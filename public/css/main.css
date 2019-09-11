@@ -1,0 +1,199 @@
+/*----------Specifications----------*/
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    /* border: 1px solid yellow; */
+    max-width: 85% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+
+/*----------Main----------*/
+.main {
+    height: 100vh;
+    min-height: 600px;
+    background: url('../images/background.png') no-repeat center;
+    background-size: cover;
+}
+
+
+/*----------Header----------*/
+.header {
+    padding-top: 70px;
+    /* border: 1px solid white; */
+}
+
+.logo {
+    height: 4em;
+    /* border: 1px solid red; */
+}
+
+/*----------Content's First-Column----------*/
+.title {
+    padding-top: 200px;
+}
+
+.title__welcome, .title__main {
+    display: block;
+    color: #fff;
+    text-align: center;
+}
+
+.title__welcome {
+    font-size: 0.7em;
+}
+
+.title__main {
+    font-size: 2.5em;
+}
+
+.social {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.social__title {
+    color: #fff;
+    font-size: 1.3em;
+}
+
+.social__icons {
+    margin-top: 10px;
+}
+
+.social__link {
+    margin-right: 50px;
+}
+
+.social__link:last-child {
+    margin-right: 0;
+}
+
+.fa {
+    font-size: 3.4em;
+    color: #FFF;
+    transition: 0.4s ease;
+}
+
+.fa-instagram:hover {
+    /* color: #8A3AB9; */
+    /* background: #d6249f;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; */
+    color: transparent;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    transition: 0.4s ease;
+}
+
+.fa-facebook-square:hover {
+    color: #3B5998;
+    transition: 0.4 ease;
+}
+
+.fa-youtube-play:hover {
+    color: #FF0000;
+    transition: 0.4 ease;
+}
+
+/*----------Content's Second Column----------*/
+.users {
+    margin-top: 40px;
+    /* border: 1px solid red; */
+}
+.users__image {
+    height: 10em;
+    /* border: 1px solid white; */
+}
+
+.input-container {
+    margin-top: 30px;
+    position: relative;
+    /* border: 1px solid red; */
+}
+
+.fa-input {
+    font-size: 2.2em;
+    position: absolute;
+    color: grey;
+    bottom: 8px;
+    /* left: 180px; */
+    left: 5.1em;
+}
+
+.show {
+    border: none;
+    outline: none !important;
+    position: absolute;
+    right: 170px;
+    bottom: 6.5px;
+    display: inline;
+    background: none;
+}
+
+.fa-eye {
+    font-size: 2.2em;
+    color: grey;
+}
+
+.fa-eye-slash {
+    font-size: 2.2em;
+    color: grey;
+}
+
+.input-field {
+    height: 50px;
+    width: 60%;
+    max-width: 60%;
+    /* padding-left: 80px; */
+    padding-left: 4.2em;
+    padding-right: 5em;
+}
+
+.btn-block {
+    margin-top: 85px;
+    height: 50px;
+    max-width: 60%;
+    background-color: rgba(83, 49, 206, 0.801);
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
+    outline: none !important;
+    transition: 0.4s ease;
+    color: #fff;
+}
+
+.btn-block:hover {
+    background-color: rgba(72, 37, 212, 1);
+    transition: 0.4s ease;
+    color: #000;
+}
+
+/*----------Footer----------*/
+.footer {
+    margin-top: 200px;
+}
+
+.footer__title {
+    display: block;
+    text-transform: uppercase;
+    color: #FFF;
+}
+
+/* ------------Nedia queries --------*/
+@media screen and (max-width: 960px) {
+
+}
+
+
+
