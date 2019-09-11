@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Library\Services\Kias;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -36,4 +38,27 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function checkSession(){
+        $kias = new Kias();
+        $response = $kias->request('User_CicHelloSvc', []);
+        if(!$response->error){
+            return false;
+        }
+        return true;
+    }
+
+    public function reAuthenticate(){
+        $kias = new Kias();
+        $kias->init(null);
+        $response = $kias->authenticate(Auth::user()->username, Auth::user()->password_hash);
+        if($response->error){
+            Auth::logout();
+            return false;
+        }
+        $User = Auth::user();
+        $User->session_id = $response->Sid;
+        $User->save();
+        return true;
+    }
 }

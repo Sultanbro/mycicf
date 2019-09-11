@@ -7,21 +7,10 @@
  */
 
 namespace App\Library\Services;
-use App\EOrder;
-use App\Library\Services\data\FalseClient;
-use App\Library\Services\Exceptions\KiasRequestException;
-use App\Library\Services\Traits\Utilities;
-use App\Library\Services\Traits\Ogpo;
-use App\Library\Services\Traits\Tour;
-use App\Library\Services\Traits\Dict;
-use App\MillionplusOrder;
-use App\OgpoOrder;
-use App\OgpoOrderParticipant;
-use App\OgpoOrderVehicle;
-use App\TourOrderParticipant;
 use Exception;
 use Faker\Guesser\Name;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,11 +83,17 @@ class Kias implements KiasServiceInterface
 //        }
 
         if (isset($xml->error)) {
-            if ($xml->error->code == '001') {
-                $this->_sid = $this->createSession();
-                return $this->request($name, $params);
+            if (isset($xml->error->code) && $xml->error->code == '001') {
+                $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);
+                if($response->error){
+                    Auth::logout();
+                }else{
+                    $User = Auth::user();
+                    $User->session_id = $response->Sid;
+                    $User->save();
+                    return $this->request($name, $params);
+                }
             }
-//            throw new KiasRequestException($name, (string) $xml->error->text, (string) $xml->error->code);
         }
 
         return $xml->result ?? $xml;

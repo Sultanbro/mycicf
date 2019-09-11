@@ -17,7 +17,7 @@ class KiasServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('App\Library\Services\KiasServiceInterface', function ($app) {
-            $session = false;
+            $session = null;
             if(Auth::check()){
                 $session = Auth::user()->session_id;
             }
