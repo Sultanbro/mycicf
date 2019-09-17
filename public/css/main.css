@@ -1,4 +1,4 @@
-/*----------Specifications----------*/
+/*----------Specifications-*/
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -10,40 +10,41 @@ body {
 }
 
 .container-fluid {
-    /* border: 1px solid yellow; */
     max-width: 85% !important;
     margin: 0 auto !important;
     padding: 0 !important;
 }
 
-/*----------Main----------*/
+/*----------Main-*/
 .main {
-    height: 100vh;
-    min-height: 600px;
+    min-height: 100vh;
+    /*min-height: 600px;*/
     background: url('../images/background.png') no-repeat center;
     background-size: cover;
+    position: relative;
 }
 
 
-/*----------Header----------*/
+/*----------Header-*/
 .header {
     padding-top: 70px;
     /* border: 1px solid white; */
 }
 
-.logo {
+.header__logo {
     height: 4em;
     /* border: 1px solid red; */
 }
 
-/*----------Content's First-Column----------*/
+/*----------Content's first-column-*/
+/*--Title block-*/
 .title {
     padding-top: 200px;
 }
 
 .title__welcome, .title__main {
     display: block;
-    color: #fff;
+    color: #FFF;
     text-align: center;
 }
 
@@ -55,25 +56,27 @@ body {
     font-size: 2.5em;
 }
 
-.social {
+/*--Social network's block-*/
+.social-network {
     text-align: center;
     margin-top: 60px;
 }
 
-.social__title {
-    color: #fff;
+.social-network__title {
+    color: #FFF;
     font-size: 1.3em;
 }
 
-.social__icons {
+.social-network__icons {
     margin-top: 10px;
 }
 
-.social__link {
+.social-network__link {
     margin-right: 50px;
+    display: inline-block;
 }
 
-.social__link:last-child {
+.social-network__link:last-child {
     margin-right: 0;
 }
 
@@ -84,11 +87,6 @@ body {
 }
 
 .fa-instagram:hover {
-    /* color: #8A3AB9; */
-    /* background: #d6249f;
-    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; */
     color: transparent;
     background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
     background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
@@ -99,78 +97,114 @@ body {
 
 .fa-facebook-square:hover {
     color: #3B5998;
-    transition: 0.4 ease;
+    transition: 0.4s ease;
 }
 
 .fa-youtube-play:hover {
     color: #FF0000;
-    transition: 0.4 ease;
+    transition: 0.4s ease;
 }
 
-/*----------Content's Second Column----------*/
+/*--Line-*/
+.line {
+    height: 500px;
+    width: 2px;
+    background-color: #FFF;
+    position: absolute;
+    left: 105%;
+    margin-left: -60px;
+    top: 25%;
+    margin-top: -50px;
+}
+
+/*----------Content's second column-*/
+/*--User's image block*/
 .users {
     margin-top: 40px;
-    /* border: 1px solid red; */
 }
 .users__image {
     height: 10em;
-    /* border: 1px solid white; */
 }
 
+/*--Login form block*/
 .input-container {
     margin-top: 30px;
-    position: relative;
-    /* border: 1px solid red; */
+}
+
+.input-container__background {
+    background-color: #FFF;
+    display: flex;
+    align-items: center;
+    width: 30rem;
+}
+
+.input-container__background:focus-within {
+    transition: 0.4s ease;
+    box-shadow: 0 0 10px rgba(83, 49, 206, 0.801);
 }
 
 .fa-input {
-    font-size: 2.2em;
-    position: absolute;
-    color: grey;
-    bottom: 8px;
-    /* left: 180px; */
-    left: 5.1em;
+    font-size: 2em;
+    color: #808080;
+    padding: 0.3em;
 }
 
-.show {
-    border: none;
-    outline: none !important;
-    position: absolute;
-    right: 170px;
-    bottom: 6.5px;
-    display: inline;
-    background: none;
-}
-
-.fa-eye {
-    font-size: 2.2em;
-    color: grey;
-}
-
-.fa-eye-slash {
-    font-size: 2.2em;
-    color: grey;
+.input-container__background:focus-within > .fa-input {
+    transition: 0.4s linear;
+    color: #000;
 }
 
 .input-field {
-    height: 50px;
-    width: 60%;
-    max-width: 60%;
-    /* padding-left: 80px; */
-    padding-left: 4.2em;
-    padding-right: 5em;
+    outline: none;
+    border: none;
+    width: 100%;
+    padding: 0.8em;
 }
 
+.fa-user-o {
+    padding-left: 0.9em;
+}
+
+.fa-lock {
+    padding-left: 1em;
+}
+
+.show-btn {
+    border: none;
+    outline: none !important;
+    background: none;
+}
+
+.show-btn:hover > .fa-eye {
+    transition: 0.4s ease;
+    color: #000;
+}
+
+.fa-eye {
+    font-size: 2em;
+    color: #808080;
+    padding-right: 0.4em;
+}
+
+.fa-eye-slash {
+    font-size: 2em;
+    color: #808080;
+    padding-right: 0.4em;
+}
+
+
+/*--Button block*/
 .btn-block {
     margin-top: 85px;
     height: 50px;
-    max-width: 60%;
+    width: 30rem;
     background-color: rgba(83, 49, 206, 0.801);
     border: none;
     box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
     outline: none !important;
     transition: 0.4s ease;
-    color: #fff;
+    color: #FFF;
+    font-size: 1.3em;
 }
 
 .btn-block:hover {
@@ -179,20 +213,22 @@ body {
     color: #000;
 }
 
-/*----------Footer----------*/
-.footer {
-    margin-top: 200px;
+/*----------Footer-*/
+.footer-title {
+    margin-top: 14em;
 }
 
-.footer__title {
+.footer-title__inner {
     display: block;
     text-transform: uppercase;
     color: #FFF;
 }
 
 /* ------------Nedia queries --------*/
-@media screen and (max-width: 960px) {
-
+@media screen and (max-width: 1280px) {
+    .line {
+        display: none;
+    }
 }
 
 

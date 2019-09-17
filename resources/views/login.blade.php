@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="header">
-                    <img src="{{asset('images/white-logo.png')}}" alt="Centras Logo" class="logo">
+                    <img src="{{asset('images/white-logo.png')}}" alt="Centras Logo" class="header__logo">
                 </div>
             </div>
         </div> <!-- First row -->
@@ -39,14 +39,15 @@
                     <span class="title__welcome">Добро пожаловать в</span>
                     <strong class="title__main">my.cic.kz</strong>
                 </h1>
-                <div class="social">
-                    <p class="social__title">Подписывайтесь на наши обновления</p>
-                    <div class="social__icons">
-                        <a href="http://www.instagram.com/centras.insurance/" class="social__link"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                        <a href="http://www.facebook.com/kupipolis.kz/" class="social__link"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-                        <a href="http://www.youtube.com/channel/UCf2GyNgEwFys5JdN4g6x4LQ" class="social__link"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                <div class="social-network">
+                    <p class="social-network__title">Подписывайтесь на наши обновления</p>
+                    <div class="social-network__icons">
+                        <a href="http://www.instagram.com/centras.insurance/" class="social-network__link"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a href="http://www.facebook.com/kupipolis.kz/" class="social-network__link"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                        <a href="http://www.youtube.com/channel/UCf2GyNgEwFys5JdN4g6x4LQ" class="social-network__link"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
                     </div>
                 </div>
+                <div class="line"></div>
             </div> <!-- First column-->
 
             <!-- Second column-->
@@ -56,10 +57,10 @@
         <!--Third row-->
         <div class="row">
             <div class="col-lg-12">
-                <div class="footer">
-                    <small class="footer__title">©1997-2019 АО "Страховая Компания "Сентрас Иншуранс"</small>
-                    <small class="footer__title">Все права защищены</small>
-                </div>
+                <p class="footer-title">
+                    <small class="footer-title__inner">©1997-2019 АО "Страховая Компания "Сентрас Иншуранс"</small>
+                    <small class="footer-title__inner">Все права защищены</small>
+                </p>
             </div>
         </div> <!--Third row-->
 

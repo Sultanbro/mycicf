@@ -1,19 +1,23 @@
 <template>
-    <div class="col-lg-6">
+    <div class="col-lg-6"> <!-- Second column-->
         <div class="users d-flex justify-content-center">
             <img src="images/users-white-image.png" alt="users image" class="users__image">
         </div>
-        <div class="form">
+        <div class="login-form">
             <div class="input-container d-flex justify-content-center">
-                <i class="fa fa-user-o fa-input" aria-hidden="true"></i>
-                <input type="text" name="username" v-model="username" class="input-field" placeholder="Логин">
+                <div class="input-container__background">
+                    <i class="fa fa-user-o fa-input" aria-hidden="true"></i>
+                    <input type="text" name="username" v-model="username" class="input-field" placeholder="Логин">
+                </div>
             </div>
             <div class="input-container d-flex justify-content-center">
-                <i class="fa fa-lock fa-input" aria-hidden="true"></i>
-                <input v-bind:type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
-                <button type="button" @click="checkType" class="show">
-                    <i v-bind:class="className" aria-hidden="true" id="icon"></i>
-                </button>
+                <div class="input-container__background">
+                    <i class="fa fa-lock fa-input" aria-hidden="true"></i>
+                    <input v-bind:type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
+                    <button type="button" @click="checkType" class="show-btn">
+                        <i v-bind:class="className" aria-hidden="true" id="icon"></i>
+                    </button>
+                </div>
             </div>
             <div class="d-flex justify-content-center">
                 <button @click="login" class="btn-block">Войти</button>
