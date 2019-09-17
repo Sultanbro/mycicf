@@ -183,4 +183,12 @@ class Kias implements KiasServiceInterface
             'EmplISN' => $ISN,
         ]);
     }
+
+    public function getAttachmentData($refisn, $isn, $pictType){
+        return $this->request('GETATTACHMENTDATA', [
+            'REFISN' => $refisn,
+            'ISN' => $isn,
+            'PICTTYPE' => $pictType
+        ]);
+    }
 }

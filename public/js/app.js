@@ -2118,6 +2118,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "simple-info",
   data: function data() {
@@ -2127,11 +2130,16 @@ __webpack_require__.r(__webpack_exports__);
       birthday: '',
       place_of_birth: '',
       married: '',
-      education: ''
+      education: '',
+      img: 0
     };
+  },
+  props: {
+    image: String
   },
   mounted: function mounted() {
     this.getTables();
+    this.img = this.image;
   },
   methods: {
     getTables: function getTables() {
@@ -2153,11 +2161,11 @@ __webpack_require__.r(__webpack_exports__);
         this.birthday = information.Birthday;
         this.married = information.Married === "0" ? "Не указано" : information.Married;
         this.education = information.Edu === "0" ? "Не указано" : information.Edu;
+        this.img = response.result.image;
+        this.$emit('image', this.img);
       } else {
         alert(response.error);
       }
-
-      console.log(response);
     }
   }
 });
@@ -20493,6 +20501,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
     _c("div", { staticClass: "flex-row bg-color-blue color-white" }, [
       _c(
         "div",
@@ -20500,7 +20510,7 @@ var render = function() {
           staticClass:
             "left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100"
         },
-        [_c("span", [_vm._v(_vm._s(_vm.fullname))]), _vm._v(" "), _vm._m(0)]
+        [_c("span", [_vm._v(_vm._s(_vm.fullname))]), _vm._v(" "), _vm._m(1)]
       )
     ]),
     _vm._v(" "),
@@ -20542,6 +20552,14 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "avatar-menu-size mt-3 mb-3 ml-2 mr-2" }, [
+      _c("img", { staticClass: "image", attrs: { src: "images/avatar.jpg" } })
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -32906,7 +32924,8 @@ window.onload = function () {
     data: {
       value: null,
       // define options
-      options: null
+      options: null,
+      image: 0
     },
     mounted: function mounted() {
       this.getOptions();
@@ -33175,26 +33194,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/app.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/app.scss ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ 0:
-/*!*************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
-  \*************************************************************/
+/*!***********************************!*\
+  !*** multi ./resources/js/app.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\i-ci_6.0\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\i-ci_6.0\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! D:\i-ci_6.0\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

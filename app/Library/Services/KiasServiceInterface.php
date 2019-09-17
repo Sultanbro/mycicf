@@ -45,4 +45,10 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getBranches();
+
+    /**
+     * Получить вложение из документа/договора/контрагента
+     * @return mixed
+     */
+    public function getAttachmentData($refisn, $isn, $pictType);
 }

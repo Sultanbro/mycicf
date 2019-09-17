@@ -1,11 +1,12 @@
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
-    <div>
-        <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
-            <img src="images/avatar.jpg" class="image">
-        </div>
-    </div>
+    {{--<div>--}}
+        {{--<div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">--}}
+            {{--<img src="images/avatar.jpg" class="image">--}}
+        {{--</div>--}}
+    {{--</div>--}}
     <div id="simple-info">
-        <simple-info></simple-info>
+        <simple-info
+            :image="image"></simple-info>
     </div>
     <div class="mb-5">
         <ul class="flex-column mr-3 ml-3">

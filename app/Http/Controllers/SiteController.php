@@ -202,7 +202,7 @@ class SiteController extends Controller
     {
         $success = true;
         $error = '';
-        $response = $kias->getEmplInfo(Auth::user()->ISN, date('d.m.Y', strtotime('tomorrow')), date('d.m.Y', strtotime('today')));
+        $response = $kias->getEmplInfo(Auth::user()->ISN, date('1.m.Y'), date('d.m.Y', strtotime('today')));
         if ($response->error)
         {
             $success = false;
@@ -214,8 +214,15 @@ class SiteController extends Controller
 
             return response()->json($result)->withCallback($request->input('callback'));
         }
+        $image = 0;
+        if(isset($response->image->refisn)){
+            $image = $kias->getAttachmentData($response->image->refisn,$response->image->isn, 'J');
+            $image = 'data:image/png;base64,'.(string)$image->FILEDATA;
+        }
+
         $result = [
             'response' => $response,
+            'image' => $image
         ];
 
         $result = array(
@@ -274,5 +281,9 @@ class SiteController extends Controller
             }
         }
         return $result;
+    }
+
+    public function test(){
+        return view('test');
     }
 }
