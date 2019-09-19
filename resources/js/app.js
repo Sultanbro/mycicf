@@ -24,7 +24,9 @@ window.onload = function(){
             value: null,
             // define options
             options: null,
-            image: 0,
+            image: {
+                encoded: 0,
+            },
         },
         mounted: function () {
             this.getOptions();

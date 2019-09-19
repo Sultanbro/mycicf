@@ -19,7 +19,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
     Route::post('/getBranchData', 'SiteController@postBranchData');
 
-    Route::get('test', 'SiteController@test')->middleware(['checkAuth', 'checkSession']);
+    Route::get('dossier', 'SiteController@dossier')->middleware(['checkAuth', 'checkSession']);
 });
 
 Route::get('/logout', function (){
@@ -27,6 +27,4 @@ Route::get('/logout', function (){
     return redirect('/');
 });
 
-Route::get('/testview', function(){
-   return view('layouts.treeview');
-});
+Route::get('/documentation/{url}', 'SiteController@getUrl');

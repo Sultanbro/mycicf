@@ -15,7 +15,7 @@ class SiteController extends Controller
     {
         if(Auth::check())
         {
-            return redirect('/cabinet');
+            return redirect('/dossier');
         }
         else
         {
@@ -217,7 +217,7 @@ class SiteController extends Controller
         $image = 0;
         if(isset($response->image->refisn)){
             $image = $kias->getAttachmentData($response->image->refisn,$response->image->isn, 'J');
-            $image = 'data:image/png;base64,'.(string)$image->FILEDATA;
+            $image = (string)$image->FILEDATA;
         }
 
         $result = [
@@ -283,7 +283,7 @@ class SiteController extends Controller
         return $result;
     }
 
-    public function test(){
-        return view('test');
+    public function dossier(){
+        return view('dossier');
     }
 }

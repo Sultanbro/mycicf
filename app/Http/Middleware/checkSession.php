@@ -46,6 +46,7 @@ class checkSession
         }
         $User = Auth::user();
         $User->session_id = $response->Sid;
+        $kias->_sid= $response->Sid;
         $User->save();
         return true;
     }

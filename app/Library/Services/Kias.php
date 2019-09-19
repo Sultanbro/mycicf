@@ -90,6 +90,7 @@ class Kias implements KiasServiceInterface
                 }else{
                     $User = Auth::user();
                     $User->session_id = $response->Sid;
+                    $this->_sId = $response->Sid;
                     $User->save();
                     return $this->request($name, $params);
                 }

@@ -285,7 +285,7 @@ ul{
 	height: 100%;
 }
 .avatar-menu-size{
-	width: 140px;
+	height: 100%;
 }
 .radius-4px{
 	border-radius: 4px;
@@ -301,6 +301,7 @@ ul{
 	line-height: 18px;
 }
 .avatar-menu-size img{
+	width: 100%;
 	border-radius: 10px;
 }
 .border0{

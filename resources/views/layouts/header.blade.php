@@ -38,10 +38,15 @@
             <div class="col-md-5 mt-1 pl-0">
                 <a href="javascript:void(0)" class="flex-row header-avatar-contain text-decoration pt-1 pb-1">
                     <div href="javascript:void(0)" class="small-avatar-circle-width ml-2">
-                        <img src="images/avatar.jpg" class="image height100 small-avatar-circle">
+                        <template
+                            :image="image">
+                            <img src="images/avatar.png" class="image height100 small-avatar-circle" v-if="image.encoded === 0">
+                            <img :src="'data:image/jpeg;base64,' + image.encoded" class="image height100 small-avatar-circle" v-else="image.encoded === 0">
+                        </template>
                     </div>
+
                     <div class="vertical-middle header-avatar-nickname">
-                        <span class="ml-1">Иванов Иван</span>
+                        <span class="ml-1">{{Auth::user()->short_name}}</span>
                         <span class="ml-2"><i class="fas fa-caret-down"></i></span>
                     </div>
                 </a>
