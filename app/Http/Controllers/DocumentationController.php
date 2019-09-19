@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentationController extends Controller
 {
-    //
     public function postSVG(Request $request, KiasServiceInterface $kias) {
-        dd($request->all());
         $file_url = $request->file_url;
         $script = $request->script;
         $url = $request->url;
@@ -36,5 +34,12 @@ class DocumentationController extends Controller
 
     public function test() {
         return view('qwerty');
+    }
+
+    public function getUrl($url){
+        $items = Documentation::where('url', $url)->findOrFail();
+        if($items){
+
+        }
     }
 }
