@@ -30,3 +30,8 @@ Route::get('/logout', function (){
 Route::get('/testview', function(){
    return view('layouts.treeview');
 });
+
+Route::get('/documentation', 'DocumentationController@test');
+Route::post('/documentation/', 'DocumentationController@postSVG');
+Route::get('/documentation/{url}', 'DocumentationController@getUrl');
+

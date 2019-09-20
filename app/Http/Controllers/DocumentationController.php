@@ -17,18 +17,24 @@ class DocumentationController extends Controller
 
         $documentations = Documentation::where('url', $request->url)->get();
         if(sizeof($documentations) > 0){
-            echo 'Такой URL уже имеется в базе данных';
+            echo "Такой URL уже имеется в базе данных\n";
             exit;
         }
 
-        $filename = time().'_'.$file_url->getClientOriginalName();
-        $file_url->move(public_path('images/documentation'), $filename);
+        try {
+            $filename = time() . '_' . $file_url->getClientOriginalName();
+            $file_url->move(public_path('images/documentation'), $filename);
 
-        $model = new Documentation();
-        $model->file_url = $filename;
-        $model->script = $script;
-        $model->url = $url;
-        $model->save();
+            $model = new Documentation();
+            $model->file_url = $filename;
+            $model->script = $script;
+            $model->url = $url;
+            if($model->save()){
+                echo "Все данные успешно добавлены в базу\n";
+            }
+        }catch (\Exception $ex){
+            echo "Ошибка {$ex->getMessage()}\n";
+        }
     }
 
 
@@ -37,9 +43,15 @@ class DocumentationController extends Controller
     }
 
     public function getUrl($url){
-        $items = Documentation::where('url', $url)->findOrFail();
-        if($items){
-
+        $items = Documentation::where('url', $url)->first();
+        if($items === null){
+            abort(404, 'Запрашиваемая вами страница не найдена');
         }
+        $result = [
+            'js' => "<script>{$items->script}</script>",
+            'SVG' => "images/documentation/{$items->file_url}",
+        ];
+
+        return view('documentation', compact('result'));
     }
 }

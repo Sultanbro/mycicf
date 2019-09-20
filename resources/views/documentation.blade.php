@@ -16,13 +16,11 @@
 </head>
 <body>
 <!-- Main -->
-<div class="main">
     <!-- Container -->
     <div class="container-fluid">
 
         {!! file_get_contents(public_path($result['SVG'])) !!}
     </div> <!-- Container -->
-</div> <!-- Main -->
 </body>
 {!! $result['js'] !!}
 </html>
