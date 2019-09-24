@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 mt-3" @click="getTables()">
+                    <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 mt-3 pointer" @click="getTables()">
                         <div><i class="far fa-eye"></i></div>
                         <div class="ml-2">Показать</div>
                     </div>
