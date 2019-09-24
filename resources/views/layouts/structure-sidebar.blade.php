@@ -16,9 +16,29 @@
         </a>
         <div id="units"> <!-- class="in collapse" -->
             <div class="border-date ml-2 mr-2">
-                <div class="menu-right-side-active pointer flex-row jc-sb vertical-middle width100 color-white pl-4 pt-2 pb-2 color-white-hover pr-4">
+                <div class="menu-right-side-active pointer flex-row jc-sb vertical-middle width100 color-white pl-4 pt-2 pb-2 color-white-hover pr-4" data-toggle="collapse" data-target="#infant-element" aria-expanded="true">
                     <span class="color-black right-sidebar-blocks">Правление</span>
                     <i class="gray-chevrons fas fa-chevron-down ml-3"></i>
+                </div>
+            </div>
+            <div id="infant-element">
+                <div class="border-date ml-2 mr-2">
+                    <div class="menu-right-side-active pointer flex-row jc-sb vertical-middle width100 color-white pl-4 pt-2 pb-2 color-white-hover pr-4">
+                        <span class="color-black right-sidebar-blocks">Дочерний элемент</span>
+                        <i class="gray-chevrons fas fa-chevron-down ml-3"></i>
+                    </div>
+                </div>
+                <div class="border-date ml-2 mr-2">
+                    <div class="menu-right-side-active pointer flex-row jc-sb vertical-middle width100 color-white pl-4 pt-2 pb-2 color-white-hover pr-4">
+                        <span class="color-black right-sidebar-blocks">Дочерний элемент</span>
+                        <i class="gray-chevrons fas fa-chevron-down ml-3"></i>
+                    </div>
+                </div>
+                <div class="border-date ml-2 mr-2">
+                    <div class="menu-right-side-active pointer flex-row jc-sb vertical-middle width100 color-white pl-4 pt-2 pb-2 color-white-hover pr-4">
+                        <span class="color-black right-sidebar-blocks">Дочерний элемент</span>
+                        <i class="gray-chevrons fas fa-chevron-down ml-3"></i>
+                    </div>
                 </div>
             </div>
             <div class="border-date ml-2 mr-2">
