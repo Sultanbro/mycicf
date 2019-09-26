@@ -31,15 +31,15 @@ window.onload = function(){
             options: null,
         },
         mounted: function () {
-            this.getOptions();
+            // this.getOptions();
         },
         methods: {
-            getOptions: function () {
-                this.axios.post('/getBranchData', {}).then((response) => {
-                    this.options = response.data.result;
-                    this.value = response.data.value;
-                })
-            }
+            // getOptions: function () {
+            //     this.axios.post('/getBranchData', {}).then((response) => {
+            //         this.options = response.data.result;
+            //         this.value = response.data.value;
+            //     })
+            // }
         },
         watch: {
             multiple(newValue) {

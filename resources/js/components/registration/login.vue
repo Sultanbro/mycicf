@@ -13,9 +13,9 @@
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-lock fa-input" aria-hidden="true"></i>
-                    <input v-bind:type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
-                    <button type="button" @click="checkType" class="show-btn">
-                        <i v-bind:class="className" aria-hidden="true" id="icon"></i>
+                    <input :type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
+                    <button type="button" class="show-btn" @click="checkType">
+                        <i :class="className" aria-hidden="true" id="icon"></i>
                     </button>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             return {
                 passwordType: 'password',
                 className: 'fa fa-eye',
-                type: 0,
+                type: 1,
                 username : '',
                 password : '',
             }
@@ -53,7 +53,7 @@
                 }
 
                 if(response.success){
-                    location.href = '/test';
+                    location.href = '/dossier';
                 }
             },
             validate: function () {

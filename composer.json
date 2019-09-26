@@ -9,12 +9,13 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "ext-json": "*",
+        "ext-simplexml": "*",
+        "ext-soap": "*",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
-        "ext-soap": "*",
-        "ext-simplexml": "*",
-        "ext-json": "*"
+        "lorisleiva/laravel-deployer": "^0.2.12"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

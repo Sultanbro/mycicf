@@ -16,6 +16,9 @@ Vue.component('simple-info', require('./components/employee/simple-info.vue').de
 
 Vue.component('info', require('./components/employee/info.vue').default);
 
+Vue.component('coordination', require('./components/employee/coordination.vue').default);
+
+Vue.component('search', require('./components/documentation/search.vue').default);
 
 window.onload = function(){
     var app = new Vue({
@@ -29,14 +32,14 @@ window.onload = function(){
             },
         },
         mounted: function () {
-            this.getOptions();
+            // this.getOptions();
         },
         methods: {
             getOptions: function () {
-                this.axios.post('/getBranchData', {}).then((response) => {
-                    this.options = response.data.result;
-                    this.value = response.data.value;
-                })
+                // this.axios.post('/getBranchData', {}).then((response) => {
+                //     this.options = response.data.result;
+                //     this.value = response.data.value;
+                // })
             }
         },
         watch: {

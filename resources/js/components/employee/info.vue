@@ -186,7 +186,6 @@
         name: "info",
         data() {
             return {
-                isn: 3921599,
                 datebeg: '2018-01-01',
                 dateend: '2019-09-10',
                 carier: null,
@@ -199,8 +198,11 @@
             }
         },
         mounted: function(){
-            this.getTables();
             this.getOptions();
+            this.getTables();
+        },
+        props: {
+            isn: Number,
         },
         methods: {
             getTables: function(){
@@ -211,7 +213,6 @@
             getOptions: function () {
                 this.axios.post('/getBranchData', {}).then((response) => {
                     this.options = response.data.result;
-                    this.isn = response.data.value;
                 })
             },
             fetchResponse: function(response){
