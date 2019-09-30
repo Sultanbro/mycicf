@@ -18,6 +18,14 @@
                 <input type="text" class="form-control" placeholder="title" name="title">
             </div>
             <div class="form-group">
+                <label for="title">PARENT ELEMENT</label>
+                <input type="text" class="form-control" placeholder="SELECT" name="title" disabled>
+            </div>
+            <div class="form-group">
+                <label for="title">UPLOAD ICON FOR ELEMENT</label>
+                <input type="text" class="form-control" placeholder="FILE-INPUT" name="title" disabled>
+            </div>
+            <div class="form-group">
                 <label for="url">Url</label>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">

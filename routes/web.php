@@ -30,6 +30,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('/documentation/', 'DocumentationController@index');
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
     Route::post('/documentation/save', 'DocumentationController@save');
+    Route::post('/documentation/search', 'DocumentationController@search');
 });
 
 Route::get('/logout', function (){
