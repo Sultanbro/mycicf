@@ -215,8 +215,9 @@ class SiteController extends Controller
             return response()->json($result)->withCallback($request->input('callback'));
         }
         $image = 0;
-        if(isset($response->image->refisn)){
-            $image = $kias->getAttachmentData($response->image->refisn,$response->image->isn, 'J');
+        if(isset($response->images->row[0]->refisn)){
+//            dd($response->images);
+            $image = $kias->getAttachmentData($response->images->row[0]->refisn,$response->images->row[0]->isn, 'J');
             $image = (string)$image->FILEDATA;
         }
 

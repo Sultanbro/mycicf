@@ -186,7 +186,6 @@
         name: "info",
         data() {
             return {
-                isn: 3921599,
                 datebeg: '2018-01-01',
                 dateend: '2019-09-10',
                 carier: null,
@@ -197,6 +196,9 @@
                 admins: null,
                 options: null,
             }
+        },
+        props : {
+            isn: Number,
         },
         mounted: function(){
             this.getTables();

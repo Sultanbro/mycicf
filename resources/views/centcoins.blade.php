@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>i-ci.kz</title>
+    <title>Сенткоины</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -22,22 +22,24 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
     <script src="{{asset('js/app.js')}}"></script>
-{{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
+    {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
     @include('layouts.header')
     <main class="flex-row"  id="app">
         <div class="main_margin flex-row width100">
-            @include('layouts.sidebar')
-
+{{--            @include('layouts.sidebar')--}}
+            <centcoins :isn="{{Auth::user()->ISN}}"  ></centcoins>
             <div class="col-md-6" id="employee_info">
-                <info
-                    :isn="{{Auth::user()->ISN}}"></info>
+                <operations-history></operations-history>
+
             </div>
+
 
             {{--RIGHT SIDE BAR GOES HERE--}}
         </div>
     </main>
+{{--    @include('layouts.footer')--}}
     {{--FOOTER GOES HERE--}}
 </body>
 </html>

@@ -1,5 +1,5 @@
 <template>
-    <div class="col-lg-6"> <!-- Second column-->
+    <div class="col-lg-6 column-2"> <!-- Second column-->
         <div class="users d-flex justify-content-center">
             <img src="images/users-white-image.png" alt="users image" class="users__image">
         </div>

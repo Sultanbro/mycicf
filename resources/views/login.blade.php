@@ -21,7 +21,6 @@
 <div class="main">
     <!-- Container -->
     <div class="container-fluid">
-
         <!-- First row -->
         <div class="row">
             <div class="col-lg-12">
@@ -34,7 +33,7 @@
         <!--Second row-->
         <div class="row" id="login">
             <!-- First column-->
-            <div class="col-lg-6">
+            <div class="col-lg-6 column-1">
                 <h1 class="title">
                     <span class="title__welcome">Добро пожаловать в</span>
                     <strong class="title__main">my.cic.kz</strong>
@@ -55,7 +54,7 @@
         </div> <!--Second row-->
 
         <!--Third row-->
-        <div class="row">
+        <div class="row row-3">
             <div class="col-lg-12">
                 <p class="footer-title">
                     <small class="footer-title__inner">©1997-2019 АО "Страховая Компания "Сентрас Иншуранс"</small>
@@ -63,7 +62,6 @@
                 </p>
             </div>
         </div> <!--Third row-->
-
     </div> <!-- Container -->
 </div> <!-- Main -->
 </body>

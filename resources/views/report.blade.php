@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>i-ci.kz</title>
+    <title>Отчет</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -22,22 +22,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
     <script src="{{asset('js/app.js')}}"></script>
-{{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
+    {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
-    @include('layouts.header')
-    <main class="flex-row"  id="app">
-        <div class="main_margin flex-row width100">
-            @include('layouts.sidebar')
+@include('layouts.header')
+<main class="flex-row"  id="app">
+    <div class="main_margin flex-row width100">
+        @include('layouts.sidebar')
 
-            <div class="col-md-6" id="employee_info">
-                <info
-                    :isn="{{Auth::user()->ISN}}"></info>
-            </div>
-
-            {{--RIGHT SIDE BAR GOES HERE--}}
+        <div class="col-md-6" id="employee_info">
+            <info></info>
         </div>
-    </main>
-    {{--FOOTER GOES HERE--}}
+
+        {{--RIGHT SIDE BAR GOES HERE--}}
+    </div>
+</main>
+{{--FOOTER GOES HERE--}}
 </body>
 </html>
