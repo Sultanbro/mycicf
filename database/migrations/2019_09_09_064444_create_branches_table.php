@@ -21,6 +21,10 @@ class CreateBranchesTable extends Migration
             $table->tinyInteger('has_child');
             $table->integer('verified');
             $table->timestamps();
+
+            $table->index('kias_id');
+            $table->index('kias_parent_id');
+            $table->index('verified');
         });
     }
 
@@ -31,6 +35,11 @@ class CreateBranchesTable extends Migration
      */
     public function down()
     {
+        Schema::table('branches', function (Blueprint $table){
+            $table->dropIndex('kias_id');
+            $table->dropIndex('kias_parent_id');
+            $table->dropIndex('verified');
+        });
         Schema::dropIfExists('branches');
     }
 }

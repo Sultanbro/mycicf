@@ -31,11 +31,35 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
     Route::post('/documentation/save', 'DocumentationController@save');
     Route::post('/documentation/search', 'DocumentationController@search');
+
+    //PARSE
+    Route::get('parse/company', 'ParseController@getCompanyTopSum');
+    Route::get('parse/product', 'ParseController@getClassTopSum');
+    Route::get('parse/finance', 'ParseController@getFinancialIndicators');
+    Route::get('parse', function (){
+        return redirect('/parse/company');
+    });
+    Route::group(['middleware' => 'parseAdmin'], function () {
+        Route::get('parse/company_name', 'ParseController@company');
+        Route::post('parse/add_name', 'ParseController@addname');
+
+        Route::get('parse/add', 'ParseController@index');
+        Route::post('parse/upload', 'ParseController@upload');
+
+        Route::get('parse/add/company', 'ParseController@getAddCompany');
+        Route::post('parse/add/company', 'ParseController@postAddCompany');
+        Route::get('parse/add/product', 'ParseController@getAddProduct');
+        Route::post('parse/add/product', 'ParseController@postAddProduct');
+        Route::get('parse/edit/company', 'ParseController@getEditCompany');
+        Route::post('parse/edit/company', 'ParseController@postEditCompany');
+        Route::get('parse/edit/product', 'ParseController@getEditProduct');
+        Route::post('parse/edit/product', 'ParseController@postEditProduct');
+        Route::get('parse/load/data', 'ParseController@getLoadedData');
+        Route::post('parse/delete/data', 'ParseController@postDeleteData');
+    });
 });
 
 Route::get('/logout', function (){
     Auth::logout();
     return redirect('/');
 });
-
-
