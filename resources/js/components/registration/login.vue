@@ -53,7 +53,7 @@
                 }
 
                 if(response.success){
-                    location.href = '/dossier';
+                    location.href = '/news';
                 }
             },
             validate: function () {
