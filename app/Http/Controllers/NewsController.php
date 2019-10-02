@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Centcoin;
+use App\CentcoinHistory;
 use App\Comment;
 use App\Like;
 use App\Post;
@@ -11,53 +13,77 @@ use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
-    public function addPost(Request $request){
+    public function addPost(Request $request) {
 
-        $success = true;
+//        $success = false;
+//        $error = '';
+//
+//        if(!Auth::check()) {
+//            $error = 'Пожалуста авторизуйтесь заново';
+//            $success = false;
+//            return [
+//                'error' => $error,
+//                'success' => $success
+//            ];
+//        }
 
-        $newPost = new Post();
-        $newPost->user_isn = $request->isn;
-        $newPost->post_text = $request->postText;
-        $newPost->likes = 0;
-        $newPost->pinned = 0;
-        $newPost->save();
+//        try {
+            $new_post = new Post();
+            $new_post->user_isn = $request->isn;
+            $new_post->post_text = $request->postText;
+            $new_post->pinned = 0;
+            $new_post->save();
+//        }
+//        catch(Exception $e) {
+//            $error = $e->getMessage();
+//            $success = false;
+//            return [
+//                'success' => $success,
+//                'error' => $error
+//            ];
+//        }
 
-        $fullname = Auth::user()->full_name;
+        $full_name = Auth::user()->full_name;
 
         $response = [
-            'user_isn' => $newPost->user_isn,
-            'postText' => $newPost->post_text,
-            'likes' => $newPost->likes,
-            'pinned' => $newPost->pinned,
-            'success' => $success,
-            'fullname' => $fullname,
-            'id' => $newPost->id,
-            'date' => date("d.m.Y h:m", strtotime($newPost->created_at)),
+            'userISN' => $new_post->user_isn,
+            'postText' => $new_post->post_text,
+//            'likes' => $newPost->likes,
+            'pinned' => $new_post->pinned,
+            'fullname' => $full_name,
+            'id' => $new_post->id,
+            'date' => date("d.m.Y h:m", strtotime($new_post->created_at)),
         ];
+
+//        $result = [
+//            'success' => $success,
+//            'error' => $error,
+//            'post' => $response,
+//        ];
 
         return $response;
     }
 
-    public function getPosts(Request $request){
-        $result = [];
-        $lastIndex = $request->lastIndex;
-        if($lastIndex == null){
+    public function getPosts(Request $request) {
+        $response = [];
+        $last_index = $request->lastIndex;
+
+        if($last_index == null){
             $model = Post::orderBy('id', 'DESC')
                 ->limit(5)
                 ->get();
         }
         else {
             $model = Post::orderBy('id', 'DESC')
-                ->where('id', '<', $lastIndex)
+                ->where('id', '<', $last_index)
                 ->limit(5)
                 ->get();
         }
 
-        foreach ($model as $item){
-            array_push($result, [
+        foreach ($model as $item) {
+            array_push($response, [
                 'fullname' => (new User())->getFullName($item->user_isn),
                 'postText' => $item->post_text,
-                'likes' => $item->likes,
                 'pinned' => $item->pinned,
                 'postId' => $item->id,
                 'likes' => (new Like())->getLikes($item->id),
@@ -66,12 +92,19 @@ class NewsController extends Controller
                 'date' => date('d.m.Y h:m', strtotime($item->created_at))
             ]);
         }
-        return $result;
+
+//        $result = [
+//            'success' => $success,
+//            'error' => $error,
+//            'post' => $response
+//        ];
+
+        return $response;
     }
 
     public function deletePost(Request $request) {
-        $success = 'true';
         $delete_post = Post::where('id', $request->postId)->delete();
+        $success = 'true';
         return $success;
     }
 
@@ -87,22 +120,22 @@ class NewsController extends Controller
     }
 
     public function likePost(Request $request) {
-        $postId = $request->postId;
+        $post_id = $request->postId;
         $user_isn = $request->isn;
 
-        $model = Like::where('postId' , $postId)
+        $model = Like::where('post_id', $post_id)
             ->where('user_isn', $user_isn);
 
         if(sizeof($model->get()) === 0) {
             $like = new Like();
             $like->user_isn = $user_isn;
-            $like->postId = $postId;
+            $like->post_id = $post_id;
             $like->save();
-            $success = 1;
+            $success = true;
         }
         else {
             $model->delete();
-            $success = 0;
+            $success = false;
         }
 
         $response = [
@@ -113,18 +146,22 @@ class NewsController extends Controller
     }
 
     public function editPost(Request $request) {
-        $postId = $request->postId;
-        $postText = $request->postText;
+        $success = false;
+        $post_id = $request->postId;
+        $post_text = $request->postText;
 
-        $model = Post::where('id', $postId)
+        $model = Post::where('id', $post_id)
                 ->update([
-                    'post_text' => $postText,
+                    'post_text' => $post_text,
                 ]);
-        return 'success';
+        $response = [
+            'success' => !$success,
+        ];
+
+        return $response;
     }
 
     public function getView() {
         return view('news');
     }
-
 }

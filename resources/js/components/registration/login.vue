@@ -53,7 +53,7 @@
                 }
 
                 if(response.success){
-                    location.href = '/test';
+                    location.href = '/dossier';
                 }
             },
             validate: function () {

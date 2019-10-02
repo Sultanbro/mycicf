@@ -31,36 +31,22 @@
                 <div>
                     <table class="dosier-table centcoins-table table text-align-center mt-4">
                         <thead>
-                        <tr class="header color-white">
-                            <th scope="col">#</th>
-                            <th scope="col">Вид</th>
-                            <th scope="col">Описание</th>
-                            <th scope="col">Кол-во</th>
-                            <th scope="col">Итого</th>
-                        </tr>
+                            <tr class="header color-white">
+                                <th scope="col">#</th>
+                                <th scope="col">Вид</th>
+                                <th scope="col">Описание</th>
+                                <th scope="col">Кол-во</th>
+                                <th scope="col">Итого</th>
+                            </tr>
                         </thead>
                         <tbody class="date-color">
-                        <tr v-for="operation in operations">
-                            <td>{{operation.id}}</td>
-                            <td>{{operation.type}}</td>
-                            <td>{{operation.description}}</td>
-                            <td>{{operation.quantity}}</td>
-                            <td>{{operation.total}}</td>
-                        </tr>
-<!--                        <tr>-->
-<!--                            <td>2</td>-->
-<!--                            <td>Пополнение</td>-->
-<!--                            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</td>-->
-<!--                            <td>1</td>-->
-<!--                            <td>13</td>-->
-<!--                        </tr>-->
-<!--                        <tr>-->
-<!--                            <td>3</td>-->
-<!--                            <td>Покупка</td>-->
-<!--                            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</td>-->
-<!--                            <td>8</td>-->
-<!--                            <td>7</td>-->
-<!--                        </tr>-->
+                            <tr v-for="operation in operations">
+                                <td>{{operation.id}}</td>
+                                <td>{{operation.type}}</td>
+                                <td>{{operation.description}}</td>
+                                <td>{{operation.quantity}}</td>
+                                <td>{{operation.total}}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -75,18 +61,17 @@
             return {
                 dateBeg: '2019-01-01',
                 dateEnd: '2019-20-01',
-                operations: [
-                ],
+                operations: [],
             }
         },
         methods: {
             getOperations: function () {
                 this.axios.post('/getOperationsList', {dateBeg: this.dateBeg, dateEnd: this.dateEnd}).then((response) => {
                     console.log(response.data);
-                    this.fetchResponseData(response.data);
+                    this.fetchOperations(response.data);
                 });
             },
-            fetchResponseData: function (response) {
+            fetchOperations: function (response) {
                 this.operations = response;
             },
         }

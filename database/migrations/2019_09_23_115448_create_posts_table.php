@@ -17,8 +17,13 @@ class CreatePostsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('user_isn');
             $table->string("post_text", 2000);
-            $table->integer("likes");
+            $table->tinyInteger('pinned');
             $table->timestamps();
+
+            $table->index('user_isn');
+            $table->index('pinned');
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

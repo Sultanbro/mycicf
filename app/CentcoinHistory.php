@@ -4,6 +4,18 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class CentcoinHistory
+ * @package App
+ * @property string $type
+ * @property string $description
+ * @property integer $quantity
+ * @property string $operation_type
+ * @property integer $total
+ * @property integer $user_isn
+ * @property integer $changed_user_isn
+ */
+
 class CentcoinHistory extends Model
 {
     protected $table = 'centcoin_histories';
@@ -11,7 +23,8 @@ class CentcoinHistory extends Model
     public function getTotal() {
         $centcoin = Centcoin::where('user_isn', $this->changed_user_isn)
             ->first();
-        if($centcoin === null){
+
+        if($centcoin === null) {
             $centcoin = new Centcoin();
             $centcoin->user_isn = $this->changed_user_isn;
             $centcoin->centcoins = 0;
@@ -20,9 +33,8 @@ class CentcoinHistory extends Model
         $this->total = $this->operation_type == 'add' ? ($centcoin->centcoins + $this->quantity) : ($centcoin->centcoins - $this->quantity);
     }
 
-    public function save(array $options = []){
+    public function save(array $options = []) {
         $this->getTotal();
         parent::save($options);
     }
-
 }

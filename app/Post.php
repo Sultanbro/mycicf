@@ -13,8 +13,4 @@ class Post extends Model
         $this->pinned = 1;
         $this->save();
     }
-
-    public function changedText($postId, $isn) {
-
-    }
 }

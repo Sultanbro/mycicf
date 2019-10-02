@@ -14,13 +14,15 @@ class CentcoinsController extends Controller
         $dateBeg = new Carbon(strtotime($request->dateBeg));
         $dateEnd = new Carbon(strtotime($request->dateEnd));
 
-        $histories = CentcoinHistory::where('created_at','>',$dateBeg)
-            ->where('created_at','<',$dateEnd)
+        $histories = CentcoinHistory::where('created_at', '>', $dateBeg)
+            ->where('created_at', '<', $dateEnd)
+            ->where('changed_user_isn', Auth::user()->ISN)
             ->get();
 
-        $result = [];
-        foreach ($histories as $history ){
-            array_push($result, [
+        $response = [];
+
+        foreach ($histories as $history ) {
+            array_push($response, [
                 'id' => $history->id,
                 "type" => $history->type,
                 "description" => $history->description,
@@ -29,13 +31,15 @@ class CentcoinsController extends Controller
             ]);
         }
 
-        return $result;
+        return $response;
     }
 
     public function getCentcoins(Request $request) {
         $isn = $request->isn;
+
         $centcoin = Centcoin::where('user_isn', $isn)
             ->first();
+
         if($centcoin === null){
             $centcoin = new Centcoin();
             $centcoin->user_isn = $isn;
@@ -46,7 +50,6 @@ class CentcoinsController extends Controller
         return $centcoin->centcoins;
     }
 
-    //
     public function getView() {
         return view('centcoins');
     }

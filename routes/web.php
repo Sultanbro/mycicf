@@ -27,8 +27,6 @@ Route::get('/logout', function (){
     return redirect('/');
 });
 
-Route::get('/documentation/{url}', 'SiteController@getUrl');
-
 Route::get('/centcoins', 'CentcoinsController@getView');
 
 Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');

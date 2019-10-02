@@ -1,6 +1,6 @@
 <template >
     <div>
-        <form onscroll="bottomOfWindow" action="">
+        <form onscroll="bottomOfWindow">
             <div class="pt-4">
                 <div class="create-publication news-contains-top pl-4 pr-4 ml-2 mr-2">
                     <div class="pt-2 pb-2"><strong>Создайте публикацию</strong></div>
@@ -85,23 +85,23 @@
         methods: {
             addPost: function () {
                 this.axios.post('addPost', {postText: this.postText, isn: this.isn}).then(response => {
-                    this.fetch(response.data);
+                    this.fetchAddPost(response.data);
                 });
                 this.postText = '';
             },
 
-            fetch: function (response) {
-                if (response.success) {
+            fetchAddPost: function (response) {
+                // if (response.success) {
                     this.posts.unshift({
-                        isn: response.user_isn,
+                        isn: response.userISN,
                         postText: response.postText,
-                        likes: response.likes,
+                        likes: 0,
                         pinned: response.pinned,
                         fullname: response.fullname,
                         date: response.date,
                         postId: response.id,
                     });
-                }
+                // }
             },
 
             getPosts: function () {

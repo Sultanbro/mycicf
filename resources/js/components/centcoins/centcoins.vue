@@ -6,9 +6,7 @@
                     <a class="color-white-hover color-white" href="javascript:void(0)">
                         Назад
                     </a>
-                    <div class="font-size-1_6">
-                        Сенткоины
-                    </div>
+                    <div class="font-size-1_6">Сенткоины</div>
                     <div>
                         <small>Доступно</small>
                     </div>
@@ -54,29 +52,32 @@
 <script>
     export default {
         name: "centcoins.vue",
+
         data() {
             return {
                 centcoins: '',
             }
         },
+
         props: {
             isn: Number,
         },
+
         mounted() {
             this.getCentcoins();
         },
+
         methods: {
             getCentcoins: function () {
                 this.axios.post('/getCentcoins', {isn: this.isn}).then(response => {
-                    console.log(response.data);
-                    this.fetchResponseData(response.data);
+                    this.fetchCentcoins(response.data);
                 });
             },
-            fetchResponseData(response) {
+
+            fetchCentcoins(response) {
                 this.centcoins = response;
             }
         }
-
     }
 </script>
 

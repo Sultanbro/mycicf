@@ -14,7 +14,7 @@ class AddPinnedToTablePosts extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->tinyInteger('pinned');
+            $table->tinyInteger('pinned')->after('post_text');
         });
     }
 
@@ -25,7 +25,7 @@ class AddPinnedToTablePosts extends Migration
      */
     public function down()
     {
-        Schema::table('table_posts', function (Blueprint $table) {
+        Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('pinned');
         });
     }

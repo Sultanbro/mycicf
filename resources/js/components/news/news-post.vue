@@ -8,8 +8,12 @@
                     </div>
                 </div>
                 <div class="flex-column ml-2">
-                    <span class="color-blue"><strong>{{post.fullname}}</strong></span>
-                    <span class="color-darkgray mt-minus-8px"><small>{{post.date}}</small></span>
+                    <span class="color-blue">
+                        <strong>{{post.fullname}}</strong>
+                    </span>
+                    <span class="color-darkgray mt-minus-8px">
+                        <small>{{post.date}}</small>
+                    </span>
                 </div>
                 <div class="ml-auto">
                     <button type="button"
@@ -44,13 +48,13 @@
         </div>
         <div class="flex-column bg-white pb-2">
             <div class="pl-4 pr-4 text-ellipsis input-edit">
-                    <textarea type="text"
-                              v-model="post.postText"
-                              v-bind:class="{editText: editMode}"
-                              :disabled="!editMode"
-                              data-toggle="modal"
-                              data-target="#exampleModal"
-                              class="custom-input bg-white w-100"></textarea>
+                <input type="text"
+                       v-model="post.postText"
+                       v-bind:class="{editText: editMode}"
+                       :disabled="!editMode"
+                       data-toggle="modal"
+                       data-target="#exampleModal"
+                       class="custom-input bg-white w-100" />
             </div>
         </div>
         <hr class="mb-0 mt-0">
@@ -63,21 +67,20 @@
                         @click="likePost">
                         <i class="far fa-thumbs-up color-red"></i>
                         {{post.likes}}
-                        <span
-                            class="color-black"
-                            v-bind:class="{liked: post.isLiked === 1}">Нравится</span>
+                        <span class="color-black"
+                              v-bind:class="{liked: post.isLiked === 1}">Нравится</span>
                     </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
                         <i class="far fa-comment color-red"></i>
                         <span class="color-black">Комментарий</span>
                     </button>
-                    <transition name="fade">
+<!--                    <transition name="fade">-->
 <!--                        <button @click="saveEdited"-->
-<!--                                v-if="post.postText != this.oldText && post.postText.length > 0 && this.edited"-->
+<!--                                v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"-->
 <!--                                type='button'-->
 <!--                                class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>-->
-                    </transition>
+<!--                    </transition>-->
                 </div>
             </div>
         </div>
@@ -135,7 +138,7 @@
             },
 
             fetchLiked: function (response) {
-                if(response.success === 1) {
+                if(response.success === true) {
                     this.post.isLiked = 1;
                     this.post.likes++;
                 }
@@ -152,10 +155,10 @@
                     if(this.post.postText === '') {
                         this.post.postText = this.oldText;
                     }
-                    // if(this.post.postText !== this.oldText) {
-                    //     this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
-                    //     })
-                    // }
+                    if(this.post.postText !== this.oldText) {
+                        this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                        })
+                    }
                 }
                 else {
                     this.editMode = true;
@@ -172,8 +175,6 @@
             fetchDisabled: function (response) {
                 this.edited = !this.edited;
             }
-
-
 
         }
     }
@@ -231,10 +232,6 @@
     .liked {
         color: red;
     }
-
-    /*.editText + .custom-input {*/
-    /*    border: 1px solid red;*/
-    /*}*/
 
 
     .editButton >  .fa-pen {
