@@ -26,7 +26,7 @@ ul{
 	min-width: 46%;
 }
 .color-blue{
-	color: #4267b2;	
+	color: #4267b2;
 }
 .font-size-1_2{
 	font-size: 1.2rem;
@@ -51,10 +51,10 @@ ul{
 	color: black;
 }
 .color-black-hover{
-	color: black;	
+	color: black;
 }
 .color-black-hover:hover{
-	color: black;	
+	color: black;
 }
 .blocks-borderRad-top{
 	border-radius: 16px 16px 0 0;
@@ -63,10 +63,10 @@ ul{
 	border-radius: 0 0 16px 16px;
 }
 .blocks-small-borderRad-top{
-	border-radius: 4px 4px 0 0;	
+	border-radius: 4px 4px 0 0;
 }
 .blocks-small-borderRad-bot{
-	border-radius: 0 0 4px 4px;	
+	border-radius: 0 0 4px 4px;
 }
 .blocks-small-borderRad{
 	border-radius: 4px;
@@ -176,7 +176,7 @@ ul{
 	border-radius: 16px 16px 0 0;
 }
 .news-contains-bottom{
-	border-radius: 0 0 16px 16px;	
+	border-radius: 0 0 16px 16px;
 }
 .textarea{
 	resize: none;
@@ -431,7 +431,7 @@ ul{
 /*----------Specifications----------*/
 *, *::before, *::after {
     box-sizing: border-box;
-} 
+}
 
 body {
     font-family: 'Roboto Condensed', sans-serif;
@@ -529,12 +529,12 @@ body {
 
 .fa-facebook-square:hover {
     color: #3B5998;
-    transition: 0.4 ease;
+    transition: 0.4s ease;
 }
 
 .fa-youtube-play:hover {
     color: #FF0000;
-    transition: 0.4 ease;
+    transition: 0.4s ease;
 }
 
 /*----------Content's Second Column----------*/

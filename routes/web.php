@@ -65,4 +65,22 @@ Route::get('/logout', function (){
     return redirect(route('index'));
 });
 
+Route::get('/centcoins', 'CentcoinsController@getView');
 
+Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+
+Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+
+Route::post('/addPost', 'NewsController@addPost');
+
+Route::get('/news', 'NewsController@getView');
+
+Route::post('/getPosts', 'NewsController@getPosts');
+
+Route::post('/deletePost', 'NewsController@deletePost');
+Route::post('/setPinned', 'NewsController@setPinned');
+Route::post('/unsetPinned', 'NewsController@unsetPinned');
+
+Route::post('/likePost', 'NewsController@likePost');
+
+Route::post('/editPost', 'NewsController@editPost');

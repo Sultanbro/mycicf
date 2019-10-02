@@ -16,6 +16,16 @@ Vue.component('simple-info', require('./components/employee/simple-info.vue').de
 
 Vue.component('info', require('./components/employee/info.vue').default);
 
+Vue.component('centcoins', require('./components/centcoins/centcoins.vue').default);
+
+Vue.component('operations-history', require('./components/centcoins/operations-history.vue').default);
+
+Vue.component('post', require('./components/news/post.vue').default);
+
+Vue.component('news-post', require('./components/news/news-post.vue').default);
+
+Vue.component('post-edit-modal', require('./components/news/PostEditModal.vue').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);

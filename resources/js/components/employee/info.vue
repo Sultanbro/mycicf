@@ -197,6 +197,9 @@
                 options: null,
             }
         },
+        props : {
+            isn: Number,
+        },
         mounted: function(){
             this.getOptions();
             this.getTables();

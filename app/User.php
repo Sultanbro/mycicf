@@ -73,4 +73,9 @@ class User extends Authenticatable
         $User->save();
         return true;
     }
+
+    public function getFullName($user_isn){
+        $model = Branch::where('kias_id', $user_isn)->first();
+        return $model === null ? 'DELETED' : $model->fullname;
+    }
 }

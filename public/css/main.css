@@ -13,12 +13,12 @@ body {
     max-width: 85% !important;
     margin: 0 auto !important;
     padding: 0 !important;
+    height: 50%;
 }
 
 /*----------Main-*/
 .main {
     min-height: 100vh;
-    /*min-height: 600px;*/
     background: url('../images/background.png') no-repeat center;
     background-size: cover;
     position: relative;
@@ -27,8 +27,9 @@ body {
 
 /*----------Header-*/
 .header {
-    padding-top: 70px;
-    /* border: 1px solid white; */
+    /*padding-top: 70px;*/
+    padding-top: 4.375em;
+    /*padding-top: 4%;*/
 }
 
 .header__logo {
@@ -39,7 +40,9 @@ body {
 /*----------Content's first-column-*/
 /*--Title block-*/
 .title {
-    padding-top: 200px;
+    padding-top: 5em;
+    /*padding-top: 26%;*/
+    /*padding-top: 200px;*/
 }
 
 .title__welcome, .title__main {
@@ -59,7 +62,9 @@ body {
 /*--Social network's block-*/
 .social-network {
     text-align: center;
-    margin-top: 60px;
+    /*margin-top: 60px;*/
+    margin-top: 3.75em;
+    /*margin-top: 8%;*/
 }
 
 .social-network__title {
@@ -107,7 +112,8 @@ body {
 
 /*--Line-*/
 .line {
-    height: 500px;
+    /*height: 500px;*/
+    height: 100%;
     width: 2px;
     background-color: #FFF;
     position: absolute;
@@ -120,15 +126,21 @@ body {
 /*----------Content's second column-*/
 /*--User's image block*/
 .users {
-    margin-top: 40px;
+    /*margin-top: 40px;*/
+    margin-top: 2.5em;
+    /*margin-top: 6%;*/
+    /*margin-top: calc(100vh - 110%);*/
 }
+
 .users__image {
     height: 10em;
 }
 
 /*--Login form block*/
 .input-container {
-    margin-top: 30px;
+    /*margin-top: 30px;*/
+    margin-top: 1.88em;
+    /*margin-top: 2%;*/
 }
 
 .input-container__background {
@@ -214,7 +226,9 @@ body {
 }
 
 /*----------Footer-*/
+
 .footer-title {
+    /*min-height: 80px;*/
     margin-top: 14em;
 }
 
@@ -224,12 +238,63 @@ body {
     color: #FFF;
 }
 
+
+
 /* ------------Nedia queries --------*/
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1000px) {
+
+    .main {
+        margin: 0 auto;
+        /*height: 100%;*/
+        /*overflow: hidden;*/
+        display: flex;
+        align-items: center;
+    }
+
+    .header {
+        margin-top: 0;
+        padding-top: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .column-1 {
+        display: none;
+    }
+
+    .line {
+        display: none;
+    }
+
+    .users__image {
+        display: none;
+    }
+
+    .row-3 {
+        display: none;
+    }
+}
+
+
+@media screen and (min-width: 970px) and (max-width: 1280px){
     .line {
         display: none;
     }
 }
+
+@media screen and (max-height: 1440px){
+    .main {
+        margin: 0 auto;
+    }
+}
+
+/*@media screen and (min-width: 1280px){*/
+/*    .main {*/
+/*        display: flex;*/
+/*        align-items: center;*/
+/*    }*/
+/*}*/
+
 
 
 
