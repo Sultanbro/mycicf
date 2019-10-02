@@ -24,6 +24,9 @@ class CreateUsersTable extends Migration
             $table->string('session_id', '100');
             $table->integer('dept_isn');
             $table->timestamps();
+
+            $table->index('ISN');
+            $table->index('username');
         });
     }
 
@@ -34,6 +37,11 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::table('users', function (Blueprint $table){
+            $table->dropIndex('ISN');
+            $table->dropIndex('username');
+        });
+
         Schema::dropIfExists('users');
     }
 }
