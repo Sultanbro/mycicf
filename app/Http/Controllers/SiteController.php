@@ -33,7 +33,7 @@ class SiteController extends Controller
         if($response->error)
         {
             $success = false;
-            $error = 'Неверный логин или пароль';
+            $error = (string)$response->error->text;
         }
         if($success && $response->UserDetails)
         {
@@ -59,14 +59,10 @@ class SiteController extends Controller
             catch (\Exception $ex)
             {
                 $success = false;
-                $error = $ex->getMessage();
+                $error = "Ошибка при сохранении пользователя : ".$ex->getMessage();
             }
         }
-        else
-        {
-            $success = false;
-            $error = 'Undefined';
-        }
+
         $response = array(
             'success' => $success,
             'error' => $error,

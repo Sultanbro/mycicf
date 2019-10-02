@@ -98,7 +98,7 @@ class CoordinationController extends Controller
                     'ISN' => (string)$row->ISN,
                     'empl' => (string)$row->empl,
                     'id' => (string)$row->id,
-                    'docdate' => (string)$row->docdate,
+                    'docdate' => (string)$row->period,
                     'days' => (string)$row->cnt
                 ]);
             }

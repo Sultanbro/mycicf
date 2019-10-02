@@ -2,7 +2,9 @@
     <div class="main_margin width100 flex-row vertical-middle">
         <div class="col-md-2 vertical-middle">
             <div class="header-img-width">
-                <img src="{{asset('images/new-white-logo.png')}}" class="image">
+                <a href="{{route('index')}}">
+                    <img src="{{asset('images/new-white-logo.png')}}" class="image">
+                </a>
             </div>
         </div>
         <div class="col-md-6">
@@ -22,7 +24,7 @@
                         О компании
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a href="{{route('admin/documentation')}}">
                     <li>
                         Библиотека
                     </li>
