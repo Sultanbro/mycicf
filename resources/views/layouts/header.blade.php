@@ -1,8 +1,8 @@
 <header class="flex-row header">
-    <div class="main_margin width100 flex-row">
+    <div class="main_margin width100 flex-row vertical-middle">
         <div class="col-md-2 vertical-middle">
-            <div>
-                <img src="{{asset('images/white-logo.png')}}" class="image">
+            <div class="header-img-width">
+                <img src="{{asset('images/new-white-logo.png')}}" class="image">
             </div>
         </div>
         <div class="col-md-6">
@@ -35,8 +35,8 @@
             </ul>
         </div>
         <div class="col-md-4">
-            <div class="col-md-5 mt-1 pl-0">
-                <a href="javascript:void(0)" class="flex-row header-avatar-contain text-decoration pt-1 pb-1">
+            <div class="flex-column col-md-5 mt-1 mb-1 pl-0 pr-0">
+                <a href="javascript:void(0)" class="flex-row header-avatar-contain header-menu-hover text-decoration pt-1 pb-1">
                     <div href="javascript:void(0)" class="small-avatar-circle-width ml-2">
                         <template
                             :image="image">
@@ -50,6 +50,19 @@
                         <span class="ml-2"><i class="fas fa-caret-down"></i></span>
                     </div>
                 </a>
+                <div class="header-section zi-2">
+                    <section class="pointer">
+                        <option>
+                            Раз
+                        </option>
+                        <option>
+                            Два
+                        </option>
+                        <option>
+                            Три
+                        </option>
+                    </section>
+                </div>
             </div>
         </div>
     </div>

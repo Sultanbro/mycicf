@@ -216,7 +216,6 @@ class SiteController extends Controller
         }
         $image = 0;
         if(isset($response->images->row[0]->refisn)){
-//            dd($response->images);
             $image = $kias->getAttachmentData($response->images->row[0]->refisn,$response->images->row[0]->isn, 'J');
             $image = (string)$image->FILEDATA;
         }

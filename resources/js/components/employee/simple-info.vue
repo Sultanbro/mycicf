@@ -4,13 +4,13 @@
             <img src="/images/avatar.png" class="image" v-if="image.encoded === 0">
             <img :src="'data:image/jpeg;base64,' + image.encoded" v-else>
         </div>
-        <div class="flex-row bg-color-blue color-white">
-            <div class="left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">
+        <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
+            <div class="pointer left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">
                 <span>{{fullname}}</span>
-                <span><i class="fas fa-chevron-up" data-toggle="collapse" href="#multiCollapseExample1"></i></span>
+                <span class="ml-2 vertical-middle"><i class="fas " :class="caretClass" data-toggle="collapse" href="#multiCollapseExample1"></i></span>
             </div>
         </div>
-        <div class="ml-3 mr-3 mt-2" >
+        <div class="ml-3 mr-3 mt-2 collapse in show" id="persons-data">
             <div class="left-menu-fonts">
                 <span>{{duty}}</span>
             </div>
@@ -36,6 +36,7 @@
         name: "simple-info",
         data() {
             return {
+                caretClass: 'fa-chevron-up',
                 fullname: '',
                 duty: '',
                 birthday: '',
@@ -68,6 +69,9 @@
                 }else{
                     alert(response.error);
                 }
+            },
+            reverseCaret: function () {
+                this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
             },
         },
 
