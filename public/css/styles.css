@@ -337,10 +337,11 @@ ul{
 	border-right: 1px solid #b6b6b6;
 	border-left: 1px solid #b6b6b6;
 }
-
 /*Стили страницы входа*/
 .image{
-	width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 50%;
 }
 .header-img-width{
 	width: 6rem;
@@ -627,6 +628,30 @@ body {
 
 }
 
+.btn.aqua-gradient {
+	transition: .5s ease;
+	color: #fff;
+}
+
+.btn.btn-sm {
+	padding: .5rem 1.6rem;
+	font-size: .64rem;
+}
+
+.aqua-gradient {
+	background: linear-gradient(40deg,#2096ff,#05ffa3)!important;
+}
+
+.btn-group-sm>.btn, .btn-sm {
+	padding: .25rem .5rem;
+	font-size: .875rem;
+	line-height: 1.5;
+	border-radius: .2rem;
+}
+
+.btn-rounded {
+	border-radius: 10em;
+}
 
 
 

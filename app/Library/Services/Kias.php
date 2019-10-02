@@ -192,4 +192,12 @@ class Kias implements KiasServiceInterface
             'PICTTYPE' => $pictType
         ]);
     }
+
+    public function myCoordinationList($ISN){
+        return $this->request('User_CicMyCoordinationList', [
+            'DateBeg' => '01.01.1970',
+            'DateEnd' => date('d.m.Y', strtotime('tomorrow')),
+            'EmplISN' => $ISN,
+        ]);
+    }
 }

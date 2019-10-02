@@ -15,11 +15,22 @@ Route::get('/', 'SiteController@getIndex');
 Route::post('/login', 'SiteController@postLogin');
 
 Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
-    Route::post('/emplInfo', 'SiteController@postEmplInfo');
     Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
     Route::post('/getBranchData', 'SiteController@postBranchData');
 
-    Route::get('dossier', 'SiteController@dossier')->middleware(['checkAuth', 'checkSession']);
+    //DOSSIER
+    Route::post('/emplInfo', 'SiteController@postEmplInfo');
+    Route::get('/dossier', 'SiteController@dossier');
+
+    //COORIDNATION
+    Route::get('/coordination', 'CoordinationController@index');
+    Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+
+    //DOCUMENTATION
+    Route::get('/documentation/', 'DocumentationController@index');
+    Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
+    Route::post('/documentation/save', 'DocumentationController@save');
+    Route::post('/documentation/search', 'DocumentationController@search');
 });
 
 Route::get('/logout', function (){
@@ -27,4 +38,4 @@ Route::get('/logout', function (){
     return redirect('/');
 });
 
-Route::get('/documentation/{url}', 'SiteController@getUrl');
+
