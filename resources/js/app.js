@@ -26,6 +26,9 @@ Vue.component('news-post', require('./components/news/news-post.vue').default);
 
 Vue.component('post-edit-modal', require('./components/news/PostEditModal.vue').default);
 
+Vue.component('coordination', require('./components/employee/coordination.vue').default);
+
+Vue.component('search', require('./components/documentation/search.vue').default);
 
 window.onload = function(){
     var app = new Vue({
@@ -39,15 +42,27 @@ window.onload = function(){
             },
         },
         mounted: function () {
-            this.getOptions();
+            // this.getOptions();
         },
         methods: {
             getOptions: function () {
-                this.axios.post('/getBranchData', {}).then((response) => {
-                    this.options = response.data.result;
-                    this.value = response.data.value;
-                })
+                // this.axios.post('/getBranchData', {}).then((response) => {
+                //     this.options = response.data.result;
+                //     this.value = response.data.value;
+                // })
             }
         },
+        watch: {
+            multiple(newValue) {
+                if (newValue) {
+                    this.value = this.value ? [this.value] : []
+                } else {
+                    this.value = this.value[0]
+                }
+            },
+        },
+        component: {
+
+        }
     });
 };

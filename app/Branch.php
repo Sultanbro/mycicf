@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Branch
- * @param string $fullname
- * @param int $kias_id
- * @param int $kias_parent_id
- * @param int $has_child
- * @param int $verified
+ * @property $fullname string
+ * @property $kias_id int
+ * @property $kias_parent_id int
+ * @property $has_child int
+ * @property $verified int
  * @package App
  */
 class Branch extends Model
@@ -20,4 +20,13 @@ class Branch extends Model
     public function childs() {
         return $this->hasMany('App\Branch','kias_parent_id','kias_id') ;
     }
+
+    protected $attributes = [
+        'fullname' => null,
+        'kias_id' => null,
+        'kias_parent_id' => null,
+        'has_child' => 0,
+        'verified' => 0,
+    ];
+
 }

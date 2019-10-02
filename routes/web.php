@@ -11,20 +11,58 @@
 |
 */
 
-Route::get('/', 'SiteController@getIndex');
+Route::get('/', 'SiteController@getIndex')->name('index');
 Route::post('/login', 'SiteController@postLogin');
 
 Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
-    Route::post('/emplInfo', 'SiteController@postEmplInfo');
     Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
     Route::post('/getBranchData', 'SiteController@postBranchData');
 
-    Route::get('dossier', 'SiteController@dossier')->middleware(['checkAuth', 'checkSession']);
+    //DOSSIER
+    Route::post('/emplInfo', 'SiteController@postEmplInfo');
+    Route::get('/dossier', 'SiteController@dossier')->name('dossier');
+
+    //COORIDNATION
+    Route::get('/coordination', 'CoordinationController@index')->name('coordination');
+    Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+
+    //DOCUMENTATION
+    Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
+    Route::post('/documentation/search', 'DocumentationController@search');
+    //DOCUMENTATION ADMIN MIDDLEWARE
+    Route::get('/documentation/', 'DocumentationController@index')->name('admin/documentation');
+    Route::post('/documentation/save', 'DocumentationController@save');
+
+    //PARSE
+    Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+    Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+    Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+    Route::get('parse', function (){
+        return redirect(route('parse/company'));
+    });
+    Route::group(['middleware' => 'parseAdmin'], function () {
+        Route::get('parse/company_name', 'ParseController@company');
+        Route::post('parse/add_name', 'ParseController@addname');
+
+        Route::get('parse/add', 'ParseController@index');
+        Route::post('parse/upload', 'ParseController@upload');
+
+        Route::get('parse/add/company', 'ParseController@getAddCompany');
+        Route::post('parse/add/company', 'ParseController@postAddCompany');
+        Route::get('parse/add/product', 'ParseController@getAddProduct');
+        Route::post('parse/add/product', 'ParseController@postAddProduct');
+        Route::get('parse/edit/company', 'ParseController@getEditCompany');
+        Route::post('parse/edit/company', 'ParseController@postEditCompany');
+        Route::get('parse/edit/product', 'ParseController@getEditProduct');
+        Route::post('parse/edit/product', 'ParseController@postEditProduct');
+        Route::get('parse/load/data', 'ParseController@getLoadedData');
+        Route::post('parse/delete/data', 'ParseController@postDeleteData');
+    });
 });
 
 Route::get('/logout', function (){
     Auth::logout();
-    return redirect('/');
+    return redirect(route('index'));
 });
 
 Route::get('/centcoins', 'CentcoinsController@getView');

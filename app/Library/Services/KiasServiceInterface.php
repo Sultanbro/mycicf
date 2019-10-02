@@ -51,4 +51,11 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getAttachmentData($refisn, $isn, $pictType);
+
+    /**
+     * Получить список всех листов согласования по ISN
+     * @param $ISN
+     * @return mixed
+     */
+    public function myCoordinationList($ISN);
 }

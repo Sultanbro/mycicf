@@ -8,6 +8,18 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class User
+ * @package App
+ * @property integer $ISN
+ * @property string $username
+ * @property string $password_hash
+ * @property integer $level
+ * @property string $short_name
+ * @property string $full_name
+ * @property string $session_id
+ * @property integer $dept_isn
+ */
 class User extends Authenticatable
 {
     use Notifiable;

@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkAuth' => \App\Http\Middleware\checkAuth::class,
         'checkSession' => \App\Http\Middleware\checkSession::class,
+        'parseAdmin' => \App\Http\Middleware\ParseAdmin::class,
     ];
 
     /**
@@ -79,5 +80,8 @@ class Kernel extends HttpKernel
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
+        \App\Http\Middleware\checkAuth::class,
+        \App\Http\Middleware\checkSession::class,
+        \App\Http\Middleware\ParseAdmin::class,
     ];
 }

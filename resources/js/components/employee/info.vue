@@ -201,8 +201,11 @@
             isn: Number,
         },
         mounted: function(){
-            this.getTables();
             this.getOptions();
+            this.getTables();
+        },
+        props: {
+            isn: Number,
         },
         methods: {
             getTables: function(){
@@ -213,7 +216,6 @@
             getOptions: function () {
                 this.axios.post('/getBranchData', {}).then((response) => {
                     this.options = response.data.result;
-                    this.isn = response.data.value;
                 })
             },
             fetchResponse: function(response){
