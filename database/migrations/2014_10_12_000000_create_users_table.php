@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('short_name', '50');
             $table->string('full_name', '50');
             $table->string('session_id', '100');
+            $table->integer('dept_isn');
             $table->timestamps();
 
             $table->index('ISN');

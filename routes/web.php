@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'SiteController@getIndex');
+Route::get('/', 'SiteController@getIndex')->name('index');
 Route::post('/login', 'SiteController@postLogin');
 
 Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
@@ -20,17 +20,18 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
 
     //DOSSIER
     Route::post('/emplInfo', 'SiteController@postEmplInfo');
-    Route::get('/dossier', 'SiteController@dossier');
+    Route::get('/dossier', 'SiteController@dossier')->name('dossier');
 
     //COORIDNATION
-    Route::get('/coordination', 'CoordinationController@index');
+    Route::get('/coordination', 'CoordinationController@index')->name('coordination');
     Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
 
     //DOCUMENTATION
-    Route::get('/documentation/', 'DocumentationController@index');
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
-    Route::post('/documentation/save', 'DocumentationController@save');
     Route::post('/documentation/search', 'DocumentationController@search');
+    //DOCUMENTATION ADMIN MIDDLEWARE
+    Route::get('/documentation/', 'DocumentationController@index')->name('admin/documentation');
+    Route::post('/documentation/save', 'DocumentationController@save');
 
     //PARSE
     Route::get('parse/company', 'ParseController@getCompanyTopSum');
@@ -63,3 +64,5 @@ Route::get('/logout', function (){
     Auth::logout();
     return redirect('/');
 });
+
+

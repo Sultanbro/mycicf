@@ -17,7 +17,7 @@ class CreateUploadDocsTable extends Migration
         Schema::create('upload_docs', function (Blueprint $table) {
             $table->engine = 'MyISAM';
             $table->bigIncrements('id');
-            $table->string('title');
+            $table->string('title', 200);
             $table->longText('encoded_text');
             $table->longText('only_text');
             $table->string('url', 55)->unique();

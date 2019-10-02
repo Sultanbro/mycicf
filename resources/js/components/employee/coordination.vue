@@ -104,8 +104,8 @@
                         <tr v-for="(info, index) in AD" :key="info.ISN">
                             <td scope="col">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
-                            <td scope="col" class="thead-border">{{info.days}}</td>
-                            <td scope="col">{{info.docdate}}</td>
+                            <td scope="col" class="thead-border">{{info.docdate}}</td>
+                            <td scope="col">{{info.days}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -157,11 +157,11 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AC" :key="info.isn">
-                            <th scope="col">{{info.id}}</th>
-                            <th scope="col" class="thead-border">{{info.type}}</th>
-                            <th scope="col" class="thead-border">{{info.curator}}</th>
-                            <th scope="col" class="thead-border">{{info.DeptName}}</th>
-                            <th scope="col">{{info.docdate}}</th>
+                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" class="thead-border">{{info.type}}</td>
+                            <td scope="col" class="thead-border">{{info.curator}}</td>
+                            <td scope="col" class="thead-border">{{info.DeptName}}</td>
+                            <td scope="col">{{info.docdate}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -186,11 +186,11 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SP" :key="info.isn">
-                            <th scope="col">{{info.id}}</th>
-                            <th scope="col" class="thead-border">{{info.type}}</th>
-                            <th scope="col" class="thead-border">{{info.curator}}</th>
-                            <th scope="col" class="thead-border">{{info.DeptName}}</th>
-                            <th scope="col">{{info.docdate}}</th>
+                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" class="thead-border">{{info.type}}</td>
+                            <td scope="col" class="thead-border">{{info.curator}}</td>
+                            <td scope="col" class="thead-border">{{info.DeptName}}</td>
+                            <td scope="col">{{info.docdate}}</td>
                         </tr>
                         </tbody>
                     </table>

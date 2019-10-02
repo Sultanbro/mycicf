@@ -239,6 +239,25 @@ ul{
 .create-publication{
 	background: #d9d9d9;
 }
+.zi-1{
+	z-index: 1;
+}
+.zi-2{
+	z-index: 2;
+}
+.zi-3{
+	z-index: 3;
+}
+.zi-4{
+	z-index: 4;
+}
+.zi-5{
+	z-index: 5;
+}
+.zi-max{
+	z-index: 10;
+}
+
 .flex-column{
 	display: flex;
 	flex-flow: column;
@@ -320,9 +339,32 @@ ul{
 }
 /*Стили страницы входа*/
 .image{
-	padding-top: 5px;
-	padding-bottom: 5px;
-	width: 50%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+}
+.header-img-width{
+	width: 6rem;
+}
+.header-section{
+	display: none;
+	position: absolute;
+	margin-top: 3rem;
+	width: 100%;
+	border: 1px solid black;
+}
+.header-section section{
+	width: 100%;
+}
+.header-section option{
+	background: #4974cc;
+	width: 100%;
+}
+.header-menu-hover:hover + .header-section{
+	display: block;
+}
+.header-section:hover{
+	display: block;
 }
 .white-logo-contain{
 	width: 230px;
@@ -523,11 +565,15 @@ body {
 .show {
     border: none;
     outline: none !important;
-    position: absolute;
+    /*position: absolute;*/
     right: 170px;
     bottom: 6.5px;
     display: inline;
     background: none;
+}
+
+.right-sidebar-blocks{
+	word-break: break-word;
 }
 
 .fa-eye-login {

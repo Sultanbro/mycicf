@@ -32,7 +32,7 @@
 
             <div class="col-md-10" id="coordination">
                 <coordination
-                    :isn="1445771"></coordination>
+                    :isn="{{ Auth::user()->ISN }}"></coordination>
             </div>
 
             {{--RIGHT SIDE BAR GOES HERE--}}

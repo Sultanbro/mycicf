@@ -10,13 +10,13 @@
     </div>
     <div class="mb-5">
         <ul class="flex-column mr-3 ml-3">
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('dossier')}}">
                 <li>
                     <i class="far fa-clipboard"></i>
                     <span>Досье</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('coordination')}}">
                 <li>
                     <i class="far fa-thumbs-up"></i>
                     <span>Согласование</span>
