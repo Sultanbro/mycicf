@@ -34,11 +34,11 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/documentation/save', 'DocumentationController@save');
 
     //PARSE
-    Route::get('parse/company', 'ParseController@getCompanyTopSum');
-    Route::get('parse/product', 'ParseController@getClassTopSum');
-    Route::get('parse/finance', 'ParseController@getFinancialIndicators');
+    Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+    Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+    Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
     Route::get('parse', function (){
-        return redirect('/parse/company');
+        return redirect(route('parse/company'));
     });
     Route::group(['middleware' => 'parseAdmin'], function () {
         Route::get('parse/company_name', 'ParseController@company');
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
 
 Route::get('/logout', function (){
     Auth::logout();
-    return redirect('/');
+    return redirect(route('index'));
 });
 
 

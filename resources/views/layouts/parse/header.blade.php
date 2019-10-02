@@ -15,8 +15,8 @@
                                     <span></span>
                                 </div>
                                 <div class="menu__links">
-                                    <a class="menu__links-item" href="/parse">Сборы</a>
-                                    <a class="menu__links-item" href="/parse/finance">Показатели</a>
+                                    <a class="menu__links-item" href="{{route('parse/company')}}">Сборы</a>
+                                    <a class="menu__links-item" href="{{route('parse/finance')}}">Показатели</a>
                                     <a class="menu__links-item" href="javascript:void(0)">Конкуренты</a>
                                     <div>
                                         <div class="input-group-btn media_input">
@@ -31,8 +31,8 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="menuinvise"><a href="/parse">Сборы</a></li>
-                        <li class="menuinvise"><a href="/parse/finance">Показатели</a></li>
+                        <li class="menuinvise"><a href="{{route('parse/company')}}">Сборы</a></li>
+                        <li class="menuinvise"><a href="{{route('parse/finance')}}">Показатели</a></li>
                         <li class="menuinvise"><a href="javascript:void(0)">Конкуренты</a></li>
                     </ul>
                 </div>
