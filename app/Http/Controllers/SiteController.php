@@ -50,6 +50,7 @@ class SiteController extends Controller
             $user->short_name = $userDetails->ShortName;
             $user->full_name = $userDetails->FullName;
             $user->session_id = $response->Sid;
+            $user->dept_isn = $userDetails->DeptISN;
             try
             {
                 $user->save();
