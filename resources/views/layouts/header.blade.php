@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                <a href="javascript:void(0)">
+                <a href="{{route('parse')}}">
                     <li>
                         Parse
                     </li>

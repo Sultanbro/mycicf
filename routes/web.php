@@ -39,7 +39,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
     Route::get('parse', function (){
         return redirect(route('parse/company'));
-    });
+    })->name('parse');
     Route::group(['middleware' => 'parseAdmin'], function () {
         Route::get('parse/company_name', 'ParseController@company');
         Route::post('parse/add_name', 'ParseController@addname');
@@ -58,29 +58,23 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('parse/load/data', 'ParseController@getLoadedData');
         Route::post('parse/delete/data', 'ParseController@postDeleteData');
     });
+
+    Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+    Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+    Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+
+
+    Route::get('/news', 'NewsController@getView')->name('news');
+    Route::post('/addPost', 'NewsController@addPost');
+    Route::post('/getPosts', 'NewsController@getPosts');
+    Route::post('/deletePost', 'NewsController@deletePost');
+    Route::post('/setPinned', 'NewsController@setPinned');
+    Route::post('/unsetPinned', 'NewsController@unsetPinned');
+    Route::post('/likePost', 'NewsController@likePost');
+    Route::post('/editPost', 'NewsController@editPost');
+
+    Route::get('/logout', function (){
+        Auth::logout();
+        return redirect(route('index'));
+    });
 });
-
-Route::get('/logout', function (){
-    Auth::logout();
-    return redirect(route('index'));
-});
-
-Route::get('/centcoins', 'CentcoinsController@getView');
-
-Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
-
-Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-
-Route::post('/addPost', 'NewsController@addPost');
-
-Route::get('/news', 'NewsController@getView');
-
-Route::post('/getPosts', 'NewsController@getPosts');
-
-Route::post('/deletePost', 'NewsController@deletePost');
-Route::post('/setPinned', 'NewsController@setPinned');
-Route::post('/unsetPinned', 'NewsController@unsetPinned');
-
-Route::post('/likePost', 'NewsController@likePost');
-
-Route::post('/editPost', 'NewsController@editPost');
