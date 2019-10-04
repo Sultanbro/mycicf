@@ -229,7 +229,6 @@
                 }else{
                     alert(response.error);
                 }
-                console.log(response);
             }
         },
 

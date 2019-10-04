@@ -264,7 +264,6 @@ use App\Http\Controllers\ParseController;
             '&companyId='+id+'&disc='+disc;
     }
     function getCompaniesByClass(id) {
-        console.log(id);
         var dateType = $('#period').val();
         var firstYear = $('#firstYear').val();
         var secondYear = $('#secondYear').val();

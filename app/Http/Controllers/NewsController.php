@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Centcoin;
 use App\CentcoinHistory;
 use App\Comment;
+use App\Events\NewPost;
 use App\Like;
 use App\Post;
 use App\User;
@@ -52,7 +53,7 @@ class NewsController extends Controller
             'pinned' => $new_post->pinned,
             'fullname' => $full_name,
             'id' => $new_post->id,
-            'date' => date("d.m.Y h:m", strtotime($new_post->created_at)),
+            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
         ];
 
 //        $result = [
@@ -60,7 +61,7 @@ class NewsController extends Controller
 //            'error' => $error,
 //            'post' => $response,
 //        ];
-
+        broadcast(new NewPost($response));
         return $response;
     }
 
@@ -89,7 +90,7 @@ class NewsController extends Controller
                 'likes' => (new Like())->getLikes($item->id),
                 'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
 //                'comments' => (new Comment())->getComment($item->id),
-                'date' => date('d.m.Y h:m', strtotime($item->created_at))
+                'date' => date('d.m.Y H:i', strtotime($item->created_at))
             ]);
         }
 

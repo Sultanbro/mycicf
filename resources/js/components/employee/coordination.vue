@@ -260,7 +260,6 @@
                 })
             },
             fetchResponse: function(response){
-                console.log(response);
                 if(response.success){
                     this.AC = response.result.AC;
                     this.SP = response.result.SP;
@@ -273,7 +272,6 @@
                 }else{
                     alert(response.error);
                 }
-                console.log(response);
             }
         },
 

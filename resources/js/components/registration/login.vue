@@ -13,7 +13,7 @@
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-lock fa-input" aria-hidden="true"></i>
-                    <input :type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
+                    <input :type="passwordType" v-model="password" @keydown.enter="login" class="input-field" placeholder="Пароль">
                     <button type="button" class="show-btn" @click="checkType">
                         <i :class="className" aria-hidden="true" id="icon"></i>
                     </button>

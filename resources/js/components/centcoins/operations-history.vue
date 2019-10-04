@@ -67,7 +67,6 @@
         methods: {
             getOperations: function () {
                 this.axios.post('/getOperationsList', {dateBeg: this.dateBeg, dateEnd: this.dateEnd}).then((response) => {
-                    console.log(response.data);
                     this.fetchOperations(response.data);
                 });
             },
