@@ -34,7 +34,7 @@
                     <span>Обучение</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
                 <li>
                     <i class="fab fa-bitcoin"></i>
                     <span>Сенткоины</span>

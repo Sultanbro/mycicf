@@ -79,6 +79,10 @@
         },
 
         mounted: function(){
+            Echo.private(`post`)
+            .listen('NewPost', (e) => {
+                this.handleIncoming(e.post);
+            });
             this.getPosts();
         },
 
@@ -132,12 +136,12 @@
             },
 
             deleteFromPost: function (index) {
-                console.log(index);
                 this.posts.splice(index, 1);
             },
 
             unsetAllPinned: function (index) {
                 var vm = this;
+                this.pinnedPost = null;
                 this.posts.forEach(function (post) {
                     post.pinned = 0;
                 });
@@ -156,6 +160,12 @@
                     });
                 }
             },
+
+            handleIncoming (post) {
+                if(post.userISN !== this.isn){
+                    this.posts.unshift(post)
+                }
+            }
 
         },
 
