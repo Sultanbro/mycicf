@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    const NEW_POST = 'new';
+    const EDITED_POST = 'edit';
+    const LIKED_POST = 'like';
+    const PINNED_POST = 'pinned';
+    const DELETED_POST = 'deleted';
+    const COMMENDTED_POST = 'commented';
+
     public function setPinned(){
         self::where('pinned', 1)->update([
             'pinned' => 0

@@ -34,10 +34,6 @@ class Kias implements KiasServiceInterface
      */
     public $url;
 
-    /**
-     * @var string ID сессии КИАС
-     */
-    private $_sid;
 
     public function init($session)
     {

@@ -16,6 +16,7 @@ class NewPost implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $post;
+    public $type;
     /**
      * Create a new event instance.
      *
@@ -23,7 +24,8 @@ class NewPost implements ShouldBroadcast
      */
     public function __construct($post)
     {
-        $this->post = $post;
+        $this->post = $post['post'];
+        $this->type = $post['type'];
     }
 
     /**
@@ -38,6 +40,9 @@ class NewPost implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return ["post" => $this->post];
+        return [
+            "post" => $this->post,
+            "type" => $this->type,
+        ];
     }
 }
