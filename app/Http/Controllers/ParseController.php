@@ -1352,6 +1352,7 @@ class ParseController extends Controller
             }
         }
         $class_sum=[];
+        arsort($premium_first);
         foreach ($insurance_classes as $id => $class){
             $first_premium = 0;
             $second_premium = 0;

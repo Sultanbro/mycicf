@@ -193,22 +193,24 @@ use App\Http\Controllers\ParseController;
                                                 <td><span>{{$controller->getPayoutChange($class_sum[$id]['payout_first'], $class_sum[$id]['premium_second'])}}</span></td>
                                                 <td><span>{{$controller->getPayoutChange($class_sum[$id]['payout_second'], $class_sum[$id]['premium_second'])}}</span></td>
                                             </tr>
-                                            @foreach($insuranceClassList[$id] as $product_id)
-                                                <tr>
-                                                    <td><span><a  onclick="getCompaniesByProduct({{$product_id}})">{{$productList[$product_id]}}</a></span></td>
-                                                    <td><span>{{number_format($premium_first[$product_id], 0, '.', ' ')}}</span></td>
-                                                    <td><span>{{number_format($premium_second[$product_id], 0, '.', ' ')}}</span></td>
-                                                    <td><span>{{$controller->getPercentOfMarker($premium_first[$product_id], array_sum($premium_first))}}</span></td>
-                                                    <td><span>{{$controller->getPercentOfMarker($premium_second[$product_id], array_sum($premium_second))}}</span></td>
-                                                    <td><span>{{$controller->getChangedVal($premium_first[$product_id], $premium_second[$product_id])}}</span></td>
-                                                    <td><span>{{number_format($premium_first[$product_id] - $premium_second[$product_id], 0, '.', ' ') }}</span></td>
-                                                    <td><span></span></td>
-                                                    <td><span>{{number_format($payout_first[$product_id], 0, '.', ' ')}}</span></td>
-                                                    <td><span>{{number_format($payout_second[$product_id], 0, '.', ' ')}}</span></td>
-                                                    <td><span>{{$controller->getChangedVal($payout_first[$product_id], $payout_second[$product_id])}}</span></td>
-                                                    <td><span>{{$controller->getPayoutChange($payout_first[$product_id], $premium_first[$product_id])}}</span></td>
-                                                    <td><span>{{$controller->getPayoutChange($payout_second[$product_id], $premium_second[$product_id])}}</span></td>
-                                                </tr>
+                                            @foreach($premium_first as $product_id => $value)
+                                                @if(in_array($product_id, $insuranceClassList[$id]))
+                                                    <tr>
+                                                        <td><span><a  onclick="getCompaniesByProduct({{$product_id}})">{{$productList[$product_id]}}</a></span></td>
+                                                        <td><span>{{number_format($premium_first[$product_id], 0, '.', ' ')}}</span></td>
+                                                        <td><span>{{number_format($premium_second[$product_id], 0, '.', ' ')}}</span></td>
+                                                        <td><span>{{$controller->getPercentOfMarker($premium_first[$product_id], array_sum($premium_first))}}</span></td>
+                                                        <td><span>{{$controller->getPercentOfMarker($premium_second[$product_id], array_sum($premium_second))}}</span></td>
+                                                        <td><span>{{$controller->getChangedVal($premium_first[$product_id], $premium_second[$product_id])}}</span></td>
+                                                        <td><span>{{number_format($premium_first[$product_id] - $premium_second[$product_id], 0, '.', ' ') }}</span></td>
+                                                        <td><span></span></td>
+                                                        <td><span>{{number_format($payout_first[$product_id], 0, '.', ' ')}}</span></td>
+                                                        <td><span>{{number_format($payout_second[$product_id], 0, '.', ' ')}}</span></td>
+                                                        <td><span>{{$controller->getChangedVal($payout_first[$product_id], $payout_second[$product_id])}}</span></td>
+                                                        <td><span>{{$controller->getPayoutChange($payout_first[$product_id], $premium_first[$product_id])}}</span></td>
+                                                        <td><span>{{$controller->getPayoutChange($payout_second[$product_id], $premium_second[$product_id])}}</span></td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
                                         @endforeach
                                         <tr>
@@ -262,7 +264,6 @@ use App\Http\Controllers\ParseController;
             '&companyId='+id+'&disc='+disc;
     }
     function getCompaniesByClass(id) {
-        console.log(id);
         var dateType = $('#period').val();
         var firstYear = $('#firstYear').val();
         var secondYear = $('#secondYear').val();

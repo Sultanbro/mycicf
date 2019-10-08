@@ -47,6 +47,7 @@
         },
         props: {
             image: Object,
+            isn: Number,
         },
         mounted: function(){
             this.getTables();

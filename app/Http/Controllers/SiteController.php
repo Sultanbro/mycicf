@@ -199,7 +199,7 @@ class SiteController extends Controller
     {
         $success = true;
         $error = '';
-        $response = $kias->getEmplInfo(Auth::user()->ISN, date('1.m.Y'), date('d.m.Y', strtotime('today')));
+        $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
         if ($response->error)
         {
             $success = false;
