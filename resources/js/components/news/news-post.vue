@@ -46,41 +46,45 @@
 <!--                <img src="images/avatar.jpg" class="image">-->
             </div>
         </div>
-        <div class="flex-column bg-white pb-2">
-            <div class="pl-4 pr-4 text-ellipsis input-edit">
-                <input type="text"
-                       v-model="post.postText"
-                       v-bind:class="{editText: editMode}"
-                       :disabled="!editMode"
-                       data-toggle="modal"
-                       data-target="#exampleModal"
-                       class="custom-input bg-white w-100" />
-            </div>
+        <div class="pl-4 pr-4 flex-column bg-white">
+            <transition name="text">
+                <span class="mb-2" v-if="!editMode">{{post.postText}}</span>
+            </transition>
+            <transition name="edit">
+                <textarea type="text"
+                          v-if="editMode"
+                          v-model="post.postText"
+                          v-bind:class="{editText: editMode}"
+                          :disabled="!editMode"
+                          data-toggle="modal"
+                          data-target="#exampleModal"
+                          class="custom-input mb-2 bg-white w-100"></textarea>
+            </transition>
         </div>
         <hr class="mb-0 mt-0">
         <div class="pl-4 pr-4 bg-white news-contains-bottom">
             <div>
                 <div class="flex-row">
-                    <button
-                        type="button"
-                        class="buttons pt-2 pl-3 pr-3 pb-2 block"
-                        @click="likePost">
-                        <i class="far fa-thumbs-up color-red"></i>
-                        {{post.likes}}
-                        <span class="color-black"
-                              v-bind:class="{liked: post.isLiked === 1}">Нравится</span>
-                    </button>
+                        <button
+                            type="button"
+                            class="buttons pt-2 pl-3 pr-3 pb-2 block"
+                            @click="likePost">
+                            <i class="fas fa-thumbs-up color-red" v-bind:class="{liked: post.isLiked === 0}"></i>
+                            <i class="far fa-thumbs-up color-red" v-bind:class="{liked: post.isLiked === 1}"></i>
+                            {{post.likes}}
+                            <span class="color-black" v-bind:class="{'color-red': post.isLiked === 1}">Нравится</span>
+                        </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
                         <i class="far fa-comment color-red"></i>
                         <span class="color-black">Комментарий</span>
                     </button>
-<!--                    <transition name="fade">-->
-<!--                        <button @click="saveEdited"-->
-<!--                                v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"-->
-<!--                                type='button'-->
-<!--                                class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>-->
-<!--                    </transition>-->
+                    <transition name="fade">
+                        <button @click="saveEdited"
+                                v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"
+                                type='button'
+                                class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>
+                    </transition>
                 </div>
             </div>
         </div>
@@ -218,6 +222,7 @@
         border: none;
         background-color: transparent;
         outline: none;
+        transition: 0.4s ease;
     }
 
     .buttons > span {
@@ -231,18 +236,20 @@
 
     .liked {
         color: red;
+        display: none;
+        transition: all 0.4s ease-in-out;
     }
-
 
     .editButton >  .fa-pen {
         color: darkorange;
     }
 
     .custom-input {
-        display: block;
-        border: none;
-        max-height: 100px;
         resize: none;
+        outline: none;
+        border: none;
+        transition: height 0.4s ease;
+
     }
 
     .save-button {
@@ -261,20 +268,59 @@
         color: #FFF;
     }
 
-    .input-edit {
-        width: 100%;
-        height: 100px;
-
+    .editText {
+        height: 150px;
+        border: 1px solid cornflowerblue;
     }
+
+    .editText:focus {
+        box-shadow: 0 0 2px cornflowerblue;
+        outline: none;
+    }
+
 
     .fade-enter-active,
     .fade-leave-active {
-        transition: opacity .5s
+        transition: opacity .5s;
     }
 
     .fade-enter,
     .fade-leave-to {
-        opacity: 0
+        opacity: 0;
     }
+
+    .text-enter-active,
+    .text-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    .text-enter,
+    .text-leave-to {
+        opacity: 0;
+    }
+
+
+    .edit-enter {
+        height: 0;
+        transition: all 1s ease;
+    }
+
+    .edit-enter-to {
+        height: 150px;
+        transition: all 1s ease;
+    }
+
+    .edit-leave {
+        height: 150px;
+        transition: all 0.4s ease;
+    }
+
+    .edit-leave-to {
+        height: 0;
+        transition: all 0.4s ease;
+    }
+
+
+
 
 </style>
