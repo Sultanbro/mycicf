@@ -36,12 +36,11 @@
         <div class="main_margin flex-row width100">
             @include('layouts.sidebar')
 
-            <div class="col-md-6" id="employee_info">
                 <info></info>
-            </div>
 
             {{--RIGHT SIDE BAR GOES HERE--}}
-            @include('layouts.structure-sidebar')
+{{--            @include('layouts.structure-sidebar')--}}
+            <structure-sidebar></structure-sidebar>
         </div>
     </main>
     {{--FOOTER GOES HERE--}}

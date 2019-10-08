@@ -99,6 +99,12 @@ ul{
 .date-color{
 	color: #818181;
 }
+.displaynone{
+	display: none;
+}
+.hiddenBlock{
+	display: block !important;
+}
 .thead-border{
 	border-left: 1px solid white !important;
 	border-right: 1px solid white !important;
@@ -235,6 +241,21 @@ ul{
 }
 .cornflowerblue{
 	color: cornflowerblue;
+}
+.position-right{
+	margin: 0 0 0 auto;
+}
+.width75{
+	width: 75%;
+}
+.sidebar-right-button div{
+	padding: 20px;
+}
+.sidebar-right-button i{
+	color: #78787d;
+}
+.sidebar-right-button{
+	background: lightgray;
 }
 .create-publication{
 	background: #d9d9d9;

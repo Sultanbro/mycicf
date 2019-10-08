@@ -7,20 +7,20 @@
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-user-o fa-input" aria-hidden="true"></i>
-                    <input type="text" name="username" v-model="username" class="input-field" placeholder="Логин">
+                    <input @keyup.enter="enterClicked()" type="text" name="username" v-model="username" class="input-field" placeholder="Логин">
                 </div>
             </div>
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-lock fa-input" aria-hidden="true"></i>
-                    <input v-bind:type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
+                    <input @keyup.enter="enterClicked()" v-bind:type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
                     <button type="button" @click="checkType" class="show-btn">
                         <i v-bind:class="className" aria-hidden="true" id="icon"></i>
                     </button>
                 </div>
             </div>
             <div class="d-flex justify-content-center">
-                <button @click="login" class="btn-block">Войти</button>
+                <button @click="login" type=submit class="btn-block">Войти</button>
             </div>
         </div>
     </div> <!-- Second column-->
@@ -39,7 +39,8 @@
             }
         },
         methods: {
-            login: function () {
+            login () {
+                // console.log('login func')
                 if(!this.validate()){
                     return;
                 }
@@ -47,13 +48,20 @@
                     this.afterLogin(response.data)
                 })
             },
+            enterClicked: function () {
+                // console.log('enter clicked')
+                this.login();
+            },
+            trigger () {
+                this.$refs.sendReply.click()
+            },
             afterLogin: function (response) {
                 if(!response.success){
                     alert(response.error);
                 }
 
                 if(response.success){
-                    location.href = '/test';
+                    location.href = '/';
                 }
             },
             validate: function () {

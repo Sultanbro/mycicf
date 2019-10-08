@@ -16,6 +16,7 @@ Vue.component('simple-info', require('./components/employee/simple-info.vue').de
 
 Vue.component('info', require('./components/employee/info.vue').default);
 
+Vue.component('structure-sidebar', require('./components/StructureSidebar.vue').default);
 
 window.onload = function(){
     var app = new Vue({
