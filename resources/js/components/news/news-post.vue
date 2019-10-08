@@ -140,11 +140,9 @@
             fetchLiked: function (response) {
                 if(response.success === true) {
                     this.post.isLiked = 1;
-                    this.post.likes++;
                 }
                 else {
                     this.post.isLiked = 0;
-                    this.post.likes--;
                 }
             },
 

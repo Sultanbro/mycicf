@@ -61,7 +61,10 @@ class NewsController extends Controller
 //            'error' => $error,
 //            'post' => $response,
 //        ];
-        broadcast(new NewPost($response));
+        broadcast(new NewPost([
+            'post' => $response,
+            'type' => Post::NEW_POST
+        ]));
         return $response;
     }
 
@@ -106,17 +109,38 @@ class NewsController extends Controller
     public function deletePost(Request $request) {
         $delete_post = Post::where('id', $request->postId)->delete();
         $success = 'true';
+
+        broadcast(new NewPost([
+            'post' => [
+                'id' => $request->postId,
+            ],
+            'type' => Post::DELETED_POST
+        ]));
         return $success;
     }
 
     public function setPinned(Request $request){
         $id = $request->postId;
         $post = Post::findOrFail($id);
+        broadcast(new NewPost([
+            'post' => [
+                'id' => $id,
+                'pinned' => 1
+            ],
+            'type' => Post::PINNED_POST
+        ]));
         $post->setPinned();
     }
 
     public function unsetPinned(Request $request){
         Post::where('pinned', 1)->update(['pinned' => 0]);
+        broadcast(new NewPost([
+            'post' => [
+                'id' => 0,
+                'pinned' => -1
+            ],
+            'type' => Post::PINNED_POST
+        ]));
         return 'true';
     }
 
@@ -143,6 +167,14 @@ class NewsController extends Controller
           'success' => $success,
         ];
 
+        broadcast(new NewPost([
+            'post' => [
+                'id' => $post_id,
+                'likes' => (new Like())->getLikes($post_id),
+            ],
+            'type' => Post::LIKED_POST
+        ]));
+
         return $response;
     }
 
@@ -158,6 +190,14 @@ class NewsController extends Controller
         $response = [
             'success' => !$success,
         ];
+
+        broadcast(new NewPost([
+            'post' => [
+                'text' => $post_text,
+                'id' => $post_id,
+            ],
+            'type' => Post::EDITED_POST
+        ]));
 
         return $response;
     }

@@ -61,7 +61,6 @@
 <script>
     export default {
         name: "post",
-
         data() {
             return {
                 lastIndex : null,
@@ -70,7 +69,13 @@
                 pinnedPost: null,
                 pinnedPostIndex: null,
                 bottomOfWindow: 0,
-                scrolled: false
+                scrolled: false,
+                NEW_POST : 'new',
+                EDITED_POST : 'edit',
+                LIKED_POST : 'like',
+                PINNED_POST : 'pinned',
+                DELETED_POST : 'deleted',
+                COMMENDTED_POST : 'commented',
             }
         },
 
@@ -81,7 +86,7 @@
         mounted: function(){
             Echo.private(`post`)
             .listen('NewPost', (e) => {
-                this.handleIncoming(e.post);
+                this.handleIncoming(e);
             });
             this.getPosts();
         },
@@ -161,12 +166,53 @@
                 }
             },
 
-            handleIncoming (post) {
-                if(post.userISN !== this.isn){
-                    this.posts.unshift(post)
+            handleIncoming (e) {
+                var vm = this;
+                console.log(e);
+                if(e.type === vm.NEW_POST)
+                {
+                    if(e.post.userISN !== vm.isn) {
+                        vm.posts.unshift(e.post)
+                    }
+                }
+                else if(e.type === vm.EDITED_POST)
+                {
+                    vm.posts.forEach(function (post) {
+                        if(post.postId === e.post.id){
+                            post.postText = e.post.text;
+                        }
+                    });
+                }
+                else if(e.type === vm.PINNED_POST)
+                {
+                    vm.unsetAllPinned(-1);
+                    if(e.post.id !== 0){
+                        vm.posts.forEach(function (post) {
+                            if(post.postId === e.post.id){
+                                post.pinned = 1;
+                                vm.pinnedPost = post;
+                            }
+                        });
+                    }
+                }
+                else if(e.type === vm.LIKED_POST)
+                {
+                    vm.posts.forEach(function (post) {
+                        if(post.postId === e.post.id){
+                            post.likes = e.post.likes;
+                        }
+                    });
+                }
+                else if(e.type === vm.DELETED_POST)
+                {
+                    vm.posts.forEach(function (post) {
+                        if(post.postId === e.post.id){
+                            var index = vm.posts.indexOf(post);
+                            vm.posts.splice(index, 1);
+                        }
+                    });
                 }
             }
-
         },
 
         beforeMount () {
