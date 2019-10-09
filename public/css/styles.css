@@ -20,10 +20,75 @@ ul{
 	border-right: 1px solid #b6b6b6;
 }
 .min-width50{
-	min-width: 50%;
+	min-width: 150px !important;
 }
 .min-width46{
 	min-width: 46%;
+}
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+	background-color: #dce7ff;
+}
+.resize{
+	resize: none;
+}
+.modal-textarea-comment{
+	border: 1px dashed #275cc7;
+	background: #ecf5ff;
+}
+.attachment-border{
+	border-right: 1px dashed #8cc2f9;
+}
+.text-dec-underline{
+	text-decoration: underline;
+}
+.attachment-bg{
+	background: #dce7ff;
+	color: #5d5d5e;
+}
+.red-button{
+	color: red;
+}
+.yellow-button{
+	color: yellow;
+}
+.blue-button{
+	color: #508ff4;
+}
+.green-button{
+	color: darkgreen;
+}
+.rotate-45{
+	transform: rotate(45deg);
+}
+.modal-note{
+	border: 1px solid #a0b3d8;
+}
+.button-accept{
+	background: #508ff4;
+}
+.button-cancel{
+	background: #c10b0b;
+}
+.button-neutral{
+	background: transparent;
+	color: #508ff4;
+	border: 1px solid #508ff4;
+}
+.matching-buttons{
+	border-radius: 6px;
+	font-size: 1.6rem;
+}
+.matching-table thead{
+	font-weight: bold;
+}
+.matching-table td{
+	min-height: 2rem;
+}
+.matching-table tr:first-child{
+	background: #dce7ff;
+}
+.none{
+	display: none;
 }
 .color-blue{
 	color: #4267b2;
@@ -336,6 +401,42 @@ ul{
 .table-td-border{
 	border-right: 1px solid #b6b6b6;
 	border-left: 1px solid #b6b6b6;
+}
+.modal-lg-custom{
+	margin-left: -180px;
+	width: 150% !important;
+}
+.modal-custom-border-top{
+	border-top-left-radius: 20px !important;
+	border-top-right-radius: 20px !important;
+}
+.inline{
+	display: inline;
+}
+.bold{
+	font-weight: bold;
+}
+.border-white{
+	border: 1px solid #fff;
+}
+.flex-wrap{
+	display: flex;
+	flex-wrap: wrap;
+}
+.table-striped-custom{
+	background: #dce7ff;
+}
+.bg-blue-standart{
+	background: #275cc7;
+}
+.color-blue-standart{
+	color: #275cc7;
+}
+.color-white-standart{
+	color: #ffffff;
+}
+.border-bottom-white{
+	border-bottom: 1px solid white;
 }
 /*Стили страницы входа*/
 .image{

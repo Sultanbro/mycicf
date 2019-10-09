@@ -18,7 +18,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SZ" :key="info.ISN">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -47,7 +47,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in KV" :key="info.ISN">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
@@ -75,7 +75,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in OL" :key="info.ISN">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
                             <td scope="col" class="thead-border">{{DeptName}}</td>
                             <td scope="col">{{info.docdate}}</td>
@@ -102,7 +102,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AD" :key="info.ISN">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
                             <td scope="col" class="thead-border">{{info.docdate}}</td>
                             <td scope="col">{{info.days}}</td>
@@ -129,7 +129,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in RV" :key="info.ISN">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col">{{info.PayDate}}</td>
@@ -157,7 +157,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AC" :key="info.isn">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -186,7 +186,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SP" :key="info.isn">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -215,7 +215,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in other" :key="info.ISN">
-                            <td scope="col" @click="showModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -226,6 +226,13 @@
                 </div>
             </div>
         </div>
+        <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+
+        <coordination-modal
+            :coordination="coordination"
+            :isn="isn"
+        >
+        </coordination-modal>
     </div>
 
 </template>
@@ -245,6 +252,7 @@
                 AD: null,
                 RV: null,
                 other: null,
+                coordination: {},
             }
         },
         mounted: function(){
@@ -273,13 +281,21 @@
                     alert(response.error);
                 }
             },
-            showModal(ISN){
-                this.axios.post("/getCoordinationInfo", {
-                    docIsn: ISN
-                })
-                .then(response => {
-                    console.log(response.data)
+            openModal (ISN) {
+                this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                    this.setModalData(response.data)
                 });
+
+            },
+            setModalData: function (response) {
+                if(response.success){
+                    this.coordination = response.response;
+                    this.$refs.modalButton.click();
+                }
+                else
+                {
+                    alert('ERROR')
+                }
             }
         },
 
