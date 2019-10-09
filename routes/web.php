@@ -25,6 +25,8 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     //COORIDNATION
     Route::get('/coordination', 'CoordinationController@index')->name('coordination');
     Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+    Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
+    Route::post('/setCoordination', 'CoordinationController@setCoordination');
 
     //DOCUMENTATION
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');

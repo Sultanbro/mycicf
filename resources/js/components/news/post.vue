@@ -21,7 +21,7 @@
                     <div class="new-publication-icons-bg mt-2 mb-2 ml-4 mr-2 pt-1 pr-2 pb-1 pl-2">
                         <i class="fas fa-volume-up cornflowerblue"></i>
                         <label for="audio-upload" class="custom-file-upload">Аудио</label>
-                        <input type="file" id="audio-upload" accept="audio/*"multiple>
+                        <input type="file" id="audio-upload" accept="audio/*" multiple>
                     </div>
                     <div class="new-publication-icons-bg mt-2 mb-2 ml-4 mr-2 pt-1 pr-2 pb-1 pl-2">
                         <i class="fas fa-file-upload cornflowerblue"></i>

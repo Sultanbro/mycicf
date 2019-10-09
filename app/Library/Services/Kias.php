@@ -40,7 +40,16 @@ class Kias implements KiasServiceInterface
         $this->url = env('KIAS_URL');
         $this->getClient();
         $this->_sId = $session;
+    }
 
+    /** Get kias by system credentials
+     */
+    public function initSystem()
+    {
+        $this->url = env('KIAS_URL');
+        $this->getClient();
+        $systemData = $this->authenticate(env('KIAS_LOGIN'), hash('sha512', env('KIAS_PASSWORD')));
+        $this->_sId = $systemData->Sid;
     }
 
     /**
@@ -142,14 +151,16 @@ class Kias implements KiasServiceInterface
         }
     }
 
-    public function authenticate($username, $password){
+    public function authenticate($username, $password)
+    {
         return $this->request('Auth', [
             'Name' => $username,
             'Pwd' => $password,
         ]);
     }
 
-    public function authBySystem(){
+    public function authBySystem()
+    {
         $response = $this->request('Auth', [
             'Name' => env('KIAS_LOGIN'),
             'Pwd' => hash('sha512', env('KIAS_PASSWORD')),
@@ -161,19 +172,22 @@ class Kias implements KiasServiceInterface
         $this->_sId = $response->Sid;
     }
 
-    public function getBranches(){
+    public function getBranches()
+    {
         return $this->request('User_CicGetUserList',[
             'number' => 1,
         ]);
     }
 
-    public function getUpperLevel($ISN){
+    public function getUpperLevel($ISN)
+    {
         return $this->request('User_CicGetUserLVL', [
             'EmplISN' => $ISN,
         ]);
     }
 
-    public function getEmplInfo($ISN, $dateBeg, $dateEnd){
+    public function getEmplInfo($ISN, $dateBeg, $dateEnd)
+    {
         return $this->request('User_CicGetEmplInfo', [
             'DateBeg' => $dateBeg,
             'DateEnd' => $dateEnd,
@@ -181,7 +195,8 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getAttachmentData($refisn, $isn, $pictType){
+    public function getAttachmentData($refisn, $isn, $pictType)
+    {
         return $this->request('GETATTACHMENTDATA', [
             'REFISN' => $refisn,
             'ISN' => $isn,
@@ -189,11 +204,28 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function myCoordinationList($ISN){
+    public function myCoordinationList($ISN)
+    {
         return $this->request('User_CicMyCoordinationList', [
             'DateBeg' => '01.01.1970',
             'DateEnd' => date('d.m.Y', strtotime('tomorrow')),
             'EmplISN' => $ISN,
+        ]);
+    }
+
+    public function getCoordination($docIsn)
+    {
+        return $this->request('User_CicGetCoordinationList', [
+            'DocISN' => $docIsn
+        ]);
+    }
+
+    public function setCoordination($DocISN, $EmplISN, $Solution)
+    {
+        return $this->request('User_CicSetCoordinationList', [
+            'DocISN' => $DocISN,
+            'EmplISN' => $EmplISN,
+            'Solution' => $Solution,
         ]);
     }
 }
