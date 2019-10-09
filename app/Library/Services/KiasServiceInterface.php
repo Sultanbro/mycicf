@@ -58,4 +58,20 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function myCoordinationList($ISN);
+
+    /**
+     * Получить информацию о листе согласовании
+     * @param $docIsn
+     * @return mixed
+     */
+    public function getCoordination($docIsn);
+
+    /**
+     * Отправка ответа на лист согласования
+     * @param $DocISN
+     * @param $EmplISN
+     * @param $Solution
+     * @return mixed
+     */
+    public function setCoordination($DocISN, $EmplISN, $Solution);
 }

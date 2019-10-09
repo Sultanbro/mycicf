@@ -45,6 +45,18 @@ ul{
 	background: #dce7ff;
 	color: #5d5d5e;
 }
+.red-button{
+	color: red;
+}
+.yellow-button{
+	color: yellow;
+}
+.blue-button{
+	color: #508ff4;
+}
+.green-button{
+	color: darkgreen;
+}
 .rotate-45{
 	transform: rotate(45deg);
 }

@@ -23,7 +23,7 @@
                                                     <span class="ml-2">Тип документа</span>
                                                 </div>
                                                 <div class="pt-2 pb-2">
-                                                    <span>Лист согласования АС</span>
+                                                    <span>{{coordination.Fullname}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -36,7 +36,7 @@
                                                     <span class="ml-2">Номер</span>
                                                 </div>
                                                 <div class="pt-2 pb-2">
-                                                    <span>ЛС-44454546465</span>
+                                                    <span>{{coordination.ID}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -49,7 +49,7 @@
                                                     <span class="ml-2">Дата</span>
                                                 </div>
                                                 <div class="pt-2 pb-2">
-                                                    <span>12-09-2019</span>
+                                                    <span>{{coordination.Docdate}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -64,7 +64,7 @@
                                                     <span class="ml-2">Инициатор</span>
                                                 </div>
                                                 <div class="pt-2 pb-2">
-                                                    <span>Андеррайтер Департамента андеррайтинга Сазазова Екатерина Александровна</span>
+                                                    <span>{{coordination.Curator}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -81,26 +81,10 @@
                                     <div class="table-responsive-sm">
                                         <table class="table table-bordered table-striped">
                                             <tbody>
-                                            <tr>
-                                                <td>Подразделение</td>
-                                                <td>Департамент корпоративного страхования</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Страхователь</td>
-                                                <td>ФИЛИАЛ ООО "АЛД АВТОМОТИВ" В РЕСПУБЛИКЕ КАЗАХСТАН</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Страхователь</td>
-                                                <td>ФИЛИАЛ ООО "АЛД АВТОМОТИВ" В РЕСПУБЛИКЕ КАЗАХСТАН</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Страхователь</td>
-                                                <td>ФИЛИАЛ ООО "АЛД АВТОМОТИВ" В РЕСПУБЛИКЕ КАЗАХСТАН</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Страхователь</td>
-                                                <td>ФИЛИАЛ ООО "АЛД АВТОМОТИВ" В РЕСПУБЛИКЕ КАЗАХСТАН</td>
-                                            </tr>
+                                                <tr v-for="attribute in coordination.Attributes">
+                                                    <td>{{attribute.Name}}</td>
+                                                    <td>{{attribute.Value}}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -111,7 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <textarea name="comment-modal" rows="3" class="resize modal-textarea-comment width100"></textarea>
+                                    <textarea name="comment-modal" rows="3" v-model="coordination.Remark" class="resize modal-textarea-comment width100"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -180,21 +164,21 @@
                             <div>
                                 <div>
                                     <div class="pl-5 pt-4 pb-4 pr-5">
-                                        <textarea rows="4" class="resize modal-note width100"></textarea>
+                                        <textarea rows="4" v-model="Remark" class="resize modal-note width100"></textarea>
                                     </div>
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4">
-                                            <div class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1">
+                                            <div class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4">
-                                            <div class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1">
+                                            <div class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(0)">
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
-                                        <div class="flex-row pl-4 pb-4 pr-4">
-                                            <div class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1">
+                                        <div class="flex-row pl-4 pb-4 pr-4" v-if='coordination.DocClass === "883011"'>
+                                            <div class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"  @click="sendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
                                         </div>
@@ -208,6 +192,7 @@
                                                     <tr>
                                                         <td>ФИО</td>
                                                         <td>Виза</td>
+                                                        <td>Примечание</td>
                                                         <td>Подразделение</td>
                                                         <td>Дата</td>
                                                     </tr>
@@ -216,30 +201,36 @@
                                                     <tr class="none">
                                                         <td></td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>Иванов Иван</td>
-                                                        <td></td>
-                                                        <td>Управление управлением</td>
-                                                        <td>19-09-2019</td>
+                                                    <tr v-for="users in coordination.Coordinations">
+                                                        <td>{{users.FullName}}</td>
+                                                        <td>
+                                                            <i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>
+                                                            <i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>
+                                                            <i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>
+                                                            <i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>
+                                                        </td>
+                                                        <td>{{users.Remark}}</td>
+                                                        <td>{{users.Dept}}</td>
+                                                        <td>{{users.Date}}</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
+<!--                                                    <tr>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                    </tr>-->
+<!--                                                    <tr>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                        <td></td>-->
+<!--                                                    </tr>-->
                                                 </tbody>
                                             </table>
                                         </div>
@@ -251,7 +242,6 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
 
 <!--        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
 <!--            <div class="modal-dialog modal-lg">-->
@@ -273,12 +263,29 @@
 
 <script>
     export default {
-        name: "centcoins.vue",
-
+        name: "coordination-modal",
         data() {
             return {
+                Remark: "",
             }
         },
+        props: {
+            coordination : Object,
+            isn : Number
+        },
+        methods: {
+            sendSolution: function (Solution) {
+                if(confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")){
+                    this.axios.post("/setCoordination", {DocISN: this.coordination.ISN, ISN : this.isn, Solution: Solution}).then((response) => {
+                        if(!response.data.success){
+                            alert(response.data.error);
+                        }else{
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        }
     }
 </script>
 

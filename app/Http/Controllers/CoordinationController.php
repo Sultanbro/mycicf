@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Providers\KiasServiceProvider;
 use Illuminate\Http\Request;
 
 class CoordinationController extends Controller
 {
+    const AC_ATTRIBUTES_LABEL = 'ACattr';
+    const COORDINATIONS_LABEL = 'Coordination';
     public function index(){
         return view('coordination');
     }
@@ -148,5 +151,129 @@ class CoordinationController extends Controller
         ];
 
         return response()->json($result)->withCallback($request->input('callback'));
+    }
+
+    public function getCoordinationInfo(Request $request, KiasServiceInterface $kias){
+        $success = true;
+        $error = "";
+        $docIsn = $request->docIsn;
+        $response = $kias->getCoordination($docIsn);
+        if($response->error){
+            $success = false;
+            $error .= (string)$response->error->text;
+            $result = [
+                'success' => $success,
+                'error' => (string)$error
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        $responseData = [];
+        $attributes = [];
+        $coordinations = [];
+        foreach ((array)$response as $key => $value){
+            if($value != "0"){
+                if(in_array((string)$key, array_keys($this->attributeKeys())))
+                {
+                    array_push($attributes, [
+                        'Name' => $this->attributeKeys()[$key],
+                        'Value' => (string)$value
+                    ]);
+                }
+                elseif($key === self::AC_ATTRIBUTES_LABEL)
+                {
+                    foreach ($value->row as $attribute) {
+                        if($attribute->Value != 0){
+                            array_push($attributes, [
+                                'Name' => (string)$attribute->AttrName,
+                                'Value' => (string)$attribute->Value,
+                            ]);
+                        }
+                    }
+                }
+                elseif($key === self::COORDINATIONS_LABEL)
+                {
+                    foreach ($value->row as $coordination) {
+                        array_push($coordinations, [
+                            'FullName' => (string)$coordination->SubjNAME,
+                            'Duty' => (string)$coordination->DutyName,
+                            'Dept' => (string)$coordination->DeptName,
+                            'Solution' => (string)$coordination->Solution,
+                            'Date' => (string)$coordination->datesolution,
+                            'Remark' => (string)$coordination->remark,
+                            'ISN' => (string)$coordination->ISN,
+                        ]);
+                    }
+                }
+                elseif(in_array($key,$this->getCoordinationAttributes()))
+                {
+                    $responseData = array_merge($responseData , [
+                        (string)$key => (string)$value
+                    ]);
+                }
+            }
+        }
+        $responseData = array_merge($responseData, [
+            'Attributes' => $attributes,
+            'Coordinations' => $coordinations
+        ]);
+        $result = [
+            'success' => $success,
+            'error' => $error,
+            'response' => $responseData,
+        ];
+        return response()->json($result)->withCallback($request->input('callback'));
+    }
+
+    public function setCoordination(Request $request){
+        $success = true;
+        $error = '';
+        $kias = new Kias();
+        $kias->initSystem();
+        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution);
+        if($response->error){
+            $success = false;
+            $error .= $response->error->text;
+            $result = [
+                'success' => $success,
+                'error' => $error,
+            ];
+
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        $result = [
+            'success' => $success,
+            'error' => $error,
+            'result' => (string)$response->Result
+        ];
+        return response()->json($result)->withCallback($request->input('callback'));
+    }
+
+    public function attributeKeys(){
+        return [
+            'AttrDocType' => 'Тип СЗ',
+            'AttrDocID' => 'Номер СЗ',
+            'AttrDocDate' => 'Дата СЗ',
+            'AttrLastDay' => 'Последний день работы',
+            'AttrDocAddr' => 'Адресат',
+            'AttrDocExe' => 'Исполнитель',
+            'AttrDocCoor1' => 'Согласующий 1',
+            'AttrDocDays' => 'Кол-во используемых дней',
+            'AttrDocCountDays' => 'Общее кол-во дней',
+            'AttrAmount' => 'Сумма',
+        ];
+    }
+
+    public function getCoordinationAttributes(){
+        return [
+            'ISN',                  //ISN СЗ
+            'DocClass',             //ISN типа СЗ
+            'ID',                   //Номер СЗ
+            'Docdate',              //Дата СЗ
+            'Fullname',             //ТИП СЗ
+            'Curator',              //Куратор СЗ
+            'SubjName',             //Наименование страхователя
+            'SubjDept',             //Департамент страхователя
+            'Remark',               //Примечание листа СЗ
+        ];
     }
 }

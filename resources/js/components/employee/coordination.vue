@@ -226,7 +226,12 @@
                 </div>
             </div>
         </div>
-        <coordination-modal>
+        <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+
+        <coordination-modal
+            :coordination="coordination"
+            :isn="isn"
+        >
         </coordination-modal>
     </div>
 
@@ -247,7 +252,7 @@
                 AD: null,
                 RV: null,
                 other: null,
-                modalOpened: false,
+                coordination: {},
             }
         },
         mounted: function(){
@@ -277,7 +282,20 @@
                 }
             },
             openModal (ISN) {
-                console.log(ISN);
+                this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                    this.setModalData(response.data)
+                });
+
+            },
+            setModalData: function (response) {
+                if(response.success){
+                    this.coordination = response.response;
+                    this.$refs.modalButton.click();
+                }
+                else
+                {
+                    alert('ERROR')
+                }
             }
         },
 
