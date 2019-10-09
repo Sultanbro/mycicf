@@ -18,7 +18,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SZ" :key="info.ISN">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -47,7 +47,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in KV" :key="info.ISN">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
@@ -75,7 +75,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in OL" :key="info.ISN">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
                             <td scope="col" class="thead-border">{{DeptName}}</td>
                             <td scope="col">{{info.docdate}}</td>
@@ -102,7 +102,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AD" :key="info.ISN">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
                             <td scope="col" class="thead-border">{{info.docdate}}</td>
                             <td scope="col">{{info.days}}</td>
@@ -129,7 +129,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in RV" :key="info.ISN">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col">{{info.PayDate}}</td>
@@ -157,7 +157,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AC" :key="info.isn">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -186,7 +186,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SP" :key="info.isn">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -215,7 +215,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in other" :key="info.ISN">
-                            <td scope="col">{{info.id}}</td>
+                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -226,6 +226,8 @@
                 </div>
             </div>
         </div>
+        <coordination-modal>
+        </coordination-modal>
     </div>
 
 </template>
@@ -245,6 +247,7 @@
                 AD: null,
                 RV: null,
                 other: null,
+                modalOpened: false,
             }
         },
         mounted: function(){
@@ -272,6 +275,9 @@
                 }else{
                     alert(response.error);
                 }
+            },
+            openModal (ISN) {
+                console.log(ISN);
             }
         },
 
