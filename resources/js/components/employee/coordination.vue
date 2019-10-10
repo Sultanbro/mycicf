@@ -18,7 +18,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SZ" :key="info.ISN">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -47,7 +47,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in KV" :key="info.ISN">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
@@ -69,13 +69,13 @@
                         <tr class="header color-white">
                             <th scope="col">Номер документа</th>
                             <th scope="col" class="thead-border">ФИО работника</th>
-                            <!--<th scope="col" class="thead-border">Подразделение</th>-->
+                            <th scope="col" class="thead-border">Подразделение</th>
                             <th scope="col">Дата</th>
                         </tr>
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in OL" :key="info.ISN">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
                             <td scope="col" class="thead-border">{{DeptName}}</td>
                             <td scope="col">{{info.docdate}}</td>
@@ -102,7 +102,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AD" :key="info.ISN">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
                             <td scope="col" class="thead-border">{{info.docdate}}</td>
                             <td scope="col">{{info.days}}</td>
@@ -129,7 +129,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in RV" :key="info.ISN">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col">{{info.PayDate}}</td>
@@ -157,7 +157,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AC" :key="info.isn">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -186,7 +186,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SP" :key="info.isn">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -215,7 +215,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in other" :key="info.ISN">
-                            <td scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -231,6 +231,7 @@
         <coordination-modal
             :coordination="coordination"
             :isn="isn"
+            :attachments="attachments"
         >
         </coordination-modal>
     </div>
@@ -253,6 +254,7 @@
                 RV: null,
                 other: null,
                 coordination: {},
+                attachments: [] ,
             }
         },
         mounted: function(){
@@ -290,12 +292,25 @@
             setModalData: function (response) {
                 if(response.success){
                     this.coordination = response.response;
+                    this.getAttachments();
                     this.$refs.modalButton.click();
                 }
                 else
                 {
                     alert('ERROR')
                 }
+            },
+            getAttachments () {
+                var vm = this;
+                this.axios.post('/getAttachmentList', {
+                    docIsn: vm.coordination.ISN
+                }).then(response => {
+                    if(response.data.success){
+                        vm.attachments = response.data.attachments;
+                    }else{
+                        vm.attachments = [];
+                    }
+                });
             }
         },
 

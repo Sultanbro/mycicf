@@ -73,5 +73,12 @@ interface KiasServiceInterface
      * @param $Solution
      * @return mixed
      */
-    public function setCoordination($DocISN, $EmplISN, $Solution);
+    public function setCoordination($DocISN, $EmplISN, $Solution, $Remark);
+
+    /**
+     * Получение списка прикреплении
+     * @param $docIsn
+     * @return mixed
+     */
+    public function getAttachmentsList($docIsn);
 }

@@ -229,7 +229,7 @@ class CoordinationController extends Controller
         $error = '';
         $kias = new Kias();
         $kias->initSystem();
-        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution);
+        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution, $request->Remark);
         if($response->error){
             $success = false;
             $error .= $response->error->text;
@@ -275,5 +275,31 @@ class CoordinationController extends Controller
             'SubjDept',             //Департамент страхователя
             'Remark',               //Примечание листа СЗ
         ];
+    }
+
+    public function getAttachments(Request $request, KiasServiceInterface $kias){
+        $response = $kias->getAttachmentsList($request->docIsn);
+        $attachments = [];
+        if($response->error){
+            $result = [
+                'success' => false,
+                'error' => (string)$response->error->text,
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if(isset($response->LIST->row)){
+            foreach ($response->LIST->row as $row){
+                array_push($attachments, [
+                    'URL' => "/getAttachment/{$row->ISN}/{$row->REFISN}/{$row->PICTTYPE}",
+                    'FileName' => (string)$row->FILENAME,
+                ]);
+            }
+        }
+        $result = [
+            'success' => true,
+            'error' => "",
+            'attachments' => $attachments,
+        ];
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 }

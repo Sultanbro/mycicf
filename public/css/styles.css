@@ -34,6 +34,7 @@ ul{
 .modal-textarea-comment{
 	border: 1px dashed #275cc7;
 	background: #ecf5ff;
+	min-height: 250px;
 }
 .attachment-border{
 	border-right: 1px dashed #8cc2f9;

@@ -17,7 +17,7 @@ Route::post('/login', 'SiteController@postLogin');
 Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
     Route::post('/getBranchData', 'SiteController@postBranchData');
-
+    Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
     //DOSSIER
     Route::post('/emplInfo', 'SiteController@postEmplInfo');
     Route::get('/dossier', 'SiteController@dossier')->name('dossier');
@@ -27,6 +27,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
     Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
     Route::post('/setCoordination', 'CoordinationController@setCoordination');
+    Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
 
     //DOCUMENTATION
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
