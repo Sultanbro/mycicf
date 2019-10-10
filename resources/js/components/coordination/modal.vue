@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <textarea name="comment-modal" rows="3" v-model="coordination.Remark" class="resize modal-textarea-comment width100"></textarea>
+                                    <textarea name="comment-modal" rows="3" v-model="coordination.Remark" class="resize modal-textarea-comment width100" disabled></textarea>
                                 </div>
                             </div>
                         </div>
@@ -112,41 +112,15 @@
                         <div>
                             <div>
                                 <div class="pl-5 pt-4 pb-4 pr-5 flex-row flex-wrap jc-sb">
-                                    <div class="flex-row vertical-middle mt-3 attachment-bg">
-                                        <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
-                                            <i class="fas fa-paperclip rotate-45"></i>
+                                    <div v-for="attachment in attachments" class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
+                                        <div class="attachment-bg flex-row vertical-middle ">
+                                            <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
+                                                <i class="fas fa-paperclip rotate-45"></i>
+                                            </div>
+                                            <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
+                                                <a :href="attachment.URL" target="_blank">{{attachment.FileName}}</a>
+                                            </div>
                                         </div>
-                                        <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">Справка МЮ.jpg</div>
-                                    </div>
-                                    <div class="flex-row vertical-middle mt-3 attachment-bg">
-                                        <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
-                                            <i class="fas fa-paperclip rotate-45"></i>
-                                        </div>
-                                        <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">Справка МЮ.jpg</div>
-                                    </div>
-                                    <div class="flex-row vertical-middle mt-3 attachment-bg">
-                                        <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
-                                            <i class="fas fa-paperclip rotate-45"></i>
-                                        </div>
-                                        <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">Справка МЮ.jpg</div>
-                                    </div>
-                                    <div class="flex-row vertical-middle mt-3 attachment-bg">
-                                        <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
-                                            <i class="fas fa-paperclip rotate-45"></i>
-                                        </div>
-                                        <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">Справка МЮ.jpg</div>
-                                    </div>
-                                    <div class="flex-row vertical-middle mt-3 attachment-bg">
-                                        <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
-                                            <i class="fas fa-paperclip rotate-45"></i>
-                                        </div>
-                                        <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">Справка МЮ.jpg</div>
-                                    </div>
-                                    <div class="flex-row vertical-middle mt-3 attachment-bg">
-                                        <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
-                                            <i class="fas fa-paperclip rotate-45"></i>
-                                        </div>
-                                        <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">Справка МЮ.jpg</div>
                                     </div>
                                 </div>
                             </div>
@@ -167,17 +141,17 @@
                                         <textarea rows="4" v-model="Remark" class="resize modal-note width100"></textarea>
                                     </div>
                                     <div class="flex-row">
-                                        <div class="flex-row pl-5 pb-4 pr-4">
+                                        <div class="flex-row pl-5 pb-4 pr-4 pointer">
                                             <div class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
-                                        <div class="flex-row pl-4 pb-4 pr-4">
+                                        <div class="flex-row pl-4 pb-4 pr-4 pointer">
                                             <div class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(0)">
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
-                                        <div class="flex-row pl-4 pb-4 pr-4" v-if='coordination.DocClass === "883011"'>
+                                        <div class="flex-row pl-4 pb-4 pr-4 pointer" v-if='coordination.DocClass === "883011"'>
                                             <div class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"  @click="sendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
@@ -213,24 +187,6 @@
                                                         <td>{{users.Dept}}</td>
                                                         <td>{{users.Date}}</td>
                                                     </tr>
-<!--                                                    <tr>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                    </tr>-->
-<!--                                                    <tr>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                    </tr>-->
-<!--                                                    <tr>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                        <td></td>-->
-<!--                                                    </tr>-->
                                                 </tbody>
                                             </table>
                                         </div>
@@ -242,22 +198,6 @@
                 </div>
             </div>
         </div>
-
-<!--        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
-<!--            <div class="modal-dialog modal-lg">-->
-<!--                <div class="modal-content">-->
-<!--                    ...-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <a href="javascript: void(0)" data-target=".bd-example-modal-lg" data-toggle="modal">PUUUUUUSH</a>-->
-<!--        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
-<!--            <div class="modal-dialog modal-lg">-->
-<!--                <div class="modal-content products-margin">-->
-<!--                    q-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
 </template>
 
@@ -271,12 +211,13 @@
         },
         props: {
             coordination : Object,
-            isn : Number
+            isn : Number,
+            attachments : Array || Object,
         },
         methods: {
             sendSolution: function (Solution) {
                 if(confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")){
-                    this.axios.post("/setCoordination", {DocISN: this.coordination.ISN, ISN : this.isn, Solution: Solution}).then((response) => {
+                    this.axios.post("/setCoordination", {DocISN: this.coordination.ISN, ISN : this.isn, Solution: Solution, Remark: this.Remark}).then((response) => {
                         if(!response.data.success){
                             alert(response.data.error);
                         }else{
@@ -285,7 +226,7 @@
                     });
                 }
             }
-        }
+        },
     }
 </script>
 

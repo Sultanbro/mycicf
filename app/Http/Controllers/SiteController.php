@@ -231,13 +231,15 @@ class SiteController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
-    public function getTesters(){
+    public function getTesters()
+    {
         return array(
             3921599 => 3921599
         );
     }
 
-    public function postBranchData(Request $request){
+    public function postBranchData(Request $request)
+    {
         $headDept = Auth::user()->level ?? Auth::user()->ISN;
         $headData = Branch::where('kias_id', $headDept)->first();
         $result = [];
@@ -260,7 +262,8 @@ class SiteController extends Controller
         return response()->json($responseData)->withCallback($request->input('callback'));
     }
 
-    public function getChild($parent_id){
+    public function getChild($parent_id)
+    {
         $result = [];
         $data = Branch::where('kias_parent_id', $parent_id)->get();
         foreach($data as $branchData){
@@ -280,7 +283,27 @@ class SiteController extends Controller
         return $result;
     }
 
-    public function dossier(){
+    public function dossier()
+    {
         return view('dossier');
+    }
+
+    public function getAttachment($ISN, $REFISN, $PICTTYPE, KiasServiceInterface $kias){
+        $attachment = $kias->getAttachmentData($REFISN, $ISN, $PICTTYPE);
+        if (isset($attachment->FILEDATA, $attachment->FILENAME)) {
+            $decoded = base64_decode((string)$attachment->FILEDATA);
+
+            $str = str_replace('\\', '/', (string)$attachment->FILENAME);
+            $pathinfo = pathinfo($str);
+
+            header('Content-Description: File Transfer');
+            header('Charset: UTF-8');
+            header('Content-Type: application/'.$pathinfo['extension']);
+            header('Content-Disposition: inline; filename="'.$pathinfo['basename'].'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            echo $decoded;
+        }
     }
 }
