@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="header">
-                    <img src="{{asset('images/white-logo.png')}}" alt="Centras Logo" class="header__logo">
+                    <img src="{{asset('images/new-white-logo.png')}}" alt="Centras Logo" class="header__logo">
                 </div>
             </div>
         </div> <!-- First row -->
