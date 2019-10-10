@@ -60,9 +60,12 @@
         data() {
             return {
                 dateBeg: '2019-01-01',
-                dateEnd: '2019-20-01',
+                dateEnd: '2019-12-01',
                 operations: [],
             }
+        },
+        mounted() {
+            this.getOperations();
         },
         methods: {
             getOperations: function () {

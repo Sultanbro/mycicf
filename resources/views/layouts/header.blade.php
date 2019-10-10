@@ -54,15 +54,11 @@
                 </a>
                 <div class="header-section zi-2">
                     <section class="pointer">
-                        <option>
-                            Раз
-                        </option>
-                        <option>
-                            Два
-                        </option>
-                        <option>
-                            Три
-                        </option>
+                        <a href="/logout">
+                            <option style="color:white">
+                                Выйти
+                            </option>
+                        </a>
                     </section>
                 </div>
             </div>

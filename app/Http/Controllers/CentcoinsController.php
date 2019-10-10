@@ -26,7 +26,7 @@ class CentcoinsController extends Controller
                 'id' => $history->id,
                 "type" => $history->type,
                 "description" => $history->description,
-                "quantity" => $history->quantity,
+                "quantity" => $history->operation_type === "add" ? $history->quantity : $history->quantity*(-1),
                 "total" => $history->total,
             ]);
         }
