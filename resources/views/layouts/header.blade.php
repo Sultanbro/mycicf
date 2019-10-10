@@ -24,7 +24,7 @@
                         О компании
                     </li>
                 </a>
-                <a href="{{route('admin/documentation')}}">
+                <a href="{{route('documentation')}}">
                     <li>
                         Библиотека
                     </li>

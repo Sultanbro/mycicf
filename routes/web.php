@@ -33,9 +33,9 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
     Route::post('/documentation/search', 'DocumentationController@search');
     //DOCUMENTATION ADMIN MIDDLEWARE
-    Route::get('/documentation/', 'DocumentationController@index')->name('admin/documentation');
+    Route::get('/documentation/', 'DocumentationController@index')->name('documentation');
     Route::post('/documentation/save', 'DocumentationController@save');
-
+    Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
     //PARSE
     Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
     Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
@@ -65,7 +65,6 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
     Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-
 
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
