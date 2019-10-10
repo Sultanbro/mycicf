@@ -15,6 +15,7 @@ class DocumentationController extends Controller
     }
 
     public function index(){
+        ini_set ('memory_limit', '2048M');
         return view('svg');
     }
 
@@ -52,8 +53,8 @@ class DocumentationController extends Controller
         $result = [];
         if($request->type == "1"){
             $sqlRes = UploadDocs::selectRaw("position(? in only_text) as pos, only_text, url, title", array($text))
-                ->whereRaw("MATCH (only_text) AGAINST (? IN BOOLEAN MODE)", array($text."*"))
-                ->orderByRaw("MATCH (only_text) AGAINST ('{$text}*' IN BOOLEAN MODE)", 'DESC')
+                ->whereRaw("MATCH (only_text) AGAINST (? IN BOOLEAN MODE)", array($text))
+                ->orderByRaw("MATCH (only_text) AGAINST ('{$text}' IN BOOLEAN MODE)", 'DESC')
                 ->get();
             foreach ($sqlRes as $sql){
                 if((int)$sql->pos < 50){
