@@ -182,7 +182,7 @@ class CoordinationController extends Controller
                 elseif($key === self::AC_ATTRIBUTES_LABEL)
                 {
                     foreach ($value->row as $attribute) {
-                        if($attribute->Value != 0){
+                        if($attribute->Value !== "0"){
                             array_push($attributes, [
                                 'Name' => (string)$attribute->AttrName,
                                 'Value' => (string)$attribute->Value,
