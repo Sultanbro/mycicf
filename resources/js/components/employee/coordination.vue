@@ -171,7 +171,7 @@
         <div class="ml-2 mr-2" v-show="SP !== null">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2">
-                    <strong>Согласование правления</strong>
+                    <strong>Согласование Правления</strong>
                 </div>
                 <div>
                     <table class="dosier-table table text-align-center">

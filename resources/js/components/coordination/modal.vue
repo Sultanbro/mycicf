@@ -8,7 +8,7 @@
                             <div class="bg-blue-standart modal-custom-border-top">
                                 <div class="border-bottom-white">
                                     <div class="pl-5 pt-4 pb-4 pr-5">
-                                        <div class="color-white-standart vertical-middle pt-3 pb-3 inline pointer">
+                                        <div @click="close" class="color-white-standart vertical-middle pt-3 pb-3 inline pointer">
                                             <i class="fas fa-chevron-circle-left"></i>
                                             <span class="pl-1">НАЗАД</span>
                                         </div>
@@ -89,11 +89,11 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="flex-row">
-                                    <div class="bg-blue-standart pl-4 pr-4 pt-2 pb-2">
-                                        <span class="color-white">Повестка АС по вопросу</span>
-                                    </div>
-                                </div>
+                                <!--<div class="flex-row" v-show="coordination.DocClass === '883011'">-->
+                                    <!--<div class="bg-blue-standart pl-4 pr-4 pt-2 pb-2">-->
+                                        <!--<span class="color-white" >Повестка АС по вопросу</span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
                                 <div class="mt-4">
                                     <textarea name="comment-modal" rows="3" v-model="coordination.Remark" class="resize modal-textarea-comment width100" disabled></textarea>
                                 </div>
@@ -142,17 +142,17 @@
                                     </div>
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
-                                            <div class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(1)">
+                                            <div title="Согласовать" class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4 pointer">
-                                            <div class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(0)">
+                                            <div title="Отказать" class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(0)">
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4 pointer" v-if='coordination.DocClass === "883011"'>
-                                            <div class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"  @click="sendSolution(2)">
+                                            <div title="Воздержаться" class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"  @click="sendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
                                         </div>
@@ -225,6 +225,9 @@
                         }
                     });
                 }
+            },
+            close () {
+                this.$parent.$refs.modalButton.click()
             }
         },
     }
