@@ -653,6 +653,10 @@ body {
 	border-radius: 10em;
 }
 
+.rating {
+	display: inline-block;
+	align-self: flex-end;
+}
 
 
 /*Конец стилей Алихана*/
