@@ -1401,7 +1401,7 @@ class ParseController extends Controller
         $_GET['secondPeriod'] = $secondPeriod;
         $_GET['firstYear'] = $firstYear;
         $_GET['secondYear'] = $secondYear;
-        $_GET['dateType'] = 'month';
+        $_GET['dateType'] = $dateType;
         $result = [];
         $companyList = $this->getCompanyListWithId();
         foreach ($this->getCompanyListWithId() as $id => $name){
@@ -1464,6 +1464,32 @@ class ParseController extends Controller
                     $result[$data->company_id]['payout_second'] += $data->insurance_payouts;
                 }
             }
+            elseif ($dateType == 'rise')
+            {
+                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+
+                $firstData = ParseFinance::where('year', '=', $firstYear)
+                    ->where('month', '<=', $firstPeriod)
+                    ->get();
+                $secondData = ParseFinance::where('year', '=', $secondYear)
+                    ->where('month', '<=', $secondPeriod)
+                    ->get();
+                foreach ($firstData as $data){
+                    $result[$data->company_id]['assets_first'] += $data->assets;
+                    $result[$data->company_id]['reserves_first'] += $data->insurance_reserves;
+                    $result[$data->company_id]['capital_first'] += $data->authorized_capital;
+                    $result[$data->company_id]['premium_first'] += $data->insurance_premium;
+                    $result[$data->company_id]['payout_first'] += $data->insurance_payouts;
+                }
+                foreach ($secondData as $data){
+                    $result[$data->company_id]['assets_second'] += $data->assets;
+                    $result[$data->company_id]['reserves_second'] += $data->insurance_reserves;
+                    $result[$data->company_id]['capital_second'] += $data->authorized_capital;
+                    $result[$data->company_id]['premium_second'] += $data->insurance_premium;
+                    $result[$data->company_id]['payout_second'] += $data->insurance_payouts;
+                }
+            }
             else
             {
                 $label_first = $firstPeriod.'кв. '.$firstYear;
@@ -1500,6 +1526,7 @@ class ParseController extends Controller
             'label_second' => $label_second,
             'month' => $this->getMonthLabels(),
             'quarter' => $this->getQuarterLabels(),
+            'controller' => $this
         ]);
     }
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
@@ -2027,10 +2054,9 @@ class ParseController extends Controller
             }
         }
 
-        $model = ParsePremium::where('year', '=', $year)->get();
         $month = 1;
         foreach ($model as $data){
-            if((integer)$data->month > $month){
+            if((integer)$data->month > $month && (integer)$data->year == $year){
                 $month = (integer)$data->month;
             }
         }
