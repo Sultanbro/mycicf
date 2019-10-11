@@ -133,7 +133,7 @@ use App\Http\Controllers\ParseController;
                     <div>
                         <div>
                             <div>
-                                <div class="textStyle_index table-responsive">
+                                <div class="table-responsive">
                                     <table class="table table-responsive  table-bordered table-hover t_table finTable" style="text-align: right">
                                         <thead>
                                         <tr>
