@@ -15,7 +15,7 @@
                             {{this.centcoins}}
                         </div>
                         <div class="font-size-3_8rem ml-2">
-                            <i class="fab fa-bitcoin"></i>
+                            <img src="/images/centcoin-logo.png" class="centcoin">
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
 
 <script>
     export default {
-        name: "centcoins.vue",
+        name: "centcoins",
 
         data() {
             return {

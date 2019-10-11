@@ -176,7 +176,7 @@ ul{
 	font-weight: normal !important;
 }
 .centcoins-table th{
-	background: #f5f6fa !important;
+	background: #275cc7 !important;
 	color: #b7bac5;
 }
 .centcoins-table td{
@@ -760,5 +760,8 @@ body {
 	align-self: flex-end;
 }
 
+.centcoin {
+	width: 3.8rem;
+}
 
 /*Конец стилей Алихана*/

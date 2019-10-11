@@ -40,7 +40,7 @@
                             </tr>
                         </thead>
                         <tbody class="date-color">
-                            <tr v-for="operation in operations">
+                            <tr v-for="operation in operations" :style="operation.quantity > 0 ? 'backgroundColor : #dce7ff' : 'backgroundColor : #ffeefc'">
                                 <td>{{operation.id}}</td>
                                 <td>{{operation.type}}</td>
                                 <td>{{operation.description}}</td>
