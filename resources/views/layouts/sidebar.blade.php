@@ -36,7 +36,7 @@
             </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
                 <li>
-                    <i class="fab fa-bitcoin"></i>
+                    <img src="/images/centcoin-fa.png" style="width: 20px;">
                     <span>Сенткоины</span>
                 </li>
             </a>
