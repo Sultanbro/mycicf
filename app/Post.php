@@ -20,4 +20,14 @@ class Post extends Model
         $this->pinned = 1;
         $this->save();
     }
+
+    public function getIsEdited($post_id) {
+        $model = self::where('id', $post_id)
+                ->first();
+
+        if($model !== null) {
+            return $model->created_at != $model->updated_at;
+        }
+    }
+
 }

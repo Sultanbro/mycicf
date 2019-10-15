@@ -16,17 +16,17 @@ class NewsController extends Controller
 {
     public function addPost(Request $request) {
 
-//        $success = false;
-//        $error = '';
-//
-//        if(!Auth::check()) {
-//            $error = 'Пожалуста авторизуйтесь заново';
-//            $success = false;
-//            return [
-//                'error' => $error,
-//                'success' => $success
-//            ];
-//        }
+        $success = false;
+        $error = '';
+
+        if(!Auth::check()) {
+            $error = 'Пожалуста авторизуйтесь заново';
+            $success = false;
+            return [
+                'error' => $error,
+                'success' => $success
+            ];
+        }
 
 //        try {
             $new_post = new Post();
@@ -51,16 +51,18 @@ class NewsController extends Controller
             'postText' => $new_post->post_text,
 //            'likes' => $newPost->likes,
             'pinned' => $new_post->pinned,
+            'edited' => false,
+            'isLiked' => 0,
             'fullname' => $full_name,
             'id' => $new_post->id,
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
         ];
 
-//        $result = [
-//            'success' => $success,
-//            'error' => $error,
-//            'post' => $response,
-//        ];
+        $result = [
+            'success' => $success,
+            'error' => $error,
+            'post' => $response,
+        ];
         broadcast(new NewPost([
             'post' => $response,
             'type' => Post::NEW_POST
@@ -86,16 +88,19 @@ class NewsController extends Controller
 
         foreach ($model as $item) {
             array_push($response, [
+                'isn' => $item->user_isn,
                 'fullname' => (new User())->getFullName($item->user_isn),
                 'postText' => $item->post_text,
                 'pinned' => $item->pinned,
                 'postId' => $item->id,
+                'edited' => (new Post())->getIsEdited($item->id),
                 'likes' => (new Like())->getLikes($item->id),
                 'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
 //                'comments' => (new Comment())->getComment($item->id),
                 'date' => date('d.m.Y H:i', strtotime($item->created_at))
             ]);
         }
+
 
 //        $result = [
 //            'success' => $success,
@@ -189,6 +194,7 @@ class NewsController extends Controller
                 ]);
         $response = [
             'success' => !$success,
+            'edited' => true,
         ];
 
         broadcast(new NewPost([

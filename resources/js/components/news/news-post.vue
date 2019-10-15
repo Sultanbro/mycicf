@@ -1,5 +1,5 @@
-<template >
-    <div class="ml-2 mr-2 mb-2">
+<template>
+    <div class="mb-2">
         <div class="bg-white news-contains-top">
             <div class="flex-row pl-4 pr-4 pt-3 pb-3">
                 <div>
@@ -13,34 +13,36 @@
                     </span>
                     <span class="color-darkgray mt-minus-8px">
                         <small>{{post.date}}</small>
+                        <transition name="edited">
+                            <small v-if="post.edited">отредактировано</small>
+                        </transition>
                     </span>
                 </div>
                 <div class="ml-auto">
                     <button type="button"
                             @click="setPinned"
                             class="custom-button mr-1"
+                            :disabled="editMode"
                             v-bind:class="{pinned: post.pinned === 1}">
                         <i class="fas fa-thumbtack"></i>
                     </button>
                     <button type="button"
                             @click="editPost"
                             class="custom-button mr-1"
-                            v-bind:class="{editButton: editMode}">
+                            v-if="this.isn === post.isn"
+                            v-bind:class="{editButton: editMode}"
+                            :disabled="editMode">
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button type="button"
-                            class="custom-button"
-                            @click="deletePost">
-                        <i class="fas fa-times"></i>
-                    </button>
+<!--                    <button type="button"-->
+<!--                            class="custom-button"-->
+<!--                            :disabled="editMode"-->
+<!--                            @click="deletePost">-->
+<!--                        <i class="fas fa-times"></i>-->
+<!--                    </button>-->
                 </div>
             </div>
         </div>
-        <post-edit-modal
-            :post="post"
-            v-if="true"
-            :edit-post="editPost">
-        </post-edit-modal>
         <div class="pl-2 pr-2 bg-white">
             <div class="news-block-image-contain">
 <!--                <img src="images/avatar.jpg" class="image">-->
@@ -48,7 +50,7 @@
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
-                <span class="mb-2" v-if="!editMode">{{post.postText}}</span>
+                <span class="mb-2 post-text" v-if="!editMode">{{post.postText}}</span>
             </transition>
             <transition name="edit">
                 <textarea type="text"
@@ -56,8 +58,6 @@
                           v-model="post.postText"
                           v-bind:class="{editText: editMode}"
                           :disabled="!editMode"
-                          data-toggle="modal"
-                          data-target="#exampleModal"
                           class="custom-input mb-2 bg-white w-100"></textarea>
             </transition>
         </div>
@@ -69,22 +69,31 @@
                             type="button"
                             class="buttons pt-2 pl-3 pr-3 pb-2 block"
                             @click="likePost">
-                            <i class="fas fa-thumbs-up color-red" v-bind:class="{liked: post.isLiked === 0}"></i>
-                            <i class="far fa-thumbs-up color-red" v-bind:class="{liked: post.isLiked === 1}"></i>
+                            <i class="fa-thumbs-up color-red" v-bind:class="post.isLiked === 0 ? 'far' : 'fas'"></i>
                             {{post.likes}}
-                            <span class="color-black" v-bind:class="{'color-red': post.isLiked === 1}">Нравится</span>
+                            <span v-bind:class="post.isLiked === 1 ? 'color-red' : 'color-black'">Нравится</span>
                         </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
                         <i class="far fa-comment color-red"></i>
                         <span class="color-black">Комментарий</span>
                     </button>
-                    <transition name="fade">
-                        <button @click="saveEdited"
-                                v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"
-                                type='button'
-                                class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>
-                    </transition>
+                    <div class="ml-auto">
+                        <transition name="fade">
+                            <div class="ml-auto" v-if="editMode">
+                                <transition name="fade">
+                                    <button @click="saveEdited"
+                                            v-if="post.postText != this.oldText && post.postText.length > 0 && editMode"
+                                            type='button'
+                                            class="save-button pr-2 pl-2 mt-2 mb-2 mr-1">Сохранить</button>
+                                </transition>
+                                <button @click="exitEdit"
+                                        v-if="editMode"
+                                        type="button"
+                                        class="save-button pr-2 pl-2 mt-2 mb-2">Отмена</button>
+                            </div>
+                        </transition>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +109,6 @@
                 isPinned: false,
                 bottomOfWindow: 0,
                 editMode: false,
-                edited: false,
                 oldText: this.post.postText,
             }
         },
@@ -114,18 +122,18 @@
         methods: {
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
-                    this.fetch(response.data)
-                })
-            },
-
-            fetch: function (response) {
-                this.$parent.deleteFromPost(this.index);
+                    // this.fetch(response.data)
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                });
             },
 
             setPinned: function () {
                 if(this.post.pinned === 0) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
+                    }).catch(error => {
+                        alert('Ошибка на стороне сервера');
                     });
                 }
                 else {
@@ -138,6 +146,8 @@
             likePost: function () {
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
                 });
             },
 
@@ -151,31 +161,35 @@
             },
 
             editPost: function () {
-                if(this.editMode) {
-                    this.editMode = !this.editMode;
-                    this.edited = !this.edited;
-                    if(this.post.postText === '') {
-                        this.post.postText = this.oldText;
-                    }
-                    if(this.post.postText !== this.oldText) {
-                        this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
-                        })
-                    }
+                if(this.post.postText === "") {
+                    this.post.postText = this.oldText;
                 }
-                else {
-                    this.editMode = true;
+                if(this.post.postText !== this.oldText) {
+                    this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                    }).catch(error => {
+                        alert('Ошибка на стороне сервера');
+                    });
                 }
+                this.oldText = this.post.postText;
+                this.editMode = !this.editMode;
             },
 
             saveEdited: function () {
                 this.editMode = !this.editMode;
                 this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
-                    this.fetchDisabled(response.data);
-                })
+                    this.fetchSaved(response.data);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                });
             },
 
-            fetchDisabled: function (response) {
-                this.edited = !this.edited;
+            fetchSaved: function (response) {
+                this.post.edited = response.edited;
+            },
+
+            exitEdit: function () {
+              this.editMode = !this.editMode;
+              this.post.postText = this.oldText;
             }
 
         }
@@ -210,7 +224,7 @@
         color: darkorange;
     }
 
-    .pinned > .fas {
+    .pinned .fas {
         color: cornflowerblue;
         transform: rotate(45deg);
         transition: transform 0.4s ease-in-out;
@@ -220,7 +234,7 @@
         border: none;
         background-color: transparent;
         outline: none;
-        transition: 0.4s ease;
+        transition: all 0.4s ease;
     }
 
     .buttons > span {
@@ -297,7 +311,6 @@
         opacity: 0;
     }
 
-
     .edit-enter {
         height: 0;
         transition: all 1s ease;
@@ -310,15 +323,27 @@
 
     .edit-leave {
         height: 150px;
-        transition: all 0.4s ease;
+        transition: all 0.5s ease;
     }
 
     .edit-leave-to {
         height: 0;
-        transition: all 0.4s ease;
+        transition: all 0.5s ease;
     }
 
+    .post-text {
+        width: 100%;
+        word-wrap: break-word;
+    }
 
+    .edited-enter-active,
+    .edited-leave-active {
+        transition: opacity 0.1s;
+    }
 
+    .edited-enter,
+    .edited-leave-to {
+        opacity: 0;
+    }
 
 </style>

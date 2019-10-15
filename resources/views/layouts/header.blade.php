@@ -9,27 +9,27 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                <a href="{{route('parse')}}">
+                <a class="header-navigation" href="{{route('parse')}}">
                     <li>
                         Parse
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         Рейтинг
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         О компании
                     </li>
                 </a>
-                <a href="{{route('admin/documentation')}}">
+                <a class="header-navigation" href="{{route('admin/documentation')}}">
                     <li>
                         Библиотека
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         Продукты
                     </li>
@@ -68,4 +68,15 @@
             </div>
         </div>
     </div>
+    <style>
+        .header-navigation {
+            transition: 0.4s ease;
+        }
+
+        .header-navigation:hover {
+            background-color: #4974cc;
+            transition: 0.4s ease;
+        }
+    </style>
+
 </header>

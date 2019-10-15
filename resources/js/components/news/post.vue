@@ -1,41 +1,78 @@
 <template >
-    <div>
-        <form onscroll="bottomOfWindow">
-            <div class="pt-4">
-                <div class="create-publication news-contains-top pl-4 pr-4 ml-2 mr-2">
-                    <div class="pt-2 pb-2"><strong>Создайте публикацию</strong></div>
+    <!-- Исправление верстки -->
+    <div class="mt-4 ml-2 mr-2">
+        <div onscroll="bottomOfWindow" class="mb-2 bg-white rounded">
+            <!--Row 1-->
+            <div class="flex-row">
+                <div class="pl-4 pt-2 pb-2 w-100 bg-top">
+                    <strong>Создайте публикацию</strong>
                 </div>
-                <div class="flex-row bg-white pl-4 pr-4 pt-2 pb-0 ml-2 mr-2 pb-2">
-                    <div class="new-publication-avatar">
-                        <img src="images/avatar.png" class="image small-avatar-circle">
+            </div> <!--Row 1-->
+            <!--Row 2-->
+            <div class="flex-row">
+                <div class="flex-row ml-4 mr-4 pt-2 pb-2 w-100">
+                    <div class="flex-column">
+                        <img src="images/avatar.png" class="rounded-circle avatar">
                     </div>
-                    <textarea v-model="postText" cols="1" class="textarea height100 news-block-avatar border0 width100 pt-2 pl-3" placeholder="Что у вас нового?">{{this.postText}}</textarea>
+                    <div class="flex-column w-100" >
+                        <textarea v-model="postText"
+                                  @input="autoResizeTextarea"
+                                  class="h-100 pl-3 pr-3 border border-0 noresize"
+                                  placeholder="Что у вас нового?"
+                                  ref="textarea">{{this.postText}}</textarea>
+                    </div>
                 </div>
-                <hr class="mb-0 mt-0 border-hr ml-2 mr-2">
-                <div class="flex-row bg-white ml-2 mr-2 news-contains-bottom mb-2">
-                    <div class="new-publication-icons-bg mt-2 mb-2 ml-4 mr-2 pt-1 pr-2 pb-1 pl-2">
-                        <i class="far fa-image forestgreen"></i>
-                        <label for="photo-upload" class="custom-file-upload">Фото/Видео</label>
-                        <input type="file" id="photo-upload" accept="image/*, video/*" multiple>
+            </div> <!--Row 2-->
+            <!--Row 3-->
+            <div class="flex-row w-100 horizontal-line"></div> <!--Row 3-->
+            <!--Row 4-->
+            <div class="flex-row">
+                <div class="flex-row ml-2 mr-2 mt-2 flex-wrap">
+                        <div v-for="(image, index) in images" class="col-md-3 col-lg-3 bg-white mb-2" v-bind:key="image">
+                            <div class="image-container">
+                                <button type="button" class="delete-image-button" @click="deleteImage(index)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="layer"></div>
+                                <img :src="image" class="mw-100">
+                            </div>
+                        </div>
+                </div>
+            </div> <!--Row 4-->
+            <!--Row 5-->
+            <div class="flex-row">
+                <div class="flex-row ml-4 mr-4 pb-2 w-100">
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                        <i class="fas fa-image color-black file-icons"></i>
+                        <label for="photo-upload" class="custom-file-upload">Фото</label>
+                        <input @change='fileUpload' type="file" id="photo-upload" accept="image/*" multiple>
                     </div>
-                    <div class="new-publication-icons-bg mt-2 mb-2 ml-4 mr-2 pt-1 pr-2 pb-1 pl-2">
-                        <i class="fas fa-volume-up cornflowerblue"></i>
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                        <i class="fas fa-play-circle color-black file-icons"></i>
+                        <label for="video-upload" class="custom-file-upload">Видео</label>
+                        <input type="file" id="video-upload" accept="video/*" multiple>
+                    </div>
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                        <i class="fas fa-volume-up color-black file-icons"></i>
                         <label for="audio-upload" class="custom-file-upload">Аудио</label>
                         <input type="file" id="audio-upload" accept="audio/*"multiple>
                     </div>
-                    <div class="new-publication-icons-bg mt-2 mb-2 ml-4 mr-2 pt-1 pr-2 pb-1 pl-2">
-                        <i class="fas fa-file-upload cornflowerblue"></i>
+                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
+                        <i class="fas fa-file-upload color-black file-icons"></i>
                         <label for="file-upload" class="custom-file-upload">Файл</label>
                         <input type="file" id="file-upload" multiple>
                     </div>
-                    <div class="ml-auto mr-4 mt-1 pt-1">
-                        <transition name="fade">
-                            <button type="button" v-if="postText.length > 0" class="btn btn-outline-primary send-button" @click="addPost">Опубликовать</button>
-                        </transition>
-                    </div>
+                    <transition name="fade">
+                        <div class="icons-bg ml-auto" v-if="postText.length > 0">
+                            <button
+                                    @click="addPost"
+                                    class="btn btn-outline-primary pt-1 pb-1 pr-2 pl-2 send-button" >Опубликовать</button>
+                        </div>
+                    </transition>
                 </div>
-            </div>
-        </form>
+            </div> <!--Row 5-->
+        </div>
+
         <div v-if="pinnedPost !== null">
             <news-post
                 :post="pinnedPost"
@@ -53,9 +90,13 @@
             ></news-post>
         </div>
         <div class="text-center">
-            <button type="button" class="load-button" @click="getPosts()">More</button>
+            <button type="button" class="load-button pl-2 pr-2" @click="getPosts()">Больше</button>
         </div>
+
+
     </div>
+
+
 </template>
 
 <script>
@@ -63,6 +104,8 @@
         name: "post",
         data() {
             return {
+                files: [],
+                images : [],
                 lastIndex : null,
                 postText: '',
                 posts: [],
@@ -83,7 +126,10 @@
             isn: Number,
         },
 
-        mounted: function(){
+        mounted: function() {
+            this.$refs.textarea.style.minHeight = this.$refs.textarea.scrollHeight + 'px';
+
+
             Echo.private(`post`)
             .listen('NewPost', (e) => {
                 this.handleIncoming(e);
@@ -92,8 +138,36 @@
         },
 
         methods: {
+            autoResizeTextarea: function() {
+                this.$refs.textarea.style.minHeight = this.$refs.textarea.scrollHeight + 'px';
+            },
+
+            fileUpload: function(e) {
+                const files = e.target.files;
+                console.log(files[0]);
+                const vm = this;
+                Array.from(files).forEach(file => {
+                    if(file.size > 2 * 1024 * 1024) {
+                        alert("ERROR FILE RAZMER : " + file.name);
+                    }
+                    else {
+                        vm.files.push(file);
+                        const image = new Image();
+                        var reader = new FileReader();
+                        reader.onload = (e) => this.images.push(e.target.result);
+                        reader.readAsDataURL(file);
+                    }
+                });
+            },
+
+            deleteImage: function(index) {
+                const vm = this;
+                vm.images.splice(index, 1);
+                // vm.
+            },
+
             addPost: function () {
-                this.axios.post('addPost', {postText: this.postText, isn: this.isn}).then(response => {
+                this.axios.post('/addPost', {postText: this.postText, isn: this.isn}).then(response => {
                     this.fetchAddPost(response.data);
                 });
                 this.postText = '';
@@ -109,13 +183,15 @@
                         fullname: response.fullname,
                         date: response.date,
                         postId: response.id,
+                        edited: response.edited,
+                        isLiked: response.isLiked
                     });
                 // }
             },
 
             getPosts: function () {
                 this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
-                    this.setPosts(response.data)
+                    this.setPosts(response.data);
                 });
             },
 
@@ -139,11 +215,6 @@
                     i++;
                 });
             },
-
-            deleteFromPost: function (index) {
-                this.posts.splice(index, 1);
-            },
-
             unsetAllPinned: function (index) {
                 var vm = this;
                 this.pinnedPost = null;
@@ -168,7 +239,7 @@
 
             handleIncoming (e) {
                 var vm = this;
-                console.log(e);
+                // console.log(e);
                 if(e.type === vm.NEW_POST)
                 {
                     if(e.post.userISN !== vm.isn) {
@@ -222,10 +293,48 @@
         beforeDestroy () {
             window.removeEventListener('scroll', this.handleScroll);
         }
+
     }
 </script>
 
 <style scoped>
+    textarea {
+        display: block;
+        height: auto;
+        max-height: 500px;
+        min-height: 35px;
+        oveflow-y:hidden;
+    }
+
+
+    .rounded {
+        border-radius: 16px !important;
+    }
+
+    .bg-top {
+        background-color: #D9D9D9;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .avatar {
+        height: 4.5em;
+    }
+
+    .noresize {
+        resize: none;
+        outline: none;
+    }
+
+    .horizontal-line {
+        border: 0.3px solid #A2A2A2;
+    }
+
+    .icons-bg {
+        background-color: #EFEFEF;
+        border-radius: 6px;
+        margin: 0;
+    }
+
     input[type='file'] {
         display:none;
     }
@@ -234,27 +343,31 @@
         display: inline-block;
         cursor:pointer;
         color: inherit;
+        transition: 0.4s ease;
+        margin: 0;
+    }
+
+    .file-icons {
+        transition: 0.4s ease;
+    }
+
+    .icons-bg:hover .custom-file-upload,
+    .icons-bg:hover .file-icons
+    {
+        color: cornflowerblue;
+    }
+
+    .send-button {
+        color: #000;
+        background-color: #EFEFEF;
+        border: none;
+        border-radius: 6px;
+        outline: none !important;
         margin: 0;
         transition: 0.4s ease;
     }
 
-    .custom-file-upload:hover {
-        color: cornflowerblue;
-        transition: 0.4s ease;
-    }
-
-    .send-button {
-        height: 2.1em;
-        color: #000;
-        background-color: #efefef;
-        border: none;
-        border-radius: 5px;
-        transition: 0.4s ease;
-        outline: none !important;
-    }
-
     .send-button:hover {
-        transition: 0.4s ease;
         background-color: cornflowerblue;
         color: #FFF;
     }
@@ -267,6 +380,16 @@
     .fade-enter,
     .fade-leave-to {
         opacity: 0
+    }
+
+    .smooth-enter-active,
+    .smooth-leave-active {
+        transition: opacity 0.8s;
+    }
+
+    .smooth-enter,
+    .smooth-leave-to {
+        opacity: 0;
     }
 
     .load-button {
@@ -283,4 +406,42 @@
         transition: 0.4s ease;
         background-color: #66ff00;
     }
+
+    .image-container {
+        position: relative;
+    }
+
+    .layer {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        transition: 0.4s ease-in-out;
+    }
+
+    .delete-image-button {
+        display: none;
+        right: 0;
+        position: absolute;
+        z-index: 2;
+        border: none;
+        background-color: #000;
+        outline: none;
+        transition: 0.4s ease-in-out;
+    }
+
+    .delete-image-button i {
+        color: #FFF;
+    }
+
+    .image-container:hover .layer {
+        transition: 0.4s ease;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .image-container:hover .delete-image-button {
+        cursor: pointer;
+        display: block;
+    }
+
 </style>
