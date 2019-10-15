@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
-            <img src="/images/avatar.png" class="image" v-if="image.encoded === 0">
-            <img :src="'data:image/jpeg;base64,' + image.encoded" v-else>
+            <img src="/images/avatar.png" class="image" v-if="fakeImage">
+            <img :src="imageUrl" @error="fakeImage = true" v-else>
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
             <div class="pointer left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">
@@ -44,14 +44,16 @@
                 married: '',
                 education: '',
                 rating: '',
+                fakeImage: false,
+                imageUrl : null,
             }
         },
         props: {
-            image: Object,
             isn: Number,
         },
-        mounted: function(){
+        created: function(){
             this.getTables();
+            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
         },
         methods: {
             getTables: function(){

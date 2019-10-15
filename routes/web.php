@@ -80,3 +80,5 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         return redirect(route('index'));
     });
 });
+
+Route::get('m', 'SiteController@getMusic');

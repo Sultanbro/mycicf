@@ -81,4 +81,11 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getAttachmentsList($docIsn);
+
+    /**
+     * Получить список фотографии сотрудника по дате обновления
+     * @param $date
+     * @return mixed
+     */
+    public function getEmplImagesByDate($date);
 }
