@@ -17,7 +17,7 @@ Route::post('/login', 'SiteController@postLogin');
 Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
     Route::post('/getBranchData', 'SiteController@postBranchData');
-
+    Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
     //DOSSIER
     Route::post('/emplInfo', 'SiteController@postEmplInfo');
     Route::get('/dossier', 'SiteController@dossier')->name('dossier');
@@ -25,14 +25,17 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     //COORIDNATION
     Route::get('/coordination', 'CoordinationController@index')->name('coordination');
     Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+    Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
+    Route::post('/setCoordination', 'CoordinationController@setCoordination');
+    Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
 
     //DOCUMENTATION
     Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
     Route::post('/documentation/search', 'DocumentationController@search');
     //DOCUMENTATION ADMIN MIDDLEWARE
-    Route::get('/documentation/', 'DocumentationController@index')->name('admin/documentation');
+    Route::get('/documentation/', 'DocumentationController@index')->name('documentation');
     Route::post('/documentation/save', 'DocumentationController@save');
-
+    Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
     //PARSE
     Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
     Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
@@ -63,7 +66,6 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
     Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
 
-
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
     Route::post('/getPosts', 'NewsController@getPosts');
@@ -78,3 +80,5 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         return redirect(route('index'));
     });
 });
+
+Route::get('m', 'SiteController@getMusic');

@@ -17,6 +17,7 @@
                 <label for="title">Title</label>
                 <input type="text" class="form-control" placeholder="title" name="title">
             </div>
+            @if(false)
             <div class="form-group">
                 <label for="title">PARENT ELEMENT</label>
                 <input type="text" class="form-control" placeholder="SELECT" name="title" disabled>
@@ -25,6 +26,7 @@
                 <label for="title">UPLOAD ICON FOR ELEMENT</label>
                 <input type="text" class="form-control" placeholder="FILE-INPUT" name="title" disabled>
             </div>
+            @endif
             <div class="form-group">
                 <label for="url">Url</label>
                 <div class="input-group mb-3">

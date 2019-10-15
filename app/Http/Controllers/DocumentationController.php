@@ -9,9 +9,14 @@ use Illuminate\Support\Facades\Auth;
 class DocumentationController extends Controller
 {
     public $exceptions = ['.',',',':','/',' '];
-    public function index()
+    public function admin()
     {
         return view('welcome');
+    }
+
+    public function index(){
+        ini_set ('memory_limit', '2048M');
+        return view('svg');
     }
 
     public function save(Request $request)

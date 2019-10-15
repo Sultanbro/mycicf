@@ -1,12 +1,7 @@
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
-    {{--<div>--}}
-        {{--<div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">--}}
-            {{--<img src="images/avatar.jpg" class="image">--}}
-        {{--</div>--}}
-    {{--</div>--}}
     <div id="simple-info">
         <simple-info
-            :image="image"></simple-info>
+            :isn="{{ auth()->user()->ISN }}"></simple-info>
     </div>
     <div class="mb-5">
         <ul class="flex-column mr-3 ml-3">
@@ -36,7 +31,7 @@
             </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
                 <li>
-                    <i class="fab fa-bitcoin"></i>
+                    <img src="/images/centcoin-fa.png" style="width: 20px;">
                     <span>Сенткоины</span>
                 </li>
             </a>
