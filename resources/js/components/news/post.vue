@@ -12,7 +12,8 @@
             <div class="flex-row">
                 <div class="flex-row ml-4 mr-4 pt-2 pb-2 w-100">
                     <div class="flex-column">
-                        <img src="images/avatar.png" class="rounded-circle avatar">
+                        <img src="/images/avatar.png" class="image height100 avatar rounded-circle" v-if="fakeImage">
+                        <img :src="imageURL" class="image height100 avatar rounded-circle" @error="fakeImage = true" v-else>
                     </div>
                     <div class="flex-column w-100" >
                         <textarea v-model="postText"
@@ -119,6 +120,8 @@
                 PINNED_POST : 'pinned',
                 DELETED_POST : 'deleted',
                 COMMENDTED_POST : 'commented',
+                fakeImage : false,
+                imageURL : null,
             }
         },
 
@@ -128,7 +131,7 @@
 
         mounted: function() {
             this.$refs.textarea.style.minHeight = this.$refs.textarea.scrollHeight + 'px';
-
+            this.imageURL = "/storage/images/employee/"+this.isn+".png";
 
             Echo.private(`post`)
             .listen('NewPost', (e) => {

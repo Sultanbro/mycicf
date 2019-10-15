@@ -3,8 +3,9 @@
         <div class="bg-white news-contains-top">
             <div class="flex-row pl-4 pr-4 pt-3 pb-3">
                 <div>
-                    <div class="small-avatar-circle-width">
-                        <img src="images/avatar.png" class="image small-avatar-circle">
+                    <div class="post-avatar-circle-width">
+                        <img src="/images/avatar.png" class="image height80 avatar rounded-circle" v-if="fakeImage">
+                        <img :src="imageURL" class="image height100 avatar rounded-circle" @error="fakeImage = true" v-else>
                     </div>
                 </div>
                 <div class="flex-column ml-2">
@@ -34,12 +35,12 @@
                             :disabled="editMode">
                         <i class="fas fa-pen"></i>
                     </button>
-<!--                    <button type="button"-->
-<!--                            class="custom-button"-->
-<!--                            :disabled="editMode"-->
-<!--                            @click="deletePost">-->
-<!--                        <i class="fas fa-times"></i>-->
-<!--                    </button>-->
+                    <button type="button"
+                            class="custom-button"
+                            :disabled="editMode"
+                            @click="deletePost">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -110,7 +111,13 @@
                 bottomOfWindow: 0,
                 editMode: false,
                 oldText: this.post.postText,
+                imageURL: null,
+                fakeImage : false,
             }
+        },
+
+        mounted() {
+            this.imageURL = "/storage/images/employee/"+this.post.isn+".png";
         },
 
         props: {
