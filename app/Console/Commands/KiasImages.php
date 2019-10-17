@@ -40,11 +40,12 @@ class KiasImages extends Command
     public function handle(KiasServiceInterface $kias)
     {
         $start = time();
-        echo "Started at : {$start}\n";
+        $startTime = date('d.m.Y h:i:s',$start);
+        echo "Started at : {$startTime}\n";
         echo "Initialyzing KIAS\n";
         $kias->initSystem();
         echo "Kias initialized\nGetting all images\n";
-        $images = $kias->getEmplImagesByDate('01.01.1970');
+        $images = $kias->getEmplImagesByDate(date('d.m.Y', time()));
         if ($images->error) {
             echo "Error : " . (string)$images->error . "\n";
         } else {

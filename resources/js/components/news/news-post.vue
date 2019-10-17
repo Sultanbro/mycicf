@@ -106,7 +106,7 @@
         },
 
         mounted () {
-            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
+            this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
         },
 
         methods: {
