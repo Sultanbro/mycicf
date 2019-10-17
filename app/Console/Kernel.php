@@ -27,10 +27,10 @@ class Kernel extends ConsoleKernel
     {
         try{
             $schedule->command('kias:images')
-                ->dailyAt('23:59')
+                ->dailyAt('23:55')
                 ->timezone('Asia/Almaty');
             $schedule->command('kias:branches')
-                ->dailyAt('23:59')
+                ->dailyAt('23:55')
                 ->timezone('Asia/Almaty');
         }catch (\Exception $e){
             Log::error($e->getMessage());
