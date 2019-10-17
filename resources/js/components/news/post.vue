@@ -80,6 +80,7 @@
                 allPostShown : false,
                 fakeImage : false,
                 imageUrl : null,
+                postIds : [],
             }
         },
 
@@ -116,6 +117,7 @@
                         date: response.date,
                         postId: response.id,
                     });
+                    this.postIds.push(response.id);
                 this.preloader(false);
 
                 // }
@@ -135,19 +137,19 @@
                     this.allPostShown = true;
                 }
                 response.forEach(function (data) {
-                    if(vm.lastIndex === null){
+                    if(vm.lastIndex === null || vm.lastIndex > data.postId){
                         vm.lastIndex = data.postId;
-                    }
-
-                    if(vm.lastIndex > data.postId){
-                        vm.lastIndex = data.postId
                     }
 
                     if(data.pinned === 1){
                         vm.pinnedPost = data;
                         vm.pinnedPostIndex = i;
                     }
-                    vm.posts.push(data);
+
+                    if(!vm.postIds.includes(data.postId)){
+                        vm.postIds.push(data.postId);
+                        vm.posts.push(data);
+                    }
                     i++;
                 });
                 this.preloader(false);
