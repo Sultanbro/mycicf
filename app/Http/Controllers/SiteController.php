@@ -8,6 +8,7 @@ use App\Providers\KiasServiceProvider;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class SiteController extends Controller
 {
@@ -67,7 +68,6 @@ class SiteController extends Controller
             'success' => $success,
             'error' => $error,
         );
-
         return response()->json($response)->withCallback($request->input('callback'));
     }
 
@@ -211,15 +211,9 @@ class SiteController extends Controller
 
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        $image = 0;
-        if(isset($response->images->row[0]->refisn)){
-            $image = $kias->getAttachmentData($response->images->row[0]->refisn,$response->images->row[0]->isn, 'J');
-            $image = (string)$image->FILEDATA;
-        }
 
         $result = [
             'response' => $response,
-            'image' => $image
         ];
 
         $result = array(
@@ -305,5 +299,14 @@ class SiteController extends Controller
             header('Pragma: public');
             echo $decoded;
         }
+    }
+
+    public function getUserData(KiasServiceInterface $kias){
+        $data = (new User)->getUserData($kias);
+        $result = [
+            'success' => true,
+            'response' => $data,
+        ];
+        return $result;
     }
 }

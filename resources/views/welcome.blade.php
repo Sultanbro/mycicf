@@ -44,4 +44,7 @@
         </form>
     </div>
 </body>
+<script>
+    window.onload = document.getElementById('preloader').style.display = 'none';
+</script>
 </html>

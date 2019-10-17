@@ -1,5 +1,5 @@
 <template>
-    <div class="col-lg-6 column-2"> <!-- Second column-->
+    <div @keydown.enter="login" class="col-lg-6 column-2"> <!-- Second column-->
         <div class="users d-flex justify-content-center">
             <img src="images/users-white-image.png" alt="users image" class="users__image">
         </div>
@@ -13,7 +13,7 @@
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-lock fa-input" aria-hidden="true"></i>
-                    <input :type="passwordType" v-model="password" @keydown.enter="login" class="input-field" placeholder="Пароль">
+                    <input :type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
                     <button type="button" class="show-btn" @click="checkType">
                         <i :class="className" aria-hidden="true" id="icon"></i>
                     </button>
@@ -40,16 +40,24 @@
         },
         methods: {
             login: function () {
+                this.preloader(true);
                 if(!this.validate()){
+                    this.preloader(false)
                     return;
                 }
-                this.axios.post('/login', {username: this.username, password: this.password}).then((response) => {
+                this.axios.post('/login', {username: this.username, password: this.password})
+                .then((response) => {
                     this.afterLogin(response.data)
+                })
+                .catch(response => {
+                    alert(response);
+                    this.preloader(false)
                 })
             },
             afterLogin: function (response) {
                 if(!response.success){
                     alert(response.error);
+                    this.preloader(false)
                 }
 
                 if(response.success){
@@ -82,6 +90,16 @@
                     this.passwordType = 'text';
                 }else{
                     this.passwordType = 'password';
+                }
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
                 }
             }
         },

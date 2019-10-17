@@ -4,7 +4,8 @@
             <div class="flex-row pl-4 pr-4 pt-3 pb-3">
                 <div>
                     <div class="small-avatar-circle-width">
-                        <img src="images/avatar.png" class="image small-avatar-circle">
+                        <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                        <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                     </div>
                 </div>
                 <div class="flex-column ml-2">
@@ -36,11 +37,6 @@
                 </div>
             </div>
         </div>
-        <post-edit-modal
-            :post="post"
-            v-if="true"
-            :edit-post="editPost">
-        </post-edit-modal>
         <div class="pl-2 pr-2 bg-white">
             <div class="news-block-image-contain">
 <!--                <img src="images/avatar.jpg" class="image">-->
@@ -75,12 +71,12 @@
                         <i class="far fa-comment color-red"></i>
                         <span class="color-black">Комментарий</span>
                     </button>
-<!--                    <transition name="fade">-->
-<!--                        <button @click="saveEdited"-->
-<!--                                v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"-->
-<!--                                type='button'-->
-<!--                                class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>-->
-<!--                    </transition>-->
+                    <!--<transition name="fade">-->
+                        <!--<button @click="saveEdited"-->
+                                <!--v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"-->
+                                <!--type='button'-->
+                                <!--class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>-->
+                    <!--</transition>-->
                 </div>
             </div>
         </div>
@@ -98,6 +94,8 @@
                 editMode: false,
                 edited: false,
                 oldText: this.post.postText,
+                fakeImage : false,
+                imageUrl : null,
             }
         },
 
@@ -105,6 +103,10 @@
             isn: Number,
             post: Object,
             index: Number,
+        },
+
+        mounted () {
+            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
         },
 
         methods: {

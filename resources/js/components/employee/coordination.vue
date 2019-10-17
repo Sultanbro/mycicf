@@ -265,6 +265,7 @@
         },
         methods: {
             getTables: function(){
+                this.preloader(true);
                 this.axios.post("/getCoordinationList", {isn: this.isn}).then((response) => {
                     this.fetchResponse(response.data)
                 })
@@ -282,12 +283,13 @@
                 }else{
                     alert(response.error);
                 }
+                this.preloader(false);
             },
             openModal (ISN) {
+                this.preloader(true);
                 this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
                     this.setModalData(response.data)
                 });
-
             },
             setModalData: function (response) {
                 if(response.success){
@@ -299,6 +301,7 @@
                 {
                     alert('ERROR')
                 }
+                this.preloader(false);
             },
             getAttachments () {
                 var vm = this;
@@ -311,6 +314,16 @@
                         vm.attachments = [];
                     }
                 });
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             }
         },
 

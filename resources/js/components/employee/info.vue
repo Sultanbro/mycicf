@@ -208,17 +208,20 @@
             isn: Number,
         },
         methods: {
-            getTables: function(){
+            getTables (){
+                this.preloader(true);
                 this.axios.post("/emplInfo", {isn: this.isn, datebeg: this.datebeg, dateend: this.dateend}).then((response) => {
                     this.fetchResponse(response.data)
                 })
             },
-            getOptions: function () {
+            getOptions () {
+                this.preloader(true);
                 this.axios.post('/getBranchData', {}).then((response) => {
                     this.options = response.data.result;
-                })
+                    this.preloader(false);
+                });
             },
-            fetchResponse: function(response){
+            fetchResponse (response){
                 if(response.success){
                     this.carier = response.result.CARIER;
                     this.vacation = response.result.VACATION;
@@ -228,6 +231,17 @@
                     this.admins = response.result.ADMINS;
                 }else{
                     alert(response.error);
+                }
+                this.preloader(false);
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
                 }
             }
         },

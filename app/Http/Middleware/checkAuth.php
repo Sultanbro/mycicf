@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Library\Services\Kias;
+use App\Library\Services\KiasServiceInterface;
+use App\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +29,9 @@ class checkAuth
         if($this->user === null){
             return redirect('/');
         }
+        $kias = new Kias();
+        $kias->initSystem();
+        (new User)->getUserData($kias);
         return $next($request);
     }
 }

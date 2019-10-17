@@ -57,20 +57,19 @@
         },
         methods: {
             getTables: function(){
-                this.axios.post("/simpleInfo", {isn: this.isn, datebeg: this.datebeg, dateend: this.dateend}).then((response) => {
+                this.axios.post("/getUsersData", {}).then((response) => {
                     this.fetchResponse(response.data)
                 })
             },
             fetchResponse: function(response){
                 if(response.success){
-                    var information = response.result.response;
+                    var information = response.response;
                     this.fullname = information.Name;
                     this.duty = information.Duty;
                     this.birthday = information.Birthday;
-                    this.married = information.Married === "0" ? "Не указано" : information.Married;
-                    this.education = information.Edu  === "0" ? "Не указано" : information.Edu;
-                    this.image.encoded = response.result.image;
-                    this.rating = information.Rating === "0" ? "" : information.Rating;
+                    this.married = information.Married;
+                    this.education = information.Education;
+                    this.rating = information.Rating;
                 }else{
                     alert(response.error);
                 }

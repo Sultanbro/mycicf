@@ -79,6 +79,6 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Auth::logout();
         return redirect(route('index'));
     });
-});
 
-Route::get('m', 'SiteController@getMusic');
+    Route::post('/getUsersData', 'SiteController@getUserData');
+});

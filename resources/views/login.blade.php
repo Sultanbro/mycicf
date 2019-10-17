@@ -13,12 +13,21 @@
     <!-- Font awesome-->
     <link rel="stylesheet" href="{{asset('fonts/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
 
     <script src="{{asset('js/login.js')}}"></script>
 </head>
 <body>
 <!-- Main -->
 <div class="main">
+    <div class="preloader" id="preloader">
+        <div class="item-1"></div>
+        <div class="item-2"></div>
+        <div class="item-3"></div>
+        <div class="item-4"></div>
+        <div class="item-5"></div>
+    </div>
+
     <!-- Container -->
     <div class="container-fluid">
         <!-- First row -->

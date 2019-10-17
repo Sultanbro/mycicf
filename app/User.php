@@ -3,10 +3,11 @@
 namespace App;
 
 use App\Library\Services\Kias;
+use App\Library\Services\KiasServiceInterface;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class User
@@ -78,4 +79,21 @@ class User extends Authenticatable
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
     }
+
+    public function getUserData(KiasServiceInterface $kias){
+        if(!Session::get('users_data', false)){
+            $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
+            $users_data = [
+                'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
+                'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
+                'Birthday' => (string)$response->Birthday == "0" ? 'Не указано' : (string)$response->Birthday,
+                'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
+                'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
+                'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+            ];
+            Session::put('users_data', $users_data);
+        }
+        return Session::get('users_data', []);
+    }
+
 }

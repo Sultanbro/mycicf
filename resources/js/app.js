@@ -24,7 +24,7 @@ Vue.component('post', require('./components/news/post.vue').default);
 
 Vue.component('news-post', require('./components/news/news-post.vue').default);
 
-Vue.component('post-edit-modal', require('./components/news/PostEditModal.vue').default);
+Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
@@ -66,5 +66,9 @@ window.onload = function(){
         component: {
 
         }
+    });
+
+    var head = new Vue({
+        el: '#header',
     });
 };
