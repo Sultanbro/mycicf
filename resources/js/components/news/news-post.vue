@@ -26,7 +26,8 @@
                     <button type="button"
                             @click="editPost"
                             class="custom-button mr-1"
-                            v-bind:class="{editButton: editMode}">
+                            v-bind:class="{editButton: editMode}"
+                            v-if="this.isn === this.post.userISN">
                         <i class="fas fa-pen"></i>
                     </button>
                     <button type="button"
