@@ -45,7 +45,7 @@ class KiasImages extends Command
         echo "Initialyzing KIAS\n";
         $kias->initSystem();
         echo "Kias initialized\nGetting all images\n";
-        $images = $kias->getEmplImagesByDate(date('d.m.Y', time()));
+        $images = $kias->getEmplImagesByDate(date('d.m.Y', strtotime("-1 day",time() )));
         if ($images->error) {
             echo "Error : " . (string)$images->error . "\n";
         } else {
