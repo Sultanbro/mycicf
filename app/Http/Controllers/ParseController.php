@@ -1502,6 +1502,10 @@ class ParseController extends Controller
             'quarter' => $this->getQuarterLabels(),
         ]);
     }
+    public function getTest(){
+        return view('parse/parse');
+    }
+
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
         $premium = [];
         $payout = [];

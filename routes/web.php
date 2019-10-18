@@ -39,6 +39,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
     Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
     Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+    Route::get('parse/parse', 'ParseController@getTest')->name('parse/parse');
     Route::get('parse', function (){
         return redirect(route('parse/company'));
     })->name('parse');
