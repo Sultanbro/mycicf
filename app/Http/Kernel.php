@@ -63,6 +63,9 @@ class Kernel extends HttpKernel
         'checkAuth' => \App\Http\Middleware\checkAuth::class,
         'checkSession' => \App\Http\Middleware\checkSession::class,
         'parseAdmin' => \App\Http\Middleware\ParseAdmin::class,
+        'checkAdminAuth' => \App\Http\Middleware\CheckAdminAuth::class,
+        'okAdmin' => \App\Http\Middleware\checkOkAuth::class,
+        'superAdmin' => \App\Http\Middleware\checkSuperAdmin::class
     ];
 
     /**
@@ -83,5 +86,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\checkAuth::class,
         \App\Http\Middleware\checkSession::class,
         \App\Http\Middleware\ParseAdmin::class,
+        \App\Http\Middleware\CheckAdminAuth::class
     ];
 }

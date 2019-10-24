@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 
 class SiteController extends Controller
 {
@@ -228,7 +229,8 @@ class SiteController extends Controller
     public function getTesters()
     {
         return array(
-            3921599 => 3921599
+            3921599 => 3921599,
+            3600338 => 3600338,
         );
     }
 
@@ -308,5 +310,22 @@ class SiteController extends Controller
             'response' => $data,
         ];
         return $result;
+    }
+
+    public function getMonthLabel(Request $request){
+        $result = [];
+        foreach (parent::getMonthLabels() as $id => $value){
+            array_push($result, [
+                'id' => $id,
+                'label' => $value
+            ]);
+        }
+        $response = [
+            'success' => true,
+            'error' => '',
+            'result' => $result,
+        ];
+
+        return response()->json($response)->withCallback($request->input('callback'));
     }
 }

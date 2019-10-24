@@ -2,11 +2,18 @@
 
 namespace App\Http\Middleware;
 
+use App\Permissions;
+use App\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
 class ParseAdmin
 {
+    public $acceptedRoles = [
+        Permissions::ROLE_SUPERADMIN => Permissions::ROLE_SUPERADMIN,
+        Permissions::ROLE_PARSE => Permissions::ROLE_PARSE,
+    ];
+
     /**
      * Handle an incoming request.
      *
@@ -16,9 +23,8 @@ class ParseAdmin
      */
     public function handle($request, Closure $next)
     {
-        //TODO CHECK USER ISN
-        //TODO MAKE SUPER USERS ARRAY
-        if(in_array(Auth::user()->ISN, array_merge(array(3921599), array())) || true){
+        if((new Permissions())->checkUser($this->acceptedRoles))
+        {
             return $next($request);
         }
         abort(403, 'У вас нет доступа для просмотра данной страницы');
