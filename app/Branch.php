@@ -21,6 +21,10 @@ class Branch extends Model
         return $this->hasMany('App\Branch','kias_parent_id','kias_id') ;
     }
 
+    public function getUserName($isn){
+        return $isn === 0 ? "ADMIN" : (self::where('kias_id', $isn)->first()->fullname ?? "DELETED");
+    }
+
     protected $attributes = [
         'fullname' => null,
         'kias_id' => null,

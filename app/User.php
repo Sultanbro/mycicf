@@ -96,4 +96,19 @@ class User extends Authenticatable
         return Session::get('users_data', []);
     }
 
+    public static function isSuperAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_SUPERADMIN]);
+    }
+
+    public static function isParseAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_PARSE]);
+    }
+
+    public static function isOtdeKadrovAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_OTDELKADROV]);
+    }
+
+    public static function isWNDAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_WND]);
+    }
 }
