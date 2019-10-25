@@ -59,11 +59,12 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::post('parse/delete/data', 'ParseController@postDeleteData');
     });
 
+    //CENTCOINS
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
     Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
 
-
+    //NEWS
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
     Route::post('/getPosts', 'NewsController@getPosts');
@@ -72,6 +73,11 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/unsetPinned', 'NewsController@unsetPinned');
     Route::post('/likePost', 'NewsController@likePost');
     Route::post('/editPost', 'NewsController@editPost');
+
+    //UNTITLED
+    Route::get('/name', 'NameController@getView')->name('name');
+    Route::post('/getItemsList', 'NameController@getItemsList');
+
 
     Route::get('/logout', function (){
         Auth::logout();
