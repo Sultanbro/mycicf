@@ -387,19 +387,8 @@
                 </div>
             </div>
         </div>
-        {{--        Template start          --}}
-        <div>
-            <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
-                <div class="flex-row jc-sb pr-3 pb-4 pl-3 vertical-middle flex-row">
-                    <parse-charts>
-
-                    </parse-charts>
-
-
-                </div>
-            </div>
-            <div></div>
-        </div>
+{{--        Template start          --}}
+                    <parse-charts></parse-charts>
 {{--        Template end--}}
     </div>
 </main>

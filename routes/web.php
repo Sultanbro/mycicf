@@ -35,11 +35,19 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('/documentation/', 'DocumentationController@index')->name('admin/documentation');
     Route::post('/documentation/save', 'DocumentationController@save');
 
+    // MOBILE
+    Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
+    Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
+    Route::get('mobile/matching', 'ParseController@getMatchingMobile')->name('mobile/matching');
+
     //PARSE
     Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
     Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
     Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
     Route::get('parse/parse', 'ParseController@getTest')->name('parse/parse');
+    Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
+    Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
+
     Route::get('parse', function (){
         return redirect(route('parse/company'));
     })->name('parse');
