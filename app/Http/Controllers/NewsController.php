@@ -104,7 +104,8 @@ class NewsController extends Controller
                 'likes' => (new Like())->getLikes($item->id),
                 'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
 //                'comments' => (new Comment())->getComment($item->id),
-                'date' => date('d.m.Y H:i', strtotime($item->created_at))
+                'date' => date('d.m.Y H:i', strtotime($item->created_at)),
+                'userISN' => $item->user_isn
             ]);
         }
 

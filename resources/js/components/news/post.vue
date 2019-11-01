@@ -12,8 +12,8 @@
             <div class="flex-row">
                 <div class="flex-row ml-4 mr-4 pt-2 pb-2 w-100">
                     <div class="flex-column">
-                        <img src="images/avatar.png" class="rounded-circle avatar">
-                    </div>
+                        <img src="/images/avatar.png" class="image-circle-add-post" v-if="fakeImage">
+                        <img :src="imageUrl" @error="fakeImage = true" class="image-circle-add-post" v-else>                    </div>
                     <div class="flex-column w-100" >
                         <TextareaAutosize v-model="postText"
                                           class="ml-2 pl-3 pr-3 border border-0 post-textarea"
@@ -92,13 +92,9 @@
             ></news-post>
         </div>
         <div class="text-center">
-            <button type="button" class="load-button pl-2 pr-2" @click="getPosts()">Больше</button>
+            <button type="button" class="load-button pl-2 pr-2" @click="getPosts()" v-if="!allPostShown">Больше</button>
         </div>
-
-
     </div>
-
-
 </template>
 
 <script>
@@ -121,6 +117,10 @@
                 PINNED_POST : 'pinned',
                 DELETED_POST : 'deleted',
                 COMMENDTED_POST : 'commented',
+                allPostShown : false,
+                fakeImage : false,
+                imageUrl : null,
+                postIds : [],
             }
         },
 
@@ -129,6 +129,7 @@
         },
 
         mounted: function() {
+            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
             Echo.private(`post`)
             .listen('NewPost', (e) => {
                 this.handleIncoming(e);
@@ -161,6 +162,7 @@
             },
 
             addPost: function () {
+                this.preloader(true);
                 this.axios.post('/addPost', this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
@@ -195,36 +197,48 @@
                         edited: response.edited,
                         isLiked: response.isLiked
                     });
+                this.postIds.push(response.id);
+                this.preloader(false);
                 // }
             },
 
-            getPosts: function () {
+            getPosts () {
+                this.preloader(true);
                 this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
-                    this.setPosts(response.data);
+                    this.setPosts(response.data)
                 });
             },
 
-            setPosts: function (response) {
+            setPosts (response) {
                 var vm = this;
                 var i = 0;
+                if(response.length < 5) {
+                    this.allPostShown = true;
+                }
                 response.forEach(function (data) {
-                    if(vm.lastIndex === null){
+                    if(vm.lastIndex === null || vm.lastIndex > data.postId){
                         vm.lastIndex = data.postId;
-                    }
-
-                    if(vm.lastIndex > data.postId){
-                        vm.lastIndex = data.postId
                     }
 
                     if(data.pinned === 1){
                         vm.pinnedPost = data;
                         vm.pinnedPostIndex = i;
                     }
-                    vm.posts.push(data);
+
+                    if(!vm.postIds.includes(data.postId)){
+                        vm.postIds.push(data.postId);
+                        vm.posts.push(data);
+                    }
                     i++;
                 });
+                this.preloader(false);
             },
-            unsetAllPinned: function (index) {
+
+            deleteFromPost (index) {
+                this.posts.splice(index, 1);
+            },
+
+            unsetAllPinned (index) {
                 var vm = this;
                 this.pinnedPost = null;
                 this.posts.forEach(function (post) {
@@ -239,7 +253,8 @@
 
             handleScroll () {
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-                if (this.bottomOfWindow) {
+                if (this.bottomOfWindow && !this.allPostShown) {
+                    this.preloader(true);
                     this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
                         this.setPosts(response.data)
                     });
@@ -292,6 +307,17 @@
                         }
                     });
                 }
+            },
+
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             }
         },
 
@@ -302,7 +328,6 @@
         beforeDestroy () {
             window.removeEventListener('scroll', this.handleScroll);
         }
-
     }
 </script>
 

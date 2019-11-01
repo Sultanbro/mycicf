@@ -8,6 +8,8 @@ use App\Providers\KiasServiceProvider;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 
 class SiteController extends Controller
 {
@@ -67,7 +69,6 @@ class SiteController extends Controller
             'success' => $success,
             'error' => $error,
         );
-
         return response()->json($response)->withCallback($request->input('callback'));
     }
 
@@ -211,15 +212,9 @@ class SiteController extends Controller
 
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        $image = 0;
-        if(isset($response->images->row[0]->refisn)){
-            $image = $kias->getAttachmentData($response->images->row[0]->refisn,$response->images->row[0]->isn, 'J');
-            $image = (string)$image->FILEDATA;
-        }
 
         $result = [
             'response' => $response,
-            'image' => $image
         ];
 
         $result = array(
@@ -231,13 +226,16 @@ class SiteController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
-    public function getTesters(){
+    public function getTesters()
+    {
         return array(
-            3921599 => 3921599
+            3921599 => 3921599,
+            3600338 => 3600338,
         );
     }
 
-    public function postBranchData(Request $request){
+    public function postBranchData(Request $request)
+    {
         $headDept = Auth::user()->level ?? Auth::user()->ISN;
         $headData = Branch::where('kias_id', $headDept)->first();
         $result = [];
@@ -260,7 +258,8 @@ class SiteController extends Controller
         return response()->json($responseData)->withCallback($request->input('callback'));
     }
 
-    public function getChild($parent_id){
+    public function getChild($parent_id)
+    {
         $result = [];
         $data = Branch::where('kias_parent_id', $parent_id)->get();
         foreach($data as $branchData){
@@ -280,7 +279,53 @@ class SiteController extends Controller
         return $result;
     }
 
-    public function dossier(){
+    public function dossier()
+    {
         return view('dossier');
+    }
+
+    public function getAttachment($ISN, $REFISN, $PICTTYPE, KiasServiceInterface $kias){
+        $attachment = $kias->getAttachmentData($REFISN, $ISN, $PICTTYPE);
+        if (isset($attachment->FILEDATA, $attachment->FILENAME)) {
+            $decoded = base64_decode((string)$attachment->FILEDATA);
+
+            $str = str_replace('\\', '/', (string)$attachment->FILENAME);
+            $pathinfo = pathinfo($str);
+
+            header('Content-Description: File Transfer');
+            header('Charset: UTF-8');
+            header('Content-Type: application/'.$pathinfo['extension']);
+            header('Content-Disposition: inline; filename="'.$pathinfo['basename'].'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            echo $decoded;
+        }
+    }
+
+    public function getUserData(KiasServiceInterface $kias){
+        $data = (new User)->getUserData($kias);
+        $result = [
+            'success' => true,
+            'response' => $data,
+        ];
+        return $result;
+    }
+
+    public function getMonthLabel(Request $request){
+        $result = [];
+        foreach (parent::getMonthLabels() as $id => $value){
+            array_push($result, [
+                'id' => $id,
+                'label' => $value
+            ]);
+        }
+        $response = [
+            'success' => true,
+            'error' => '',
+            'result' => $result,
+        ];
+
+        return response()->json($response)->withCallback($request->input('callback'));
     }
 }

@@ -4,13 +4,13 @@
             <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                 <div class="flex-row jc-sb">
                     <div>
-                        <input type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 date-width" v-model="datebeg">
+                        <input type="date" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="datebeg">
                     </div>
                     <div>
-                        <input type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 date-width" v-model="dateend">
+                        <input type="date" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateend">
                     </div>
                     <div>
-                        <div class="bg-darkgray flex-row date-color pl-4 pr-2 pt-1 pb-1 date-width">
+                        <div class="bg-darkgray flex-row date-color pr-1 pt-1 pb-1 date-width">
                             <treeselect v-model="isn" :multiple="false" :options="options" />
                         </div>
                     </div>
@@ -208,17 +208,20 @@
             isn: Number,
         },
         methods: {
-            getTables: function(){
+            getTables (){
+                this.preloader(true);
                 this.axios.post("/emplInfo", {isn: this.isn, datebeg: this.datebeg, dateend: this.dateend}).then((response) => {
                     this.fetchResponse(response.data)
                 })
             },
-            getOptions: function () {
+            getOptions () {
+                this.preloader(true);
                 this.axios.post('/getBranchData', {}).then((response) => {
                     this.options = response.data.result;
-                })
+                    this.preloader(false);
+                });
             },
-            fetchResponse: function(response){
+            fetchResponse (response){
                 if(response.success){
                     this.carier = response.result.CARIER;
                     this.vacation = response.result.VACATION;
@@ -228,6 +231,17 @@
                     this.admins = response.result.ADMINS;
                 }else{
                     alert(response.error);
+                }
+                this.preloader(false);
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
                 }
             }
         },

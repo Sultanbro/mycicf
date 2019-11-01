@@ -5,7 +5,11 @@
                 {{--<div class="header_contain">--}}
                 {{--</div>--}}
                 <div class="header_contain">
-                    <ul>
+                    <ul style="
+                        display: flex;
+                        flex-flow: row;
+                        margin-bottom: 0;
+                    ">
                         <li class="screen_invise">
                             <div class="menu">
                                 <div class="menu__icon">
@@ -46,3 +50,25 @@
         </div>
     </div>	<!--Конец шапки-->
 </header>
+<style>
+    .menuinvise {
+        margin: 0 40px;
+        font-size: 1.2em;
+        align-items: center;
+        display: flex;
+    }
+
+    .menuinvise a {
+        color : white;
+        transition: color 0.5s ease;
+    }
+
+    .menuinvise a:hover {
+        color : #49bcff;
+    }
+
+
+    .header_bg {
+        background-color: #4267b2;
+    }
+</style>

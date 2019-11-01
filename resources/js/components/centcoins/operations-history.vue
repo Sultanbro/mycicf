@@ -40,7 +40,7 @@
                             </tr>
                         </thead>
                         <tbody class="date-color">
-                            <tr v-for="operation in operations">
+                            <tr v-for="operation in operations" :style="operation.quantity > 0 ? 'backgroundColor : #dce7ff' : 'backgroundColor : #ffeefc'">
                                 <td>{{operation.id}}</td>
                                 <td>{{operation.type}}</td>
                                 <td>{{operation.description}}</td>
@@ -60,9 +60,12 @@
         data() {
             return {
                 dateBeg: '2019-01-01',
-                dateEnd: '2019-20-01',
+                dateEnd: '2019-12-01',
                 operations: [],
             }
+        },
+        mounted() {
+            this.getOperations();
         },
         methods: {
             getOperations: function () {

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +25,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        try{
+            $schedule->command('kias:images')
+                ->dailyAt('03:00')
+                ->timezone('Asia/Almaty');
+            $schedule->command('kias:branches')
+                ->dailyAt('03:00')
+                ->timezone('Asia/Almaty');
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+        }
     }
 
     /**

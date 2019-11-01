@@ -1,4 +1,5 @@
-<header class="flex-row header">
+<header class="flex-row header" id="header">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/app.css')}}">
     <div class="main_margin width100 flex-row vertical-middle">
         <div class="col-md-2 vertical-middle">
             <div class="header-img-width">
@@ -24,7 +25,7 @@
                         О компании
                     </li>
                 </a>
-                <a class="header-navigation" href="{{route('admin/documentation')}}">
+                <a class="header-navigation" href="{{route('documentation')}}">
                     <li>
                         Библиотека
                     </li>
@@ -40,11 +41,8 @@
             <div class="flex-column col-md-5 mt-1 mb-1 pl-0 pr-0">
                 <a href="javascript:void(0)" class="flex-row header-avatar-contain header-menu-hover text-decoration pt-1 pb-1">
                     <div href="javascript:void(0)" class="small-avatar-circle-width ml-2">
-                        <template
-                            :image="image">
-                            <img src="images/avatar.png" class="image height100 small-avatar-circle" v-if="image.encoded === 0">
-                            <img :src="'data:image/jpeg;base64,' + image.encoded" class="image height100 small-avatar-circle" v-else="image.encoded === 0">
-                        </template>
+                        <user-image
+                            :isn="{{ auth()->user()->ISN }}"></user-image>
                     </div>
 
                     <div class="vertical-middle header-avatar-nickname">
@@ -54,29 +52,21 @@
                 </a>
                 <div class="header-section zi-2">
                     <section class="pointer">
-                        <option>
-                            Раз
-                        </option>
-                        <option>
-                            Два
-                        </option>
-                        <option>
-                            Три
-                        </option>
+                        <a href="/logout">
+                            <option style="color:white">
+                                Выйти
+                            </option>
+                        </a>
                     </section>
                 </div>
             </div>
         </div>
     </div>
-    <style>
-        .header-navigation {
-            transition: 0.4s ease;
-        }
-
-        .header-navigation:hover {
-            background-color: #4974cc;
-            transition: 0.4s ease;
-        }
-    </style>
-
+    <div class="preloader" id="preloader">
+        <div class="item-1"></div>
+        <div class="item-2"></div>
+        <div class="item-3"></div>
+        <div class="item-4"></div>
+        <div class="item-5"></div>
+    </div>
 </header>

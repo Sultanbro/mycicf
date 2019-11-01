@@ -4,7 +4,8 @@
             <div class="flex-row pl-4 pr-4 pt-3 pb-3">
                 <div>
                     <div class="small-avatar-circle-width">
-                        <img src="images/avatar.png" class="image small-avatar-circle">
+                        <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                        <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                     </div>
                 </div>
                 <div class="flex-column ml-2">
@@ -29,17 +30,15 @@
                     <button type="button"
                             @click="editPost"
                             class="custom-button mr-1"
-                            v-if="this.isn === post.isn"
                             v-bind:class="{editButton: editMode}"
-                            :disabled="editMode">
+                            v-if="this.isn === this.post.userISN">
                         <i class="fas fa-pen"></i>
                     </button>
-<!--                    <button type="button"-->
-<!--                            class="custom-button"-->
-<!--                            :disabled="editMode"-->
-<!--                            @click="deletePost">-->
-<!--                        <i class="fas fa-times"></i>-->
-<!--                    </button>-->
+                    <button type="button"
+                            class="custom-button"
+                            @click="deletePost">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -110,6 +109,8 @@
                 bottomOfWindow: 0,
                 editMode: false,
                 oldText: this.post.postText,
+                fakeImage : false,
+                imageUrl : null,
             }
         },
 
@@ -119,10 +120,14 @@
             index: Number,
         },
 
+        mounted () {
+            this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+        },
+
         methods: {
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
-                    // this.fetch(response.data)
+                    this.fetch(response.data)
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
                 });
@@ -251,6 +256,7 @@
         display: none;
         transition: all 0.4s ease-in-out;
     }
+
 
     .editButton >  .fa-pen {
         color: darkorange;

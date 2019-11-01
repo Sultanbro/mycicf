@@ -8,7 +8,7 @@ use App\Http\Controllers\ParseController;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>i-ci.kz</title>
+    <title>Parse | My.cic.kz</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -114,7 +114,7 @@ use App\Http\Controllers\ParseController;
                                 </div>
                             </div>
                             <div>
-                                <a onclick="load({{$_GET['productId'] ?? 0}})"><div class="showbut margleft20 flexvertcenter pointer">
+                                <a onclick="load()"><div class="showbut margleft20 flexvertcenter pointer">
                                         показать
                                     </div></a>
                             </div>
@@ -133,7 +133,7 @@ use App\Http\Controllers\ParseController;
                     <div>
                         <div>
                             <div>
-                                <div class="textStyle_index table-responsive">
+                                <div class="table-responsive">
                                     <table class="table table-responsive  table-bordered table-hover t_table finTable" style="text-align: right">
                                         <thead>
                                         <tr>
@@ -169,23 +169,23 @@ use App\Http\Controllers\ParseController;
                                                 <td style="text-align: left"><span>{{$companyList[$id]}}</span></td>
                                                 <td><span>{{number_format($result[$id]['assets_first'], 0, '.', ' ')}}</span></td>
                                                 <td><span>{{number_format($result[$id]['assets_second'], 0, '.', ' ')}}</span></td>
-                                                <td><span>{{\App\Http\Controllers\ParseController::getChangedValFinance($result[$id]['assets_first'], $result[$id]['assets_second'])}}</span></td>
+                                                <td><span>{{$controller->getChangedValFinance($result[$id]['assets_first'], $result[$id]['assets_second'])}}</span></td>
                                                 <td><span>{{number_format($result[$id]['reserves_first'], 0, '.', ' ')}}</span></td>
                                                 <td><span>{{number_format($result[$id]['reserves_second'], 0, '.', ' ')}}</span></td>
-                                                <td><span>{{\App\Http\Controllers\ParseController::getChangedValFinance($result[$id]['reserves_first'], $result[$id]['reserves_second'])}}</span></td>
+                                                <td><span>{{$controller->getChangedValFinance($result[$id]['reserves_first'], $result[$id]['reserves_second'])}}</span></td>
                                                 <td><span>{{number_format($result[$id]['capital_first'], 0, '.', ' ')}}</span></td>
                                                 <td><span>{{number_format($result[$id]['capital_second'], 0, '.', ' ')}}</span></td>
-                                                <td><span>{{\App\Http\Controllers\ParseController::getChangedValFinance($result[$id]['capital_first'], $result[$id]['capital_second'])}}</span></td>
+                                                <td><span>{{$controller->getChangedValFinance($result[$id]['capital_first'], $result[$id]['capital_second'])}}</span></td>
                                                 <td><span>{{number_format($result[$id]['premium_first'], 0, '.', ' ')}}</span></td>
                                                 <td><span>{{number_format($result[$id]['premium_second'], 0, '.', ' ')}}</span></td>
-                                                <td><span>{{\App\Http\Controllers\ParseController::getChangedValFinance($result[$id]['premium_first'], $result[$id]['premium_second'])}}</span></td>
+                                                <td><span>{{$controller->getChangedValFinance($result[$id]['premium_first'], $result[$id]['premium_second'])}}</span></td>
                                                 <td><span>{{number_format($result[$id]['payout_first'], 0, '.', ' ')}}</span></td>
                                                 <td><span>{{number_format($result[$id]['payout_second'], 0, '.', ' ')}}</span></td>
-                                                <td><span>{{\App\Http\Controllers\ParseController::getChangedValFinance($result[$id]['payout_first'], $result[$id]['payout_second'])}}</span></td>
+                                                <td><span>{{$controller->getChangedValFinance($result[$id]['payout_first'], $result[$id]['payout_second'])}}</span></td>
                                             </tr>
                                         @endforeach
                                         <tr>
-                                            <td><span></span></td>
+                                                 <td><span></span></td>
                                             <td><span></span></td>
                                             <td><span></span></td>
                                             <td><span></span></td>
@@ -218,37 +218,19 @@ use App\Http\Controllers\ParseController;
 </body>
 
 <script>
-    function load(id) {
+    function load() {
         var dateType = $('#period').val();
         var firstYear = $('#firstYear').val();
         var secondYear = $('#secondYear').val();
         var firstPeriod = $('#firstPeriod').val() || 0;
         var secondPeriod = $('#secondPeriod').val() || 0;
         var disc = 0;
-        if ($('#checkJs')[0].checked){
-            disc = $('#disc').val();
-        }
         firstPeriod = parseInt(firstPeriod);
         secondPeriod = parseInt(secondPeriod);
         location.href = '?dateType=' + dateType +
             '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
             '&firstYear=' + firstYear + '&secondYear=' + secondYear +
-            '&productId=' + id + '&disc=' + disc;
-    }
-    function getProducts(id) {
-        var dateType = $('#period').val();
-        var firstYear = $('#firstYear').val();
-        var secondYear = $('#secondYear').val();
-        var firstPeriod = $('#firstPeriod').val() || 0;
-        var secondPeriod = $('#secondPeriod').val() || 0;
-        var disc = 0;
-        if ($('#checkJs')[0].checked){
-            disc = $('#disc').val();
-        }
-        location.href = '/parse/product?dateType=' + dateType +
-            '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
-            '&firstYear=' + firstYear + '&secondYear=' + secondYear +
-            '&companyId=' + id + '&disc=' + disc;
+            '&disc=' + disc;
     }
 </script>
 

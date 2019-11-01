@@ -14,11 +14,13 @@ use App\PreviousProductName;
 
 use App\Imports\UsersImport;
 
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ParseController extends Controller
 {
@@ -200,15 +202,15 @@ class ParseController extends Controller
         }
     }
     public function index(){
-        return view('parse/index',[
-            'types' => $this->getDocumentType(),
-        ]);
+        return view('parse/index');
     }
-    public function upload(){
-        $document_type = $_POST['type'];
-        $month = (integer)$_POST['month'];
-        $year = (integer)$_POST['year'];
-
+    public function upload(Request $request){
+        //TODO VALIDATE
+        $document_type = $request->type;
+        $month = $request->month;
+        $year = $request->year;
+        $productStart = $request->row - 1;
+        $model = null;
         switch ($document_type){
             case self::PREMIUM :
                 $model = ParsePremium::where('month' , '=', $month)
@@ -230,56 +232,63 @@ class ParseController extends Controller
                     ->where('year', '=', $year)
                     ->get();
                 break;
-            default :
-                echo 'Выберите правильный тип документа<br>';
-                echo '<a href="'.URL::previous().'">&laquo;назад</a>';
-                return;
         }
-
-        if(sizeof($model) > 0){
-            echo 'За данный период загруженные данные уже имеются<br>';
-            echo '<a href="'.URL::previous().'">&laquo;назад</a>';
-            return;
+        if(sizeof($model) > 0 || $model === null){
+            $result = [
+                'success' => false,
+                'error' => 'За данный период загруженные данные уже имеются',
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
         }
-
-        header('Content-Type: text/plain');
-        $filepath = basename($_FILES['xls']['name']);
-        $filename = (string)time();
-        $filename.= '_'.$document_type.'_'.Session::get('id', '0');;
-
-        $extension = explode(".", strtolower($filepath));
-        $filename .= '.'.end($extension);
-        $productStart = (integer)$_POST['productStart'] - 1;
-        if(move_uploaded_file($_FILES['xls']['tmp_name'], $filename)){
-            echo 'Файл загружен<br>';
-        }else{
-            echo 'Error';
-            exit;
+        try{
+            $file = $request->file;
+            $contents = $file->get();
+            $extension = $file->extension();
+            $filePath = "parse/{$document_type}/{$month}_{$year}.{$extension}";
+            Storage::disk('local')->put("/public/{$filePath}", $contents);
+        }catch (FileException $ex){
+            $result = [
+                'success' => false,
+                'error' => $ex->getMessage(),
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
         }
+        $filePath = "storage/{$filePath}";
+        if($document_type > 4 || $document_type < 1){
+            $result = [
+                'success' => false,
+                'error' => 'Выберите правильный тип документа',
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        $result = [
+            'success' => true,
+            'error' => '',
+        ];
+        echo json_encode($result);
         switch ($document_type){
             case 1 :
-                echo 'Отчет будет готов через некоторое время<br>';
-                $this->parseXlsFinance($filename, $year, $month,$productStart);
+                $this->parseXlsFinance($filePath, $year, $month,$productStart);
                 break;
             case 2 :
-                echo 'Отчет будет готов через некоторое время<br>';
-                $this->parseXlsPremium($filename, $year, $month,$productStart);
+                $this->parseXlsPremium($filePath, $year, $month,$productStart);
                 break;
             case 3 :
-                echo 'Отчет будет готов через некоторое время<br>';
-                $this->parseXlsPayout($filename, $year, $month,$productStart);
+                $this->parseXlsPayout($filePath, $year, $month,$productStart);
                 break;
             case 4 :
-                echo 'Отчет будет готов через некоторое время<br>';
-                $this->parseXlsStandart($filename, $year, $month,$productStart);
+                $this->parseXlsStandart($filePath, $year, $month,$productStart);
                 break;
-            default :
-                echo 'Выберите правильный тип документа<br>';
-                echo '<a href="'.URL::previous().'">назад</a>';
-                return;
         }
-        echo 'Файл загружен';
-        echo '<a href="'.URL::previous().'">назад</a>';
+    }
+    public function getDocTypes(Request $request){
+        $response = [
+            'success' => true,
+            'error' => '',
+            'result' => $this->getDocumentType()
+        ];
+
+        return response()->json($response)->withCallback($request->input('callback'));
     }
     public function getDocumentType(){
         return [
@@ -1401,7 +1410,7 @@ class ParseController extends Controller
         $_GET['secondPeriod'] = $secondPeriod;
         $_GET['firstYear'] = $firstYear;
         $_GET['secondYear'] = $secondYear;
-        $_GET['dateType'] = 'month';
+        $_GET['dateType'] = $dateType;
         $result = [];
         $companyList = $this->getCompanyListWithId();
         foreach ($this->getCompanyListWithId() as $id => $name){
@@ -1464,6 +1473,32 @@ class ParseController extends Controller
                     $result[$data->company_id]['payout_second'] += $data->insurance_payouts;
                 }
             }
+            elseif ($dateType == 'rise')
+            {
+                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+
+                $firstData = ParseFinance::where('year', '=', $firstYear)
+                    ->where('month', '<=', $firstPeriod)
+                    ->get();
+                $secondData = ParseFinance::where('year', '=', $secondYear)
+                    ->where('month', '<=', $secondPeriod)
+                    ->get();
+                foreach ($firstData as $data){
+                    $result[$data->company_id]['assets_first'] += $data->assets;
+                    $result[$data->company_id]['reserves_first'] += $data->insurance_reserves;
+                    $result[$data->company_id]['capital_first'] += $data->authorized_capital;
+                    $result[$data->company_id]['premium_first'] += $data->insurance_premium;
+                    $result[$data->company_id]['payout_first'] += $data->insurance_payouts;
+                }
+                foreach ($secondData as $data){
+                    $result[$data->company_id]['assets_second'] += $data->assets;
+                    $result[$data->company_id]['reserves_second'] += $data->insurance_reserves;
+                    $result[$data->company_id]['capital_second'] += $data->authorized_capital;
+                    $result[$data->company_id]['premium_second'] += $data->insurance_premium;
+                    $result[$data->company_id]['payout_second'] += $data->insurance_payouts;
+                }
+            }
             else
             {
                 $label_first = $firstPeriod.'кв. '.$firstYear;
@@ -1500,6 +1535,7 @@ class ParseController extends Controller
             'label_second' => $label_second,
             'month' => $this->getMonthLabels(),
             'quarter' => $this->getQuarterLabels(),
+            'controller' => $this
         ]);
     }
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
@@ -2027,10 +2063,9 @@ class ParseController extends Controller
             }
         }
 
-        $model = ParsePremium::where('year', '=', $year)->get();
         $month = 1;
         foreach ($model as $data){
-            if((integer)$data->month > $month){
+            if((integer)$data->month > $month && (integer)$data->year == $year){
                 $month = (integer)$data->month;
             }
         }
@@ -2053,13 +2088,13 @@ class ParseController extends Controller
     }
     public function postAddCompany(Request $request){
         $this->validate($request, [
-            'full_name' => 'required|unique:insurance_company|max:255',
-            'short_name' => 'required|unique:insurance_company|max:255',
+            'fullname' => 'required|unique:insurance_company|max:255',
+            'shortname' => 'required|unique:insurance_company|max:255',
         ]);
 
         $model = new InsuranceCompany();
-        $model->full_name = $request->full_name;
-        $model->short_name = $request->short_name;
+        $model->full_name = $request->fullname;
+        $model->short_name = $request->shortname;
         if($model->save()){
             $previousName = new PreviousName();
             $previousName->companyId = $model->id;
@@ -2079,12 +2114,12 @@ class ParseController extends Controller
     }
     public function postAddProduct(Request $request){
         $this->validate($request, [
-            'full_name' => 'required|unique:insurance_products|max:255',
-            'short_name' => 'required|unique:insurance_products|max:255',
+            'fullname' => 'required|unique:insurance_products|max:255',
+            'shortname' => 'required|unique:insurance_products|max:255',
         ]);
         $model = new InsuranceProduct();
-        $model->full_name = $request->full_name;
-        $model->short_name = $request->short_name;
+        $model->full_name = $request->fullname;
+        $model->short_name = $request->shortname;
         if($model->save()){
             $previousName = new PreviousProductName();
             $previousName->product_id = $model->id;
@@ -2104,25 +2139,25 @@ class ParseController extends Controller
         return view('parse.editCompany', compact('list'));
     }
     public function postEditCompany(Request $request){
-        if($request->company_id == ''){
+        if($request->company == ''){
             return  'Выберите компанию';
         }
-        $id = $request->company_id;
-        if($request->full_name == '' && $request->short_name == ''){
+        $id = $request->company;
+        if($request->fullname == '' && $request->shortname == ''){
             return  'как миннимум одно из двух текстовых  полей должна быть заполнена';
         }
         $result = '';
-        if($request->full_name != ''){
+        if($request->fullname != ''){
             $previousName = new PreviousName();
             $previousName->companyId = $id;
-            $previousName->name = $request->full_name;
+            $previousName->name = $request->fullname;
             $previousName->save();
             $result .= 'Добавлена полное наименование<br>';
         }
 
-        if($request->short_name != ''){
+        if($request->shortname != ''){
             $model = InsuranceCompany::findOrFail($id);
-            $model->short_name = $request->short_name;
+            $model->short_name = $request->shortname;
             $model->save();
             $result .= 'Добавлена наименование для вывода';
         }
@@ -2133,31 +2168,31 @@ class ParseController extends Controller
         return view('parse.editProduct', compact('list'));
     }
     public function postEditProduct(Request $request){
-        if($request->product_id == ''){
+        if($request->product == ''){
             return  'Выберите продукт';
         }
-        $id = $request->product_id;
-        if($request->full_name == '' && $request->short_name == ''){
+        $id = $request->product;
+        if($request->fullname == '' && $request->shortname == ''){
             return  'как миннимум одно из двух текстовых  полей должна быть заполнена';
         }
         $result = '';
         if($request->full_name != ''){
             $previousName = new PreviousProductName();
             $previousName->product_id = $id;
-            $previousName->name = $request->full_name;
+            $previousName->name = $request->fullname;
             $previousName->save();
             $result .= 'Добавлена полное наименование<br>';
         }
 
         if($request->short_name != ''){
             $model = InsuranceProduct::findOrFail($id);
-            $model->short_name = $request->short_name;
+            $model->short_name = $request->shortname;
             $model->save();
             $result .= 'Добавлена наименование для вывода';
         }
         return $result;
     }
-    public function getLoadedData(){
+    public function getLoadedData(Request $request){
         $result = [];
         for($year = 2014; $year <= (integer)date("Y");$year++){
             for($month = 1; $month <= 12 ; $month++){
@@ -2182,14 +2217,21 @@ class ParseController extends Controller
                 $result[$year][$month]['finance'] = sizeof($finance) < 1 ? 0 : 1;
             }
         }
-        $types = $this->getDocumentType();
-        return view('parse.load',compact('result'), compact('types'));
+        return response()->json([
+                'success' => true,
+                'error' => '',
+                'data' => $result
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
     }
     public function postDeleteData(Request $request){
         $month = $request->month;
         $year = $request->year;
         $type = $request->type;
-        dd([$month, $year, $type]);
+        $success = true;
+        $error = '';
         switch ($type){
             case self::FINANCE :
                 ParseFinance::where('month', $month)
@@ -2212,7 +2254,56 @@ class ParseController extends Controller
                     ->delete();
                 break;
             default :
-                return 'Выберите правильный тип докмуента';
+                $success = false;
+                $error = 'Выберите правильный тип докмуента';
         }
-        return 'Данные за выбранный период удалены';
-    }}
+        return response()
+            ->json([
+                'success' => $success,
+                'error' => $error,
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
+    }
+    public function getLoadView(){
+        return view('parse.loadData');
+    }
+    public function getCompanyListAxios(Request $request){
+        $result = [];
+        foreach($this->getCompanyListWithId() as $id => $value){
+            array_push($result, [
+                'id' => $id,
+                'label' => $value
+            ]);
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'result' => $result,
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
+    }
+    public function getProductListAxios(Request $request){
+        $result = [];
+        foreach($this->getProductListWithId() as $id => $value){
+            array_push($result, [
+                'id' => $id,
+                'label' => $value
+            ]);
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'result' => $result,
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
+    }
+
+}

@@ -13,7 +13,5 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/login.js', 'public/js')
-    // .js('resources/js/info_employee.js', 'public/js')
-    // .js('resources/js/simple_info.js', 'public/js')
-    // .js('resources/js/tree_view.js', 'public/js')
-    // .sass('resources/sass/app.scss', 'public/css');
+    .js('resources/js/admin.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css');

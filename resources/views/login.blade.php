@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>i-ci.kz</title>
+    <title>My.cic.kz</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -13,19 +13,28 @@
     <!-- Font awesome-->
     <link rel="stylesheet" href="{{asset('fonts/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
 
     <script src="{{asset('js/login.js')}}"></script>
 </head>
 <body>
 <!-- Main -->
 <div class="main">
+    <div class="preloader" id="preloader">
+        <div class="item-1"></div>
+        <div class="item-2"></div>
+        <div class="item-3"></div>
+        <div class="item-4"></div>
+        <div class="item-5"></div>
+    </div>
+
     <!-- Container -->
     <div class="container-fluid">
         <!-- First row -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="header">
-                    <img src="{{asset('images/white-logo.png')}}" alt="Centras Logo" class="header__logo">
+                    <img src="{{asset('images/new-white-logo.png')}}" alt="Centras Logo" class="header__logo">
                 </div>
             </div>
         </div> <!-- First row -->
