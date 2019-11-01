@@ -79,8 +79,12 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::post('/getItemsList', 'NameController@getItemsList');
 
 
+
     Route::get('/logout', function (){
         Auth::logout();
         return redirect(route('index'));
     });
 });
+
+//RELOG
+Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
