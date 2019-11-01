@@ -50,7 +50,7 @@
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
-                <span class="mb-2 post-text" v-if="!editMode">{{post.postText}}</span>
+                <span class="mb-2 post-text" v-if="!editMode"><pre>{{post.postText}}</pre></span>
             </transition>
             <transition name="edit">
                 <textarea type="text"
@@ -333,6 +333,17 @@
 
     .post-text {
         width: 100%;
+        word-wrap: break-word;
+        line-break: auto;
+    }
+
+    .post-text pre {
+        font-size: 1em;
+        line-break: auto;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: pre-wrap;
+        white-space: -o-pre-wrap;
         word-wrap: break-word;
     }
 

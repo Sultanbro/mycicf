@@ -11,6 +11,7 @@ use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
@@ -34,6 +35,12 @@ class NewsController extends Controller
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
+
+//        foreach ($request->postFiles as $file) {
+//            $fileName = $file->getClientOriginalName();
+//            $content = file_get_contents($file->getRealPath());
+//            Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
+//        }
 //        }
 //        catch(Exception $e) {
 //            $error = $e->getMessage();

@@ -15,11 +15,12 @@
                         <img src="images/avatar.png" class="rounded-circle avatar">
                     </div>
                     <div class="flex-column w-100" >
-                        <textarea v-model="postText"
-                                  @input="autoResizeTextarea"
-                                  class="h-100 pl-3 pr-3 border border-0 noresize"
-                                  placeholder="Что у вас нового?"
-                                  ref="textarea">{{this.postText}}</textarea>
+                        <TextareaAutosize v-model="postText"
+                                          class="ml-2 pl-3 pr-3 border border-0 post-textarea"
+                                          placeholder="Что у вас нового?"
+                                          :min-height="70"
+                                          :max-height="350"
+                                  >{{this.postText}}</TextareaAutosize>
                     </div>
                 </div>
             </div> <!--Row 2-->
@@ -45,7 +46,7 @@
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
                         <i class="fas fa-image color-black file-icons"></i>
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
-                        <input @change='fileUpload' type="file" id="photo-upload" accept="image/*" multiple>
+                        <input type="file" id="photo-upload" accept="image/*" multiple>
                     </div>
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
                         <i class="fas fa-play-circle color-black file-icons"></i>
@@ -63,7 +64,7 @@
                         <input type="file" id="file-upload" multiple>
                     </div>
                     <transition name="fade">
-                        <div class="icons-bg ml-auto" v-if="postText.length > 0">
+                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0">
                             <button
                                     @click="addPost"
                                     class="btn btn-outline-primary pt-1 pb-1 pr-2 pl-2 send-button" >Опубликовать</button>
@@ -72,6 +73,7 @@
                 </div>
             </div> <!--Row 5-->
         </div>
+
 
         <div v-if="pinnedPost !== null">
             <news-post
@@ -127,9 +129,6 @@
         },
 
         mounted: function() {
-            this.$refs.textarea.style.minHeight = this.$refs.textarea.scrollHeight + 'px';
-
-
             Echo.private(`post`)
             .listen('NewPost', (e) => {
                 this.handleIncoming(e);
@@ -138,39 +137,49 @@
         },
 
         methods: {
-            autoResizeTextarea: function() {
-                this.$refs.textarea.style.minHeight = this.$refs.textarea.scrollHeight + 'px';
-            },
-
-            fileUpload: function(e) {
-                const files = e.target.files;
-                console.log(files[0]);
-                const vm = this;
-                Array.from(files).forEach(file => {
-                    if(file.size > 2 * 1024 * 1024) {
-                        alert("ERROR FILE RAZMER : " + file.name);
-                    }
-                    else {
-                        vm.files.push(file);
-                        const image = new Image();
-                        var reader = new FileReader();
-                        reader.onload = (e) => this.images.push(e.target.result);
-                        reader.readAsDataURL(file);
-                    }
-                });
-            },
+            // fileUpload: function(e) {
+            //     const files = e.target.files;
+            //     console.log(files[0]);
+            //     const vm = this;
+            //     Array.from(files).forEach(file => {
+            //         if(file.size > 2 * 1024 * 1024) {
+            //             alert("ERROR FILE RAZMER : " + file.name);
+            //         }
+            //         else {
+            //             vm.files.push(file);
+            //             const image = new Image();
+            //             var reader = new FileReader();
+            //             reader.onload = (e) => this.images.push(e.target.result);
+            //             reader.readAsDataURL(file);
+            //         }
+            //     });
+            // },
 
             deleteImage: function(index) {
                 const vm = this;
                 vm.images.splice(index, 1);
-                // vm.
             },
 
             addPost: function () {
-                this.axios.post('/addPost', {postText: this.postText, isn: this.isn}).then(response => {
+                this.axios.post('/addPost', this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
                 });
                 this.postText = '';
+            },
+
+            getFormData() {
+                const formData = new FormData;
+
+                this.files.forEach(file => {
+                    formData.append('postFiles[]', file, file.name);
+                });
+
+                formData.append('postText', this.postText);
+                formData.append('isn', this.isn);
+
+                return formData;
             },
 
             fetchAddPost: function (response) {
@@ -298,14 +307,6 @@
 </script>
 
 <style scoped>
-    textarea {
-        display: block;
-        height: auto;
-        max-height: 500px;
-        min-height: 35px;
-        oveflow-y:hidden;
-    }
-
 
     .rounded {
         border-radius: 16px !important;
@@ -317,11 +318,12 @@
     }
 
     .avatar {
-        height: 4.5em;
+        height: 75px;
     }
 
-    .noresize {
-        resize: none;
+    .post-textarea {
+        box-sizing: border-box;
+        /*resize: none;*/
         outline: none;
     }
 
