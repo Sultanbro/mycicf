@@ -37,9 +37,14 @@
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">ВНД</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
-                    <a class="dropdown-item" href="#">Загрузка</a>
-                    <a class="dropdown-item" href="#">Страховые компании</a>
-                    <a class="dropdown-item" href="#">Страховые классы</a>
+                    <a class="dropdown-item" href="{{route('wnd.org')}}">Орг. структура</a>
+                    <a class="dropdown-item" href="{{route('wnd.svg')}}">Загрузка SVG</a>
+                    <a class="dropdown-item" href="{{route('wnd.word')}}">Загрузка WORD</a>
+                    <a class="dropdown-item" href="{{route('wnd.image')}}">Загрузка Фотографии</a>
+                    <a class="dropdown-item" href="{{route('wnd.menu')}}">Структура меню</a>
+                    <a class="dropdown-item" href="{{route('wnd.svg.list')}}">Список SVG</a>
+                    <a class="dropdown-item" href="{{route('wnd.word.list')}}">Список WORD</a>
+                    <a class="dropdown-item" href="{{route('wnd.menu.list')}}">Список меню</a>
                 </div>
             </li>
                 <li class="nav-item dropdown">

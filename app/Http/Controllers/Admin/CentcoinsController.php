@@ -59,6 +59,7 @@ class CentcoinsController extends Controller
                 'to' => (new User)->getFullName($data->changed_user_isn),
                 'from' => (new User)->getFullName($data->user_isn),
                 'coins' => $data->quantity,
+                'description' => $data->description,
                 'updated' => date('d.m.Y H:i:s', strtotime($data->created_at)),
             ]);
         }

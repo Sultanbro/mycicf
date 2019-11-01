@@ -5,6 +5,7 @@
             <tr>
                 <th>ID</th>
                 <th>Тип операции</th>
+                <th>Описание</th>
                 <th>ФИО получаетля</th>
                 <th>ФИО администратора</th>
                 <th>Кол-во</th>
@@ -15,6 +16,7 @@
             <tr v-for="item in list">
                 <td>{{item.id}}</td>
                 <td>{{item.type}}</td>
+                <td>{{item.description}}</td>
                 <td>{{item.to}}</td>
                 <td>{{item.from}}</td>
                 <td>{{item.coins}}</td>

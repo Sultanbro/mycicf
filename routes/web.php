@@ -68,6 +68,33 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
 
         });
+
+        Route::group(['middleware' => 'wndAdmin'], function () {
+            Route::get('wnd/org_structure', 'Admin\DocumentationController@orgStructure')->name('wnd.org');
+            Route::post('wnd/save_struct', 'Admin\DocumentationController@saveStructure');
+
+            Route::get('wnd/svg', 'Admin\DocumentationController@loadSvg')->name('wnd.svg');
+            Route::post('wnd/save_svg', 'Admin\DocumentationController@saveSvg');
+
+            Route::get('wnd/word', 'Admin\DocumentationController@loadWord')->name('wnd.word');
+            Route::post('wnd/save_word', 'Admin\DocumentationController@saveWord');
+
+            Route::get('wnd/image', 'Admin\DocumentationController@loadImage')->name('wnd.image');
+            Route::post('wnd/save_image', 'Admin\DocumentationController@saveImage');
+
+            Route::get('wnd/menu', 'Admin\DocumentationController@menu')->name('wnd.menu');
+            Route::post('wnd/save_menu', 'Admin\DocumentationController@saveMenu');
+            Route::post('wnd/list_menu', 'Admin\DocumentationController@listMenu');
+
+            Route::get('wnd/svg/list', 'Admin\DocumentationController@svgList')->name('wnd.svg.list');
+            Route::post('wnd/get/svgList', 'Admin\DocumentationController@getSvgList');
+
+            Route::get('wnd/word/list', 'Admin\DocumentationController@wordList')->name('wnd.word.list');
+            Route::post('wnd/get/wordList', 'Admin\DocumentationController@getWordList');
+
+            Route::get('wnd/menu/list', 'Admin\DocumentationController@menuList')->name('wnd.menu.list');
+            Route::post('wnd/get/menuList', 'Admin\DocumentationController@getMenuList');
+        });
     });
 });
 
@@ -94,13 +121,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
         Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
 
-        //DOCUMENTATION
-        Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
-        Route::post('/documentation/search', 'DocumentationController@search');
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/', 'DocumentationController@index')->name('documentation');
         Route::post('/documentation/save', 'DocumentationController@save');
         Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
+
+        //DOCUMENTATION
+        Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
+        Route::post('/documentation/search', 'DocumentationController@search');
         //PARSE
         Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
