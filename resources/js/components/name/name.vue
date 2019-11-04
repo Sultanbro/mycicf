@@ -6,22 +6,38 @@
                         class="dropbtn d-flex p-2 ml-2">{{item.label}}</a>
 
             <div class="nav-dropdown" v-if="isOpened">
-                <div class="nav-dropdown__container ml-4 mr-4 mt-5">
+                <div class="nav-dropdown__container mr-4 mt-5">
                     <button type='button'
                             class="close-btn"
                             @click="showDropdown"><i class="fas fa-times"></i></button>
                     <div class="dropdown-content mb-4 flex-row" >
                         <!--Column 1-->
                         <div class="dropdown-content__list">
-                            <a class="dropbtn-inner p-3 d-flex"
-                               @click="getLevelTwo(innerItem.id)"
-                               v-for="innerItem in itemsLevelOne">{{innerItem.label}}</a>
+                            <div v-for="innerItem in itemsLevelOne"
+                                 @click="getLevelTwo(innerItem.id)"
+                                 class="flex-row pl-4 pt-3 pb-3 dropbtn-inner">
+                                <img :src="innerItem.icon_url" class="items-icons mr-2">
+                                <img :src="imageUrl" @error="fakeImage = true">
+                                <a href="#" class=" d-flex">{{innerItem.label}}</a>
+                            </div>
+
+<!--                            <a class="dropbtn-inner p-3 d-flex"-->
+<!--                               @click="getLevelTwo(innerItem.id)"-->
+<!--                               v-for="innerItem in itemsLevelOne">{{innerItem.label}}</a>-->
                         </div>
                         <!--Column 2-->
                         <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100" >
-                            <div class="flex-row" v-if="levelOneOpened">
+                            <div class="flex-row border border-danger" v-if="levelOneOpened">
                                 <a class="p-4 mr-2"
                                    v-for="innerItem in itemsLevelTwo">{{innerItem.label}}</a>
+                            </div>
+                            <div class="flex-row" v-if="levelOneOpened">
+                                <div class="flex-column w-25 mr-4 border border-danger">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum et maiores natus nihil odio quis sed tempore. Fugiat, officiis, quia?
+                                </div>
+                                <div class="flex-column w-25 border border-danger mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>
+                                <div class="flex-column w-25 border border-danger mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>
+                                <div class="flex-column w-25 border border-danger">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>
                             </div>
                         </div>
 
@@ -45,7 +61,10 @@
             return {
                 counter: 0,
                 isOpened: false,
+                isActive: false,
                 levelOneOpened: false,
+                imageUrl: null,
+                fakeImage: false,
 
                 items: [],
                 itemsLevelZero: [],
@@ -339,8 +358,9 @@
     }
 
     .dropdown-content__inner {
-        max-height: 500px;
+        /*max-height: 500px;*/
         overflow-y: auto;
+        border-left: 1px solid #818181;
     }
 
     .dropdown-content__inner::-webkit-scrollbar {
@@ -377,9 +397,9 @@
     }
 
     .dropdown-content__list {
-        width: 280px;
-        max-height: 500px;
-        overflow-y: auto;
+        width: 300px;
+        /*max-height: 500px;*/
+        /*overflow-y: auto;*/
     }
 
 
@@ -404,13 +424,24 @@
         border: none;
         outline: none;
         transition: 0.4s ease;
-        border-bottom: 2px solid transparent;
+        /*border-bottom: 2px solid transparent;*/
+        border-left: 3px solid transparent;
     }
 
     .dropbtn-inner:hover {
-        border-bottom: 2px solid #000;
+        /*border-bottom: 2px solid #000;*/
+        border-left: 3px solid #007bff;
+        /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
     }
 
+    .dropbtn-inner:hover a {
+        color: #007bff;
+    }
+
+    .active-btn {
+        border-left: 3px solid #818181;
+        color: #818181;
+    }
 
 
     .nav-dropdown {
@@ -441,108 +472,16 @@
     }
 
 
-    /*.nav-dropdown:hover .dropbtn {*/
-    /*    border-bottom: 1px solid #000;*/
-    /*    !*background-color: cornflowerblue;*!*/
-    /*}*/
-
-    /*.dropdown-content {*/
-    /*    display: none;*/
-    /*    position: absolute;*/
-    /*    left: 0;*/
-    /*    z-index: 1;*/
-    /*    width: 100%;*/
-    /*    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
-    /*}*/
-
-    /*.nav-dropdown:hover .dropdown-content {*/
-    /*    display: block;*/
-    /*}*/
-
-    /*.inner-btn {*/
-    /*    border: none;*/
-    /*    outline: none;*/
-    /*    background-color: #FFF;*/
-    /*    transition: 0.4s ease;*/
-    /*    display: block;*/
-    /*}*/
-
-    /*.inner-content {*/
-    /*    display: none;*/
-    /*    !*z-index: 2;*!*/
-    /*}*/
-
-    /*.dropdown-content:before {*/
-    /*    content: '';*/
-    /*    display: table;*/
-    /*    clear: both;*/
-    /*}*/
-
-    /*.dropdown-content:after {*/
-    /*    content: '';*/
-    /*    display: table;*/
-    /*    clear: both;*/
-    /*}*/
-
-    /*.dropdown-content__inner:hover .inner-content {*/
-    /*    display: block;*/
-    /*}*/
 
 
 
+    .items-icons {
+        height: 25px;
+    }
 
-
-
-    /*.dropdown {*/
-    /*    background-color: #FFF;*/
-    /*}*/
-
-    /*.inner-item {*/
-    /*    border: 1px solid red;*/
-    /*}*/
-
-    /*.dropdown {*/
-    /*    position: relative;*/
-    /*}*/
-
-    /*.dropdown-content {*/
-    /*    left: 0;*/
-    /*    display: none;*/
-    /*    position: absolute;*/
-    /*    width: 100%;*/
-    /*    transition: 0.4s linear;*/
-    /*}*/
-
-    /*.ul-content:hover .dropdown-content {*/
-    /*    display: block;*/
-    /*}*/
-
-    /*.content {*/
-    /*    display: none;*/
-    /*}*/
-
-    /*.inner-item:hover .content {*/
-    /*    display: block;*/
-    /*    width: 100%;*/
-    /*}*/
-
-    /*.items {*/
-    /*    border-bottom: 1px solid transparent;*/
-    /*}*/
-
-    /*.ul-content:hover .items {*/
-    /*    border-bottom: 1px solid #000;*/
-    /*}*/
-
-    /*.inner-item:hover .div-inner {*/
-    /*    display: block;*/
-    /*}*/
-    /*.list:hover .div-inner {*/
-    /*    display: block;*/
-    /*}*/
-
-    /*.div-inner {*/
-    /*    display: none;*/
-    /*}*/
+    a {
+        color: #000;
+        text-decoration: none;
+    }
 
 </style>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DocumentationStructure;
 use App\Item;
 use Illuminate\Http\Request;
 
@@ -9,7 +10,7 @@ class NameController extends Controller
 {
     public function getItemsList(Request $request) {
 
-        $items = Item::where('parent_id', $request->parentId)->get();
+        $items = DocumentationStructure::where('parent_id', $request->parentId)->get();
 
         $result = [];
 
@@ -17,6 +18,8 @@ class NameController extends Controller
             array_push($result, [
                 'id' => $item->id,
                 'label' => $item->label,
+                'url' => $item->url,
+                'icon_url' => $item->icon_url,
                 'childs' => [],
                 'opened' => false
             ]);
