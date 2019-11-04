@@ -328,4 +328,12 @@ class SiteController extends Controller
 
         return response()->json($response)->withCallback($request->input('callback'));
     }
+
+    public function motivation(){
+        return view('motivation');
+    }
+
+    public function getMotivationList(Request $request, KiasServiceInterface $kias){
+
+    }
 }
