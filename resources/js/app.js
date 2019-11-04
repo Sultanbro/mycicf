@@ -32,6 +32,8 @@ Vue.component('search', require('./components/documentation/search.vue').default
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
 
+Vue.component('motivation', require('./components/employee/motivation.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
