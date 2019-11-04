@@ -18,7 +18,7 @@
                                  class="flex-row pl-4 pt-3 pb-3 dropbtn-inner">
                                 <img :src="innerItem.icon_url" class="items-icons mr-2">
                                 <img :src="imageUrl" @error="fakeImage = true">
-                                <a href="#" class=" d-flex">{{innerItem.label}}</a>
+                                <a href="#" class=" d-flex" onload="this.getChilds(innerItem.id)">{{innerItem.label}}</a>
                             </div>
 
 <!--                            <a class="dropbtn-inner p-3 d-flex"-->
@@ -26,19 +26,18 @@
 <!--                               v-for="innerItem in itemsLevelOne">{{innerItem.label}}</a>-->
                         </div>
                         <!--Column 2-->
-                        <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100" >
-                            <div class="flex-row border border-danger" v-if="levelOneOpened">
-                                <a class="p-4 mr-2"
-                                   v-for="innerItem in itemsLevelTwo">{{innerItem.label}}</a>
+                        <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
+                            <div class="ml-4 w-25" v-if="levelOneOpened" v-for="innerItem in itemsLevelTwo">
+                                <img :src="innerItem.icon_url" class="items-icons mr-2">
+                                <a class="mr-2">{{innerItem.label}}</a>
+
                             </div>
-                            <div class="flex-row" v-if="levelOneOpened">
-                                <div class="flex-column w-25 mr-4 border border-danger">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum et maiores natus nihil odio quis sed tempore. Fugiat, officiis, quia?
-                                </div>
-                                <div class="flex-column w-25 border border-danger mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>
-                                <div class="flex-column w-25 border border-danger mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>
-                                <div class="flex-column w-25 border border-danger">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>
-                            </div>
+<!--                            <div class="flex-row" v-if="levelOneOpened">-->
+<!--                                <div class="flex-column w-25 ml-4 mr-4  ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam aut blanditiis, error explicabo fugiat harum inventore iusto molestiae natus necessitatibus numquam porro provident quae quaerat qui quia quibusdam, recusandae repudiandae sapiente soluta ut velit vero voluptas voluptate? A atque cumque dolorem eius eum exercitationem inventore itaque iure minima nihil, nulla provident quisquam recusandae reiciendis sed sint vitae. A asperiores atque beatae blanditiis debitis deleniti deserunt dolor earum est hic in iusto nam nostrum praesentium provident rerum, soluta sunt tempore veritatis voluptatum! Aliquam fuga natus nihil quas quibusdam quidem quod! Architecto deserunt mollitia nihil nulla, odio quis repellat sequi sint.</div>-->
+<!--                                <div class="flex-column w-25   mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>-->
+<!--                                <div class="flex-column w-25   mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>-->
+<!--                                <div class="flex-column w-25  ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>-->
+<!--                            </div>-->
                         </div>
 
                     </div>
@@ -287,7 +286,6 @@
             },
 
             getLevelTwo: function(id) {
-                // debugger;
                 var vm = this;
 
                 for(var i = 0; i < vm.itemsLevelOne.length; i++) {
@@ -296,6 +294,13 @@
                         this.axios.post('/getItemsList', {parentId: id}).then(response => {
                             vm.fetchLevelTwo(response.data, id);
                         });
+
+                        for(var i = 0; i < vm.itemsLevelTwo.length; i++) {
+
+                            this.axios.post('/getItemsList', {parentId: vm.itemsLevelTwo[i].id}).then(response => {
+                                fetchGetChilds(response.data);
+                            })
+                        }
 
                         vm.itemsLevelOne[i].opened = true;
 
@@ -346,6 +351,13 @@
 
                 this.levelOneOpened = true;
             },
+
+            fetchGetChilds: function (response) {
+                var vm = this;
+
+
+                console.log(response);
+            }
 
         },
     }
