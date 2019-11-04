@@ -31,6 +31,17 @@ Vue.component('centcoin-history', require('./components/admin/centcoins/history.
 Vue.component('centcoin-spend', require('./components/admin/centcoins/spend.vue').default);
 Vue.component('centcoin-replenish', require('./components/admin/centcoins/relpenish.vue').default);
 
+Vue.component('org-structure', require('./components/admin/documentation/org-structure.vue').default);
+Vue.component('svg-load', require('./components/admin/documentation/svg-load.vue').default);
+Vue.component('image-load', require('./components/admin/documentation/image-load.vue').default);
+Vue.component('menu-load', require('./components/admin/documentation/menu-load.vue').default);
+
+Vue.component('menu-list', require('./components/admin/documentation/menu-list.vue').default);
+Vue.component('svg-list', require('./components/admin/documentation/svg-list.vue').default);
+Vue.component('word-list', require('./components/admin/documentation/word-list.vue').default);
+
+
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

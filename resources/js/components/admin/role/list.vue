@@ -7,7 +7,7 @@
                 <i class="fas fa-plus"></i>
             </button>
         </div>
-        <table class="table table-responsive table-stripper table-data table-bordered">
+        <table class="table table-responsive-sm table-stripper table-data table-bordered">
             <thead class="thead-inverse">
             <tr>
                 <th>ID</th>

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $encoded_text string
  * @property $only_text string
  * @property $url string
+ * @property $user_isn int
  */
 class UploadDocs extends Model
 {

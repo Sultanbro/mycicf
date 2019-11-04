@@ -15,58 +15,40 @@
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
-    <style>
-        html, body {
-            background-color: #fff;
-            color: #181819;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 200;
-            height: 100vh;
-            margin: 0;
-        }
-        .full-height {
-            height: 90vh;
-        }
-        .flex-center {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-        }
-        .position-ref {
-            position: relative;
-        }
-        .content {
-            text-align: center;
-        }
-        .title {
-            font-size: 50px;
-        }
-        .m-b-md {
-            margin-bottom: 30px;
-        }
-    </style>
-
-
 </head>
 <body>
-<div class="container">
+<div class="container" id="app">
     @include('layouts.header')
     <main role="main">
-        <div class="flex-center position-ref full-height">
-            <div class="content">
-                <div class="title m-b-md">
-                    Добро пожаловать!
-                    <br>
-
+        <form method="post" action="/wnd/save_word">
+            @csrf
+            <div class="form-group">
+                <label for="title">Наименование документа</label>
+                <input type="text" class="form-control" placeholder="title" name="title">
+            </div>
+            <div class="form-group">
+                <label for="url">URL</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">https://my.cic.kz/documentation/</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="url" name="url">
                 </div>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="title">Документ</label>
+                <textarea class="form-control" name="area3" style="width: 100%; height : 500px;"></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">SEND</button>
+        </form>
     </main>
 </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+<script type="text/javascript" src="{{asset('js/nicEdit.js')}}"></script>
+<script type="text/javascript">
+    bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+</script>
 </html>
