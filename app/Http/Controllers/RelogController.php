@@ -20,7 +20,7 @@ class RelogController extends Controller
 
             $relog_model = new Relog();
             $relog_model->doc_no = $data['externalId'];
-            $relog_model->in_process = 1;
+            $relog_model->in_process = 0;
             $relog_model->status = Relog::STATUS_PENDING;
             $relog_model->save();
 
@@ -44,6 +44,10 @@ class RelogController extends Controller
         }
         else {
             DB::rollBack();
+            return [
+                "success" => false,
+                "code" => "419"
+            ];
         }
     }
 }

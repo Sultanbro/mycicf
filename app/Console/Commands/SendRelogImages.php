@@ -42,8 +42,12 @@ class SendRelogImages extends Command
         try {
 
             $image_info_collection = Relog::where('status', Relog::STATUS_PENDING)
-                ->where('in_process', 1)
+                ->where('in_process', 0)
                 ->get();
+
+            Relog::where('status', Relog::STATUS_PENDING)
+                ->where('in_process', 0)
+                ->update(['in_process' => 1]);
 
             $images_info = [];
 
@@ -76,13 +80,11 @@ class SendRelogImages extends Command
                 if(!isset($result->error)) {
                     Relog::where("id", $image["id"])->update([
                         "status" => Relog::STATUS_ACCEPTED,
-                        "in_process" => 0
                     ]);
                 }
                 else {
                     Relog::where('id', $image['id'])->update([
                         'status' => Relog::STATUS_FAILED,
-                        'in_process' => 0
                     ]);
                 }
             }
