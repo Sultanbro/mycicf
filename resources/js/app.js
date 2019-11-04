@@ -6,7 +6,11 @@ import axios from 'axios'
 
 import VueAxios from 'vue-axios'
 
+import TextareaAutosize from 'vue-textarea-autosize'
+
 Vue.use(VueAxios, axios);
+
+Vue.use(TextareaAutosize);
 
 Vue.component('login', require('./components/registration/login.vue').default);
 
@@ -33,6 +37,8 @@ Vue.component('search', require('./components/documentation/search.vue').default
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
 
 Vue.component('motivation', require('./components/employee/motivation.vue').default);
+
+Vue.component('name', require('./components/name/name.vue').default);
 
 window.onload = function(){
     var app = new Vue({
