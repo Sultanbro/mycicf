@@ -39,31 +39,29 @@ class SendRelogImages extends Command
      * @return mixed
      */
     public function handle(KiasServiceInterface $kias) {
+        $kias->initSystem();
         try {
 
             $image_info_collection = Relog::where('status', Relog::STATUS_PENDING)
-                ->where('in_process', 0)
-                ->get();
+                ->where('in_process', 0);
 
-            Relog::where('status', Relog::STATUS_PENDING)
-                ->where('in_process', 0)
-                ->update(['in_process' => 1]);
+            $image_info_collection->update(['in_process' => 1]);
 
             $images_info = [];
 
-            foreach ($image_info_collection as $image) {
+            foreach ($image_info_collection->get() as $image) {
                 array_push($images_info, [
                     'id' => $image->id,
                     'doc_no' => $image->doc_no
                 ]);
             }
-
-
             foreach ($images_info as $key => $images) {
                 $result = RelogUrl::where('doc_id', $images['id'])->get();
                 foreach ($result as $res) {
+                    $size = getimagesize(($res->url));
+                    $extension = image_type_to_extension($size[2]);
                     $images_info[$key] = array_merge($images, [
-                        'name' => basename($res->url),
+                        'name' => time() . $extension,
                         'img' => base64_encode(file_get_contents($res->url)),
                     ]);
                 }
