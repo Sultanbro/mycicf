@@ -5,7 +5,12 @@ switch($_SERVER['HTTP_HOST'] ?? env('FRONTEND_DOMAIN')){
         $viewPath = 'admin';
         break;
     case env('FRONTEND_DOMAIN') :
-        $viewPath = 'views';
+
+        $agent = new \Jenssegers\Agent\Agent;
+
+        $result = $agent->isDesktop();
+
+        $viewPath = $result ? 'views' : 'mobile';
         break;
 }
 return [

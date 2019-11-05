@@ -152,7 +152,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/editPost', 'NewsController@editPost');
 
     //UNTITLED
-    Route::get('/name', 'NameController@getView')->name('name');
+    Route::get('/name', 'NameController@getView')->name('documentation');
     Route::post('/getItemsList', 'NameController@getItemsList');
 
     Route::get('/logout', function (){
@@ -175,8 +175,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::post('/getUsersData', 'SiteController@getUserData');
 
-//        Route::get('/motivation', 'SiteController@motivation');
-    });
+        Route::get('/motivation', 'SiteController@motivation');
+        Route::post('/getMotivationList', 'SiteController@getMotivationList');
+        });
     });
 
 //RELOG

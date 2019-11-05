@@ -37,26 +37,12 @@
                             <th scope="col">Критерии</th>
                             <th scope="col">Выполнение</th>
                         </tr>
-                        <!--<tr v-for="motivation in motivations">-->
-                        <tr>
-                            <td>motivation.id</td>
-                            <td>motivation.type</td>
-                            <td>motivation.description</td>
-                            <td><i class="fa fa-lg fa-circle motivation" aria-hidden="true"></i></td>
+                        <tr v-for="(motivation, index) in motivations">
+                            <td>{{index + 1}}</td>
+                            <td>{{motivation.types}}</td>
+                            <td>{{motivation.sum}}</td>
+                            <td><i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i></td>
                         </tr>
-                        <tr>
-                            <td>motivation.id</td>
-                            <td>motivation.type</td>
-                            <td>motivation.description</td>
-                            <td><i class="fa fa-lg fa-circle motivation" aria-hidden="true"></i></td>
-                        </tr>
-                        <tr>
-                            <td>motivation.id</td>
-                            <td>motivation.type</td>
-                            <td>motivation.description</td>
-                            <td><i class="fa fa-lg fa-circle motivation" aria-hidden="true"></i></td>
-                        </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -83,7 +69,36 @@
         },
         methods : {
             getMotivation(){
-                console.log(this.isn);
+                this.preloader(true)
+                this.axios.post('/getMotivationList', {
+                        isn: this.isn,
+                        begin : this.dateBeg,
+                        end: this.dateEnd
+                    })
+                    .then(response => {
+                        if(response.data.success){
+                            this.motivations = response.data.list
+                            this.category = response.data.cat
+                        }else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    })
+                    .finally(() => {
+                        this.preloader(false)
+                    });
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             }
         }
     }

@@ -353,14 +353,8 @@
         word-wrap: break-word;
     }
 
-    .edited-enter-active,
-    .edited-leave-active {
-        transition: opacity 0.1s;
-    }
-
-    .edited-enter,
-    .edited-leave-to {
-        opacity: 0;
+    pre{
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     }
 
 </style>
