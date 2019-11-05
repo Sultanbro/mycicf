@@ -1517,6 +1517,9 @@ class ParseController extends Controller
     public function getMatchingMobile(){
         return view('mobile/matching');
     }
+    public function getMatchingIndexMobile(){
+        return view('mobile/matching-index');
+    }
     public function getTopClasses(){
         return view('parse/top-classes');
     }

@@ -39,6 +39,7 @@ Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
     Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
     Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
     Route::get('mobile/matching', 'ParseController@getMatchingMobile')->name('mobile/matching');
+    Route::get('mobile/matching-index', 'ParseController@getMatchingIndexMobile')->name('mobile/matching-index');
 
     //PARSE
     Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
