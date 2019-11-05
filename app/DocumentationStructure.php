@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Deployer\Host\Storage;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentationStructure extends Model
 {

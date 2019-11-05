@@ -175,8 +175,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::post('/getUsersData', 'SiteController@getUserData');
 
-//        Route::get('/motivation', 'SiteController@motivation');
-    });
+        Route::get('/motivation', 'SiteController@motivation');
+        Route::post('/getMotivationList', 'SiteController@getMotivationList');
+        });
     });
 
 //RELOG
