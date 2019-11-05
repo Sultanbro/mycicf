@@ -69,6 +69,7 @@
         },
         methods : {
             getMotivation(){
+                this.preloader(true)
                 this.axios.post('/getMotivationList', {
                         isn: this.isn,
                         begin : this.dateBeg,
@@ -85,6 +86,19 @@
                     .catch(error => {
                         alert(error)
                     })
+                    .finally(() => {
+                        this.preloader(false)
+                    });
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             }
         }
     }

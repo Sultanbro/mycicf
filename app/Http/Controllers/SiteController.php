@@ -358,7 +358,7 @@ class SiteController extends Controller
                 $list = [
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
-                        'sum' => (double)$response->Mot->row->PercPlan ?? 0,
+                        'sum' => ((double)$response->Mot->row->PercPlan ?? 0).'%',
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
