@@ -1,9 +1,13 @@
 <template>
     <div class="nav mt-2 d-flex justify-content-center">
         <div class="nav-container flex-row">
-            <a href="#" @click='getLevelOne(item.id)'
-                        v-for="item in itemsLevelZero"
-                        class="dropbtn d-flex p-2 ml-2">{{item.label}}</a>
+            <div @click="getLevelOne(item.id, item.url)"
+                 v-for="item in itemsLevelZero"
+                 class="dropbtn d-flex p-3 ml-2"
+                :class="item.id === levelOnePinned ? 'active' : ''">
+                <img :src="item.icon_url">
+                <span>{{item.label}}</span>
+            </div>
 
             <div class="nav-dropdown" v-if="isOpened">
                 <div class="nav-dropdown__container mr-4 mt-5">
@@ -11,33 +15,28 @@
                             class="close-btn"
                             @click="showDropdown"><i class="fas fa-times"></i></button>
                     <div class="dropdown-content mb-4 flex-row" >
+
                         <!--Column 1-->
                         <div class="dropdown-content__list">
                             <div v-for="innerItem in itemsLevelOne"
-                                 @click="getLevelTwo(innerItem.id)"
-                                 class="flex-row pl-4 pt-3 pb-3 dropbtn-inner">
-                                <img :src="innerItem.icon_url" class="items-icons mr-2">
-                                <img :src="imageUrl" @error="fakeImage = true">
-                                <a href="#" class=" d-flex" onload="this.getChilds(innerItem.id)">{{innerItem.label}}</a>
+                                 @click="getLevelTwo(innerItem.id, innerItem.url)"
+                                 class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
+                                 :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
+                                <img :src="innerItem.icon_url"
+                                     class="items-icons mr-2">
+                                <span class="d-flex">{{innerItem.label}}</span>
                             </div>
-
-<!--                            <a class="dropbtn-inner p-3 d-flex"-->
-<!--                               @click="getLevelTwo(innerItem.id)"-->
-<!--                               v-for="innerItem in itemsLevelOne">{{innerItem.label}}</a>-->
                         </div>
+
                         <!--Column 2-->
                         <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
-                            <div class="ml-4 w-25" v-if="levelOneOpened" v-for="innerItem in itemsLevelTwo">
-                                <img :src="innerItem.icon_url" class="items-icons mr-2">
-                                <a class="mr-2">{{innerItem.label}}</a>
-
+                            <div class="ml-4 w-25"
+                                 v-if="levelOneOpened"
+                                 v-for="innerItem in itemsLevelTwo">
+                                <img :src="innerItem.icon_url"
+                                     class="items-icons mr-2">
+                                <span class="mr-2">{{innerItem.label}}</span>
                             </div>
-<!--                            <div class="flex-row" v-if="levelOneOpened">-->
-<!--                                <div class="flex-column w-25 ml-4 mr-4  ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam aut blanditiis, error explicabo fugiat harum inventore iusto molestiae natus necessitatibus numquam porro provident quae quaerat qui quia quibusdam, recusandae repudiandae sapiente soluta ut velit vero voluptas voluptate? A atque cumque dolorem eius eum exercitationem inventore itaque iure minima nihil, nulla provident quisquam recusandae reiciendis sed sint vitae. A asperiores atque beatae blanditiis debitis deleniti deserunt dolor earum est hic in iusto nam nostrum praesentium provident rerum, soluta sunt tempore veritatis voluptatum! Aliquam fuga natus nihil quas quibusdam quidem quod! Architecto deserunt mollitia nihil nulla, odio quis repellat sequi sint.</div>-->
-<!--                                <div class="flex-column w-25   mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>-->
-<!--                                <div class="flex-column w-25   mr-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>-->
-<!--                                <div class="flex-column w-25  ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores cumque deleniti, distinctio dolorum ducimus eos itaque odit officiis provident sunt?</div>-->
-<!--                            </div>-->
                         </div>
 
                     </div>
@@ -58,159 +57,29 @@
 
         data() {
             return {
-                counter: 0,
                 isOpened: false,
                 isActive: false,
                 levelOneOpened: false,
-                imageUrl: null,
-                fakeImage: false,
 
                 items: [],
                 itemsLevelZero: [],
                 itemsLevelOne: [],
                 itemsLevelTwo: [],
-
-
-
-                // dropItems: [
-                //     //Item 1
-                //     {
-                //         id: 1,
-                //         label: "Drop item 1",
-                //         url: '',
-                //         childs: [
-                //             {
-                //                 id: 1,
-                //                 label: 'Inner 1',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 2,
-                //                 label: 'Inner 2',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 3,
-                //                 label: 'Inner 3',
-                //                 url: '',
-                //                 childs: []
-                //             }
-                //         ],
-                //     },
-                //
-                //     // //Item 2
-                //     {
-                //         id: 2,
-                //         label: "Drop item 2",
-                //         url: '',
-                //         childs: [
-                //             {
-                //                 id: 1,
-                //                 label: 'Inner 1',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 2,
-                //                 label: 'Inner 2',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 3,
-                //                 label: 'Inner 3',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 4,
-                //                 label: 'Inner 4',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //         ],
-                //     },
-                //
-                //     //Item 3
-                //     {
-                //         id: 3,
-                //         label: "Drop item 3",
-                //         url: '',
-                //         childs: [
-                //             {
-                //                 id: 1,
-                //                 label: 'Inner 1',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 2,
-                //                 label: 'Inner 2',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 3,
-                //                 label: 'Inner 3',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 4,
-                //                 label: 'Inner 4',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //             {
-                //                 id: 5,
-                //                 label: 'Inner 5',
-                //                 url: '',
-                //                 childs: []
-                //             },
-                //         ],
-                //     },
-                // ],
-                //
-                // levelOne: [
-                //     {
-                //         id: 1,
-                //         label: "Inner 1"
-                //     },
-                //     {
-                //         id: 2,
-                //         label: "Inner 2"
-                //     },
-                //     {
-                //         id: 3,
-                //         label: "Inner 3"
-                //     }
-                // ],
-                //
-                // levelTwo: [
-                //     {
-                //         id: 1,
-                //         label: "Inner Inner 1"
-                //     },
-                //     {
-                //         id: 2,
-                //         label: "Inner Inner 2"
-                //     },
-                //     {
-                //         id: 3,
-                //         label: "Inner Inner 3"
-                //     },
-                // ]
+                itemsLevelThree: [],
+                levelOnePinned: null,
+                levelTwoPinned: null,
             }
         },
         methods: {
             showDropdown: function() {
                 this.isOpened = false;
                 this.levelOneOpened = false;
+                this.levelOnePinned = null;
+                this.levelTwoPinned = null;
             },
 
             getItems: function(id) {
+                this.preloader(true);
                 this.axios.post('/getItemsList', {parentId: id}).then(response => {
                     this.fetchGetItems(response.data);
                 });
@@ -218,26 +87,32 @@
 
             fetchGetItems: function(response, id) {
                 var vm = this;
-
-
                 response.forEach(data => {
                     vm.itemsLevelZero.push(data);
-                    // vm.items.push(data);
                 })
+                this.preloader(false);
             },
 
-            getLevelOne: function(id) {
-
+            getLevelOne: function(id, url) {
+                this.levelOnePinned = id;
                 var vm = this;
+
+                if(url !== null && url !== '') {
+                    location.replace(url);
+                    return 0;
+                }
 
                 for(var i = 0; i < vm.itemsLevelZero.length; i++) {
                     if(vm.itemsLevelZero[i].id === id && vm.itemsLevelZero[i].opened === false) {
+
+                        this.preloader(true);
 
                         this.axios.post('/getItemsList', {parentId: id}).then(response => {
                            vm.fetchLevelOne(response.data, id);
                         });
 
                         vm.itemsLevelZero[i].opened = true;
+
                         break;
                     }
                     else if(vm.itemsLevelZero[i].id === id && vm.itemsLevelZero[i].opened === true) {
@@ -258,12 +133,24 @@
                             this.levelOneOpened = false;
                             break;
                         }
+                        else {
+                            for(var i = 0; i < vm.itemsLevelZero.length; i++) {
+                                if(vm.itemsLevelZero[i] === id) {
+                                    vm.itemsLevelOne = vm.itemsLevelZero[i].childs;
+                                }
+                            }
+                            this.isOpened = true;
+                            this.levelOneOpened = false;
+                            break;
+                        }
                     }
                 }
            },
 
             fetchLevelOne: function(response, id) {
                 var vm = this;
+
+                if(response.length === 0) return 0;
 
                 for(var i = 0; i < vm.itemsLevelZero.length; i++) {
                     if(vm.itemsLevelZero[i].id === id) {
@@ -283,24 +170,28 @@
                 }
                 this.levelOneOpened = false;
                 this.isOpened = true;
+
+                this.preloader(false);
+
             },
 
-            getLevelTwo: function(id) {
+            getLevelTwo: function(id, url) {
+                this.levelTwoPinned = id;
                 var vm = this;
+
+                if(url !== null && url !== '') {
+                    location.replace(url);
+                    return 0;
+                }
 
                 for(var i = 0; i < vm.itemsLevelOne.length; i++) {
                     if(vm.itemsLevelOne[i].id === id && vm.itemsLevelOne[i].opened === false) {
 
+                        this.preloader(true);
+
                         this.axios.post('/getItemsList', {parentId: id}).then(response => {
                             vm.fetchLevelTwo(response.data, id);
                         });
-
-                        for(var i = 0; i < vm.itemsLevelTwo.length; i++) {
-
-                            this.axios.post('/getItemsList', {parentId: vm.itemsLevelTwo[i].id}).then(response => {
-                                fetchGetChilds(response.data);
-                            })
-                        }
 
                         vm.itemsLevelOne[i].opened = true;
 
@@ -323,6 +214,18 @@
                             this.levelOneOpened = true;
                             break;
                         }
+                        else {
+                            for(var i = 0; i < vm.itemsLevelZero.length; i++) {
+                                for(var j = 0; j < vm.itemsLevelZero[i].childs.length; j++) {
+                                    if(vm.itemsLevelZero[i].childs[j].id === id) {
+                                        vm.itemsLevelTwo = vm.itemsLevelZero[i].childs[j].childs;
+                                    }
+                                }
+                            }
+                            this.levelOneOpened = true;
+                            break;
+                        }
+
                     }
                 }
             },
@@ -330,6 +233,11 @@
             fetchLevelTwo: function(response, id) {
 
                 var vm = this;
+
+                if(response.length === 0) {
+                    this.preloader(false);
+                    return 0;
+                }
 
                 for(var i = 0; i < vm.itemsLevelZero.length; i++) {
                     for(var j = 0; j < vm.itemsLevelZero[i].childs.length; j++) {
@@ -349,14 +257,20 @@
                     vm.itemsLevelTwo = response;
                 }
 
+                this.preloader(false);
+
                 this.levelOneOpened = true;
             },
 
-            fetchGetChilds: function (response) {
-                var vm = this;
-
-
-                console.log(response);
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             }
 
         },
@@ -393,41 +307,28 @@
         background: #4974CC;
     }
 
-
-
-
-    .show-me {
-        display: none;
-    }
-
-    .showInner {
-        display: block;
-    }
-
     .nav {
         position: relative;
+        background-color: #4267b2;
+        z-index: 500;
     }
 
     .dropdown-content__list {
         width: 300px;
-        /*max-height: 500px;*/
-        /*overflow-y: auto;*/
     }
 
-
-
-
     .dropbtn {
+        color: #FFF;
         cursor: pointer;
         border: none;
         outline: none;
         transition: 0.4s ease;
-        background: #FFF;
-        border-bottom: 1px solid transparent;
+        border-top: 2px solid transparent;
     }
 
     .dropbtn:hover {
-        border-bottom: 1px solid #000;
+        border-top: 2px solid #FFF;
+        background-color: #4974cc;
     }
 
     .dropbtn-inner {
@@ -436,23 +337,15 @@
         border: none;
         outline: none;
         transition: 0.4s ease;
-        /*border-bottom: 2px solid transparent;*/
         border-left: 3px solid transparent;
     }
 
     .dropbtn-inner:hover {
-        /*border-bottom: 2px solid #000;*/
         border-left: 3px solid #007bff;
-        /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
     }
 
-    .dropbtn-inner:hover a {
+    .dropbtn-inner:hover span {
         color: #007bff;
-    }
-
-    .active-btn {
-        border-left: 3px solid #818181;
-        color: #818181;
     }
 
 
@@ -460,11 +353,10 @@
         position: absolute;
         left: 0;
         width: 100%;
-        top: 45px;
+        top: 50px;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
+        z-index: 200;
     }
-
 
     .close-btn {
         position: absolute;
@@ -479,21 +371,27 @@
         transition: 0.4s ease;
     }
 
+    .close-btn i {
+        font-size: 1.5em;
+    }
+
     .close-btn:hover i {
         color: red;
     }
-
-
-
-
 
     .items-icons {
         height: 25px;
     }
 
-    a {
-        color: #000;
-        text-decoration: none;
+    .active {
+        background-color: #4974cc;
+        border-top: 2px solid #FFF;
     }
+
+    .inner-active {
+        color: #007bff;
+        border-left: 3px solid #007bff;
+    }
+
 
 </style>
