@@ -25,6 +25,7 @@
     "pusher-js": "^5.0.2",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
-    "vue-textarea-autosize": "^1.1.1"
+    "vue-textarea-autosize": "^1.1.1",
+    "vue-google-charts": "^0.3.2"
   }
 }

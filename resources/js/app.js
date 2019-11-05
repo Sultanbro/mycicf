@@ -8,6 +8,10 @@ import VueAxios from 'vue-axios'
 
 import TextareaAutosize from 'vue-textarea-autosize'
 
+import VueGoogleCharts from 'vue-google-charts'
+
+Vue.use(VueGoogleCharts);
+
 Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);
@@ -39,6 +43,12 @@ Vue.component('coordination-modal', require('./components/coordination/modal.vue
 Vue.component('motivation', require('./components/employee/motivation.vue').default);
 
 Vue.component('name', require('./components/name/name.vue').default);
+
+Vue.component('parse-charts', require('./components/parse/parse-charts.vue').default);
+
+Vue.component('main-data-charts', require('./components/parse/main-data-charts.vue').default);
+
+Vue.component('mobile-info', require('./components/mobile/mobile-info.vue').default);
 
 window.onload = function(){
     var app = new Vue({

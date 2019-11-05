@@ -37,7 +37,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/role/getRoles', 'Admin\RoleController@getRoles');
             Route::post('/role/setNewUser', 'Admin\RoleController@newUser');
         });
-        
+
         Route::group(['middleware' => 'parseAdmin'], function () {
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
@@ -141,6 +141,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
     Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
 
+
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
     Route::post('/getPosts', 'NewsController@getPosts');
@@ -159,11 +160,24 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         return redirect(route('index'));
     });
 
+
+
+
+        // MOBILE
+        Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
+        Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
+        Route::get('mobile/matching', 'ParseController@getMatchingMobile')->name('mobile/matching');
+        Route::get('mobile/matching-index', 'ParseController@getMatchingIndexMobile')->name('mobile/matching-index');
+        Route::get('parse/parse', 'ParseController@getTest')->name('parse/parse');
+        Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
+        Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
+
+
         Route::post('/getUsersData', 'SiteController@getUserData');
 
 //        Route::get('/motivation', 'SiteController@motivation');
     });
-});
+    });
 
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');

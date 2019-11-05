@@ -1538,6 +1538,28 @@ class ParseController extends Controller
             'controller' => $this
         ]);
     }
+    public function getTest(){
+        return view('parse/parse');
+    }
+    public function getMainData(){
+        return view('parse/main-data');
+    }
+    public function getLoginMobile(){
+        return view('mobile/login');
+    }
+    public function getDossierMobile(){
+        return view('mobile/dossier');
+    }
+    public function getMatchingMobile(){
+        return view('mobile/matching');
+    }
+    public function getMatchingIndexMobile(){
+        return view('mobile/matching-index');
+    }
+    public function getTopClasses(){
+        return view('parse/top-classes');
+    }
+
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
         $premium = [];
         $payout = [];
