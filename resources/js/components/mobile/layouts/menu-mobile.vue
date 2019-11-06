@@ -1,5 +1,5 @@
 <template>
-    <div class="m-navbar" id="m-navbar" style="display: none">
+    <div class="m-navbar " id="m-navbar" style="display: none">
         <div>
             <div class="absolute pb-3 pt-3">
                 <a href="javascript: void(0)" class="color-white mr-4 vertical-middle pt-2 ml-5 mobile-link-padding">

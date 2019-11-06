@@ -5,7 +5,7 @@
                 <div class="flex-column vertical-middle">
                     <div class="width100">
                         <img src="images/avatar.png" class="small-avatar-circle width100"  v-if="fakeImage">
-                        <img :src="imageUrl" @error="fakeImage = true" v-else>
+                        <img :src="imageUrl" class="small-avatar-circle width100" @error="fakeImage = true" v-else>
                     </div>
                 </div>
                 <div class="mt-2 mb-2 color-blue-name">
