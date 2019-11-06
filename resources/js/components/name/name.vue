@@ -1,44 +1,45 @@
 <template>
     <div class="nav mt-2 d-flex justify-content-center">
         <div class="nav-container flex-row">
-            <div @click="getLevelOne(item.id, item.url)"
-                 v-for="item in itemsLevelZero"
-                 class="dropbtn d-flex p-3 ml-2"
-                :class="item.id === levelOnePinned ? 'active' : ''">
-                <img :src="item.icon_url">
-                <span>{{item.label}}</span>
-            </div>
+            <div class="row">
+                <div @click="getLevelOne(item.id, item.url)"
+                     v-for="item in itemsLevelZero"
+                     class="dropbtn d-flex p-3 ml-2"
+                    :class="item.id === levelOnePinned ? 'active' : ''">
+                    <img :src="item.icon_url">
+                    <span>{{item.label}}</span>
+                </div>
+                <div class="nav-dropdown" v-if="isOpened">
+                    <div class="nav-dropdown__container mr-4 mt-5">
+                        <button type='button'
+                                class="close-btn"
+                                @click="showDropdown"><i class="fas fa-times"></i></button>
+                        <div class="dropdown-content mb-4 flex-row" >
 
-            <div class="nav-dropdown" v-if="isOpened">
-                <div class="nav-dropdown__container mr-4 mt-5">
-                    <button type='button'
-                            class="close-btn"
-                            @click="showDropdown"><i class="fas fa-times"></i></button>
-                    <div class="dropdown-content mb-4 flex-row" >
-
-                        <!--Column 1-->
-                        <div class="dropdown-content__list">
-                            <div v-for="innerItem in itemsLevelOne"
-                                 @click="getLevelTwo(innerItem.id, innerItem.url)"
-                                 class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
-                                 :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
-                                <img :src="innerItem.icon_url"
-                                     class="items-icons mr-2">
-                                <span class="d-flex">{{innerItem.label}}</span>
+                            <!--Column 1-->
+                            <div class="dropdown-content__list">
+                                <div v-for="innerItem in itemsLevelOne"
+                                     @click="getLevelTwo(innerItem.id, innerItem.url)"
+                                     class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
+                                     :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
+                                    <img :src="innerItem.icon_url"
+                                         class="items-icons mr-2">
+                                    <span class="d-flex">{{innerItem.label}}</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <!--Column 2-->
-                        <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
-                            <div class="ml-4 w-25"
-                                 v-if="levelOneOpened"
-                                 v-for="innerItem in itemsLevelTwo">
-                                <img :src="innerItem.icon_url"
-                                     class="items-icons mr-2">
-                                <span class="mr-2">{{innerItem.label}}</span>
+                            <!--Column 2-->
+                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
+                                <div class="ml-4 w-25"
+                                     v-if="levelOneOpened"
+                                     v-for="innerItem in itemsLevelTwo">
+                                    <img :src="innerItem.icon_url"
+                                         class="items-icons mr-2">
+                                    <span class="mr-2"><a :href="'/documentation/'+innerItem.url">{{innerItem.label}}</a></span>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,7 +99,7 @@
                 var vm = this;
 
                 if(url !== null && url !== '') {
-                    location.replace(url);
+                    location.replace('/documentation/'+url);
                     return 0;
                 }
 
@@ -178,39 +179,29 @@
             getLevelTwo: function(id, url) {
                 this.levelTwoPinned = id;
                 var vm = this;
-
                 if(url !== null && url !== '') {
-                    location.replace(url);
+                    location.replace('/documentation/'+url);
                     return 0;
                 }
-
                 for(var i = 0; i < vm.itemsLevelOne.length; i++) {
                     if(vm.itemsLevelOne[i].id === id && vm.itemsLevelOne[i].opened === false) {
-
                         this.preloader(true);
-
                         this.axios.post('/getItemsList', {parentId: id}).then(response => {
                             vm.fetchLevelTwo(response.data, id);
                         });
-
                         vm.itemsLevelOne[i].opened = true;
-
                         break;
                     }
                     else if(vm.itemsLevelOne[i].id === id && vm.itemsLevelOne[i].opened === true) {
-
                         if(vm.itemsLevelTwo.length !== 0) {
-
                             for(var i = 0; i < vm.itemsLevelTwo.length; i++) {
                                 vm.itemsLevelTwo.slice(i);
                             }
-
                             for(var i = 0; i < vm.itemsLevelOne.length; i++) {
                                 if(vm.itemsLevelOne[i].id === id) {
                                     vm.itemsLevelTwo = vm.itemsLevelOne[i].childs;
                                 }
                             }
-
                             this.levelOneOpened = true;
                             break;
                         }
@@ -229,16 +220,12 @@
                     }
                 }
             },
-
             fetchLevelTwo: function(response, id) {
-
                 var vm = this;
-
                 if(response.length === 0) {
                     this.preloader(false);
                     return 0;
                 }
-
                 for(var i = 0; i < vm.itemsLevelZero.length; i++) {
                     for(var j = 0; j < vm.itemsLevelZero[i].childs.length; j++) {
                         if(vm.itemsLevelZero[i].childs[j].id === id) {

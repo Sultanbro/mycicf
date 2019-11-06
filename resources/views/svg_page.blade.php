@@ -22,6 +22,7 @@
             {{--<search></search>--}}
         {{--</div>--}}
     {{--</div>--}}
+    <name></name>
     <div class="row">
         <div class="col-12 border-20 border-gray svg_center">
             <h2><p class="text-center">{{$page->title}}</p></h2>
