@@ -17,6 +17,9 @@
                         <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
                     <div>
+                        <input type="number" v-model="ISN">
+                    </div>
+                    <div>
                         <div class="flex-row date-color pl-4 pr-2">
                             <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
                                 <div><i class="far fa-eye"></i></div>
@@ -55,6 +58,7 @@
         name: "motivation",
         data() {
             return {
+                ISN: '',
                 category: 1,
                 motivations: [],
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 10),
@@ -65,15 +69,16 @@
             isn : Number
         },
         mounted () {
+            this.ISN = this.isn;
             this.getMotivation()
         },
         methods : {
             getMotivation(){
                 this.preloader(true)
                 this.axios.post('/getMotivationList', {
-                        isn: this.isn,
+                        isn: this.ISN,
                         begin : this.dateBeg,
-                        end: this.dateEnd
+                        end: this.dateEnd,
                     })
                     .then(response => {
                         if(response.data.success){

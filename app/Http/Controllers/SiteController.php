@@ -336,7 +336,7 @@ class SiteController extends Controller
     public function getMotivationList(Request $request, KiasServiceInterface $kias){
         $success = true;
         $error = '';
-        $ISN = 1446171;//$request->isn;
+        $ISN = $request->isn;
         $begin = $request->begin;
         $end = $request->end;
         $response = $kias->getEmplMotivation($ISN, $begin, $end);
