@@ -34,59 +34,8 @@
 <div id="app">
     @include('layouts.header')
     <main class="bg-white">
-        <div class="mt-3">
-            <div class="bg-blue-standart">
-                <div class="container-fluid pt-2 pb-2">
-                    <span class="color-white">Согласование АС</span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-3">
-            <div class="bg-white">
-                <div class="container-fluid flex-row jc-sb pt-2 pl-3 pr-3 pb-2 box-shadow">
-                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
-                    <span>2019-09-16</span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-3">
-            <div class="bg-white">
-                <div class="container-fluid flex-row pl-3 pr-3 jc-sb pt-2 pb-2 box-shadow">
-                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
-                    <span>2019-09-16</span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-5">
-            <div class="bg-blue-standart">
-                <div class="container-fluid pt-2 pb-2">
-                    <span class="color-white">Обходной лист</span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-3">
-            <div class="bg-white">
-                <div class="container-fluid flex-row pl-3 pr-3 jc-sb pt-2 pb-2 box-shadow">
-                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
-                    <span>2019-09-16</span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-5">
-            <div class="bg-blue-standart">
-                <div class="container-fluid pt-2 pb-2">
-                    <span class="color-white">Согласование административных дней</span>
-                </div>
-            </div>
-        </div>
-        <div class="mt-3">
-            <div class="bg-white">
-                <div class="container-fluid flex-row pl-3 pr-3 jc-sb pt-2 pb-2 box-shadow">
-                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
-                    <span>2019-09-16</span>
-                </div>
-            </div>
-        </div>
+        <coordination
+            :isn = {{auth()->user()->ISN}}></coordination>
     </main>
 </div>
 </body>

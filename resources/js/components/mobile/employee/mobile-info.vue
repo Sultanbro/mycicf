@@ -61,25 +61,151 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Small modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>
-
-            <div class="modal fade bd-example-modal-sm" id="qwe" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-sm modal-margin">
-                    <div class="modal-content border-rad-20">
-                        <div>
-                            <div class="flex-row border-top-rad-20 bg-blue-standart jc-center vertical-middle">
-                                <span class="color-white mt-2 mb-2">Страховые случаи</span>
-                            </div>
+        </div>
+        <div class="bg-white mt-2">
+            <div class="flex-column">
+                <div v-show="vacation !== null">
+                    <div class="border-radius15 bg-white mt-2">
+                        <div class="ml-3 pt-2 pb-2">
+                            <strong>Отпуск</strong>
                         </div>
-                        <div>
-                            <div>
-                                <div class="color-dimgray mt-4 ml-5 mr-5 mb-2">Авария при проведении СМР, Затопления водой из водо-, тепло-, отопительных систем, Кража/хищение, Наезд движущейся техники, исключая башенный кран, Ошибки, допущенные при монтаже, Падение пилотируемых летательных аппаратов или их обломков, Пожар, Просадка</div>
-                            </div>
+                        <div class="table-responsive width100">
+                            <table class="dosier-table table text-align-center">
+                                <thead>
+                                <tr class="header color-white">
+                                    <th scope="col">Вид</th>
+                                    <th scope="col" class="thead-border">Период</th>
+                                    <th scope="col" class="thead-border">Период отпуска</th>
+                                    <th scope="col">Дни</th>
+                                </tr>
+                                </thead>
+                                <tbody class="date-color">
+                                <tr v-for="(info, index) in vacation">
+                                    <td>{{info.Fullname}}</td>
+                                    <td class="table-td-border">{{info.Period}}</td>
+                                    <td class="table-td-border">{{info.DateBeg}} - {{info.DateEnd  === '0' ? 'н.в.' : info.DateEnd}}</td>
+                                    <td>{{info.Duration}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="modal-footer border-top-0">
-                            <button type="button" class="btn color-white width100 bg-notification-center ml-4 mr-4" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white mt-2">
+            <div class="flex-column">
+                <div v-show="admins !== null">
+                    <div class="border-radius15 bg-white mt-2">
+                        <div class="ml-3 pt-2 pb-2">
+                            <strong>Административные дни</strong>
+                        </div>
+                        <div class="table-responsive width100">
+                            <table class="dosier-table table text-align-center">
+                                <thead>
+                                <tr class="header color-white">
+                                    <th scope="col">Кол-во дней</th>
+                                    <th scope="col" class="thead-border">Период</th>
+                                    <th scope="col">Примечание</th>
+                                </tr>
+                                </thead>
+                                <tbody class="date-color">
+                                <tr v-for="(info, index) in admins">
+                                    <td>{{info.Duration}}</td>
+                                    <td class="thead-border">{{info.Period}}</td>
+                                    <td>{{info.Remark}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white mt-2">
+            <div class="flex-column">
+                <div v-show="mission !== null">
+                    <div class="border-radius15 bg-white mt-2">
+                        <div class="ml-3 pt-2 pb-2">
+                            <strong>Командировка</strong>
+                        </div>
+                        <div class="table-responsive width100">
+                            <table class="dosier-table table text-align-center">
+                                <thead>
+                                <tr class="header color-white">
+                                    <th scope="col">Город</th>
+                                    <th scope="col" class="thead-border">Период</th>
+                                    <th scope="col">Примечание</th>
+                                </tr>
+                                </thead>
+                                <tbody class="date-color">
+                                <tr v-for="(info, index) in mission">
+                                    <td>{{info.City}}</td>
+                                    <td class="table-td-border">{{info.Period}}</td>
+                                    <td>{{info.Remark}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white mt-2">
+            <div class="flex-column">
+                <div v-show="sick !== null">
+                    <div class="border-radius15 bg-white mt-2">
+                        <div class="ml-3 pt-2 pb-2">
+                            <strong>Больничные дни</strong>
+                        </div>
+                        <div class="table-responsive width100">
+                            <table class="dosier-table table text-align-center">
+                                <thead>
+                                <tr class="header color-white">
+                                    <th scope="col">Кол-во дней</th>
+                                    <th scope="col" class="thead-border">Период</th>
+                                    <th scope="col">Примечание</th>
+                                </tr>
+                                </thead>
+                                <tbody class="date-color">
+                                <tr v-for="(info, index) in sick">
+                                    <td>{{info.Duration}}</td>
+                                    <td class="thead-border">{{info.Period}}</td>
+                                    <td>{{info.Remark}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white mt-2">
+            <div class="flex-column">
+                <div v-show="thanks !== null">
+                    <div class="border-radius15 bg-white mt-2">
+                        <div class="ml-3 pt-2 pb-2">
+                            <strong>Дисциплинарные взыскания</strong>
+                        </div>
+                        <div class="table-responsive width100">
+                            <table class="dosier-table table text-align-center">
+                                <thead>
+                                <tr class="header color-white">
+                                    <th scope="col">Вид</th>
+                                    <th scope="col" class="thead-border">Дата</th>
+                                    <th scope="col" class="thead-border">Штраф</th>
+                                    <th scope="col">Примечание</th>
+                                </tr>
+                                </thead>
+                                <tbody class="date-color">
+                                <tr v-for="(info, index) in thanks">
+                                    <td>{{info.FullName}}</td>
+                                    <td class="table-td-border">{{info.DocDate}}</td>
+                                    <td class="table-td-border">{{info.ExtraPay}}</td>
+                                    <td>{{info.Remark}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

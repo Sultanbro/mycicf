@@ -19,7 +19,13 @@ Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.v
 
 Vue.component('login', require('./components/mobile/registration/login.vue').default);
 
+Vue.component('simple-info', require('./components/mobile/employee/simple-info.vue').default);
 
+Vue.component('coordination', require('./components/mobile/coordination/coordination.vue').default);
+
+Vue.component('coordination-modal', require('./components/mobile/coordination/modal.vue').default);
+
+Vue.component('menu-mobile', require('./components/mobile/layouts/menu-mobile.vue').default);
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
 
@@ -60,7 +66,7 @@ window.onload = function(){
         }
     });
 
-    var head = new Vue({
-        el: '#header',
-    });
+    // var head = new Vue({
+    //     el: '#header',
+    // });
 };

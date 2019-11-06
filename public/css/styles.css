@@ -259,6 +259,12 @@ ul{
     border-top: 1px solid #0255ff !important;
     color: #286eff;
 }
+.mobile-matching-active-table-contain td{
+	font-size: 0.7rem;
+}
+.width40pxHOTFIX{
+	width: 40px !important;
+}
 .mobile-matching-active-table-contain td:first-child{
     border-right: 1px solid lightsteelblue !important;
 }
@@ -400,7 +406,7 @@ ul{
 	position: absolute;
 	width: 100vw;
 	background: white;
-	display: none;
+	/*display: none;*/
 }
 .hamburger-mobile:hover > .m-navbar{
 	display: block;

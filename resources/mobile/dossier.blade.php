@@ -56,33 +56,7 @@
 {{--    </header>--}}
     <main class="bg-parse">
         <div>
-            <div class="bg-white">
-                <div class="pb-3 container-fluid flex-column vertical-middle">
-                    <div class="mt-3 flex-column vertical-middle">
-                        <div class="flex-column vertical-middle">
-                            <div class="width-40">
-                                <img src="../images/avatar.png" class="small-avatar-circle width100">
-                            </div>
-                        </div>
-                        <div class="mt-2 mb-2 color-blue-name">
-                            <strong >Имя Фамилия</strong>
-                        </div>
-                    </div>
-                    <div class="width100">
-                        <div class="flex-column vertical-middle color-white bg-color-blue width100">
-                            <span>Основная информация</span>
-                            <span><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                    </div>
-{{--                    <div class="width100 mt-3 mb-4">--}}
-{{--                        <div class="flex-row jc-center bg-notification-center border-rad-10 pt-2 pb-2 vertical-middle color-white width100">--}}
-{{--                            <span><i class="far fa-bell fs-1_2"></i></span>--}}
-{{--                            <span class="pl-2">Центр уведомлений</span>--}}
-{{--                            <div class="notification-counter">1</div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-                </div>
-            </div>
+            <simple-info :isn="{{Auth::user()->ISN}}"></simple-info>
             <mobile-info :isn="{{Auth::user()->ISN}}"></mobile-info>
         </div>
     </main>
