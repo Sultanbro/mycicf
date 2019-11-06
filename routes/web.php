@@ -102,7 +102,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
  */
-Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+//Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
 
@@ -178,7 +178,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/motivation', 'SiteController@motivation');
         Route::post('/getMotivationList', 'SiteController@getMotivationList');
         });
-    });
+//    });
 
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');

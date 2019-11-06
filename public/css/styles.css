@@ -221,6 +221,11 @@ ul{
 	background: #ecf5ff;
 	min-height: 250px;
 }
+.modal-textarea-comment-solid{
+    border: 1px solid #275cc7;
+    min-height: 150px;
+    background: #ffffff;
+}
 .attachment-border{
 	border-right: 1px dashed #8cc2f9;
 }
@@ -242,6 +247,35 @@ ul{
 }
 .green-button{
 	color: darkgreen;
+}
+.mobile-matching-additional-information{
+
+}
+.table-striped-white-blue > tbody > tr:nth-child(2n+0) > td, .table-striped > tbody > tr:nth-child(2n+0) > th {
+    background-color: #fff;
+}
+.mobile-matching-active-table td{
+    border: 1px solid #0255ff;
+    border-top: 1px solid #0255ff !important;
+    color: #286eff;
+}
+.mobile-matching-active-table-contain td{
+	font-size: 0.7rem;
+}
+.width40pxHOTFIX{
+	width: 40px !important;
+}
+.mobile-matching-active-table-contain td:first-child{
+    border-right: 1px solid lightsteelblue !important;
+}
+.mobile-matching-second-table-contain{
+
+}
+.mobile-matching-second-table-contain td:first-child{
+    text-align: left;
+}
+.mobile-matching-second-table-contain td{
+    border: 1px solid #aac0ea;
 }
 .rotate-45{
 	transform: rotate(45deg);
@@ -372,7 +406,7 @@ ul{
 	position: absolute;
 	width: 100vw;
 	background: white;
-	display: none;
+	/*display: none;*/
 }
 .hamburger-mobile:hover > .m-navbar{
 	display: block;

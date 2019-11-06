@@ -27,12 +27,12 @@
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
-    <script src="{{asset('js/app.js')}}"></script>
+    <script src="{{asset('js/mobile.js')}}"></script>
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
 <div id="app">
-    <header class="bg-color-blue color-white fs-1_3">
+    <header class="bg-color-blue color-white fs-1_3" id="header">
         <div class="container-fluid flex-row jc-sb vertical-middle pt-3 pb-3">
             <div>
                 <a href="javascript: void(0)" class="color-white mobile-link-padding">
@@ -97,19 +97,19 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="bg-white">
                 <div>
                     <div class="table-responsive width100">
-                        <table class="dosier-table table text-align-center">
+                        <table class="table table-striped-white-blue mobile-matching-active-table-contain table-striped text-align-center">
                             <thead>
-                            <tr class="header color-white">
+                            <tr class="color-blue bg-white">
                                 <th colspan="2">Дополнительные сведения</th>
                             </tr>
                             </thead>
-                            <tbody class="date-color">
-                            <tr>
-                                <td>Подразделение</td>
-                                <td>Департамент перестрахования</td>
+                            <tbody>
+                            <tr class="color-blue">
+                                <td><strong>Подразделение</strong></td>
+                                <td><strong>Департамент перестрахования</strong></td>
                             </tr>
                             <tr>
                                 <td>Страхователь</td>
@@ -131,7 +131,7 @@
                                 <td>Статус</td>
                                 <td>Первичная</td>
                             </tr>
-                            <tr>
+                            <tr class="mobile-matching-active-table">
                                 <td>Страховые случаи</td>
                                 <td>Авария при проведении СМР, Затопления водой из водопровода</td>
                             </tr>
@@ -152,107 +152,120 @@
                     </div>
                 </div>
                 <div>
-                    <div>
-                        <textarea cols="30" rows="10"></textarea>
+                    <div class="ml-4 mr-4">
+                        <textarea class="resize modal-textarea-comment width100" rows="3" disabled="disabled"></textarea>
                     </div>
                 </div>
-                <div>
-                    <div class="flex jc-center">
-                        <span>Документы</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="jc-center flex-column vertical-middle">
-                        <div class="flex-row">
-                            <div>
-                                <i class="fas fa-paperclip"></i>
-                            </div>
-                            <div>
-                                Справка МЮ.jpg
-                            </div>
-                        </div>
-                        <div class="flex-row">
-                            <div>
-                                <i class="fas fa-paperclip"></i>
-                            </div>
-                            <div>
-                                Справка МЮ.jpg
-                            </div>
-                        </div>
-                        <div class="flex-row">
-                            <div>
-                                <i class="fas fa-paperclip"></i>
-                            </div>
-                            <div>
-                                Справка МЮ.jpg
-                            </div>
+                <div class="mt-3">
+                    <div class="bg-blue-standart">
+                        <div class="container-fluid pt-2 pb-2 jc-center fs-1_2">
+                            <span class="color-white">Документы</span>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div class="flex jc-center">
-                        <span>Примечание</span>
+                    <div class="jc-center flex-column vertical-middle pt-3 pb-3">
+                        <div class="flex-row attachment-bg mt-2 mb-2">
+                            <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
+                                <i class="fas fa-paperclip color-blue-standart fs-1_4 rotate-45"></i>
+                            </div>
+                            <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
+                                <a href="javascript:void(0)" class="color-dimgray">Справка МЮ.jpg</a>
+                            </div>
+                        </div>
+                        <div class="flex-row attachment-bg mt-2 mb-2">
+                            <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
+                                <i class="fas fa-paperclip color-blue-standart fs-1_4 rotate-45"></i>
+                            </div>
+                            <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
+                                <a href="javascript:void(0)" class="color-dimgray">Справка МЮ.jpg</a>
+                            </div>
+                        </div>
+                        <div class="flex-row attachment-bg mt-2 mb-2">
+                            <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
+                                <i class="fas fa-paperclip color-blue-standart fs-1_4 rotate-45"></i>
+                            </div>
+                            <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
+                                <a href="javascript:void(0)" class="color-dimgray">Справка МЮ.jpg</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="bg-blue-standart">
+                        <div class="container-fluid pt-2 pb-2 jc-center fs-1_2">
+                            <span class="color-white">Примечание</span>
+                        </div>
                     </div>
                 </div>
                 <div class="matching-note-border">
                     <div>
-                        <textarea cols="30" rows="10"></textarea>
                         <div>
-                            <div>
-                                <i class="far fa-check-circle"></i>
+                            <div class="ml-4 mr-4 mt-4">
+                                <textarea class="resize modal-textarea-comment-solid width100" rows="3"></textarea>
                             </div>
                         </div>
-                        <div>
-                            <div>
-                                <i class="far fa-times-circle"></i>
+                        <div class="pl-4">
+                            <div class="flex-row pb-4 pr-4 pointer">
+                                <div title="Согласовать" class="vertical-middle button-accept color-white-standart matching-buttons width100 jc-center pl-4 pr-4 pt-1 pb-1">
+                                    <i class="far fa-check-circle"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <div>
-                                <i class="far fa-circle"></i>
+                            <div class="flex-row pb-4 pr-4 pointer">
+                                <div title="Согласовать" class="vertical-middle button-cancel color-white-standart matching-buttons width100 jc-center pl-4 pr-4 pt-1 pb-1">
+                                    <i class="far fa-times-circle"></i>
+                                </div>
+                            </div>
+                            <div class="flex-row pb-4 pr-4 pointer">
+                                <div title="Согласовать" class="vertical-middle button-neutral matching-buttons width100 jc-center pl-4 pr-4 pt-1 pb-1">
+                                    <i class="far fa-circle"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div>
-                        <div>
-                            <div class="flex-row jc-sb">
-                                <div>Иванов Иван</div>
-                                <div><i class="fas fa-chevron-up"></i></div>
-                            </div>
-                            <div>
-                                <div class="table-responsive width100">
-                                    <table class="dosier-table table text-align-center">
-                                        <tbody class="date-color">
-                                        <tr>
-                                            <td>Виза</td>
-                                            <td><i class="far fa-check-circle"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Дата</td>
-                                            <td>20-10-2019</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Подразделение</td>
-                                            <td>Управление управления</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="flex-row jc-sb">
-                                <div>Иванов Иван</div>
-                                <div><i class="far fa-check-circle"></i></div>
-                            </div>
-                            <div class="flex-row jc-sb">
-                                <div>Иванов Иван</div>
-                                <div><i class="far fa-check-circle"></i></div>
-                            </div>
-                        </div>
-                        <div></div>
-                        <div></div>
-                    </div>
+                <div class="ml-4 mr-4 mt-3">
+{{--                    <div>--}}
+{{--                        <div class="mobile-matching-second-table-contain box-shadow">--}}
+{{--                            <div class="flex-row pl-3 pr-3 color-blue jc-sb table-striped-custom pt-2 pb-2">--}}
+{{--                                <div>Иванов Иван</div>--}}
+{{--                                <div><i class="fas fa-chevron-up"></i></div>--}}
+{{--                            </div>--}}
+{{--                            <div class="mb-2">--}}
+{{--                                <div class="table-responsive width100">--}}
+{{--                                    <table class="dosier-table color-blue mobile-matching-second-table-contain box-shadow table text-align-center mb-0">--}}
+{{--                                        <tbody>--}}
+{{--                                        <tr>--}}
+{{--                                            <td>Виза</td>--}}
+{{--                                            <td><i class="far fa-check-circle green-button"></i></td>--}}
+{{--                                        </tr>--}}
+{{--                                        <tr>--}}
+{{--                                            <td>Дата</td>--}}
+{{--                                            <td>20-10-2019</td>--}}
+{{--                                        </tr>--}}
+{{--                                        <tr>--}}
+{{--                                            <td>Подразделение</td>--}}
+{{--                                            <td>Управление управления</td>--}}
+{{--                                        </tr>--}}
+{{--                                        </tbody>--}}
+{{--                                    </table>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div>--}}
+{{--                            <div class="flex-row pl-3 pr-3 pt-2 pb-2 box-shadow jc-sb table-striped-custom">--}}
+{{--                                <div>Иванов Иван</div>--}}
+{{--                                <div><i class="far fa-check-circle green-button"></i></div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div>--}}
+{{--                            <div class="flex-row pl-3 pr-3 pt-2 pb-2 mt-1 mb-5 box-shadow jc-sb table-striped-custom">--}}
+{{--                                <div>Иванов Иван</div>--}}
+{{--                                <div><i class="far fa-check-circle green-button"></i></div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <test></test>--}}
                 </div>
             </div>
         </div>
