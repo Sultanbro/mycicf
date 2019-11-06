@@ -37,7 +37,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/role/getRoles', 'Admin\RoleController@getRoles');
             Route::post('/role/setNewUser', 'Admin\RoleController@newUser');
         });
-
+        
         Route::group(['middleware' => 'parseAdmin'], function () {
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
@@ -102,7 +102,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
  */
-//Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
 
@@ -138,9 +138,11 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
         })->name('parse');
 
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+    Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
     Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-
+    Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
+    Route::post('/buyItem', 'CentcoinsController@buyItem');
 
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');

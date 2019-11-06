@@ -28,6 +28,8 @@ Vue.component('centcoins', require('./components/centcoins/centcoins.vue').defau
 
 Vue.component('operations-history', require('./components/centcoins/operations-history.vue').default);
 
+Vue.component('spend-centcoins', require('./components/centcoins/spend-centcoins.vue').default);
+
 Vue.component('post', require('./components/news/post.vue').default);
 
 Vue.component('news-post', require('./components/news/news-post.vue').default);
