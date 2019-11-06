@@ -70,7 +70,7 @@
                             @click="likePost">
                             <i class="fa-thumbs-up color-red" v-bind:class="post.isLiked === 0 ? 'far' : 'fas'"></i>
                             {{post.likes}}
-                            <span v-bind:class="post.isLiked === 1 ? 'color-red' : 'color-black'">Нравится</span>
+                            <span v-bind:class="post.isLiked === 1 ? 'color-black' : 'color-black'">Нравится</span>
                         </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
