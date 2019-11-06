@@ -17,7 +17,7 @@
                     <span>Согласование</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/motivation">
                 <li>
                     <i class="far fa-grin-stars"></i>
                     <span>Мотивация</span>
