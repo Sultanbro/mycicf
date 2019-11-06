@@ -180,7 +180,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/motivation', 'SiteController@motivation');
         Route::post('/getMotivationList', 'SiteController@getMotivationList');
         });
-//    });
+    });
 
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');

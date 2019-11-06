@@ -1,16 +1,16 @@
 <template>
-    <div class="m-navbar" id="m-navbar">
+    <div class="m-navbar" id="m-navbar" v-show="show">
         <div>
             <div class="absolute pb-3 pt-3">
-                <a href="javascript: void(0)" class="color-white mr-4 vertical-middle pt-2 ml-5 mobile-link-padding" v-model="menu_mobile_link" onclick="changeDisplay('m-navbar')">
+                <a href="javascript: void(0)" class="color-white mr-4 vertical-middle pt-2 ml-5 mobile-link-padding" v-model="menu_mobile_link" onclick="show = !show">
                     <i class="fa fa-bars fs-1_3 color-blue"></i>
                 </a>
             </div>
             <div class="flex-row ml-5 relative jc-center mr-5 jc-sb pt-3 pb-3">
                 <div>
                     <div class="mobile-centras-logo">
-                        <a href="{{route('index')}}">
-                            <img src="{{asset('images/new-white-logo.png')}}" class="image">
+                        <a href="/">
+                            <img src="/images/new-white-logo.png" class="image">
                         </a>
                     </div>
                 </div>
@@ -114,6 +114,7 @@
         name: 'menu-mobile',
         data() {
             return {
+                show : false,
                 menu_mobile_link: '',
             }
         },
