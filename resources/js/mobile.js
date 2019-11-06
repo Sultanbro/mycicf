@@ -10,6 +10,20 @@ import TextareaAutosize from 'vue-textarea-autosize'
 
 import VueGoogleCharts from 'vue-google-charts'
 
+
+Vue.use(VueAxios, axios);
+
+Vue.use(VueTreeselect);
+
+Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
+
+Vue.component('login', require('./components/mobile/registration/login.vue').default);
+
+
+
+Vue.component('treeselect', VueTreeselect.Treeselect);
+
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

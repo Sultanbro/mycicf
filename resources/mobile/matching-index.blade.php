@@ -27,62 +27,65 @@
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
-    <script src="{{asset('js/app.js')}}"></script>
+    <script src="{{asset('js/mobile.js')}}"></script>
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
 <div id="app">
-    <header class="bg-color-blue color-white fs-1_3">
-        <div class="container-fluid flex-row jc-sb vertical-middle pt-3 pb-3">
-            <div>
-                <a href="javascript: void(0)" class="color-white mobile-link-padding">
-                    <i class="fa fa-bars"></i>
-                </a>
-            </div>
-            <div>
-                <div class="mobile-centras-logo">
-                    <a href="{{route('index')}}">
-                        <img src="{{asset('images/new-white-logo.png')}}" class="image">
-                    </a>
+    @include('layouts.header')
+    <main class="bg-white">
+        <div class="mt-3">
+            <div class="bg-blue-standart">
+                <div class="container-fluid pt-2 pb-2">
+                    <span class="color-white">Согласование АС</span>
                 </div>
-            </div>
-            <div>
-                <a href="javascript: void(0)" class="color-white mobile-link-padding">
-                    <i class="fa fa-user"></i>
-                </a>
             </div>
         </div>
-    </header>
-    <main class="bg-parse">
-        <div>
+        <div class="mt-3">
             <div class="bg-white">
-                <div class="pb-3 container-fluid flex-column vertical-middle">
-                    <div class="mt-3 flex-column vertical-middle">
-                        <div class="flex-column vertical-middle">
-                            <div class="width-40">
-                                <img src="../images/avatar.png" class="small-avatar-circle width100">
-                            </div>
-                        </div>
-                        <div class="mt-2 mb-2 color-blue-name">
-                            <strong >Имя Фамилия</strong>
-                        </div>
-                    </div>
-                    <div class="width100">
-                        <div class="flex-column vertical-middle color-white bg-color-blue width100">
-                            <span>Основная информация</span>
-                            <span><i class="fa fa-chevron-down"></i></span>
-                        </div>
-                    </div>
-{{--                    <div class="width100 mt-3 mb-4">--}}
-{{--                        <div class="flex-row jc-center bg-notification-center border-rad-10 pt-2 pb-2 vertical-middle color-white width100">--}}
-{{--                            <span><i class="far fa-bell fs-1_2"></i></span>--}}
-{{--                            <span class="pl-2">Центр уведомлений</span>--}}
-{{--                            <div class="notification-counter">1</div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
+                <div class="container-fluid flex-row jc-sb pt-2 pl-3 pr-3 pb-2 box-shadow">
+                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
+                    <span>2019-09-16</span>
                 </div>
             </div>
-            <mobile-info :isn="{{Auth::user()->ISN}}"></mobile-info>
+        </div>
+        <div class="mt-3">
+            <div class="bg-white">
+                <div class="container-fluid flex-row pl-3 pr-3 jc-sb pt-2 pb-2 box-shadow">
+                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
+                    <span>2019-09-16</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="bg-blue-standart">
+                <div class="container-fluid pt-2 pb-2">
+                    <span class="color-white">Обходной лист</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="bg-white">
+                <div class="container-fluid flex-row pl-3 pr-3 jc-sb pt-2 pb-2 box-shadow">
+                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
+                    <span>2019-09-16</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="bg-blue-standart">
+                <div class="container-fluid pt-2 pb-2">
+                    <span class="color-white">Согласование административных дней</span>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="bg-white">
+                <div class="container-fluid flex-row pl-3 pr-3 jc-sb pt-2 pb-2 box-shadow">
+                    <span class="blue-button matching-underline">ЛС-20-001473/19</span>
+                    <span>2019-09-16</span>
+                </div>
+            </div>
         </div>
     </main>
 </div>
