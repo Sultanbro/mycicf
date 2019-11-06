@@ -57,9 +57,6 @@
             this.getOptions();
             this.getTables();
         },
-        props: {
-            isn: Number,
-        },
         methods: {
             getTables: function(){
                 this.axios.post("/emplInfo", {isn: this.isn, datebeg: this.datebeg, dateend: this.dateend}).then((response) => {
@@ -83,16 +80,6 @@
                     alert(response.error);
                 }
             },
-            // modalBlur: function () {
-            //     var qwe = document.getElementById(qwe);
-            //   // var app = document.getElementById(app);
-            //   if (qwe.className == active){
-            //       alert('qwe');
-            //   }
-            //   else{
-            //       alert('empty')
-            //   }
-            // },
         },
 
     }

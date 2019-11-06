@@ -147,15 +147,20 @@
                                                 <tbody>
                                                 <tr>
                                                     <td>Виза</td>
-                                                    <td><i class="far fa-check-circle green-button"></i></td>
+                                                    <td>
+                                                        <i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>
+                                                        <i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>
+                                                        <i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>
+                                                        <i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Дата</td>
-                                                    <td>20-10-2019</td>
+                                                    <td>{{users.Date}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Подразделение</td>
-                                                    <td>Управление управления</td>
+                                                    <td>{{users.Dept}}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>

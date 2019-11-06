@@ -56,8 +56,9 @@
 {{--    </header>--}}
     <main class="bg-parse">
         <div>
-            <simple-info :isn="{{Auth::user()->ISN}}"
-            :fullname="{{Auth::user()->full_name}}"></simple-info>
+            <simple-info
+                    :isn="{{Auth::user()->ISN}}"
+                    :fullname="{{json_encode(Auth::user()->full_name)}}"></simple-info>
             <mobile-info :isn="{{Auth::user()->ISN}}"></mobile-info>
         </div>
     </main>

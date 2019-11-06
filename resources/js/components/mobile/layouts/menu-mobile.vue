@@ -1,12 +1,12 @@
 <template>
-    <div class="m-navbar" id="m-navbar" v-show="show">
+    <div class="m-navbar" id="m-navbar" style="display: none">
         <div>
             <div class="absolute pb-3 pt-3">
-                <a href="javascript: void(0)" class="color-white mr-4 vertical-middle pt-2 ml-5 mobile-link-padding" v-model="menu_mobile_link" onclick="show = !show">
+                <a href="javascript: void(0)" class="color-white mr-4 vertical-middle pt-2 ml-5 mobile-link-padding">
                     <i class="fa fa-bars fs-1_3 color-blue"></i>
                 </a>
             </div>
-            <div class="flex-row ml-5 relative jc-center mr-5 jc-sb pt-3 pb-3">
+            <div class="flex-row ml-5 relative jc-center mr-5 jc-sb pt-3 pb-3" onclick="changeDisplay('m-navbar')">
                 <div>
                     <div class="mobile-centras-logo">
                         <a href="/">
@@ -119,15 +119,9 @@
             }
         },
         methods: {
-            changeDisplay: function(idName){
-                    if(menu_mobile_link.classList.contains('active')){
-                        menu_mobile_link.classList.remove('active');
-                        menu_mobile_link.style.display = "none";
-                    }
-                    else {
-                        menu_mobile_link.classList.add('active');
-                        menu_mobile_link.style.display = "block";
-                    }
+            changeHead: function(){
+                    console.log(this.show);
+                    this.show = this.show ? false : true;
                 }
             },
     }
