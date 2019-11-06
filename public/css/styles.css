@@ -1281,6 +1281,12 @@ body {
 		padding-left: 20px;
 	}
 }
+
+.svg_center{
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+}
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/
 /*::-moz-placeholder          {color:#fff;}!* Firefox 19+ *!*/
