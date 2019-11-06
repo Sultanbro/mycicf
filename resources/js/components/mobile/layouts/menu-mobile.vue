@@ -120,7 +120,6 @@
         },
         methods: {
             changeDisplay: function(idName){
-                    // var element = document.getElementById(idName);
                     if(menu_mobile_link.classList.contains('active')){
                         menu_mobile_link.classList.remove('active');
                         menu_mobile_link.style.display = "none";

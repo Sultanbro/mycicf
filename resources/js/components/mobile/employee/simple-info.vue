@@ -3,13 +3,13 @@
         <div class="pb-3 container-fluid flex-column vertical-middle">
             <div class="mt-3 flex-column vertical-middle">
                 <div class="flex-column vertical-middle">
-                    <div class="width-40">
+                    <div class="width100">
                         <img src="images/avatar.png" class="small-avatar-circle width100"  v-if="fakeImage">
                         <img :src="imageUrl" @error="fakeImage = true" v-else>
                     </div>
                 </div>
                 <div class="mt-2 mb-2 color-blue-name">
-                    <strong >Имя Фамилия</strong>
+                    <strong>{{fullname}}</strong>
                 </div>
             </div>
             <div class="width100">
@@ -48,6 +48,7 @@
         },
         props : {
             isn: Number,
+            fullname: String,
         },
         created: function(){
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
