@@ -1,5 +1,5 @@
-<template >
-    <div class="ml-2 mr-2 mb-2">
+<template>
+    <div class="mb-2">
         <div class="bg-white news-contains-top">
             <div class="flex-row pl-4 pr-4 pt-3 pb-3">
                 <div>
@@ -14,12 +14,16 @@
                     </span>
                     <span class="color-darkgray mt-minus-8px">
                         <small>{{post.date}}</small>
+                        <transition name="edited">
+                            <small v-if="post.edited">отредактировано</small>
+                        </transition>
                     </span>
                 </div>
                 <div class="ml-auto">
                     <button type="button"
                             @click="setPinned"
                             class="custom-button mr-1"
+                            :disabled="editMode"
                             v-bind:class="{pinned: post.pinned === 1}">
                         <i class="fas fa-thumbtack"></i>
                     </button>
@@ -43,41 +47,52 @@
 <!--                <img src="images/avatar.jpg" class="image">-->
             </div>
         </div>
-        <div class="flex-column bg-white pb-2">
-            <div class="pl-4 pr-4 text-ellipsis input-edit">
-                <input type="text"
-                       v-model="post.postText"
-                       v-bind:class="{editText: editMode}"
-                       :disabled="!editMode"
-                       data-toggle="modal"
-                       data-target="#exampleModal"
-                       class="custom-input bg-white w-100" />
-            </div>
+        <div class="pl-4 pr-4 flex-column bg-white">
+            <transition name="text">
+                <span class="mb-2 post-text" v-if="!editMode"><pre>{{post.postText}}</pre></span>
+            </transition>
+            <transition name="edit">
+                <textarea type="text"
+                          v-if="editMode"
+                          v-model="post.postText"
+                          v-bind:class="{editText: editMode}"
+                          :disabled="!editMode"
+                          class="custom-input mb-2 bg-white w-100"></textarea>
+            </transition>
         </div>
         <hr class="mb-0 mt-0">
         <div class="pl-4 pr-4 bg-white news-contains-bottom">
             <div>
                 <div class="flex-row">
-                    <button
-                        type="button"
-                        class="buttons pt-2 pl-3 pr-3 pb-2 block"
-                        @click="likePost">
-                        <i class="far fa-thumbs-up color-red"></i>
-                        {{post.likes}}
-                        <span class="color-black"
-                              v-bind:class="{liked: post.isLiked === 1}">Нравится</span>
-                    </button>
+                        <button
+                            type="button"
+                            class="buttons pt-2 pl-3 pr-3 pb-2 block"
+                            @click="likePost">
+                            <i class="fa-thumbs-up color-red" v-bind:class="post.isLiked === 0 ? 'far' : 'fas'"></i>
+                            {{post.likes}}
+                            <span v-bind:class="post.isLiked === 1 ? 'color-black' : 'color-black'">Нравится</span>
+                        </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
                         <i class="far fa-comment color-red"></i>
                         <span class="color-black">Комментарий</span>
                     </button>
-                    <!--<transition name="fade">-->
-                        <!--<button @click="saveEdited"-->
-                                <!--v-if="post.postText != this.oldText && post.postText.length > 0 && !this.edited"-->
-                                <!--type='button'-->
-                                <!--class="save-button mt-2 mb-2 ml-auto block">Сохранить</button>-->
-                    <!--</transition>-->
+                    <div class="ml-auto">
+                        <transition name="fade">
+                            <div class="ml-auto" v-if="editMode">
+                                <transition name="fade">
+                                    <button @click="saveEdited"
+                                            v-if="post.postText != this.oldText && post.postText.length > 0 && editMode"
+                                            type='button'
+                                            class="save-button pr-2 pl-2 mt-2 mb-2 mr-1">Сохранить</button>
+                                </transition>
+                                <button @click="exitEdit"
+                                        v-if="editMode"
+                                        type="button"
+                                        class="save-button pr-2 pl-2 mt-2 mb-2">Отмена</button>
+                            </div>
+                        </transition>
+                    </div>
                 </div>
             </div>
         </div>
@@ -93,7 +108,6 @@
                 isPinned: false,
                 bottomOfWindow: 0,
                 editMode: false,
-                edited: false,
                 oldText: this.post.postText,
                 fakeImage : false,
                 imageUrl : null,
@@ -114,17 +128,17 @@
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
                     this.fetch(response.data)
-                })
-            },
-
-            fetch: function (response) {
-                this.$parent.deleteFromPost(this.index);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                });
             },
 
             setPinned: function () {
                 if(this.post.pinned === 0) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
+                    }).catch(error => {
+                        alert('Ошибка на стороне сервера');
                     });
                 }
                 else {
@@ -137,6 +151,8 @@
             likePost: function () {
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
                 });
             },
 
@@ -150,31 +166,35 @@
             },
 
             editPost: function () {
-                if(this.editMode) {
-                    this.editMode = !this.editMode;
-                    this.edited = !this.edited;
-                    if(this.post.postText === '') {
-                        this.post.postText = this.oldText;
-                    }
-                    if(this.post.postText !== this.oldText) {
-                        this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
-                        })
-                    }
+                if(this.post.postText === "") {
+                    this.post.postText = this.oldText;
                 }
-                else {
-                    this.editMode = true;
+                if(this.post.postText !== this.oldText) {
+                    this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                    }).catch(error => {
+                        alert('Ошибка на стороне сервера');
+                    });
                 }
+                this.oldText = this.post.postText;
+                this.editMode = !this.editMode;
             },
 
             saveEdited: function () {
                 this.editMode = !this.editMode;
                 this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
-                    this.fetchDisabled(response.data);
-                })
+                    this.fetchSaved(response.data);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                });
             },
 
-            fetchDisabled: function (response) {
-                this.edited = !this.edited;
+            fetchSaved: function (response) {
+                this.post.edited = response.edited;
+            },
+
+            exitEdit: function () {
+              this.editMode = !this.editMode;
+              this.post.postText = this.oldText;
             }
 
         }
@@ -209,7 +229,7 @@
         color: darkorange;
     }
 
-    .pinned > .fas {
+    .pinned .fas {
         color: cornflowerblue;
         transform: rotate(45deg);
         transition: transform 0.4s ease-in-out;
@@ -219,6 +239,7 @@
         border: none;
         background-color: transparent;
         outline: none;
+        transition: all 0.4s ease;
     }
 
     .buttons > span {
@@ -232,6 +253,8 @@
 
     .liked {
         color: red;
+        display: none;
+        transition: all 0.4s ease-in-out;
     }
 
 
@@ -240,10 +263,11 @@
     }
 
     .custom-input {
-        display: block;
-        border: none;
-        max-height: 100px;
         resize: none;
+        outline: none;
+        border: none;
+        transition: height 0.4s ease;
+
     }
 
     .save-button {
@@ -262,20 +286,75 @@
         color: #FFF;
     }
 
-    .input-edit {
-        width: 100%;
-        height: 100px;
-
+    .editText {
+        height: 150px;
+        border: 1px solid cornflowerblue;
     }
+
+    .editText:focus {
+        box-shadow: 0 0 2px cornflowerblue;
+        outline: none;
+    }
+
 
     .fade-enter-active,
     .fade-leave-active {
-        transition: opacity .5s
+        transition: opacity .5s;
     }
 
     .fade-enter,
     .fade-leave-to {
-        opacity: 0
+        opacity: 0;
+    }
+
+    .text-enter-active,
+    .text-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    .text-enter,
+    .text-leave-to {
+        opacity: 0;
+    }
+
+    .edit-enter {
+        height: 0;
+        transition: all 1s ease;
+    }
+
+    .edit-enter-to {
+        height: 150px;
+        transition: all 1s ease;
+    }
+
+    .edit-leave {
+        height: 150px;
+        transition: all 0.5s ease;
+    }
+
+    .edit-leave-to {
+        height: 0;
+        transition: all 0.5s ease;
+    }
+
+    .post-text {
+        width: 100%;
+        word-wrap: break-word;
+        line-break: auto;
+    }
+
+    .post-text pre {
+        font-size: 1em;
+        line-break: auto;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+    }
+
+    pre{
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     }
 
 </style>

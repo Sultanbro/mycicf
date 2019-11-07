@@ -5,7 +5,11 @@ switch($_SERVER['HTTP_HOST'] ?? env('FRONTEND_DOMAIN')){
         $viewPath = 'admin';
         break;
     case env('FRONTEND_DOMAIN') :
-        $viewPath = 'views';
+        $agent = new \Jenssegers\Agent\Agent;
+
+        $result = $agent->isDesktop();
+
+        $viewPath = $result ? 'views' : 'mobile';
         break;
 }
 return [
@@ -19,7 +23,6 @@ return [
     | an array of paths that should be checked for your views. Of course
     | the usual Laravel view path has already been registered for you.
     |
-    TODO : if(frontend_app){app()->isMobile ? mobile_path : desktop_path}
     */
     'paths' => [
         resource_path($viewPath),

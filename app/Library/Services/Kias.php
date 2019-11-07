@@ -241,4 +241,12 @@ class Kias implements KiasServiceInterface
             'Date' => $date,
         ]);
     }
+
+    public function getEmplMotivation($isn, $begin, $end) {
+        return $this->request('User_CicGetEmplMotivation', [
+            'EmplISN' => $isn,
+            'DateBeg' => date('d.m.Y', strtotime($begin)),
+            'DateEnd' => date('d.m.Y', strtotime($end))
+        ]);
+    }
 }

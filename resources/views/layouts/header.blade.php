@@ -10,27 +10,27 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                <a href="{{route('parse')}}">
+                <a class="header-navigation" href="{{route('parse')}}">
                     <li>
                         Parse
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         Рейтинг
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         О компании
                     </li>
                 </a>
-                <a href="{{route('documentation')}}">
+                <a class="header-navigation" href="{{route('documentation')}}">
                     <li>
                         Библиотека
                     </li>
                 </a>
-                <a href="javascript:void(0)">
+                <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         Продукты
                     </li>
@@ -60,7 +60,6 @@
                     </section>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="preloader" id="preloader">

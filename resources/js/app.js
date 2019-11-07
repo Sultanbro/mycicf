@@ -6,7 +6,15 @@ import axios from 'axios'
 
 import VueAxios from 'vue-axios'
 
+import TextareaAutosize from 'vue-textarea-autosize'
+
+import VueGoogleCharts from 'vue-google-charts'
+
+Vue.use(VueGoogleCharts);
+
 Vue.use(VueAxios, axios);
+
+Vue.use(TextareaAutosize);
 
 Vue.component('login', require('./components/registration/login.vue').default);
 
@@ -20,6 +28,8 @@ Vue.component('centcoins', require('./components/centcoins/centcoins.vue').defau
 
 Vue.component('operations-history', require('./components/centcoins/operations-history.vue').default);
 
+Vue.component('spend-centcoins', require('./components/centcoins/spend-centcoins.vue').default);
+
 Vue.component('post', require('./components/news/post.vue').default);
 
 Vue.component('news-post', require('./components/news/news-post.vue').default);
@@ -31,6 +41,16 @@ Vue.component('coordination', require('./components/employee/coordination.vue').
 Vue.component('search', require('./components/documentation/search.vue').default);
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
+
+Vue.component('motivation', require('./components/employee/motivation.vue').default);
+
+Vue.component('name', require('./components/name/name.vue').default);
+
+Vue.component('parse-charts', require('./components/parse/parse-charts.vue').default);
+
+Vue.component('main-data-charts', require('./components/parse/main-data-charts.vue').default);
+
+Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
 
 window.onload = function(){
     var app = new Vue({

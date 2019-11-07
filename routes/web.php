@@ -122,7 +122,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
 
         //DOCUMENTATION ADMIN MIDDLEWARE
-        Route::get('/documentation/', 'DocumentationController@index')->name('documentation');
+        Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
         Route::post('/documentation/save', 'DocumentationController@save');
         Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
 
@@ -137,25 +137,50 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             return redirect(route('parse/company'));
         })->name('parse');
 
-        Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
-        Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
-        Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+    Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+    Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
+    Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+    Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+    Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
+    Route::post('/buyItem', 'CentcoinsController@buyItem');
 
-        Route::get('/news', 'NewsController@getView')->name('news');
-        Route::post('/addPost', 'NewsController@addPost');
-        Route::post('/getPosts', 'NewsController@getPosts');
-        Route::post('/deletePost', 'NewsController@deletePost');
-        Route::post('/setPinned', 'NewsController@setPinned');
-        Route::post('/unsetPinned', 'NewsController@unsetPinned');
-        Route::post('/likePost', 'NewsController@likePost');
-        Route::post('/editPost', 'NewsController@editPost');
+    Route::get('/news', 'NewsController@getView')->name('news');
+    Route::post('/addPost', 'NewsController@addPost');
+    Route::post('/getPosts', 'NewsController@getPosts');
+    Route::post('/deletePost', 'NewsController@deletePost');
+    Route::post('/setPinned', 'NewsController@setPinned');
+    Route::post('/unsetPinned', 'NewsController@unsetPinned');
+    Route::post('/likePost', 'NewsController@likePost');
+    Route::post('/editPost', 'NewsController@editPost');
 
-        Route::get('/logout', function (){
-            Auth::logout();
-            return redirect(route('index'));
-        });
+    //UNTITLED
+    Route::get('/name', 'NameController@getView')->name('documentation');
+    Route::post('/getItemsList', 'NameController@getItemsList');
+
+    Route::get('/logout', function (){
+        Auth::logout();
+        return redirect(route('index'));
+    });
+
+
+
+
+        // MOBILE
+        Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
+        Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
+        Route::get('mobile/matching', 'ParseController@getMatchingMobile')->name('mobile/matching');
+        Route::get('mobile/matching-index', 'ParseController@getMatchingIndexMobile')->name('mobile/matching-index');
+        Route::get('parse/parse', 'ParseController@getTest')->name('parse/parse');
+        Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
+        Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
+
 
         Route::post('/getUsersData', 'SiteController@getUserData');
-    });
-});
 
+        Route::get('/motivation', 'SiteController@motivation');
+        Route::post('/getMotivationList', 'SiteController@getMotivationList');
+        });
+    });
+
+//RELOG
+Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');

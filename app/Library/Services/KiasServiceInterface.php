@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: IAkbergen
- * Date: 23.04.2019
- * Time: 11:52
- */
-
 namespace App\Library\Services;
 
-
+/**
+ * Interface KiasServiceInterface
+ * @package App\Library\Services
+ * @property string $_sId KiasSessionId
+ */
 interface KiasServiceInterface
 {
     /**
@@ -88,4 +85,13 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getEmplImagesByDate($date);
+
+    /**
+     * Получить мотивацию сотрудников продающих подразделении
+     * @param $isn
+     * @param $begin
+     * @param $end
+     * @return mixed
+     */
+    public function getEmplMotivation($isn, $begin, $end);
 }

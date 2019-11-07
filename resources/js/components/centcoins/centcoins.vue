@@ -26,13 +26,13 @@
         </div>
         <div class="mb-5">
             <ul class="flex-column mr-3 ml-3">
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/centcoins">
                     <li>
                         <i class="far fa-clipboard"></i>
                         <span>История операций</span>
                     </li>
                 </a>
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/spendCentcoins">
                     <li>
                         <i class="far fa-thumbs-up"></i>
                         <span>Потратить Сенткоины</span>

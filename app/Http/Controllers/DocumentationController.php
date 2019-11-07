@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\SvgFiles;
 use App\UploadDocs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,10 +43,13 @@ class DocumentationController extends Controller
     }
 
     public function getByUrl($url){
-        if(($page = UploadDocs::where('url', $url)->first()) === null){
-            throw new \Exception('Данная страница не найдена', 404);
+        if(($page = UploadDocs::where('url', $url)->first())){
+            return view('documentation_page', compact('page'));
+        }elseif(($page = SvgFiles::where('url', $url)->first())){
+            return view('svg_page', compact('page'));
+        }else{
+            throw new \Exception('Запрашиваемая страница не найдена', 404);
         }
-        return view('documentation_page', compact('page'));
     }
 
     public function search(Request $request){

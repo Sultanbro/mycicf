@@ -204,9 +204,6 @@
             this.getOptions();
             this.getTables();
         },
-        props: {
-            isn: Number,
-        },
         methods: {
             getTables (){
                 this.preloader(true);
