@@ -132,27 +132,27 @@
                                 <div class="mobile-matching-second-table-contain box-shadow" v-for="(users, index) in coordination.Coordinations">
                                     <div class="flex-row pl-3 pr-3 color-blue jc-sb table-striped-custom pt-2 pb-2" data-toggle="collapse" :data-target="'#visa-date-unit_'+index" aria-expanded="true">
                                         <div>{{users.FullName}}</div>
-                                        <!--<div>-->
-                                            <!--<i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>-->
-                                            <!--<i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>-->
-                                            <!--<i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>-->
-                                            <!--<i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>-->
-                                        <!--</div>-->
+                                        <div>
+                                            <i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>
+                                            <i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>
+                                            <i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>
+                                            <i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>
+                                        </div>
                                         <!--                                        <div><i class="fas fa-chevron-up"></i></div>-->
                                     </div>
                                     <div class="mb-2 collapse" :id="'visa-date-unit_'+index">
                                         <div class="table-responsive width100">
                                             <table class="dosier-table color-blue mobile-matching-second-table-contain box-shadow table text-align-center mb-0">
                                                 <tbody>
-                                                <tr>
-                                                    <td>Виза</td>
-                                                    <td>
-                                                        <i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>
-                                                        <i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>
-                                                        <i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>
-                                                        <i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>
-                                                    </td>
-                                                </tr>
+                                                <!--<tr>-->
+                                                    <!--<td>Виза</td>-->
+                                                    <!--<td>-->
+                                                        <!--<i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>-->
+                                                        <!--<i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>-->
+                                                        <!--<i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>-->
+                                                        <!--<i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>-->
+                                                    <!--</td>-->
+                                                <!--</tr>-->
                                                 <tr>
                                                     <td>Дата</td>
                                                     <td>{{users.Date}}</td>
