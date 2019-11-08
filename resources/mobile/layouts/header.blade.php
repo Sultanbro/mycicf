@@ -1,17 +1,6 @@
-<menu-mobile></menu-mobile>
-<script>
-    function changeDisplay(idName){
-        var element = document.getElementById(idName);
-        if(element.classList.contains('active')){
-            element.classList.remove('active');
-            element.style.display = "none";
-        }
-        else {
-            element.classList.add('active');
-            element.style.display = "block";
-        }
-    }
-</script>
+<menu-mobile
+    :fullname="{{json_encode(auth()->user()->full_name)}}"
+    :motivationShow="{{json_encode(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()))}}"></menu-mobile>
 <header class="bg-color-blue color-white fs-1_3">
     <div class="container-fluid flex-row jc-sb vertical-middle pt-3 pb-3">
         <div>

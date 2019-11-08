@@ -39,4 +39,17 @@
     </main>
 </div>
 </body>
+<script>
+    function changeDisplay(idName){
+        var element = document.getElementById(idName);
+        if(element.classList.contains('active')){
+            element.classList.remove('active');
+            element.style.display = "none";
+        }
+        else {
+            element.classList.add('active');
+            element.style.display = "block";
+        }
+    }
+</script>
 </html>
