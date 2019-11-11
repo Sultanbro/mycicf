@@ -1,15 +1,19 @@
 <template>
-    <div class="nav mt-2 d-flex justify-content-center">
-        <div class="nav-container flex-row">
-            <div class="row">
-                <div @click="getLevelOne(item.id, item.url)"
-                     v-for="item in itemsLevelZero"
-                     class="dropbtn d-flex p-3 ml-2"
-                    :class="item.id === levelOnePinned ? 'active' : ''">
-                    <img :src="item.icon_url">
-                    <span>{{item.label}}</span>
+    <div class="nav mt-2 d-flex justify-content-center bg-WHITE">
+        <div class="nav-container flex-row width100">
+            <div class="row width110">
+                <div class="blue-bg-all width100">
+                    <div class="flex-row width100 jc-center">
+                        <div @click="getLevelOne(item.id, item.url)"
+                             v-for="item in itemsLevelZero"
+                             class="dropbtn d-flex p-3 ml-2"
+                            :class="item.id === levelOnePinned ? 'active' : ''">
+                            <img :src="item.icon_url">
+                            <span>{{item.label}}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="nav-dropdown" v-if="isOpened">
+                <div class="nav-dropdown initial" v-if="isOpened">
                     <div class="nav-dropdown__container mr-4 mt-5">
                         <button type='button'
                                 class="close-btn"

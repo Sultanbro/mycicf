@@ -1,7 +1,9 @@
 <template>
     <div class="">
-        <div class="modal fade bd-example-modal-lg" id="test" tabindex="-1" role="dialog"
-             aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg" id="mainModal" tabindex="-1" role="dialog"
+             aria-labelledby="myLargeModalLabel" aria-hidden="true"
+            ref="mainModal"
+        >
             <div class="modal-dialog modal-lg">
                 <div class="modal-content products-margin modal-custom-border-top">
                     <div class="bg-blue-standart pt-3">
@@ -49,16 +51,17 @@
                     <div class="bg-white">
                         <div>
                             <div class="table-responsive width100">
-                                <table class="table table-striped-white-blue mobile-matching-active-table-contain table-striped text-align-center">
+                                <table class="table table-striped-white-blue mobile-coordination-table mobile-matching-active-table-contain table-striped text-align-center">
                                     <thead>
                                     <tr class="color-blue bg-white">
                                         <th colspan="2">Дополнительные сведения</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="color-blue" v-for="attribute in coordination.Attributes">
-                                        <td><strong>{{attribute.Name}}</strong></td>
-                                        <td><strong>{{attribute.Value}}</strong></td>
+                                    <tr v-for="attribute in coordination.Attributes" :class="[{ModalColorfulText: attribute.Value.length > 200}, {cursor : attribute.Value.length > 200}]" class="coordinationModalTr">
+                                        <td>{{attribute.Name}}</td>
+                                        <td v-if="attribute.Value.length > 200" @click="openLongText(attribute.Name, attribute.Value)">{{attribute.Value.substring(0,200)}}...</td>
+                                        <td v-else>{{attribute.Value}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -176,6 +179,28 @@
                 </div>
             </div>
         </div>
+        <button type="button" class="btn btn-primary" style="display: none;" ref="longTextButton" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>
+
+        <div class="modal fade bd-example-modal-sm" id="qwe" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-margin">
+                <div class="modal-content border-rad-20">
+                    <div>
+                        <div class="flex-row border-top-rad-20 bg-blue-standart jc-center vertical-middle">
+                            <span class="color-white mt-2 mb-2">{{longTitle}}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <div class="color-dimgray mt-4 ml-5 mr-5 mb-2">{{longText}}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0">
+                        <button type="button" class="btn color-white width100 bg-notification-center ml-4 mr-4" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -185,6 +210,8 @@
         data() {
             return {
                 Remark: "",
+                longText: "",
+                longTitle: ""
             }
         },
         props: {
@@ -210,8 +237,23 @@
                 }
             },
             close() {
-                this.$parent.$refs.modalButton.click()
-            }
+                this.$parent.$refs.modalButton.click();
+            },
+            openLongText (title, longText) {
+                this.longTitle = title;
+                this.longText = longText;
+                this.$refs.longTextButton.click();
+            },
+            preloader: function(show) {
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
+            },
         },
     }
 </script>
