@@ -30,6 +30,7 @@
                     <button type="button"
                             @click="editPost"
                             class="custom-button mr-1"
+                            :disabled="editMode"
                             v-bind:class="{editButton: editMode}"
                             v-if="this.isn === this.post.userISN">
                         <i class="fas fa-pen"></i>
@@ -49,7 +50,9 @@
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
-                <span class="mb-2 post-text" v-if="!editMode"><pre>{{post.postText}}</pre></span>
+                <span class="mb-2 post-text" v-if="!editMode">
+                    <pre>{{post.postText}}</pre>
+                </span>
             </transition>
             <transition name="edit">
                 <textarea type="text"
@@ -61,16 +64,16 @@
             </transition>
         </div>
         <hr class="mb-0 mt-0">
-        <div class="pl-4 pr-4 bg-white news-contains-bottom">
+        <div class=" bg-white news-contains-bottom">
             <div>
-                <div class="flex-row">
+                <div class="flex-row pl-4 pr-4">
                         <button
                             type="button"
                             class="buttons pt-2 pl-3 pr-3 pb-2 block"
                             @click="likePost">
                             <i class="fa-thumbs-up color-red" v-bind:class="post.isLiked === 0 ? 'far' : 'fas'"></i>
                             {{post.likes}}
-                            <span v-bind:class="post.isLiked === 1 ? 'color-red' : 'color-black'">Нравится</span>
+                            <span v-bind:class="post.isLiked === 1 ? 'color-black' : ''">Нравится</span>
                         </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
@@ -94,8 +97,85 @@
                         </transition>
                     </div>
                 </div>
+
+                <hr class="mb-0 mt-0">
+                <div class="flex-row p-4 ">
+
+                    <div class="comments-container w-100">
+                        <div class="comments-container__inner w-100">
+                            <div class="d-flex comments-section w-100">
+                                <div>
+                                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
+                                </div>
+
+                                <div class="ml-2 comments-section__body w-100">
+
+<!--                                    <div class="d-flex comment-section__top">-->
+<!--                                        <div class="comment-section__dropdown ml-auto">-->
+
+<!--                                            <div class="comment-section__icon pr-3 pl-3">-->
+<!--                                                <i class="fas fa-ellipsis-h"></i>-->
+<!--                                            </div>-->
+
+<!--                                            <div class="comment-section__dropcontent">-->
+<!--                                                <div class="p-2">-->
+<!--                                                    <span>-->
+<!--                                                        <small>Отредактировать</small>-->
+<!--                                                    </span>-->
+<!--                                                </div>-->
+<!--                                                <div class="p-2">-->
+<!--                                                    <span>-->
+<!--                                                        <small>Удалить</small>-->
+<!--                                                    </span>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+                                    <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
+                                        <div class="mr-3 w-100">
+                                            <span class="color-blue">Name</span>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus expedita itaque natus obcaecati pariatur possimus quae sed velit voluptas voluptatibus? A aliquid architecto aut consectetur delectus dicta dignissimos dolore eaque earum eligendi enim eos esse excepturi harum illo, ipsam itaque minus molestias odio officia optio pariatur perferendis porro praesentium quia quis reiciendis sequi, similique sunt tempore? Asperiores aut delectus, eius eos maxime minima nihil officiis perferendis provident quisquam vel, velit! Accusamus amet dolore eveniet quibusdam quis ratione repudiandae tempore temporibus ut vel. Accusamus aut blanditiis culpa dicta dignissimos illo ipsum iure molestiae mollitia nisi non, numquam similique tempore, veniam voluptate.
+                                        </div>
+                                        <div class="d-flex comment-section__top">
+                                            <div class="comment-section__dropdown ml-auto">
+
+                                                <div class="comment-section__icon">
+                                                    <i class="fas fa-ellipsis-h"></i>
+                                                </div>
+
+                                                <div class="comment-section__dropcontent">
+                                                    <div class="p-2">
+                                                    <span>
+                                                        <small>Отредактировать</small>
+                                                    </span>
+                                                    </div>
+                                                    <div class="p-2">
+                                                    <span>
+                                                        <small>Удалить</small>
+                                                    </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex pl-5 pt-2 comments-bottom">
+                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>
+                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>
+                                <div class="color-blue ml-auto pr-2"><small>01.01.2020</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
+        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -363,4 +443,45 @@
         opacity: 0;
     }
 
+    .comments-section__body {
+        background-color: #EFEFEF;
+        border-radius: 10px;
+    }
+
+    .comments-bottom_inner {
+        cursor: pointer;
+        transition: 0.4s ease;
+    }
+
+    .comment-section__icon {
+        cursor: pointer;
+    }
+
+    .comment-section__dropcontent {
+        display: none;
+        position: absolute;
+        background-color: #e9ebee;
+        right: 45px;
+        box-shadow: 0px 8px 40px 0px rgba(0,0,0,0.2);
+        z-index: 300;
+    }
+
+    .comment-section__dropdown:hover .comment-section__dropcontent {
+        display: block;
+        transition: 0.4s ease;
+        cursor: pointer;
+    }
+
+    .comment-section__dropcontent div:hover {
+        background-color: cornflowerblue;
+        color: #FFF;
+    }
+
+    .comment-section__dropdown:hover .comment-section__icon i {
+        color: cornflowerblue;
+    }
+
+    /*.comment-section__top {*/
+    /*    height: 15px;*/
+    /*}*/
 </style>

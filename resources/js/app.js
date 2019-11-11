@@ -8,6 +8,10 @@ import VueAxios from 'vue-axios'
 
 import TextareaAutosize from 'vue-textarea-autosize'
 
+import FlashMessage from '@smartweb/vue-flash-message'
+
+Vue.use(FlashMessage);
+
 Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);

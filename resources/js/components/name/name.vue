@@ -309,7 +309,7 @@
 
     .nav {
         position: relative;
-        background-color: #4267b2;
+        background-color: #508ff4;
         z-index: 500;
     }
 
@@ -323,12 +323,11 @@
         border: none;
         outline: none;
         transition: 0.4s ease;
-        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
     }
 
     .dropbtn:hover {
-        border-top: 2px solid #FFF;
-        background-color: #4974cc;
+        border-bottom: 2px solid #FFF;
     }
 
     .dropbtn-inner {
@@ -341,20 +340,20 @@
     }
 
     .dropbtn-inner:hover {
-        border-left: 3px solid #007bff;
+        border-left: 3px solid #508ff4;
     }
 
     .dropbtn-inner:hover span {
-        color: #007bff;
+        color: #508ff4;
     }
-
 
     .nav-dropdown {
         position: absolute;
         left: 0;
         width: 100%;
         top: 50px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.2);
+        /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
         z-index: 200;
     }
 
@@ -384,13 +383,18 @@
     }
 
     .active {
-        background-color: #4974cc;
-        border-top: 2px solid #FFF;
+        /*background-color: #4974cc;*/
+        /*border-top: 2px solid #FFF;*/
+        border-bottom: 2px solid #FFF;
     }
 
     .inner-active {
-        color: #007bff;
-        border-left: 3px solid #007bff;
+        /*color: #007bff;*/
+        /*border-left: 3px solid #007bff;*/
+
+        color: #508ff4;
+        border-left: 3px solid #508ff4;
+
     }
 
 

@@ -94,6 +94,9 @@
         <div class="text-center">
             <button type="button" class="load-button pl-2 pr-2" @click="getPosts()" v-if="!allPostShown">Больше</button>
         </div>
+
+
+        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -166,7 +169,13 @@
                 this.axios.post('/addPost', this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
-                    alert('Ошибка на стороне сервера');
+                    // alert('Ошибка на стороне сервера');
+                    this.preloader(false);
+                    this.flashMessage.error({
+                        title: "Ошибка",
+                        message: error,
+                    });
+
                 });
                 this.postText = '';
             },

@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "^0.3.0",
+    "@smartweb/vue-flash-message": "^0.5.0",
     "laravel-echo": "^1.6.1",
     "pusher-js": "^5.0.2",
     "vue": "^2.6.10",

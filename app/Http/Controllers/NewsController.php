@@ -29,52 +29,59 @@ class NewsController extends Controller
             ];
         }
 
-//        try {
+        try {
             $new_post = new Post();
             $new_post->user_isn = $request->isn;
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
 
-//        foreach ($request->postFiles as $file) {
-//            $fileName = $file->getClientOriginalName();
-//            $content = file_get_contents($file->getRealPath());
-//            Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
-//        }
-//        }
-//        catch(Exception $e) {
-//            $error = $e->getMessage();
-//            $success = false;
-//            return [
-//                'success' => $success,
-//                'error' => $error
-//            ];
-//        }
+            $success = true;
 
-        $full_name = Auth::user()->full_name;
+            if(isset($request->postFiles)) {
+                foreach ($request->postFiles as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
+                }
+            }
 
-        $response = [
-            'userISN' => $new_post->user_isn,
-            'postText' => $new_post->post_text,
+            $full_name = Auth::user()->full_name;
+
+            $response = [
+                'userISN' => $new_post->user_isn,
+                'postText' => $new_post->post_text,
 //            'likes' => $newPost->likes,
-            'pinned' => $new_post->pinned,
-            'edited' => false,
-            'isLiked' => 0,
-            'fullname' => $full_name,
-            'id' => $new_post->id,
-            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
-        ];
+                'pinned' => $new_post->pinned,
+                'edited' => false,
+                'isLiked' => 0,
+                'fullname' => $full_name,
+                'id' => $new_post->id,
+                'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            ];
 
-        $result = [
-            'success' => $success,
-            'error' => $error,
-            'post' => $response,
-        ];
-        broadcast(new NewPost([
-            'post' => $response,
-            'type' => Post::NEW_POST
-        ]));
-        return $response;
+            $result = [
+                'success' => $success,
+                'error' => $error,
+                'post' => $response,
+            ];
+            broadcast(new NewPost([
+                'post' => $response,
+                'type' => Post::NEW_POST
+            ]));
+
+            return $result;
+        }
+        catch(Exception $e) {
+            $error = $e->getMessage();
+            $success = false;
+            return [
+                'success' => $success,
+                'error' => $error
+            ];
+        }
+
+
     }
 
     public function getPosts(Request $request) {
