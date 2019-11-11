@@ -39,7 +39,7 @@
                                      v-for="innerItem in itemsLevelTwo">
                                     <img :src="innerItem.icon_url"
                                          class="items-icons mr-2">
-                                    <span class="mr-2"><a :href="'/documentation/'+innerItem.url">{{innerItem.label}}</a></span>
+                                    <span class="mr-2"><a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
                                 </div>
                             </div>
 
@@ -75,6 +75,9 @@
                 levelTwoPinned: null,
             }
         },
+        props: {
+            pinned_id: Number
+        },
         methods: {
             showDropdown: function() {
                 this.isOpened = false;
@@ -96,6 +99,9 @@
                     vm.itemsLevelZero.push(data);
                 })
                 this.preloader(false);
+                if(this.pinned_id !== 0) {
+                    this.getLevelOne(this.pinned_id, null);
+                }
             },
 
             getLevelOne: function(id, url) {
@@ -184,7 +190,7 @@
                 this.levelTwoPinned = id;
                 var vm = this;
                 if(url !== null && url !== '') {
-                    location.replace('/documentation/'+url);
+                    location.replace(`/documentation/` + url + `?id=${this.levelOnePinned}`);
                     return 0;
                 }
                 for(var i = 0; i < vm.itemsLevelOne.length; i++) {
