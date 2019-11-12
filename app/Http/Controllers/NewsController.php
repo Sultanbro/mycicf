@@ -56,12 +56,12 @@ class NewsController extends Controller
         $response = [
             'userISN' => $new_post->user_isn,
             'postText' => $new_post->post_text,
-//            'likes' => $newPost->likes,
+            'likes' => 0,
             'pinned' => $new_post->pinned,
             'edited' => false,
             'isLiked' => 0,
             'fullname' => $full_name,
-            'id' => $new_post->id,
+            'postId' => $new_post->id,
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
         ];
 
