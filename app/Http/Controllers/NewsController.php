@@ -54,15 +54,16 @@ class NewsController extends Controller
         $full_name = Auth::user()->full_name;
 
         $response = [
-            'userISN' => $new_post->user_isn,
-            'postText' => $new_post->post_text,
-//            'likes' => $newPost->likes,
-            'pinned' => $new_post->pinned,
-            'edited' => false,
-            'isLiked' => 0,
-            'fullname' => $full_name,
-            'id' => $new_post->id,
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited' => false,
+            'fullname' => $full_name,
+            'isLiked' => 0,
+            'isn' => $new_post->user_isn,
+            'userISN' => $new_post->user_isn,
+            'likes' => 0,
+            'pinned' => 0,
+            'postText' => $new_post->post_text,
+            'postId' => $new_post->id,
         ];
 
         $result = [

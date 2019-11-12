@@ -186,18 +186,18 @@
 
             fetchAddPost: function (response) {
                 // if (response.success) {
-                    this.posts.unshift({
-                        isn: response.userISN,
-                        postText: response.postText,
-                        likes: 0,
-                        pinned: response.pinned,
-                        fullname: response.fullname,
-                        date: response.date,
-                        postId: response.id,
-                        edited: response.edited,
-                        isLiked: response.isLiked
-                    });
-                this.postIds.push(response.id);
+                //     this.posts.unshift({
+                //         isn: response.userISN,
+                //         postText: response.postText,
+                //         likes: 0,
+                //         pinned: response.pinned,
+                //         fullname: response.fullname,
+                //         date: response.date,
+                //         postId: response.id,
+                //         edited: response.edited,
+                //         isLiked: response.isLiked
+                //     });
+                // this.postIds.push(response.id);
                 this.preloader(false);
                 // }
             },
@@ -263,11 +263,12 @@
 
             handleIncoming (e) {
                 var vm = this;
-                // console.log(e);
+                console.log(e);
                 if(e.type === vm.NEW_POST)
                 {
                     if(e.post.userISN !== vm.isn) {
-                        vm.posts.unshift(e.post)
+                        vm.posts.unshift(e.post);
+                        vm.postIds.push(e.post.postId);
                     }
                 }
                 else if(e.type === vm.EDITED_POST)
