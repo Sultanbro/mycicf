@@ -128,29 +128,6 @@
         </coordination-modal>
 
     </div>
-
-<!--    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>-->
-<!---->
-<!--    <div class="modal fade bd-example-modal-sm" id="qwe" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">-->
-<!--        <div class="modal-dialog modal-sm modal-margin">-->
-<!--            <div class="modal-content border-rad-20">-->
-<!--                <div>-->
-<!--                    <div class="flex-row border-top-rad-20 bg-blue-standart jc-center vertical-middle">-->
-<!--                        <span class="color-white mt-2 mb-2">Страховые случаи</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <div>-->
-<!--                        <div class="color-dimgray mt-4 ml-5 mr-5 mb-2">Авария при проведении СМР, Затопления водой из водо-, тепло-, отопительных систем, Кража/хищение, Наезд движущейся техники, исключая башенный кран, Ошибки, допущенные при монтаже, Падение пилотируемых летательных аппаратов или их обломков, Пожар, Просадка</div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="modal-footer border-top-0">-->
-<!--                    <button type="button" class="btn color-white width100 bg-notification-center ml-4 mr-4" data-dismiss="modal">Закрыть</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!---->
 </template>
 
 <script>
@@ -180,6 +157,7 @@
         },
         methods : {
             getTables: function(){
+                this.preloader(true);
                 this.axios.post("/getCoordinationList", {isn: this.isn}).then((response) => {
                     this.fetchResponse(response.data)
                 })
@@ -197,8 +175,10 @@
                 }else{
                     alert(response.error);
                 }
+                this.preloader(false);
             },
             openModal (ISN) {
+                this.preloader(true);
                 this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
                     this.setModalData(response.data)
                 });
@@ -213,6 +193,7 @@
                 {
                     alert('ERROR')
                 }
+                this.preloader(false);
             },
             getAttachments () {
                 var vm = this;
@@ -225,6 +206,16 @@
                         vm.attachments = [];
                     }
                 });
+            },
+            preloader: function(show) {
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             },
         }
     }

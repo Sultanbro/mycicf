@@ -29,6 +29,7 @@
                         <a class="dropdown-item" href="{{route('centcoins.history')}}">Сенткойн - История</a>
                         <a class="dropdown-item" href="{{route('centcoins.replenish')}}">Сенткойн - Начисление</a>
                         <a class="dropdown-item" href="{{route('centcoins.spend')}}">Сенткойн - Списывание</a>
+                        <a class="dropdown-item" href="{{route('centcoins.items')}}">Сенткойн - Продукты</a>
                         <a class="dropdown-item" href="#">Обучение - Справочник</a>
                         <a class="dropdown-item" href="#">Обучение - Оценка</a>
                     </div>

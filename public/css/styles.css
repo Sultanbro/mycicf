@@ -385,6 +385,11 @@ ul{
 .pt-13{
 	padding-top: 13rem !important;
 }
+.keep-all{
+	-ms-word-break: keep-all;
+	word-break: keep-all;
+	width: 5rem;
+}
 .button-cancel{
 	background: #c10b0b;
 }
@@ -419,6 +424,9 @@ ul{
 		width: 300px;
 		height: 100%;
 	}
+}
+.initial{
+    position: initial !important;
 }
 .test{
     margin: 0 1.5rem;
@@ -505,6 +513,29 @@ ul{
 }
 .blue-bg-all{
     background: #4267b2;
+}
+.bg-WHITE{
+	background: #fff !important;
+}
+.width110{
+	width: 110%;
+}
+.ModalColorfulText td{
+	color: #4267b2;
+	border-left: 1px solid #4267b2;
+	border-right: 1px solid #4267b2;
+	border-top: 1px solid #4267b2 !important;
+	border-bottom: 1px solid #4267b2;
+}
+.coordinationModalTr:first-child{
+	color: #4267b2;
+}
+.coordinationModalTr{
+	font-weight: bold;
+	color: #4267b2;
+}
+.coordinationModalTextStyle{
+
 }
 .color-darkgray{
     color: darkgray;

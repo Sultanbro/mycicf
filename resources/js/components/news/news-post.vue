@@ -124,6 +124,10 @@
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
         },
 
+        updated() {
+            this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+        },
+
         methods: {
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
