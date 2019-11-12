@@ -119,6 +119,23 @@
                 </div>
             </div>
         </div>
+        <div v-if="other !== null">
+            <div class="mt-3">
+                <div class="bg-blue-standart">
+                    <div class="container-fluid pt-2 pb-2">
+                        <span class="color-white">Прочие документы на согласование</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3" v-for="(info, index) in other">
+                <div class="bg-white">
+                    <div class="container-fluid flex-row jc-sb pt-2 pl-3 pr-3 pb-2 box-shadow">
+                        <span class="blue-button matching-underline" @click="openModal(info.ISN)">{{info.id}}</span>
+                        <span>{{info.docdate}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
         <coordination-modal
                 :coordination="coordination"
