@@ -10,10 +10,11 @@ import TextareaAutosize from 'vue-textarea-autosize'
 
 import VueGoogleCharts from 'vue-google-charts'
 
-
 Vue.use(VueAxios, axios);
 
 Vue.use(VueTreeselect);
+
+Vue.use(TextareaAutosize);
 
 Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
 
@@ -29,6 +30,9 @@ Vue.component('menu-mobile', require('./components/mobile/layouts/menu-mobile.vu
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
 
+Vue.component('post', require('./components/mobile/news/post.vue').default);
+
+Vue.component('news-post', require('./components/mobile/news/news-post.vue').default);
 
 window.onload = function(){
     var app = new Vue({
