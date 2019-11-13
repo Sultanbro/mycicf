@@ -41,7 +41,7 @@
                                     <span>Досье</span>
                                 </li>
                             </a>
-                            <a href="/coordination" class="pt-2 pb-2 mobile-navbar-active color-darkgray font-size-1_2">
+                            <a href="/coordination" class="pt-2 pb-2 color-darkgray font-size-1_2">
                                 <li>
                                     <i class="far fa-thumbs-up"></i>
                                     <span>Согласование</span>
@@ -124,6 +124,7 @@
         },
         methods: {
             changeHead: function(){
+                    console.log(window.location.pathname);
                     console.log(this.show);
                     this.show = this.show ? false : true;
                 }

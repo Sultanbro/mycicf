@@ -53,7 +53,7 @@ class CentcoinsController extends Controller
     }
 
     public function getItemsStorage() {
-        $store_items_model = StoreItem::all();
+        $store_items_model = StoreItem::where('count', '>', '0')->get();
 
         $store_items = [];
 
