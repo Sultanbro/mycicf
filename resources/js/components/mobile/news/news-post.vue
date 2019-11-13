@@ -16,8 +16,10 @@
                         </span>
                     </div>
                 </div>
-                <div class="ml-auto pt-1 post-settings">
-                    <div @click="openPostSetting" v-click-outside="closePostSettings">
+                <div class="ml-auto post-settings">
+                    <div @click="openPostSetting"
+                         v-on-clickaway="closePostSettings"
+                            class="p-2">
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
 
@@ -38,9 +40,11 @@
             </div>
 
             <div class="pl-3 pr-3 mb-2 post-text-section">
-                <div class="post-text-section__text" :class="showFull ? 'show-full' : ''">{{post.postText}}</div>
-                <div class="color-blue" v-if="post.postText.length > 200 && !showFull">
-                    <small @click="showFullText(post.postId)">Показать полностью...</small>
+                <div class="post-text-section__text"
+                     :class="showFull ? 'show-full' : ''">{{post.postText}}</div>
+                <div class="color-blue"
+                     v-if="post.postText.length > 200 && !showFull">
+                    <small @click="showFullText">Показать полностью...</small>
                 </div>
             </div>
 
@@ -52,12 +56,13 @@
 
             <div class="pl-3 pr-3 pt-2 pb-2 d-flex">
                 <div class="mr-2" @click="likePost">
-                    <i class="fa-thumbs-up text-danger" v-bind:class="post.isLiked === 1 ? 'fas ' : 'far'"></i>
-                    <span v-bind:class="post.isLiked === 1 ? 'color-black' : ''">{{post.likes}}</span>
+                    <i class="fa-thumbs-up text-danger"
+                       :class="post.isLiked === 1 ? 'fas ' : 'far'"></i>
+                    <span :class="post.isLiked === 1 ? 'color-black' : ''">{{post.likes}}</span>
                 </div>
                 <div>
                     <i class="far fa-comment text-danger"></i>
-                    <span></span>
+                    <span>0</span>
                 </div>
             </div>
         </div>
@@ -65,10 +70,11 @@
 </template>
 
 <script>
-    import ClickOutside from 'vue-click-outside';
+    import { directive as onClickaway } from 'vue-clickaway';
 
     export default {
         name: "news-post",
+
 
         data() {
             return {
@@ -98,7 +104,6 @@
         },
 
         methods: {
-
             likePost: function () {
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
@@ -117,7 +122,7 @@
             },
 
             openPostSetting: function () {
-                this.isSettingsOpened = true;
+                this.isSettingsOpened = !this.isSettingsOpened;
             },
 
             closePostSettings: function () {
@@ -131,7 +136,7 @@
         },
 
         directives: {
-            ClickOutside
+            onClickaway: onClickaway,
         },
 
     }
