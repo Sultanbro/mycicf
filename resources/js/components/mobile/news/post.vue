@@ -82,7 +82,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <button class="show-more-btn p-2" @click="getPosts">Show more</button>
+            <button class="show-more-btn p-2" v-if="!allPostShown" @click="getPosts">Show more</button>
         </div>
 
     </div>

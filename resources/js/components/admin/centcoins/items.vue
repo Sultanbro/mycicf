@@ -9,6 +9,10 @@
                 <label for="price">Цена</label>
                 <input class="form-control" type="number" v-model="price" id="price">
             </div>
+            <div class="form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
+                <label for="count">Количество</label>
+                <input class="form-control" type="number" v-model="count" id="count">
+            </div>
             <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
                 <button type="button" @click="send" class="btn-info btn-lg btn">Отправить</button>
             </div>
@@ -23,6 +27,7 @@
             return {
                 name: null,
                 price: 0,
+                count: 0,
             }
         },
         methods : {
@@ -30,6 +35,7 @@
                 this.axios.post('/centcoins/addItem', {
                     name: this.name,
                     price: this.price,
+                    count: this.count,
                 })
                     .then(
                         response => {

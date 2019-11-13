@@ -1355,6 +1355,12 @@ body {
 	flex-flow: column;
 	align-items: center;
 }
+
+.coordination-none-text{
+	font-weight: bold;
+	text-align: center;
+	font-size: x-large;
+}
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/
 /*::-moz-placeholder          {color:#fff;}!* Firefox 19+ *!*/
