@@ -135,7 +135,9 @@
                                     <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
                                         <div class="mr-3 w-100">
                                             <span class="color-blue">Name</span>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus expedita itaque natus obcaecati pariatur possimus quae sed velit voluptas voluptatibus? A aliquid architecto aut consectetur delectus dicta dignissimos dolore eaque earum eligendi enim eos esse excepturi harum illo, ipsam itaque minus molestias odio officia optio pariatur perferendis porro praesentium quia quis reiciendis sequi, similique sunt tempore? Asperiores aut delectus, eius eos maxime minima nihil officiis perferendis provident quisquam vel, velit! Accusamus amet dolore eveniet quibusdam quis ratione repudiandae tempore temporibus ut vel. Accusamus aut blanditiis culpa dicta dignissimos illo ipsum iure molestiae mollitia nisi non, numquam similique tempore, veniam voluptate.
+                                            <div>
+                                                asdsa
+                                            </div>
                                         </div>
                                         <div class="d-flex comment-section__top">
                                             <div class="comment-section__dropdown ml-auto">
@@ -163,11 +165,29 @@
                                 </div>
                             </div>
                             <div class="d-flex pl-5 pt-2 comments-bottom">
-                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>
-                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>
+<!--                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>-->
+<!--                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>-->
                                 <div class="color-blue ml-auto pr-2"><small>01.01.2020</small></div>
                             </div>
                         </div>
+                        <div class="d-flex">
+                            <div>
+                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
+                            </div>
+                            <div class="d-flex w-100">
+                                <TextareaAutosize placeholder="Напишите комментарии..."
+                                                  :max-height="60"
+                                                  :min-height="40"
+                                                  class="p-2 ml-3 w-100 comment-textarea"
+                                                  ></TextareaAutosize>
+                            </div>
+                            <div>
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+
+                        </div>
+
+
                     </div>
                 </div>
 
@@ -479,6 +499,11 @@
 
     .comment-section__dropdown:hover .comment-section__icon i {
         color: cornflowerblue;
+    }
+
+    .comment-textarea {
+        border-radius: 5px;
+        height: 20px;
     }
 
     /*.comment-section__top {*/
