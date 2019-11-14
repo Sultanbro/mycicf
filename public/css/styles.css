@@ -10,6 +10,15 @@ ul{
 	margin: 0 !important;
 	padding: 0;
 }
+/* FONTS  START */
+@font-face {
+	font-family: Ubuntu; /* Имя шрифта */
+	src: url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap'); /* Путь к файлу со шрифтом */
+}
+.ubuntu-font{
+	font-family: Ubuntu;
+}
+/* FONTS  END */
 .bg-color-blue{
 	background: #4267b2;
 }
@@ -61,6 +70,9 @@ ul{
 }
 .modal-footer{
 	border-top: 0;
+}
+.CAPS{
+	text-transform: uppercase;
 }
 /*@media (min-width: 400px){*/
 /*	.mobile-date-flex{*/
@@ -605,6 +617,9 @@ ul{
 }
 .text-align-center{
     text-align: center;
+}
+.motivation-red{
+	color: #ff4454;
 }
 .width-min-content{
 	width: min-content;
