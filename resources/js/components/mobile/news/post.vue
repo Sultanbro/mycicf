@@ -3,7 +3,8 @@
         <div class="pt-2 pb-2">
             <div class="d-flex bg-white">
                 <div class="pl-3 pt-2 pb-2">
-                    <img src="/images/avatar.png" class="avatar-small">
+                    <img src="/images/avatar.png" class="avatar-small header-avatar-size" v-if="fakeImage">
+                    <img :src="imageUrl" class="avatar-small header-avatar-size" @error="fakeImage = true" v-else>
                 </div>
                 <div class="d-flex w-100 align-items-center color-darkgray" @click="createPost">
                     <div class="w-100 pl-3 pr-3 new-post__input">Что у вас нового?</div>
@@ -25,7 +26,8 @@
 
             <div>
                 <div class="pl-4 pr-4 pt-2 pb-2">
-                    <img src="/images/avatar.png" alt="" class="avatar-small mr-3">
+                    <img src="/images/avatar.png" class="avatar-small mr-3 header-avatar-size" v-if="fakeImage">
+                    <img :src="imageUrl" class="avatar-small mr-3 header-avatar-size" @error="fakeImage = true" v-else>
                     <span>{{fullname}}</span>
                 </div>
             </div>
@@ -134,7 +136,9 @@
                 });
             this.getPosts();
         },
-
+        updated() {
+            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
+        },
         methods: {
             createPost: function () {
                 this.isOpened = true;

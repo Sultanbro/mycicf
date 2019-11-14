@@ -19,7 +19,8 @@
                 <div class="flex-row vertical-middle">
                     <div>
                         <div class="mobile-medium-avatar-circle-width vertical-middle width40pxHOTFIX">
-                            <img class="pt-0 image-circle-add-post image header-avatar-size small-avatar-circle width100" src="/images/avatar.png">
+                            <img class="pt-0 image-circle-add-post image header-avatar-size small-avatar-circle width100" src="/images/avatar.png" v-if="fakeImage">
+                            <img class="pt-0 image-circle-add-post image header-avatar-size small-avatar-circle width100" :src="imageUrl" @error="fakeImage = true" v-else>
                         </div>
                     </div>
                     <div class="ml-3">
@@ -116,18 +117,27 @@
             return {
                 show : false,
                 menu_mobile_link: '',
+                imageUrl : null,
+                fakeImage: false,
             }
         },
         props: {
             fullname : String,
-            motivationShow: Boolean
+            motivationShow: Boolean,
+            isn: Number,
+        },
+        mounted() {
+            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
+        },
+        updated() {
+            this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
         },
         methods: {
             changeHead: function(){
                     console.log(window.location.pathname);
                     console.log(this.show);
                     this.show = this.show ? false : true;
-                }
-            },
+            }
+        },
     }
 </script>

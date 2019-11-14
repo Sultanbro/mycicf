@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Storage;
 class NewsController extends Controller
 {
     public function addPost(Request $request) {
-
         $success = false;
         $error = '';
 
@@ -29,27 +28,36 @@ class NewsController extends Controller
             ];
         }
 
-//        try {
+        if($request->postText === null && sizeof($request->postFiles) === 0){
+            $error = 'Заполните поле или добавьте фотографию';
+            $success = false;
+            return [
+                'error' => $error,
+                'success' => $success
+            ];
+        }
+
+        try {
             $new_post = new Post();
             $new_post->user_isn = $request->isn;
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
-
-//        foreach ($request->postFiles as $file) {
-//            $fileName = $file->getClientOriginalName();
-//            $content = file_get_contents($file->getRealPath());
-//            Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
-//        }
-//        }
-//        catch(Exception $e) {
-//            $error = $e->getMessage();
-//            $success = false;
-//            return [
-//                'success' => $success,
-//                'error' => $error
-//            ];
-//        }
+            if(isset($request->postFiles)) {
+                foreach ($request->postFiles as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
+                }
+            }
+        }catch(\Exception $e) {
+            $error = $e->getMessage();
+            $success = false;
+            return [
+                'success' => $success,
+                'error' => $error
+            ];
+        }
 
         $full_name = Auth::user()->full_name;
 
@@ -62,8 +70,10 @@ class NewsController extends Controller
             'userISN' => $new_post->user_isn,
             'likes' => 0,
             'pinned' => 0,
-            'postText' => $new_post->post_text,
+            'postText' => $new_post->getText(),
             'postId' => $new_post->id,
+            'image' => $new_post->getImage(),
+            'youtube' => $new_post->getVideo(),
         ];
 
         $result = [
@@ -98,7 +108,7 @@ class NewsController extends Controller
             array_push($response, [
                 'isn' => $item->user_isn,
                 'fullname' => (new User())->getFullName($item->user_isn),
-                'postText' => $item->post_text,
+                'postText' => $item->getText(),
                 'pinned' => $item->pinned,
                 'postId' => $item->id,
                 'edited' => (new Post())->getIsEdited($item->id),
@@ -106,7 +116,10 @@ class NewsController extends Controller
                 'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
 //                'comments' => (new Comment())->getComment($item->id),
                 'date' => date('d.m.Y H:i', strtotime($item->created_at)),
-                'userISN' => $item->user_isn
+                'userISN' => $item->user_isn,
+                'image' => $item->getImage(),
+                'youtube' => $item->getVideo(),
+
             ]);
         }
 

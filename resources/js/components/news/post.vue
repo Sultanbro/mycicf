@@ -46,23 +46,23 @@
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
                         <i class="fas fa-image color-black file-icons"></i>
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
-                        <input type="file" id="photo-upload" accept="image/*" multiple>
+                        <input type="file" id="photo-upload" @change="fileUpload" accept="image/*">
                     </div>
-                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
-                        <i class="fas fa-play-circle color-black file-icons"></i>
-                        <label for="video-upload" class="custom-file-upload">Видео</label>
-                        <input type="file" id="video-upload" accept="video/*" multiple>
-                    </div>
-                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
-                        <i class="fas fa-volume-up color-black file-icons"></i>
-                        <label for="audio-upload" class="custom-file-upload">Аудио</label>
-                        <input type="file" id="audio-upload" accept="audio/*"multiple>
-                    </div>
-                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
-                        <i class="fas fa-file-upload color-black file-icons"></i>
-                        <label for="file-upload" class="custom-file-upload">Файл</label>
-                        <input type="file" id="file-upload" multiple>
-                    </div>
+                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
+                        <!--<i class="fas fa-play-circle color-black file-icons"></i>-->
+                        <!--<label for="video-upload" class="custom-file-upload">Видео</label>-->
+                        <!--<input type="file" id="video-upload" accept="video/*" multiple>-->
+                    <!--</div>-->
+                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
+                        <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
+                        <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
+                        <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
+                    <!--</div>-->
+                    <!--<div class="icons-bg pt-1 pr-2 pl-2 pb-1">-->
+                        <!--<i class="fas fa-file-upload color-black file-icons"></i>-->
+                        <!--<label for="file-upload" class="custom-file-upload">Файл</label>-->
+                        <!--<input type="file" id="file-upload" multiple>-->
+                    <!--</div>-->
                     <transition name="fade">
                         <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0">
                             <button
@@ -138,27 +138,27 @@
         },
 
         methods: {
-            // fileUpload: function(e) {
-            //     const files = e.target.files;
-            //     console.log(files[0]);
-            //     const vm = this;
-            //     Array.from(files).forEach(file => {
-            //         if(file.size > 2 * 1024 * 1024) {
-            //             alert("ERROR FILE RAZMER : " + file.name);
-            //         }
-            //         else {
-            //             vm.files.push(file);
-            //             const image = new Image();
-            //             var reader = new FileReader();
-            //             reader.onload = (e) => this.images.push(e.target.result);
-            //             reader.readAsDataURL(file);
-            //         }
-            //     });
-            // },
+            fileUpload: function(e) {
+                const files = e.target.files;
+                const vm = this;
+                Array.from(files).forEach(file => {
+                    if(file.size > 2 * 1024 * 1024) {
+                        alert("ERROR FILE RAZMER : " + file.name);
+                    }
+                    else {
+                        vm.files.push(file);
+                        const image = new Image();
+                        var reader = new FileReader();
+                        reader.onload = (e) => this.images.push(e.target.result);
+                        reader.readAsDataURL(file);
+                    }
+                });
+            },
 
             deleteImage: function(index) {
                 const vm = this;
                 vm.images.splice(index, 1);
+                vm.files.splice(index, 1);
             },
 
             addPost: function () {
@@ -185,7 +185,8 @@
             },
 
             fetchAddPost: function (response) {
-                // if (response.success) {
+                this.files = [];
+                this.images = [];
                 //     this.posts.unshift({
                 //         isn: response.userISN,
                 //         postText: response.postText,

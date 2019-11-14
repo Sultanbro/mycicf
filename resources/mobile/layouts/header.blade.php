@@ -1,6 +1,7 @@
 <menu-mobile
     :fullname="{{json_encode(auth()->user()->full_name)}}"
-    :motivationShow="{{json_encode(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()))}}"></menu-mobile>
+    :motivationShow="{{json_encode(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()))}}"
+    :isn="{{ auth()->user()->ISN }}"></menu-mobile>
 <header class="bg-color-blue color-white fs-1_3">
     <div class="container-fluid flex-row jc-sb vertical-middle pt-3 pb-3">
         <div>
@@ -16,9 +17,9 @@
             </div>
         </div>
         <div>
-            <a href="javascript: void(0)" class="color-white mobile-link-padding">
-                <i class="fa fa-user"></i>
-            </a>
+            {{--<a href="javascript: void(0)" class="color-white mobile-link-padding">--}}
+                {{--<i class="fa fa-user"></i>--}}
+            {{--</a>--}}
         </div>
     </div>
 
