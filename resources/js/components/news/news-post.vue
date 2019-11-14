@@ -51,8 +51,18 @@
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
-                <span class="mb-2 post-text" v-if="!editMode"><pre>{{post.postText}}</pre></span>
+                <div class="post-text"
+                     :class="isAllTextOpened ? 'show-full-text' : ''"
+                     v-if="!editMode">
+                    <pre>{{post.postText}}</pre>
+                </div>
             </transition>
+            <div v-if="post.postText !== null && post.postText.length > 350 && !isAllTextOpened && !editMode"
+                 class="pb-2"
+            >
+                <small class="color-blue show-all-btn"
+                       @click="showAllText">Показать больше...</small>
+            </div>
             <transition name="edit">
                 <textarea type="text"
                           v-if="editMode"
@@ -114,6 +124,7 @@
                 fakeImage : false,
                 imageUrl : null,
                 showVideo: true,
+                isAllTextOpened : false,
             }
         },
 
@@ -202,7 +213,10 @@
             exitEdit: function () {
               this.editMode = !this.editMode;
               this.post.postText = this.oldText;
-            }
+            },
+            showAllText: function () {
+                this.isAllTextOpened = true;
+            },
 
         }
     }
@@ -346,6 +360,8 @@
 
     .post-text {
         width: 100%;
+        max-height: 148px;
+        overflow: hidden;
         word-wrap: break-word;
         line-break: auto;
     }

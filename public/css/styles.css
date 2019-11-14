@@ -1383,6 +1383,20 @@ body {
 	margin-right: auto;
 	display: block;
 }
+
+.show-full-text {
+	max-height: none!important;
+	overflow: unset!important;
+}
+
+.show-all-btn {
+	cursor: pointer;
+	transition: 0.4s ease;
+}
+
+.show-all-btn:hover {
+	color: cornflowerblue;
+}
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/
 /*::-moz-placeholder          {color:#fff;}!* Firefox 19+ *!*/
