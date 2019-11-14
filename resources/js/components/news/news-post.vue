@@ -50,7 +50,8 @@
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
-                <span class="mb-2 post-text" v-if="!editMode">
+                <span class="mb-2 post-text"
+                      v-if="!editMode">
                     <pre>{{post.postText}}</pre>
                 </span>
             </transition>
@@ -71,9 +72,10 @@
                             type="button"
                             class="buttons pt-2 pl-3 pr-3 pb-2 block"
                             @click="likePost">
-                            <i class="fa-thumbs-up color-red" v-bind:class="post.isLiked === 0 ? 'far' : 'fas'"></i>
+                            <i class="fa-thumbs-up color-red"
+                               :class="post.isLiked === 0 ? 'far' : 'fas'"></i>
                             {{post.likes}}
-                            <span v-bind:class="post.isLiked === 1 ? 'color-black' : ''">Нравится</span>
+                            <span :class="post.isLiked === 1 ? 'color-black' : ''">Нравится</span>
                         </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
@@ -99,7 +101,7 @@
                 </div>
 
                 <hr class="mb-0 mt-0">
-                <div class="flex-row p-4 ">
+                <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
 
                     <div class="comments-container w-100">
                         <div class="comments-container__inner w-100">
@@ -164,26 +166,27 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex pl-5 pt-2 comments-bottom">
+                            <div class="d-flex pl-5 pt-2 pb-2 comments-bottom">
+                                    <!-- Не удалять потом дополним функционал -->
 <!--                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>-->
 <!--                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>-->
                                 <div class="color-blue ml-auto pr-2"><small>01.01.2020</small></div>
                             </div>
                         </div>
                         <div class="d-flex">
-                            <div>
+                            <div class="d-flex align-items-center">
                                 <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
                             </div>
                             <div class="d-flex w-100">
-                                <TextareaAutosize placeholder="Напишите комментарии..."
-                                                  :max-height="60"
-                                                  :min-height="40"
-                                                  class="p-2 ml-3 w-100 comment-textarea"
-                                                  ></TextareaAutosize>
+                                <TextareaAutosize v-model="commentText"
+                                                  placeholder="Напишите комментарии..."
+                                                  :max-height="100"
+                                                  class="p-2 ml-2 w-100 comment-textarea"></TextareaAutosize>
                             </div>
-                            <div>
-                                <i class="fas fa-paper-plane"></i>
-                            </div>
+                            <button class="p-2 ml-2 d-flex align-items-center send-comment-btn"
+                                    :disabled="commentText === ''"
+                                    @click="addComment" ><i class="fas fa-paper-plane"></i>
+                            </button>
 
                         </div>
 
@@ -211,6 +214,7 @@
                 oldText: this.post.postText,
                 fakeImage : false,
                 imageUrl : null,
+                commentText: '',
             }
         },
 
@@ -295,6 +299,12 @@
             exitEdit: function () {
               this.editMode = !this.editMode;
               this.post.postText = this.oldText;
+            },
+
+            addComment: function () {
+                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText}).then(response => {
+                   console.log("ok");
+                });
             }
 
         }
@@ -502,9 +512,31 @@
     }
 
     .comment-textarea {
-        border-radius: 5px;
-        height: 20px;
+        border-radius: 10px;
+        outline: none;
+        /*height: 40px !important;*/
     }
+
+    .comment-textarea:focus {
+        border: 1px solid cornflowerblue;
+    }
+
+    .send-comment-btn {
+        cursor: pointer;
+        border: none;
+        outline: none;
+        background: #FFF;
+    }
+
+    .send-comment-btn i {
+        font-size: 1.2em;
+        transition: 0.4s ease;
+    }
+
+    .send-comment-btn:hover:enabled i {
+        color: cornflowerblue;
+    }
+
 
     /*.comment-section__top {*/
     /*    height: 15px;*/

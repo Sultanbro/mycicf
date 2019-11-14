@@ -223,6 +223,17 @@ class NewsController extends Controller
         return $response;
     }
 
+    public function addComment(Request $request) {
+        dd($request);
+        $new_comment = new Comment();
+        $new_comment->text = $request->commentText;
+        $new_comment->post_id = $request->postId;
+        $new_comment->user_isn = $request->isn;
+        $new_comment->save();
+    }
+
+
+
     public function getView() {
         return view('news');
     }
