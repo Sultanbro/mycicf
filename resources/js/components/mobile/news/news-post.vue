@@ -4,7 +4,12 @@
             <div class="d-flex pl-3 pr-3">
                 <div class="pt-2 pb-2 pr-2">
                     <img src="/images/avatar.png"
-                         class="avatar-small">
+                         class="avatar-small header-avatar-size"
+                        v-if="fakeImage">
+                    <img :src="imageUrl"
+                         class="avatar-small header-avatar-size"
+                    @error="fakeImage = true"
+                    v-else>
                 </div>
                 <div class="post-section__author">
                     <div class="post-author">
