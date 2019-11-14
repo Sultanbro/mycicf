@@ -55,7 +55,7 @@ class Post extends Model
     }
 
     public function getVideo(){
-        if(strpos($this->post_text,'<iframe') && strpos($this->post_text,'</iframe>')){
+        if(strpos($this->post_text,'<iframe') !== false && strpos($this->post_text,'</iframe>')){
             $start = strpos($this->post_text, '<iframe');
             $end = strpos($this->post_text, '</iframe>');
             return(substr($this->post_text, $start, $end-$start+9));

@@ -139,20 +139,22 @@
 
         methods: {
             fileUpload: function(e) {
-                const files = e.target.files;
-                const vm = this;
-                Array.from(files).forEach(file => {
-                    if(file.size > 2 * 1024 * 1024) {
-                        alert("ERROR FILE RAZMER : " + file.name);
-                    }
-                    else {
-                        vm.files.push(file);
-                        const image = new Image();
-                        var reader = new FileReader();
-                        reader.onload = (e) => this.images.push(e.target.result);
-                        reader.readAsDataURL(file);
-                    }
-                });
+                if(this.files.length < 1) {
+                    const files = e.target.files;
+                    const vm = this;
+                    Array.from(files).forEach(file => {
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert("ERROR FILE RAZMER : " + file.name);
+                        }
+                        else {
+                            vm.files.push(file);
+                            const image = new Image();
+                            var reader = new FileReader();
+                            reader.onload = (e) => this.images.push(e.target.result);
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
             },
 
             deleteImage: function(index) {

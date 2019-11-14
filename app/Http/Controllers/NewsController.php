@@ -103,7 +103,6 @@ class NewsController extends Controller
                 ->limit(5)
                 ->get();
         }
-
         foreach ($model as $item) {
             array_push($response, [
                 'isn' => $item->user_isn,

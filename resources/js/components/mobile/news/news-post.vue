@@ -48,14 +48,16 @@
                 <div class="post-text-section__text"
                      :class="showFull ? 'show-full' : ''">{{post.postText}}</div>
                 <div class="color-blue"
-                     v-if="post.postText.length > 200 && !showFull">
+                     v-if="post.postText !== null && post.postText.length > 200 && !showFull">
                     <small @click="showFullText">Показать полностью...</small>
                 </div>
             </div>
 
-<!--             <div class="" >-->
-<!--                <img src="https://images.unsplash.com/photo-1499084732479-de2c02d45fcc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="" style="height: 20%; width: 100%;">-->
-<!--            </div>-->
+             <div class="" >
+                <img class="width100 pl-3 pr-3 pt-2 pb-2" :src="image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)"">
+            </div>
+
+            <div class="jc-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
 
             <div class="horizontal-line mt-2"></div>
 
@@ -91,6 +93,7 @@
                 imageUrl : null,
                 showFull: false,
                 isSettingsOpened: false,
+                showVideo: true,
             }
         },
 

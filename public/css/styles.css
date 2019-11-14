@@ -602,6 +602,19 @@ ul{
 .mr-10{
     margin-right: 5.5rem;
 }
+.mobile-cancel-image{
+	position: absolute;
+	z-index: 2;
+	opacity: 0.8;
+	border: none;
+	outline: none;
+	transition: 0.4s ease-in-out;
+	right: .5rem;
+}
+.mobile-image-size-fix{
+	max-height: 50px;
+	min-height: 50px;
+}
 .font-size-1_4{
     font-size: 1.4rem;
 }
