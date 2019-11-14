@@ -40,9 +40,14 @@
                                   :max-height="200"
                 ></TextareaAutosize>
             </div>
-
+            <div class="flex-row flex-wrap">
+                <div v-for="(image, index) in images" class="col-4 pr-2 pl-2 pt-2">
+                    <button type="button" @click="deleteImage(index)" class="delete-image-button mobile-cancel-image"><i class="fas fa-times"></i></button>
+                    <img :src="image" class="width100"/>
+                </div>
+            </div>
             <div class="create-post-section__add-file">
-                <div class="pt-2 pb-2 pl-3 pr-3 create-post-section__add-file__inner">
+                <div class="pt-2 pb-2 pl-3 pr-3 create-post-section__add-file__inner" @click="triggerUpload()">
                     <i class="fas fa-image"></i>
                     <span class="ml-2">Фото</span>
                 </div>
@@ -60,10 +65,14 @@
                 </div>
             </div>
 
+            <div v-show="false">
+                <input type="file" id="photo-upload" ref="imageBtn" @change="fileUpload" accept="image/*">
+            </div>
+
             <div class="d-flex justify-content-center mt-3 mb-3">
                 <button class="new-post-btn"
                         @click="addPost"
-                        :disabled="postText === ''">Опубликовать</button>
+                        >Опубликовать</button>
             </div>
         </div>
 
@@ -119,7 +128,7 @@
               fakeImage : false,
               imageUrl : null,
               postIds : [],
-
+              disabled: true,
           }
         },
 
@@ -140,13 +149,41 @@
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
         },
         methods: {
+            fileUpload: function(e) {
+                if(this.files.length < 1) {
+                    const files = e.target.files;
+                    const vm = this;
+                    Array.from(files).forEach(file => {
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert("ERROR FILE RAZMER : " + file.name);
+                        }
+                        else {
+                            vm.files.push(file);
+                            const image = new Image();
+                            var reader = new FileReader();
+                            reader.onload = (e) => this.images.push(e.target.result);
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            },
+
+            deleteImage: function(index) {
+                const vm = this;
+                vm.images.splice(index, 1);
+                vm.files.splice(index, 1);
+            },
+
+            triggerUpload() {
+                this.$refs.imageBtn.click();
+            },
             createPost: function () {
                 this.isOpened = true;
-                disableScroll.on();
+                // disableScroll.on();
             },
             closeCreatePost: function () {
                 this.isOpened = false;
-                disableScroll.off();
+                // disableScroll.off();
             },
 
             getFormData() {
@@ -306,7 +343,6 @@
         beforeDestroy () {
             window.removeEventListener('scroll', this.handleScroll);
         }
-
     }
 </script>
 

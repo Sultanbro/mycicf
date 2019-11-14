@@ -602,6 +602,19 @@ ul{
 .mr-10{
     margin-right: 5.5rem;
 }
+.mobile-cancel-image{
+	position: absolute;
+	z-index: 2;
+	opacity: 0.8;
+	border: none;
+	outline: none;
+	transition: 0.4s ease-in-out;
+	right: .5rem;
+}
+.mobile-image-size-fix{
+	max-height: 50px;
+	min-height: 50px;
+}
 .font-size-1_4{
     font-size: 1.4rem;
 }
@@ -1369,6 +1382,20 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
+}
+
+.show-full-text {
+	max-height: none!important;
+	overflow: unset!important;
+}
+
+.show-all-btn {
+	cursor: pointer;
+	transition: 0.4s ease;
+}
+
+.show-all-btn:hover {
+	color: cornflowerblue;
 }
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/
