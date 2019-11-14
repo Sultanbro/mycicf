@@ -58,9 +58,10 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-center mt-4 mb-4">
+            <div class="d-flex justify-content-center mt-3 mb-3">
                 <button class="new-post-btn"
-                        @click="addPost">Опубликовать</button>
+                        @click="addPost"
+                        :disabled="postText === ''">Опубликовать</button>
             </div>
         </div>
 
@@ -344,6 +345,10 @@
         color: white;
         height: 40px;
         width: 85%;
+    }
+
+    .new-post-btn[disabled] {
+        background-color: #818181;
     }
 
     .news-post {
