@@ -1361,6 +1361,15 @@ body {
 	text-align: center;
 	font-size: x-large;
 }
+
+.post-image{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/
 /*::-moz-placeholder          {color:#fff;}!* Firefox 19+ *!*/

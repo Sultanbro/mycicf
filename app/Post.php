@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -33,4 +34,32 @@ class Post extends Model
         }
     }
 
+    public function getImage(){
+        $file = Storage::disk('local')->files("public/post_files/$this->id");
+        foreach ($file as $key => $item){
+            $file[$key] = "/storage".substr($item,6);
+        }
+        return $file;
+    }
+
+    public function getText(){
+        if($this->getVideo() === null){
+            return $this->post_text;
+        }else{
+            $start = strpos($this->post_text, '<iframe');
+            $end = strpos($this->post_text, '</iframe>');
+            $text = substr($this->post_text, 0, $start);
+            $text .= substr($this->post_text, $end+9);
+            return $text;
+        }
+    }
+
+    public function getVideo(){
+        if(strpos($this->post_text,'<iframe') && strpos($this->post_text,'</iframe>')){
+            $start = strpos($this->post_text, '<iframe');
+            $end = strpos($this->post_text, '</iframe>');
+            return(substr($this->post_text, $start, $end-$start+9));
+        }
+        return null;
+    }
 }

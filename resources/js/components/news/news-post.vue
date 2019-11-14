@@ -36,7 +36,8 @@
                     </button>
                     <button type="button"
                             class="custom-button"
-                            @click="deletePost">
+                            @click="deletePost"
+                            v-if="this.isn === this.post.userISN">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -44,7 +45,8 @@
         </div>
         <div class="pl-2 pr-2 bg-white">
             <div class="news-block-image-contain">
-<!--                <img src="images/avatar.jpg" class="image">-->
+                <img :src="image" class="post-image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)">
+                <div class="jc-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
             </div>
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
@@ -111,6 +113,7 @@
                 oldText: this.post.postText,
                 fakeImage : false,
                 imageUrl : null,
+                showVideo: true,
             }
         },
 
@@ -361,4 +364,9 @@
         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     }
 
+    iframe {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+    }
 </style>

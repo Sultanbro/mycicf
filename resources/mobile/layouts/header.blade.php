@@ -17,9 +17,9 @@
             </div>
         </div>
         <div>
-            <a href="javascript: void(0)" class="color-white mobile-link-padding">
-                <i class="fa fa-user"></i>
-            </a>
+            {{--<a href="javascript: void(0)" class="color-white mobile-link-padding">--}}
+                {{--<i class="fa fa-user"></i>--}}
+            {{--</a>--}}
         </div>
     </div>
 
