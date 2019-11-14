@@ -23,8 +23,8 @@
                 </div>
                 <div class="ml-auto post-settings">
                     <div @click="openPostSetting"
-                         v-on-clickaway="closePostSettings"
-                            class="p-2">
+                         v-click-outside="closePostSettings"
+                         class="p-2">
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
 
@@ -75,11 +75,11 @@
 </template>
 
 <script>
-    import { directive as onClickaway } from 'vue-clickaway';
+    // import { directive as onClickaway } from 'vue-clickaway';
+    import vClickOutside from 'v-click-outside'
 
     export default {
         name: "news-post",
-
 
         data() {
             return {
@@ -141,14 +141,11 @@
         },
 
         directives: {
-            onClickaway: onClickaway,
+            // onClickaway: onClickaway,
+            clickOutside: vClickOutside.directive
         },
 
     }
-
-
-
-
 
 </script>
 
@@ -185,7 +182,7 @@
     .post-settings__inner {
         position: absolute;
         right: 0;
-        top: 20px;
+        top: 25px;
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         z-index: 500;
         background: #FFF;
