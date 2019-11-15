@@ -16,12 +16,20 @@ use Illuminate\Support\Facades\Storage;
 class NewsController extends Controller
 {
     public function addPost(Request $request) {
-
         $success = false;
         $error = '';
 
         if(!Auth::check()) {
             $error = 'Пожалуста авторизуйтесь заново';
+            $success = false;
+            return [
+                'error' => $error,
+                'success' => $success
+            ];
+        }
+
+        if($request->postText === null && sizeof($request->postFiles) === 0){
+            $error = 'Заполните поле или добавьте фотографию';
             $success = false;
             return [
                 'error' => $error,
@@ -35,6 +43,21 @@ class NewsController extends Controller
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
+            if(isset($request->postFiles)) {
+                foreach ($request->postFiles as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
+                }
+            }
+        }catch(\Exception $e) {
+            $error = $e->getMessage();
+            $success = false;
+            return [
+                'success' => $success,
+                'error' => $error
+            ];
+        }
 
             $success = true;
 
@@ -48,40 +71,32 @@ class NewsController extends Controller
 
             $full_name = Auth::user()->full_name;
 
-            $response = [
-                'userISN' => $new_post->user_isn,
-                'postText' => $new_post->post_text,
-//            'likes' => $newPost->likes,
-                'pinned' => $new_post->pinned,
-                'edited' => false,
-                'isLiked' => 0,
-                'fullname' => $full_name,
-                'id' => $new_post->id,
-                'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
-            ];
+        $response = [
+            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited' => false,
+            'fullname' => $full_name,
+            'isLiked' => 0,
+            'isn' => $new_post->user_isn,
+            'userISN' => $new_post->user_isn,
+            'likes' => 0,
+            'pinned' => 0,
+            'postText' => $new_post->getText(),
+            'postId' => $new_post->id,
+            'image' => $new_post->getImage(),
+            'youtube' => $new_post->getVideo(),
+            'comments' => [],
+        ];
 
-            $result = [
-                'success' => $success,
-                'error' => $error,
-                'post' => $response,
-            ];
-            broadcast(new NewPost([
-                'post' => $response,
-                'type' => Post::NEW_POST
-            ]));
-
-            return $result;
-        }
-        catch(Exception $e) {
-            $error = $e->getMessage();
-            $success = false;
-            return [
-                'success' => $success,
-                'error' => $error
-            ];
-        }
-
-
+        $result = [
+            'success' => $success,
+            'error' => $error,
+            'post' => $response,
+        ];
+        broadcast(new NewPost([
+            'post' => $response,
+            'type' => Post::NEW_POST
+        ]));
+        return $response;
     }
 
     public function getPosts(Request $request) {
@@ -99,13 +114,11 @@ class NewsController extends Controller
                 ->limit(5)
                 ->get();
         }
-
-
         foreach ($model as $item) {
             array_push($response, [
                 'isn' => $item->user_isn,
                 'fullname' => (new User())->getFullName($item->user_isn),
-                'postText' => $item->post_text,
+                'postText' => $item->getText(),
                 'pinned' => $item->pinned,
                 'postId' => $item->id,
                 'edited' => (new Post())->getIsEdited($item->id),
@@ -114,6 +127,9 @@ class NewsController extends Controller
                 'date' => date('d.m.Y H:i', strtotime($item->created_at)),
                 'userISN' => $item->user_isn,
                 'comments' => $item->getComments(),
+                'image' => $item->getImage(),
+                'youtube' => $item->getVideo(),
+
             ]);
         }
 

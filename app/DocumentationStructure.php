@@ -2,13 +2,14 @@
 
 namespace App;
 
-use Deployer\Host\Storage;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentationStructure extends Model
 {
     public function saveImage($image){
-        $fileName = time().$image->extension();
+        $fileName = time().'.'.$image->extension();
         $content = $image->get();
         Storage::disk('local')->put("/public/menu/{$fileName}", $content);
         $this->icon_url = "/storage/menu/{$fileName}";

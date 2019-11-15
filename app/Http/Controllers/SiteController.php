@@ -334,6 +334,93 @@ class SiteController extends Controller
     }
 
     public function getMotivationList(Request $request, KiasServiceInterface $kias){
+        $success = true;
+        $error = '';
+        $ISN = $request->isn;
+        $begin = $request->begin;
+        $end = $request->end;
+        $response = $kias->getEmplMotivation($ISN, $begin, $end);
+        if($response->error) {
+            return response()
+                ->json([
+                    'success' => false,
+                    'error' => (string)$response->error->text
+                ])
+                ->withCallback(
+                    $request->input(
+                        'callback'
+                    )
+                );
+        }
+        switch ((int)$response->Category) {
+            case 1 :
+                $category = 1;
+                $list = [
+                    [
+                        'types' => 'Сборы с нарастанием (>80%)',
+                        'sum' => ((double)$response->Mot->row->PercPlan ?? 0).'%',
+                        'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Сборы за месяц (>50%)',
+                        'sum' => ((double)$response->Mot->row->PlanFM ?? 0).'%',
+                        'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Средневзвешенный размер комиссии ',
+                        'sum' => ((double)$response->Mot->row->TotalProcKV ?? 00).'%',
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Мотивация',
+                        'sum' => ((double)$response->Mot->row->MotSum ?? 00),
+                        'color' => 'transparent',
+                    ],
+                ];
+                break;
+            case 2 :
+                $category = 2;
+                $list = [
+                    [
+                        'types' => 'Оплаченные премии',
+                        'sum' => (double)$response->Mot->row->AmountF ?? 0,
+                        'color' => (double)$response->Mot->row->SharePlan > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Доля ОГПО физических лиц (<20%)',
+                        'sum' => ((double)$response->Mot->row->DolyaVTSFis ?? 0).'%',
+                        'color' => ((double)$response->Mot->row->DolyaVTSFis ?? 0) < 20 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Себестоимость',
+                        'sum' => ((double)$response->Mot->row->SharePlan ?? 00).'%',
+                        'color' => ((double)$response->Mot->row->SharePlan ?? 0) < 45 ? 'green' : 'red',
+                    ],
+                ];
+                break;
+            case 3 :
 
+                break;
+            case 4 :
+
+                break;
+            case 5 :
+
+                break;
+            default :
+                $list = [];
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'list' => $list,
+                'cat' => $category
+            ])
+            ->withCallback(
+                $request->input(
+                    'callback'
+                )
+            );
     }
 }

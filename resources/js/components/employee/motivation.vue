@@ -17,6 +17,9 @@
                         <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
                     <div>
+                        <input type="number" v-model="ISN">
+                    </div>
+                    <div>
                         <div class="flex-row date-color pl-4 pr-2">
                             <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
                                 <div><i class="far fa-eye"></i></div>
@@ -37,26 +40,12 @@
                             <th scope="col">Критерии</th>
                             <th scope="col">Выполнение</th>
                         </tr>
-                        <!--<tr v-for="motivation in motivations">-->
-                        <tr>
-                            <td>motivation.id</td>
-                            <td>motivation.type</td>
-                            <td>motivation.description</td>
-                            <td><i class="fa fa-lg fa-circle motivation" aria-hidden="true"></i></td>
+                        <tr v-for="(motivation, index) in motivations">
+                            <td>{{index + 1}}</td>
+                            <td>{{motivation.types}}</td>
+                            <td>{{motivation.sum}}</td>
+                            <td><i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i></td>
                         </tr>
-                        <tr>
-                            <td>motivation.id</td>
-                            <td>motivation.type</td>
-                            <td>motivation.description</td>
-                            <td><i class="fa fa-lg fa-circle motivation" aria-hidden="true"></i></td>
-                        </tr>
-                        <tr>
-                            <td>motivation.id</td>
-                            <td>motivation.type</td>
-                            <td>motivation.description</td>
-                            <td><i class="fa fa-lg fa-circle motivation" aria-hidden="true"></i></td>
-                        </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -69,6 +58,7 @@
         name: "motivation",
         data() {
             return {
+                ISN: '',
                 category: 1,
                 motivations: [],
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 10),
@@ -79,11 +69,41 @@
             isn : Number
         },
         mounted () {
+            this.ISN = this.isn;
             this.getMotivation()
         },
         methods : {
             getMotivation(){
-                console.log(this.isn);
+                this.preloader(true)
+                this.axios.post('/getMotivationList', {
+                        isn: this.ISN,
+                        begin : this.dateBeg,
+                        end: this.dateEnd,
+                    })
+                    .then(response => {
+                        if(response.data.success){
+                            this.motivations = response.data.list
+                            this.category = response.data.cat
+                        }else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    })
+                    .finally(() => {
+                        this.preloader(false)
+                    });
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
             }
         }
     }

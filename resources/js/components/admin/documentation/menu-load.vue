@@ -58,7 +58,7 @@
                 this.axios.post('/wnd/save_menu', this.getFormData())
                     .then(response => {
                         if(response.data.success){
-                            this.url = response.data.url
+                            location.href = '/'
                         }
                     })
                     .catch(error => {

@@ -17,12 +17,14 @@
                     <span>Согласование</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
-                <li>
-                    <i class="far fa-grin-stars"></i>
-                    <span>Мотивация</span>
-                </li>
-            </a>
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()))
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/motivation">
+                    <li>
+                        <i class="far fa-grin-stars"></i>
+                        <span>Мотивация</span>
+                    </li>
+                </a>
+            @endif
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
                 <li>
                     <i class="fas fa-book-reader"></i>

@@ -15,10 +15,17 @@
 <body>
 @include('layouts.header')
 <div class="container-fluid" >
-    <br>
-    <div class="row">
-        <div class="col-12 border-20 border-gray" id="app">
-            <search></search>
+    <div id="app">
+        <div class="row">
+            <div class="col-12 border-20 border-gray">
+                <name
+                        v-bind:pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 0 }}"></name>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 border-20 border-gray">
+                <search></search>
+            </div>
         </div>
     </div>
     <div class="row">

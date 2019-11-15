@@ -39,7 +39,7 @@
                         </thead>
                         <tbody class="date-color">
                             <tr v-for="(info, index) in carier">
-                                <td>{{info.DateBeg}} - {{info.DateEnd  === '0' ? 'н.в.' : info.DateEnd}}</td>
+                                <td class="keep-all">{{info.DateBeg}} - {{info.DateEnd  === '0' ? 'н.в.' : info.DateEnd}}</td>
                                 <td class="table-td-border">{{info.Dept}}</td>
                                 <td>{{info.DutyName}}</td>
                             </tr>
@@ -203,9 +203,6 @@
         mounted: function(){
             this.getOptions();
             this.getTables();
-        },
-        props: {
-            isn: Number,
         },
         methods: {
             getTables (){

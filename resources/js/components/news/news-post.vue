@@ -37,7 +37,8 @@
                     </button>
                     <button type="button"
                             class="custom-button"
-                            @click="deletePost">
+                            @click="deletePost"
+                            v-if="this.isn === this.post.userISN">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -45,20 +46,21 @@
         </div>
         <div class="pl-2 pr-2 bg-white">
             <div class="news-block-image-contain">
-<!--                <img src="images/avatar.jpg" class="image">-->
+                <img :src="image" class="post-image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)">
+                <div class="jc-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
             </div>
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
                 <div class="post-text"
                      :class="isAllTextOpened ? 'show-full-text' : ''"
-                      v-if="!editMode">
+                     v-if="!editMode">
                     <pre>{{post.postText}}</pre>
                 </div>
             </transition>
-            <div v-if="post.postText.length > 350 && !isAllTextOpened && !editMode"
+            <div v-if="post.postText !== null && post.postText.length > 350 && !isAllTextOpened && !editMode"
                  class="pb-2"
-                 >
+            >
                 <small class="color-blue show-all-btn"
                        @click="showAllText">Показать больше...</small>
             </div>
@@ -146,7 +148,6 @@
 
             </div>
         </div>
-        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -166,6 +167,7 @@
                 isAllTextOpened: false,
                 allCommentsShown: false,
                 comments: [],
+                showVideo: true,
             }
         },
 
@@ -442,14 +444,14 @@
         overflow: hidden;
     }
 
-    .edited-enter-active,
-    .edited-leave-active {
-        transition: opacity 0.1s;
+    pre{
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     }
 
-    .edited-enter,
-    .edited-leave-to {
-        opacity: 0;
+    iframe {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
     }
 
     .comments-section__body {

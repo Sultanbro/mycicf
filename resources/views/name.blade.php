@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Name</title>
+    <title>Библиотека</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -29,7 +29,9 @@
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         <div class="col-md-12 col-lg-12">
-            <name></name>
+            <name
+                    v-bind:pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 0 }}"></name>
+
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>

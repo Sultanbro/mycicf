@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Branch;
 use App\Centcoin;
 use App\CentcoinHistory;
+use App\StoreItem;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -27,6 +28,10 @@ class CentcoinsController extends Controller
 
     public function getHistoryView(){
         return view('centcoins.history');
+    }
+
+    public function getItemsView(){
+        return view('centcoins.items');
     }
 
     public function getUserList(Request $request){
@@ -167,5 +172,33 @@ class CentcoinsController extends Controller
             }
         }
         return $result;
+    }
+
+    public function addItem(Request $request){
+        $model = new StoreItem();
+        foreach ($request->all() as $key => $value){
+            $model->$key = $value;
+        }
+        $model->updated_by = Auth::user()->ISN;
+        try{
+            $model->save();
+        }catch (\Exception $ex){
+            return response()
+                ->json([
+                    'success' => false,
+                    'error' => $ex->getMessage(),
+                ])
+                ->withCallback(
+                    $request->input('callback')
+                );
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
     }
 }

@@ -46,23 +46,23 @@
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
                         <i class="fas fa-image color-black file-icons"></i>
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
-                        <input type="file" id="photo-upload" accept="image/*" multiple>
+                        <input type="file" id="photo-upload" @change="fileUpload" accept="image/*">
                     </div>
-                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
-                        <i class="fas fa-play-circle color-black file-icons"></i>
-                        <label for="video-upload" class="custom-file-upload">Видео</label>
-                        <input type="file" id="video-upload" accept="video/*" multiple>
-                    </div>
-                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
-                        <i class="fas fa-volume-up color-black file-icons"></i>
-                        <label for="audio-upload" class="custom-file-upload">Аудио</label>
-                        <input type="file" id="audio-upload" accept="audio/*"multiple>
-                    </div>
-                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
-                        <i class="fas fa-file-upload color-black file-icons"></i>
-                        <label for="file-upload" class="custom-file-upload">Файл</label>
-                        <input type="file" id="file-upload" multiple>
-                    </div>
+                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
+                        <!--<i class="fas fa-play-circle color-black file-icons"></i>-->
+                        <!--<label for="video-upload" class="custom-file-upload">Видео</label>-->
+                        <!--<input type="file" id="video-upload" accept="video/*" multiple>-->
+                    <!--</div>-->
+                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
+                        <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
+                        <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
+                        <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
+                    <!--</div>-->
+                    <!--<div class="icons-bg pt-1 pr-2 pl-2 pb-1">-->
+                        <!--<i class="fas fa-file-upload color-black file-icons"></i>-->
+                        <!--<label for="file-upload" class="custom-file-upload">Файл</label>-->
+                        <!--<input type="file" id="file-upload" multiple>-->
+                    <!--</div>-->
                     <transition name="fade">
                         <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0">
                             <button
@@ -94,9 +94,6 @@
         <div class="text-center">
             <button type="button" class="load-button pl-2 pr-2" @click="getPosts()" v-if="!allPostShown">Больше</button>
         </div>
-
-
-        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -141,27 +138,29 @@
         },
 
         methods: {
-            // fileUpload: function(e) {
-            //     const files = e.target.files;
-            //     console.log(files[0]);
-            //     const vm = this;
-            //     Array.from(files).forEach(file => {
-            //         if(file.size > 2 * 1024 * 1024) {
-            //             alert("ERROR FILE RAZMER : " + file.name);
-            //         }
-            //         else {
-            //             vm.files.push(file);
-            //             const image = new Image();
-            //             var reader = new FileReader();
-            //             reader.onload = (e) => this.images.push(e.target.result);
-            //             reader.readAsDataURL(file);
-            //         }
-            //     });
-            // },
+            fileUpload: function(e) {
+                if(this.files.length < 1) {
+                    const files = e.target.files;
+                    const vm = this;
+                    Array.from(files).forEach(file => {
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert("ERROR FILE RAZMER : " + file.name);
+                        }
+                        else {
+                            vm.files.push(file);
+                            const image = new Image();
+                            var reader = new FileReader();
+                            reader.onload = (e) => this.images.push(e.target.result);
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            },
 
             deleteImage: function(index) {
                 const vm = this;
                 vm.images.splice(index, 1);
+                vm.files.splice(index, 1);
             },
 
             addPost: function () {
@@ -169,13 +168,7 @@
                 this.axios.post('/addPost', this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
-                    // alert('Ошибка на стороне сервера');
-                    this.preloader(false);
-                    this.flashMessage.error({
-                        title: "Ошибка",
-                        message: error,
-                    });
-
+                    alert('Ошибка на стороне сервера');
                 });
                 this.postText = '';
             },
@@ -194,8 +187,22 @@
             },
 
             fetchAddPost: function (response) {
-                this.postIds.push(response.id);
+                this.files = [];
+                this.images = [];
+                //     this.posts.unshift({
+                //         isn: response.userISN,
+                //         postText: response.postText,
+                //         likes: 0,
+                //         pinned: response.pinned,
+                //         fullname: response.fullname,
+                //         date: response.date,
+                //         postId: response.id,
+                //         edited: response.edited,
+                //         isLiked: response.isLiked
+                //     });
+                // this.postIds.push(response.id);
                 this.preloader(false);
+                // }
             },
 
             getPosts () {
@@ -259,11 +266,11 @@
 
             handleIncoming (e) {
                 var vm = this;
-                // console.log(e);
                 if(e.type === vm.NEW_POST)
                 {
                     if(e.post.userISN !== vm.isn) {
-                        vm.posts.unshift(e.post)
+                        vm.posts.unshift(e.post);
+                        vm.postIds.push(e.post.postId);
                     }
                 }
                 else if(e.type === vm.EDITED_POST)
