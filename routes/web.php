@@ -187,4 +187,4 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
-Route::post('/car/prices', 'SiteController@addPrice');
+Route::post('/car/addPrice', 'SiteController@addPrice');
