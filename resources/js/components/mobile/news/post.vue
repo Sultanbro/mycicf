@@ -101,7 +101,6 @@
 </template>
 
 <script>
-    import disableScroll from 'disable-scroll';
 
     export default {
         name: "post",
@@ -179,11 +178,9 @@
             },
             createPost: function () {
                 this.isOpened = true;
-                // disableScroll.on();
             },
             closeCreatePost: function () {
                 this.isOpened = false;
-                // disableScroll.off();
             },
 
             getFormData() {
