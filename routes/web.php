@@ -153,6 +153,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/likePost', 'NewsController@likePost');
     Route::post('/editPost', 'NewsController@editPost');
     Route::post('/addComment', 'NewsController@addComment');
+    Route::post('/deleteComment', 'NewsController@deleteComment');
 
     //UNTITLED
     Route::get('/name', 'NameController@getView')->name('name');

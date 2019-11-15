@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
@@ -31,6 +32,22 @@ class Post extends Model
         if($model !== null) {
             return $model->created_at != $model->updated_at;
         }
+    }
+
+    public function getComments(){
+        $comments = [];
+
+        $model = Comment::where('post_id', $this->id)->get();
+        foreach ($model as $comment) {
+            array_push($comments, [
+                'commentText' => $comment->text,
+                'userISN' => $comment->user_isn,
+                'commentId' => $comment->id,
+                'fullname' => (new User)->getFullName($comment->user_isn),
+                'date' => date('d.m.Y H:i', strtotime($comment->created_at)),
+            ]);
+        }
+        return $comments;
     }
 
 }

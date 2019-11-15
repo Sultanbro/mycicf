@@ -100,6 +100,7 @@ class NewsController extends Controller
                 ->get();
         }
 
+
         foreach ($model as $item) {
             array_push($response, [
                 'isn' => $item->user_isn,
@@ -110,9 +111,9 @@ class NewsController extends Controller
                 'edited' => (new Post())->getIsEdited($item->id),
                 'likes' => (new Like())->getLikes($item->id),
                 'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
-//                'comments' => (new Comment())->getComment($item->id),
                 'date' => date('d.m.Y H:i', strtotime($item->created_at)),
-                'userISN' => $item->user_isn
+                'userISN' => $item->user_isn,
+                'comments' => $item->getComments(),
             ]);
         }
 
@@ -127,7 +128,7 @@ class NewsController extends Controller
     }
 
     public function deletePost(Request $request) {
-        $delete_post = Post::where('id', $request->postId)->delete();
+        Post::where('id', $request->postId)->delete();
         $success = 'true';
 
         broadcast(new NewPost([
@@ -224,12 +225,33 @@ class NewsController extends Controller
     }
 
     public function addComment(Request $request) {
-        dd($request);
         $new_comment = new Comment();
         $new_comment->text = $request->commentText;
         $new_comment->post_id = $request->postId;
         $new_comment->user_isn = $request->isn;
         $new_comment->save();
+
+        $response = [
+            'userISN' => $new_comment->user_isn,
+            'commentText' => $new_comment->text,
+            'postId' => $new_comment->post_id,
+            'commentId' => $new_comment->id,
+            'date' => date("d.m.Y H:i", strtotime($new_comment->created_at)),
+            'fullname' => Auth::user()->full_name,
+        ];
+
+        return $response;
+
+    }
+
+    public function deleteComment(Request $request) {
+        Comment::where('id', $request->commentId)->delete();
+
+        $response = [
+            'success' => true,
+        ];
+
+        return $response;
     }
 
 

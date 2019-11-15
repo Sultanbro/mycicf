@@ -50,11 +50,18 @@
         </div>
         <div class="pl-4 pr-4 flex-column bg-white">
             <transition name="text">
-                <span class="mb-2 post-text"
+                <div class="post-text"
+                     :class="isAllTextOpened ? 'show-full-text' : ''"
                       v-if="!editMode">
                     <pre>{{post.postText}}</pre>
-                </span>
+                </div>
             </transition>
+            <div v-if="post.postText.length > 350 && !isAllTextOpened && !editMode"
+                 class="pb-2"
+                 >
+                <small class="color-blue show-all-btn"
+                       @click="showAllText">Показать больше...</small>
+            </div>
             <transition name="edit">
                 <textarea type="text"
                           v-if="editMode"
@@ -80,6 +87,7 @@
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
                         <i class="far fa-comment color-red"></i>
+                        {{post.comments.length}}
                         <span class="color-black">Комментарий</span>
                     </button>
                     <div class="ml-auto">
@@ -104,75 +112,17 @@
                 <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
 
                     <div class="comments-container w-100">
-                        <div class="comments-container__inner w-100">
-                            <div class="d-flex comments-section w-100">
-                                <div>
-                                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
-                                </div>
 
-                                <div class="ml-2 comments-section__body w-100">
-
-<!--                                    <div class="d-flex comment-section__top">-->
-<!--                                        <div class="comment-section__dropdown ml-auto">-->
-
-<!--                                            <div class="comment-section__icon pr-3 pl-3">-->
-<!--                                                <i class="fas fa-ellipsis-h"></i>-->
-<!--                                            </div>-->
-
-<!--                                            <div class="comment-section__dropcontent">-->
-<!--                                                <div class="p-2">-->
-<!--                                                    <span>-->
-<!--                                                        <small>Отредактировать</small>-->
-<!--                                                    </span>-->
-<!--                                                </div>-->
-<!--                                                <div class="p-2">-->
-<!--                                                    <span>-->
-<!--                                                        <small>Удалить</small>-->
-<!--                                                    </span>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-
-                                    <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
-                                        <div class="mr-3 w-100">
-                                            <span class="color-blue">Name</span>
-                                            <div>
-                                                asdsa
-                                            </div>
-                                        </div>
-                                        <div class="d-flex comment-section__top">
-                                            <div class="comment-section__dropdown ml-auto">
-
-                                                <div class="comment-section__icon">
-                                                    <i class="fas fa-ellipsis-h"></i>
-                                                </div>
-
-                                                <div class="comment-section__dropcontent">
-                                                    <div class="p-2">
-                                                    <span>
-                                                        <small>Отредактировать</small>
-                                                    </span>
-                                                    </div>
-                                                    <div class="p-2">
-                                                    <span>
-                                                        <small>Удалить</small>
-                                                    </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex pl-5 pt-2 pb-2 comments-bottom">
-                                    <!-- Не удалять потом дополним функционал -->
-<!--                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>-->
-<!--                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>-->
-                                <div class="color-blue ml-auto pr-2"><small>01.01.2020</small></div>
-                            </div>
+                        <div v-for="(comment, index) in comments">
+                            <news-comment :comment="comment"
+                                          :index="index"></news-comment>
                         </div>
+                        <div v-if="!allCommentsShown && post.comments.length > 3" class="pb-2 pl-5">
+                            <span>
+                                <small @click="showMoreComments" class="color-blue show-all-btn">Показать ещё</small>
+                            </span>
+                        </div>
+
                         <div class="d-flex">
                             <div class="d-flex align-items-center">
                                 <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
@@ -183,14 +133,12 @@
                                                   :max-height="100"
                                                   class="p-2 ml-2 w-100 comment-textarea"></TextareaAutosize>
                             </div>
-                            <button class="p-2 ml-2 d-flex align-items-center send-comment-btn"
+                            <button class="p-2 d-flex align-items-center send-comment-btn"
                                     :disabled="commentText === ''"
                                     @click="addComment" ><i class="fas fa-paper-plane"></i>
                             </button>
 
                         </div>
-
-
                     </div>
                 </div>
 
@@ -215,6 +163,9 @@
                 fakeImage : false,
                 imageUrl : null,
                 commentText: '',
+                isAllTextOpened: false,
+                allCommentsShown: false,
+                comments: [],
             }
         },
 
@@ -226,6 +177,11 @@
 
         mounted () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.comments = this.post.comments.slice(0, 3)
+        },
+        updated () {
+            this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            // this.comments = this.post.comments.slice(0, 3)
         },
 
         methods: {
@@ -302,10 +258,29 @@
             },
 
             addComment: function () {
-                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText}).then(response => {
-                   console.log("ok");
+                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
+                    this.setComments(response.data);
                 });
+                this.commentText = '';
+            },
+
+            showAllText: function () {
+                this.isAllTextOpened = true;
+            },
+
+            setComments: function (response) {
+                var vm = this;
+                // if(response.length < 3) {
+                //     this.allCommentShown = true;
+                // }
+                vm.post.comments.push(response);
+            },
+
+            showMoreComments: function () {
+                this.comments = this.post.comments;
+                this.allCommentsShown = true;
             }
+
 
         }
     }
@@ -449,6 +424,8 @@
 
     .post-text {
         width: 100%;
+        max-height: 148px;
+        overflow: hidden;
         word-wrap: break-word;
         line-break: auto;
     }
@@ -461,6 +438,8 @@
         white-space: pre-wrap;
         white-space: -o-pre-wrap;
         word-wrap: break-word;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        overflow: hidden;
     }
 
     .edited-enter-active,
@@ -522,7 +501,7 @@
     }
 
     .send-comment-btn {
-        cursor: pointer;
+
         border: none;
         outline: none;
         background: #FFF;
@@ -535,7 +514,23 @@
 
     .send-comment-btn:hover:enabled i {
         color: cornflowerblue;
+        cursor: pointer;
     }
+
+    .show-all-btn {
+        cursor: pointer;
+        transition: 0.4s ease;
+    }
+
+    .show-all-btn:hover {
+        color: cornflowerblue;
+    }
+
+    .show-full-text {
+        max-height: none;
+        overflow: unset;
+    }
+
 
 
     /*.comment-section__top {*/
