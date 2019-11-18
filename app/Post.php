@@ -39,6 +39,7 @@ class Post extends Model
         $comments = [];
 
         $model = Comment::where('post_id', $this->id)->get();
+
         foreach ($model as $comment) {
             array_push($comments, [
                 'commentText' => $comment->text,

@@ -18,11 +18,11 @@
                             </div>
 
                             <div class="comment-section__dropcontent">
-                                <div class="p-2">
-                                    <span>
-                                        <small>Отредактировать</small>
-                                    </span>
-                                </div>
+<!--                                <div class="p-2">-->
+<!--                                    <span>-->
+<!--                                        <small>Отредактировать</small>-->
+<!--                                    </span>-->
+<!--                                </div>-->
                                 <div class="p-2"
                                      @click="deleteComment">
                                     <span>
@@ -42,6 +42,7 @@
             <div class="color-blue ml-auto pr-2"><small>{{comment.date}}</small></div>
         </div>
     </div>
+
 </template>
 
 <script>
