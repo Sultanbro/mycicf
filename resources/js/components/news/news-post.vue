@@ -115,72 +115,20 @@
 
                     <div class="comments-container w-100">
 
-                        <div v-for="(comment, index) in post.comments">
-                            <div class="comments-container__inner w-100">
-                                <div class="d-flex comments-section w-100">
-                                    <div>
-                                        <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
-                                        <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
-                                    </div>
-                                    <div class="ml-2 comments-section__body w-100">
-                                        <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
-                                            <div class="mr-3 w-100">
-                                                <span class="color-blue">{{comment.fullname}},</span>
-                                                <div>{{comment.commentText}}</div>
-                                            </div>
-                                            <div class="d-flex comment-section__top">
-                                                <div class="comment-section__dropdown ml-auto">
-
-                                                    <div class="comment-section__icon">
-                                                        <i class="fas fa-ellipsis-h"></i>
-                                                    </div>
-
-                                                    <div class="comment-section__dropcontent">
-                                                        <!--                                <div class="p-2">-->
-                                                        <!--                                    <span>-->
-                                                        <!--                                        <small>Отредактировать</small>-->
-                                                        <!--                                    </span>-->
-                                                        <!--                                </div>-->
-                                                        <div class="p-2"
-                                                             @click="deleteComment(index)">
-                                    <span>
-                                        <small>Удалить</small>
-                                    </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex pl-5 pt-1 pb-1 comments-bottom">
-                                    <!-- Не удалять потом дополним функционал -->
-                                    <!--                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>-->
-                                    <!--                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>-->
-                                    <div class="color-blue ml-auto pr-2"><small>{{comment.date}}</small></div>
-                                </div>
-                            </div>
-
-
-
+                        <div v-if="!allCommentsShown" v-for="(comment, index) in post.comments.slice(0, 3)">
+                            <news-comment :comment="comment"
+                                          :index="index"></news-comment>
                         </div>
+
+                        <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
+                            <news-comment :comment="comment" :index="index"></news-comment>
+                        </div>
+
                         <div v-if="!allCommentsShown && post.comments.length > 3" class="pb-2 pl-5">
                             <span>
                                 <small @click="showMoreComments" class="color-blue show-all-btn">Показать ещё</small>
                             </span>
                         </div>
-
-
-
-<!--                        <div v-for="(comment, index) in comments">-->
-<!--                            <news-comment :comment="comment"-->
-<!--                                          :index="index"></news-comment>-->
-<!--                        </div>-->
-<!--                        <div v-if="!allCommentsShown && post.comments.length > 3" class="pb-2 pl-5">-->
-<!--                            <span>-->
-<!--                                <small @click="showMoreComments" class="color-blue show-all-btn">Показать ещё</small>-->
-<!--                            </span>-->
-<!--                        </div>-->
 
                         <div class="d-flex">
                             <div class="d-flex align-items-center">
@@ -238,12 +186,12 @@
 
         mounted () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
-            // this.comments = this.post.comments.slice(0, 3)
             // this.comments = [...this.post.comments];
         },
+
         updated () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
-            // this.comments = this.allCommentsShown ? this.post.comments : this.post.comments.slice(3)
+            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         methods: {
@@ -348,7 +296,6 @@
                 // for(let i = 3; i < post.comments.length; i++) {
                 //     this.comments[i] = post.comments[i];
                 // }
-
                 this.allCommentsShown = true;
             },
 
@@ -611,9 +558,9 @@
         overflow: unset;
     }
 
-    .show-all-comments {
-        max-height: none;
-    }
+
+
+
 
 
 
