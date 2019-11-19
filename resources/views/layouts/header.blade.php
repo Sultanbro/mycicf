@@ -15,11 +15,11 @@
                         Parse
                     </li>
                 </a>
-                <a class="header-navigation" href="javascript:void(0)">
-                    <li>
-                        Рейтинг
-                    </li>
-                </a>
+                {{--<a class="header-navigation" href="javascript:void(0)">--}}
+                    {{--<li>--}}
+                        {{--Рейтинг--}}
+                    {{--</li>--}}
+                {{--</a>--}}
                 <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         О компании
