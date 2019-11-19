@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/broadcasting/auth',
         '/relog/*',
-        '/car/addPrice'
+        '/car/addPrice',
+        '/coordination/notify'
     ];
 }

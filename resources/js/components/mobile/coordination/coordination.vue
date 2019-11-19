@@ -204,7 +204,7 @@
                 } else {
                     alert(response.error);
                 }
-                if(this.AC === this.SP === this.SZ === this.KV === this.OL === this.AD === this.RV === this.other === null){
+                if(this.AC === null && this.SP === null && this.SZ === null && this.KV === null && this.OL === null && this.AD === null && this.RV === null && this.other === null){
                     this.none = true;
                 }
                 this.preloader(false);
