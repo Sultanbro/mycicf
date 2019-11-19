@@ -69,6 +69,7 @@ class CentcoinsController extends Controller
     }
 
     public function buyItem(Request $request) {
+
         $price = StoreItem::where('id', $request->itemId)->first();
         $model = new CentcoinHistory();
         $model->type = 'Оплата';

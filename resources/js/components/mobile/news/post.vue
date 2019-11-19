@@ -71,8 +71,7 @@
 
             <div class="d-flex justify-content-center mt-3 mb-3">
                 <button class="new-post-btn"
-                        @click="addPost"
-                        >Опубликовать</button>
+                        @click="addPost">Опубликовать</button>
             </div>
         </div>
 

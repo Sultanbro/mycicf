@@ -8,6 +8,10 @@ import VueAxios from 'vue-axios'
 
 import TextareaAutosize from 'vue-textarea-autosize'
 
+import FlashMessage from '@smartweb/vue-flash-message'
+
+Vue.use(FlashMessage);
+
 import VueGoogleCharts from 'vue-google-charts'
 
 Vue.use(VueGoogleCharts);
@@ -33,6 +37,8 @@ Vue.component('spend-centcoins', require('./components/centcoins/spend-centcoins
 Vue.component('post', require('./components/news/post.vue').default);
 
 Vue.component('news-post', require('./components/news/news-post.vue').default);
+
+Vue.component('news-comment', require('./components/news/news-comment.vue').default);
 
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 

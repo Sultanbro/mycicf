@@ -266,7 +266,6 @@
 
             handleIncoming (e) {
                 var vm = this;
-                console.log(e);
                 if(e.type === vm.NEW_POST)
                 {
                     if(e.post.userISN !== vm.isn) {

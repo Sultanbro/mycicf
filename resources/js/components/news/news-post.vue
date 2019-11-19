@@ -30,6 +30,7 @@
                     <button type="button"
                             @click="editPost"
                             class="custom-button mr-1"
+                            :disabled="editMode"
                             v-bind:class="{editButton: editMode}"
                             v-if="this.isn === this.post.userISN">
                         <i class="fas fa-pen"></i>
@@ -73,20 +74,22 @@
             </transition>
         </div>
         <hr class="mb-0 mt-0">
-        <div class="pl-4 pr-4 bg-white news-contains-bottom">
+        <div class=" bg-white news-contains-bottom">
             <div>
-                <div class="flex-row">
+                <div class="flex-row pl-4 pr-4">
                         <button
                             type="button"
                             class="buttons pt-2 pl-3 pr-3 pb-2 block"
                             @click="likePost">
-                            <i class="fa-thumbs-up color-red" v-bind:class="post.isLiked === 0 ? 'far' : 'fas'"></i>
+                            <i class="fa-thumbs-up color-red"
+                               :class="post.isLiked === 0 ? 'far' : 'fas'"></i>
                             {{post.likes}}
-                            <span v-bind:class="post.isLiked === 1 ? 'color-black' : 'color-black'">Нравится</span>
+                            <span :class="post.isLiked === 1 ? 'color-black' : ''">Нравится</span>
                         </button>
                     <button type='button'
                             class="buttons pt-2 pl-3 pr-3 pb-2 block">
                         <i class="far fa-comment color-red"></i>
+                        {{post.comments.length}}
                         <span class="color-black">Комментарий</span>
                     </button>
                     <div class="ml-auto">
@@ -106,6 +109,50 @@
                         </transition>
                     </div>
                 </div>
+
+                <hr class="mb-0 mt-0">
+                <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
+
+                    <div class="comments-container w-100">
+
+                        <div v-if="!allCommentsShown" v-for="(comment, index) in post.comments.slice(0, 3)">
+                            <news-comment :comment="comment"
+                                          :index="index"></news-comment>
+                        </div>
+
+                        <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
+                            <news-comment :comment="comment" :index="index"></news-comment>
+                        </div>
+
+                        <div v-if="!allCommentsShown && post.comments.length > 3" class="pb-2 pl-5">
+                            <span>
+                                <small @click="showMoreComments" class="color-blue show-all-btn">Показать ещё</small>
+                            </span>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="d-flex align-items-center">
+<!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
+                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                                <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                            </div>
+                            <div class="d-flex w-100">
+                                <TextareaAutosize v-model="commentText"
+                                                  placeholder="Напишите комментарии..."
+                                                  :max-height="100"
+                                                  class="p-2 ml-2 w-100 comment-textarea"></TextareaAutosize>
+                            </div>
+                            <button class="p-2 d-flex align-items-center send-comment-btn"
+                                    :disabled="commentText === ''"
+                                    @click="addComment" ><i class="fas fa-paper-plane"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     </div>
@@ -123,8 +170,11 @@
                 oldText: this.post.postText,
                 fakeImage : false,
                 imageUrl : null,
+                commentText: '',
+                isAllTextOpened: false,
+                allCommentsShown: false,
+                comments: [],
                 showVideo: true,
-                isAllTextOpened : false,
             }
         },
 
@@ -136,13 +186,22 @@
 
         mounted () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            // this.comments = [...this.post.comments];
         },
 
-        updated() {
+        updated () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         methods: {
+            showComment: function() {
+                // for(let i = 0; i < 3; i++) {
+                //     // this.comments[i] = this.post.comments[i];
+                //     // this.comments.push(this.post.comments[i]);
+                // }
+            },
+
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
                     this.fetch(response.data)
@@ -214,9 +273,41 @@
               this.editMode = !this.editMode;
               this.post.postText = this.oldText;
             },
+
+            addComment: function () {
+                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
+                    this.setComments(response.data);
+                });
+                this.commentText = '';
+            },
+
             showAllText: function () {
                 this.isAllTextOpened = true;
             },
+
+            setComments: function (response) {
+                var vm = this;
+                vm.post.comments.push(response);
+            },
+
+            showMoreComments: function () {
+                // this.comments = this.post.comments;
+                // this.post.comments.slice(3);
+                // for(let i = 3; i < post.comments.length; i++) {
+                //     this.comments[i] = post.comments[i];
+                // }
+                this.allCommentsShown = true;
+            },
+
+            deleteComment: function (index) {
+                var vm = this;
+                this.axios.post('/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
+                    if(response.data.success) {
+                        vm.post.comments.splice(index, 1);
+                    }
+                });
+            },
+
 
         }
     }
@@ -374,6 +465,8 @@
         white-space: pre-wrap;
         white-space: -o-pre-wrap;
         word-wrap: break-word;
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        overflow: hidden;
     }
 
     pre{
@@ -385,4 +478,93 @@
         margin-right: auto !important;
         display: block !important;
     }
+
+    .comments-section__body {
+        background-color: #EFEFEF;
+        border-radius: 10px;
+    }
+
+    .comments-bottom_inner {
+        cursor: pointer;
+        transition: 0.4s ease;
+    }
+
+    .comment-section__icon {
+        cursor: pointer;
+    }
+
+    .comment-section__dropcontent {
+        display: none;
+        position: absolute;
+        background-color: #e9ebee;
+        right: 45px;
+        box-shadow: 0px 8px 40px 0px rgba(0,0,0,0.2);
+        z-index: 300;
+    }
+
+    .comment-section__dropdown:hover .comment-section__dropcontent {
+        display: block;
+        transition: 0.4s ease;
+        cursor: pointer;
+    }
+
+    .comment-section__dropcontent div:hover {
+        background-color: cornflowerblue;
+        color: #FFF;
+    }
+
+    .comment-section__dropdown:hover .comment-section__icon i {
+        color: cornflowerblue;
+    }
+
+    .comment-textarea {
+        border-radius: 10px;
+        outline: none;
+        /*height: 40px !important;*/
+    }
+
+    .comment-textarea:focus {
+        border: 1px solid cornflowerblue;
+    }
+
+    .send-comment-btn {
+
+        border: none;
+        outline: none;
+        background: #FFF;
+    }
+
+    .send-comment-btn i {
+        font-size: 1.2em;
+        transition: 0.4s ease;
+    }
+
+    .send-comment-btn:hover:enabled i {
+        color: cornflowerblue;
+        cursor: pointer;
+    }
+
+    .show-all-btn {
+        cursor: pointer;
+        transition: 0.4s ease;
+    }
+
+    .show-all-btn:hover {
+        color: cornflowerblue;
+    }
+
+    .show-full-text {
+        max-height: none;
+        overflow: unset;
+    }
+
+
+
+
+
+
+
+    /*.comment-section__top {*/
+    /*    height: 15px;*/
+    /*}*/
 </style>
