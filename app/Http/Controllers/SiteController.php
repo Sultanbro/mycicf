@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Branch;
+use App\KolesaPrices;
 use App\Library\Services\KiasServiceInterface;
 use App\Providers\KiasServiceProvider;
 use App\User;
@@ -422,5 +423,19 @@ class SiteController extends Controller
                     'callback'
                 )
             );
+    }
+
+    public function addPrice(Request $request){
+        $model = new KolesaPrices();
+        $model->label = $request->label;
+        $model->price = $request->price;
+        try{
+            $model->save();
+            return response()
+                ->json(['success' => true]);
+        }catch (\Exception $ex) {
+            return response()
+                ->json(['success' => false]);
+        }
     }
 }
