@@ -34,6 +34,9 @@ Vue.component('post', require('./components/mobile/news/post.vue').default);
 
 Vue.component('news-post', require('./components/mobile/news/news-post.vue').default);
 
+Vue.component('news-comment', require('./components/mobile/news/news-comment.vue').default);
+
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
