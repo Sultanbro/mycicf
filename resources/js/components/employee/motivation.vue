@@ -4,11 +4,11 @@
             <div class="bg-white ml-2 mr-2 pt-4 pb-3">
                 <div class="flex-row jc-sb">
                     <div>
-                        <input v-model="dateBeg" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                        <input v-model="dateBeg" type="month" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
-                    <div>
-                        <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                    </div>
+<!--                    <div>-->
+<!--                        <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">-->
+<!--                    </div>-->
                     <div>
                         <input type="number" v-model="ISN">
                     </div>
@@ -26,7 +26,7 @@
         <div class="pt-4">
             <div class="flex-row vertical-middle jc-sb bg-white ml-2 mr-2 pt-3 pb-3">
                 <div>
-                    <span class="fs-1 CAPS">{{category_start}} {{category}} {{category_end_first}}</span>
+                    <span class="fs-1 CAPS">{{category_end_first}}</span>
                 </div>
                 <div>
                     <strong class="vertical-middle">
@@ -59,7 +59,6 @@
                     <tr v-for="test in testArray">
                         <td v-for="t in test.items">{{t.name}}</td>
                     </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -118,12 +117,10 @@
         data() {
             return {
                 ISN: '',
-                category: 1,
-                category_start: 'категория',
                 motivations: [],
                 category_end_first: 'Менеджер по корпоративному страхованию',
-                dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 10),
-                dateEnd: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toJSON().slice(0, 10),
+                dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 7),
+                // dateEnd: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toJSON().slice(0, 10),
 
                 // motivationTdArray: [
                 //     { // <- item
