@@ -31,7 +31,7 @@
                             <div>{{comment.commentText}}</div>
                         </div>
                         <div class="d-flex">
-                            <div class="ml-2">
+                            <div class="ml-2" v-if="isn === comment.userISN">
                                 <span>
                                     <small class="color-blue" @click="deleteComment(index)">Удалить</small>
                                 </span>
@@ -40,11 +40,7 @@
                                 <span><small>{{comment.date}}</small></span>
                             </div>
                         </div>
-
                     </div>
-
-
-
                 </div>
             </div>
         </div>
@@ -64,6 +60,7 @@
         props: {
             comment: Object,
             index: Number,
+            isn: Number
         },
 
         mounted () {

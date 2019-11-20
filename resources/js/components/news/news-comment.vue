@@ -12,7 +12,7 @@
                         <div>{{comment.commentText}}</div>
                     </div>
                     <div class="d-flex comment-section__top">
-                        <div class="comment-section__dropdown ml-auto">
+                        <div class="comment-section__dropdown ml-auto" v-if="isn === comment.userISN">
 
                             <div class="comment-section__icon">
                                 <i class="fas fa-ellipsis-h"></i>

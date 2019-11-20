@@ -76,7 +76,7 @@
 
             <div  v-if="isCommentsOpened" class="comment-section w-100">
                 <div v-for="(comment, index) in post.comments">
-                    <news-comment :comment="comment" :index="index"></news-comment>
+                    <news-comment :comment="comment" :index="index" :isn="isn"></news-comment>
                 </div>
 
                 <div class="pl-3 mb-2" v-if="post.comments.length > 0">
