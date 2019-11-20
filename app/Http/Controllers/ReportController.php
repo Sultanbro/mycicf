@@ -12,7 +12,7 @@ class ReportController extends Controller
     }
 
     public function getReport(Request $request, KiasServiceInterface $kias){
-        $ISN = 1446171;//$request->isn;
+        $ISN = $request->isn;
         /*
          * 1446265
          * 1446171
