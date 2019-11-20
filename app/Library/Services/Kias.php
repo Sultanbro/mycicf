@@ -249,4 +249,13 @@ class Kias implements KiasServiceInterface
             'DateEnd' => date('d.m.Y', strtotime($end))
         ]);
     }
+
+    public function GetInfoUser($dateBeg, $dateEnd, $emplIsn){
+        return $this->request('User_CicGetUserInfo', [
+            'DateBeg' => $dateBeg,
+            'DateEnd' => $dateEnd,
+            'EmplISN' => $emplIsn,
+        ]);
+    }
+
 }

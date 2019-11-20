@@ -58,6 +58,8 @@ Vue.component('main-data-charts', require('./components/parse/main-data-charts.v
 
 Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
 
+Vue.component('report', require('./components/employee/report.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
