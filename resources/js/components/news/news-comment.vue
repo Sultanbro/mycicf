@@ -2,7 +2,8 @@
     <div class="comments-container__inner w-100">
         <div class="d-flex comments-section w-100">
             <div>
-                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
+                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
             </div>
             <div class="ml-2 comments-section__body w-100">
                 <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
@@ -51,13 +52,25 @@
 
         data() {
             return {
-
+                imageUrl : null,
+                fakeImage : false
             }
+        },
+
+        mounted () {
+            this.imageUrl = "/storage/images/employee/" + this.comment.userISN + ".png";
+            // this.comments = [...this.post.comments];
+        },
+
+        updated () {
+            this.imageUrl = "/storage/images/employee/" + this.comment.userISN + ".png";
+            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         props: {
             comment: Object,
-            index: Number
+            index: Number,
+            isn: Number
         },
 
         methods: {

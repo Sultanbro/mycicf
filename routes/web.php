@@ -19,10 +19,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
     Route::post('/login','Admin\SiteController@checkLogin');
     Route::group(['middleware' => ['checkAuth','checkSession','checkAdminAuth']], function (){
         Route::get('index', 'Admin\SiteController@index');
-        Route::get('/logout', function (){
-            Auth::logout();
-            return redirect('/');
-        });
+        Route::get('/logout', 'SiteController@logout');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         Route::post('/getCompanyList', 'ParseController@getCompanyListAxios');
@@ -136,9 +133,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-        Route::get('parse', function (){
-            return redirect(route('parse/company'));
-        })->name('parse');
+        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
@@ -162,10 +157,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/name', 'NameController@getView')->name('documentation');
     Route::post('/getItemsList', 'NameController@getItemsList');
 
-    Route::get('/logout', function (){
-        Auth::logout();
-        return redirect(route('index'));
-    });
+    Route::get('/logout', 'SiteController@logout');
+
 
 
 
@@ -190,4 +183,3 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
-Route::post('/coordination/notify', 'CoordinationController@sendNotify');

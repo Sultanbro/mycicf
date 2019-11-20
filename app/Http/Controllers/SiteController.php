@@ -438,4 +438,10 @@ class SiteController extends Controller
                 ->json(['success' => false]);
         }
     }
+
+    public function logout(){
+        if(Auth::check())
+            Auth::logout();
+        return redirect('/');
+    }
 }

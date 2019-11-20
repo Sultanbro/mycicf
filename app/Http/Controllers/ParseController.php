@@ -2327,5 +2327,7 @@ class ParseController extends Controller
                 $request->input('callback')
             );
     }
-
+    public function redirectToCompany(){
+        return redirect(route('parse/company'));
+    }
 }

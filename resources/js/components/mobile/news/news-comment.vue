@@ -6,6 +6,12 @@
                     <div class="">
                         <img src="/images/avatar.png"
                              class="avatar-small header-avatar-size"
+                             v-if="fakeImage"
+                             >
+                        <img :src="imageUrl"
+                             class="avatar-small header-avatar-size"
+                             @error="fakeImage = true"
+                             v-else
                              >
 <!--                        <img :src="imageUrl"-->
 <!--                             class="avatar-small header-avatar-size"-->
@@ -50,14 +56,24 @@
 
         data() {
             return {
-                // fakeImage : false,
-                // imageUrl : null,
+                fakeImage : false,
+                imageUrl : null,
             }
         },
 
         props: {
             comment: Object,
             index: Number,
+        },
+
+        mounted () {
+            this.imageUrl = "/storage/images/employee/" + this.comment.userISN + ".png";
+            // this.comments = [...this.post.comments];
+        },
+
+        updated () {
+            this.imageUrl = "/storage/images/employee/" + this.comment.userISN + ".png";
+            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         methods: {

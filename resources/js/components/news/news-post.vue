@@ -117,11 +117,14 @@
 
                         <div v-if="!allCommentsShown" v-for="(comment, index) in post.comments.slice(0, 3)">
                             <news-comment :comment="comment"
-                                          :index="index"></news-comment>
+                                          :index="index"
+                                          :isn="isn"></news-comment>
                         </div>
 
                         <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
-                            <news-comment :comment="comment" :index="index"></news-comment>
+                            <news-comment :comment="comment"
+                                          :index="index"
+                                          :isn="isn"></news-comment>
                         </div>
 
                         <div v-if="!allCommentsShown && post.comments.length > 3" class="pb-2 pl-5">
@@ -133,8 +136,8 @@
                         <div class="d-flex">
                             <div class="d-flex align-items-center">
 <!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
-                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
-                                <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="MainFakeImage">
+                                <img :src="MainImageUrl" @error="MainFakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                             </div>
                             <div class="d-flex w-100">
                                 <TextareaAutosize v-model="commentText"
@@ -175,6 +178,8 @@
                 allCommentsShown: false,
                 comments: [],
                 showVideo: true,
+                MainImageUrl : null,
+                MainFakeImage : false,
             }
         },
 
@@ -186,11 +191,13 @@
 
         mounted () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
             // this.comments = [...this.post.comments];
         },
 
         updated () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
             // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
