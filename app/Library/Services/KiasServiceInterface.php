@@ -94,4 +94,13 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getEmplMotivation($isn, $begin, $end);
+
+    /**
+     * Получить отчет продавца
+     * @param $dateBeg
+     * @param $dateEnd
+     * @param $emplIsn
+     * @return mixed
+     */
+    public function GetInfoUser($dateBeg, $dateEnd, $emplIsn);
 }
