@@ -157,7 +157,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/name', 'NameController@getView')->name('documentation');
     Route::post('/getItemsList', 'NameController@getItemsList');
 
-    Route::get('/report', 'ReportController@index');
+    Route::get('/report', 'ReportController@index')->name('report');
     Route::post('/getReport', 'ReportController@getReport');
 
 

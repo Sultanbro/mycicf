@@ -17,6 +17,9 @@
                         </div>-->
                     </div>
                     <div>
+                        <input type="number" v-model="vIsn"/>
+                    </div>
+                    <div>
                         <div class="flex-row border-gray pt-2 pb-2 pl-4  pr-4 width-min-content pointer" @click="getReport()">
                             <div><i class="far fa-eye"></i></div>
                             <div class="ml-2">Показать</div>
@@ -187,7 +190,7 @@
                 },
                 fourthChartData:[],
                 fourthChartOptions: {
-                    colors: ['#a3a1fb','#54d8ff'],
+                    colors: ['#a3a1fb','#54d8ff', 'red'],
                     title: 'Динамика',
                     fontSize: 12,
                     curveType: 'function',
@@ -199,19 +202,21 @@
                     }
                 },
                 show: false,
+                vIsn: null
             }
         },
         props : {
             isn : Number
         },
         mounted() {
-            this.getReport()
+            this.vIsn = this.isn;
+            // this.getReport()
         },
         methods : {
             getReport() {
                 this.preloader(true);
                 this.axios.post('/getReport', {
-                    isn: this.isn,
+                    isn: this.vIsn,
                     dateBeg : this.dateBeg,
                     dateEnd : this.dateEnd
                 })
@@ -240,7 +245,7 @@
                 }
             },
             setMainData(Plan, Amount) {
-                if(Plan > Amount) {
+                if(parseInt(Plan) > parseInt(Amount)) {
                     this.chartData = [
                         ['Рынок', 'Доля'],
                         ['Сборы', parseInt(Amount)],
@@ -266,18 +271,26 @@
                 var array = [
                     ['Рынок', 'Доля'],
                 ];
-                PRODUCTS.row.forEach(data => {
-                    array.push([data.PRODUCT, parseInt(data.COUNT)]);
-                });
+                if(Array.isArray(PRODUCTS.row)) {
+                    PRODUCTS.row.forEach(data => {
+                        array.push([data.PRODUCT, parseInt(data.COUNT)]);
+                    });
+                }else{
+                    array.push([PRODUCTS.row.PRODUCT, parseInt(PRODUCTS.row.COUNT)]);
+                }
                 this.thirdChartData = array;
             },
             setDynamicData(Dynamic){
                 var array = [
                     ['Дата', 'Выплаты', 'Премии', 'План'],
                 ];
-                Dynamic.row.forEach(data => {
-                    array.push([this.getDateString(data.Month, data.Year), parseInt(data.Payout), parseInt(data.Prem), parseInt(data.FeesPlan)]);
-                });
+                if(Array.isArray(Dynamic.row)) {
+                    Dynamic.row.forEach(data => {
+                        array.push([this.getDateString(data.Month, data.Year), parseInt(data.Payout), parseInt(data.Prem), parseInt(data.FeesPlan)]);
+                    });
+                }else{
+                    array.push([this.getDateString(Dynamic.row.Month, Dynamic.row.Year), parseInt(Dynamic.row.Payout), parseInt(Dynamic.row.Prem), parseInt(Dynamic.row.FeesPlan)])
+                }
                 this.fourthChartData = array;
             },
             getDateString(Month, Year){

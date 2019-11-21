@@ -37,7 +37,7 @@
                     <span>Сенткоины</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('report')}}">
                 <li>
                     <i class="fas fa-chart-pie"></i>
                     <span>Отчет</span>
