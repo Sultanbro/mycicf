@@ -7,22 +7,31 @@
             <div class="ml-2 comments-section__body w-100">
                 <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
                     <div class="mr-3 w-100">
-                        <span class="color-blue">{{comment.fullname}},</span>
-                        <div>{{comment.commentText}}</div>
+                        <span class="color-blue">{{comment.fullname}}</span>
+                        <transition name="text-comment-transition">
+                            <div v-if="!editMode">{{comment.commentText}}</div>
+                        </transition>
+                        <transition name="textarea-comment-transition">
+                            <div v-if="editMode" class="d-flex">
+                                <textarea v-model="comment.commentText"
+                                          class="w-100 comments-section__textarea"></textarea>
+                            </div>
+                        </transition>
+
                     </div>
                     <div class="d-flex comment-section__top">
-                        <div class="comment-section__dropdown ml-auto">
+                        <div class="comment-section__dropdown ml-auto" v-if="isn === comment.userISN">
 
                             <div class="comment-section__icon">
                                 <i class="fas fa-ellipsis-h"></i>
                             </div>
 
                             <div class="comment-section__dropcontent">
-<!--                                <div class="p-2">-->
-<!--                                    <span>-->
-<!--                                        <small>Отредактировать</small>-->
-<!--                                    </span>-->
-<!--                                </div>-->
+                                <div class="p-2" @click="editComment">
+                                    <span>
+                                        <small>Отредактировать</small>
+                                    </span>
+                                </div>
                                 <div class="p-2"
                                      @click="deleteComment">
                                     <span>
@@ -35,12 +44,20 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex pl-5 pt-1 pb-1 comments-bottom">
+        <div class="d-flex pl-5 pb-1 comments-bottom">
             <!-- Не удалять потом дополним функционал -->
-            <!--                                <div class="pl-3 mr-3 color-blue comments-bottom_inner"><small>Нравиться</small></div>-->
-            <!--                                <div class="mr-3 color-blue comments-bottom_inner"><small>Ответить</small></div>-->
-            <div class="color-blue ml-auto pr-2"><small>{{comment.date}}</small></div>
+<!--            <div class="pl-3 color-blue comments-bottom_inner" v-if="isn !== comment.userISN">-->
+<!--                <small>Нравиться</small>-->
+<!--            </div>-->
+            <div class="pl-3 color-blue comments-bottom_inner" v-if="isn !== comment.userISN">
+                <small @click="replyComment">Ответить</small>
+            </div>
+            <div class="color-blue ml-auto pr-2">
+                <small>{{comment.date}}</small>
+            </div>
         </div>
+
+
     </div>
 
 </template>
@@ -51,13 +68,14 @@
 
         data() {
             return {
-
+                editMode: false,
             }
         },
 
         props: {
             comment: Object,
-            index: Number
+            index: Number,
+            isn: Number,
         },
 
         methods: {
@@ -69,6 +87,22 @@
                     }
                 });
             },
+            replyComment: function () {
+                if(this.replyFullName !== '') {
+                    this.replyFullName = '';
+                    this.replyFullName = this.comment.fullname;
+                    this.$parent.commentText = this.replyFullName + ', ';
+                    document.getElementById("comment-desktop-textarea").focus();
+                }
+                else {
+                    this.replyFullName = this.comment.fullname;
+                    this.$parent.commentText = this.replyFullName + ', ';
+                    document.getElementById("comment-desktop-textarea").focus();
+                }
+            },
+            editComment: function () {
+                this.editMode = !this.editMode;
+            }
         }
 
 
@@ -85,6 +119,10 @@
     .comments-bottom_inner {
         cursor: pointer;
         transition: 0.4s ease;
+    }
+
+    .comments-bottom_inner:hover {
+        color: cornflowerblue;
     }
 
     .comment-section__icon {
@@ -141,4 +179,50 @@
         color: cornflowerblue;
         cursor: pointer;
     }
+
+    .comments-section__textarea {
+        resize: none;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .comments-section__textarea:focus {
+        border: 1px solid cornflowerblue;
+    }
+
+
+
+
+    .text-comment-transition-enter-active,
+    .text-comment-transition-leave-active {
+        transition: opacity 0.2s ease;
+    }
+
+    .text-comment-transition-enter,
+    .text-comment-transition-leave-to {
+        opacity: 0;
+    }
+
+
+    .textarea-comment-transition-enter {
+        width: 0;
+        transition: all 1.2s ease;
+    }
+
+    .textarea-comment-transition-enter-to {
+        width: 100%;
+        transition: all 1.2s ease;
+    }
+
+    .textarea-comment-transition-leave {
+        width: 100%;
+        transition: all 0.8s ease;
+    }
+
+    .textarea-comment-transition-leave-to {
+        width: 0;
+        transition: all 0.8s ease;
+    }
+
+
 </style>

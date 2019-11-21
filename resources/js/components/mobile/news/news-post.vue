@@ -45,7 +45,9 @@
 
             <div class="pl-3 pr-3 mb-2 post-text-section">
                 <div class="post-text-section__text"
-                     :class="showFull ? 'show-full' : ''">{{post.postText}}</div>
+                     v-if="!showFull">{{post.postText.substr(0, 200)}}</div>
+                <div class="post-text-section__text"
+                     v-if="showFull">{{post.postText}}</div>
                 <div class="color-blue"
                      v-if="post.postText !== null && post.postText.length > 200 && !showFull">
                     <small @click="showFullText">Показать полностью...</small>
@@ -76,7 +78,7 @@
 
             <div  v-if="isCommentsOpened" class="comment-section w-100">
                 <div v-for="(comment, index) in post.comments">
-                    <news-comment :comment="comment" :index="index"></news-comment>
+                    <news-comment :comment="comment" :index="index" :isn="isn"></news-comment>
                 </div>
 
                 <div class="pl-3 mb-2" v-if="post.comments.length > 0">
@@ -93,6 +95,7 @@
                     <div class="d-flex w-100 pt-2 pb-2">
                         <TextareaAutosize class="w-100 comment-textarea"
                                           :max-height="100"
+                                          id="comment-mobile-textarea"
                                           v-model="commentText"></TextareaAutosize>
                     </div>
                     <button class="p-2 comment-section-btn"
@@ -248,16 +251,6 @@
 
     .show {
         display: block;
-    }
-
-    .post-text-section__text {
-        max-height: 195px;
-        overflow: hidden;
-    }
-
-    .show-full {
-        max-height: none;
-        overflow: unset;
     }
 
 

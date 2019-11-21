@@ -10,9 +10,13 @@ import TextareaAutosize from 'vue-textarea-autosize'
 
 import FlashMessage from '@smartweb/vue-flash-message'
 
-Vue.use(FlashMessage);
-
 import VueGoogleCharts from 'vue-google-charts'
+
+import {EmojiPickerPlugin} from 'vue-emoji-picker'
+
+Vue.use(EmojiPickerPlugin);
+
+Vue.use(FlashMessage);
 
 Vue.use(VueGoogleCharts);
 
