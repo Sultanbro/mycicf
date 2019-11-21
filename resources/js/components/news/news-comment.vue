@@ -8,7 +8,7 @@
             <div class="ml-2 comments-section__body w-100">
                 <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
                     <div class="mr-3 w-100">
-                        <span class="color-blue">{{comment.fullname}},</span>
+                        <span class="color-blue">{{comment.fullname}}</span>
                         <div>{{comment.commentText}}</div>
                     </div>
                     <div class="d-flex comment-section__top">

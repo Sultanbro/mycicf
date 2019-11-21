@@ -190,7 +190,7 @@
                 },
                 fourthChartData:[],
                 fourthChartOptions: {
-                    colors: ['#a3a1fb','#54d8ff'],
+                    colors: ['#a3a1fb','#54d8ff', 'red'],
                     title: 'Динамика',
                     fontSize: 12,
                     curveType: 'function',
