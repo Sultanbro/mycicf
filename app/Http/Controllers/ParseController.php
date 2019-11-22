@@ -359,7 +359,7 @@ class ParseController extends Controller
         return $model;
     }
     public function getCompanyIdByName($row){
-        $model = PreviousName::where('name','=',$row)->get()[0]->companyId;
+        $model = PreviousName::where('name','=',$row)->get()[0]->company_id;
         return $model;
     }
     public function getFinanceAttrNameByLabel($name){
@@ -2119,7 +2119,7 @@ class ParseController extends Controller
         $model->short_name = $request->shortname;
         if($model->save()){
             $previousName = new PreviousName();
-            $previousName->companyId = $model->id;
+            $previousName->company_id = $model->id;
             $previousName->name = $request->full_name;
             if($previousName->save()){
                 echo 'Успешно добавлена';
@@ -2171,7 +2171,7 @@ class ParseController extends Controller
         $result = '';
         if($request->fullname != ''){
             $previousName = new PreviousName();
-            $previousName->companyId = $id;
+            $previousName->company_id = $id;
             $previousName->name = $request->fullname;
             $previousName->save();
             $result .= 'Добавлена полное наименование<br>';
