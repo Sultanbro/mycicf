@@ -1,22 +1,22 @@
 <template>
     <div class="mt-3 pb-2">
         <div class="pt-4">
-            <div class="bg-white ml-2 mr-2 mt-1 box-shadow border-16 pt-3 pb-3">
-                <div class="flex-row jc-sb">
-                    <div class="ml-2">
-                        <input v-model="dateBeg" type="month" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+            <div class="bg-white ml-2 mr-2 mt-1 box-shadow border-16 pt-3 pb-3 ad-jc-center-800">
+                <div class="flex jc-sb ad-flex-column-800 ad-alignitems-center-800 ml-0-contain ad-stretch-800">
+                    <div class="ml-2 dealer-raiting-input1-contain dealer-raiting-margins">
+                        <input v-model="dateBeg" type="month" class="border0 date-color ad-width190-800 bg-darkgray pl-4 pr-2 pt-1 pb-1 dealer-raiting-input1">
                     </div>
-<!--                    <div>-->
-<!--                        <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">-->
-<!--                    </div>-->
-                    <div>
-                        <input type="number" v-model="ISN">
+                    <!--                    <div>-->
+                    <!--                        <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">-->
+                    <!--                    </div>-->
+                    <div class="dealer-raiting-margins">
+                        <input type="number" v-model="ISN" class="ad-width190-800">
                     </div>
-                    <div>
+                    <div class="dealer-raiting-input3-contain dealer-raiting-margins">
                         <div class="flex-row date-color pl-4 pr-2">
-                            <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
+                            <div class="flex-row show-btn-contain border-gray pl-4 width-min-content pr-4 pt-1 pb-1 ad-width190-800 jc-center ad-dealer-raiting-ml-2-800">
                                 <div><i class="far fa-eye"></i></div>
-                                <div class="ml-2" @click="getMotivation()">Показать</div>
+                                <div class="ml-2 show-btn" @click="getMotivation()">Показать</div>
                             </div>
                         </div>
                     </div>
@@ -24,14 +24,18 @@
             </div>
         </div>
         <div class="pt-2">
-            <div class="border-16 flex-row vertical-middle jc-sb bg-white ml-2 mr-2 pt-3 pb-3 border-4px box-shadow pl-2 pr-2">
+            <div class="border-16 flex-row vertical-middle jc-sb bg-white ml-2 mr-2 pt-3 pb-3 border-4px box-shadow pl-2 pr-2 show-btn-contain">
                 <div>
                     <span class="fs-1 CAPS">{{category_end_first}}</span>
                 </div>
                 <div>
-                    <strong class="vertical-middle">
-                        <span class="fs-1_5"><i class="fas fa-hand-holding-usd"></i></span>
-                        <span class="fs-2 ml-3 color-blue">280 000</span>
+                    <strong class="vertical-middle ad-flex-column-440 ad-alignitems-end-440">
+                        <span class="fs-1_5">рейтинг</span>
+                        <span class="fs-2 ml-3 class-a pl-4 pr-4 blocks-small-borderRad">A+</span>
+<!--                        <span class="fs-2 ml-3 class-b pl-4 pr-4 blocks-small-borderRad">B+</span>-->
+<!--                        <span class="fs-2 ml-3 class-c pl-4 pr-4 blocks-small-borderRad">C+</span>-->
+<!--                        <span class="fs-2 ml-3 class-d pl-4 pr-4 blocks-small-borderRad">D+</span>-->
+<!--                        <span class="fs-2 ml-3 class-e pl-4 pr-4 blocks-small-borderRad">E+</span>-->
                     </strong>
                 </div>
             </div>
@@ -42,17 +46,11 @@
                     <table class="table table-bordered table-striped">
                         <tbody>
                         <tr>
-                            <!--                            <th scope="col">№</th>-->
-                            <!--                            <th scope="col">Мотивация</th>-->
-                            <!--                            <th scope="col">Критерии</th>-->
                             <th scope="col">Критерии</th>
-                            <th scope="col">Расчеты</th>
-                            <th scope="col">Выполнение</th>
+                            <th scope="col">Показатель</th>
+                            <th scope="col">Оценка</th>
                         </tr>
                         <tr v-for="(motivation, index) in motivations">
-                            <!--                            <td>{{index + 1}}</td>-->
-                            <!--                            <td>{{motivation.types}}</td>-->
-                            <!--                            <td>{{motivation.sum}}</td>-->
                             <td></td>
                             <td></td>
                             <td><i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i></td>
@@ -69,33 +67,6 @@
                 <span class="ml-2 color-black fs-1_1">положение по мотивации</span>
             </a>
         </div>
-<!--        <div class="mr-2 ml-2 mt-2">-->
-<!--            <div class="table-responsive-sm">-->
-<!--                <table class="table table-bordered table-striped">-->
-<!--                    <tbody>-->
-<!--                    <tr>-->
-<!--                        &lt;!&ndash;                            <th scope="col">№</th>&ndash;&gt;-->
-<!--                        &lt;!&ndash;                            <th scope="col">Мотивация</th>&ndash;&gt;-->
-<!--                        &lt;!&ndash;                            <th scope="col">Критерии</th>&ndash;&gt;-->
-<!--                        <th scope="col">Критерии</th>-->
-<!--                        <th scope="col">Расчеты</th>-->
-<!--                        <th scope="col">Выполнение</th>-->
-<!--                    </tr>-->
-<!--                    <tr v-for="(motivation, index) in motivations">-->
-<!--                        &lt;!&ndash;                            <td>{{index + 1}}</td>&ndash;&gt;-->
-<!--                        &lt;!&ndash;                            <td>{{motivation.types}}</td>&ndash;&gt;-->
-<!--                        &lt;!&ndash;                            <td>{{motivation.sum}}</td>&ndash;&gt;-->
-<!--                        <td></td>-->
-<!--                        <td></td>-->
-<!--                        <td><i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i></td>-->
-<!--                    </tr>-->
-<!--                    <tr v-for="itemSecond in motivationTdArray">-->
-<!--                        <td v-for="itemTd in itemSecond.motivationChildArray">{{itemTd.itemName}}</td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="pt-3 pb-3 pl-0 pr-0 mt-3 bg-white ml-2 mr-2 box-shadow border-16">
             <div>
                 <div class="width100 flex-row">

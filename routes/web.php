@@ -178,6 +178,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
 
+        Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
+
         Route::post('/getUsersData', 'SiteController@getUserData');
 
         Route::get('/motivation', 'SiteController@motivation');

@@ -117,6 +117,26 @@ ul{
 .bold{
 	font-weight: bold;
 }
+.class-a{
+	background: #956fc9;
+	color: white;
+}
+.class-b{
+	background: #335aad;
+	color: #edd33d;
+}
+.class-c{
+	background: #86d1fa;
+	color: #0e0d0de3;
+}
+.class-d{
+	background: #ec4f4a;
+	color: #e8e6e6;
+}
+.class-e{
+    background: #02a661;
+	color: #fff;
+}
 .termination-checkbox{
 	background: #508ff4;
 	display: flex;
@@ -1418,3 +1438,90 @@ body {
 /*::-moz-placeholder          {color:#fff;}!* Firefox 19+ *!*/
 /*:-moz-placeholder           {color:#fff;}!* Firefox 18- *!*/
 /*:-ms-input-placeholder      {color:#fff;}*/
+
+/*MEDIA*/
+
+@media (max-width: 800px){
+	.ad-flex-column-800{
+		display: flex;
+		flex-flow: column !important;
+		flex-direction: column !important;
+	}
+	.ad-wrap-800{
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.ad-jc-sb-800{
+		justify-content: space-between;
+		display: flex;
+	}
+	.ad-jc-sa-800{
+		justify-content: space-around;
+		display: flex;
+	}
+	.ad-jc-center-800{
+		justify-content: center;
+		display: flex;
+	}
+	.ad-alignitems-center-800{
+		align-items: center;
+		display: flex;
+	}
+	.ad-width190-800{
+		width: 190px;
+	}
+	.ad-stretch-800{
+		display: flex;
+		align-items: stretch !important;
+	}
+	.ml-0-contain div{
+		margin-left: 0 !important;
+	}
+	.ad-dealer-raiting-ml-2-800 div:nth-of-type(2){
+		margin-left: 2rem;
+	}
+	.dealer-raiting-input1{
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	.dealer-raiting-input1-contain{
+		margin-left: 0 !important;
+	}
+	.dealer-raiting-input2{
+
+	}
+	.dealer-raiting-margins{
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+	}
+	.dealer-raiting-input3{
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	.dealer-raiting-input3-contain div{
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	.main_margin{
+		margin: 0;
+	}
+	.show-btn-contain div:nth-of-type(2){
+		margin-left: 0.50rem !important;
+	}
+}
+@media(max-width: 600px){
+	.data-chart-pie{
+		padding-left: 0;
+	}
+}
+@media(max-width: 440px) {
+	.ad-flex-column-440{
+		display: flex;
+		flex-flow: column !important;
+		flex-direction: column !important;
+	}
+	.ad-alignitems-end-440{
+		align-items: flex-end;
+		display: flex;
+	}
+}
