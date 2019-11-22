@@ -1,20 +1,20 @@
 <template>
     <div class="box-shadow radius-4px mt-3 pb-2">
         <div class="pt-4">
-            <div class="bg-white ml-3 mr-3 pt-4 pb-3">
+            <div class="bg-white ml-2 mr-2 mt-1 box-shadow border-16 pt-3 pb-3 ad-jc-center-800">
                 <div class="d-flex align-items-center">
-                    <div class="mr-2">
-                        <input v-model="dateBeg" type="month" class="border-0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                    <div class="ml-2 dealer-raiting-input1-contain dealer-raiting-margins">
+                        <input v-model="dateBeg" type="month" class="border0 date-color ad-width190-800 bg-darkgray pl-4 pr-2 pt-1 pb-1 dealer-raiting-input1">
                     </div>
 <!--                    <div class="mr-2">-->
 <!--                        <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">-->
 <!--                    </div>-->
                     <div class="">
-                        <treeselect class="w-50" v-model="ISN" :multiple="false" :options="options" />
+                        <treeselect class="w-50 ad-width190-800 ml-2" v-model="ISN" :multiple="false" :options="options" />
                     </div>
-                    <div>
-                        <div class="date-color border-gray show-btn" @click="getMotivation">
-                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
+                    <div class="dealer-raiting-input3-contain dealer-raiting-margins">
+                        <div class="date-color show-btn flex-row pl-4 pr-2" @click="getMotivation">
+                            <div class="flex-row show-btn-contain border-gray pl-4 width-min-content pr-4 pt-1 pb-1 ad-width190-800 jc-center ad-dealer-raiting-ml-2-800">
                                 <div>
                                     <i class="far fa-eye"></i>
                                 </div>
@@ -27,13 +27,13 @@
                 </div>
             </div>
         </div>
-        <div class="pt-4">
-            <div class="d-flex align-items-center justify-content-between bg-white ml-3 mr-3 pt-3 pb-3">
+        <div class="pt-2">
+            <div class="d-flex border-16 flex-row vertical-middle jc-sb bg-white ml-2 mr-2 pt-3 pb-3 border-4px box-shadow pl-2 pr-2 show-btn-contain">
                 <div>
                     <span class="fs-1 CAPS">{{category_end_first}}</span>
                 </div>
                 <div>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center ad-flex-column-440 ad-alignitems-end-440">
                         <span class="fs-1_5 bold">
                             <i class="fas fa-hand-holding-usd"></i>
                         </span>
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="mr-3 ml-3 mt-2">
+        <div class="box-shadow border-16 mr-2 ml-2 mt-2">
             <div class="table-responsive-sm">
                 <table class="table table-bordered table-striped">
                     <tbody>
