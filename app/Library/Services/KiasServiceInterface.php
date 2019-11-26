@@ -93,7 +93,7 @@ interface KiasServiceInterface
      * @param $end
      * @return mixed
      */
-    public function getEmplMotivation($isn, $begin, $end);
+    public function getEmplMotivation($isn, $begin);
 
     /**
      * Получить отчет продавца
