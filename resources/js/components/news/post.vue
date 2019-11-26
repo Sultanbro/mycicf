@@ -1,31 +1,37 @@
 <template >
-    <!-- Исправление верстки -->
     <div class="mt-4 ml-2 mr-2">
         <div onscroll="bottomOfWindow" class="mb-2 bg-white rounded">
             <!--Row 1-->
-            <div class="flex-row">
-                <div class="pl-4 pt-2 pb-2 w-100 bg-top">
-                    <strong>Создайте публикацию</strong>
+            <div class="d-flex justify-content-between bg-top pl-4 pt-2 pb-2 pr-4">
+                <div>
+                    <span class="bold">Создайте публикацию</span>
                 </div>
+                <transition name="transition-opacity">
+                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 1950">
+                        <span>Осталось символов:</span>
+                        <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
+                    </div>
+                </transition>
             </div> <!--Row 1-->
             <!--Row 2-->
-            <div class="flex-row">
-                <div class="flex-row ml-4 mr-4 pt-2 pb-2 w-100">
-                    <div class="flex-column">
+            <div class="d-flex">
+                <div class="d-flex ml-4 w-100">
+                    <div class="pt-2 pb-2">
                         <img src="/images/avatar.png" class="image-circle-add-post" v-if="fakeImage">
                         <img :src="imageUrl" @error="fakeImage = true" class="image-circle-add-post" v-else>                    </div>
-                    <div class="flex-column w-100" >
-                        <TextareaAutosize v-model="postText"
-                                          class="ml-2 pl-3 pr-3 border border-0 post-textarea"
+                    <div class="w-100 h-100 wrapper">
+                        <textarea-autosize v-model="postText"
+                                          class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
                                           placeholder="Что у вас нового?"
+                                          :maxlength="2000"
                                           :min-height="70"
-                                          :max-height="350"
-                                  >{{this.postText}}</TextareaAutosize>
+                                          :max-height="350">{{this.postText}}</textarea-autosize>
+                        <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
                     </div>
                 </div>
             </div> <!--Row 2-->
             <!--Row 3-->
-            <div class="flex-row w-100 horizontal-line"></div> <!--Row 3-->
+            <div class="d-flex w-100 horizontal-line"></div> <!--Row 3-->
             <!--Row 4-->
             <div class="flex-row">
                 <div class="flex-row ml-2 mr-2 mt-2 flex-wrap">
@@ -63,11 +69,11 @@
                         <!--<label for="file-upload" class="custom-file-upload">Файл</label>-->
                         <!--<input type="file" id="file-upload" multiple>-->
                     <!--</div>-->
-                    <transition name="fade">
+                    <transition name="transition-opacity">
                         <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0">
                             <button
                                     @click="addPost"
-                                    class="btn btn-outline-primary pt-1 pb-1 pr-2 pl-2 send-button" >Опубликовать</button>
+                                    class="pt-1 pb-1 pr-2 pl-2 common-btn" >Опубликовать</button>
                         </div>
                     </transition>
                 </div>
@@ -121,6 +127,7 @@
                 fakeImage : false,
                 imageUrl : null,
                 postIds : [],
+                NEW_POST_TEXTAREA: 'NEW_POST'
             }
         },
 
@@ -335,7 +342,6 @@
 </script>
 
 <style scoped>
-
     .rounded {
         border-radius: 16px !important;
     }
@@ -351,7 +357,6 @@
 
     .post-textarea {
         box-sizing: border-box;
-        /*resize: none;*/
         outline: none;
     }
 
@@ -387,40 +392,6 @@
         color: cornflowerblue;
     }
 
-    .send-button {
-        color: #000;
-        background-color: #EFEFEF;
-        border: none;
-        border-radius: 6px;
-        outline: none !important;
-        margin: 0;
-        transition: 0.4s ease;
-    }
-
-    .send-button:hover {
-        background-color: cornflowerblue;
-        color: #FFF;
-    }
-
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity .5s
-    }
-
-    .fade-enter,
-    .fade-leave-to {
-        opacity: 0
-    }
-
-    .smooth-enter-active,
-    .smooth-leave-active {
-        transition: opacity 0.8s;
-    }
-
-    .smooth-enter,
-    .smooth-leave-to {
-        opacity: 0;
-    }
 
     .load-button {
         height: 2.1em;
@@ -473,5 +444,4 @@
         cursor: pointer;
         display: block;
     }
-
 </style>

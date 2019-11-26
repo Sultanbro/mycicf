@@ -37,7 +37,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/role/getRoles', 'Admin\RoleController@getRoles');
             Route::post('/role/setNewUser', 'Admin\RoleController@newUser');
         });
-        
+
         Route::group(['middleware' => 'parseAdmin'], function () {
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
@@ -157,6 +157,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/editPost', 'NewsController@editPost');
     Route::post('/addComment', 'NewsController@addComment');
     Route::post('/deleteComment', 'NewsController@deleteComment');
+    Route::post('/editComment', 'NewsController@editComment');
 
     //UNTITLED
     Route::get('/name', 'NameController@getView')->name('documentation');

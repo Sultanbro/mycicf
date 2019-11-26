@@ -270,6 +270,32 @@ class NewsController extends Controller
         return $response;
     }
 
+    public function editComment(Request $request) {
+        $success = false;
+
+        $comment_id = $request->commentId;
+        $comment_text = $request->commentText;
+
+        Comment::where('id', $comment_id)
+            ->update([
+                'text' => $comment_text,
+            ]);
+        $response = [
+            'success' => !$success,
+            'edited' => true,
+        ];
+        //TODO настроить сокеты
+//        broadcast(new NewPost([
+//            'post' => [
+//                'text' => $comment_text,
+//                'id' => $comment_id,
+//            ],
+//            'type' => Post::EDITED_COMMENT
+//        ]));
+
+        return $response;
+    }
+
 
 
     public function getView() {

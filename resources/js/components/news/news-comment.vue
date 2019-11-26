@@ -1,25 +1,15 @@
 <template>
-    <div class="comments-container__inner w-100">
+    <div class="comments-container__inner w-100 mb-2">
         <div class="d-flex comments-section w-100">
             <div>
                 <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">
             </div>
-            <div class="ml-2 comments-section__body w-100">
-                <div class="pt-2 pb-2 pl-3 pr-3 d-flex">
-                    <div class="mr-3 w-100">
-                        <span class="color-blue">{{comment.fullname}}</span>
-                        <transition name="text-comment-transition">
-                            <div v-if="!editMode">{{comment.commentText}}</div>
-                        </transition>
-                        <transition name="textarea-comment-transition">
-                            <div v-if="editMode" class="d-flex">
-                                <textarea v-model="comment.commentText"
-                                          class="w-100 comments-section__textarea"></textarea>
-                            </div>
-                        </transition>
-
+            <div class="ml-2 w-100">
+                <div class="d-flex justify-content-between">
+                    <div class="color-blue">
+                        <span class="pl-2">{{comment.fullname}}</span>
                     </div>
-                    <div class="d-flex comment-section__top">
+                    <div class="comment-section__top pr-2">
                         <div class="comment-section__dropdown ml-auto" v-if="isn === comment.userISN">
 
                             <div class="comment-section__icon">
@@ -42,21 +32,68 @@
                         </div>
                     </div>
                 </div>
+                <div class="d-flex p-2 comments-section__body">
+                    <div class="w-100">
+                        <transition name="transition-opacity">
+                            <div v-if="!editMode">{{comment.commentText}}</div>
+                        </transition>
+                        <transition name="transition-textarea-width">
+                            <div v-if="editMode" class="d-flex wrapper">
+                                <textarea v-model="comment.commentText"
+                                                  class="w-100 pl-2 pr-4 comments-section__textarea"
+                                                  maxlength="255"
+                                                  ref="textarea-edit-comment"></textarea>
+                                <emoji-component :type="EDIT_COMMENT_TEXTAREA"></emoji-component>
+                            </div>
+                        </transition>
+                        <div class="d-flex">
+                            <div v-if="editMode && comment.commentText.length > 205">
+                                <span>
+                                    <small>Осталось символов: {{255 - comment.commentText.length > 0 ? 255 - comment.commentText.length : 0}}</small>
+                                </span>
+                            </div>
+                            <transition name="transition-opacity">
+                                <div class="ml-auto d-flex" v-if="editMode">
+                                    <transition name="transition-opacity">
+                                        <div @click="saveEdited"
+                                                v-if="comment.commentText !== this.oldText && comment.commentText.length > 0 && editMode"
+                                                class="comments-bottom__inner pr-2 pl-2">
+                                            <small class="comments-bottom__inner_hover">Сохранить</small>
+                                        </div>
+                                    </transition>
+                                    <div @click="exitEdit"
+                                            v-if="editMode"
+                                            class="comments-bottom__inner pr-2 pl-2">
+                                        <small class="comments-bottom__inner_hover">Отмена</small>
+                                    </div>
+                                </div>
+                            </transition>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
         <div class="d-flex pl-5 pb-1 comments-bottom">
-            <!-- Не удалять потом дополним функционал -->
-<!--            <div class="pl-3 color-blue comments-bottom_inner" v-if="isn !== comment.userISN">-->
-<!--                <small>Нравиться</small>-->
+<!--            <div class="ml-2 comments-bottom__inner">-->
+<!--                <span>-->
+<!--                    <i class="far fa-thumbs-up color-red"></i>-->
+<!--                </span>-->
+<!--                <small>0</small>-->
+<!--                <small class="comments-bottom__inner_hover">Нравиться</small>-->
 <!--            </div>-->
-            <div class="pl-3 color-blue comments-bottom_inner" v-if="isn !== comment.userISN">
-                <small @click="replyComment">Ответить</small>
+            <div class="ml-2 comments-bottom__inner"
+                 v-if="isn !== comment.userISN"
+                 @click="replyComment">
+                <span>
+                    <i class="fas fa-reply color-red"></i>
+                </span>
+                <small class="comments-bottom__inner_hover">Ответить</small>
             </div>
-            <div class="color-blue ml-auto pr-2">
+            <div class="ml-auto pr-2">
                 <small>{{comment.date}}</small>
             </div>
         </div>
-
 
     </div>
 
@@ -69,6 +106,8 @@
         data() {
             return {
                 editMode: false,
+                oldText: this.comment.commentText,
+                EDIT_COMMENT_TEXTAREA: 'EDIT_COMMENT'
             }
         },
 
@@ -87,22 +126,47 @@
                     }
                 });
             },
+
             replyComment: function () {
                 if(this.replyFullName !== '') {
+                    var id = this.$parent.post.postId;
                     this.replyFullName = '';
                     this.replyFullName = this.comment.fullname;
                     this.$parent.commentText = this.replyFullName + ', ';
-                    document.getElementById("comment-desktop-textarea").focus();
+                    document.getElementById(id).focus();
                 }
                 else {
+                    var id = this.$parent.post.postId;
                     this.replyFullName = this.comment.fullname;
                     this.$parent.commentText = this.replyFullName + ', ';
-                    document.getElementById("comment-desktop-textarea").focus();
+                    document.getElementById(id).focus();
                 }
             },
+
             editComment: function () {
                 this.editMode = !this.editMode;
-            }
+                setTimeout(() => {
+                    this.$refs['textarea-edit-comment'].focus();
+                }, 1000);
+            },
+
+            exitEdit: function () {
+                this.editMode = !this.editMode;
+                this.comment.commentText = this.oldText;
+            },
+
+            saveEdited: function () {
+                this.editMode = !this.editMode;
+                this.axios.post('/editComment', {commentText: this.comment.commentText, commentId: this.comment.commentId}).then(response => {
+                    this.fetchSaveEdited(response.data);
+                }).catch(error => {
+                    alert(error);
+                });
+            },
+            fetchSaveEdited: function (response) {
+                // this.comment.edited = response.edited;
+                console.log('ok')
+            },
         }
 
 
@@ -116,13 +180,20 @@
         border-radius: 10px;
     }
 
-    .comments-bottom_inner {
+    .comments-bottom__inner {
         cursor: pointer;
+    }
+
+    .comments-bottom__inner_hover {
         transition: 0.4s ease;
     }
 
-    .comments-bottom_inner:hover {
+    .comments-bottom__inner:hover .comments-bottom__inner_hover {
         color: cornflowerblue;
+    }
+
+    .comments-bottom__inner span {
+        font-size: 0.7em;
     }
 
     .comment-section__icon {
@@ -153,22 +224,6 @@
         color: cornflowerblue;
     }
 
-    .comment-textarea {
-        border-radius: 10px;
-        outline: none;
-        /*height: 40px !important;*/
-    }
-
-    .comment-textarea:focus {
-        border: 1px solid cornflowerblue;
-    }
-
-    .send-comment-btn {
-
-        border: none;
-        outline: none;
-        background: #FFF;
-    }
 
     .send-comment-btn i {
         font-size: 1.2em;
@@ -182,7 +237,8 @@
 
     .comments-section__textarea {
         resize: none;
-        border-radius: 5px;
+        border-radius: 10px;
+        height: inherit;
         outline: none;
     }
 
@@ -193,36 +249,7 @@
 
 
 
-    .text-comment-transition-enter-active,
-    .text-comment-transition-leave-active {
-        transition: opacity 0.2s ease;
-    }
 
-    .text-comment-transition-enter,
-    .text-comment-transition-leave-to {
-        opacity: 0;
-    }
-
-
-    .textarea-comment-transition-enter {
-        width: 0;
-        transition: all 1.2s ease;
-    }
-
-    .textarea-comment-transition-enter-to {
-        width: 100%;
-        transition: all 1.2s ease;
-    }
-
-    .textarea-comment-transition-leave {
-        width: 100%;
-        transition: all 0.8s ease;
-    }
-
-    .textarea-comment-transition-leave-to {
-        width: 0;
-        transition: all 0.8s ease;
-    }
 
 
 </style>
