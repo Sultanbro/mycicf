@@ -1102,7 +1102,7 @@ class ParseController extends Controller
                 $ranking[$id] = $i++;
             }
         }
-        return view('parse.company', [
+        return view('parse.top-company', [
             'premium_first' => $premium_first,
             'premium_second' => $premium_second,
             'payout_first' => $payout_first,
@@ -1381,7 +1381,7 @@ class ParseController extends Controller
             $class_sum[$id]['payout_second'] = $second_payout;
         }
 
-        return view('parse.product', [
+        return view('parse.top-classes', [
             'premium_first' => $premium_first,
             'premium_second' => $premium_second,
             'payout_first' => $payout_first,
@@ -1528,7 +1528,7 @@ class ParseController extends Controller
             }
         }
         arsort($result);
-        return view('parse/finance', [
+        return view('parse/top-finance', [
             'result' => $result,
             'companyList' => $companyList,
             'label_first' => $label_first,
@@ -1559,7 +1559,6 @@ class ParseController extends Controller
     public function getTopClasses(){
         return view('parse/top-classes');
     }
-
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
         $premium = [];
         $payout = [];
@@ -2331,3 +2330,4 @@ class ParseController extends Controller
         return redirect(route('parse/company'));
     }
 }
+

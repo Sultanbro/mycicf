@@ -235,28 +235,28 @@
             // this.getMotivation()
         },
         methods : {
-            // getMotivation(){
-            //     this.preloader(true)
-            //     this.axios.post('/getMotivationList', {
-            //             isn: this.ISN,
-            //             begin : this.dateBeg,
-            //             end: this.dateEnd,
-            //         })
-            //         .then(response => {
-            //             if(response.data.success){
-            //                 this.motivations = response.data.list
-            //                 this.category = response.data.cat
-            //             }else{
-            //                 alert(response.data.error)
-            //             }
-            //         })
-            //         .catch(error => {
-            //             alert(error)
-            //         })
-            //         .finally(() => {
-            //             this.preloader(false)
-            //         });
-            // },
+            getMotivation(){
+                this.preloader(true)
+                this.axios.post('/getMotivationList', {
+                        isn: this.ISN,
+                        begin : this.dateBeg,
+                        end: this.dateEnd,
+                    })
+                    .then(response => {
+                        if(response.data.success){
+                            this.motivations = response.data.list
+                            this.category = response.data.cat
+                        }else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    })
+                    .finally(() => {
+                        this.preloader(false)
+                    });
+            },
             preloader(show){
                 if(show)
                 {

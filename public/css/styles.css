@@ -135,10 +135,11 @@ ul{
 /*}*/
 /*Стили thead*/
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(2) span{
-	background: #508ff4;
-	color: #ffffff;
+	background: #ffffff;
+	border: 2px solid #508ff4 !important;
+	color: #508ff4;
 	border-radius: 16px;
-	padding: 10px;
+	padding: 8px;
 }
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(3) span{
 	background: #ffffff;
@@ -171,18 +172,11 @@ ul{
 	color: #767676;
 	font-weight: bold;
 }
-.parse-table thead tr:nth-of-type(1) td:nth-of-type(5){
-	background: #eaeff3;
-	width: 1px !important;
-}
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(6){
 	color: #767676;
 	font-weight: bold;
 }
-.parse-table thead tr:nth-of-type(2) td:nth-of-type(10){
-	background: #eaeff3;
-	width: 1px !important;
-}
+
 /*Стили Tbody*/
 /*Подсвечивает пятую строку с Сентрас Иншуранс*/
 /*.parse-table tbody tr:nth-of-type(5){*/
@@ -201,10 +195,7 @@ ul{
 /*	border-top-right-radius: 12px;*/
 /*	border-bottom-right-radius: 12px;*/
 /*}*/
-.parse-table tbody tr td:nth-of-type(10){
-	background: #eaeff3;
-	width: 1px;
-}
+
 /*Скругление блоков по правой стороне от 10 блока*/
 /*.parse-table tbody tr td:nth-of-type(11){*/
 /*	border-top-left-radius: 12px;*/
@@ -1413,6 +1404,32 @@ body {
 .show-all-btn:hover {
 	color: cornflowerblue;
 }
+
+.parse-active{
+	background: #508ff4 !important;
+	color: #ffffff !important;
+	border-radius: 16px !important;
+	padding: 10px !important;
+}
+.parse-table thead tr:nth-of-type(1) td:nth-of-type(2) span:hover{
+	background: #508ff4 !important;
+	color: #ffffff !important;
+	border-radius: 16px !important;
+	/*padding: 10px !important;*/
+	transition: 0.4s ease-in-out;
+}
+.parse-table thead tr:nth-of-type(1) td:nth-of-type(3) span:hover{
+	background: #508ff4 !important;
+	color: #ffffff !important;
+	border-radius: 16px !important;
+	/*padding: 10px !important;*/
+	transition: 0.4s ease-in-out;
+}
+
+#inputRRPDiscount {
+	color : red;
+}
+
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/
 /*::-moz-placeholder          {color:#fff;}!* Firefox 19+ *!*/

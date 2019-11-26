@@ -76,15 +76,17 @@ class Kias implements KiasServiceInterface
             ])->ExecProcResult->any
         );
 
-        if ($name!='GetDictiList' && $name!='User_CicHelloSvc' && $name!='User_CicGetAgrObjectClassList' && $name!='Auth' && $name!='GETATTACHMENTDATA') {
-            $t     = microtime(true) + 6 * 60 * 60;
-            $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-            $d     = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
-            $date  = $d->format('d-m-Y_H-i-s-u');
-            file_put_contents(
-                storage_path() ."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
-                $xml->asXml()
-            );
+        if(env('APP_ENV', 'local') !== 'production') {
+            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList' && $name != 'Auth' && $name != 'GETATTACHMENTDATA') {
+                $t = microtime(true) + 6 * 60 * 60;
+                $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+                $d = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
+                $date = $d->format('d-m-Y_H-i-s-u');
+                file_put_contents(
+                    storage_path() . "/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+                    $xml->asXml()
+                );
+            }
         }
 
         if (isset($xml->error)) {
@@ -118,15 +120,17 @@ class Kias implements KiasServiceInterface
         $request->addChild('RequestIp', $_SERVER['REMOTE_ADDR'] ?? '1');
         $request->addChild('UserAgent', $_SERVER['HTTP_USER_AGENT'] ?? '1');
         self::addXmlChildren($request->addChild('params'), $params);
-        if($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList' && $name != 'Auth'  && $name!='GETATTACHMENTDATA'){
-            $t = microtime(true) + 6 * 60 * 60;
-            $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-            $d = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
-            $date = $d->format('d-m-Y_H-i-s-u');
-            file_put_contents(
-                storage_path() . "/kias_logs/" . $date . "_kias_agent_" . $name . "_.xml",
-                $xml->asXML()
-            );
+        if(env('APP_ENV', 'local') !== 'production') {
+            if($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList' && $name != 'Auth'  && $name!='GETATTACHMENTDATA') {
+                $t = microtime(true) + 6 * 60 * 60;
+                $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+                $d = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
+                $date = $d->format('d-m-Y_H-i-s-u');
+                file_put_contents(
+                    storage_path() . "/kias_logs/" . $date . "_kias_agent_" . $name . "_.xml",
+                    $xml->asXML()
+                );
+            }
         }
         return $xml->asXML();
     }

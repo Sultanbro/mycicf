@@ -60,6 +60,8 @@ Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.v
 
 Vue.component('report', require('./components/employee/report.vue').default);
 
+Vue.component('parse-selector', require('./components/parse/parse-selector.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
