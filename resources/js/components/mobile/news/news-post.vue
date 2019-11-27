@@ -104,9 +104,7 @@
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
-
             </div>
-
         </div>
 </template>
 
@@ -129,6 +127,8 @@
                 showVideo: true,
                 isCommentsOpened: false,
                 commentText: '',
+                MainImageUrl: null,
+                MainFakeImage: false,
             }
         },
 
@@ -140,10 +140,14 @@
 
         mounted () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
+            // this.comments = [...this.post.comments];
         },
 
-        updated() {
+        updated () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
+            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         methods: {

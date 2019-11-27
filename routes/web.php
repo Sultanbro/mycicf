@@ -19,10 +19,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
     Route::post('/login','Admin\SiteController@checkLogin');
     Route::group(['middleware' => ['checkAuth','checkSession','checkAdminAuth']], function (){
         Route::get('index', 'Admin\SiteController@index');
-        Route::get('/logout', function (){
-            Auth::logout();
-            return redirect('/');
-        });
+        Route::get('/logout', 'SiteController@logout');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         Route::post('/getCompanyList', 'ParseController@getCompanyListAxios');
@@ -136,9 +133,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-        Route::get('parse', function (){
-            return redirect(route('parse/company'));
-        })->name('parse');
+        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
@@ -163,13 +158,16 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/name', 'NameController@getView')->name('documentation');
     Route::post('/getItemsList', 'NameController@getItemsList');
 
-    Route::get('/logout', function (){
-        Auth::logout();
-        return redirect(route('index'));
-    });
+    Route::get('/report', 'ReportController@index')->name('report');
+    Route::post('/getReport', 'ReportController@getReport');
+
+
+    Route::get('/logout', 'SiteController@logout');
 
 
 
+//MOTIVATION
+    Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
 
         // MOBILE
         Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
@@ -183,8 +181,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::post('/getUsersData', 'SiteController@getUserData');
 
-        Route::get('/motivation', 'SiteController@motivation');
-        Route::post('/getMotivationList', 'SiteController@getMotivationList');
+        Route::get('/motivation', 'MotivationController@motivation');
+        Route::post('/getMotivationList', 'MotivationController@getMotivationList');
         });
     });
 

@@ -134,6 +134,10 @@
                                           :isn="isn"></news-comment>
                         </div>
 
+                        <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
+                            <news-comment :comment="comment"
+                                          :index="index"
+                                          :isn="isn"></news-comment>
                         <div v-if="allCommentsShown"
                              v-for="(comment, index) in post.comments">
                             <news-comment :comment="comment"
@@ -154,7 +158,7 @@
                                 <div class="d-flex align-items-center">
                                     <!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
                                     <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
-                                    <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                                    <img :src="MainImageUrl" @error="MainFakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                                 </div>
                                 <div class="d-flex w-100 wrapper">
                                     <textarea-autosize v-model="commentText"
@@ -209,6 +213,8 @@
                 allCommentsShown: false,
                 comments: [],
                 showVideo: true,
+                MainImageUrl : null,
+                MainFakeImage : false,
                 NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
                 EDIT_POST_TEXTAREA: 'EDIT_POST',
             }
@@ -222,10 +228,14 @@
 
         mounted () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
+            // this.comments = [...this.post.comments];
         },
 
         updated () {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
+            this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
+            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         methods: {
@@ -333,15 +343,8 @@
                 });
             },
 
-            transitionComplete: function(el){
-                el.style.height='150px';
 
-            },
-            willLeave: function(el){
-                el.style.height='';
-            }
-        },
-
+        }
     }
 </script>
 
@@ -350,6 +353,7 @@
         border: none !important;
         outline: none !important;
         background-color: transparent;
+        /*transition: 0.4s ease;*/
     }
 
     .custom-button > .fas {

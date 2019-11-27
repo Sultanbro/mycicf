@@ -1,4 +1,3 @@
-/* Global styles */
 body{
 	margin: 0;
 	padding: 0;
@@ -11,9 +10,15 @@ ul{
 	margin: 0 !important;
 	padding: 0;
 }
-pre {
-
+/* FONTS  START */
+@font-face {
+	font-family: Ubuntu; /* Имя шрифта */
+	src: url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap'); /* Путь к файлу со шрифтом */
 }
+.ubuntu-font{
+	font-family: Ubuntu;
+}
+/* FONTS  END */
 .bg-color-blue{
 	background: #4267b2;
 }
@@ -66,6 +71,9 @@ pre {
 .modal-footer{
 	border-top: 0;
 }
+.CAPS{
+	text-transform: uppercase;
+}
 
 .mobile-date-contain{
 	margin-top: 1rem;
@@ -115,10 +123,11 @@ pre {
 /*}*/
 /*Стили thead*/
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(2) span{
-	background: #508ff4;
-	color: #ffffff;
+	background: #ffffff;
+	border: 2px solid #508ff4 !important;
+	color: #508ff4;
 	border-radius: 16px;
-	padding: 10px;
+	padding: 8px;
 }
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(3) span{
 	background: #ffffff;
@@ -151,18 +160,11 @@ pre {
 	color: #767676;
 	font-weight: bold;
 }
-.parse-table thead tr:nth-of-type(1) td:nth-of-type(5){
-	background: #eaeff3;
-	width: 1px !important;
-}
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(6){
 	color: #767676;
 	font-weight: bold;
 }
-.parse-table thead tr:nth-of-type(2) td:nth-of-type(10){
-	background: #eaeff3;
-	width: 1px !important;
-}
+
 /*Стили Tbody*/
 /*Подсвечивает пятую строку с Сентрас Иншуранс*/
 /*.parse-table tbody tr:nth-of-type(5){*/
@@ -181,10 +183,7 @@ pre {
 /*	border-top-right-radius: 12px;*/
 /*	border-bottom-right-radius: 12px;*/
 /*}*/
-.parse-table tbody tr td:nth-of-type(10){
-	background: #eaeff3;
-	width: 1px;
-}
+
 /*Скругление блоков по правой стороне от 10 блока*/
 /*.parse-table tbody tr td:nth-of-type(11){*/
 /*	border-top-left-radius: 12px;*/
@@ -612,6 +611,9 @@ pre {
 }
 .text-align-center{
     text-align: center;
+}
+.motivation-red{
+	color: #ff4454;
 }
 .width-min-content{
 	width: min-content;
@@ -1392,6 +1394,41 @@ body {
 
 .show-all-btn:hover {
 	color: cornflowerblue;
+}
+
+.parse-active{
+	background: #508ff4 !important;
+	color: #ffffff !important;
+	border-radius: 16px !important;
+	padding: 10px !important;
+}
+.parse-table thead tr:nth-of-type(1) td:nth-of-type(2) span:hover{
+	background: #508ff4 !important;
+	color: #ffffff !important;
+	border-radius: 16px !important;
+	/*padding: 10px !important;*/
+	transition: 0.4s ease-in-out;
+}
+.parse-table thead tr:nth-of-type(1) td:nth-of-type(3) span:hover{
+	background: #508ff4 !important;
+	color: #ffffff !important;
+	border-radius: 16px !important;
+	/*padding: 10px !important;*/
+	transition: 0.4s ease-in-out;
+}
+
+#inputRRPDiscount {
+	color : red;
+}
+
+
+.show-btn {
+    transition: 0.4s ease;
+    cursor: pointer;
+}
+.show-btn:hover {
+    color: #000;
+    border-color: #000;
 }
 /*Стилизация плейсхолдеров, перед псевдоклассом надо поставить имя класса инпута*/
 /*::-webkit-input-placeholder {color:#fff;}*/

@@ -24,10 +24,6 @@ use App\Http\Controllers\ParseController;
 
     <!-- include vue-treeselect & its styles. you can change the version tag to better suit your needs. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
-
-    <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
 
     <style>
         input[type=number]::-webkit-inner-spin-button,
@@ -70,10 +66,10 @@ use App\Http\Controllers\ParseController;
                     </div>
                 </a>
                 {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
-                    {{--<i class="fa fa-user-friends"></i>--}}
-                    {{--<div class="mt-1 fs-0_8">--}}
-                        {{--Конкуренты--}}
-                    {{--</div>--}}
+                {{--<i class="fa fa-user-friends"></i>--}}
+                {{--<div class="mt-1 fs-0_8">--}}
+                {{--Конкуренты--}}
+                {{--</div>--}}
                 {{--</div>--}}
             </div>
             <div>
@@ -133,9 +129,9 @@ use App\Http\Controllers\ParseController;
                         </div>
                         <div class="ml-10">
                             <select id="secondYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                            @for($year = 2014; $year <= date('Y'); $year++)
-                                <option value="{{$year}}" @if($quarter == $_GET['secondYear']) selected @endif>{{$year}}</option>
-                            @endfor
+                                @for($year = 2014; $year <= date('Y'); $year++)
+                                    <option value="{{$year}}" @if($quarter == $_GET['secondYear']) selected @endif>{{$year}}</option>
+                                @endfor
                             </select>
                             <select id="secondQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                                 @for($quarter = 1; $quarter <= 4; $quarter++)
@@ -202,14 +198,16 @@ use App\Http\Controllers\ParseController;
                     <thead>
                     <tr class="border-table-0">
                         <td class="text-left fs-1_3 pl-0">{{$label}}</td>
-                        <td class="pt-3"><span class="pointer">Топ по компаниям</span></td>
-                        <td class="pt-3"><span class="pointer parse-active">Топ по классам</span></td>
-                        <td colspan="4" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                        <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
+                        <td class="pt-3"><span class="pointer">Топ по классам</span></td>
+                        <td colspan="6" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                     </tr>
                     <tr>
-                        <td>Класс страхования</td>
+                        <td></td>
+                        <td></td>
+                        <td>Компания</td>
                         <td>{{$label_first}}</td>
                         <td>{{$label_second}}</td>
                         <td>Доля {{$label_first}}</td>
@@ -225,44 +223,45 @@ use App\Http\Controllers\ParseController;
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($insuranceClassList as $id => $key)
+                    @php
+                        $other['premium_first'] = 0;
+                        $other['premium_second'] = 0;
+                        $other['payout_first'] = 0;
+                        $other['payout_second'] = 0;
+                        $i = 0;
+                    @endphp
+                    @foreach($premium_first as $id => $key)
                         <tr>
-                            <td><strong><a onclick="getCompaniesByClass({{$id}})">{{$controller->getNameByClassId($id)}}</a></strong></td>
-                            <td>{{number_format($class_sum[$id]['premium_first'], 0, '.', ' ')}}</td>
-                            <td>{{number_format($class_sum[$id]['premium_second'], 0, '.', ' ')}}</td>
-                            <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_first'], array_sum($premium_first))}}</td>
-                            <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_second'], array_sum($premium_second))}}</td>
-                            <td>{{$controller->getChangedVal($class_sum[$id]['premium_first'], $class_sum[$id]['premium_second'])}}%</td>
-                            <td>{{number_format($class_sum[$id]['premium_second'] - $class_sum[$id]['premium_first'], 0, '.', ' ') }}</td>
+                            <td><span>{{$i+1}}</span></td>
+                            <td>{{$ranking[$id]}}</td>
+                            <td><span class="bold"><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
+                            <td>{{number_format($val, 0, '.', ' ')}}</td>
+                            <td>{{number_format($premium_second[$id],0,  '.', ' ')}}</td>
+                            <td>{{$controller->getPercentOfMarker($val, array_sum($premium_first))}}</td>
+                            <td>{{$controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))}}</td>
+                            <td>{{$controller->getChangedVal($val, $premium_second[$id])}}</td>
+                            <td>{{number_format($val - $premium_second[$id], 0, '.', ' ') }}</td>
                             <td></td>
-                            <td>{{number_format($class_sum[$id]['payout_first'], 0, '.', ' ')}}</td>
-                            <td>{{number_format($class_sum[$id]['payout_second'], 0, '.', ' ')}}</td>
-                            <td>{{$controller->getChangedVal($class_sum[$id]['payout_first'],$class_sum[$id]['payout_second'])}}%</td>
-                            <td>{{$controller->getPayoutChange($class_sum[$id]['payout_first'], $class_sum[$id]['premium_second'])}}</td>
-                            <td>{{$controller->getPayoutChange($class_sum[$id]['payout_second'], $class_sum[$id]['premium_second'])}}</td>
+                            <td>{{number_format($payout_first[$id], 0, '.', ' ')}}</td>
+                            <td>{{number_format($payout_second[$id], 0, '.', ' ')}}</td>
+                            <td>{{$controller->getChangedVal($payout_first[$id], $payout_second[$id])}}</td>
+                            <td>{{$controller->getPayoutChange($payout_first[$id], $premium_first[$id])}}</td>
+                            <td>{{$controller->getPayoutChange($payout_second[$id], $premium_second[$id])}}</td>
                         </tr>
-                        @foreach($premium_first as $product_id => $value)
-                            @if(in_array($product_id, $insuranceClassList[$id]))
-                                <tr>
-                                    <td><a  onclick="getCompaniesByProduct({{$product_id}})">{{$productList[$product_id]}}</a></td>
-                                    <td>{{number_format($premium_first[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{number_format($premium_second[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{$controller->getPercentOfMarker($premium_first[$product_id], array_sum($premium_first))}}</td>
-                                    <td>{{$controller->getPercentOfMarker($premium_second[$product_id], array_sum($premium_second))}}</td>
-                                    <td>{{$controller->getChangedVal($premium_first[$product_id], $premium_second[$product_id])}}</td>
-                                    <td>{{number_format($premium_first[$product_id] - $premium_second[$product_id], 0, '.', ' ') }}</td>
-                                    <td></td>
-                                    <td>{{number_format($payout_first[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{number_format($payout_second[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{$controller->getChangedVal($payout_first[$product_id], $payout_second[$product_id])}}</td>
-                                    <td>{{$controller->getPayoutChange($payout_first[$product_id], $premium_first[$product_id])}}</td>
-                                    <td>{{$controller->getPayoutChange($payout_second[$product_id], $premium_second[$product_id])}}</td>
-                                </tr>
-                            @endif
-                        @endforeach
+                        @if($i>=10)
+                            @php
+                                $other['premium_first'] += $premium_first[$id];
+                                $other['premium_second'] += $premium_second[$id];
+                                $other['payout_first'] += $payout_first[$id];
+                                $other['payout_second'] += $payout_second[$id];
+                            @endphp
+                        @endif
+                        @php $i++; @endphp
                     @endforeach
                     <tr>
-                        <td class="bold fs-0_9">Итого</td>
+                        <td><span></span></td>
+                        <td><span></span></td>
+                        <td><span class="bold">Итого</span></td>
                         <td>{{number_format(array_sum($premium_first), 0, '.', ' ')}}</td>
                         <td>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</td>
                         <td></td>
@@ -278,6 +277,21 @@ use App\Http\Controllers\ParseController;
                     </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">	<!--Гугл графики-->
+        <div class="col-12 row">
+            <div class="col-md-6 col-lg-6">
+                <div id="pieFirst" style="width: 100%; height: 500px;"></div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+                <div id="pieSecond" style="width: 100%; height: 500px;"></div>
+            </div>
+        </div>
+        <div class="col-12 row">
+            <div class="col-12">
+                <div id="chart_div" style="height: 500px; width: 100%;"></div>
             </div>
         </div>
     </div>
@@ -310,89 +324,119 @@ use App\Http\Controllers\ParseController;
         }
         firstPeriod = parseInt(firstPeriod);
         secondPeriod = parseInt(secondPeriod);
-        location.href = '/parse/product?dateType='+dateType+
-            '&firstPeriod='+firstPeriod+'&secondPeriod='+secondPeriod+
-            '&firstYear='+firstYear+'&secondYear='+secondYear+
-            '&companyId='+id+'&disc='+disc;
-        console.log(a);
-    }
-    function getCompaniesByClass(id) {
-        var firstYear, firstPeriod, secondYear, secondPeriod;
-        var dateType = document.getElementById('dateType').value;
-        if(dateType === 'year'){
-            firstYear = document.getElementById('first').value;
-            secondYear = document.getElementById('second').value;
-            firstPeriod = 0;
-            secondPeriod = 0;
-        } else  if(dateType === 'quarter'){
-            firstYear = document.getElementById('firstYear').value;
-            secondYear = document.getElementById('secondYear').value;
-            firstPeriod = document.getElementById('firstQuarter').value;
-            secondPeriod = document.getElementById('secondQuarter').value;
-        } else {
-            firstYear = document.getElementById('fYear').value;
-            secondYear = document.getElementById('sYear').value;
-            firstPeriod = document.getElementById('firstMonth').value;
-            secondPeriod = document.getElementById('secondMonth').value;
-        }
-
-        var disc = 0;
-        if (document.getElementById('termination').checked){
-            disc = document.getElementById('inputRRPDiscount').value;
-        }
-        firstPeriod = parseInt(firstPeriod);
-        secondPeriod = parseInt(secondPeriod);
-        location.href = '/parse/company?dateType=' + dateType +
-            '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
-            '&firstYear=' + firstYear + '&secondYear=' + secondYear +
-            '&classId=' + id + '&disc=' + disc;
-    }
-    function getCompaniesByProduct(id) {
-        var firstYear, firstPeriod, secondYear, secondPeriod;
-        var dateType = document.getElementById('dateType').value;
-        if(dateType === 'year'){
-            firstYear = document.getElementById('first').value;
-            secondYear = document.getElementById('second').value;
-            firstPeriod = 0;
-            secondPeriod = 0;
-        } else  if(dateType === 'quarter'){
-            firstYear = document.getElementById('firstYear').value;
-            secondYear = document.getElementById('secondYear').value;
-            firstPeriod = document.getElementById('firstQuarter').value;
-            secondPeriod = document.getElementById('secondQuarter').value;
-        } else {
-            firstYear = document.getElementById('fYear').value;
-            secondYear = document.getElementById('sYear').value;
-            firstPeriod = document.getElementById('firstMonth').value;
-            secondPeriod = document.getElementById('secondMonth').value;
-        }
-
-        var disc = 0;
-        if (document.getElementById('termination').checked){
-            disc = document.getElementById('inputRRPDiscount').value;
-        }
-        firstPeriod = parseInt(firstPeriod);
-        secondPeriod = parseInt(secondPeriod);
-        location.href = '/parse/company?dateType=' + dateType +
+        location.href = '?dateType=' + dateType +
             '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
             '&firstYear=' + firstYear + '&secondYear=' + secondYear +
             '&productId=' + id + '&disc=' + disc;
     }
-    function checkDateType() {
-        console.log('a');
-        if (document.getElementById('dateType').value === 'year') {
-            document.getElementById('monthBlock').style.display = 'none';
-            document.getElementById('quarterBlock').style.display = 'none';
-            document.getElementById('yearBlock').style.display = 'flex';
-        } else if (document.getElementById('dateType').value === 'quarter') {
-            document.getElementById('monthBlock').style.display = 'none';
-            document.getElementById('quarterBlock').style.display = 'flex';
-            document.getElementById('yearBlock').style.display = 'none';
+    function getProducts(id) {
+        var firstYear, firstPeriod, secondYear, secondPeriod;
+        var dateType = document.getElementById('dateType').value;
+        if(dateType === 'year'){
+            firstYear = document.getElementById('first').value;
+            secondYear = document.getElementById('second').value;
+            firstPeriod = 0;
+            secondPeriod = 0;
+        } else  if(dateType === 'quarter'){
+            firstYear = document.getElementById('firstYear').value;
+            secondYear = document.getElementById('secondYear').value;
+            firstPeriod = document.getElementById('firstQuarter').value;
+            secondPeriod = document.getElementById('secondQuarter').value;
         } else {
-            document.getElementById('monthBlock').style.display = 'flex';
-            document.getElementById('quarterBlock').style.display = 'none';
-            document.getElementById('yearBlock').style.display = 'none';
+            firstYear = document.getElementById('fYear').value;
+            secondYear = document.getElementById('sYear').value;
+            firstPeriod = document.getElementById('firstMonth').value;
+            secondPeriod = document.getElementById('secondMonth').value;
         }
+
+        var disc = 0;
+        if (document.getElementById('termination')){
+            disc = document.getElementById('inputRRPDiscount').value;
+        }
+        firstPeriod = parseInt(firstPeriod);
+        secondPeriod = parseInt(secondPeriod);
+        location.href = '/parse/product?dateType=' + dateType +
+            '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
+            '&firstYear=' + firstYear + '&secondYear=' + secondYear +
+            '&companyId=' + id + '&disc=' + disc;
+    }
+</script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawMultSeries);
+    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawPieSecond);
+    function drawMultSeries() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Наименование');
+        data.addColumn('number', 'Сборы {{$label_first}}');
+        data.addColumn('number', 'Выплаты {{$label_first}}');
+        data.addColumn('number', 'Сборы {{$label_second}}');
+        data.addColumn('number', 'Выплаты {{$label_second}}');
+        <?php $i = 0;?>
+        @foreach($premium_first as $id=>$val)
+        @if($i<10)
+            data.addRow(['{{$companyList[$id]}}', parseInt('{{$val}}'), parseInt('{{$payout_first[$id]}}'), parseInt('{{$premium_second[$id]}}'), parseInt('{{$payout_second[$id]}}')]);
+        @endif
+        <?php $i++;?>
+        @endforeach
+            data.addRow(['Другие СК', parseInt('{{$other['premium_first']}}'), parseInt('{{$other['payout_first']}}'),
+            parseInt('{{$other['premium_second']}}'), parseInt('{{$other['payout_second']}}')]);
+        var options = {
+            title : "Динамика рынка",
+            colors: [
+                '#4889f9',
+                '#ff2323',
+                '#2e9cea',
+                '#ff4c4c'
+            ],
+        };
+
+        var chart = new google.visualization.ColumnChart(
+            document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Рынок');
+        data.addColumn('number', 'Доля');
+        <?php $i = 0;?>
+        @foreach($premium_first as $id=>$val)
+        @if($i<10)
+        data.addRow(['{{$companyList[$id]}}', parseInt('{{$val}}')]);
+        @endif
+        <?php $i++;?>
+        @endforeach
+        data.addRow(['Другие СК', parseInt('{{$other['premium_first']}}')]);
+        var options = {
+            title: 'Доля рынка за {{$label_first}}',
+            pieHole: 0.5,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('pieFirst'));
+        chart.draw(data, options);
+    }
+    function drawPieSecond() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Рынок');
+        data.addColumn('number', 'Доля');
+        <?php $i = 0;?>
+        @foreach($premium_second as $id=>$val)
+        @if($i<10)
+        data.addRow(['{{$companyList[$id]}}', parseInt('{{$val}}')]);
+        @endif
+        <?php $i++;?>
+        @endforeach
+        data.addRow(['Другие СК', parseInt('{{$other['premium_second']}}')]);
+        var options = {
+            title: 'Доля рынка за {{$label_second}}',
+            pieHole: 0.5,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('pieSecond'));
+        chart.draw(data, options);
     }
 </script>
 <style>
@@ -400,11 +444,11 @@ use App\Http\Controllers\ParseController;
         background: #eaeff3;
         width: 1px !important;
     }
-    .parse-table thead tr:nth-of-type(2) td:nth-of-type(8){
+    .parse-table thead tr:nth-of-type(2) td:nth-of-type(10){
         background: #eaeff3;
         width: 1px !important;
     }
-    .parse-table tbody tr td:nth-of-type(8){
+    .parse-table tbody tr td:nth-of-type(10){
         background: #eaeff3;
         width: 1px;
     }
