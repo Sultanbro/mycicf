@@ -145,7 +145,7 @@ class NewsController extends Controller
 
     public function deletePost(Request $request) {
         Post::where('id', $request->postId)->delete();
-        $success = 'true';
+
 
         broadcast(new NewPost([
             'post' => [
@@ -153,7 +153,9 @@ class NewsController extends Controller
             ],
             'type' => Post::DELETED_POST
         ]));
-        return $success;
+        return [
+            'success' => true,
+        ];
     }
 
     public function setPinned(Request $request){

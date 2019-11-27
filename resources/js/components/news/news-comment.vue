@@ -108,8 +108,7 @@
             return {
                 editMode: false,
                 oldText: this.comment.commentText,
-                EDIT_COMMENT_TEXTAREA: 'EDIT_COMMENT'
-            }
+                EDIT_COMMENT_TEXTAREA: 'EDIT_COMMENT',
                 imageUrl : null,
                 fakeImage : false
             }

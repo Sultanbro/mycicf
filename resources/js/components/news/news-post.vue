@@ -33,13 +33,13 @@
                         class="custom-button mr-1"
                         :disabled="editMode"
                         :class="{editButton: editMode}"
-                        v-if="isn === post.userISN">
+                        v-if="isn === parseInt(post.userISN)">
                     <i class="fas fa-pen"></i>
                 </button>
                 <button type="button"
                         class="custom-button"
                         @click="deletePost"
-                        v-if="isn === post.userISN">
+                        v-if="isn === parseInt(post.userISN)">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -134,12 +134,8 @@
                                           :isn="isn"></news-comment>
                         </div>
 
+
                         <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
-                            <news-comment :comment="comment"
-                                          :index="index"
-                                          :isn="isn"></news-comment>
-                        <div v-if="allCommentsShown"
-                             v-for="(comment, index) in post.comments">
                             <news-comment :comment="comment"
                                           :index="index"
                                           :isn="isn"></news-comment>
@@ -193,7 +189,7 @@
 
             </div>
         </div>
-    </div>
+        </div>
 </template>
 
 <script>
@@ -241,7 +237,7 @@
         methods: {
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
-                    this.fetch(response.data)
+                    return;
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
                 });
