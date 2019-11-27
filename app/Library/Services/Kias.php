@@ -258,4 +258,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getEmplRating($isn, $begin) {
+        return $this->request('User_CicGetEmplRating', [
+           'EmplISN' => $isn,
+           'Month' => date('m', strtotime($begin)),
+           'Year' =>  date('Y', strtotime($begin))
+        ]);
+    }
+
 }

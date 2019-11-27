@@ -60,7 +60,7 @@ Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.v
 
 Vue.component('report', require('./components/employee/report.vue').default);
 
-Vue.component('dealer-raiting', require('./components/employee/dealer-raiting.vue').default);
+Vue.component('rating', require('./components/employee/rating.vue').default);
 
 window.onload = function(){
     var app = new Vue({

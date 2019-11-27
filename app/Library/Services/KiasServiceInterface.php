@@ -103,4 +103,11 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function GetInfoUser($dateBeg, $dateEnd, $emplIsn);
+
+    /**
+     * Получить рейтинг продавца
+     * @param $isn
+     * @param $begin
+     */
+    public function getEmplRating($isn, $begin);
 }

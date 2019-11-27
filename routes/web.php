@@ -34,7 +34,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/role/getRoles', 'Admin\RoleController@getRoles');
             Route::post('/role/setNewUser', 'Admin\RoleController@newUser');
         });
-        
+
         Route::group(['middleware' => 'parseAdmin'], function () {
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
@@ -135,6 +135,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
         Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
+    //CENTCOINS
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
@@ -142,6 +143,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
     Route::post('/buyItem', 'CentcoinsController@buyItem');
 
+    //NEWS
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
     Route::post('/getPosts', 'NewsController@getPosts');
@@ -152,6 +154,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/editPost', 'NewsController@editPost');
     Route::post('/addComment', 'NewsController@addComment');
     Route::post('/deleteComment', 'NewsController@deleteComment');
+
+    //RATING
+    Route::get('/rating', 'RatingController@index')->name('rating');
+    Route::post('/getRatingList', 'RatingController@getRatingList');
 
     //UNTITLED
     Route::get('/name', 'NameController@getView')->name('documentation');
