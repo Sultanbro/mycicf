@@ -57,12 +57,14 @@ use App\Http\Controllers\ParseController;
                         Сборы
                     </div>
                 </div>
-                <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
-                    <i class="fa fa-sliders-h settings-icon-transform270"></i>
-                    <div class="mt-1 fs-0_8">
-                        Показатели
+                <a href="/parse/finance">
+                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-sliders-h settings-icon-transform270"></i>
+                        <div class="mt-1 fs-0_8">
+                            Показатели
+                        </div>
                     </div>
-                </div>
+                </a>
                 {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
                 {{--<i class="fa fa-user-friends"></i>--}}
                 {{--<div class="mt-1 fs-0_8">--}}
@@ -196,7 +198,7 @@ use App\Http\Controllers\ParseController;
                     <thead>
                     <tr class="border-table-0">
                         <td class="text-left fs-1_3 pl-0">{{$label}}</td>
-                        <td class="pt-3"><span class="pointer">Топ по компаниям</span></td>
+                        <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
                         <td class="pt-3"><span class="pointer">Топ по классам</span></td>
                         <td colspan="6" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
