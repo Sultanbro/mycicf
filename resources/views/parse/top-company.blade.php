@@ -235,12 +235,12 @@ use App\Http\Controllers\ParseController;
                             <td><span>{{$i+1}}</span></td>
                             <td>{{$ranking[$id]}}</td>
                             <td><span class="bold"><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
-                            <td>{{number_format($val, 0, '.', ' ')}}</td>
+                            <td>{{number_format($key, 0, '.', ' ')}}</td>
                             <td>{{number_format($premium_second[$id],0,  '.', ' ')}}</td>
-                            <td>{{$controller->getPercentOfMarker($val, array_sum($premium_first))}}</td>
+                            <td>{{$controller->getPercentOfMarker($key, array_sum($premium_first))}}</td>
                             <td>{{$controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))}}</td>
-                            <td>{{$controller->getChangedVal($val, $premium_second[$id])}}</td>
-                            <td>{{number_format($val - $premium_second[$id], 0, '.', ' ') }}</td>
+                            <td>{{$controller->getChangedVal($key, $premium_second[$id])}}</td>
+                            <td>{{number_format($key - $premium_second[$id], 0, '.', ' ') }}</td>
                             <td></td>
                             <td>{{number_format($payout_first[$id], 0, '.', ' ')}}</td>
                             <td>{{number_format($payout_second[$id], 0, '.', ' ')}}</td>
