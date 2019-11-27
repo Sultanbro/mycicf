@@ -202,7 +202,7 @@ use App\Http\Controllers\ParseController;
                     <thead>
                     <tr class="border-table-0">
                         <td class="text-left fs-1_3 pl-0">{{$label}}</td>
-                        <td class="pt-3"><span class="pointer">Топ по компаниям</span></td>
+                        <td class="pt-3"><span href="/parse/company" class="pointer">Топ по компаниям</span></td>
                         <td class="pt-3"><span class="pointer parse-active">Топ по классам</span></td>
                         <td colspan="4" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
