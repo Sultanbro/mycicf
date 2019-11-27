@@ -36,6 +36,12 @@
                                     <small class="color-blue" @click="deleteComment(index)">Удалить</small>
                                 </span>
                             </div>
+                            <div class="ml-2" v-if="isn !== comment.userISN">
+                                <span>
+                                    <small class="color-blue" @click="replyComment">Ответить</small>
+                                </span>
+                            </div>
+
                             <div class="ml-auto pr-2">
                                 <span><small>{{comment.date}}</small></span>
                             </div>
@@ -54,6 +60,7 @@
             return {
                 fakeImage : false,
                 imageUrl : null,
+                replyFullName: '',
             }
         },
 
@@ -82,6 +89,20 @@
                     }
                 });
             },
+            replyComment: function () {
+                if(this.replyFullName !== '') {
+                    this.replyFullName = '';
+                    this.replyFullName = this.comment.fullname;
+                    this.$parent.commentText = this.replyFullName + ', ';
+                    document.getElementById("comment-mobile-textarea").focus();
+                }
+                else {
+                    this.replyFullName = this.comment.fullname;
+                    this.$parent.commentText = this.replyFullName + ', ';
+                    document.getElementById("comment-mobile-textarea").focus();
+                }
+            }
+
         },
     }
 </script>

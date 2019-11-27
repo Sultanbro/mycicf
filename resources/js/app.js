@@ -14,6 +14,12 @@ Vue.use(FlashMessage);
 
 import VueGoogleCharts from 'vue-google-charts'
 
+import {EmojiPickerPlugin} from 'vue-emoji-picker'
+
+Vue.use(EmojiPickerPlugin);
+
+Vue.use(FlashMessage);
+
 Vue.use(VueGoogleCharts);
 
 Vue.use(VueAxios, axios);
@@ -58,7 +64,11 @@ Vue.component('main-data-charts', require('./components/parse/main-data-charts.v
 
 Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
 
+Vue.component('emoji-component', require('./components/news/emoji-component.vue').default);
+
 Vue.component('report', require('./components/employee/report.vue').default);
+
+//Vue.component('parse-selector', require('./components/parse/parse-selector.vue').default);
 
 window.onload = function(){
     var app = new Vue({
