@@ -78,6 +78,16 @@ use App\Http\Controllers\ParseController;
             </div>
             <div>
                 <div class="flex-row">
+                    <div class="mr-10">
+                        <div>
+                            <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
+                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
+                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
+                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
+                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="flex-row jc-sb" id="monthBlock" @if(($_GET['dateType'] ?? 'rise') == 'month' || ($_GET['dateType'] ?? 'rise') == 'rise') style="display: flex;" @else  style="display: none;"  @endif>
                         <div class="mr-4 ml-4">
                             <select id="fYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
@@ -144,19 +154,6 @@ use App\Http\Controllers\ParseController;
                             </select>
                         </div>
                     </div>
-                    <div class="mr-4 ml-4">
-                        <div class="flex-row date-color">
-                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
-                                <div>
-                                    <i class="fa fa-filter"></i>
-                                </div>
-                                <div class="ml-2">
-                                    Показать
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <div>
@@ -182,13 +179,15 @@ use App\Http\Controllers\ParseController;
                         </div>
                     </div>
                     <div class="mr-4 ml-4">
-                        <div>
-                            <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
-                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
-                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
-                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
-                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
-                            </select>
+                        <div class="flex-row date-color">
+                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
+                                <div>
+                                    <i class="fa fa-filter"></i>
+                                </div>
+                                <div class="ml-2">
+                                    Показать
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,14 +201,14 @@ use App\Http\Controllers\ParseController;
                     <thead>
                     <tr class="border-table-0">
                         <td class="text-left fs-1_3 pl-0">{{$label}}</td>
-                        <td class="pt-3"><span href="/parse/company" class="pointer">Топ по компаниям</span></td>
+                        <td class="pt-3"><a  href="/parse/company"><span class="pointer">Топ по компаниям</span></a></td>
                         <td class="pt-3"><span class="pointer parse-active">Топ по классам</span></td>
                         <td colspan="4" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                     </tr>
                     <tr>
-                        <td>Класс страхования</td>
+                        <td class="text-left">Класс страхования</td>
                         <td>{{$label_first}}</td>
                         <td>{{$label_second}}</td>
                         <td>Доля {{$label_first}}</td>
@@ -227,7 +226,7 @@ use App\Http\Controllers\ParseController;
                     <tbody>
                     @foreach($insuranceClassList as $id => $key)
                         <tr>
-                            <td><strong><a onclick="getCompaniesByClass({{$id}})">{{$controller->getNameByClassId($id)}}</a></strong></td>
+                            <td class="text-left"><strong><a onclick="getCompaniesByClass({{$id}})">{{$controller->getNameByClassId($id)}}</a></strong></td>
                             <td>{{number_format($class_sum[$id]['premium_first'], 0, '.', ' ')}}</td>
                             <td>{{number_format($class_sum[$id]['premium_second'], 0, '.', ' ')}}</td>
                             <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_first'], array_sum($premium_first))}}</td>
@@ -244,7 +243,7 @@ use App\Http\Controllers\ParseController;
                         @foreach($premium_first as $product_id => $value)
                             @if(in_array($product_id, $insuranceClassList[$id]))
                                 <tr>
-                                    <td><a  onclick="getCompaniesByProduct({{$product_id}})">{{$productList[$product_id]}}</a></td>
+                                    <td class="text-left"><a  onclick="getCompaniesByProduct({{$product_id}})">{{$productList[$product_id]}}</a></td>
                                     <td>{{number_format($premium_first[$product_id], 0, '.', ' ')}}</td>
                                     <td>{{number_format($premium_second[$product_id], 0, '.', ' ')}}</td>
                                     <td>{{$controller->getPercentOfMarker($premium_first[$product_id], array_sum($premium_first))}}</td>
@@ -262,7 +261,7 @@ use App\Http\Controllers\ParseController;
                         @endforeach
                     @endforeach
                     <tr>
-                        <td class="bold fs-0_9">Итого</td>
+                        <td class="bold text-left fs-0_9">Итого</td>
                         <td>{{number_format(array_sum($premium_first), 0, '.', ' ')}}</td>
                         <td>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</td>
                         <td></td>

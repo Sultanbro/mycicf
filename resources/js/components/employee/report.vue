@@ -10,14 +10,9 @@
                         <div class="ml-3">
                             <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
                         </div>
-                        <!--<div>
-                            <div class="bg-darkgray flex-row date-color pr-1 pt-1 pb-1 date-width">
-                                <treeselect v-model="isn" :multiple="false" :options="options" />
-                            </div>
-                        </div>-->
                     </div>
                     <div class="ml-3">
-                        <treeselect class="w-50" v-model="ISN" :multiple="false" :options="options"></treeselect>
+                        <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
                     </div>
                     <div class="ml-auto">
                         <div class="date-color border-gray show-btn" @click="getReport">
@@ -224,7 +219,7 @@
             getReport() {
                 this.preloader(true);
                 this.axios.post('/getReport', {
-                    isn: this.vIsn,
+                    isn: this.ISN,
                     dateBeg : this.dateBeg,
                     dateEnd : this.dateEnd
                 })

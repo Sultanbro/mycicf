@@ -65,15 +65,27 @@ use App\Http\Controllers\ParseController;
                         </div>
                     </div>
                 </a>
-                {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
-                {{--<i class="fa fa-user-friends"></i>--}}
-                {{--<div class="mt-1 fs-0_8">--}}
-                {{--Конкуренты--}}
-                {{--</div>--}}
-                {{--</div>--}}
+                {{--<a href="/KONKURETI">--}}
+                    {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
+                        {{--<i class="fa fa-user-friends"></i>--}}
+                        {{--<div class="mt-1 fs-0_8">--}}
+                            {{--Конкуренты--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--</a>--}}
             </div>
             <div>
                 <div class="flex-row">
+                    <div class="mr-10 ">
+                        <div>
+                            <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
+                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
+                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
+                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
+                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="flex-row jc-sb" id="monthBlock" @if(($_GET['dateType'] ?? 'rise') == 'month' || ($_GET['dateType'] ?? 'rise') == 'rise') style="display: flex;" @else  style="display: none;"  @endif>
                         <div class="mr-4 ml-4">
                             <select id="fYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
@@ -140,19 +152,6 @@ use App\Http\Controllers\ParseController;
                             </select>
                         </div>
                     </div>
-                    <div class="mr-4 ml-4">
-                        <div class="flex-row date-color">
-                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
-                                <div>
-                                    <i class="fa fa-filter"></i>
-                                </div>
-                                <div class="ml-2">
-                                    Показать
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <div>
@@ -178,13 +177,15 @@ use App\Http\Controllers\ParseController;
                         </div>
                     </div>
                     <div class="mr-4 ml-4">
-                        <div>
-                            <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
-                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
-                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
-                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
-                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
-                            </select>
+                        <div class="flex-row date-color">
+                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
+                                <div>
+                                    <i class="fa fa-filter"></i>
+                                </div>
+                                <div class="ml-2">
+                                    Показать
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -197,17 +198,17 @@ use App\Http\Controllers\ParseController;
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
-                        <td class="text-left fs-1_3 pl-0">{{$label}}</td>
+                        <td colspan="2" class="text-left fs-1_3 pl-0">{{$label}}</td>
                         <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
-                        <td class="pt-3"><span href="/parse/product" class="pointer">Топ по классам</span></td>
-                        <td colspan="6" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                        <td class="pt-3"><a href="/parse/product"><span class="pointer">Топ по классам</span></a></td>
+                        <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                     </tr>
                     <tr>
                         <td></td>
                         <td></td>
-                        <td>Компания</td>
+                        <td class="text-left">Компания</td>
                         <td>{{$label_first}}</td>
                         <td>{{$label_second}}</td>
                         <td>Доля {{$label_first}}</td>
@@ -234,7 +235,7 @@ use App\Http\Controllers\ParseController;
                         <tr>
                             <td><span>{{$i+1}}</span></td>
                             <td>{{$ranking[$id]}}</td>
-                            <td><span class="bold"><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
+                            <td class="text-left"><span class="bold"><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
                             <td>{{number_format($key, 0, '.', ' ')}}</td>
                             <td>{{number_format($premium_second[$id],0,  '.', ' ')}}</td>
                             <td>{{$controller->getPercentOfMarker($key, array_sum($premium_first))}}</td>
@@ -452,5 +453,19 @@ use App\Http\Controllers\ParseController;
         background: #eaeff3;
         width: 1px;
     }
+    .parse-table tbody tr td:nth-of-type(1){
+        width: 1px;
+        padding: 3px !important;
+    }
+    .parse-table tbody tr td:nth-of-type(2){
+        width: 1px;
+        padding: 3px !important;
+    }
+    .parse-table tbody tr td:nth-of-type(3){
+        width: 1px;
+        padding: 5px !important;
+    }
+
+
 </style>
 </html>

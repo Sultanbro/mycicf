@@ -1591,3 +1591,6 @@ textarea::-webkit-scrollbar-thumb {
     width: 0;
     transition: all 0.8s ease;
 }
+.w-95 {
+	width: 95%;
+}
