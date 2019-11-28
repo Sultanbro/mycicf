@@ -8,12 +8,9 @@ use Illuminate\Http\Request;
 class RatingController extends Controller
 {
     public $keys = [
-        'MeanShare' => 'среднее значение по показателям',
-        'Category' => 'категория',
-        'DeptName' => 'подразделение',
-        'DutyName' => 'должность',
-        'JurShare' => 'доля юр. лица %',
-        'LearningGrade' => 'оценка по обучению',
+//        'Category' => 'категория',
+//        'DeptName' => 'подразделение',
+//        'DutyName' => 'должность',
         'Rentability' => 'рентабельность',
         'ExecutionPlan' => 'исполнение плана',
         'CostPrice' => 'себестоимсоть',
@@ -26,14 +23,17 @@ class RatingController extends Controller
         'DirectSales' => 'доля прямых продаж',
         'VtsShare' => 'доля ОГПО физлиц',
         'CalcShare' => '% перехода сделки в договор',
+        'JurShare' => 'доля юр. лица %',
+        'LearningGrade' => 'оценка по обучению',
         'AppraisalStaff' => 'оценка персонала',
         'AverageDaily' => 'среднедневное кол-во договоров',
         'CrossShare' => 'кросс-продажи, %',
         'Loyality' => 'лоялность',
+        'MeanShare' => 'среднее значение по показателям'
     ];
 
     public function getRatingList(Request $request, KiasServiceInterface $kias) {
-        $success = true;
+        $success = false;
         $error = '';
         $isn = $request->isn;
         $begin = $request->begin;
@@ -54,9 +54,22 @@ class RatingController extends Controller
         }
 
         $emplRate = null;
+        $category = null;
+        $deptName = null;
+        $dutyName = null;
         foreach((array)$response->Rate->row as $key => $value) {
-            if($key == 'EmplRate')
+            if($key == 'EmplRate') {
                 $emplRate = (string)$value;
+            }
+            else if($key == 'Category') {
+                $category = (string)$value;
+            }
+            else if($key == 'DeptName') {
+                $deptName = (string)$value;
+            }
+            else if($key == 'DutyName') {
+                $dutyName = (string)$value;
+            }
             else {
                 array_push($rating, [
                     'criteria' => (string)$this->keys[$key],
@@ -72,6 +85,9 @@ class RatingController extends Controller
                 'error' => '',
                 'rating' => $rating,
                 'emplRate' => $emplRate,
+                'category' => $category,
+                'deptName' => $deptName,
+                'dutyName' => $dutyName
             ])
             ->withCallback($request->input(
                 'callback'

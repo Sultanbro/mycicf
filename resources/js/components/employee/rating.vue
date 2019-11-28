@@ -25,16 +25,15 @@
              v-if="showFullInformation">
             <div class="border-16 flex-row vertical-middle jc-sb bg-white ml-2 mr-2 pt-3 pb-3 border-4px box-shadow pl-2 pr-2 show-btn-contain">
                 <div>
-                    <span class="fs-1 CAPS">{{category_end_first}}</span>
+                    <span class="fs-1 CAPS">{{dutyName}}</span>
                 </div>
                 <div>
                     <strong class="vertical-middle ad-flex-column-440 ad-alignitems-end-440">
                         <span class="fs-1_5">рейтинг</span>
-                        <span class="fs-2 ml-3 class-a pl-4 pr-4 blocks-small-borderRad">{{this.emplRate}}</span>
-<!--                        <span class="fs-2 ml-3 class-b pl-4 pr-4 blocks-small-borderRad">B+</span>-->
-<!--                        <span class="fs-2 ml-3 class-c pl-4 pr-4 blocks-small-borderRad">C+</span>-->
-<!--                        <span class="fs-2 ml-3 class-d pl-4 pr-4 blocks-small-borderRad">D+</span>-->
-<!--                        <span class="fs-2 ml-3 class-e pl-4 pr-4 blocks-small-borderRad">E+</span>-->
+                        <span class="fs-2 ml-3 class-a pl-4 pr-4 blocks-small-borderRad" v-if="emplRate === 'A' || emplRate === 'A+' || emplRate === 'A-'">{{this.emplRate}}</span>
+                        <span class="fs-2 ml-3 class-b pl-4 pr-4 blocks-small-borderRad" v-else-if="emplRate === 'B' || emplRate === 'B+' || emplRate === 'B-'">{{this.emplRate}}</span>
+                        <span class="fs-2 ml-3 class-c pl-4 pr-4 blocks-small-borderRad" v-else-if="emplRate === 'C'">{{this.emplRate}}</span>
+                        <span class="fs-2 ml-3 class-d pl-4 pr-4 blocks-small-borderRad" v-else-if="emplRate === 'D'">{{this.emplRate}}</span>
                     </strong>
                 </div>
             </div>
@@ -45,16 +44,16 @@
                 <div class="table-responsive-sm">
                     <table class="table table-bordered table-striped">
                         <tbody>
-                        <tr>
-                            <th scope="col">Критерии</th>
-                            <th scope="col">Показатель</th>
-                            <th scope="col">Оценка</th>
-                        </tr>
-                        <tr v-for="rating in ratings">
-                            <td>{{rating.criteria}}</td>
-                            <td>{{rating.mark}}</td>
-                            <td>{{rating.assessment}}</td>
-                        </tr>
+                            <tr>
+                                <th scope="col">Критерии</th>
+                                <th scope="col">Показатель</th>
+                                <th scope="col">Оценка</th>
+                            </tr>
+                            <tr v-for="rating in ratings">
+                                <td>{{rating.criteria}}</td>
+                                <td>{{rating.mark}}</td>
+                                <td>{{rating.assessment}}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -91,8 +90,11 @@
                 showFullInformation: false,
                 ratings: [],
                 emplRate: null,
-                category_end_first: 'Менеджер по корпоративному страхованию',
-                dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 7),
+                category: null,
+                deptName: null,
+                dutyName: null,
+                // category_end_first: 'Менеджер по корпоративному страхованию',
+                dateBeg: new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 6).toJSON().slice(0, 7),
 
                 fourthChartData: [
                     ['Year', 'План', 'Мотивация'],
@@ -134,6 +136,9 @@
                     if(response.data.success) {
                         this.ratings = response.data.rating;
                         this.emplRate = response.data.emplRate;
+                        this.category = response.data.category;
+                        this.deptName = response.data.deptName;
+                        this.dutyName = response.data.dutyName
                     }
                 }).catch(error => {
                     alert(error);

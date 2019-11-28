@@ -171,7 +171,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
 
 
-//MOTIVATION
+    //MOTIVATION
     Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
 
         // MOBILE
