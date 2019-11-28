@@ -40,6 +40,10 @@ class ParseController extends Controller
     {
         return view('parse/company');
     }
+    public function dealerRaiting()
+    {
+        return view('dealerRaiting');
+    }
     public function addname()
     {
         $full_name = Request::input('full_name');

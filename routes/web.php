@@ -135,6 +135,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
         Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
+    //CENTCOINS
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
@@ -142,6 +143,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
     Route::post('/buyItem', 'CentcoinsController@buyItem');
 
+    //NEWS
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
     Route::post('/getPosts', 'NewsController@getPosts');
@@ -153,6 +155,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/addComment', 'NewsController@addComment');
     Route::post('/deleteComment', 'NewsController@deleteComment');
     Route::post('/editComment', 'NewsController@editComment');
+
+    //RATING
+    Route::get('/rating', 'RatingController@index')->name('rating');
+    Route::post('/getRatingList', 'RatingController@getRatingList');
 
     //UNTITLED
     Route::get('/name', 'NameController@getView')->name('documentation');
@@ -166,7 +172,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
 
 
-//MOTIVATION
+    //MOTIVATION
     Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
 
         // MOBILE
@@ -178,6 +184,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
+
+        Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
 
         Route::post('/getUsersData', 'SiteController@getUserData');
 

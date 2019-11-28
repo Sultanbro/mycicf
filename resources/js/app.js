@@ -68,6 +68,8 @@ Vue.component('emoji-component', require('./components/news/emoji-component.vue'
 
 Vue.component('report', require('./components/employee/report.vue').default);
 
+Vue.component('rating', require('./components/employee/rating.vue').default);
+
 //Vue.component('parse-selector', require('./components/parse/parse-selector.vue').default);
 
 window.onload = function(){
