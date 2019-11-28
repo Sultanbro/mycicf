@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 class RatingController extends Controller
 {
     public $keys = [
+        'MeanShare' => 'среднее значение по показателям',
+        'Category' => 'категория',
+        'DeptName' => 'подразделение',
+        'DutyName' => 'должность',
+        'JurShare' => 'доля юр. лица %',
+        'LearningGrade' => 'оценка по обучению',
         'Rentability' => 'рентабельность',
         'ExecutionPlan' => 'исполнение плана',
         'CostPrice' => 'себестоимсоть',
@@ -20,12 +26,10 @@ class RatingController extends Controller
         'DirectSales' => 'доля прямых продаж',
         'VtsShare' => 'доля ОГПО физлиц',
         'CalcShare' => '% перехода сделки в договор',
-//        '' => 'рейтинг исп.срока и обучения',
         'AppraisalStaff' => 'оценка персонала',
         'AverageDaily' => 'среднедневное кол-во договоров',
         'CrossShare' => 'кросс-продажи, %',
         'Loyality' => 'лоялность',
-//        '' => 'итоговая оценка'
     ];
 
     public function getRatingList(Request $request, KiasServiceInterface $kias) {
@@ -49,15 +53,17 @@ class RatingController extends Controller
                 );
         }
 
-//        dd($response);
-//        dd($response->Rate);
-
-        foreach($response->Rate as $key => $value) {
-            array_push($rating, [
-                'criteria' => $this->keys[$key],
-                'mark' => $response->Rate->row->$key,
-                'assessment' => $response->RateMean->row->$key
-            ]);
+        $emplRate = null;
+        foreach((array)$response->Rate->row as $key => $value) {
+            if($key == 'EmplRate')
+                $emplRate = (string)$value;
+            else {
+                array_push($rating, [
+                    'criteria' => (string)$this->keys[$key],
+                    'mark' => (string)$response->Rate->row->$key,
+                    'assessment' => (string)$response->RateMean->row->$key
+                ]);
+            }
         }
 
         return response()
@@ -65,6 +71,7 @@ class RatingController extends Controller
                 'success' => true,
                 'error' => '',
                 'rating' => $rating,
+                'emplRate' => $emplRate,
             ])
             ->withCallback($request->input(
                 'callback'

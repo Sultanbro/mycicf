@@ -30,7 +30,7 @@
                 <div>
                     <strong class="vertical-middle ad-flex-column-440 ad-alignitems-end-440">
                         <span class="fs-1_5">рейтинг</span>
-                        <span class="fs-2 ml-3 class-a pl-4 pr-4 blocks-small-borderRad">A+</span>
+                        <span class="fs-2 ml-3 class-a pl-4 pr-4 blocks-small-borderRad">{{this.emplRate}}</span>
 <!--                        <span class="fs-2 ml-3 class-b pl-4 pr-4 blocks-small-borderRad">B+</span>-->
 <!--                        <span class="fs-2 ml-3 class-c pl-4 pr-4 blocks-small-borderRad">C+</span>-->
 <!--                        <span class="fs-2 ml-3 class-d pl-4 pr-4 blocks-small-borderRad">D+</span>-->
@@ -51,9 +51,9 @@
                             <th scope="col">Оценка</th>
                         </tr>
                         <tr v-for="rating in ratings">
-                            <td>rating.criteria</td>
-                            <td>rating.mark</td>
-                            <td>rating.assessment</td>
+                            <td>{{rating.criteria}}</td>
+                            <td>{{rating.mark}}</td>
+                            <td>{{rating.assessment}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -90,6 +90,7 @@
                 options: null,
                 showFullInformation: false,
                 ratings: [],
+                emplRate: null,
                 category_end_first: 'Менеджер по корпоративному страхованию',
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 7),
 
@@ -132,6 +133,7 @@
                 this.axios.post('/getRatingList', {isn: this.ISN, begin: this.dateBeg,}).then(response => {
                     if(response.data.success) {
                         this.ratings = response.data.rating;
+                        this.emplRate = response.data.emplRate;
                     }
                 }).catch(error => {
                     alert(error);
