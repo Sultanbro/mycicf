@@ -465,7 +465,5 @@ use App\Http\Controllers\ParseController;
         width: 1px;
         padding: 5px !important;
     }
-
-
 </style>
 </html>
