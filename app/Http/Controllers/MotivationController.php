@@ -42,8 +42,8 @@ class MotivationController extends Controller
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
-                        'sum' => ((double)$response->Mot->row->SumP ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->SumP ?? 0) > 50 ? 'green' : 'red',
+                        'sum' => ((double)$response->Mot->row->PlanFM ?? 0).'%',
+                        'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Себестоимость',
@@ -104,15 +104,17 @@ class MotivationController extends Controller
             default :
                 $list = [];
         }
-        array_push($motivations, [
-            'Date' => date('m.Y', strtotime($begin)),
-            'Sum' => $mot_sum,
-        ]);
-        foreach ($response->MOTLIST->row as $value){
+        if(isset($mot_sum)) {
             array_push($motivations, [
-                'Date' => date('m.Y', strtotime($value->Date)),
-                'Sum' => (int)$value->Motivation
+                'Date' => date('m.Y', strtotime($begin)),
+                'Sum' => $mot_sum,
             ]);
+            foreach ($response->MOTLIST->row as $value) {
+                array_push($motivations, [
+                    'Date' => date('m.Y', strtotime($value->Date)),
+                    'Sum' => (int)$value->Motivation
+                ]);
+            }
         }
         return response()
             ->json([
