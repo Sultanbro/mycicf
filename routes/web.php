@@ -199,16 +199,4 @@ Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
 
-Route::get('test', function (){
-    $url = 'http://api.kupipolis.kz/integration';
-    $client = new SoapClient($url, [
-        'cache_wsdl' => WSDL_CACHE_NONE
-    ]);
-    $result = null;
-    $result = $client->__call('getKiasClientByIin', [
-        'iin' => 631105400308
-    ]);
-    $a = [
-        'passport_date'    => count((array)$result->DOCCLASSISN)>0 ? ((string)$result->DOCCLASSISN == '1159' ? (is_array(json_decode(json_encode($result->DOCDATE), true)) ? null : (string)$result->DOCDATE) : null) : null
-    ];
-});
+Route::get('test', 'Admin\SiteController@getModelss');

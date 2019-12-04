@@ -332,8 +332,11 @@ class SiteController extends Controller
 
     public function addPrice(Request $request){
         $model = new KolesaPrices();
-        $model->label = $request->label;
+        $model->title = $request->label;
         $model->price = $request->price;
+        $model->mark_id = $request->mark_id;
+        $model->model_id = $request->model_id;
+        $model->year = $request->year;
         try{
             $model->save();
             return response()
