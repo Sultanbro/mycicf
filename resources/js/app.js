@@ -62,6 +62,10 @@ Vue.component('report', require('./components/employee/report.vue').default);
 
 Vue.component('rating', require('./components/employee/rating.vue').default);
 
+Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
+
+Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
