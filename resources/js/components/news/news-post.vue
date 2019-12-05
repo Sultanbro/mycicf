@@ -1,125 +1,139 @@
 <template>
-    <div class="mb-2">
-        <div class="bg-white news-contains-top">
-            <div class="flex-row pl-4 pr-4 pt-3 pb-3">
-                <div>
-                    <div class="small-avatar-circle-width">
-                        <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
-                        <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
-                    </div>
-                </div>
-                <div class="flex-column ml-2">
-                    <span class="color-blue">
-                        <strong>{{post.fullname}}</strong>
-                    </span>
-                    <span class="color-darkgray mt-minus-8px">
-                        <small>{{post.date}}</small>
-                        <transition name="edited">
-                            <small v-if="post.edited">отредактировано</small>
-                        </transition>
-                    </span>
-                </div>
-                <div class="ml-auto">
-                    <button type="button"
-                            @click="setPinned"
-                            class="custom-button mr-1"
-                            :disabled="editMode"
-                            v-bind:class="{pinned: post.pinned === 1}">
-                        <i class="fas fa-thumbtack"></i>
-                    </button>
-                    <button type="button"
-                            @click="editPost"
-                            class="custom-button mr-1"
-                            :disabled="editMode"
-                            v-bind:class="{editButton: editMode}"
-                            v-if="this.isn === this.post.userISN">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                    <button type="button"
-                            class="custom-button"
-                            @click="deletePost"
-                            v-if="this.isn === this.post.userISN">
-                        <i class="fas fa-times"></i>
-                    </button>
+    <div class="mb-2 bg-white rounded">
+        <!-- Header of the news post section -->
+        <div class="d-flex pl-4 pr-4 pt-3 pb-3">
+            <div>
+                <div class="small-avatar-circle-width">
+                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                    <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                 </div>
             </div>
+            <div class="flex-column ml-2">
+                <span class="color-blue bold">
+                    {{post.fullname}}
+                </span>
+                <span class="color-darkgray mt-minus-8px">
+                    <small>{{post.date}}</small>
+                    <transition name="transition-opacity">
+                        <small v-if="post.edited">отредактировано</small>
+                    </transition>
+                </span>
+            </div>
+
+            <div class="ml-auto">
+                <button type="button"
+                        @click="setPinned"
+                        class="custom-button mr-1"
+                        :disabled="editMode"
+                        :class="{pinned: post.pinned === 1}">
+                    <i class="fas fa-thumbtack"></i>
+                </button>
+                <button type="button"
+                        @click="editPost"
+                        class="custom-button mr-1"
+                        :disabled="editMode"
+                        :class="{editButton: editMode}"
+                        v-if="isn === parseInt(post.userISN)">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button type="button"
+                        class="custom-button"
+                        @click="deletePost"
+                        v-if="isn === parseInt(post.userISN)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
-        <div class="pl-2 pr-2 bg-white">
+       <!-- Header of the news post section -->
+
+        <div class="pl-2 pr-2">
             <div class="news-block-image-contain">
                 <img :src="image" class="post-image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)">
-                <div class="jc-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
+                <div class="d-flex justify-content-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
             </div>
         </div>
-        <div class="pl-4 pr-4 flex-column bg-white">
-            <transition name="text">
+
+        <div class="pl-4 pr-4 pb-2">
+            <transition name="transition-opacity">
                 <div class="post-text"
-                     :class="isAllTextOpened ? 'show-full-text' : ''"
                      v-if="!editMode">
-                    <pre>{{post.postText}}</pre>
+                    <pre v-if="!isAllTextOpened">{{post.postText.substr(0, 300)}}</pre>
+                    <pre v-if="isAllTextOpened">{{post.postText}}</pre>
+                    <div v-if="post.postText !== null && post.postText.length > 350 && !isAllTextOpened && !editMode">
+                        <small class="color-blue show-all-btn"
+                               @click="showAllText">Показать больше...</small>
+                    </div>
                 </div>
             </transition>
-            <div v-if="post.postText !== null && post.postText.length > 350 && !isAllTextOpened && !editMode"
-                 class="pb-2"
-            >
-                <small class="color-blue show-all-btn"
-                       @click="showAllText">Показать больше...</small>
+            <div class="wrapper w-100" v-if="editMode">
+                <transition name="transition-textarea-height">
+                    <textarea v-model="post.postText"
+                              v-if="editMode"
+                              maxlength="2000"
+                              :class="{'textarea-height': editMode}"
+                              class="custom-input w-100 pr-5"></textarea>
+                </transition>
+                <div v-if="post.postText.length > 1950">
+                    <span>
+                        <small>Отслаось символов: {{2000 - post.postText.length > 0 ? 2000 - post.postText.length : 0}}</small>
+                    </span>
+                </div>
+                <emoji-component v-if="editMode" :type="EDIT_POST_TEXTAREA"></emoji-component>
             </div>
-            <transition name="edit">
-                <textarea type="text"
-                          v-if="editMode"
-                          v-model="post.postText"
-                          v-bind:class="{editText: editMode}"
-                          :disabled="!editMode"
-                          class="custom-input mb-2 bg-white w-100"></textarea>
-            </transition>
         </div>
+
         <hr class="mb-0 mt-0">
-        <div class=" bg-white news-contains-bottom">
+
+        <div class="news-contains-bottom">
             <div>
-                <div class="flex-row pl-4 pr-4">
-                        <button
-                            type="button"
-                            class="buttons pt-2 pl-3 pr-3 pb-2 block"
-                            @click="likePost">
+                <div class="flex-row pl-4 pr-4 align-items-center justify-content-between">
+                    <div class="flex-row">
+                        <div class="buttons pt-2 pl-3 pr-3 pb-2"
+                             @click="likePost">
+                        <span>
                             <i class="fa-thumbs-up color-red"
                                :class="post.isLiked === 0 ? 'far' : 'fas'"></i>
-                            {{post.likes}}
-                            <span :class="post.isLiked === 1 ? 'color-black' : ''">Нравится</span>
-                        </button>
-                    <button type='button'
-                            class="buttons pt-2 pl-3 pr-3 pb-2 block">
-                        <i class="far fa-comment color-red"></i>
-                        {{post.comments.length}}
-                        <span class="color-black">Комментарий</span>
-                    </button>
-                    <div class="ml-auto">
-                        <transition name="fade">
+                        </span>
+                            <span>{{post.likes}}</span>
+                            <span>Нравится</span>
+                        </div>
+                        <div class="pt-2 pl-3 pr-3 pb-2">
+                            <i class="far fa-comment color-red"></i>
+                            <span>{{post.comments.length}}</span>
+                            <span>Комментарий</span>
+                        </div>
+                    </div>
+
+                    <div class="flex-row">
+                        <transition name="transition-opacity">
                             <div class="ml-auto" v-if="editMode">
-                                <transition name="fade">
+                                <transition name="transition-opacity">
                                     <button @click="saveEdited"
                                             v-if="post.postText != this.oldText && post.postText.length > 0 && editMode"
                                             type='button'
-                                            class="save-button pr-2 pl-2 mt-2 mb-2 mr-1">Сохранить</button>
+                                            class="common-btn pt-1 pb-1 pr-2 pl-2 mr-1">Сохранить</button>
                                 </transition>
                                 <button @click="exitEdit"
                                         v-if="editMode"
                                         type="button"
-                                        class="save-button pr-2 pl-2 mt-2 mb-2">Отмена</button>
+                                        class="common-btn pt-1 pb-1 pl-3 pr-3">Отмена</button>
                             </div>
                         </transition>
                     </div>
                 </div>
 
                 <hr class="mb-0 mt-0">
-                <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
 
+                <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
                     <div class="comments-container w-100">
 
-                        <div v-if="!allCommentsShown" v-for="(comment, index) in post.comments.slice(0, 3)">
+                        <div v-if="!allCommentsShown"
+                             v-for="(comment, index) in post.comments.slice(0, 3)">
                             <news-comment :comment="comment"
                                           :index="index"
                                           :isn="isn"></news-comment>
                         </div>
+
 
                         <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
                             <news-comment :comment="comment"
@@ -127,29 +141,46 @@
                                           :isn="isn"></news-comment>
                         </div>
 
-                        <div v-if="!allCommentsShown && post.comments.length > 3" class="pb-2 pl-5">
+                        <div v-if="!allCommentsShown && post.comments.length > 3"
+                             class="pb-2 pl-5">
                             <span>
-                                <small @click="showMoreComments" class="color-blue show-all-btn">Показать ещё</small>
+                                <small @click="showMoreComments"
+                                       class="color-blue show-all-btn">Показать ещё</small>
                             </span>
                         </div>
 
-                        <div class="d-flex">
-                            <div class="d-flex align-items-center">
-<!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
-                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="MainFakeImage">
-                                <img :src="MainImageUrl" @error="MainFakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                        <div>
+                            <div class="d-flex">
+                                <div class="d-flex align-items-center">
+                                    <!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
+                                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                                    <img :src="MainImageUrl" @error="MainFakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                                </div>
+                                <div class="d-flex w-100 wrapper">
+                                    <textarea-autosize v-model="commentText"
+                                                       placeholder="Напишите комментарии..."
+                                                       :max-height="100"
+                                                       :maxlength="255"
+                                                       :id="post.postId"
+                                                       name="textarea-add-comment"
+                                                       class="pl-2 pt-2 pb-2 pr-5 ml-2 w-100 comment-textarea"></textarea-autosize>
+                                    <emoji-component :type="NEW_COMMENT_TEXTAREA"></emoji-component>
+                                    <div v-if="commentText.length > 205"
+                                         class="d-flex align-items-center justify-content-center textarea-text-counter">
+                                        <span>
+                                            <small class="bold"
+                                                   :class="255 - commentText.length > 0 ? 'text-success' : 'text-danger'">
+                                                {{255 - commentText.length > 0 ? 255 - commentText.length : 0}}
+                                            </small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="p-2 d-flex align-items-center send-comment-btn"
+                                        :disabled="commentText === ''"
+                                        @click="addComment" >
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
                             </div>
-                            <div class="d-flex w-100">
-                                <TextareaAutosize v-model="commentText"
-                                                  placeholder="Напишите комментарии..."
-                                                  :max-height="100"
-                                                  class="p-2 ml-2 w-100 comment-textarea"></TextareaAutosize>
-                            </div>
-                            <button class="p-2 d-flex align-items-center send-comment-btn"
-                                    :disabled="commentText === ''"
-                                    @click="addComment" ><i class="fas fa-paper-plane"></i>
-                            </button>
-
                         </div>
                     </div>
                 </div>
@@ -158,14 +189,14 @@
 
             </div>
         </div>
-    </div>
+        </div>
 </template>
 
 <script>
     export default {
         name: "news-post",
 
-        data(){
+        data() {
             return {
                 isPinned: false,
                 bottomOfWindow: 0,
@@ -180,6 +211,8 @@
                 showVideo: true,
                 MainImageUrl : null,
                 MainFakeImage : false,
+                NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
+                EDIT_POST_TEXTAREA: 'EDIT_POST',
             }
         },
 
@@ -202,16 +235,9 @@
         },
 
         methods: {
-            showComment: function() {
-                // for(let i = 0; i < 3; i++) {
-                //     // this.comments[i] = this.post.comments[i];
-                //     // this.comments.push(this.post.comments[i]);
-                // }
-            },
-
             deletePost: function () {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
-                    this.fetch(response.data)
+                    return;
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
                 });
@@ -250,6 +276,9 @@
             },
 
             editPost: function () {
+                setTimeout(() => {
+                    this.$refs['textarea-edit-post'].focus();
+                }, 1000);
                 if(this.post.postText === "") {
                     this.post.postText = this.oldText;
                 }
@@ -298,11 +327,6 @@
             },
 
             showMoreComments: function () {
-                // this.comments = this.post.comments;
-                // this.post.comments.slice(3);
-                // for(let i = 3; i < post.comments.length; i++) {
-                //     this.comments[i] = post.comments[i];
-                // }
                 this.allCommentsShown = true;
             },
 
@@ -359,13 +383,14 @@
         background-color: transparent;
         outline: none;
         transition: all 0.4s ease;
+        cursor: pointer;
     }
 
     .buttons > span {
         transition: 0.4s ease;
     }
 
-    .buttons:hover > span {
+    .buttons:hover > span:last-child {
         color: cornflowerblue;
         transition: 0.4s ease;
     }
@@ -384,82 +409,40 @@
     .custom-input {
         resize: none;
         outline: none;
-        border: none;
         transition: height 0.4s ease;
-
     }
 
-    .save-button {
-        height: 2.1em;
-        color: #000;
-        background-color: #efefef;
-        border: none;
-        border-radius: 5px;
-        transition: 0.4s ease;
-        outline: none !important;
-    }
-
-    .save-button:hover {
-        transition: 0.4s ease;
-        background-color: cornflowerblue;
-        color: #FFF;
-    }
-
-    .editText {
+    .textarea-height {
         height: 150px;
+    }
+
+    .custom-input:focus {
         border: 1px solid cornflowerblue;
     }
 
-    .editText:focus {
-        box-shadow: 0 0 2px cornflowerblue;
-        outline: none;
-    }
 
-
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity .5s;
-    }
-
-    .fade-enter,
-    .fade-leave-to {
-        opacity: 0;
-    }
-
-    .text-enter-active,
-    .text-leave-active {
-        transition: opacity 0.3s ease;
-    }
-
-    .text-enter,
-    .text-leave-to {
-        opacity: 0;
-    }
-
-    .edit-enter {
+    .transition-textarea-height-enter {
         height: 0;
-        transition: all 1s ease;
+        transition: all 0.8s ease;
     }
 
-    .edit-enter-to {
+    .transition-textarea-height-to {
         height: 150px;
-        transition: all 1s ease;
+        transition: all 0.8s ease;
     }
 
-    .edit-leave {
+    .transition-textarea-height-leave {
         height: 150px;
         transition: all 0.5s ease;
     }
 
-    .edit-leave-to {
+    .transition-textarea-height-leave-to {
         height: 0;
         transition: all 0.5s ease;
     }
 
     .post-text {
         width: 100%;
-        max-height: 148px;
-        overflow: hidden;
         word-wrap: break-word;
         line-break: auto;
     }
@@ -473,11 +456,12 @@
         white-space: -o-pre-wrap;
         word-wrap: break-word;
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        overflow: hidden;
     }
 
     pre{
         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        padding: 0;
+        margin: 0;
     }
 
     iframe {
@@ -486,28 +470,7 @@
         display: block !important;
     }
 
-    .comments-section__body {
-        background-color: #EFEFEF;
-        border-radius: 10px;
-    }
 
-    .comments-bottom_inner {
-        cursor: pointer;
-        transition: 0.4s ease;
-    }
-
-    .comment-section__icon {
-        cursor: pointer;
-    }
-
-    .comment-section__dropcontent {
-        display: none;
-        position: absolute;
-        background-color: #e9ebee;
-        right: 45px;
-        box-shadow: 0px 8px 40px 0px rgba(0,0,0,0.2);
-        z-index: 300;
-    }
 
     .comment-section__dropdown:hover .comment-section__dropcontent {
         display: block;
@@ -527,7 +490,6 @@
     .comment-textarea {
         border-radius: 10px;
         outline: none;
-        /*height: 40px !important;*/
     }
 
     .comment-textarea:focus {
@@ -560,18 +522,13 @@
         color: cornflowerblue;
     }
 
-    .show-full-text {
-        max-height: none;
-        overflow: unset;
+    .textarea-text-counter {
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        height: 20px;
+        width: 25px;
+        border: 2px solid #D9D9D9;
+        border-radius: 5px;
     }
-
-
-
-
-
-
-
-    /*.comment-section__top {*/
-    /*    height: 15px;*/
-    /*}*/
 </style>

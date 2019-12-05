@@ -82,7 +82,7 @@
 
 <script>
     export default {
-        name: "motivation",
+        name: "rating",
         data() {
             return {
                 ISN: '',
@@ -93,17 +93,9 @@
                 category: null,
                 deptName: null,
                 dutyName: null,
-                // category_end_first: 'Менеджер по корпоративному страхованию',
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 6).toJSON().slice(0, 7),
 
-                fourthChartData: [
-                    ['Year', 'План', 'Мотивация'],
-                    ['Сентябрь',  -1000, 0],
-                    ['Октябрь',  900, 660],
-                    ['Ноябрь', 2000, -3000],
-                    ['Ноябрь', 2000, 500],
-                    ['Ноябрь', 500, 900],
-                ],
+                fourthChartData: null,
 
                 fourthChartOptions: {
                     colors: ['#a3a1fb','#54d8ff'],

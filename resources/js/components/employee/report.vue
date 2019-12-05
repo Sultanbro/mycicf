@@ -2,27 +2,28 @@
     <div>
         <div class="news-tape-bg radius-4px mt-3 pb-2">
             <div class="pt-4">
-                <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 flex-row jc-sb">
-                    <div class="flex-row">
-                        <div>
-                            <input type="date" class="border0 ml-3 mr-3 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
+                <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
+                    <div class="d-flex">
+                        <div class="ml-4 mr-4">
+                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
                         </div>
-                        <div>
-                            <input type="date" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
+                        <div class="ml-4 mr-4">
+                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
                         </div>
-                        <!--<div>
-                            <div class="bg-darkgray flex-row date-color pr-1 pt-1 pb-1 date-width">
-                                <treeselect v-model="isn" :multiple="false" :options="options" />
+                    </div>
+                    <div class="ml-4 mr-4">
+                        <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
+                    </div>
+                    <div class="ml-4 mr-4">
+                        <div class="date-color border-gray show-btn" @click="getReport">
+                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
+                                <div>
+                                    <i class="far fa-eye"></i>
+                                </div>
+                                <div class="ml-2">
+                                    <span>Показать</span>
+                                </div>
                             </div>
-                        </div>-->
-                    </div>
-                    <div>
-                        <input type="number" v-model="vIsn"/>
-                    </div>
-                    <div>
-                        <div class="flex-row border-gray pt-2 pb-2 pl-4  pr-4 width-min-content pointer" @click="getReport()">
-                            <div><i class="far fa-eye"></i></div>
-                            <div class="ml-2">Показать</div>
                         </div>
                     </div>
                 </div>
@@ -52,12 +53,11 @@
                                 <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{Income}}</span></strong>
                             </div>
                         </div>
-                        <div class="col-md-6 pl-0 pr-0 min-width-50">
+                        <div class="col-12 pl-0 pr-0 min-width-50">
                             <div>
                                 <div class="width100 flex-row">
                                     <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px">
                                         <GChart
-                                                class="data-chart-bar"
                                                 type="BarChart"
                                                 :data="secondChartData"
                                                 :options="secondChartOptions"
@@ -73,30 +73,25 @@
                 <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
                     <div class="width100 col-md-12 pl-0 pr-0 main-data-chart-contains main-data-chart-contains-size">
                         <div class="main-data-chart-contains-size min-width-50 flex-row pl-0 pr-0 vertical-middle">
-                            <div>
-                                <div class="width100 flex-row">
-                                    <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
-                                        <GChart
-                                                class="data-chart-pie"
-                                                type="PieChart"
-                                                :data="thirdChartData"
-                                                :options="thirdChartOptions"
-                                        />
-                                    </div>
+                            <div class="width100 flex-row">
+                                <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
+                                    <GChart
+                                            type="PieChart"
+                                            :data="thirdChartData"
+                                            :options="thirdChartOptions"
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 pl-0 pr-0 min-width-50 main-data-border-left">
-                            <div>
-                                <div class="width100 flex-row">
-                                    <div class="col-md-12 pl-0 pr-0 flex-row width100 main-data-first-chart-contain" ref="divElement" style="height : 200px">
-                                        <GChart
-                                                class="data-chart-pie"
-                                                type="LineChart"
-                                                :data="fourthChartData"
-                                                :options="fourthChartOptions"
-                                        />
-                                    </div>
+                            <div class="width100 flex-row">
+                                <div class="col-12 pl-0 pr-0 flex-row width100 main-data-first-chart-contain" ref="divElement" style="height : 200px">
+                                    <GChart
+                                            class="width100"
+                                            type="LineChart"
+                                            :data="fourthChartData"
+                                            :options="fourthChartOptions"
+                                />
                                 </div>
                             </div>
                         </div>
@@ -112,6 +107,7 @@
         name: "report",
         data () {
             return {
+                options: null,
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 10),
                 dateEnd: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toJSON().slice(0, 10),
                 Amount : 0,
@@ -202,23 +198,24 @@
                     }
                 },
                 show: false,
-                vIsn: null
+                ISN: null
             }
         },
         props : {
             isn : Number
         },
         mounted() {
-            this.vIsn = this.isn;
-            // this.getReport()
+            this.ISN = this.isn;
+            this.getReport()
+            this.getOptions();
         },
         methods : {
             getReport() {
                 this.preloader(true);
                 this.axios.post('/getReport', {
-                    isn: this.vIsn,
-                    dateBeg : this.dateBeg,
-                    dateEnd : this.dateEnd
+                    isn: 1446171,//this.ISN,
+                    dateBeg : "2019-11-01",//this.dateBeg,
+                    dateEnd : "2019-11-30",//this.dateEnd
                 })
                     .then(response => {
                         this.setChartData(response.data)
@@ -312,6 +309,13 @@
             },
             getPercent(val, max){
                 return parseInt(max*val/100);
+            },
+            getOptions () {
+                this.preloader(true);
+                this.axios.post('/getBranchData', {}).then((response) => {
+                    this.options = response.data.result;
+                    this.preloader(false);
+                });
             },
             preloader(show){
                 if(show)

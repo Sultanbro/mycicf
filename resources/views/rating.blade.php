@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Досье | My.cic.kz</title>
+    <title>Рейтинг | My.cic.kz</title>
 
     <link rel="stylesheet" type="text/css" href="{{asset('css/styles.css')}}">
     <!-- Fonts-->
@@ -34,7 +34,7 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
 
-        <div class="col-md-6" id="employee_info">
+        <div class="col-md-8" id="employee_info">
             <rating :isn="{{ Auth::user()->ISN }}"></rating>
         </div>
 
