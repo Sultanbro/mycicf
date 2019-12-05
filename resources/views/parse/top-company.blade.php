@@ -49,7 +49,121 @@ use App\Http\Controllers\ParseController;
 
 <main class="flex-column pl-5 pr-5" id="app">
     <div class="bg-white pl-3 pr-3 box-shadow border-16">
-        <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
+        <div class="mt-2 company-pannel-small flex-row vertical-middle">
+            <div class="flex-row mt-3 mb-3">
+                <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                    <i class="fa fa-chart-pie"></i>
+                    <div class="mt-1 fs-0_8">
+                        Сборы
+                    </div>
+                </div>
+                <a href="/parse/finance">
+                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-sliders-h settings-icon-transform270"></i>
+                        <div class="mt-1 fs-0_8">
+                            Показатели
+                        </div>
+                    </div>
+                </a>
+                <a href="/KONKURETI">
+                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-user-friends"></i>
+                        <div class="mt-1 fs-0_8">
+                            Конкуренты
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript: void(0)">
+                    <div class="blue-bg-all color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-filter"></i>
+                        <div class="mt-1 fs-0_8">
+                            Фильтр
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div>
+                <div class="flex-row">
+                    <div class="mr-10 company-mr vertical-middle">
+                        <div>
+                            <select class="border-0-bottom pb-1 pointer blue-select" id="dateType" onchange="checkDateType()">
+                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
+                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
+                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
+                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex-row jc-sb" id="monthBlock" @if(($_GET['dateType'] ?? 'rise') == 'month' || ($_GET['dateType'] ?? 'rise') == 'rise') style="display: flex;" @else  style="display: none;"  @endif>
+                        <div class="mr-4 ml-4">
+                            <select id="fYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @for($year = 2014; $year <= date('Y'); $year++)
+                                    <option value="{{$year}}" @if($year == $_GET['firstYear']) selected @endif>{{$year}}</option>
+                                @endfor
+                            </select>
+                            <select id="firstMonth" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @foreach($month as $val => $key)
+                                    <option value="{{$val}}" @if(($_GET['firstPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mr-4 ml-4">
+                            <select id="sYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @for($year = 2014; $year <= date('Y'); $year++)
+                                    <option value="{{$year}}" @if($year == $_GET['secondYear']) selected @endif>{{$year}}</option>
+                                @endfor
+                            </select>
+                            <select id="secondMonth" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @foreach($month as $val => $key)
+                                    <option value="{{$val}}" @if(($_GET['secondPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+                    <div id="yearBlock" class="jc-sb" @if(($_GET['dateType'] ?? 'rise') == 'year') style="display: flex;" @else  style="display: none;"  @endif>
+                        <select id="first" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 mr-10 company-data-size">
+                            @for($year = 2014; $year < date('Y'); $year++)
+                                <option value="{{$year}}" @if($year == $_GET['firstYear']) selected @endif>{{$year}}</option>
+                            @endfor
+                        </select>
+
+                        <select id="second" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 ml-10 company-data-size">
+                            @for($year = 2014; $year < date('Y'); $year++)
+                                <option value="{{$year}}" @if($year == $_GET['secondYear']) selected @endif>{{$year}}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div id="quarterBlock" class="jc-sb" @if(($_GET['dateType'] ?? 'rise') == 'quarter') style="display: flex;" @else  style="display: none;"  @endif>
+                        <div class="mr-10">
+                            <select id="firstYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @for($year = 2014; $year <= date('Y'); $year++)
+                                    <option value="{{$year}}" @if($year == $_GET['firstYear']) selected @endif>{{$year}}</option>
+                                @endfor
+                            </select>
+                            <select id="firstQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @for($quarter = 1; $quarter <= 4; $quarter++)
+                                    <option value="{{$quarter}}" @if($quarter == $_GET['firstPeriod']) selected @endif>{{$quarter}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="ml-10">
+                            <select id="secondYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @for($year = 2014; $year <= date('Y'); $year++)
+                                    <option value="{{$year}}" @if($quarter == $_GET['secondYear']) selected @endif>{{$year}}</option>
+                                @endfor
+                            </select>
+                            <select id="secondQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 company-data-size">
+                                @for($quarter = 1; $quarter <= 4; $quarter++)
+                                    <option value="{{$quarter}}" @if($quarter == $_GET['secondYear']) selected @endif>{{$quarter}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row company-pannel">
             <div class="flex-row jc-sb">
                 <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                     <i class="fa fa-chart-pie"></i>
@@ -65,20 +179,20 @@ use App\Http\Controllers\ParseController;
                         </div>
                     </div>
                 </a>
-                {{--<a href="/KONKURETI">--}}
-                    {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
-                        {{--<i class="fa fa-user-friends"></i>--}}
-                        {{--<div class="mt-1 fs-0_8">--}}
-                            {{--Конкуренты--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</a>--}}
+                <a href="/KONKURETI">
+                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-user-friends"></i>
+                        <div class="mt-1 fs-0_8">
+                            Конкуренты
+                        </div>
+                    </div>
+                </a>
             </div>
             <div>
                 <div class="flex-row">
-                    <div class="mr-10 ">
+                    <div class="mr-10">
                         <div>
-                            <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
+                            <select class="border-0-bottom pb-1 pointer blue-select" id="dateType" onchange="checkDateType()">
                                 <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
                                 <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
                                 <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
@@ -194,7 +308,7 @@ use App\Http\Controllers\ParseController;
     </div>
     <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
-            <div class="width100">
+            <div class="width100 table-responsive border-0">
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">

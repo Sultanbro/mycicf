@@ -25,6 +25,29 @@ ul{
 .mobile-centras-logo{
 	width: 4.5rem;
 }
+.company-data-size{
+    width: 100%;
+}
+@media (min-width: 1500px){
+	.company-pannel-small{
+		display: none;
+	}
+}
+@media (max-width: 1500px){
+	.company-pannel{
+		display: none !important;
+	}
+}
+@media (max-width: 1400px){
+    .company-mr{
+        margin-right: 0rem !important;
+    }
+}
+@media (max-width: 1050px){
+    .company-data-size{
+        width: auto;
+    }
+}
 .mobile-link-padding{
 	padding: 0.3rem;
 }
@@ -522,6 +545,10 @@ ul{
 }
 .blue-bg-all{
     background: #4267b2;
+}
+.blue-select{
+    border: 1px solid #4267B1 !important;
+    color: #4267b2 !important;
 }
 .bg-WHITE{
 	background: #fff !important;
