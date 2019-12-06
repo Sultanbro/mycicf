@@ -10,11 +10,13 @@ import TextareaAutosize from 'vue-textarea-autosize'
 
 import FlashMessage from '@smartweb/vue-flash-message'
 
-Vue.use(FlashMessage);
+import linkify from 'vue-linkify'
 
 import VueGoogleCharts from 'vue-google-charts'
 
 import {EmojiPickerPlugin} from 'vue-emoji-picker'
+
+Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
 
@@ -25,6 +27,8 @@ Vue.use(VueGoogleCharts);
 Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);
+
+Vue.directive('linkified', linkify);
 
 Vue.component('login', require('./components/registration/login.vue').default);
 

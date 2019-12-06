@@ -45,9 +45,13 @@
 
             <div class="pl-3 pr-3 mb-2 post-text-section">
                 <div class="post-text-section__text"
-                     v-if="!showFull">{{post.postText.substr(0, 200)}}</div>
+                     v-if="!showFull"
+                    v-html="post.postText.substr(0, 200)"
+                    v-linkified></div>
                 <div class="post-text-section__text"
-                     v-if="showFull">{{post.postText}}</div>
+                     v-if="showFull"
+                    v-html="post.postText"
+                    v-linkified></div>
                 <div class="color-blue"
                      v-if="post.postText !== null && post.postText.length > 200 && !showFull">
                     <small @click="showFullText">Показать полностью...</small>

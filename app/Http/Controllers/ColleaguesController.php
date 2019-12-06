@@ -67,19 +67,23 @@ class ColleaguesController extends Controller {
     }
 
     public function showPageByIsn($ISN){
-        return view('colleagues.dossier', compact('ISN'));
+        $fullname = (new Branch())->getUserName($ISN);
+        return view('colleagues.dossier', compact('ISN'), compact('fullname'));
     }
 
     public function showRatingByIsn($ISN){
-        return view('colleagues.rating', compact('ISN'));
+        $fullname = (new Branch())->getUserName($ISN);
+        return view('colleagues.rating', compact('ISN'), compact('fullname'));
     }
 
     public function showMotivationByIsn($ISN){
-        return view('colleagues.motivation', compact('ISN'));
+        $fullname = (new Branch())->getUserName($ISN);
+        return view('colleagues.motivation', compact('ISN'), compact('fullname'));
     }
 
     public function showReportByIsn($ISN){
-        return view('colleagues.report', compact('ISN'));
+        $fullname = (new Branch())->getUserName($ISN);
+        return view('colleagues.report', compact('ISN'), compact('fullname'));
     }
 
 }

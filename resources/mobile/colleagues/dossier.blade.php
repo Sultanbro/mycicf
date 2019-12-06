@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Коллеги | My.cic.kz</title>
+    <title>i-ci.kz</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{{asset('fonts/font-awesome.min.css')}}">
 
     <link rel="stylesheet" type="text/css" href="{{asset('css/styles.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('css/app.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -32,14 +31,29 @@
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
-<div id="app" class="modal-open" style="min-height: 100vh">
+<div id="app">
     @include('layouts.header')
-    <colleagues></colleagues>
-    {{--<footer>--}}
-        {{--<div class="container-fluid justify-content-end flex-row mt-5 slideDown">--}}
-            {{--<i class="fas fa-frog"></i>--}}
-        {{--</div>--}}
-    {{--</footer>--}}
+    <main class="bg-parse">
+        <div>
+            <simple-info
+                    :isn="{{$ISN}}"
+                    :fullname="{{json_encode($fullname)}}"></simple-info>
+            <mobile-info :isn="{{$ISN}}"></mobile-info>
+        </div>
+    </main>
 </div>
 </body>
+    <script>
+        function changeDisplay(idName){
+            var element = document.getElementById(idName);
+            if(element.classList.contains('active')){
+                element.classList.remove('active');
+                element.style.display = "none";
+            }
+            else {
+                element.classList.add('active');
+                element.style.display = "block";
+            }
+        }
+    </script>
 </html>

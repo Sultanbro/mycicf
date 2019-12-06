@@ -57,8 +57,12 @@
             <transition name="transition-opacity">
                 <div class="post-text"
                      v-if="!editMode">
-                    <pre v-if="!isAllTextOpened">{{post.postText.substr(0, 300)}}</pre>
-                    <pre v-if="isAllTextOpened">{{post.postText}}</pre>
+                    <pre v-if="!isAllTextOpened"
+                        v-html="post.postText.substr(0, 300)"
+                        v-linkified></pre>
+                    <pre v-if="isAllTextOpened"
+                        v-html="post.postText"
+                        v-linkified></pre>
                     <div v-if="post.postText !== null && post.postText.length > 350 && !isAllTextOpened && !editMode">
                         <small class="color-blue show-all-btn"
                                @click="showAllText">Показать больше...</small>
