@@ -31,6 +31,8 @@
         @include('colleagues.sidebar')
 
         <div class="col-md-8" id="employee_info">
+            @include('layouts.tabs')
+
             <report
                 :isn = "{{ $ISN }}"
             ></report>

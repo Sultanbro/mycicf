@@ -35,6 +35,7 @@
         @include('colleagues.sidebar')
 
         <div class="col-md-6" id="employee_info">
+            @include('layouts.tabs')
             <rating :isn="{{ $ISN }}"></rating>
         </div>
 

@@ -163,7 +163,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     //COLLEAGUES
     Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
     Route::post('/colleagues/search', 'ColleaguesController@search');
-    Route::get('/colleagues/{ISN}', 'ColleaguesController@showPageByIsn');
+    Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
+    Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
     Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
     Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
     Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');

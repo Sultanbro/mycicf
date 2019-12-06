@@ -1777,6 +1777,23 @@ textarea::-webkit-scrollbar-thumb {
 .colleagues-section__header__nav:focus-within > .fas {
     color: cornflowerblue;
 }
+.tabs-contain-active{
+	background: #275cc7 !important;
+}
+.tabs-contain:hover{
+	color: white;
+	background: #4373d9;
+	transition: 0.2s ease-in-out;
+}
+.tabs-contain{
+	background: #6c93e5;
+}
+.first-tab{
+	border-radius: 6px 0 0 0;
+}
+.last-tab{
+	border-radius: 0 6px 0 0;
+}
 
 .colleagues-section__header__nav span {
     position: absolute;

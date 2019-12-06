@@ -32,6 +32,7 @@
         @include('colleagues.sidebar')
 
         <div class="col-md-8" id="motivation">
+            @include('layouts.tabs')
             <motivation
                     :isn="{{ $ISN }}"></motivation>
         </div>

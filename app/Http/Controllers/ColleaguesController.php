@@ -86,4 +86,8 @@ class ColleaguesController extends Controller {
         return view('colleagues.report', compact('ISN'), compact('fullname'));
     }
 
+    public function redirectToDossier($ISN){
+        return redirect("/colleagues/$ISN/dossier");
+    }
+
 }

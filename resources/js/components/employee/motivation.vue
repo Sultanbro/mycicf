@@ -1,5 +1,5 @@
 <template>
-    <div class="box-shadow radius-4px mt-3 pb-2">
+    <div class="box-shadow radius-4px pb-2">
         <div class="pt-4">
             <div class="bg-white ml-3 mr-3 pt-4 pb-3">
                 <div class="d-flex align-items-center">
