@@ -126,4 +126,25 @@ class User extends Authenticatable
             "3994433", "3994439", "3436136",
         ];
     }
+
+    public function checkMotivationPermission($ISN){
+        if(in_array(Auth::user()->level, [50,1000]) || Auth::user()->dept_isn === 3436136){
+            return true;
+        }
+        $permitted = $this->getChildElements(Auth::user()->level);
+        return in_array($ISN, $permitted);
+    }
+
+    public function getChildElements($level){
+        $result = [];
+        $data = Branch::where('kias_id', $level)->get();
+        foreach ($data as $value){
+            if(count($value->childs)){
+                array_merge($result, $this->getChildElements($value->kias_id));
+            }else{
+                array_push($result, $value->kias_id);
+            }
+        }
+        return $result;
+    }
 }
