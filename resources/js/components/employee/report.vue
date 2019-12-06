@@ -215,9 +215,9 @@
             getReport() {
                 this.preloader(true);
                 this.axios.post('/getReport', {
-                    isn: 1446171,//this.ISN,
-                    dateBeg : "2019-11-01",//this.dateBeg,
-                    dateEnd : "2019-11-30",//this.dateEnd
+                    isn: this.ISN,
+                    dateBeg : this.dateBeg,
+                    dateEnd : this.dateEnd
                 })
                     .then(response => {
                         this.setChartData(response.data)
