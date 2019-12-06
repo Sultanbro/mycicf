@@ -72,18 +72,30 @@ class ColleaguesController extends Controller {
     }
 
     public function showRatingByIsn($ISN){
-        $fullname = (new Branch())->getUserName($ISN);
-        return view('colleagues.rating', compact('ISN'), compact('fullname'));
+        if((new \App\User())->checkMotivationPermission($ISN)){
+            $fullname = (new Branch())->getUserName($ISN);
+            return view('colleagues.rating', compact('ISN'), compact('fullname'));
+        }else{
+            abort(419,'У вас нет доступа для просмотра этой страницы');
+        }
     }
 
     public function showMotivationByIsn($ISN){
-        $fullname = (new Branch())->getUserName($ISN);
-        return view('colleagues.motivation', compact('ISN'), compact('fullname'));
+        if((new \App\User())->checkMotivationPermission($ISN)) {
+            $fullname = (new Branch())->getUserName($ISN);
+            return view('colleagues.motivation', compact('ISN'), compact('fullname'));
+        }else{
+            abort(419,'У вас нет доступа для просмотра этой страницы');
+        }
     }
 
     public function showReportByIsn($ISN){
-        $fullname = (new Branch())->getUserName($ISN);
-        return view('colleagues.report', compact('ISN'), compact('fullname'));
+        if((new \App\User())->checkMotivationPermission($ISN)) {
+            $fullname = (new Branch())->getUserName($ISN);
+            return view('colleagues.report', compact('ISN'), compact('fullname'));
+        }else{
+            abort(419,'У вас нет доступа для просмотра этой страницы');
+        }
     }
 
     public function redirectToDossier($ISN){

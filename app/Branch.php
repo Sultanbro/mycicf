@@ -26,6 +26,10 @@ class Branch extends Model
         return $isn === 0 ? "ADMIN" : (self::where('kias_id', $isn)->first()->fullname ?? "DELETED");
     }
 
+    public static function getParentId($ISN){
+        return self::where('kias_id', $ISN)->first()->kias_parent_id;
+    }
+
     protected $attributes = [
         'fullname' => null,
         'kias_id' => null,

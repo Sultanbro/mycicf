@@ -131,6 +131,9 @@ class User extends Authenticatable
         if(in_array(Auth::user()->level, [50,1000]) || Auth::user()->dept_isn === 3436136){
             return true;
         }
+        if(Auth::user()->level == Auth::user()->ISN){
+            return false;
+        }
         $permitted = $this->getChildElements(Auth::user()->level);
         return in_array($ISN, $permitted);
     }
