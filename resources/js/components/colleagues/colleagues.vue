@@ -13,12 +13,10 @@
                                v-model="searchText">
                         <span class="fa fa-search"></span>
                     </div>
-                    <div>
-                        <treeselect class='w-50' :multiple="false" :options="options" />
-                    </div>
+                    <treeselect class='w-50' :multiple="false" :options="options" v-model="parentId" />
                 </div>
                 <div>
-                    <button @click="testFunction(searchText)"
+                    <button @click="searchUser()"
                             class="colleagues-section__btn border-0 bg-color-blue color-white pl-3 pr-3 pt-1 pb-1">Применить</button>
                 </div>
             </div>
@@ -26,18 +24,11 @@
 
         <div class="p-4">
             <div class="colleagues-section__body">
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
-                <colleagues-info></colleagues-info>
+                <colleagues-info
+                    v-for="(user, index) in usersList"
+                    :key="index"
+                    :info="user"
+                ></colleagues-info>
             </div>
         </div>
 
@@ -52,6 +43,8 @@
             return {
                 options: null,
                 searchText: '',
+                parentId: 50,
+                usersList : [],
             }
         },
 
@@ -60,16 +53,25 @@
         },
 
         methods: {
-            testFunction(searchText) {
-                console.log(searchText);
-                this.axios.post('/colleagues/search', {searchText}).then(response => {
-                    console.log('ok');
+            searchUser() {
+                var vm = this
+                this.axios.post('/colleagues/search', {
+                    searchText : this.searchText,
+                    parentId : this.parentId
+                }).then(response => {
+                    if(response.data.success){
+                        vm.usersList = response.data.list
+                    }else{
+                        alert(response.data.error)
+                    }
+                }).catch(error => {
+                    alert(error)
                 })
             },
 
             getBranchData() {
-                this.axios.post('/getBranchData', {}).then(response => {
-                    this.options = this.response.data.result;
+                this.axios.post('/getSearchBranch', {}).then(response => {
+                    this.options = response.data.result;
                 })
             }
         }

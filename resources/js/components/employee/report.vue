@@ -11,7 +11,7 @@
                             <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
                         </div>
                     </div>
-                    <div class="ml-4 mr-4">
+                    <div v-if="checkUrl()" class="ml-4 mr-4">
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
                     </div>
                     <div class="ml-4 mr-4">
@@ -207,7 +207,9 @@
         mounted() {
             this.ISN = this.isn;
             this.getReport()
-            this.getOptions();
+            if(this.checkUrl()){
+                this.getOptions();
+            }
         },
         methods : {
             getReport() {
@@ -326,6 +328,9 @@
                 {
                     document.getElementById('preloader').style.display = 'none';
                 }
+            },
+            checkUrl(){
+                return ((window.location.pathname).slice(1,10) !== 'colleague');
             }
         }
 

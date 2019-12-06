@@ -74,6 +74,8 @@ Vue.component('colleagues', require('./components/colleagues/colleagues.vue').de
 
 Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
 
+Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

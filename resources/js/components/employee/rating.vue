@@ -6,7 +6,7 @@
                     <div class="ml-2 dealer-raiting-input1-contain dealer-raiting-margins">
                         <input v-model="dateBeg" type="month" class="border0 date-color ad-width190-800 bg-darkgray pl-4 pr-2 pt-1 pb-1 dealer-raiting-input1">
                     </div>
-                    <div class="dealer-raiting-margins">
+                    <div v-if="checkUrl()" class="dealer-raiting-margins">
                         <treeselect v-model="ISN" :multiple="false" :options="options" />
                     </div>
                     <div class="dealer-raiting-input3-contain dealer-raiting-margins">
@@ -118,7 +118,9 @@
 
         mounted() {
             this.ISN = this.isn;
-            this.getOptions();
+            if(this.checkUrl()){
+                this.getOptions();
+            }
         },
 
         methods: {
@@ -155,6 +157,9 @@
                 else {
                     document.getElementById('preloader').style.display = 'none';
                 }
+            },
+            checkUrl(){
+                return ((window.location.pathname).slice(1,10) !== 'colleague');
             }
         }
     }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $kias_parent_id int
  * @property $has_child int
  * @property $verified int
+ * @property $duty string
  * @package App
  */
 class Branch extends Model

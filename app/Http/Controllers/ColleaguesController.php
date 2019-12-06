@@ -8,45 +8,78 @@ use Illuminate\Http\Request;
 class ColleaguesController extends Controller {
 
     public function search(Request $request) {
-        try {
-            $value = $request->searchText;
-
-            if($value !== null) {
-                $model = Branch::where('fullname', 'LIKE', '%' . $value . '%')->get();
-                $search_result = [];
-
-                foreach($model as $item) {
-                    array_push($search_result, [
-                        'fullname' => $item->fullname,
-                        'isn' => $item->kias_id,
-                    ]);
-                }
-
-                if($request->id !== null) {
-                    $branch = Branch::where('kias_id', $request->id)->get();
-                    if(count($branch->childs)) {
-
-                    }
-                }
-
-                dd($search_result);
-
+        $result = [];
+        $searchText = $request->searchText;
+        $parentId = isset($request->parentId) ? $request->parentId : 50;
+        $model = Branch::where('fullname', 'like', "%$searchText%")
+            ->whereIn('kias_parent_id', $this->getChilds($parentId))
+            ->get();
+        foreach ($model as $user){
+            if(!count($user->childs)) {
+                array_push($result, [
+                    'name' => $user->fullname,
+                    'isn' => $user->kias_id,
+                    'department' => (new Branch())->getUserName($user->kias_parent_id),
+                    'imageUrl' => $this->getImageUrl($user->kias_id),
+                    'duty' => $user->duty,
+                ]);
             }
-            else return 0;
-        } catch(Exception $e) {
-            $e->getMessage();
         }
-    }
-
-    public function getBranchData() {
-
-    }
-
-    private function getChild($parent_id) {
-
+        return response()->json([
+            'success' => true,
+            'error' => '',
+            'list' => $result
+        ]);
     }
 
     public function index() {
         return view('colleagues');
     }
+
+    public function getChilds($parentId){
+        $result = [];
+        $model = Branch::where('kias_id', $parentId)->first();
+        if(count($model->childs)){
+            array_push($result, $parentId);
+            $result = array_merge($result,$this->getChildsOfChild($parentId));
+        }
+        return $result;
+    }
+
+    public function getChildsOfChild($parentId){
+        $result = [];
+        $model = Branch::where('kias_parent_id', $parentId)->get();
+        foreach ($model as $data){
+            if(count($data->childs)){
+                array_push($result, $data->kias_id);
+                $result = array_merge($result, $this->getChildsOfChild($data->kias_id));
+            }
+        }
+        return $result;
+    }
+
+    public function getImageUrl($isn){
+        if(file_exists(public_path()."/storage/images/employee/$isn.png")){
+            return "/storage/images/employee/$isn.png";
+        }else{
+            return "/images/avatar.png";
+        }
+    }
+
+    public function showPageByIsn($ISN){
+        return view('colleagues.dossier', compact('ISN'));
+    }
+
+    public function showRatingByIsn($ISN){
+        return view('colleagues.rating', compact('ISN'));
+    }
+
+    public function showMotivationByIsn($ISN){
+        return view('colleagues.motivation', compact('ISN'));
+    }
+
+    public function showReportByIsn($ISN){
+        return view('colleagues.report', compact('ISN'));
+    }
+
 }
