@@ -6,7 +6,7 @@
     <a href="@if($tag === 'dossier') # @else dossier @endif" class="tabs-contain @if($tag === 'dossier') tabs-contain-active @endif color-white pt-2 pb-2 pl-3 pr-3 pointer first-tab">
         Досье
     </a>
-    @if(in_array(\App\Branch::getParentId($ISN), \App\User::getMotivationDepartments()))
+    @if(in_array(\App\Branch::getParentId($ISN), \App\User::getMotivationDepartments()) && in_array(\App\Branch::getParentId($ISN), ["3994433", "3994439", "3436136"]))
         @if((new \App\User())->checkMotivationPermission($ISN))
             <a href="@if($tag === 'motivation') # @else motivation @endif" class="tabs-contain @if($tag === 'motivation') tabs-contain-active @endif color-white pointer pt-2 pb-2 pl-3 pr-3">
                 Мотивация
