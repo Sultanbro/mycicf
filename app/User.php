@@ -140,7 +140,7 @@ class User extends Authenticatable
 
     public function getChildElements($level){
         $result = [];
-        $data = Branch::where('kias_id', $level)->get();
+        $data = Branch::where('kias_parent_id', $level)->get();
         foreach ($data as $value){
             if(count($value->childs)){
                 array_merge($result, $this->getChildElements($value->kias_id));

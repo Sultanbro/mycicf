@@ -209,5 +209,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
-
+Route::get('/kolesa/marks', 'SiteController@getMarks');
+Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('test', 'Admin\SiteController@getModelss');

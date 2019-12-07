@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Branch;
+use App\KolesaMarks;
+use App\KolesaModel;
 use App\KolesaPrices;
 use App\Library\Services\KiasServiceInterface;
 use App\Providers\KiasServiceProvider;
@@ -419,6 +421,29 @@ class SiteController extends Controller
             }
         }
         return $result;
+    }
+
+    public function getMarks(){
+        $result = [];
+        foreach (KolesaMarks::all()as $item) {
+            array_push($result, [
+                'id' => $item->mark_id,
+                'name' => $item->mark_label,
+            ]);
+        }
+        return response()->json($result);
+    }
+
+    public function getModels(){
+        $result = [];
+        foreach (KolesaModel::all()as $item) {
+            array_push($result, [
+                'mark_id' => $item->parent_id,
+                'id' => $item->model_id,
+                'name' => $item->model_name,
+            ]);
+        }
+        return response()->json($result);
     }
 
 }
