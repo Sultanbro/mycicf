@@ -210,19 +210,19 @@
                 if(documents.length <= this.docMaxNumber) {
                     Array.from(documents).forEach(document => {
                         if(document.size > this.docMaxSize) {
-                            alert("Error file size: " + document.name);
+                            alert("Документ превысил ограничение по размеру : " + document.name);
                         }
                         else if(!this.checkExtension(document.type, this.docExtensions)) {
-                            alert("You can upload only files with extensions: doc, docx, ppt, pptx, xls, xlsx, pdf, rar");
+                            alert("Вы загрузили неверный тип документа.\n" +
+                                "Доступные типы документов: doc, docx, ppt, pptx, xls, xlsx, pdf, rar");
                         }
                         else {
                             vm.documents.push(document);
-                            console.log(vm.documents);
                         }
                     })
                 }
                 else {
-                    alert("Maximum number of files: 5")
+                    alert("Максимальное кол-во файлов: 5")
                 }
             },
 

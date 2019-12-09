@@ -45,7 +45,7 @@
 
             <div class="pl-3 pr-3 mb-2 post-text-section">
                 <div class="post-text-section__text"
-                     v-if="!showFull">{{post.postText.substr(0, 200)}}</div>
+                     v-if="!showFull">{{post.postText !== null ? post.postText.substr(0, 300) : ''}}</div>
                 <div class="post-text-section__text"
                      v-if="showFull">{{post.postText}}</div>
                 <div class="color-blue"
@@ -54,11 +54,19 @@
                 </div>
             </div>
 
-             <div class="" >
+            <div class="" >
                 <img class="width100 pl-3 pr-3 pt-2 pb-2" :src="image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)">
             </div>
 
             <div class="jc-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
+
+            <div v-for="(document, index) in post.documents"
+                 class="col-12 pr-2 pl-2 pt-2">
+                <div class="d-flex">
+                    <i :class="document.type" class="fas fs-1_2"></i>
+                    <div class="pl-2 pr-2"><a :href="document.link" target="_blank">{{document.name}}</a></div>
+                </div>
+            </div>
 
             <div class="horizontal-line mt-2"></div>
 

@@ -53,9 +53,23 @@ class Post extends Model
     }
 
     public function getImage(){
-        $file = Storage::disk('local')->files("public/post_files/$this->id");
+        $file = Storage::disk('local')->files("public/post_files/$this->id/images");
         foreach ($file as $key => $item){
             $file[$key] = "/storage".substr($item,6);
+        }
+        return $file;
+    }
+
+    public function getDocuments(){
+        $file = Storage::disk('local')->files("public/post_files/$this->id/documents");
+        foreach ($file as $key => $item){
+            $fileName = explode('/', $item);
+            $fileName = end($fileName);
+            $file[$key] = [
+                'link' => "/storage".substr($item,6),
+                'type' => $this->getTypeOfDocument($fileName),
+                'name' => $fileName,
+                ];
         }
         return $file;
     }
@@ -79,5 +93,44 @@ class Post extends Model
             return(substr($this->post_text, $start, $end-$start+9));
         }
         return null;
+    }
+
+    public function getTypeOfDocument($doc_name){
+        $ext = explode('.', $doc_name);
+        $ext = end($ext);
+        switch ($ext){
+            case 'doc' :
+                return 'fa-file-word text-primary';
+                break;
+            case 'docx' :
+                return 'fa-file-word text-primary';
+                break;
+            case 'dot' :
+                return 'fa-file-word text-primary';
+                break;
+            case 'xls' :
+                return 'fa-file-excel text-success';
+                break;
+            case 'xlsx' :
+                return 'fa-file-excel text-success';
+                break;
+            case 'pdf' :
+                return 'fa-file-pdf text-danger';
+                break;
+            case 'ppt' :
+                return 'fa-file-powerpoint text-warning';
+                break;
+            case 'pptx' :
+                return 'fa-file-powerpoint text-warning';
+                break;
+            case 'rar' :
+                return 'fa-file-archive text-info';
+                break;
+            case 'zip' :
+                return 'fa-file-archive text-info';
+                break;
+            default :
+                return 'fa-file-o';
+        }
     }
 }

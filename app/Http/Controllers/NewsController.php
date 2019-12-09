@@ -80,6 +80,7 @@ class NewsController extends Controller
             'postText' => $new_post->getText(),
             'postId' => $new_post->id,
             'image' => $new_post->getImage(),
+            'documents' => $new_post->getDocuments(),
             'youtube' => $new_post->getVideo(),
             'comments' => [],
         ];
@@ -125,6 +126,7 @@ class NewsController extends Controller
                 'userISN' => $item->user_isn,
                 'comments' => $item->getComments(),
                 'image' => $item->getImage(),
+                'documents' => $item->getDocuments(),
                 'youtube' => $item->getVideo(),
 
             ]);

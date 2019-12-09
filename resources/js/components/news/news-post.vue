@@ -58,7 +58,7 @@
                 <div class="post-text"
                      v-if="!editMode">
                     <pre v-if="!isAllTextOpened"
-                         v-html="post.postText.substr(0, 300)"
+                         v-html="post.postText !== null ? post.postText.substr(0, 300) : ''"
                          v-linkified></pre>
                     <pre v-if="isAllTextOpened"
                          v-html="post.postText"
@@ -83,6 +83,17 @@
                     </span>
                 </div>
                 <emoji-component v-if="editMode" :type="EDIT_POST_TEXTAREA"></emoji-component>
+            </div>
+        </div>
+        <div class="pl-2 pr-2">
+            <div class="news-block-image-contain">
+                <div v-for="(document, index) in post.documents"
+                     class="d-flex justify-content-between bg-white pl-3 pr-3">
+                    <div class="d-flex align-items-center">
+                        <i :class="document.type" class="fas fs-1_2"></i>
+                        <div class="p-2"><a :href="document.link" target="_blank">{{document.name}}</a></div>
+                    </div>
+                </div>
             </div>
         </div>
 
