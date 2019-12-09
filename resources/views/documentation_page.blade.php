@@ -19,7 +19,7 @@
     <div id="app">
         <div class="row">
             <div class="col-12 border-20 border-gray">
-                <library-doc :pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 0 }}"
+                <library-doc :pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 10 }}"
                              :title="{{json_encode($page->title)}}"
                              :encodedtext="{{json_encode($page->encoded_text)}}"> </library-doc>
             </div>

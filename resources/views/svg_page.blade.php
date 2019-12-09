@@ -19,7 +19,7 @@
     <br>
     <div id="app">
         <div class="col-12 border-20 border-gray">
-            <library-svg :pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 0 }}"
+            <library-svg :pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 10 }}"
                          :title="{{json_encode($page->title)}}"
                          :body="{{json_encode($page->body)}}"></library-svg>
         </div>
