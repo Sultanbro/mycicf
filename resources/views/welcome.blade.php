@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>DOCUMENTATION ADD NEW FILE</title>
+    <title>my.cic.kz</title>
     <script type="text/javascript" src="{{asset('js/nicEdit.js')}}"></script>
     <script type="text/javascript">
         bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
