@@ -1,7 +1,7 @@
 <template >
     <div class="mt-4 ml-2 mr-2">
         <div onscroll="bottomOfWindow" class="mb-2 bg-white rounded">
-            <!--Row 1-->
+
             <div class="d-flex justify-content-between bg-top pl-4 pt-2 pb-2 pr-4">
                 <div>
                     <span class="bold">Создайте публикацию</span>
@@ -12,8 +12,8 @@
                         <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
                     </div>
                 </transition>
-            </div> <!--Row 1-->
-            <!--Row 2-->
+            </div>
+
             <div class="d-flex">
                 <div class="d-flex ml-4 w-100">
                     <div class="pt-2 pb-2">
@@ -29,30 +29,66 @@
                         <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
                     </div>
                 </div>
-            </div> <!--Row 2-->
-            <!--Row 3-->
-            <div class="d-flex w-100 horizontal-line"></div> <!--Row 3-->
-            <!--Row 4-->
-            <div class="flex-row">
-                <div class="flex-row ml-2 mr-2 mt-2 flex-wrap">
-                        <div v-for="(image, index) in images" class="col-md-3 col-lg-3 bg-white mb-2" v-bind:key="image">
+            </div>
+
+            <div class="d-flex w-100 horizontal-line"></div>
+
+            <div class="mt-2" v-if="files.length !== 0 || documents.length !== 0">
+                <div class="d-flex">
+                    <div class="d-flex ml-2 mr-2 flex-wrap">
+                        <div v-for="(image, index) in images"
+                             class="col-md-3 col-lg-3 bg-white mb-2"
+                             :key="image">
                             <div class="image-container">
-                                <button type="button" class="delete-image-button" @click="deleteImage(index)">
+                                <button type="button"
+                                        class="delete-image-button"
+                                        @click="deleteImage(index)">
                                     <i class="fas fa-times"></i>
                                 </button>
                                 <div class="layer"></div>
                                 <img :src="image" class="mw-100">
                             </div>
                         </div>
+                    </div>
                 </div>
-            </div> <!--Row 4-->
-            <!--Row 5-->
+
+                <div class="d-flex">
+                    <div class="d-flex flex-column ml-3 mr-3 w-100">
+                        <div v-for="(document, index) in documents"
+                             class="d-flex justify-content-between bg-white pl-3 pr-3">
+                            <div class="d-flex align-items-center">
+                                <div v-if="document.type === 'application/msword' || document.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
+                                    <i class="fas fa-file-word text-primary fs-1_2"></i>
+                                </div>
+                                <div v-if="document.type === 'application/pdf'">
+                                    <i class="fas fa-file-pdf text-danger fs-1_2"></i>
+                                </div>
+                                <div v-if="document.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.type === 'application/vnd.ms-excel'">
+                                    <i class="fas fa-file-excel text-success fs-1_2"></i>
+                                </div>
+                                <div v-if="document.type === 'application/vnd.ms-powerpoint' || document.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'">
+                                    <i class="fas fa-file-powerpoint text-warning fs-1_2"></i>
+                                </div>
+                                <div v-if="document.type === 'application/vnd.rar' || document.type === 'application/zip'">
+                                    <i class="fas fa-file-archive text-info fs-1_2"></i>
+                                </div>
+                                <div class="p-2">{{document.name}}</div>
+                            </div>
+                            <button class="border-0 bg-transparent button-delete" @click="deleteFile(index)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="flex-row">
-                <div class="flex-row ml-4 mr-4 pb-2 w-100">
+                <div class="flex-row ml-4 mr-4 pb-2 pt-2 w-100">
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
                         <i class="fas fa-image color-black file-icons"></i>
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
-                        <input type="file" id="photo-upload" @change="fileUpload" accept="image/*">
+                        <input type="file" id="photo-upload" @change="imageUpload" accept="image/*" multiple>
                     </div>
                     <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
                         <!--<i class="fas fa-play-circle color-black file-icons"></i>-->
@@ -64,20 +100,20 @@
                         <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
                         <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
                     <!--</div>-->
-                    <!--<div class="icons-bg pt-1 pr-2 pl-2 pb-1">-->
-                        <!--<i class="fas fa-file-upload color-black file-icons"></i>-->
-                        <!--<label for="file-upload" class="custom-file-upload">Файл</label>-->
-                        <!--<input type="file" id="file-upload" multiple>-->
-                    <!--</div>-->
+                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
+                        <i class="fas fa-file-upload color-black file-icons"></i>
+                        <label for="file-upload" class="custom-file-upload">Файл</label>
+                        <input type="file" id="file-upload" @change="fileUpload" multiple>
+                    </div>
                     <transition name="transition-opacity">
-                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0">
+                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0 || documents.length > 0">
                             <button
                                     @click="addPost"
-                                    class="pt-1 pb-1 pr-2 pl-2 common-btn" >Опубликовать</button>
+                                    class="pt-1 pb-1 pr-2 pl-2 common-btn">Опубликовать</button>
                         </div>
                     </transition>
                 </div>
-            </div> <!--Row 5-->
+            </div>
         </div>
 
 
@@ -98,7 +134,7 @@
             ></news-post>
         </div>
         <div class="text-center">
-            <button type="button" class="load-button pl-2 pr-2" @click="getPosts()" v-if="!allPostShown">Больше</button>
+            <button type="button" class="load-button pl-2 pr-2" @click="getPosts" v-if="!allPostShown">Больше</button>
         </div>
     </div>
 </template>
@@ -108,26 +144,48 @@
         name: "post",
         data() {
             return {
+                imgExtensions: [
+                    "image/jpeg",
+                    "image/jpg",
+                    "image/png",
+                    "image/svg+xml"
+                ],
+                docExtensions: [
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/pdf",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "application/vnd.ms-excel",
+                    "application/vnd.ms-powerpoint",
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    "application/vnd.rar",
+                    "application/zip",
+                ],
                 files: [],
                 images : [],
+                documents: [],
                 lastIndex : null,
-                postText: '',
+                postText: "",
                 posts: [],
                 pinnedPost: null,
                 pinnedPostIndex: null,
                 bottomOfWindow: 0,
                 scrolled: false,
-                NEW_POST : 'new',
-                EDITED_POST : 'edit',
-                LIKED_POST : 'like',
-                PINNED_POST : 'pinned',
-                DELETED_POST : 'deleted',
-                COMMENDTED_POST : 'commented',
+                NEW_POST : "new",
+                EDITED_POST : "edit",
+                LIKED_POST : "like",
+                PINNED_POST : "pinned",
+                DELETED_POST : "deleted",
+                COMMENDTED_POST : "commented",
+                NEW_POST_TEXTAREA: "NEW_POST",
                 allPostShown : false,
                 fakeImage : false,
                 imageUrl : null,
                 postIds : [],
-                NEW_POST_TEXTAREA: 'NEW_POST'
+                imgMaxSize: 2 * 1024 * 1024,
+                docMaxSize: 10 * 1024 * 1024,
+                imgMaxNumber: 1,
+                docMaxNumber: 5,
             }
         },
 
@@ -138,20 +196,56 @@
         mounted: function() {
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
             Echo.private(`post`)
-            .listen('NewPost', (e) => {
+            .listen("NewPost", (e) => {
                 this.handleIncoming(e);
             });
             this.getPosts();
         },
 
         methods: {
-            fileUpload: function(e) {
-                if(this.files.length < 1) {
+            fileUpload(e) {
+                const documents = e.target.files;
+                const vm = this;
+
+                if(documents.length <= this.docMaxNumber) {
+                    Array.from(documents).forEach(document => {
+                        if(document.size > this.docMaxSize) {
+                            alert("Error file size: " + document.name);
+                        }
+                        else if(!this.checkExtension(document.type, this.docExtensions)) {
+                            alert("You can upload only files with extensions: doc, docx, ppt, pptx, xls, xlsx, pdf, rar");
+                        }
+                        else {
+                            vm.documents.push(document);
+                            console.log(vm.documents);
+                        }
+                    })
+                }
+                else {
+                    alert("Maximum number of files: 5")
+                }
+            },
+
+            deleteFile(index) {
+                const vm = this;
+                vm.documents.splice(index, 1);
+            },
+
+            checkExtension(type, array) {
+                if(array.includes(type)) return true
+                else return false;
+            },
+
+            imageUpload(e) {
+                if(e.target.files.length <= this.docMaxNumber) {
                     const files = e.target.files;
                     const vm = this;
                     Array.from(files).forEach(file => {
-                        if (file.size > 2 * 1024 * 1024) {
-                            alert("ERROR FILE RAZMER : " + file.name);
+                        if (file.size > this.imgMaxSize) {
+                            alert("Error file size: " + file.name);
+                        }
+                        else if(!this.checkExtension(file.type, this.imgExtensions)) {
+                            alert("You can upload only images with extensions: svg, jpg, png");
                         }
                         else {
                             vm.files.push(file);
@@ -162,38 +256,45 @@
                         }
                     });
                 }
+                else {
+                    alert("Maximum number of images: 1")
+                }
             },
 
-            deleteImage: function(index) {
+            deleteImage(index) {
                 const vm = this;
                 vm.images.splice(index, 1);
                 vm.files.splice(index, 1);
             },
 
-            addPost: function () {
+            addPost() {
                 this.preloader(true);
-                this.axios.post('/addPost', this.getFormData()).then(response => {
+                this.axios.post("/addPost", this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
-                    alert('Ошибка на стороне сервера');
+                    alert("Ошибка на стороне сервера");
                 });
-                this.postText = '';
+                this.postText = "";
             },
 
             getFormData() {
                 const formData = new FormData;
 
-                this.files.forEach(file => {
-                    formData.append('postFiles[]', file, file.name);
+                this.documents.forEach(document => {
+                    formData.append('postDocuments[]', document, document.name);
                 });
 
-                formData.append('postText', this.postText);
-                formData.append('isn', this.isn);
+                this.files.forEach(file => {
+                    formData.append("postFiles[]", file, file.name);
+                });
+
+                formData.append("postText", this.postText);
+                formData.append("isn", this.isn);
 
                 return formData;
             },
 
-            fetchAddPost: function (response) {
+            fetchAddPost(response) {
                 this.files = [];
                 this.images = [];
                 //     this.posts.unshift({
@@ -212,14 +313,14 @@
                 // }
             },
 
-            getPosts () {
+            getPosts() {
                 this.preloader(true);
-                this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
+                this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
                     this.setPosts(response.data)
                 });
             },
 
-            setPosts (response) {
+            setPosts(response) {
                 var vm = this;
                 var i = 0;
                 if(response.length < 5) {
@@ -244,11 +345,11 @@
                 this.preloader(false);
             },
 
-            deleteFromPost (index) {
+            deleteFromPost(index) {
                 this.posts.splice(index, 1);
             },
 
-            unsetAllPinned (index) {
+            unsetAllPinned(index) {
                 var vm = this;
                 this.pinnedPost = null;
                 this.posts.forEach(function (post) {
@@ -261,17 +362,17 @@
                 }
             },
 
-            handleScroll () {
+            handleScroll() {
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
                 if (this.bottomOfWindow && !this.allPostShown) {
                     this.preloader(true);
-                    this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
+                    this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
                         this.setPosts(response.data)
                     });
                 }
             },
 
-            handleIncoming (e) {
+            handleIncoming(e) {
                 var vm = this;
                 if(e.type === vm.NEW_POST)
                 {
@@ -319,24 +420,24 @@
                 }
             },
 
-            preloader(show){
+            preloader(show) {
                 if(show)
                 {
-                    document.getElementById('preloader').style.display = 'flex';
+                    document.getElementById("preloader").style.display = "flex";
                 }
                 else
                 {
-                    document.getElementById('preloader').style.display = 'none';
+                    document.getElementById("preloader").style.display = "none";
                 }
             }
         },
 
         beforeMount () {
-            window.addEventListener('scroll', this.handleScroll);
+            window.addEventListener("scroll", this.handleScroll);
         },
 
         beforeDestroy () {
-            window.removeEventListener('scroll', this.handleScroll);
+            window.removeEventListener("scroll", this.handleScroll);
         }
     }
 </script>
@@ -370,7 +471,7 @@
         margin: 0;
     }
 
-    input[type='file'] {
+    input[type="file"] {
         display:none;
     }
 
@@ -443,5 +544,15 @@
     .image-container:hover .delete-image-button {
         cursor: pointer;
         display: block;
+    }
+
+    .button-delete {
+        cursor: pointer;
+        outline: none;
+        transition: 0.4s ease;
+    }
+
+    .button-delete:hover {
+        color: red;
     }
 </style>
