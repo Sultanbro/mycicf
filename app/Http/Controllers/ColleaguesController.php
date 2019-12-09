@@ -52,7 +52,6 @@ class ColleaguesController extends Controller {
     public function getChildsOfChild($parentId){
         $result = [];
         $model = Branch::where('kias_parent_id', $parentId)
-            ->where('duty', '<>', '0')
             ->get();
         foreach ($model as $data){
             if(count($data->childs)){
