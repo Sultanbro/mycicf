@@ -10,15 +10,10 @@ import TextareaAutosize from 'vue-textarea-autosize'
 
 import VueGoogleCharts from 'vue-google-charts'
 
-import linkify from 'vue-linkify'
 
 Vue.use(VueAxios, axios);
 
 Vue.use(VueTreeselect);
-
-Vue.use(TextareaAutosize);
-
-Vue.directive('linkified', linkify);
 
 Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
 
@@ -34,15 +29,6 @@ Vue.component('menu-mobile', require('./components/mobile/layouts/menu-mobile.vu
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
 
-Vue.component('post', require('./components/mobile/news/post.vue').default);
-
-Vue.component('news-post', require('./components/mobile/news/news-post.vue').default);
-
-Vue.component('news-comment', require('./components/mobile/news/news-comment.vue').default);
-
-Vue.component('colleagues', require('./components/mobile/colleagues/colleagues.vue').default);
-
-Vue.component('colleagues-info', require('./components/mobile/colleagues/colleagues-info.vue').default);
 
 window.onload = function(){
     var app = new Vue({

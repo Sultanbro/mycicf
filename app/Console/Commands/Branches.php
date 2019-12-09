@@ -58,7 +58,7 @@ class Branches extends Command
         Branch::where('verified', '=', '2')->update(['verified' => '1']);
         echo "Удаляем старые данные\n";
         Branch::where('verified', '=', '0')->delete();
-        echo "Данные успешно обновлены\n";
+        echo "Данные успешно обновлены";
         $responseTime = time() - $time;
         echo "Выпонено за {$responseTime} секунд\n";
         $time = time();
@@ -72,7 +72,6 @@ class Branches extends Command
         $model->kias_parent_id = $subject->ParentISN;
         $model->has_child = $subject->Kids;
         $model->verified = 2;
-        $model->duty = $subject->Duty;
         try{
             if($model->save()){
                 return true;

@@ -40,10 +40,6 @@ class ParseController extends Controller
     {
         return view('parse/company');
     }
-    public function dealerRaiting()
-    {
-        return view('dealerRaiting');
-    }
     public function addname()
     {
         $full_name = Request::input('full_name');
@@ -363,7 +359,7 @@ class ParseController extends Controller
         return $model;
     }
     public function getCompanyIdByName($row){
-        $model = PreviousName::where('name','=',$row)->get()[0]->company_id;
+        $model = PreviousName::where('name','=',$row)->get()[0]->companyId;
         return $model;
     }
     public function getFinanceAttrNameByLabel($name){
@@ -1106,7 +1102,7 @@ class ParseController extends Controller
                 $ranking[$id] = $i++;
             }
         }
-        return view('parse.top-company', [
+        return view('parse.company', [
             'premium_first' => $premium_first,
             'premium_second' => $premium_second,
             'payout_first' => $payout_first,
@@ -1385,7 +1381,7 @@ class ParseController extends Controller
             $class_sum[$id]['payout_second'] = $second_payout;
         }
 
-        return view('parse.top-classes', [
+        return view('parse.product', [
             'premium_first' => $premium_first,
             'premium_second' => $premium_second,
             'payout_first' => $payout_first,
@@ -1532,7 +1528,7 @@ class ParseController extends Controller
             }
         }
         arsort($result);
-        return view('parse/top-finance', [
+        return view('parse/finance', [
             'result' => $result,
             'companyList' => $companyList,
             'label_first' => $label_first,
@@ -1563,6 +1559,7 @@ class ParseController extends Controller
     public function getTopClasses(){
         return view('parse/top-classes');
     }
+
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
         $premium = [];
         $payout = [];
@@ -2122,7 +2119,7 @@ class ParseController extends Controller
         $model->short_name = $request->shortname;
         if($model->save()){
             $previousName = new PreviousName();
-            $previousName->company_id = $model->id;
+            $previousName->companyId = $model->id;
             $previousName->name = $request->full_name;
             if($previousName->save()){
                 echo 'Успешно добавлена';
@@ -2174,7 +2171,7 @@ class ParseController extends Controller
         $result = '';
         if($request->fullname != ''){
             $previousName = new PreviousName();
-            $previousName->company_id = $id;
+            $previousName->companyId = $id;
             $previousName->name = $request->fullname;
             $previousName->save();
             $result .= 'Добавлена полное наименование<br>';
@@ -2330,8 +2327,5 @@ class ParseController extends Controller
                 $request->input('callback')
             );
     }
-    public function redirectToCompany(){
-        return redirect(route('parse/company'));
-    }
-}
 
+}

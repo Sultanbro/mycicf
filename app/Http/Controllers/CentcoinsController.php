@@ -53,7 +53,7 @@ class CentcoinsController extends Controller
     }
 
     public function getItemsStorage() {
-        $store_items_model = StoreItem::where('count', '>', '0')->get();
+        $store_items_model = StoreItem::all();
 
         $store_items = [];
 
@@ -69,7 +69,6 @@ class CentcoinsController extends Controller
     }
 
     public function buyItem(Request $request) {
-
         $price = StoreItem::where('id', $request->itemId)->first();
         $model = new CentcoinHistory();
         $model->type = 'Оплата';

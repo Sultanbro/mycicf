@@ -24,32 +24,10 @@ use App\Http\Controllers\ParseController;
 
     <!-- include vue-treeselect & its styles. you can change the version tag to better suit your needs. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
-
-    <script type="text/javascript" src="{{asset('js/app.js')}}"></script>
-
-    <style>
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .valuePadding {
-            border: 1px inset #000000;
-        }
-        .valuePadding input {
-            border: none;
-            padding:0px;
-            outline: none;
-            text-align: left;
-            width: 20px;
-        }
-    </style>
 </head>
 <body>
 @include('layouts.header')
+@include('layouts.parse.header')
 
 <main class="flex-column pl-5 pr-5" id="app">
     <div class="bg-white pl-3 pr-3 box-shadow border-16">
@@ -61,104 +39,44 @@ use App\Http\Controllers\ParseController;
                         Сборы
                     </div>
                 </div>
-                <a href="/parse/finance">
-                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
-                        <i class="fa fa-sliders-h settings-icon-transform270"></i>
-                        <div class="mt-1 fs-0_8">
-                            Показатели
-                        </div>
+                <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                    <i class="fa fa-sliders-h settings-icon-transform270"></i>
+                    <div class="mt-1 fs-0_8">
+                        Показатели
                     </div>
-                </a>
-                {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
-                    {{--<i class="fa fa-user-friends"></i>--}}
-                    {{--<div class="mt-1 fs-0_8">--}}
-                        {{--Конкуренты--}}
-                    {{--</div>--}}
-                {{--</div>--}}
+                </div>
+                <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                    <i class="fa fa-user-friends"></i>
+                    <div class="mt-1 fs-0_8">
+                        Конкуренты
+                    </div>
+                </div>
             </div>
             <div>
-                <div class="flex-row">
-                    <div class="mr-10">
-                        <div>
-                            <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
-                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
-                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
-                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
-                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
-                            </select>
-                        </div>
+                <div class="flex-row jc-sb">
+                    <div class="test">
+                        <input type="date" value="2019-01-01" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
-                    <div class="flex-row jc-sb" id="monthBlock" @if(($_GET['dateType'] ?? 'rise') == 'month' || ($_GET['dateType'] ?? 'rise') == 'rise') style="display: flex;" @else  style="display: none;"  @endif>
-                        <div class="mr-4 ml-4">
-                            <select id="fYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @for($year = 2014; $year <= date('Y'); $year++)
-                                    <option value="{{$year}}" @if($year == $_GET['firstYear']) selected @endif>{{$year}}</option>
-                                @endfor
-                            </select>
-                            <select id="firstMonth" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @foreach($month as $val => $key)
-                                    <option value="{{$val}}" @if(($_GET['firstPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mr-4 ml-4">
-                            <select id="sYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @for($year = 2014; $year <= date('Y'); $year++)
-                                    <option value="{{$year}}" @if($year == $_GET['secondYear']) selected @endif>{{$year}}</option>
-                                @endfor
-                            </select>
-                            <select id="secondMonth" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @foreach($month as $val => $key)
-                                    <option value="{{$val}}" @if(($_GET['secondPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
+                    <div class="test">
+                        <input type="date" value="2019-01-01" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
-                    <div id="yearBlock" class="jc-sb" @if(($_GET['dateType'] ?? 'rise') == 'year') style="display: flex;" @else  style="display: none;"  @endif>
-                        <select id="first" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 mr-10">
-                            @for($year = 2014; $year < date('Y'); $year++)
-                                <option value="{{$year}}" @if($year == $_GET['firstYear']) selected @endif>{{$year}}</option>
-                            @endfor
-                        </select>
-
-                        <select id="second" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 ml-10">
-                            @for($year = 2014; $year < date('Y'); $year++)
-                                <option value="{{$year}}" @if($year == $_GET['secondYear']) selected @endif>{{$year}}</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div id="quarterBlock" class="jc-sb" @if(($_GET['dateType'] ?? 'rise') == 'quarter') style="display: flex;" @else  style="display: none;"  @endif>
-                        <div class="mr-10">
-                            <select id="firstYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @for($year = 2014; $year <= date('Y'); $year++)
-                                    <option value="{{$year}}" @if($year == $_GET['firstYear']) selected @endif>{{$year}}</option>
-                                @endfor
-                            </select>
-                            <select id="firstQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @for($quarter = 1; $quarter <= 4; $quarter++)
-                                    <option value="{{$quarter}}" @if($quarter == $_GET['firstPeriod']) selected @endif>{{$quarter}}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="ml-10">
-                            <select id="secondYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                            @for($year = 2014; $year <= date('Y'); $year++)
-                                <option value="{{$year}}" @if($quarter == $_GET['secondYear']) selected @endif>{{$year}}</option>
-                            @endfor
-                            </select>
-                            <select id="secondQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
-                                @for($quarter = 1; $quarter <= 4; $quarter++)
-                                    <option value="{{$quarter}}" @if($quarter == $_GET['secondYear']) selected @endif>{{$quarter}}</option>
-                                @endfor
-                            </select>
+                    <div class="test">
+                        <div class="flex-row date-color">
+                            <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
+                                <div>
+                                    <i class="fa fa-eye"></i>
+                                </div>
+                                <div class="ml-2">
+                                    Показать
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div>
                 <div class="flex-row vertical-middle jc-sb">
-                    <div class="mr-4 ml-4">
+                    <div class="test">
                         <label class="vertical-middle pointer mb-0">
                             <div class="termination-checkbox">
                                 <input type="checkbox" id="termination">
@@ -168,26 +86,24 @@ use App\Http\Controllers\ParseController;
                             </div>
                         </label>
                     </div>
-                    <div class="mr-4 ml-4">
+                    <div class="test">
                         <div class="vertical-middle">
-                            <div class="vertical-middle color-red pl-4 pr-4">
-                        <span class="valuePadding pl-2 pr-2">
-                                    <input type="number" max="100" min="0" value="{{$_GET['disc'] ?? 0}}" id="inputRRPDiscount">
-                                    %
-                                </span>
+                            <div class="vertical-middle border-black color-red pl-4 pr-4">
+                                <span class="fs-1_2 pb-1">0 %</span>
                             </div>
                         </div>
                     </div>
-                    <div class="mr-4 ml-4">
-                        <div class="flex-row date-color">
-                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
-                                <div>
-                                    <i class="fa fa-filter"></i>
-                                </div>
-                                <div class="ml-2">
-                                    Показать
-                                </div>
-                            </div>
+                    <div class="test">
+                        <div>
+                            <select class="border-0-bottom pb-1 pointer">
+                                <option selected="selected" disabled="disabled" class="none">
+                                    С нарастанием
+                                </option>
+                                <option>option 2</option>
+                                <option>option 3</option>
+                                <option>option 4</option>
+                                <option>option 5</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -200,80 +116,235 @@ use App\Http\Controllers\ParseController;
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
-                        <td class="text-left fs-1_3 pl-0">{{$label}}</td>
-                        <td class="pt-3"><a  href="/parse/company"><span class="pointer">Топ по компаниям</span></a></td>
-                        <td class="pt-3"><span class="pointer parse-active">Топ по классам</span></td>
-                        <td colspan="4" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                        <td class="text-left fs-1_3 pl-0">Рынок</td>
+                        <td class="pt-3"><span class="pointer">Топ по компаниям</span></td>
+                        <td class="pt-3"><span class="pointer">Топ по классам</span></td>
+                        <td colspan="6" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                     </tr>
                     <tr>
-                        <td class="text-left">Класс страхования</td>
-                        <td>{{$label_first}}</td>
-                        <td>{{$label_second}}</td>
-                        <td>Доля {{$label_first}}</td>
-                        <td>Доля {{$label_second}}</td>
+                        <td></td>
+                        <td>№</td>
+                        <td>Класс страхования</td>
+                        <td>Авг 2019</td>
+                        <td>Авг 2018</td>
+                        <td>Доля Авг 2019</td>
+                        <td>Доля Авг 2018</td>
                         <td>Изм %</td>
                         <td>Изм сумма</td>
                         <td></td>
-                        <td>{{$label_first}}</td>
-                        <td>{{$label_second}}</td>
+                        <td>Авг 2019</td>
+                        <td>Авг 2018</td>
                         <td>Изм %</td>
-                        <td>{{$label_first}}</td>
-                        <td>{{$label_second}}</td>
+                        <td>Авг 2019</td>
+                        <td>Авг 2018</td>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($insuranceClassList as $id => $key)
-                        <tr>
-                            <td class="text-left"><strong><a onclick="getCompaniesByClass({{$id}})">{{$controller->getNameByClassId($id)}}</a></strong></td>
-                            <td>{{number_format($class_sum[$id]['premium_first'], 0, '.', ' ')}}</td>
-                            <td>{{number_format($class_sum[$id]['premium_second'], 0, '.', ' ')}}</td>
-                            <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_first'], array_sum($premium_first))}}</td>
-                            <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_second'], array_sum($premium_second))}}</td>
-                            <td>{{$controller->getChangedVal($class_sum[$id]['premium_first'], $class_sum[$id]['premium_second'])}}%</td>
-                            <td>{{number_format($class_sum[$id]['premium_second'] - $class_sum[$id]['premium_first'], 0, '.', ' ') }}</td>
-                            <td></td>
-                            <td>{{number_format($class_sum[$id]['payout_first'], 0, '.', ' ')}}</td>
-                            <td>{{number_format($class_sum[$id]['payout_second'], 0, '.', ' ')}}</td>
-                            <td>{{$controller->getChangedVal($class_sum[$id]['payout_first'],$class_sum[$id]['payout_second'])}}%</td>
-                            <td>{{$controller->getPayoutChange($class_sum[$id]['payout_first'], $class_sum[$id]['premium_second'])}}</td>
-                            <td>{{$controller->getPayoutChange($class_sum[$id]['payout_second'], $class_sum[$id]['premium_second'])}}</td>
-                        </tr>
-                        @foreach($premium_first as $product_id => $value)
-                            @if(in_array($product_id, $insuranceClassList[$id]))
-                                <tr>
-                                    <td class="text-left"><a  onclick="getCompaniesByProduct({{$product_id}})">{{$productList[$product_id]}}</a></td>
-                                    <td>{{number_format($premium_first[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{number_format($premium_second[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{$controller->getPercentOfMarker($premium_first[$product_id], array_sum($premium_first))}}</td>
-                                    <td>{{$controller->getPercentOfMarker($premium_second[$product_id], array_sum($premium_second))}}</td>
-                                    <td>{{$controller->getChangedVal($premium_first[$product_id], $premium_second[$product_id])}}</td>
-                                    <td>{{number_format($premium_first[$product_id] - $premium_second[$product_id], 0, '.', ' ') }}</td>
-                                    <td></td>
-                                    <td>{{number_format($payout_first[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{number_format($payout_second[$product_id], 0, '.', ' ')}}</td>
-                                    <td>{{$controller->getChangedVal($payout_first[$product_id], $payout_second[$product_id])}}</td>
-                                    <td>{{$controller->getPayoutChange($payout_first[$product_id], $premium_first[$product_id])}}</td>
-                                    <td>{{$controller->getPayoutChange($payout_second[$product_id], $premium_second[$product_id])}}</td>
-                                </tr>
-                            @endif
-                        @endforeach
-                    @endforeach
                     <tr>
-                        <td class="bold text-left fs-0_9">Итого</td>
-                        <td>{{number_format(array_sum($premium_first), 0, '.', ' ')}}</td>
-                        <td>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</td>
+                        <td><span>1</span></td>
+                        <td>1</td>
+                        <td><strong>Обязательное</strong></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>2</span></td>
+                        <td>2</td>
+                        <td><strong>Личное</strong></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>3</span></td>
+                        <td>3</td>
+                        <td><strong>Имущественное</strong></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>4</span></td>
+                        <td>4</td>
+                        <td>ВСЕГО</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr class="parse-centras-active">
+                        <td><span>5</span></td>
+                        <td>5</td>
+                        <td>Сентрас Иншуранс</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>6</span></td>
+                        <td>6</td>
+                        <td>Коммеск</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>7</span></td>
+                        <td>7</td>
+                        <td>НСК</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>8</span></td>
+                        <td>8</td>
+                        <td>ИНТЕРТИЧ</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>9</span></td>
+                        <td>9</td>
+                        <td>Amanat</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td><span>10</span></td>
+                        <td>10</td>
+                        <td>Лондон-Алматы</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td></td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>0%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
                         <td></td>
                         <td></td>
-                        <td>{{$controller->getChangedVal(array_sum($premium_first), array_sum($premium_second))}}</td>
-                        <td>{{number_format(array_sum($premium_first)-array_sum($premium_second), 0, '.', ' ')}}</td>
+                        <td class="bold fs-0_9">Итого</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>100%</td>
+                        <td>100%</td>
+                        <td>100%</td>
+                        <td>71 280 655</td>
                         <td></td>
-                        <td>{{number_format(array_sum($payout_first), 0, '.', ' ')}}</td>
-                        <td>{{number_format(array_sum($payout_second), 0, '.', ' ')}}</td>
-                        <td>{{$controller->getChangedVal(array_sum($payout_first), array_sum($payout_second))}}</td>
-                        <td>{{$controller->getPayoutChange(array_sum($payout_first), array_sum($premium_first))}}</td>
-                        <td>{{$controller->getPayoutChange(array_sum($payout_second), array_sum($premium_second))}}</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                        <td>100%</td>
+                        <td>71 280 655</td>
+                        <td>71 280 655</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>
@@ -282,130 +353,4 @@ use App\Http\Controllers\ParseController;
     </div>
 </main>
 </body>
-<script>
-    function load(id) {
-        var firstYear, firstPeriod, secondYear, secondPeriod;
-        var dateType = document.getElementById('dateType').value;
-        if(dateType === 'year'){
-            firstYear = document.getElementById('first').value;
-            secondYear = document.getElementById('second').value;
-            firstPeriod = 0;
-            secondPeriod = 0;
-        } else  if(dateType === 'quarter'){
-            firstYear = document.getElementById('firstYear').value;
-            secondYear = document.getElementById('secondYear').value;
-            firstPeriod = document.getElementById('firstQuarter').value;
-            secondPeriod = document.getElementById('secondQuarter').value;
-        } else {
-            firstYear = document.getElementById('fYear').value;
-            secondYear = document.getElementById('sYear').value;
-            firstPeriod = document.getElementById('firstMonth').value;
-            secondPeriod = document.getElementById('secondMonth').value;
-        }
-
-        var disc = 0;
-        if (document.getElementById('termination')){
-            disc = document.getElementById('inputRRPDiscount').value;
-        }
-        firstPeriod = parseInt(firstPeriod);
-        secondPeriod = parseInt(secondPeriod);
-        location.href = '/parse/product?dateType='+dateType+
-            '&firstPeriod='+firstPeriod+'&secondPeriod='+secondPeriod+
-            '&firstYear='+firstYear+'&secondYear='+secondYear+
-            '&companyId='+id+'&disc='+disc;
-        console.log(a);
-    }
-    function getCompaniesByClass(id) {
-        var firstYear, firstPeriod, secondYear, secondPeriod;
-        var dateType = document.getElementById('dateType').value;
-        if(dateType === 'year'){
-            firstYear = document.getElementById('first').value;
-            secondYear = document.getElementById('second').value;
-            firstPeriod = 0;
-            secondPeriod = 0;
-        } else  if(dateType === 'quarter'){
-            firstYear = document.getElementById('firstYear').value;
-            secondYear = document.getElementById('secondYear').value;
-            firstPeriod = document.getElementById('firstQuarter').value;
-            secondPeriod = document.getElementById('secondQuarter').value;
-        } else {
-            firstYear = document.getElementById('fYear').value;
-            secondYear = document.getElementById('sYear').value;
-            firstPeriod = document.getElementById('firstMonth').value;
-            secondPeriod = document.getElementById('secondMonth').value;
-        }
-
-        var disc = 0;
-        if (document.getElementById('termination').checked){
-            disc = document.getElementById('inputRRPDiscount').value;
-        }
-        firstPeriod = parseInt(firstPeriod);
-        secondPeriod = parseInt(secondPeriod);
-        location.href = '/parse/company?dateType=' + dateType +
-            '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
-            '&firstYear=' + firstYear + '&secondYear=' + secondYear +
-            '&classId=' + id + '&disc=' + disc;
-    }
-    function getCompaniesByProduct(id) {
-        var firstYear, firstPeriod, secondYear, secondPeriod;
-        var dateType = document.getElementById('dateType').value;
-        if(dateType === 'year'){
-            firstYear = document.getElementById('first').value;
-            secondYear = document.getElementById('second').value;
-            firstPeriod = 0;
-            secondPeriod = 0;
-        } else  if(dateType === 'quarter'){
-            firstYear = document.getElementById('firstYear').value;
-            secondYear = document.getElementById('secondYear').value;
-            firstPeriod = document.getElementById('firstQuarter').value;
-            secondPeriod = document.getElementById('secondQuarter').value;
-        } else {
-            firstYear = document.getElementById('fYear').value;
-            secondYear = document.getElementById('sYear').value;
-            firstPeriod = document.getElementById('firstMonth').value;
-            secondPeriod = document.getElementById('secondMonth').value;
-        }
-
-        var disc = 0;
-        if (document.getElementById('termination').checked){
-            disc = document.getElementById('inputRRPDiscount').value;
-        }
-        firstPeriod = parseInt(firstPeriod);
-        secondPeriod = parseInt(secondPeriod);
-        location.href = '/parse/company?dateType=' + dateType +
-            '&firstPeriod=' + firstPeriod + '&secondPeriod=' + secondPeriod +
-            '&firstYear=' + firstYear + '&secondYear=' + secondYear +
-            '&productId=' + id + '&disc=' + disc;
-    }
-    function checkDateType() {
-        console.log('a');
-        if (document.getElementById('dateType').value === 'year') {
-            document.getElementById('monthBlock').style.display = 'none';
-            document.getElementById('quarterBlock').style.display = 'none';
-            document.getElementById('yearBlock').style.display = 'flex';
-        } else if (document.getElementById('dateType').value === 'quarter') {
-            document.getElementById('monthBlock').style.display = 'none';
-            document.getElementById('quarterBlock').style.display = 'flex';
-            document.getElementById('yearBlock').style.display = 'none';
-        } else {
-            document.getElementById('monthBlock').style.display = 'flex';
-            document.getElementById('quarterBlock').style.display = 'none';
-            document.getElementById('yearBlock').style.display = 'none';
-        }
-    }
-</script>
-<style>
-    .parse-table thead tr:nth-of-type(1) td:nth-of-type(5){
-        background: #eaeff3;
-        width: 1px !important;
-    }
-    .parse-table thead tr:nth-of-type(2) td:nth-of-type(8){
-        background: #eaeff3;
-        width: 1px !important;
-    }
-    .parse-table tbody tr td:nth-of-type(8){
-        background: #eaeff3;
-        width: 1px;
-    }
-</style>
 </html>

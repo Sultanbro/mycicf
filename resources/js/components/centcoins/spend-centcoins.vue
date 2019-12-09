@@ -18,8 +18,6 @@
                         :disabled="centcoins < price">Купить</button>
             </div>
         </div>
-
-        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -75,13 +73,8 @@
             buyItem: function() {
                 this.axios.post('/buyItem', {isn: this.isn, itemId: this.itemId}).then(response => {
                     this.fetchBuyItem(response.data);
-                    this.flashMessage.error({
-                        title: "Ошибка",
-                        message: "Ошибка на стороне сервера",
-                        time: 5000
-                    });
                 }).catch(error => {
-
+                    alert('Ошибка на стороне сервера');
                 })
             },
 
