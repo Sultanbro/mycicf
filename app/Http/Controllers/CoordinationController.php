@@ -19,7 +19,7 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
-        $response = $kias->myCoordinationList(1490780);
+        $response = $kias->myCoordinationList($ISN);
         if($response->error){
             $success = false;
             $error = (string)$response->text;

@@ -62,6 +62,10 @@ Vue.component('motivation', require('./components/employee/motivation.vue').defa
 
 Vue.component('name', require('./components/name/name.vue').default);
 
+Vue.component('library-doc', require('./components/name/library-doc.vue').default);
+
+Vue.component('library-svg', require('./components/name/library-svg.vue').default);
+
 Vue.component('parse-charts', require('./components/parse/parse-charts.vue').default);
 
 Vue.component('main-data-charts', require('./components/parse/main-data-charts.vue').default);
