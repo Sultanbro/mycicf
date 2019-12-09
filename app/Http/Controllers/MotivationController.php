@@ -30,6 +30,7 @@ class MotivationController extends Controller
                     )
                 );
         }
+        $category = 0;
         switch ((int)$response->Category) {
             case 1 :
                 $category = 1;
