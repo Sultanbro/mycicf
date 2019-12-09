@@ -46,7 +46,7 @@
             <div class="pl-3 pr-3 mb-2 post-text-section">
                 <div class="post-text-section__text"
                      v-if="!showFull"
-                    v-html="{{post.postText !== null ? post.postText.substr(0, 200) : ''}}"
+                    v-html="post.postText !== null ? post.postText.substr(0, 200) : ''"
                     v-linkified></div>
                 <div class="post-text-section__text"
                      v-if="showFull"

@@ -38,7 +38,7 @@
                     <div class="d-flex ml-2 mr-2 flex-wrap">
                         <div v-for="(image, index) in images"
                              class="col-md-3 col-lg-3 bg-white mb-2"
-                             :key="image">
+                             :key="index">
                             <div class="image-container">
                                 <button type="button"
                                         class="delete-image-button"
