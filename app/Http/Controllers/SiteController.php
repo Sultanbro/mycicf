@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Branch;
+use App\KolesaMarks;
+use App\KolesaModel;
+use App\KolesaPrices;
 use App\Library\Services\KiasServiceInterface;
 use App\Providers\KiasServiceProvider;
 use App\User;
@@ -17,7 +20,7 @@ class SiteController extends Controller
     {
         if(Auth::check())
         {
-            return redirect(route('dossier'));
+            return redirect(route('news'));
         }
         else
         {
@@ -231,6 +234,11 @@ class SiteController extends Controller
         return array(
             3921599 => 3921599,
             3600338 => 3600338,
+            1445765 => 1445765,
+            1445988 => 1445988,
+            3611435 => 3611435,
+            4334911 => 4334911,
+            1490780 => 1490780,
         );
     }
 
@@ -312,6 +320,23 @@ class SiteController extends Controller
         return $result;
     }
 
+    public function getColleagueData(Request $request, KiasServiceInterface $kias){
+        $response = $kias->getEmplInfo($request->isn, date('01.m.Y'), date('d.m.Y', strtotime('today')));
+        $data = [
+            'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
+            'Name' => (string)$response->Name == "0" ? (new Branch())->getUserName($request->isn) : (string)$response->Name,
+            'Birthday' => (string)$response->Birthday == "0" ? 'Не указано' : (string)$response->Birthday,
+            'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
+            'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
+            'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+        ];
+        $result = [
+            'success' => true,
+            'response' => $data,
+        ];
+        return $result;
+    }
+
     public function getMonthLabel(Request $request){
         $result = [];
         foreach (parent::getMonthLabels() as $id => $value){
@@ -329,98 +354,110 @@ class SiteController extends Controller
         return response()->json($response)->withCallback($request->input('callback'));
     }
 
-    public function motivation(){
-        return view('motivation');
+    public function addPrice(Request $request){
+        $model = new KolesaPrices();
+        $model->title = $request->label;
+        $model->price = $request->price;
+        $model->mark_id = $request->mark_id;
+        $model->model_id = $request->model_id;
+        $model->year = $request->year;
+        try{
+            $model->save();
+            return response()
+                ->json(['success' => true]);
+        }catch (\Exception $ex) {
+            return response()
+                ->json(['success' => false]);
+        }
     }
 
-    public function getMotivationList(Request $request, KiasServiceInterface $kias){
-        $success = true;
-        $error = '';
-        $ISN = $request->isn;
-        $begin = $request->begin;
-        $end = $request->end;
-        $response = $kias->getEmplMotivation($ISN, $begin, $end);
-        if($response->error) {
-            return response()
-                ->json([
-                    'success' => false,
-                    'error' => (string)$response->error->text
-                ])
-                ->withCallback(
-                    $request->input(
-                        'callback'
-                    )
-                );
+    public function logout(){
+        if(Auth::check())
+            Auth::logout();
+        return redirect('/');
+    }
+
+    public function getBranchSearch(Request $request){
+        $headData = Branch::where('kias_id', 50)
+            ->where('duty','=', '0')
+            ->first();
+        $result = [];
+        if(count($headData->childs)){
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+                'children' => $this->getSearchChild($headData->kias_id),
+            ]);
+        }else{
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+            ]);
         }
-        switch ((int)$response->Category) {
-            case 1 :
-                $category = 1;
-                $list = [
-                    [
-                        'types' => 'Сборы с нарастанием (>80%)',
-                        'sum' => ((double)$response->Mot->row->PercPlan ?? 0).'%',
-                        'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
-                    ],
-                    [
-                        'types' => 'Сборы за месяц (>50%)',
-                        'sum' => ((double)$response->Mot->row->PlanFM ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
-                    ],
-                    [
-                        'types' => 'Средневзвешенный размер комиссии ',
-                        'sum' => ((double)$response->Mot->row->TotalProcKV ?? 00).'%',
-                        'color' => 'transparent',
-                    ],
-                    [
-                        'types' => 'Мотивация',
-                        'sum' => ((double)$response->Mot->row->MotSum ?? 00),
-                        'color' => 'transparent',
-                    ],
-                ];
-                break;
-            case 2 :
-                $category = 2;
-                $list = [
-                    [
-                        'types' => 'Оплаченные премии',
-                        'sum' => (double)$response->Mot->row->AmountF ?? 0,
-                        'color' => (double)$response->Mot->row->SharePlan > 80 ? 'green' : 'red',
-                    ],
-                    [
-                        'types' => 'Доля ОГПО физических лиц (<20%)',
-                        'sum' => ((double)$response->Mot->row->DolyaVTSFis ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->DolyaVTSFis ?? 0) < 20 ? 'green' : 'red',
-                    ],
-                    [
-                        'types' => 'Себестоимость',
-                        'sum' => ((double)$response->Mot->row->SharePlan ?? 00).'%',
-                        'color' => ((double)$response->Mot->row->SharePlan ?? 0) < 45 ? 'green' : 'red',
-                    ],
-                ];
-                break;
-            case 3 :
+        $responseData = [
+            'result' => $result,
+            'value' => Auth::user()->ISN,
+        ];
+        return response()->json($responseData)->withCallback($request->input('callback'));
+    }
 
-                break;
-            case 4 :
-
-                break;
-            case 5 :
-
-                break;
-            default :
-                $list = [];
+    public function getSearchChild($parent_id){
+        $result = [];
+        $data = Branch::where('kias_parent_id', $parent_id)
+            ->where('duty', '0')
+            ->get();
+        foreach($data as $branchData){
+            if(count($branchData->childs)){
+                array_push($result, [
+                    'id' => $branchData->kias_id,
+                    'label' => $branchData->fullname,
+                    'children' => $this->getSearchChild($branchData->kias_id),
+                ]);
+            }else{
+                array_push($result, [
+                    'id' => $branchData->kias_id,
+                    'label' => $branchData->fullname,
+                ]);
+            }
         }
-        return response()
-            ->json([
-                'success' => true,
-                'error' => '',
-                'list' => $list,
-                'cat' => $category
-            ])
-            ->withCallback(
-                $request->input(
-                    'callback'
-                )
-            );
+        return $result;
+    }
+
+    public function getMarks(){
+        $result = [];
+        foreach (KolesaMarks::all()as $item) {
+            array_push($result, [
+                'id' => $item->mark_id,
+                'name' => $item->mark_label,
+            ]);
+        }
+        return response()->json($result);
+    }
+
+    public function getModels(){
+        $result = [];
+        foreach (KolesaModel::all()as $item) {
+            array_push($result, [
+                'mark_id' => $item->parent_id,
+                'id' => $item->model_id,
+                'name' => $item->model_name,
+            ]);
+        }
+        return response()->json($result);
+    }
+
+    public function getPrices(){
+        $result = [];
+        foreach (KolesaPrices::all() as $item){
+            array_push($result, [
+                'mark_id' => $item->mark_id,
+                'model_id' => $item->model_id,
+                'year' => $item->year,
+                'price' => $item->price,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ]);
+        }
+        return response()->json($result);
     }
 }

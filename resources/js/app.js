@@ -8,13 +8,27 @@ import VueAxios from 'vue-axios'
 
 import TextareaAutosize from 'vue-textarea-autosize'
 
+import FlashMessage from '@smartweb/vue-flash-message'
+
+import linkify from 'vue-linkify'
+
 import VueGoogleCharts from 'vue-google-charts'
+
+import {EmojiPickerPlugin} from 'vue-emoji-picker'
+
+Vue.use(FlashMessage);
+
+Vue.use(EmojiPickerPlugin);
+
+Vue.use(FlashMessage);
 
 Vue.use(VueGoogleCharts);
 
 Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);
+
+Vue.directive('linkified', linkify);
 
 Vue.component('login', require('./components/registration/login.vue').default);
 
@@ -34,6 +48,8 @@ Vue.component('post', require('./components/news/post.vue').default);
 
 Vue.component('news-post', require('./components/news/news-post.vue').default);
 
+Vue.component('news-comment', require('./components/news/news-comment.vue').default);
+
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
@@ -51,6 +67,18 @@ Vue.component('parse-charts', require('./components/parse/parse-charts.vue').def
 Vue.component('main-data-charts', require('./components/parse/main-data-charts.vue').default);
 
 Vue.component('mobile-info', require('./components/mobile/employee/mobile-info.vue').default);
+
+Vue.component('emoji-component', require('./components/news/emoji-component.vue').default);
+
+Vue.component('report', require('./components/employee/report.vue').default);
+
+Vue.component('rating', require('./components/employee/rating.vue').default);
+
+Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
+
+Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
+
+Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
 
 window.onload = function(){
     var app = new Vue({

@@ -6,16 +6,16 @@
                     <div>
                         <div class="flex-column">
                             <div class="flex-column vertical-middle">
-                                <div class="mobile-date-flex width100">
+                                <div class="mobile-date-flex vw90">
                                     <div class="mobile-date-contain">
                                         <input type="date" class="border0 width100 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1 date-width" v-model="datebeg">
                                     </div>
                                     <div class="mobile-date-contain">
-                                        <input type="date" class="width100 border0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1 date-width" v-model="datebeg">
+                                        <input type="date" class="width100 border0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1 date-width" v-model="dateend">
                                     </div>
                                 </div>
                                 <div class="mobile-date-flex">
-                                    <div class="mobile-date-contain mobile-dossier-fio-input mobile-date-width">
+                                    <div v-if="checkUrl()" class="mobile-date-contain mobile-dossier-fio-input mobile-date-width">
                                         <div class="bg-darkgray width100 flex-row date-color pl-2 pr-2 pt-1 pb-1 date-width">
                                             <treeselect v-model="isn" :multiple="false" :options="options" />
                                         </div>
@@ -51,7 +51,7 @@
                                 </thead>
                                 <tbody class="date-color">
                                 <tr v-for="(info, index) in carier">
-                                    <td>{{info.DateBeg}} - {{info.DateEnd  === '0' ? 'н.в.' : info.DateEnd}}</td>
+                                    <td class="keep-all">{{info.DateBeg}} - {{info.DateEnd  === '0' ? 'н.в.' : info.DateEnd}}</td>
                                     <td class="table-td-border">{{info.Dept}}</td>
                                     <td>{{info.DutyName}}</td>
                                 </tr>
@@ -219,8 +219,8 @@
         name: "mobile-info",
         data() {
             return {
-                datebeg: '2018-01-01',
-                dateend: '2019-09-10',
+                datebeg: '1990-01-01',
+                dateend: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDay()+1, 6).toJSON().slice(0, 10),
                 carier: null,
                 vacation: null,
                 sick: null,
@@ -235,7 +235,9 @@
         },
         mounted: function(){
             this.getOptions();
-            this.getTables();
+            if(this.checkUrl()){
+                this.getTables();
+            }
         },
         props: {
             isn: Number,
@@ -263,6 +265,9 @@
                     alert(response.error);
                 }
             },
+            checkUrl(){
+                return ((window.location.pathname).slice(1,10) !== 'colleague');
+            }
             // modalBlur: function () {
             //     var qwe = document.getElementById(qwe);
             //   // var app = document.getElementById(app);

@@ -30,8 +30,10 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
 
-        <div class="col-md-6" id="employee_info">
-            <info></info>
+        <div class="col-md-10" id="employee_info">
+            <report
+                :isn = "{{auth()->user()->ISN}}"
+            ></report>
         </div>
 
         {{--RIGHT SIDE BAR GOES HERE--}}

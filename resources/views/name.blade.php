@@ -29,7 +29,9 @@
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         <div class="col-md-12 col-lg-12">
-            <name></name>
+            <name
+                    v-bind:pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 0 }}"></name>
+
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>

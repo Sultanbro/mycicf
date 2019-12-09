@@ -1,12 +1,5 @@
 <template>
         <div class="box-shadow radius-4px mt-3 pb-2">
-            <div>
-                <span>
-                    <h4 class="ml-2">
-                        <strong>История операций</strong>
-                    </h4>
-                </span>
-            </div>
             <div class="pt-4">
                 <div class="border-radius15 box-shadow bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                     <div class="flex-row jc-sb">
@@ -62,24 +55,82 @@
                 dateBeg: '2019-01-01',
                 dateEnd: '2019-12-01',
                 operations: [],
+                centcoins: null,
             }
         },
+
+        props: {
+            isn: Number,
+        },
+
         mounted() {
             this.getOperations();
+            this.getCentcoins();
         },
+
         methods: {
             getOperations: function () {
                 this.axios.post('/getOperationsList', {dateBeg: this.dateBeg, dateEnd: this.dateEnd}).then((response) => {
                     this.fetchOperations(response.data);
                 });
             },
+
             fetchOperations: function (response) {
                 this.operations = response;
+            },
+
+            getCentcoins: function () {
+                this.axios.post('/getCentcoins', {isn: this.isn}).then(response => {
+                    this.fetchCentcoins(response.data);
+                });
+            },
+
+            fetchCentcoins(response) {
+                this.centcoins = response;
+            },
+
+            preloader: function(show) {
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
+            },
+
+        },
+
+        watch: {
+            itemIndex: function () {
+                this.price = this.itemsStorage[this.itemIndex].price;
             },
         }
     }
 </script>
 
 <style scoped>
+    .buy-btn {
+        color: #FFF;
+        background-color: #0051f3;
+        transition: 0.4s ease;
+        height: 40px;
+        width: 25%;
+        outline: none;
+        border:none;
+    }
+
+    .buy-btn:hover {
+        box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .buy-btn[disabled] {
+        opacity: 0.5;
+    }
+
+    .buy-btn[disabled]:hover {
+        box-shadow: none;
+    }
 
 </style>

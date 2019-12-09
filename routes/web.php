@@ -19,10 +19,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
     Route::post('/login','Admin\SiteController@checkLogin');
     Route::group(['middleware' => ['checkAuth','checkSession','checkAdminAuth']], function (){
         Route::get('index', 'Admin\SiteController@index');
-        Route::get('/logout', function (){
-            Auth::logout();
-            return redirect('/');
-        });
+        Route::get('/logout', 'SiteController@logout');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         Route::post('/getCompanyList', 'ParseController@getCompanyListAxios');
@@ -37,7 +34,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/role/getRoles', 'Admin\RoleController@getRoles');
             Route::post('/role/setNewUser', 'Admin\RoleController@newUser');
         });
-        
+
         Route::group(['middleware' => 'parseAdmin'], function () {
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
@@ -61,11 +58,14 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('/centcoins/replenish', 'Admin\CentcoinsController@getReplenishView')->name('centcoins.replenish');
             Route::get('/centcoins/spend', 'Admin\CentcoinsController@getSpendView')->name('centcoins.spend');
             Route::get('/centcoins/history', 'Admin\CentcoinsController@getHistoryView')->name('centcoins.history');
+            Route::get('/centcoins/items', 'Admin\CentcoinsController@getItemsView')->name('centcoins.items');
+
 
             Route::post('/centcoins/userList', 'Admin\CentcoinsController@getUserList');
             Route::post('/centcoins/historyList', 'Admin\CentcoinsController@getHistoryList');
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
+            Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
 
         });
 
@@ -133,10 +133,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-        Route::get('parse', function (){
-            return redirect(route('parse/company'));
-        })->name('parse');
+        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
+    //CENTCOINS
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
     Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
     Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
@@ -144,6 +143,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
     Route::post('/buyItem', 'CentcoinsController@buyItem');
 
+    //NEWS
     Route::get('/news', 'NewsController@getView')->name('news');
     Route::post('/addPost', 'NewsController@addPost');
     Route::post('/getPosts', 'NewsController@getPosts');
@@ -152,18 +152,38 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/unsetPinned', 'NewsController@unsetPinned');
     Route::post('/likePost', 'NewsController@likePost');
     Route::post('/editPost', 'NewsController@editPost');
+    Route::post('/addComment', 'NewsController@addComment');
+    Route::post('/deleteComment', 'NewsController@deleteComment');
+    Route::post('/editComment', 'NewsController@editComment');
 
+    //RATING
+    Route::get('/rating', 'RatingController@index')->name('rating');
+    Route::post('/getRatingList', 'RatingController@getRatingList');
+
+    //COLLEAGUES
+    Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
+    Route::post('/colleagues/search', 'ColleaguesController@search');
+    Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
+    Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
+    Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
+    Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
+    Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
     //UNTITLED
     Route::get('/name', 'NameController@getView')->name('documentation');
     Route::post('/getItemsList', 'NameController@getItemsList');
 
-    Route::get('/logout', function (){
-        Auth::logout();
-        return redirect(route('index'));
-    });
+    Route::get('/report', 'ReportController@index')->name('report');
+    Route::post('/getReport', 'ReportController@getReport');
+
+    Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
+
+
+    Route::get('/logout', 'SiteController@logout');
 
 
 
+    //MOTIVATION
+    Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
 
         // MOBILE
         Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
@@ -175,12 +195,21 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
 
-        Route::post('/getUsersData', 'SiteController@getUserData');
+        Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
 
-        Route::get('/motivation', 'SiteController@motivation');
-        Route::post('/getMotivationList', 'SiteController@getMotivationList');
+        Route::post('/getUsersData', 'SiteController@getUserData');
+        Route::post('/getColleagueData', 'SiteController@getColleagueData');
+
+        Route::get('/motivation', 'MotivationController@motivation');
+        Route::post('/getMotivationList', 'MotivationController@getMotivationList');
         });
     });
 
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
+Route::post('/car/addPrice', 'SiteController@addPrice');
+Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::get('/kolesa/marks', 'SiteController@getMarks');
+Route::get('/kolesa/models', 'SiteController@getModels');
+Route::get('/kolesa/prices', 'SiteController@getPrices');
+Route::get('test', 'Admin\SiteController@getModelss');

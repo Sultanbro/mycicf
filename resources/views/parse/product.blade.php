@@ -57,7 +57,7 @@ use App\Http\Controllers\ParseController;
                             </select>
                         </div>
                         <div class="flex">
-                            <form class="h_flex margtop20 padtop7"><label class="h_flex labelcheck">
+                            <form class="h_flex margtop20 padtop7"><label class="h_flex flex-row vertical-middle labelcheck">
                                     <input type="checkbox" name="check" id="checkJs" @if(($_GET['disc'] ?? 0) != 0) checked @endif>
                                     <div class="margleft10">расторжения</div></label>
                             </form>
@@ -148,7 +148,7 @@ use App\Http\Controllers\ParseController;
                                 топ по классам
                             </div></a>
                     </div>
-                    <div>
+                    <div class="margtop20">
                         <h1 class="h1">{{$label}}</h1>
                     </div>
                 </div>
