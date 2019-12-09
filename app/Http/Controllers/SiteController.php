@@ -446,4 +446,18 @@ class SiteController extends Controller
         return response()->json($result);
     }
 
+    public function getPrices(){
+        $result = [];
+        foreach (KolesaPrices::all() as $item){
+            array_push($result, [
+                'mark_id' => $item->mark_id,
+                'model_id' => $item->model_id,
+                'year' => $item->year,
+                'price' => $item->price,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ]);
+        }
+        return response()->json($result);
+    }
 }
