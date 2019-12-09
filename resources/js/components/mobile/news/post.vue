@@ -302,7 +302,10 @@
                 this.closeCreatePost();
             },
             fetchAddPost: function (response) {
-                this.postIds.push(response.id);
+                this.files = [];
+                this.images = [];
+                this.documents = [];
+
                 this.preloader(false);
             },
 

@@ -297,6 +297,7 @@
             fetchAddPost(response) {
                 this.files = [];
                 this.images = [];
+                this.documents = [];
                 //     this.posts.unshift({
                 //         isn: response.userISN,
                 //         postText: response.postText,
