@@ -1,12 +1,12 @@
 <template>
-    <div class="box-shadow radius-4px mt-3 pb-2">
+    <div class="box-shadow radius-4px pb-2">
         <div class="pt-4">
             <div class="bg-white ml-3 mr-3 pt-4 pb-3">
                 <div class="d-flex align-items-center">
                     <div class="mr-2">
                         <input v-model="dateBeg" type="month" class="border-0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
-                    <div>
+                    <div v-if="checkUrl()">
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options" />
                     </div>
                     <div>
@@ -59,11 +59,11 @@
                 </table>
             </div>
         </div>
-        <a href="#" class="flex-row vertical-middle mr-4 ml-4 mt-2">
-            <i class="far fa-file-word color-blue fs-1_3"></i>
-            <span class="ml-2 color-black fs-1_1">положение по мотивации</span>
-        </a>
-        <div class="col-md-12 pl-0 pr-0 min-width-50 mt-3 width100">
+        <!--<a href="#" class="flex-row vertical-middle mr-4 ml-4 mt-2">-->
+            <!--<i class="far fa-file-word color-blue fs-1_3"></i>-->
+            <!--<span class="ml-2 color-black fs-1_1">положение по мотивации</span>-->
+        <!--</a>-->
+        <div ref="chart" style="display: none;" class="col-md-12 pl-0 pr-0 min-width-50 mt-3 width100">
             <div class="bg-white ml-3 mr-3 pl-3 pr-3 pt-4 pb-3">
                 <div class="width100 flex-row">
                     <div class="col-md-12 pl-0 pr-0 flex-row width100 main-data-first-chart-contain" ref="divElement" style="height : 200px">
@@ -112,7 +112,9 @@
         mounted () {
             this.ISN = this.isn;
             // this.getMotivation()
-            this.getOptions();
+            if(this.checkUrl()){
+                this.getOptions();
+            }
         },
         methods : {
             getMotivation() {
@@ -128,6 +130,7 @@
                             this.category = response.data.cat
                             this.motSum = response.data.mot_sum
                             this.setChartData(response.data.motivations)
+                            this.$refs.chart.style.display = 'block'
                         }else{
                             alert(response.data.error)
                         }
@@ -164,6 +167,9 @@
                 {
                     document.getElementById('preloader').style.display = 'none';
                 }
+            },
+            checkUrl(){
+                return ((window.location.pathname).slice(1,10) !== 'colleague');
             }
         }
     }

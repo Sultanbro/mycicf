@@ -1,7 +1,7 @@
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
     <div id="simple-info">
-        <simple-info
-            :isn="{{ auth()->user()->ISN }}"></simple-info>
+        <colleague-info
+            :isn="{{ $ISN }}"></colleague-info>
     </div>
     <div class="mb-5">
         <ul class="flex-column mr-3 ml-3">
@@ -55,6 +55,7 @@
                     <span>Сенткоины</span>
                 </li>
             </a>
+
         </ul>
     </div>
 </div>

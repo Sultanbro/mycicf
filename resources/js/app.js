@@ -10,11 +10,13 @@ import TextareaAutosize from 'vue-textarea-autosize'
 
 import FlashMessage from '@smartweb/vue-flash-message'
 
-Vue.use(FlashMessage);
+import linkify from 'vue-linkify'
 
 import VueGoogleCharts from 'vue-google-charts'
 
 import {EmojiPickerPlugin} from 'vue-emoji-picker'
+
+Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
 
@@ -25,6 +27,8 @@ Vue.use(VueGoogleCharts);
 Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);
+
+Vue.directive('linkified', linkify);
 
 Vue.component('login', require('./components/registration/login.vue').default);
 
@@ -70,7 +74,11 @@ Vue.component('report', require('./components/employee/report.vue').default);
 
 Vue.component('rating', require('./components/employee/rating.vue').default);
 
-//Vue.component('parse-selector', require('./components/parse/parse-selector.vue').default);
+Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
+
+Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
+
+Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
 
 window.onload = function(){
     var app = new Vue({

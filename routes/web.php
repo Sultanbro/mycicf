@@ -160,12 +160,22 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/rating', 'RatingController@index')->name('rating');
     Route::post('/getRatingList', 'RatingController@getRatingList');
 
+    //COLLEAGUES
+    Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
+    Route::post('/colleagues/search', 'ColleaguesController@search');
+    Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
+    Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
+    Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
+    Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
+    Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
     //UNTITLED
     Route::get('/name', 'NameController@getView')->name('documentation');
     Route::post('/getItemsList', 'NameController@getItemsList');
 
     Route::get('/report', 'ReportController@index')->name('report');
     Route::post('/getReport', 'ReportController@getReport');
+
+    Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
 
     Route::get('/logout', 'SiteController@logout');
@@ -188,6 +198,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
 
         Route::post('/getUsersData', 'SiteController@getUserData');
+        Route::post('/getColleagueData', 'SiteController@getColleagueData');
 
         Route::get('/motivation', 'MotivationController@motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
@@ -198,5 +209,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
-
+Route::get('/kolesa/marks', 'SiteController@getMarks');
+Route::get('/kolesa/models', 'SiteController@getModels');
+Route::get('/kolesa/prices', 'SiteController@getPrices');
 Route::get('test', 'Admin\SiteController@getModelss');

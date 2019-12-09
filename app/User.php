@@ -123,7 +123,31 @@ class User extends Authenticatable
             "3436143", "1445823", "1445797", "1445798", "1445799",
             "1445789", "1445790", "1445791", "1445792", "1445793",
             "1445824", "1445826", "3492324", "3492327", "4380822",
-            "3994433"
+            "3994433", "3994439", "3436136",
         ];
+    }
+
+    public function checkMotivationPermission($ISN){
+        if(in_array(Auth::user()->level, [50,1000]) || Auth::user()->dept_isn === 3436136){
+            return true;
+        }
+        if(Auth::user()->level == Auth::user()->ISN){
+            return false;
+        }
+        $permitted = $this->getChildElements(Auth::user()->level);
+        return in_array($ISN, $permitted);
+    }
+
+    public function getChildElements($level){
+        $result = [];
+        $data = Branch::where('kias_parent_id', $level)->get();
+        foreach ($data as $value){
+            if(count($value->childs)){
+                array_merge($result, $this->getChildElements($value->kias_id));
+            }else{
+                array_push($result, $value->kias_id);
+            }
+        }
+        return $result;
     }
 }

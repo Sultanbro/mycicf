@@ -45,16 +45,20 @@
 
             <div class="pl-3 pr-3 mb-2 post-text-section">
                 <div class="post-text-section__text"
-                     v-if="!showFull">{{post.postText !== null ? post.postText.substr(0, 300) : ''}}</div>
+                     v-if="!showFull"
+                    v-html="{{post.postText !== null ? post.postText.substr(0, 200) : ''}}"
+                    v-linkified></div>
                 <div class="post-text-section__text"
-                     v-if="showFull">{{post.postText}}</div>
+                     v-if="showFull"
+                        v-html="post.postText"
+                        v-linkified></div>
                 <div class="color-blue"
                      v-if="post.postText !== null && post.postText.length > 200 && !showFull">
                     <small @click="showFullText">Показать полностью...</small>
                 </div>
             </div>
 
-            <div class="" >
+             <div class="" >
                 <img class="width100 pl-3 pr-3 pt-2 pb-2" :src="image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)">
             </div>
 
