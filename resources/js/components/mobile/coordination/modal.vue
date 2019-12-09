@@ -87,7 +87,15 @@
                                         <i class="fas fa-paperclip color-blue-standart fs-1_4 rotate-45"></i>
                                     </div>
                                     <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
-                                        <a :href="attachment.URL" class="color-dimgray">{{attachment.FileName}}</a>
+                                        <a :href="attachment.URL" target="_blank" class="color-dimgray">{{attachment.FileName}}</a>
+                                    </div>
+                                </div>
+                                <div class="flex-row attachment-bg mt-2 mb-2 width100" v-if="coordination.Limit !== null">
+                                    <div class="attachment-border pt-2 pr-4 pb-2 pl-4 jc-center flex-column">
+                                        <i class="fas fa-paperclip color-blue-standart fs-1_4 rotate-45"></i>
+                                    </div>
+                                    <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
+                                        <a :href="`/getPrintableDocument/${coordination.Limit}/3015/3`" target="_blank" class="color-dimgray">Изменение лимитов на подписание ДС</a>
                                     </div>
                                 </div>
                             </div>

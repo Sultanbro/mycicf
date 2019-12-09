@@ -19,7 +19,7 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
-        $response = $kias->myCoordinationList($ISN);
+        $response = $kias->myCoordinationList(1490780);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
@@ -210,11 +210,15 @@ class CoordinationController extends Controller
                         (string)$key => (string)$value
                     ]);
                 }
+                elseif($key == 'AttrLimit'){
+                    $LimitISN = $value;
+                }
             }
         }
         $responseData = array_merge($responseData, [
             'Attributes' => $attributes,
-            'Coordinations' => $coordinations
+            'Coordinations' => $coordinations,
+            'Limit' => $LimitISN ?? null,
         ]);
         $result = [
             'success' => $success,

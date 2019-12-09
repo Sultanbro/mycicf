@@ -270,4 +270,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getPrintableDocument($isn, $template, $classId){
+        return $this->request('GetPrintableDocument', [
+            'ISN' => $isn,
+            'TemplateISN' => $template,
+            'ClassID' => $classId,
+        ]);
+    }
+
 }

@@ -112,6 +112,17 @@
                         <div>
                             <div>
                                 <div class="pl-5 pt-4 pb-4 pr-5 flex-row flex-wrap jc-sb">
+                                    <div v-if="coordination.Limit !== null" class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
+                                        <div class="attachment-bg flex-row vertical-middle ">
+                                            <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
+                                                <i class="fas fa-paperclip rotate-45"></i>
+                                            </div>
+                                            <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
+                                                <a :href="`/getPrintableDocument/${coordination.Limit}/3015/3`" target="_blank">Изменение лимитов на подписание ДС</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div v-for="attachment in attachments" class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
                                         <div class="attachment-bg flex-row vertical-middle ">
                                             <div class="attachment-border pt-2 pr-4 pb-2 pl-4">

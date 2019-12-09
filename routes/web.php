@@ -110,6 +110,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
+        Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
         //DOSSIER
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');

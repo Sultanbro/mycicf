@@ -82,7 +82,7 @@
                         <tr v-for="(info, index) in OL" :key="info.ISN">
                             <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
-                            <td scope="col" class="thead-border">{{DeptName}}</td>
+                            <td scope="col" class="thead-border">{{info.DeptName}}</td>
                             <td scope="col">{{info.docdate}}</td>
                         </tr>
                         </tbody>
