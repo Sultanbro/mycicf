@@ -6,6 +6,7 @@ use App\Branch;
 use App\KolesaMarks;
 use App\KolesaModel;
 use App\KolesaPrices;
+use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Providers\KiasServiceProvider;
 use App\User;
@@ -311,6 +312,24 @@ class SiteController extends Controller
         }
     }
 
+    public function getPrintableDocument($ISN, $TEMPLATE, $CLASS, KiasServiceInterface $kias){
+        $attachment = $kias->getPrintableDocument($ISN, $TEMPLATE, $CLASS);
+        if (isset($attachment->Bytes, $attachment->FileName)) {
+            $decoded = base64_decode((string)$attachment->Bytes);
+
+            $str = str_replace('\\', '/', (string)$attachment->FileName);
+            $pathinfo = pathinfo($str);
+            header('Content-Description: File Transfer');
+            header('Charset: UTF-8');
+            header('Content-Type: application/'.$pathinfo['extension']);
+            header('Content-Disposition: inline; filename="'.$pathinfo['basename'].'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            echo $decoded;
+        }
+    }
+
     public function getUserData(KiasServiceInterface $kias){
         $data = (new User)->getUserData($kias);
         $result = [
@@ -446,4 +465,18 @@ class SiteController extends Controller
         return response()->json($result);
     }
 
+    public function getPrices(){
+        $result = [];
+        foreach (KolesaPrices::all() as $item){
+            array_push($result, [
+                'mark_id' => $item->mark_id,
+                'model_id' => $item->model_id,
+                'year' => $item->year,
+                'price' => $item->price,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ]);
+        }
+        return response()->json($result);
+    }
 }

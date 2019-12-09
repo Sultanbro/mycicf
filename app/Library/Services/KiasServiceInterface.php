@@ -110,4 +110,13 @@ interface KiasServiceInterface
      * @param $begin
      */
     public function getEmplRating($isn, $begin);
+
+    /**
+     * Получить печатную форму документа
+     * @param $isn
+     * @param $template
+     * @param $classId
+     * @return mixed
+     */
+    public function getPrintableDocument($isn, $template, $classId);
 }

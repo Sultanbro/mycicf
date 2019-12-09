@@ -46,12 +46,12 @@
             <div class="pl-3 pr-3 mb-2 post-text-section">
                 <div class="post-text-section__text"
                      v-if="!showFull"
-                    v-html="post.postText.substr(0, 200)"
+                    v-html="post.postText !== null ? post.postText.substr(0, 200) : ''"
                     v-linkified></div>
                 <div class="post-text-section__text"
                      v-if="showFull"
-                    v-html="post.postText"
-                    v-linkified></div>
+                        v-html="post.postText"
+                        v-linkified></div>
                 <div class="color-blue"
                      v-if="post.postText !== null && post.postText.length > 200 && !showFull">
                     <small @click="showFullText">Показать полностью...</small>
@@ -63,6 +63,14 @@
             </div>
 
             <div class="jc-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
+
+            <div v-for="(document, index) in post.documents"
+                 class="col-12 pr-2 pl-2 pt-2">
+                <div class="d-flex">
+                    <i :class="document.type" class="fas fs-1_2"></i>
+                    <div class="pl-2 pr-2"><a :href="document.link" target="_blank">{{document.name}}</a></div>
+                </div>
+            </div>
 
             <div class="horizontal-line mt-2"></div>
 

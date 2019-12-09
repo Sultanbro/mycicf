@@ -13,6 +13,7 @@ class ColleaguesController extends Controller {
         $parentId = isset($request->parentId) ? $request->parentId : 50;
         $model = Branch::where('fullname', 'like', "%$searchText%")
             ->whereIn('kias_parent_id', $this->getChilds($parentId))
+            ->where('duty', '<>', '0')
             ->get();
         foreach ($model as $user){
             if(!count($user->childs)) {
@@ -42,13 +43,17 @@ class ColleaguesController extends Controller {
         if(count($model->childs)){
             array_push($result, $parentId);
             $result = array_merge($result,$this->getChildsOfChild($parentId));
+        }else{
+            $result = [$parentId];
         }
         return $result;
     }
 
     public function getChildsOfChild($parentId){
         $result = [];
-        $model = Branch::where('kias_parent_id', $parentId)->get();
+        $model = Branch::where('kias_parent_id', $parentId)
+            ->where('duty', '<>', '0')
+            ->get();
         foreach ($model as $data){
             if(count($data->childs)){
                 array_push($result, $data->kias_id);

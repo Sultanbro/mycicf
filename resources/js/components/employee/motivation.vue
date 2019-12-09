@@ -27,7 +27,7 @@
         <div class="pt-4">
             <div class="d-flex align-items-center justify-content-between bg-white ml-3 mr-3 pt-3 pb-3">
                 <div>
-                    <span class="fs-1 CAPS">{{category_end_first}}</span>
+                    <span class="fs-1 CAPS">{{label}}</span>
                 </div>
                 <div>
                     <div class="d-flex align-items-center">
@@ -89,7 +89,7 @@
                 options: null,
                 motivations: [],
                 motSum: null,
-                category_end_first: 'Менеджер по корпоративному страхованию',
+                label: '',
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 7),
                 chartData:[],
                 chartOptions: {
@@ -104,6 +104,7 @@
                         },
                     }
                 },
+                category: 0
             }
         },
         props : {
@@ -128,6 +129,15 @@
                         if(response.data.success){
                             this.motivations = response.data.list
                             this.category = response.data.cat
+                            if(this.category === 1){
+                                this.label = 'Менеджер по корпоративному страхованию'
+                            }else if(this.category === 2){
+                                this.label = ' Менеджеры по корпоративным продажам (филиалы)'
+                            }else if(this.category === 3){
+                                this.label = 'Менеджеры по прямым продажам'
+                            }else{
+                                this.label = ''
+                            }
                             this.motSum = response.data.mot_sum
                             this.setChartData(response.data.motivations)
                             this.$refs.chart.style.display = 'block'

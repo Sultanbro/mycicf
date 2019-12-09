@@ -48,6 +48,12 @@
                                     <span>Согласование</span>
                                 </li>
                             </a>
+                            <a href="/colleagues" class="pt-2 pb-2 color-darkgray font-size-1_2">
+                                <li>
+                                    <i class="far fa-thumbs-up"></i>
+                                    <span>Согласование</span>
+                                </li>
+                            </a>
 
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2" v-if="motivationShow">-->
                                 <!--<li>-->

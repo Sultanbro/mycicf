@@ -46,6 +46,36 @@
                     <img :src="image" class="width100"/>
                 </div>
             </div>
+
+            <div class="flex-row flex-wrap">
+                <div v-for="(document, index) in documents"
+                     class="col-12 pr-2 pl-2 pt-2">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <div v-if="document.type === 'application/msword' || document.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
+                                <i class="fas fa-file-word text-primary fs-1_2"></i>
+                            </div>
+                            <div v-if="document.type === 'application/pdf'">
+                                <i class="fas fa-file-pdf text-danger fs-1_2"></i>
+                            </div>
+                            <div v-if="document.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.type === 'application/vnd.ms-excel'">
+                                <i class="fas fa-file-excel text-success fs-1_2"></i>
+                            </div>
+                            <div v-if="document.type === 'application/vnd.ms-powerpoint' || document.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'">
+                                <i class="fas fa-file-powerpoint text-warning fs-1_2"></i>
+                            </div>
+                            <div v-if="document.type === 'application/vnd.rar' || document.type === 'application/zip'">
+                                <i class="fas fa-file-archive text-info fs-1_2"></i>
+                            </div>
+                            <div class="pl-2 pr-2">{{document.name}}</div>
+                        </div>
+                        <button class="border-0 bg-transparent button-delete" @click="deleteFile(index)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="create-post-section__add-file">
                 <div class="pt-2 pb-2 pl-3 pr-3 create-post-section__add-file__inner" @click="triggerUpload()">
                     <i class="fas fa-image"></i>
@@ -59,7 +89,7 @@
                     <i class="fas fa-volume-up"></i>
                     <span class="ml-2">Аудио</span>
                 </div>
-                <div class="pt-2 pb-2 pl-3 pr-3 create-post-section__add-file__inner">
+                <div class="pt-2 pb-2 pl-3 pr-3 create-post-section__add-file__inner" @click="triggerUploadFile()">
                     <i class="fas fa-file-upload"></i>
                     <span class="ml-3">Файл</span>
                 </div>
@@ -67,6 +97,9 @@
 
             <div v-show="false">
                 <input type="file" id="photo-upload" ref="imageBtn" @change="fileUpload" accept="image/*">
+            </div>
+            <div v-show="false">
+                <input type="file" id="image-upload" ref="documentBtn" @change="docUpload" multiple>
             </div>
 
             <div class="d-flex justify-content-center mt-3 mb-3">
@@ -106,27 +139,50 @@
 
         data() {
           return {
+              imgExtensions: [
+                  "image/jpeg",
+                  "image/jpg",
+                  "image/png",
+                  "image/svg+xml"
+              ],
+              docExtensions: [
+                  "application/msword",
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                  "application/pdf",
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  "application/vnd.ms-excel",
+                  "application/vnd.ms-powerpoint",
+                  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                  "application/vnd.rar",
+                  "application/zip",
+              ],
               isOpened: false,
               files: [],
               images : [],
+              documents: [],
               lastIndex : null,
-              postText: '',
+              postText: "",
               posts: [],
               pinnedPost: null,
               pinnedPostIndex: null,
               bottomOfWindow: 0,
               scrolled: false,
-              NEW_POST : 'new',
-              EDITED_POST : 'edit',
-              LIKED_POST : 'like',
-              PINNED_POST : 'pinned',
-              DELETED_POST : 'deleted',
-              COMMENDTED_POST : 'commented',
+              NEW_POST : "new",
+              EDITED_POST : "edit",
+              LIKED_POST : "like",
+              PINNED_POST : "pinned",
+              DELETED_POST : "deleted",
+              COMMENDTED_POST : "commented",
+              NEW_POST_TEXTAREA: "NEW_POST",
               allPostShown : false,
               fakeImage : false,
               imageUrl : null,
               postIds : [],
               disabled: true,
+              imgMaxSize: 2 * 1024 * 1024,
+              docMaxSize: 10 * 1024 * 1024,
+              imgMaxNumber: 1,
+              docMaxNumber: 5,
           }
         },
 
@@ -152,8 +208,11 @@
                     const files = e.target.files;
                     const vm = this;
                     Array.from(files).forEach(file => {
-                        if (file.size > 2 * 1024 * 1024) {
-                            alert("ERROR FILE RAZMER : " + file.name);
+                        if (file.size > this.imgMaxSize) {
+                            alert("Фотография превысил ограничение по размеру : " + file.name);
+                        }
+                        else if(!this.checkExtension(file.type, this.imgExtensions)) {
+                            alert("Доступные типы документов: svg, jpg, png");
                         }
                         else {
                             vm.files.push(file);
@@ -165,7 +224,37 @@
                     });
                 }
             },
+            docUpload: function(e) {
+                const documents = e.target.files;
+                const vm = this;
 
+                if(documents.length <= this.docMaxNumber) {
+                    Array.from(documents).forEach(document => {
+                        if(document.size > this.docMaxSize) {
+                            alert("Документ превысил ограничение по размеру : " + document.name);
+                        }
+                        else if(!this.checkExtension(document.type, this.docExtensions)) {
+                            alert("Вы загрузили неверный тип документа.\n" +
+                                "Доступные типы документов: doc, docx, ppt, pptx, xls, xlsx, pdf, rar");
+                        }
+                        else {
+                            vm.documents.push(document);
+                        }
+                    })
+                }
+                else {
+                    alert("Максимальное кол-во файлов: 5")
+                }
+            },
+            deleteFile(index) {
+                const vm = this;
+                vm.documents.splice(index, 1);
+            },
+
+            checkExtension(type, array) {
+                if(array.includes(type)) return true
+                else return false;
+            },
             deleteImage: function(index) {
                 const vm = this;
                 vm.images.splice(index, 1);
@@ -174,6 +263,9 @@
 
             triggerUpload() {
                 this.$refs.imageBtn.click();
+            },
+            triggerUploadFile() {
+                this.$refs.documentBtn.click();
             },
             createPost: function () {
                 this.isOpened = true;
@@ -187,6 +279,9 @@
 
                 this.files.forEach(file => {
                     formData.append('postFiles[]', file, file.name);
+                });
+                this.documents.forEach(document => {
+                    formData.append('postDocuments[]', document, document.name);
                 });
 
                 formData.append('postText', this.postText);
@@ -207,7 +302,10 @@
                 this.closeCreatePost();
             },
             fetchAddPost: function (response) {
-                this.postIds.push(response.id);
+                this.files = [];
+                this.images = [];
+                this.documents = [];
+
                 this.preloader(false);
             },
 
