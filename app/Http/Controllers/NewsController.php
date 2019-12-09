@@ -28,7 +28,8 @@ class NewsController extends Controller
             ];
         }
 
-        if($request->postText === null && sizeof($request->postFiles) === 0){
+
+        if($request->postText === null && isset($request->postFiles) && sizeof($request->postFiles) === 0){
             $error = 'Заполните поле или добавьте фотографию';
             $success = false;
             return [
@@ -47,9 +48,17 @@ class NewsController extends Controller
                 foreach ($request->postFiles as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
-                    Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
+                    Storage::disk('local')->put("public/post_files/$new_post->id/images/$fileName", $content);
                 }
             }
+            if(isset($request->postDocuments)) {
+                foreach($request->postDocuments as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
+                }
+            }
+
         }catch(\Exception $e) {
             $error = $e->getMessage();
             $success = false;
@@ -59,22 +68,10 @@ class NewsController extends Controller
             ];
         }
 
-            $success = true;
-
-            if(isset($request->postFiles)) {
-                foreach ($request->postFiles as $file) {
-                    $fileName = $file->getClientOriginalName();
-                    $content = file_get_contents($file->getRealPath());
-                    Storage::disk('local')->put("public/post_files/$new_post->id/$fileName", $content);
-                }
-            }
-
-            $full_name = Auth::user()->full_name;
-
         $response = [
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
             'edited' => false,
-            'fullname' => $full_name,
+            'fullname' => Auth::user()->full_name,
             'isLiked' => 0,
             'isn' => $new_post->user_isn,
             'userISN' => $new_post->user_isn,
@@ -83,12 +80,13 @@ class NewsController extends Controller
             'postText' => $new_post->getText(),
             'postId' => $new_post->id,
             'image' => $new_post->getImage(),
+            'documents' => $new_post->getDocuments(),
             'youtube' => $new_post->getVideo(),
             'comments' => [],
         ];
 
         $result = [
-            'success' => $success,
+            'success' => true,
             'error' => $error,
             'post' => $response,
         ];
@@ -128,6 +126,7 @@ class NewsController extends Controller
                 'userISN' => $item->user_isn,
                 'comments' => $item->getComments(),
                 'image' => $item->getImage(),
+                'documents' => $item->getDocuments(),
                 'youtube' => $item->getVideo(),
 
             ]);
