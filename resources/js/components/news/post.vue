@@ -1,119 +1,77 @@
 <template >
+    <!-- Исправление верстки -->
     <div class="mt-4 ml-2 mr-2">
         <div onscroll="bottomOfWindow" class="mb-2 bg-white rounded">
-
-            <div class="d-flex justify-content-between bg-top pl-4 pt-2 pb-2 pr-4">
-                <div>
-                    <span class="bold">Создайте публикацию</span>
+            <!--Row 1-->
+            <div class="flex-row">
+                <div class="pl-4 pt-2 pb-2 w-100 bg-top">
+                    <strong>Создайте публикацию</strong>
                 </div>
-                <transition name="transition-opacity">
-                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 1950">
-                        <span>Осталось символов:</span>
-                        <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
-                    </div>
-                </transition>
-            </div>
-
-            <div class="d-flex">
-                <div class="d-flex ml-4 w-100">
-                    <div class="pt-2 pb-2">
+            </div> <!--Row 1-->
+            <!--Row 2-->
+            <div class="flex-row">
+                <div class="flex-row ml-4 mr-4 pt-2 pb-2 w-100">
+                    <div class="flex-column">
                         <img src="/images/avatar.png" class="image-circle-add-post" v-if="fakeImage">
                         <img :src="imageUrl" @error="fakeImage = true" class="image-circle-add-post" v-else>                    </div>
-                    <div class="w-100 h-100 wrapper">
-                        <textarea-autosize v-model="postText"
-                                          class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
+                    <div class="flex-column w-100" >
+                        <TextareaAutosize v-model="postText"
+                                          class="ml-2 pl-3 pr-3 border border-0 post-textarea"
                                           placeholder="Что у вас нового?"
-                                          :maxlength="2000"
                                           :min-height="70"
-                                          :max-height="350">{{this.postText}}</textarea-autosize>
-                        <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
+                                          :max-height="350"
+                                  >{{this.postText}}</TextareaAutosize>
                     </div>
                 </div>
-            </div>
-
-            <div class="d-flex w-100 horizontal-line"></div>
-
-            <div class="mt-2" v-if="files.length !== 0 || documents.length !== 0">
-                <div class="d-flex">
-                    <div class="d-flex ml-2 mr-2 flex-wrap">
-                        <div v-for="(image, index) in images"
-                             class="col-md-3 col-lg-3 bg-white mb-2"
-                             :key="index">
+            </div> <!--Row 2-->
+            <!--Row 3-->
+            <div class="flex-row w-100 horizontal-line"></div> <!--Row 3-->
+            <!--Row 4-->
+            <div class="flex-row">
+                <div class="flex-row ml-2 mr-2 mt-2 flex-wrap">
+                        <div v-for="(image, index) in images" class="col-md-3 col-lg-3 bg-white mb-2" v-bind:key="image">
                             <div class="image-container">
-                                <button type="button"
-                                        class="delete-image-button"
-                                        @click="deleteImage(index)">
+                                <button type="button" class="delete-image-button" @click="deleteImage(index)">
                                     <i class="fas fa-times"></i>
                                 </button>
                                 <div class="layer"></div>
                                 <img :src="image" class="mw-100">
                             </div>
                         </div>
-                    </div>
                 </div>
-
-                <div class="d-flex">
-                    <div class="d-flex flex-column ml-3 mr-3 w-100">
-                        <div v-for="(document, index) in documents"
-                             class="d-flex justify-content-between bg-white pl-3 pr-3">
-                            <div class="d-flex align-items-center">
-                                <div v-if="document.type === 'application/msword' || document.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
-                                    <i class="fas fa-file-word text-primary fs-1_2"></i>
-                                </div>
-                                <div v-if="document.type === 'application/pdf'">
-                                    <i class="fas fa-file-pdf text-danger fs-1_2"></i>
-                                </div>
-                                <div v-if="document.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.type === 'application/vnd.ms-excel'">
-                                    <i class="fas fa-file-excel text-success fs-1_2"></i>
-                                </div>
-                                <div v-if="document.type === 'application/vnd.ms-powerpoint' || document.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'">
-                                    <i class="fas fa-file-powerpoint text-warning fs-1_2"></i>
-                                </div>
-                                <div v-if="document.type === 'application/vnd.rar' || document.type === 'application/zip'">
-                                    <i class="fas fa-file-archive text-info fs-1_2"></i>
-                                </div>
-                                <div class="p-2">{{document.name}}</div>
-                            </div>
-                            <button class="border-0 bg-transparent button-delete" @click="deleteFile(index)">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+            </div> <!--Row 4-->
+            <!--Row 5-->
             <div class="flex-row">
-                <div class="flex-row ml-4 mr-4 pb-2 pt-2 w-100">
+                <div class="flex-row ml-4 mr-4 pb-2 w-100">
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
                         <i class="fas fa-image color-black file-icons"></i>
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
-                        <input type="file" id="photo-upload" @change="imageUpload" accept="image/*" multiple>
+                        <input type="file" id="photo-upload" accept="image/*" multiple>
                     </div>
-                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
-                        <!--<i class="fas fa-play-circle color-black file-icons"></i>-->
-                        <!--<label for="video-upload" class="custom-file-upload">Видео</label>-->
-                        <!--<input type="file" id="video-upload" accept="video/*" multiple>-->
-                    <!--</div>-->
-                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
-                        <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
-                        <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
-                        <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
-                    <!--</div>-->
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                        <i class="fas fa-play-circle color-black file-icons"></i>
+                        <label for="video-upload" class="custom-file-upload">Видео</label>
+                        <input type="file" id="video-upload" accept="video/*" multiple>
+                    </div>
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                        <i class="fas fa-volume-up color-black file-icons"></i>
+                        <label for="audio-upload" class="custom-file-upload">Аудио</label>
+                        <input type="file" id="audio-upload" accept="audio/*"multiple>
+                    </div>
                     <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
                         <i class="fas fa-file-upload color-black file-icons"></i>
                         <label for="file-upload" class="custom-file-upload">Файл</label>
-                        <input type="file" id="file-upload" @change="fileUpload" multiple>
+                        <input type="file" id="file-upload" multiple>
                     </div>
-                    <transition name="transition-opacity">
-                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0 || documents.length > 0">
+                    <transition name="fade">
+                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0">
                             <button
                                     @click="addPost"
-                                    class="pt-1 pb-1 pr-2 pl-2 common-btn">Опубликовать</button>
+                                    class="btn btn-outline-primary pt-1 pb-1 pr-2 pl-2 send-button" >Опубликовать</button>
                         </div>
                     </transition>
                 </div>
-            </div>
+            </div> <!--Row 5-->
         </div>
 
 
@@ -134,7 +92,7 @@
             ></news-post>
         </div>
         <div class="text-center">
-            <button type="button" class="load-button pl-2 pr-2" @click="getPosts" v-if="!allPostShown">Больше</button>
+            <button type="button" class="load-button pl-2 pr-2" @click="getPosts()" v-if="!allPostShown">Больше</button>
         </div>
     </div>
 </template>
@@ -144,48 +102,25 @@
         name: "post",
         data() {
             return {
-                imgExtensions: [
-                    "image/jpeg",
-                    "image/jpg",
-                    "image/png",
-                    "image/svg+xml"
-                ],
-                docExtensions: [
-                    "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "application/pdf",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "application/vnd.ms-excel",
-                    "application/vnd.ms-powerpoint",
-                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    "application/vnd.rar",
-                    "application/zip",
-                ],
                 files: [],
                 images : [],
-                documents: [],
                 lastIndex : null,
-                postText: "",
+                postText: '',
                 posts: [],
                 pinnedPost: null,
                 pinnedPostIndex: null,
                 bottomOfWindow: 0,
                 scrolled: false,
-                NEW_POST : "new",
-                EDITED_POST : "edit",
-                LIKED_POST : "like",
-                PINNED_POST : "pinned",
-                DELETED_POST : "deleted",
-                COMMENDTED_POST : "commented",
-                NEW_POST_TEXTAREA: "NEW_POST",
+                NEW_POST : 'new',
+                EDITED_POST : 'edit',
+                LIKED_POST : 'like',
+                PINNED_POST : 'pinned',
+                DELETED_POST : 'deleted',
+                COMMENDTED_POST : 'commented',
                 allPostShown : false,
                 fakeImage : false,
                 imageUrl : null,
                 postIds : [],
-                imgMaxSize: 2 * 1024 * 1024,
-                docMaxSize: 10 * 1024 * 1024,
-                imgMaxNumber: 1,
-                docMaxNumber: 5,
             }
         },
 
@@ -196,131 +131,85 @@
         mounted: function() {
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
             Echo.private(`post`)
-            .listen("NewPost", (e) => {
+            .listen('NewPost', (e) => {
                 this.handleIncoming(e);
             });
             this.getPosts();
         },
 
         methods: {
-            fileUpload(e) {
-                const documents = e.target.files;
-                const vm = this;
+            // fileUpload: function(e) {
+            //     const files = e.target.files;
+            //     console.log(files[0]);
+            //     const vm = this;
+            //     Array.from(files).forEach(file => {
+            //         if(file.size > 2 * 1024 * 1024) {
+            //             alert("ERROR FILE RAZMER : " + file.name);
+            //         }
+            //         else {
+            //             vm.files.push(file);
+            //             const image = new Image();
+            //             var reader = new FileReader();
+            //             reader.onload = (e) => this.images.push(e.target.result);
+            //             reader.readAsDataURL(file);
+            //         }
+            //     });
+            // },
 
-                if(documents.length <= this.docMaxNumber) {
-                    Array.from(documents).forEach(document => {
-                        if(document.size > this.docMaxSize) {
-                            alert("Документ превысил ограничение по размеру : " + document.name);
-                        }
-                        else if(!this.checkExtension(document.type, this.docExtensions)) {
-                            alert("Вы загрузили неверный тип документа.\n" +
-                                "Доступные типы документов: doc, docx, ppt, pptx, xls, xlsx, pdf, rar");
-                        }
-                        else {
-                            vm.documents.push(document);
-                        }
-                    })
-                }
-                else {
-                    alert("Максимальное кол-во файлов: 5")
-                }
-            },
-
-            deleteFile(index) {
-                const vm = this;
-                vm.documents.splice(index, 1);
-            },
-
-            checkExtension(type, array) {
-                if(array.includes(type)) return true
-                else return false;
-            },
-
-            imageUpload(e) {
-                if(e.target.files.length <= this.docMaxNumber) {
-                    const files = e.target.files;
-                    const vm = this;
-                    Array.from(files).forEach(file => {
-                        if (file.size > this.imgMaxSize) {
-                            alert("Error file size: " + file.name);
-                        }
-                        else if(!this.checkExtension(file.type, this.imgExtensions)) {
-                            alert("You can upload only images with extensions: svg, jpg, png");
-                        }
-                        else {
-                            vm.files.push(file);
-                            const image = new Image();
-                            var reader = new FileReader();
-                            reader.onload = (e) => this.images.push(e.target.result);
-                            reader.readAsDataURL(file);
-                        }
-                    });
-                }
-                else {
-                    alert("Maximum number of images: 1")
-                }
-            },
-
-            deleteImage(index) {
+            deleteImage: function(index) {
                 const vm = this;
                 vm.images.splice(index, 1);
-                vm.files.splice(index, 1);
             },
 
-            addPost() {
+            addPost: function () {
                 this.preloader(true);
-                this.axios.post("/addPost", this.getFormData()).then(response => {
+                this.axios.post('/addPost', this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
-                    alert("Ошибка на стороне сервера");
+                    alert('Ошибка на стороне сервера');
                 });
-                this.postText = "";
+                this.postText = '';
             },
 
             getFormData() {
                 const formData = new FormData;
 
-                this.documents.forEach(document => {
-                    formData.append('postDocuments[]', document, document.name);
-                });
-
                 this.files.forEach(file => {
-                    formData.append("postFiles[]", file, file.name);
+                    formData.append('postFiles[]', file, file.name);
                 });
 
-                formData.append("postText", this.postText);
-                formData.append("isn", this.isn);
+                formData.append('postText', this.postText);
+                formData.append('isn', this.isn);
 
                 return formData;
             },
 
-            fetchAddPost(response) {
-                this.files = [];
-                this.images = [];
-                //     this.posts.unshift({
-                //         isn: response.userISN,
-                //         postText: response.postText,
-                //         likes: 0,
-                //         pinned: response.pinned,
-                //         fullname: response.fullname,
-                //         date: response.date,
-                //         postId: response.id,
-                //         edited: response.edited,
-                //         isLiked: response.isLiked
-                //     });
-                // this.postIds.push(response.id);
+            fetchAddPost: function (response) {
+                // if (response.success) {
+                    this.posts.unshift({
+                        isn: response.userISN,
+                        postText: response.postText,
+                        likes: 0,
+                        pinned: response.pinned,
+                        fullname: response.fullname,
+                        date: response.date,
+                        postId: response.id,
+                        edited: response.edited,
+                        isLiked: response.isLiked
+                    });
+                this.postIds.push(response.id);
                 this.preloader(false);
                 // }
             },
 
-            getPosts() {
+            getPosts () {
                 this.preloader(true);
-                this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
+                this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
                     this.setPosts(response.data)
                 });
             },
 
-            setPosts(response) {
+            setPosts (response) {
                 var vm = this;
                 var i = 0;
                 if(response.length < 5) {
@@ -345,11 +234,11 @@
                 this.preloader(false);
             },
 
-            deleteFromPost(index) {
+            deleteFromPost (index) {
                 this.posts.splice(index, 1);
             },
 
-            unsetAllPinned(index) {
+            unsetAllPinned (index) {
                 var vm = this;
                 this.pinnedPost = null;
                 this.posts.forEach(function (post) {
@@ -362,23 +251,23 @@
                 }
             },
 
-            handleScroll() {
+            handleScroll () {
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
                 if (this.bottomOfWindow && !this.allPostShown) {
                     this.preloader(true);
-                    this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
+                    this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
                         this.setPosts(response.data)
                     });
                 }
             },
 
-            handleIncoming(e) {
+            handleIncoming (e) {
                 var vm = this;
+                // console.log(e);
                 if(e.type === vm.NEW_POST)
                 {
                     if(e.post.userISN !== vm.isn) {
-                        vm.posts.unshift(e.post);
-                        vm.postIds.push(e.post.postId);
+                        vm.posts.unshift(e.post)
                     }
                 }
                 else if(e.type === vm.EDITED_POST)
@@ -420,29 +309,30 @@
                 }
             },
 
-            preloader(show) {
+            preloader(show){
                 if(show)
                 {
-                    document.getElementById("preloader").style.display = "flex";
+                    document.getElementById('preloader').style.display = 'flex';
                 }
                 else
                 {
-                    document.getElementById("preloader").style.display = "none";
+                    document.getElementById('preloader').style.display = 'none';
                 }
             }
         },
 
         beforeMount () {
-            window.addEventListener("scroll", this.handleScroll);
+            window.addEventListener('scroll', this.handleScroll);
         },
 
         beforeDestroy () {
-            window.removeEventListener("scroll", this.handleScroll);
+            window.removeEventListener('scroll', this.handleScroll);
         }
     }
 </script>
 
 <style scoped>
+
     .rounded {
         border-radius: 16px !important;
     }
@@ -458,6 +348,7 @@
 
     .post-textarea {
         box-sizing: border-box;
+        /*resize: none;*/
         outline: none;
     }
 
@@ -471,7 +362,7 @@
         margin: 0;
     }
 
-    input[type="file"] {
+    input[type='file'] {
         display:none;
     }
 
@@ -493,6 +384,40 @@
         color: cornflowerblue;
     }
 
+    .send-button {
+        color: #000;
+        background-color: #EFEFEF;
+        border: none;
+        border-radius: 6px;
+        outline: none !important;
+        margin: 0;
+        transition: 0.4s ease;
+    }
+
+    .send-button:hover {
+        background-color: cornflowerblue;
+        color: #FFF;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity .5s
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0
+    }
+
+    .smooth-enter-active,
+    .smooth-leave-active {
+        transition: opacity 0.8s;
+    }
+
+    .smooth-enter,
+    .smooth-leave-to {
+        opacity: 0;
+    }
 
     .load-button {
         height: 2.1em;
@@ -546,13 +471,4 @@
         display: block;
     }
 
-    .button-delete {
-        cursor: pointer;
-        outline: none;
-        transition: 0.4s ease;
-    }
-
-    .button-delete:hover {
-        color: red;
-    }
 </style>

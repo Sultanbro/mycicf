@@ -1,19 +1,15 @@
 <template>
-    <div class="nav mt-2 d-flex justify-content-center bg-WHITE">
-        <div class="nav-container flex-row width100">
-            <div class="row width110">
-                <div class="blue-bg-all width100">
-                    <div class="flex-row width100 jc-center">
-                        <div @click="getLevelOne(item.id, item.url)"
-                             v-for="item in itemsLevelZero"
-                             class="dropbtn d-flex p-3 ml-2"
-                            :class="item.id === levelOnePinned ? 'active' : ''">
-                            <img :src="item.icon_url">
-                            <span>{{item.label}}</span>
-                        </div>
-                    </div>
+    <div class="nav mt-2 d-flex justify-content-center">
+        <div class="nav-container flex-row">
+            <div class="row">
+                <div @click="getLevelOne(item.id, item.url)"
+                     v-for="item in itemsLevelZero"
+                     class="dropbtn d-flex p-3 ml-2"
+                    :class="item.id === levelOnePinned ? 'active' : ''">
+                    <img :src="item.icon_url">
+                    <span>{{item.label}}</span>
                 </div>
-                <div class="nav-dropdown initial" v-if="isOpened">
+                <div class="nav-dropdown" v-if="isOpened">
                     <div class="nav-dropdown__container mr-4 mt-5">
                         <button type='button'
                                 class="close-btn"
@@ -39,7 +35,7 @@
                                      v-for="innerItem in itemsLevelTwo">
                                     <img :src="innerItem.icon_url"
                                          class="items-icons mr-2">
-                                    <span class="mr-2"><a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
+                                    <span class="mr-2"><a :href="'/documentation/'+innerItem.url">{{innerItem.label}}</a></span>
                                 </div>
                             </div>
 
@@ -75,9 +71,6 @@
                 levelTwoPinned: null,
             }
         },
-        props: {
-            pinned_id: Number
-        },
         methods: {
             showDropdown: function() {
                 this.isOpened = false;
@@ -99,9 +92,6 @@
                     vm.itemsLevelZero.push(data);
                 })
                 this.preloader(false);
-                if(this.pinned_id !== 0) {
-                    this.getLevelOne(this.pinned_id, null);
-                }
             },
 
             getLevelOne: function(id, url) {
@@ -190,7 +180,7 @@
                 this.levelTwoPinned = id;
                 var vm = this;
                 if(url !== null && url !== '') {
-                    location.replace(`/documentation/` + url + `?id=${this.levelOnePinned}`);
+                    location.replace('/documentation/'+url);
                     return 0;
                 }
                 for(var i = 0; i < vm.itemsLevelOne.length; i++) {
@@ -306,7 +296,7 @@
 
     .nav {
         position: relative;
-        background-color: #508ff4;
+        background-color: #4267b2;
         z-index: 500;
     }
 
@@ -320,11 +310,12 @@
         border: none;
         outline: none;
         transition: 0.4s ease;
-        border-bottom: 2px solid transparent;
+        border-top: 2px solid transparent;
     }
 
     .dropbtn:hover {
-        border-bottom: 2px solid #FFF;
+        border-top: 2px solid #FFF;
+        background-color: #4974cc;
     }
 
     .dropbtn-inner {
@@ -337,20 +328,20 @@
     }
 
     .dropbtn-inner:hover {
-        border-left: 3px solid #508ff4;
+        border-left: 3px solid #007bff;
     }
 
     .dropbtn-inner:hover span {
-        color: #508ff4;
+        color: #007bff;
     }
+
 
     .nav-dropdown {
         position: absolute;
         left: 0;
         width: 100%;
         top: 50px;
-        box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.2);
-        /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 200;
     }
 
@@ -380,18 +371,13 @@
     }
 
     .active {
-        /*background-color: #4974cc;*/
-        /*border-top: 2px solid #FFF;*/
-        border-bottom: 2px solid #FFF;
+        background-color: #4974cc;
+        border-top: 2px solid #FFF;
     }
 
     .inner-active {
-        /*color: #007bff;*/
-        /*border-left: 3px solid #007bff;*/
-
-        color: #508ff4;
-        border-left: 3px solid #508ff4;
-
+        color: #007bff;
+        border-left: 3px solid #007bff;
     }
 
 

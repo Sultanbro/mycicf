@@ -1,14 +1,5 @@
 <template>
     <div>
-        <div v-if="none">
-            <div class="mt-3">
-                <div>
-                    <div class="container-fluid pt-2 pb-2">
-                        <span class="coordination-none-text">Нет документов на согласовании</span>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div v-if="AC !== null">
             <div class="mt-3">
                 <div class="bg-blue-standart">
@@ -98,7 +89,7 @@
             <div class="mt-3">
                 <div class="bg-blue-standart">
                     <div class="container-fluid pt-2 pb-2">
-                        <span class="color-white">Согласование РВ</span>
+                        <span class="color-white">Согласование АС</span>
                     </div>
                 </div>
             </div>
@@ -128,26 +119,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="other !== null">
-            <div class="mt-3">
-                <div class="bg-blue-standart">
-                    <div class="container-fluid pt-2 pb-2">
-                        <span class="color-white">Прочие документы на согласование</span>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-3" v-for="(info, index) in other">
-                <div class="bg-white">
-                    <div class="container-fluid flex-row jc-sb pt-2 pl-3 pr-3 pb-2 box-shadow">
-                        <span class="blue-button matching-underline" @click="openModal(info.ISN)">{{info.id}}</span>
-                        <span>{{info.docdate}}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">
-            Large modal
-        </button>
+        <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
         <coordination-modal
                 :coordination="coordination"
                 :isn="isn"
@@ -156,6 +128,29 @@
         </coordination-modal>
 
     </div>
+
+<!--    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>-->
+<!---->
+<!--    <div class="modal fade bd-example-modal-sm" id="qwe" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-sm modal-margin">-->
+<!--            <div class="modal-content border-rad-20">-->
+<!--                <div>-->
+<!--                    <div class="flex-row border-top-rad-20 bg-blue-standart jc-center vertical-middle">-->
+<!--                        <span class="color-white mt-2 mb-2">Страховые случаи</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <div>-->
+<!--                        <div class="color-dimgray mt-4 ml-5 mr-5 mb-2">Авария при проведении СМР, Затопления водой из водо-, тепло-, отопительных систем, Кража/хищение, Наезд движущейся техники, исключая башенный кран, Ошибки, допущенные при монтаже, Падение пилотируемых летательных аппаратов или их обломков, Пожар, Просадка</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="modal-footer border-top-0">-->
+<!--                    <button type="button" class="btn color-white width100 bg-notification-center ml-4 mr-4" data-dismiss="modal">Закрыть</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!---->
 </template>
 
 <script>
@@ -173,26 +168,24 @@
                 AD: null,
                 RV: null,
                 other: null,
-                none: false,
                 coordination: {},
-                attachments: [],
+                attachments: [] ,
             }
         },
-        mounted: function () {
+        mounted: function(){
             this.getTables();
         },
         props: {
             isn: Number,
         },
-        methods: {
-            getTables: function () {
-                this.preloader(true);
+        methods : {
+            getTables: function(){
                 this.axios.post("/getCoordinationList", {isn: this.isn}).then((response) => {
                     this.fetchResponse(response.data)
                 })
             },
-            fetchResponse: function (response) {
-                if (response.success) {
+            fetchResponse: function(response){
+                if(response.success){
                     this.AC = response.result.AC;
                     this.SP = response.result.SP;
                     this.SZ = response.result.SZ;
@@ -201,50 +194,37 @@
                     this.AD = response.result.AD;
                     this.RV = response.result.RV;
                     this.other = response.result.other;
-                } else {
+                }else{
                     alert(response.error);
                 }
-                if(this.AC === null && this.SP === null && this.SZ === null && this.KV === null && this.OL === null && this.AD === null && this.RV === null && this.other === null){
-                    this.none = true;
-                }
-                this.preloader(false);
             },
-            openModal(ISN) {
-                this.preloader(true);
+            openModal (ISN) {
                 this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
                     this.setModalData(response.data)
                 });
             },
             setModalData: function (response) {
-                if (response.success) {
+                if(response.success){
                     this.coordination = response.response;
                     this.getAttachments();
                     this.$refs.modalButton.click();
                 }
-                else {
+                else
+                {
                     alert('ERROR')
                 }
-                this.preloader(false);
             },
-            getAttachments() {
+            getAttachments () {
                 var vm = this;
                 this.axios.post('/getAttachmentList', {
                     docIsn: vm.coordination.ISN
                 }).then(response => {
-                    if (response.data.success) {
+                    if(response.data.success){
                         vm.attachments = response.data.attachments;
-                    } else {
+                    }else{
                         vm.attachments = [];
                     }
                 });
-            },
-            preloader: function (show) {
-                if (show) {
-                    document.getElementById('preloader').style.display = 'flex';
-                }
-                else {
-                    document.getElementById('preloader').style.display = 'none';
-                }
             },
         }
     }

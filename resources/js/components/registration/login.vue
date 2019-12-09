@@ -23,10 +23,7 @@
                 <button @click="login" class="btn-block">Войти</button>
             </div>
         </div>
-
-        <FlashMessage></FlashMessage>
     </div> <!-- Second column-->
-
 </template>
 
 <script>
@@ -57,14 +54,9 @@
                     this.preloader(false)
                 })
             },
-
             afterLogin: function (response) {
-                if(!response.success) {
-                    this.flashMessage.error({
-                        title: "Ошибка",
-                        message: response.error,
-                        time: 5000
-                    })
+                if(!response.success){
+                    alert(response.error);
                     this.preloader(false)
                 }
 
@@ -72,7 +64,6 @@
                     location.href = '/news';
                 }
             },
-
             validate: function () {
                 var result = true;
                 if(this.username === ''){
@@ -84,11 +75,9 @@
                 }
                 return result;
             },
-
             checkType: function () {
                 this.type = this.type === 1 ? 0 : 1;
             },
-
             changeIcon: function () {
                 if(this.type === 0){
                     this.className = 'fa fa-eye-slash';
@@ -96,7 +85,6 @@
                     this.className = 'fa fa-eye';
                 }
             },
-
             changeType: function () {
                 if(this.type === 0){
                     this.passwordType = 'text';
@@ -104,7 +92,6 @@
                     this.passwordType = 'password';
                 }
             },
-
             preloader(show){
                 if(show)
                 {
@@ -116,9 +103,9 @@
                 }
             }
         },
-
         watch: {
             type : ['changeIcon', 'changeType']
-        },
+        }
+
     }
 </script>

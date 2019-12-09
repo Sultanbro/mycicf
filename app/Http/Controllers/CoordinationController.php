@@ -302,26 +302,4 @@ class CoordinationController extends Controller
         ];
         return response()->json($result)->withCallback($request->input('callback'));
     }
-
-    public function sendNotify(Request $request){
-        $users = explode(',', $request->users);
-        $doc_no = $request->doc_no;
-        $doc_type = $request->doc_type;
-        $client = new \GuzzleHttp\Client();
-        $url = 'https://bots.n9.kz/notification';
-        foreach ($users as $user){
-            $res = $client->request('POST', $url, [
-                'form_params' => [
-                    'isn' => $user,
-                    'docType' => $doc_type,
-                    'docNum' => $doc_no
-                ],
-                'verify' => false
-            ]);
-            if($res->getStatusCode() !== 200){
-                return false;
-            }
-        }
-        return true;
-    }
 }

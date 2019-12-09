@@ -111,43 +111,4 @@ class User extends Authenticatable
     public static function isWNDAdmin(){
         return (new Permissions())->checkUser([Permissions::ROLE_WND]);
     }
-
-    public static function getMotivationDepartments(){
-        return [
-            "1445780", "1445781", "1445783", "1445783", "4100260",
-            "4100283", "4100326", "4100328", "4100332", "4100334",
-            "3629955", "3991836", "3991842", "1445786", "1445822",
-            "1445735", "1445814", "1445818", "1445820", "1445821",
-            "1445825", "1445827", "1445828", "1445833", "1445834",
-            "1445801", "1445802", "1445805", "1497575", "3367227",
-            "3436143", "1445823", "1445797", "1445798", "1445799",
-            "1445789", "1445790", "1445791", "1445792", "1445793",
-            "1445824", "1445826", "3492324", "3492327", "4380822",
-            "3994433", "3994439", "3436136",
-        ];
-    }
-
-    public function checkMotivationPermission($ISN){
-        if(in_array(Auth::user()->level, [50,1000]) || Auth::user()->dept_isn === 3436136){
-            return true;
-        }
-        if(Auth::user()->level == Auth::user()->ISN){
-            return false;
-        }
-        $permitted = $this->getChildElements(Auth::user()->level);
-        return in_array($ISN, $permitted);
-    }
-
-    public function getChildElements($level){
-        $result = [];
-        $data = Branch::where('kias_parent_id', $level)->get();
-        foreach ($data as $value){
-            if(count($value->childs)){
-                array_merge($result, $this->getChildElements($value->kias_id));
-            }else{
-                array_push($result, $value->kias_id);
-            }
-        }
-        return $result;
-    }
 }
