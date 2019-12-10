@@ -16,6 +16,8 @@ Vue.use(VueAxios, axios);
 
 Vue.use(VueTreeselect);
 
+Vue.use(VueGoogleCharts);
+
 Vue.use(TextareaAutosize);
 
 Vue.directive('linkified', linkify);
@@ -43,6 +45,8 @@ Vue.component('news-comment', require('./components/mobile/news/news-comment.vue
 Vue.component('colleagues', require('./components/mobile/colleagues/colleagues.vue').default);
 
 Vue.component('colleagues-info', require('./components/mobile/colleagues/colleagues-info.vue').default);
+
+Vue.component('report', require('./components/mobile/employee/report').default);
 
 window.onload = function(){
     var app = new Vue({

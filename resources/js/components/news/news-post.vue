@@ -10,7 +10,7 @@
             </div>
             <div class="flex-column ml-2">
                 <span class="color-blue bold">
-                    {{post.fullname}}
+                    <a :href="`/colleagues/${post.userISN}/dossier`">{{post.fullname}}</a>
                 </span>
                 <span class="color-darkgray mt-minus-8px">
                     <small>{{post.date}}</small>
