@@ -47,10 +47,10 @@
                                 </div>
                             </div>
                             <div class="flex-column chart-mainData-attributes-contain width100">
-                                <strong class="chart-mainData-attributes"><span>Сборы: </span><span>{{Amount}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>Выплаты: </span><span>{{Payout}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>АВ: </span><span>{{AV}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{Income}}</span></strong>
+                                <strong class="chart-mainData-attributes"><span>Сборы: </span><span>{{numberWithSpaces(Amount)}}</span></strong>
+                                <strong class="chart-mainData-attributes"><span>Выплаты: </span><span>{{numberWithSpaces(Payout)}}</span></strong>
+                                <strong class="chart-mainData-attributes"><span>АВ: </span><span>{{numberWithSpaces(AV)}}</span></strong>
+                                <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{numberWithSpaces(Income)}}</span></strong>
                             </div>
                         </div>
                         <div class="col-12 pl-0 pr-0 min-width-50">
@@ -331,6 +331,11 @@
             },
             checkUrl(){
                 return ((window.location.pathname).slice(1,10) !== 'colleague');
+            },
+            numberWithSpaces(x) {
+                var parts = x.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+                return parts.join(".");
             }
         }
 

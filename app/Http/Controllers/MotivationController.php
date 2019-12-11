@@ -133,17 +133,20 @@ class MotivationController extends Controller
                 $list = [];
         }
         if(isset($mot_sum)) {
-            array_push($motivations, [
-                'Date' => date('m.Y', strtotime($begin)),
-                'Sum' => $mot_sum,
-            ]);
             if(isset($response->MOTLIST->row)) {
                 foreach ($response->MOTLIST->row as $value) {
+                    if(date('m.Y', strtotime($value->Date)) == date('m.Y', strtotime($begin))) $finded = true;
                     array_push($motivations, [
                         'Date' => date('m.Y', strtotime($value->Date)),
                         'Sum' => (int)$value->Motivation
                     ]);
                 }
+            }
+            if(!$finded){
+                array_push($motivations, [
+                    'Date' => date('m.Y', strtotime($begin)),
+                    'Sum' => str_replace(' ', '', $mot_sum),
+                ]);
             }
         }
         return response()

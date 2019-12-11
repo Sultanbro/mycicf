@@ -81,19 +81,16 @@ class User extends Authenticatable
     }
 
     public function getUserData(KiasServiceInterface $kias){
-        if(!Session::get('users_data', false)){
-            $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
-            $users_data = [
-                'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
-                'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
-                'Birthday' => (string)$response->Birthday == "0" ? 'Не указано' : (string)$response->Birthday,
-                'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
-                'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
-                'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
-            ];
-            Session::put('users_data', $users_data);
-        }
-        return Session::get('users_data', []);
+        $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
+        $users_data = [
+            'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
+            'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
+            'Birthday' => (string)$response->Birthday == "0" ? 'Не указано' : (string)$response->Birthday,
+            'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
+            'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
+            'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+        ];
+        return $users_data;
     }
 
     public static function isSuperAdmin(){

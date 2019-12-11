@@ -23,7 +23,8 @@
                         <div class="d-flex">
                             <div class="ml-2">
                                 <span>
-                                    <small>{{comment.fullname}}</small>
+                                    <small v-if="comment.userISN === isn">{{comment.fullname}}</small>
+                                    <small v-else><a :href="`/colleagues/${comment.userISN}/dossier`">{{comment.fullname}}</small>
                                 </span>
                             </div>
                         </div>

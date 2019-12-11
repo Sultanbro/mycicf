@@ -6,13 +6,16 @@
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
             <div class="pointer left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">
-                <span>{{fullname}}</span><span class="rating">{{rating}}</span>
+                <span>{{fullname}}</span>
                 <span class="ml-2 vertical-middle"><i class="fas " :class="caretClass" data-toggle="collapse" href="#multiCollapseExample1"></i></span>
             </div>
         </div>
         <div class="ml-3 mr-3 mt-2 collapse in show" id="persons-data">
             <div class="left-menu-fonts">
                 <span><strong>{{duty}}</strong></span>
+            </div>
+            <div class="left-menu-fonts" v-if="rating !== ''">
+                <span><strong>Рейтинг: &nbsp; </strong><span>{{rating}}</span></span>
             </div>
             <div class="left-menu-fonts">
                 <span><strong>Дата рождения: &nbsp; </strong><span>{{birthday}}</span></span>

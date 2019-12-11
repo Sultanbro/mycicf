@@ -8,7 +8,8 @@
             <div class="ml-2 w-100">
                 <div class="d-flex justify-content-between">
                     <div class="color-blue">
-                        <span class="pl-2">{{comment.fullname}}</span>
+                        <span v-if="comment.userISN === isn" class="pl-2">{{comment.fullname}}</span>
+                        <span v-else class="pl-2"><a :href="`/colleagues/${comment.userISN}/dossier`">{{comment.fullname}}</a></span>
                     </div>
                     <div class="comment-section__top pr-2">
                         <div class="comment-section__dropdown ml-auto" v-if="isn === comment.userISN">

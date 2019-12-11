@@ -10,7 +10,8 @@
             </div>
             <div class="flex-column ml-2">
                 <span class="color-blue bold">
-                    <a :href="`/colleagues/${post.userISN}/dossier`">{{post.fullname}}</a>
+                    <a v-if="post.userISN === isn">{{post.fullname}}</a>
+                    <a v-else :href="`/colleagues/${post.userISN}/dossier`">{{post.fullname}}</a>
                 </span>
                 <span class="color-darkgray mt-minus-8px">
                     <small>{{post.date}}</small>

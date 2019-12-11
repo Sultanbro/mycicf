@@ -12,7 +12,8 @@
                 </div>
                 <div class="post-section__author">
                     <div class="post-author">
-                        <span>{{post.fullname}}</span>
+                        <span v-if="post.userISN === isn">{{post.fullname}}</span>
+                        <span v-else :href="`/colleagues/${post.userISN}/dossier`">{{post.fullname}}</span>
                     </div>
                     <div class="post-date">
                         <span>

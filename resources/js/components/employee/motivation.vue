@@ -1,12 +1,15 @@
 <template>
-    <div class="box-shadow radius-4px pb-2">
-        <div class="pt-4">
+    <div class="box-shadow radius-4px pb-2 mt-3">
+        <div class="pt-2" v-if="checkUrl()">
             <div class="bg-white ml-3 mr-3 pt-4 pb-3">
+                <div>
+                    <label for="dateBeg" >Отчетный месяц</label>
+                </div>
                 <div class="d-flex align-items-center">
                     <div class="mr-2">
                         <input v-model="dateBeg" type="month" class="border-0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
-                    <div v-if="checkUrl()">
+                    <div>
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options" />
                     </div>
                     <div>
@@ -24,7 +27,31 @@
                 </div>
             </div>
         </div>
-        <div class="pt-4">
+        <div class="pt-2" v-else>
+            <div class="bg-white ml-3 mr-3 pt-4 pb-3 flex-column">
+                <div>
+                    <label for="dateBeg" >Отчетный месяц</label>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="mr-2 flex-column">
+                        <input name="dateBeg" id="dateBeg" v-model="dateBeg" type="month" class="border-0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                    </div>
+                    <div>
+                        <div class="date-color border-gray show-btn" @click="getMotivation">
+                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
+                                <div>
+                                    <i class="far fa-eye"></i>
+                                </div>
+                                <div class="ml-2">
+                                    <span>Показать</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pt-2">
             <div class="d-flex align-items-center justify-content-between bg-white ml-3 mr-3 pt-3 pb-3">
                 <div>
                     <span class="fs-1 CAPS">{{label}}</span>

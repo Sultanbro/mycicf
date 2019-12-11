@@ -13,7 +13,7 @@ class RatingController extends Controller
 //        'DutyName' => 'должность',
         'Rentability' => 'рентабельность',
         'ExecutionPlan' => 'исполнение плана',
-        'CostPrice' => 'себестоимсоть',
+        'CostPrice' => 'себестоимость',
         'NetClaim' => 'убыточность',
         'EmplDZ6' => 'дз текущая',
         'EmplDZ180' => 'дз свыше 180 дней',
@@ -28,7 +28,7 @@ class RatingController extends Controller
         'AppraisalStaff' => 'оценка персонала',
         'AverageDaily' => 'среднедневное кол-во договоров',
         'CrossShare' => 'кросс-продажи, %',
-        'Loyality' => 'лоялность',
+        'Loyality' => 'лояльность',
         'MeanShare' => 'среднее значение по показателям'
     ];
 

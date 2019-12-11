@@ -69,12 +69,16 @@ class Kias implements KiasServiceInterface
     }
 
     public function request($name, $params = []){
-        $xml = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-            . $this->client->ExecProc([
-                'pData' => $this->createRequestData($name, $params),
-            ])->ExecProcResult->any
-        );
+        try{
+            $xml = new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+                . $this->client->ExecProc([
+                    'pData' => $this->createRequestData($name, $params),
+                ])->ExecProcResult->any
+            );
+        }catch (\SoapFault $exception){
+            return $this->request($name, $params);
+        }
 
         if(env('APP_ENV', 'local') !== 'production') {
             if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList' && $name != 'Auth' && $name != 'GETATTACHMENTDATA') {
@@ -88,7 +92,6 @@ class Kias implements KiasServiceInterface
                 );
             }
         }
-
         if (isset($xml->error)) {
             if (isset($xml->error->code) && $xml->error->code == '001') {
                 $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);
