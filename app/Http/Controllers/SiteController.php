@@ -480,4 +480,32 @@ class SiteController extends Controller
         }
         return response()->json($result);
     }
+
+    /**
+     * @param Request $request
+     * $mark_id
+     * $model_id
+     * $year
+     */
+    public function getPriceByData(Request $request){
+        $result = [];
+        foreach ($request->all() as $key => $value){
+            $$key = $value;
+        }
+        $model = KolesaPrices::where('mark_id', $mark_id)
+            ->where('model_id', $model_id)
+            ->where('year', $year)
+            ->latest()
+            ->first();
+        if($model === null){
+            return response()->json([
+                'code' => 419,
+                'error' => 'CarNotFoundException'
+            ]);
+        }
+        return response()->json([
+            'code' => 200,
+            'price' => $model->price
+        ]);
+    }
 }

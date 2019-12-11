@@ -22,6 +22,7 @@ class VerifyCsrfToken extends Middleware
         '/broadcasting/auth',
         '/relog/*',
         '/car/addPrice',
-        '/coordination/notify'
+        '/coordination/notify',
+        '/kolesa/getPrice'
     ];
 }
