@@ -146,8 +146,8 @@
                     },
                     colors: ['#0079ea','#3293ee','#7cb8f1'],
                     chartArea:{left:100, right: 0},
-                    width: 330,
-                    axisTitlesPosition: 'in',
+                    width: 400,
+                    axisTitlesPosition: 'out',
                     // vAxis: {
                     //     // title: 'Hello',
                     //     titleTextStyle: {
