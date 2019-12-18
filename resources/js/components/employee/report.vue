@@ -51,6 +51,7 @@
                                 <strong class="chart-mainData-attributes"><span>Выплаты: </span><span>{{numberWithSpaces(Payout)}}</span></strong>
                                 <strong class="chart-mainData-attributes"><span>АВ: </span><span>{{numberWithSpaces(AV)}}</span></strong>
                                 <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{numberWithSpaces(Income)}}</span></strong>
+                                <strong class="chart-mainData-attributes"><span>План: </span><span>{{numberWithSpaces(Plan)}}</span></strong>
                             </div>
                         </div>
                         <div class="col-12 pl-0 pr-0 min-width-50">
@@ -114,6 +115,7 @@
                 Payout : 0,
                 AV : 0,
                 Income : 0,
+                Plan: 0,
                 chartData: [],
                 chartOptions: {
                     chart: {
@@ -232,7 +234,8 @@
                     this.Amount = response.info.Amount;
                     this.Payout = response.info.Payout;
                     this.AV = response.info.AV;
-                    this.Income =response.info.Income;
+                    this.Income = response.info.Income;
+                    this.Plan = response.info.FeesPlan;
                     this.setMainData(response.info.FeesPlan, this.Amount);
                     this.setIndicators(response.info.ProlProc, response.info.CrossProc, response.info.Treaties);
                     this.setPortfelData(response.info.PRODUCTS);
