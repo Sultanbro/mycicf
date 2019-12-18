@@ -20,7 +20,7 @@ class ReportController extends Controller
          */
         $dateBeg = date('d.m.Y', strtotime($request->dateBeg));
         $dateEnd = date('d.m.Y', strtotime($request->dateEnd));
-        $response = $kias->GetInfoUser($dateBeg, $dateEnd, 1446285);
+        $response = $kias->GetInfoUser($dateBeg, $dateEnd, $ISN);
         if($response->error) {
             return response()
                 ->json([
