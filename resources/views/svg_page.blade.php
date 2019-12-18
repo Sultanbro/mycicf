@@ -1,5 +1,14 @@
 <html>
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-29153373-9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-29153373-9');
+    </script>
     <title>{{$page->title}}</title>
     <script type="text/javascript" src="{{asset('js/nicEdit.js')}}"></script>
     <script type="text/javascript">
