@@ -34,11 +34,11 @@
 
                             <!--Column 2-->
                             <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
-                                <div class="ml-4 w-25"
+                                <div class="m-2"
                                      v-if="levelOneOpened"
                                      v-for="innerItem in itemsLevelTwo">
                                     <img :src="innerItem.icon_url"
-                                         class="items-icons mr-2">
+                                         class="items-icons">
                                     <span class="mr-2"><a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
                                 </div>
                             </div>
