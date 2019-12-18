@@ -261,7 +261,7 @@
             setIndicators(Prolongation, Cross, Agreements){
                 this.secondChartData = [
                     ['Element', '', { role: 'style' }],
-                    ['прологация', this.getPercent(parseInt(Prolongation.substring(0, Prolongation.length - 1)), Agreements), '#0079ea'],
+                    ['пролонгация', this.getPercent(parseInt(Prolongation.substring(0, Prolongation.length - 1)), Agreements), '#0079ea'],
                     ['кросс-продажи', this.getPercent(parseInt(Cross.substring(0, Cross.length - 1)), Agreements), '#3293ee'],
                     ['кол-во договоров', Agreements, '#7cb8f1'],
                 ]
