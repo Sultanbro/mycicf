@@ -11,11 +11,11 @@
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
                 @if(Auth::user()->ISN !== Auth::user()->level)
-                <a class="header-navigation" href="{{route('parse')}}">
-                    <li>
-                        Parse
-                    </li>
-                </a>
+                    <a class="header-navigation" href="{{route('parse')}}">
+                        <li>
+                            Parse
+                        </li>
+                    </a>
                 @endif
                 {{--<a class="header-navigation" href="javascript:void(0)">--}}
                     {{--<li>--}}
