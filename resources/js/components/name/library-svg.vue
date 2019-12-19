@@ -47,6 +47,13 @@
                                     </div>
                                 </div>
                                 <div v-if="levelOneOpened" class="border border-primary p-2 d-flex dropdown-content__inner-list w-100 bg-white justify-content-between flex-column">
+                                    <div class="ml-auto">
+                                        <button type="button"
+                                                class="close-btn"
+                                                @click="closeLevelTwo">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
                                     <div class="m-2 d-flex min-height-15"
                                          v-for="innerItem in itemsLevelTwo">
                                         <img :src="innerItem.icon_url"
@@ -54,13 +61,6 @@
                                         <span>
                                             <a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a>
                                         </span>
-                                    </div>
-                                    <div>
-                                        <button type="button"
-                                                class="close-btn"
-                                                @click="closeLevelTwo">
-                                            <i class="fa fa-times"></i>
-                                        </button>
                                     </div>
                                 </div>
 
