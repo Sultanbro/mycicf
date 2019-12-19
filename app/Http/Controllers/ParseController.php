@@ -14,6 +14,8 @@ use App\PreviousProductName;
 
 use App\Imports\UsersImport;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -35,6 +37,17 @@ class ParseController extends Controller
     public const PROPERTY = 3;          //Имущественное
     //PRODUCT
     public const MST_ID = 3;
+
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(Auth::user()->ISN !== Auth::user()->level){
+                return $next($request);
+            }
+            return Redirect::back();
+        });
+    }
 
     public function company()
     {
