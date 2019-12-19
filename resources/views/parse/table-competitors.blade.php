@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+<?php
+use App\Http\Controllers\ParseController;
+?>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Сенткоины | My.cic.kz</title>
+    <title>i-ci.kz</title>
 
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -14,32 +18,45 @@
     <link rel="stylesheet" href="{{asset('fonts/font-awesome.min.css')}}">
 
     <link rel="stylesheet" type="text/css" href="{{asset('css/styles.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/styles_parse.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- include vue-treeselect & its styles. you can change the version tag to better suit your needs. -->
-    <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
-
-    <script src="{{asset('js/app.js')}}"></script>
-    {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-    @include('layouts.header')
-    <main class="flex-row"  id="app">
-        <div class="main_margin flex-row width100">
-{{--            @include('layouts.sidebar')--}}
-            <centcoins :isn="{{Auth::user()->ISN}}"></centcoins>
-            <div class="col-md-8" id="employee_info">
-                <operations-history :isn="{{Auth::user()->ISN}}"></operations-history>
-{{--                <spend-centcoins :isn="{{Auth::user()->ISN}}"></spend-centcoins>--}}
-            </div>
+@include('layouts.header')
 
-
-            {{--RIGHT SIDE BAR GOES HERE--}}
+<main class="flex-column pl-5 pr-5" id="app">
+    <div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                <tr>
+                    <th scope="col">Сентрас</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+                <tr class="bold">
+                    <td>Показатель</td>
+                    <td>Январь 2019</td>
+                    <td>Январь 2018</td>
+                </tr>
+                <tr class="bold">
+                    <td>Рейтинг</td>
+                    <td>B+ / Fitch Ratings / 01.01.2019</td>
+                    <td>C+ / Fitch Ratings </td>
+                </tr>
+                <tr class="bold">
+                    <td>Ренкинг</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </main>
-{{--    @include('layouts.footer')--}}
-    {{--FOOTER GOES HERE--}}
+    </div>
+</main>
 </body>
 </html>

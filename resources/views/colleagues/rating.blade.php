@@ -34,7 +34,7 @@
     <div class="main_margin flex-row width100">
         @include('colleagues.sidebar')
 
-        <div class="col-md-6" id="employee_info">
+        <div class="col-md-8" id="employee_info">
             @include('layouts.tabs')
             <rating :isn="{{ $ISN }}"></rating>
         </div>

@@ -18,6 +18,18 @@ ul{
 .ubuntu-font{
 	font-family: Ubuntu;
 }
+.assets-string{
+	background: #adc973;
+}
+.obligations-string{
+	background: #ebac65;
+}
+.reserves-string{
+	background: #be9fe0;
+}
+.capital-string{
+	background: #87c5e6;
+}
 /* FONTS  END */
 .bg-color-blue{
 	background: #4267b2;
@@ -27,6 +39,34 @@ ul{
 }
 .mobile-link-padding{
 	padding: 0.3rem;
+}
+.dossierIsn{
+	margin-top: 1.95rem;
+}
+@media (min-width: 1000px) and (max-width: 1700px){
+	.header-avatar-none{
+		display: none;
+	}
+	.leftsidebar-icons{
+		font-size: 1rem;
+	}
+	.centcoins-value{
+		font-size: 3rem !important;
+	}
+	.centcoin{
+		width: 2.8rem !important;
+	}
+	.parse-top-company-margins div{
+		margin-left: 0rem !important;
+		margin-right: 0rem !important;
+	}
+	.parse-top-company-select{
+		margin-right: 3rem;
+	}
+}
+.flex-start{
+	display: flex;
+	justify-content: flex-start;
 }
 .friends-settings{
 	background: #e4edff !important;
@@ -77,7 +117,23 @@ ul{
 .CAPS{
 	text-transform: uppercase;
 }
-
+@media (min-width: 900px) and (max-width: 1500px) {
+	.colleagues-tree div{
+		flex-flow: column;
+		align-items: flex-start !important;
+		margin-top: 0.25rem;
+	}
+}
+@media (min-width: 900px) and (max-width: 1170px){
+	.centcoins-date-indicators div{
+		flex-flow: column!important;
+		flex-direction: column !important;
+		justify-content: flex-start;
+	}
+	.centcoins-date-indicators div div{
+		margin-top: 0.25rem;
+	}
+}
 .mobile-date-contain{
 	margin-top: 1rem;
 }
@@ -693,6 +749,23 @@ ul{
 }
 .menu-right-side-active{
     background: #bdd1f8;
+}
+.tabs-contain-active{
+	background: #275cc7 !important;
+}
+.tabs-contain:hover{
+	color: white;
+	background: #4373d9;
+	transition: 0.2s ease-in-out;
+}
+.tabs-contain{
+	background: #6c93e5;
+}
+.first-tab{
+	border-radius: 6px 0 0 0;
+}
+.last-tab{
+	border-radius: 0 6px 0 0;
 }
 .bg-darkgray{
     background: #eeeeee;

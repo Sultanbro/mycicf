@@ -34,7 +34,7 @@
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
-        <div class="col-md-6 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
             <colleagues></colleagues>
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}

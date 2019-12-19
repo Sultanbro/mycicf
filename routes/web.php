@@ -135,6 +135,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
         Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+        Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
+        Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
+        Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
 
     //CENTCOINS
     Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');

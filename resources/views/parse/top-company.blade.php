@@ -76,7 +76,7 @@ use App\Http\Controllers\ParseController;
             </div>
             <div>
                 <div class="flex-row">
-                    <div class="mr-10 ">
+                    <div class="mr-10 parse-top-company-select">
                         <div>
                             <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
                                 <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
@@ -155,7 +155,7 @@ use App\Http\Controllers\ParseController;
                 </div>
             </div>
             <div>
-                <div class="flex-row vertical-middle jc-sb">
+                <div class="flex-row vertical-middle parse-top-company-margins jc-sb">
                     <div class="mr-4 ml-4">
                         <label class="vertical-middle pointer mb-0">
                             <div class="termination-checkbox">
@@ -182,7 +182,7 @@ use App\Http\Controllers\ParseController;
                                 <div>
                                     <i class="fa fa-filter"></i>
                                 </div>
-                                <div class="ml-2">
+                                <div class="pl-2">
                                     Показать
                                 </div>
                             </div>
@@ -194,7 +194,7 @@ use App\Http\Controllers\ParseController;
     </div>
     <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
-            <div class="width100">
+            <div class="width100 table-responsive">
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
