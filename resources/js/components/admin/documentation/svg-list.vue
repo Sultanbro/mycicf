@@ -19,7 +19,7 @@
                         Изменить
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button disabled @click="deleteItem(item.id)" class="btn btn-danger btn-sm">
+                    <button @click="deleteItem(item.id)" class="btn btn-danger btn-sm">
                         Удалить
                         <i class="fas fa-trash"></i>
                     </button>
@@ -47,7 +47,7 @@
                 this.axios.post('/wnd/get/svgList', {})
                     .then(response => {
                         if(response.data.success){
-                            this.list = response.data.list
+                            this.list = response.data.files
                         }else{
                             alert(response.data.error)
                         }
@@ -57,7 +57,15 @@
                     });
             },
             editItem(id){},
-            deleteItem(id){},
+            deleteItem(id){
+                this.axios.post('/wnd/delete/svg', {id: id})
+                    .then(response => {
+                        location.reload();
+                    })
+                    .catch(error => {
+                       alert(error)
+                    });
+            },
         },
     }
 

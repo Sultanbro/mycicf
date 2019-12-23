@@ -23,7 +23,7 @@
                         Изменить
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button disabled @click="deleteItem(item.id)" class="btn btn-danger btn-sm">
+                    <button @click="deleteItem(item.id)" class="btn btn-danger btn-sm">
                         Удалить
                         <i class="fas fa-trash"></i>
                     </button>
@@ -61,7 +61,15 @@
                     });
             },
             editItem(id){},
-            deleteItem(id){},
+            deleteItem(id){
+                this.axios.post('/wnd/delete/menu', {id: id})
+                    .then(response => {
+                        location.reload();
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            },
         },
     }
 
