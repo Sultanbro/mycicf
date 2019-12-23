@@ -105,6 +105,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
+    Route::get('getModerators', 'SiteController@getModerators');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
@@ -213,5 +214,15 @@ Route::post('/coordination/notify', 'CoordinationController@sendNotify');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
-Route::get('test', 'Admin\SiteController@getModelss');
+//Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+Route::get('test', function (){
+
+    $a = \App\UploadDocs::findOrFail(54);
+    header('Content-type: html');
+    header('Content-Disposition: attachment;Filename=myfile.doc');
+    header('Accept-Charset: utf-8');
+    header('Accept-Language: ru');
+
+    echo ($a->encoded_text);
+});

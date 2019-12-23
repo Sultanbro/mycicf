@@ -45,6 +45,7 @@ class ParseController extends Controller
             if(Auth::user()->ISN !== Auth::user()->level){
                 return $next($request);
             }
+            abort(403, 'У вас нет доступа для просмотра данной страницы');
             return Redirect::back();
         });
     }

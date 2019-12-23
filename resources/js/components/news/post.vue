@@ -122,6 +122,7 @@
                 :post="pinnedPost"
                 :isn="isn"
                 :index="pinnedPostIndex"
+                :moderators="moderators"
                 v-on:deletePost="deleteFromPost(pinnedPostIndex)"
             ></news-post>
         </div>
@@ -130,6 +131,7 @@
                 :post="post"
                 :isn="isn"
                 :index="index"
+                :moderators="moderators"
                 v-on:deletePost="deleteFromPost(index)"
             ></news-post>
         </div>
@@ -186,6 +188,7 @@
                 docMaxSize: 10 * 1024 * 1024,
                 imgMaxNumber: 1,
                 docMaxNumber: 5,
+                moderators: [],
             }
         },
 
@@ -200,9 +203,17 @@
                 this.handleIncoming(e);
             });
             this.getPosts();
+            this.getModerators();
         },
 
         methods: {
+            getModerators: function () {
+                this.axios.get('/getModerators', {})
+                    .then(response => {
+                        this.moderators = response.data.moderators
+                    })
+                    .catch()
+            },
             fileUpload(e) {
                 const documents = e.target.files;
                 const vm = this;

@@ -30,14 +30,23 @@
 
                     <div class="post-settings__inner"
                          :class="isSettingsOpened ? 'show' : ''">
-                        <div class="p-2">
+                        <div class="p-2"
+                             @click="deletePost"
+                             v-if="isn === parseInt(post.userISN) || moderators.includes(isn)">
                             <span>
                                 <small>Удалить</small>
                             </span>
                         </div>
-                        <div class="p-2">
+                        <!--<div class="p-2">-->
+                            <!--<span>-->
+                                <!--<small>Отредактировать</small>-->
+                            <!--</span>-->
+                        <!--</div>-->
+                        <div class="p-2"
+                             @click="setPinned"
+                             v-if="isn === parseInt(post.userISN) || moderators.includes(isn)">
                             <span>
-                                <small>Отредактировать</small>
+                                <small>Закрепить</small>
                             </span>
                         </div>
                     </div>

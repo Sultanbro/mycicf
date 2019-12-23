@@ -8,6 +8,7 @@ use App\KolesaModel;
 use App\KolesaPrices;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Permissions;
 use App\Providers\KiasServiceProvider;
 use App\User;
 use Illuminate\Http\Request;
@@ -507,5 +508,15 @@ class SiteController extends Controller
             'code' => 200,
             'price' => $model->price
         ]);
+    }
+
+    public function getModerators(){
+        $moderators = [];
+        foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_MODERATOR])->get() as $users){
+            array_push($moderators,
+                $users->user_isn
+            );
+        }
+        return response()->json(['moderators' => $moderators]);
     }
 }

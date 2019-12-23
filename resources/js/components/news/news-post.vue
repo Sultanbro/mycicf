@@ -26,6 +26,7 @@
                         @click="setPinned"
                         class="custom-button mr-1"
                         :disabled="editMode"
+                        v-if="isn === parseInt(post.userISN) || moderators.includes(isn)"
                         :class="{pinned: post.pinned === 1}">
                     <i class="fas fa-thumbtack"></i>
                 </button>
@@ -34,13 +35,13 @@
                         class="custom-button mr-1"
                         :disabled="editMode"
                         :class="{editButton: editMode}"
-                        v-if="isn === parseInt(post.userISN)">
+                        v-if="isn === parseInt(post.userISN) || moderators.includes(isn)">
                     <i class="fas fa-pen"></i>
                 </button>
                 <button type="button"
                         class="custom-button"
                         @click="deletePost"
-                        v-if="isn === parseInt(post.userISN)">
+                        v-if="isn === parseInt(post.userISN) || moderators.includes(isn)">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -169,7 +170,7 @@
                             <div class="d-flex">
                                 <div class="d-flex align-items-center">
                                     <!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
-                                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
+                                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="MainFakeImage">
                                     <img :src="MainImageUrl" @error="MainFakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                                 </div>
                                 <div class="d-flex w-100 wrapper">
@@ -240,6 +241,7 @@
             isn: Number,
             post: Object,
             index: Number,
+            moderators : Array,
         },
 
         mounted () {
@@ -358,7 +360,6 @@
                     }
                 });
             },
-
 
         }
     }
