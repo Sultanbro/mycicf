@@ -31,7 +31,7 @@
         },
         methods: {
             getUserList() {
-                this.axios.post('/getBranchData', {}).then((response) => {
+                this.axios.post('/getFullBranch', {}).then((response) => {
                     this.userList = response.data.result;
                 });
             },
