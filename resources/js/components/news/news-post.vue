@@ -26,7 +26,7 @@
                         @click="setPinned"
                         class="custom-button mr-1"
                         :disabled="editMode"
-                        v-if="isn === parseInt(post.userISN) || moderators.includes(isn)"
+                        v-if="moderators.includes(isn)"
                         :class="{pinned: post.pinned === 1}">
                     <i class="fas fa-thumbtack"></i>
                 </button>

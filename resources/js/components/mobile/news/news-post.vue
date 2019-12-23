@@ -24,6 +24,7 @@
                 <div v-click-outside="closePostSettings"
                     class="ml-auto post-settings">
                     <div @click="openPostSetting"
+                         v-if="isn === parseInt(post.userISN) || moderators.includes(isn)"
                          class="p-2">
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
@@ -44,7 +45,7 @@
                         <!--</div>-->
                         <div class="p-2"
                              @click="setPinned"
-                             v-if="isn === parseInt(post.userISN) || moderators.includes(isn)">
+                             v-if="moderators.includes(isn)">
                             <span>
                                 <small>Закрепить</small>
                             </span>
@@ -158,6 +159,7 @@
             isn: Number,
             post: Object,
             index: Number,
+            moderators: Array
         },
 
         mounted () {
@@ -221,9 +223,28 @@
                 var vm = this;
                 vm.post.comments.push(response);
             },
+            deletePost: function () {
+                this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
+                    return;
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                });
+            },
 
-
-
+            setPinned: function () {
+                if(this.post.pinned === 0) {
+                    this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
+                        this.$parent.unsetAllPinned(this.index);
+                    }).catch(error => {
+                        alert('Ошибка на стороне сервера');
+                    });
+                }
+                else {
+                    this.axios.post('/unsetPinned', {postId: this.post.postId}).then(response => {
+                        this.$parent.unsetAllPinned(-1)
+                    });
+                }
+            },
         },
 
         directives: {
