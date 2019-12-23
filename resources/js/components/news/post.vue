@@ -138,6 +138,7 @@
         <div class="text-center">
             <button type="button" class="load-button pl-2 pr-2" @click="getPosts" v-if="!allPostShown">Больше</button>
         </div>
+        <a v-if="showToTopBtn" href="javascript:" class="to-top-btn" @click="goToTop()"><i class="fas fa-chevron-up fa-3x"></i></a>
     </div>
 </template>
 
@@ -189,6 +190,7 @@
                 imgMaxNumber: 1,
                 docMaxNumber: 5,
                 moderators: [],
+                showToTopBtn: false,
             }
         },
 
@@ -375,6 +377,11 @@
             },
 
             handleScroll() {
+                if(document.documentElement.scrollTop > 50){
+                    this.showToTopBtn = true;
+                }else{
+                    this.showToTopBtn = false;
+                }
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
                 if (this.bottomOfWindow && !this.allPostShown) {
                     this.preloader(true);
@@ -441,6 +448,13 @@
                 {
                     document.getElementById("preloader").style.display = "none";
                 }
+            },
+            goToTop(){
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
             }
         },
 

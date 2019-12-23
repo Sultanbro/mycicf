@@ -1820,3 +1820,9 @@ textarea::-webkit-scrollbar-thumb {
 .vw90{
 	width: 90vw;
 }
+
+.to-top-btn {
+	position: fixed;
+	right: 50px;
+	bottom: 50px;
+}
