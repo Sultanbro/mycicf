@@ -9,6 +9,7 @@ use App\ParseFinance;
 use App\ParsePayout;
 use App\ParsePremium;
 use App\ParseStandart;
+use App\Permissions;
 use App\PreviousName;
 use App\PreviousProductName;
 
@@ -42,7 +43,7 @@ class ParseController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if(Auth::user()->ISN !== Auth::user()->level){
+            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_PARSE]))){
                 return $next($request);
             }
             abort(403, 'У вас нет доступа для просмотра данной страницы');
