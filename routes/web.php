@@ -200,7 +200,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
-
         Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
 
         Route::post('/getUsersData', 'SiteController@getUserData');
@@ -220,13 +219,7 @@ Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
-Route::get('test', function (){
 
-    $a = \App\UploadDocs::findOrFail(54);
-    header('Content-type: html');
-    header('Content-Disposition: attachment;Filename=myfile.doc');
-    header('Accept-Charset: utf-8');
-    header('Accept-Language: ru');
 
-    echo ($a->encoded_text);
-});
+Route::get('/parse/opu/parse', 'ParseController@parseOpuData');
+Route::get('/parse/balance/parse', 'ParseController@parseBalanceData');
