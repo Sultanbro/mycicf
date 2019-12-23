@@ -245,6 +245,28 @@ class SiteController extends Controller
         );
     }
 
+    public function getFullBranch(Request $request){
+        $headData = Branch::where('kias_id', 50)->first();
+        $result = [];
+        if(count($headData->childs)){
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+                'children' => $this->getChild($headData->kias_id),
+            ]);
+        }else{
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+            ]);
+        }
+        $responseData = [
+            'result' => $result,
+            'value' => Auth::user()->ISN,
+        ];
+        return response()->json($responseData)->withCallback($request->input('callback'));
+    }
+
     public function postBranchData(Request $request)
     {
         $headDept = Auth::user()->level ?? Auth::user()->ISN;

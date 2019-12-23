@@ -34,6 +34,8 @@ class ParseController extends Controller
     public const PREMIUM = 2;           //Отчет по премиям
     public const PAYMENTS = 3;          //Отчет по выплатам
     public const STANDART = 4;          //Отчет по нормативам
+    public const OPU = 5;               //ОПУ
+    public const BALANCE = 6;           //Баланс
     //CLASS OF INSURANCE
     public const COMPULSORY = 1;        //Обязательное
     public const INDIVIDUAL = 2;        //Личное
@@ -234,7 +236,11 @@ class ParseController extends Controller
         $document_type = $request->type;
         $month = $request->month;
         $year = $request->year;
-        $productStart = $request->row - 1;
+        if(in_array($document_type, [5,6])){
+            $companyId = $request->company;
+        }else{
+            $productStart = $request->row - 1;
+        }
         $model = null;
         switch ($document_type){
             case self::PREMIUM :
@@ -257,8 +263,10 @@ class ParseController extends Controller
                     ->where('year', '=', $year)
                     ->get();
                 break;
+            default :
+                $model = [];
         }
-        if(sizeof($model) > 0 || $model === null){
+        if(sizeof($model) > 0){
             $result = [
                 'success' => false,
                 'error' => 'За данный период загруженные данные уже имеются',
@@ -279,7 +287,7 @@ class ParseController extends Controller
             return response()->json($result)->withCallback($request->input('callback'));
         }
         $filePath = "storage/{$filePath}";
-        if($document_type > 4 || $document_type < 1){
+        if($document_type > 6 || $document_type < 1){
             $result = [
                 'success' => false,
                 'error' => 'Выберите правильный тип документа',
@@ -304,6 +312,12 @@ class ParseController extends Controller
             case 4 :
                 $this->parseXlsStandart($filePath, $year, $month,$productStart);
                 break;
+            case 5 :
+                $this->parseOpuData($filePath, $year, $month, $companyId);
+                break;
+            case 6 :
+                $this->parseBalanceData($filePath, $year, $month, $companyId);
+                break;
         }
     }
     public function getDocTypes(Request $request){
@@ -322,6 +336,8 @@ class ParseController extends Controller
             self::PREMIUM => 'Премии',
             self::PAYMENTS => 'Выплаты',
             self::STANDART => 'Норматив маржи',
+            self::OPU => 'ОПУ',
+            self::BALANCE => 'Баланс',
         ];
     }
     public function getTypes(){
@@ -329,7 +345,9 @@ class ParseController extends Controller
             self::FINANCE,
             self::PREMIUM,
             self::STANDART,
-            self::PAYMENTS
+            self::PAYMENTS,
+            self::OPU,
+            self::BALANCE
         ];
     }
     public function getCompanyList(){
@@ -2355,14 +2373,9 @@ class ParseController extends Controller
         return redirect(route('parse/company'));
     }
     /** NEW PART */
-    public function parseOpuData()
+    public function parseOpuData($filePath, $year, $month, $company_id)
     {
-        $start = microtime(true);
-        $name = 'third.xlsx';
-        $year = 2019;
-        $month = 1;
-        $company_id = 3;
-        $arr = Excel::toArray(new UsersImport, $name);
+        $arr = Excel::toArray(new UsersImport, $filePath);
         $model = new ParseOpu();
         foreach ($this->getOpuOptions() as $key => $functionsString){
             $value = 0;
@@ -2390,17 +2403,11 @@ class ParseController extends Controller
                 }
                 $model->$key = $value;
             }
-//            $model->ros = 0;
-//            $model->roa = 0;
-//            $model->roe = 0;
-//            $model->cos = 0;
         }
         $model->year=$year;
         $model->month=$month;
         $model->company_id=$company_id;
         $model->save();
-        $diff = microtime(true) - $start;
-        echo "executed at $diff seconds";
     }
 
     public function getOpuOptions(){
@@ -2459,13 +2466,8 @@ class ParseController extends Controller
     }
     public function getOpuData(){}
 
-    public function parseBalanceData(){
-        $start = microtime(true);
-        $name = 'fourth.xlsx';
-        $year = 2019;
-        $month = 1;
-        $company_id = 1;
-        $arr = Excel::toArray(new UsersImport, $name);
+    public function parseBalanceData($filePath, $year, $month, $company_id){
+        $arr = Excel::toArray(new UsersImport, $filePath);
         $model = new ParseBalance();
         foreach ($this->getBalanceOptions() as $key => $functionsString){
             $value = 0;
@@ -2498,8 +2500,6 @@ class ParseController extends Controller
         $model->month=$month;
         $model->company_id=$company_id;
         $model->save();
-        $diff = microtime(true) - $start;
-        echo "executed at $diff seconds";
     }
     public function getBalanceOptions(){
         return [
