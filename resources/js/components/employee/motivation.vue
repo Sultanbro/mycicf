@@ -3,7 +3,7 @@
         <div class="pt-2" v-if="checkUrl()">
             <div class="bg-white ml-3 mr-3 pt-4 pb-3">
                 <div>
-                    <label for="dateBeg" >Отчетный месяц</label>
+                    <label for="dateBeg" class="bold">Отчетный месяц</label>
                 </div>
                 <div class="d-flex align-items-center">
                     <div class="mr-2">
@@ -30,7 +30,7 @@
         <div class="pt-2" v-else>
             <div class="bg-white ml-3 mr-3 pt-4 pb-3 flex-column">
                 <div>
-                    <label for="dateBeg" >Отчетный месяц</label>
+                    <label for="dateBeg" class="bold">Отчетный месяц</label>
                 </div>
                 <div class="d-flex align-items-center">
                     <div class="mr-2 flex-column">

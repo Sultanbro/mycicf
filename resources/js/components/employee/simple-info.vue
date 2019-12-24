@@ -10,7 +10,7 @@
                 <span class="ml-2 vertical-middle"><i class="fas " :class="caretClass" data-toggle="collapse" href="#multiCollapseExample1"></i></span>
             </div>
         </div>
-        <div class="ml-3 mr-3 mt-2 collapse in show" id="persons-data">
+        <div class="ml-3 mr-3 mt-2 collapse in" id="persons-data">
             <div class="left-menu-fonts">
                 <span><strong>{{duty}}</strong></span>
             </div>
@@ -39,7 +39,7 @@
         name: "simple-info",
         data() {
             return {
-                caretClass: 'fa-chevron-up',
+                caretClass: 'fa-chevron-down',
                 fullname: '',
                 duty: '',
                 birthday: '',
@@ -78,7 +78,7 @@
                 }
             },
             reverseCaret: function () {
-                this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
+                this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
             },
         },
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="news-tape-bg radius-4px mt-3 pb-2">
+        <div v-if="checkUrl()" class="news-tape-bg radius-4px mt-3 pb-2">
             <div class="pt-4">
                 <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
                     <div class="d-flex">
@@ -11,8 +11,34 @@
                             <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
                         </div>
                     </div>
-                    <div v-if="checkUrl()" class="ml-4 mr-4">
+                    <div class="ml-4 mr-4">
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
+                    </div>
+                    <div class="ml-4 mr-4">
+                        <div class="date-color border-gray show-btn" @click="getReport">
+                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
+                                <div>
+                                    <i class="far fa-eye"></i>
+                                </div>
+                                <div class="ml-2">
+                                    <span>Показать</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="news-tape-bg radius-4px mt-3 pb-2">
+            <div class="pt-4">
+                <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
+                    <div class="d-flex">
+                        <div class="ml-4 mr-4">
+                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
+                        </div>
+                        <div class="ml-4 mr-4">
+                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
+                        </div>
                     </div>
                     <div class="ml-4 mr-4">
                         <div class="date-color border-gray show-btn" @click="getReport">

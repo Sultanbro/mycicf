@@ -231,6 +231,15 @@ class ParseController extends Controller
     public function index(){
         return view('parse/index');
     }
+    public function getFees(){
+        return view('parse/table-fees');
+    }
+    public function getCompetitors(){
+        return view('parse/table-competitors');
+    }
+    public function getIndicators(){
+        return view('parse/table-indicators');
+    }
     public function upload(Request $request){
         //TODO VALIDATE
         $document_type = $request->type;
