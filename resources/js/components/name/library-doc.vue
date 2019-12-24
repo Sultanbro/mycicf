@@ -35,31 +35,30 @@
                             <!--Column 2-->
                             <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
                                 <div class="w-100">
-                                    <search></search>
+                                    <search v-if="changed"></search>
                                     <div class="d-flex justify-content-center">
                                         <h2>{{title}}</h2>
                                     </div>
-                                    <div class="d-flex justify-content-center">
+                                    <div class="d-flex justify-content-center" ref="content">
                                         <div v-html="encodedtext"></div>
                                     </div>
                                 </div>
-                                <div v-if="levelOneOpened" class="border border-primary p-2 d-flex dropdown-content__inner-list w-100 bg-white justify-content-between">
-                                    <div class="ml-4 d-flex min-height-15"
-                                         v-for="innerItem in itemsLevelTwo">
-                                        <img :src="innerItem.icon_url"
-                                             class="items-icons mr-2">
-                                        <span class="mr-2">
-                                            <a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a>
-                                        </span>
-                                    </div>
-                                    <div>
+                                <div v-if="levelOneOpened" class="border border-primary p-2 d-flex dropdown-content__inner-list w-100 bg-white justify-content-between flex-column">
+                                    <div class="ml-auto">
                                         <button type="button"
                                                 class="close-btn"
                                                 @click="closeLevelTwo">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </div>
-
+                                    <div class="m-2 d-flex min-height-15"
+                                         v-for="innerItem in itemsLevelTwo">
+                                        <img :src="innerItem.icon_url"
+                                             class="items-icons">
+                                        <span class="">
+                                            <a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a>
+                                        </span>
+                                    </div>
                                 </div>
 
                             </div>
@@ -93,6 +92,7 @@
                 itemsLevelThree: [],
                 levelOnePinned: null,
                 levelTwoPinned: null,
+                changed: true,
             }
         },
         props: {
@@ -128,6 +128,11 @@
 
             getLevelOne: function(id, url) {
                 this.levelOnePinned = id;
+                if(id !== this.pinned_id){
+                    this.encodedtext = '';
+                    this.title = '';
+                    this.changed = false;
+                }
                 var vm = this;
 
                 if(url !== null && url !== '') {

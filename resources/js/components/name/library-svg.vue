@@ -46,21 +46,21 @@
                                         <div v-html="body"></div>
                                     </div>
                                 </div>
-                                <div v-if="levelOneOpened" class="border border-primary p-2 d-flex dropdown-content__inner-list w-100 bg-white justify-content-between">
-                                    <div class="ml-4 d-flex min-height-15"
-                                         v-for="innerItem in itemsLevelTwo">
-                                        <img :src="innerItem.icon_url"
-                                             class="items-icons mr-2">
-                                        <span class="mr-2">
-                                            <a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a>
-                                        </span>
-                                    </div>
-                                    <div>
+                                <div v-if="levelOneOpened" class="border border-primary p-2 d-flex dropdown-content__inner-list w-100 bg-white justify-content-between flex-column">
+                                    <div class="ml-auto">
                                         <button type="button"
                                                 class="close-btn"
                                                 @click="closeLevelTwo">
                                             <i class="fa fa-times"></i>
                                         </button>
+                                    </div>
+                                    <div class="m-2 d-flex min-height-15"
+                                         v-for="innerItem in itemsLevelTwo">
+                                        <img :src="innerItem.icon_url"
+                                             class="items-icons">
+                                        <span>
+                                            <a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -133,6 +133,10 @@
 
             getLevelOne: function(id, url) {
                 this.levelOnePinned = id;
+                if(id !== this.pinned_id){
+                    this.body = '';
+                    this.title = '';
+                }
                 var vm = this;
 
                 if(url !== null && url !== '') {

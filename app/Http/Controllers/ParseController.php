@@ -5,15 +5,20 @@ namespace App\Http\Controllers;
 use App\InsuranceClasses;
 use App\InsuranceCompany;
 use App\InsuranceProduct;
+use App\ParseBalance;
 use App\ParseFinance;
+use App\ParseOpu;
 use App\ParsePayout;
 use App\ParsePremium;
 use App\ParseStandart;
+use App\Permissions;
 use App\PreviousName;
 use App\PreviousProductName;
 
 use App\Imports\UsersImport;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,12 +34,30 @@ class ParseController extends Controller
     public const PREMIUM = 2;           //Отчет по премиям
     public const PAYMENTS = 3;          //Отчет по выплатам
     public const STANDART = 4;          //Отчет по нормативам
+    public const OPU = 5;               //ОПУ
+    public const BALANCE = 6;           //Баланс
     //CLASS OF INSURANCE
     public const COMPULSORY = 1;        //Обязательное
     public const INDIVIDUAL = 2;        //Личное
     public const PROPERTY = 3;          //Имущественное
     //PRODUCT
     public const MST_ID = 3;
+
+
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $acceptedUsers = [];
+            foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_PARSE])->get() as $user){
+                array_push($acceptedUsers, $user->user_isn);
+            }
+            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, $acceptedUsers)){
+                return $next($request);
+            }
+            abort(403, 'У вас нет доступа для просмотра данной страницы');
+            return Redirect::back();
+        });
+    }
 
     public function company()
     {
@@ -222,7 +245,11 @@ class ParseController extends Controller
         $document_type = $request->type;
         $month = $request->month;
         $year = $request->year;
-        $productStart = $request->row - 1;
+        if(in_array($document_type, [5,6])){
+            $companyId = $request->company;
+        }else{
+            $productStart = $request->row - 1;
+        }
         $model = null;
         switch ($document_type){
             case self::PREMIUM :
@@ -245,8 +272,10 @@ class ParseController extends Controller
                     ->where('year', '=', $year)
                     ->get();
                 break;
+            default :
+                $model = [];
         }
-        if(sizeof($model) > 0 || $model === null){
+        if(sizeof($model) > 0){
             $result = [
                 'success' => false,
                 'error' => 'За данный период загруженные данные уже имеются',
@@ -267,7 +296,7 @@ class ParseController extends Controller
             return response()->json($result)->withCallback($request->input('callback'));
         }
         $filePath = "storage/{$filePath}";
-        if($document_type > 4 || $document_type < 1){
+        if($document_type > 6 || $document_type < 1){
             $result = [
                 'success' => false,
                 'error' => 'Выберите правильный тип документа',
@@ -292,6 +321,12 @@ class ParseController extends Controller
             case 4 :
                 $this->parseXlsStandart($filePath, $year, $month,$productStart);
                 break;
+            case 5 :
+                $this->parseOpuData($filePath, $year, $month, $companyId);
+                break;
+            case 6 :
+                $this->parseBalanceData($filePath, $year, $month, $companyId);
+                break;
         }
     }
     public function getDocTypes(Request $request){
@@ -310,6 +345,8 @@ class ParseController extends Controller
             self::PREMIUM => 'Премии',
             self::PAYMENTS => 'Выплаты',
             self::STANDART => 'Норматив маржи',
+            self::OPU => 'ОПУ',
+            self::BALANCE => 'Баланс',
         ];
     }
     public function getTypes(){
@@ -317,7 +354,9 @@ class ParseController extends Controller
             self::FINANCE,
             self::PREMIUM,
             self::STANDART,
-            self::PAYMENTS
+            self::PAYMENTS,
+            self::OPU,
+            self::BALANCE
         ];
     }
     public function getCompanyList(){
@@ -2341,6 +2380,173 @@ class ParseController extends Controller
     }
     public function redirectToCompany(){
         return redirect(route('parse/company'));
+    }
+    /** NEW PART */
+    public function parseOpuData($filePath, $year, $month, $company_id)
+    {
+        $arr = Excel::toArray(new UsersImport, $filePath);
+        $model = new ParseOpu();
+        foreach ($this->getOpuOptions() as $key => $functionsString){
+            $value = 0;
+            $functions = explode(',', $functionsString);
+            foreach ($functions as $function) {
+                list($func, $val) = explode('(', $function);
+                $val = substr_replace($val,"",-1);
+                if(in_array($func, ['add', 'minus'])){
+                    if(in_array($val, array_keys($this->getOpuOptions()))){
+                        if($func == 'add'){
+                            $value += $model->$val;
+                        }else{
+                            $value -= $model->$val;
+                        }
+                    }else{
+                        $value += $this->$func($arr, $val);
+                    }
+                }else{
+                    list($a,$b) = explode(';',$val);
+                    if($model->$b == 0){
+                        $value = 0;
+                    }else {
+                        $value += ($model->$a / $model->$b);
+                    }
+                }
+                $model->$key = $value;
+            }
+        }
+        $model->year=$year;
+        $model->month=$month;
+        $model->company_id=$company_id;
+        $model->save();
+    }
+
+    public function getOpuOptions(){
+        return [
+            'dsd' => 'add(17),add(21),minus(64),add(22)',
+            'brut_prem' => 'add(14),add(15),minus(64)',
+            'own_ret' => 'division(dsd;brut_prem)',
+            'net_payout' => 'add(53),add(54)',
+            'lost_perc' => 'division(net_payout;dsd)',
+            'av' => 'add(63)',
+            'ins_expense' => 'add(net_payout),add(av)',
+            'av_perc' => 'division(av;dsd)',
+            'net_ins_income' => 'add(dsd),minus(ins_expense)',
+            'adm_expenses'=>'add(71)',
+            'fot' => 'add(73)',
+            'fot_dsd' => 'division(adm_expenses;dsd)',
+            'fin_result' => 'add(adm_expenses),minus(fot),minus(77)',
+            'reserve_changes' => 'add(18),minus(19),add(59),minus(60),add(61),minus(62)',
+            'fin_changes' => 'add(fin_result),minus(reserve_changes)',
+            'invest_income' => 'add(23),minus(65),minus(70)',
+            'other_income' => 'add(43)',
+            'other_expenses' => 'add(77)',
+            'brut_income' => 'add(reserve_changes),add(fin_changes),add(invest_income),minus(other_income)',
+            'kpn' => 'add(82)',
+            'net_income' => 'add(brut_income),minus(kpn)',
+        ];
+    }
+    public function getOpuLabels(){
+        return [
+            'dsd' => 'ДСД',
+            'brut_prem' => 'Брутто премии',
+            'own_ret' => 'Собст. удер',
+            'ins_expense' => 'Расходы по страхованию',
+            'net_payout' => 'Нетто выплаты',
+            'lost_perc' => 'Доля выплат от ДСД%',
+            'av' => 'Агентские',
+            'av_perc' => 'Доля агентских от ДСД%',
+            'net_ins_income' => 'Нетто доход по страхованию',
+            'adm_expenses'=>'Административные расходы',
+            'fot' => 'ФОТ',
+            'fot_dsd' => 'Доля адм. расходов от ДСД',
+            'fin_result' => 'Финансовый результат по страхованию',
+            'reserve_changes' => 'Изменение резервов',
+            'fin_changes' => 'Финансовый результат с учетом резервов',
+            'invest_income' => 'Доход по инвестиционной деятельности',
+            'other_income' => 'Прочие доходы',
+            'other_expenses' => 'Прочие расходы',
+            'brut_income' => 'Прибыль до налогов',
+            'kpn' => 'КПН',
+            'net_income' => 'Чистая прибыль',
+            'ros' => 'ROS',
+            'roa' => 'ROA',
+            'roe' => 'ROE',
+            'cos' => 'COS',
+        ];
+    }
+    public function getOpuData(){}
+
+    public function parseBalanceData($filePath, $year, $month, $company_id){
+        $arr = Excel::toArray(new UsersImport, $filePath);
+        $model = new ParseBalance();
+        foreach ($this->getBalanceOptions() as $key => $functionsString){
+            $value = 0;
+            $functions = explode(',', $functionsString);
+            foreach ($functions as $function) {
+                list($func, $val) = explode('(', $function);
+                $val = substr_replace($val,"",-1);
+                if(in_array($func, ['add', 'minus'])){
+                    if(in_array($val, array_keys($this->getBalanceOptions()))){
+                        if($func == 'add'){
+                            $value += $model->$val;
+                        }else{
+                            $value -= $model->$val;
+                        }
+                    }else{
+                        $value += $this->$func($arr, $val);
+                    }
+                }else{
+                    list($a,$b) = explode(';',$val);
+                    if($model->$b == 0){
+                        $value = 0;
+                    }else {
+                        $value += ($model->$a / $model->$b);
+                    }
+                }
+                $model->$key = $value;
+            }
+        }
+        $model->year=$year;
+        $model->month=$month;
+        $model->company_id=$company_id;
+        $model->save();
+    }
+    public function getBalanceOptions(){
+        return [
+            'actives' => 'add(41)',
+            'cash' => 'add(14)',
+            'deposits' => 'add(15)',
+            'securities' => 'add(16),add(17)',
+            'rev_repo' => 'add(18)',
+            'OS' => 'add(35),add(36),add(37),add(38)',
+            'NMA' => 'add(39)',
+            'ins_dz' => 'add(26)',
+            'other_dz' => 'add(28)',
+            'other_actives' => 'add(19),add(20),add(27),add(29),add(30),add(31),add(32),add(33),add(34),add(40)',
+            'liability' => 'add(62)',
+            'repo' => 'add(55)',
+            'reins_calcs' => 'add(49)',
+            'middleman_calcs' => 'add(50)',
+            'invoices_to_pay' => 'add(52)',
+            'other_credits' => 'add(53)',
+            'other_liability' => 'add(48),add(51),add(54),add(56),add(57),add(58),add(59),add(60),add(61)',
+            'rnp' => 'add(43),minus(21)',
+            'rznu' => 'add(47),minus(25)',
+            'rpnu' => 'add(46),minus(22)',
+            'reserves' => 'add(rnp),add(rznu),add(rpnu)',
+            'capital' => 'add(75)',
+            'authorized_capital' => 'add(64)',
+            'other_rezerves' => 'add(66),add(68),add(69),add(70)',
+            'retained_earnings' => 'add(71)',
+            'current_period' => 'add(74)',
+            'last_years' => 'add(73)',
+        ];
+    }
+
+    public function add($arr, $number){
+        return $arr[0][$number-1][2] == null ? 0 : (double)$arr[0][$number-1][2];
+    }
+    public function minus($arr, $number){
+        return $arr[0][$number-1][2] == null ? 0 : -1*($arr[0][$number-1][2]);
     }
 }
 

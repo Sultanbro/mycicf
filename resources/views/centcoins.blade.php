@@ -6,6 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Сенткоины | My.cic.kz</title>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-29153373-9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-29153373-9');
+    </script>
+
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
     <!-- Bootstrap-->

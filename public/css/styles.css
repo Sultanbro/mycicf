@@ -1893,3 +1893,21 @@ textarea::-webkit-scrollbar-thumb {
 .vw90{
 	width: 90vw;
 }
+
+.to-top-btn {
+	position: fixed;
+	right: 50px;
+	bottom: 50px;
+}
+
+.parse-info{
+	text-align: right;
+	width: 100%;
+	color: gray;
+	margin-right: 55px;
+}
+
+.ny-2020 {
+	background: url(https://niagarastar.ru/niagara8/img8/ng-gyr.png) repeat-x;
+	height: 100px;
+}

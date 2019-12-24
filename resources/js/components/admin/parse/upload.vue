@@ -26,10 +26,15 @@
                 </select>
             </div>
         </div>
-        <div class="form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
+        <div class="form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12" v-if="!newTypes.includes(docType)">
             <label for="row">Строка продуктов/фин.показателей</label>
             <input class="form-control" type="number" v-model="row" id="row">
         </div>
+        <div class="form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12" v-if="newTypes.includes(docType)">
+            <label for="company">Наименование СК</label>
+            <select class="form-control" v-model="company" id="company">
+                <option v-for="item in companyList" :value="item.id">{{item.label}}</option>
+            </select>        </div>
         <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
             <button type="button" @click="send" class="btn-info btn-lg btn">Отправить</button>
         </div>
@@ -48,14 +53,18 @@
                 month : null,
                 year : null,
                 row: null,
+                company: null,
                 monthLabels: [],
                 yearLabels: [],
+                newTypes: [5, 6],
+                companyList: [],
             }
         },
         mounted() {
             this.getDocTypes()
             this.getMonthLabels();
             this.getYearLabels();
+            this.getCompanyList();
         },
         methods: {
             getDocTypes() {
@@ -97,6 +106,19 @@
                     })
                 }
             },
+            getCompanyList(){
+                this.axios.post('/getCompanyList', {})
+                    .then(response => {
+                        if(response.data.success){
+                            this.companyList = response.data.result;
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+            },
             send(){
                 this.axios.post('/parse/upload', this.getFormData())
                     .then(response => {
@@ -117,6 +139,7 @@
                 formData.append('month', this.month);
                 formData.append('year', this.year);
                 formData.append('row', this.row);
+                formData.append('company', this.company);
                 formData.append('file', this.files);
                 return formData;
             }

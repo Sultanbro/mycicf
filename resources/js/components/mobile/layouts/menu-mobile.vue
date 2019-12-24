@@ -77,12 +77,6 @@
                                 <!--<li>-->
                                     <!--<img src="/images/centcoin-fa.png" style="width: 20px;">-->
                                     <!--<span>Сенткоины</span></li></a>-->
-                            <a href="/report" class="pt-2 pb-2 color-darkgray font-size-1_2">
-                                <li>
-                                    <i class="fas fa-chart-pie"></i>
-                                    <span>Отчет</span>
-                                </li>
-                            </a>
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2">-->
                                 <!--<li>-->
                                     <!--<i class="fas fa-chart-pie"></i>-->

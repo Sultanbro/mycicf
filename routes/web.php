@@ -20,7 +20,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
     Route::group(['middleware' => ['checkAuth','checkSession','checkAdminAuth']], function (){
         Route::get('index', 'Admin\SiteController@index');
         Route::get('/logout', 'SiteController@logout');
-        Route::post('/getBranchData', 'SiteController@postBranchData');
+        Route::post('/getFullBranch', 'SiteController@getFullBranch');
         Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         Route::post('/getCompanyList', 'ParseController@getCompanyListAxios');
         Route::post('/getProductList', 'ParseController@getProductListAxios');
@@ -88,12 +88,15 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
 
             Route::get('wnd/svg/list', 'Admin\DocumentationController@svgList')->name('wnd.svg.list');
             Route::post('wnd/get/svgList', 'Admin\DocumentationController@getSvgList');
+            Route::post('wnd/delete/svg', 'Admin\DocumentationController@deleteSvg');
 
             Route::get('wnd/word/list', 'Admin\DocumentationController@wordList')->name('wnd.word.list');
             Route::post('wnd/get/wordList', 'Admin\DocumentationController@getWordList');
+            Route::post('wnd/delete/word', 'Admin\DocumentationController@deleteWord');
 
             Route::get('wnd/menu/list', 'Admin\DocumentationController@menuList')->name('wnd.menu.list');
             Route::post('wnd/get/menuList', 'Admin\DocumentationController@getMenuList');
+            Route::post('wnd/delete/menu', 'Admin\DocumentationController@deleteMenu');
         });
     });
 });
@@ -105,6 +108,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
+    Route::get('getModerators', 'SiteController@getModerators');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
@@ -198,7 +202,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
-
         Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
 
         Route::post('/getUsersData', 'SiteController@getUserData');
@@ -216,5 +219,9 @@ Route::post('/coordination/notify', 'CoordinationController@sendNotify');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
-Route::get('test', 'Admin\SiteController@getModelss');
+//Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+
+
+Route::get('/parse/opu/parse', 'ParseController@parseOpuData');
+Route::get('/parse/balance/parse', 'ParseController@parseBalanceData');

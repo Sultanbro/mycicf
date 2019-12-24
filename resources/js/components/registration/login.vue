@@ -52,22 +52,31 @@
                 .then((response) => {
                     this.afterLogin(response.data)
                 })
-                .catch(response => {
-                    alert(response);
-                    this.preloader(false)
+                .catch(error => {
+                    console.log(error.response);
+                    if(error.response.status === 419){
+                        this.flashMessage.error({
+                            title: "Ошибка",
+                            message: 'Пожалуйста обновите страницу или сайт будет обновлен автоматически',
+                            time: 5000
+                        });
+                        setTimeout(() => {
+                            location.reload();
+                        }, 5000);
+                    }else {
+                        this.flashMessage.error({
+                            title: "Ошибка",
+                            message: error.response.statusText,
+                            time: 5000
+                        });
+                    }
                 })
+                .finally(() => {
+                    this.preloader(false)
+                });
             },
 
             afterLogin: function (response) {
-                if(!response.success) {
-                    this.flashMessage.error({
-                        title: "Ошибка",
-                        message: response.error,
-                        time: 5000
-                    })
-                    this.preloader(false)
-                }
-
                 if(response.success){
                     location.href = '/news';
                 }

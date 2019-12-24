@@ -24,20 +24,30 @@
                 <div v-click-outside="closePostSettings"
                     class="ml-auto post-settings">
                     <div @click="openPostSetting"
+                         v-if="isn === parseInt(post.userISN) || moderators.includes(isn)"
                          class="p-2">
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
 
                     <div class="post-settings__inner"
                          :class="isSettingsOpened ? 'show' : ''">
-                        <div class="p-2">
+                        <div class="p-2"
+                             @click="deletePost"
+                             v-if="isn === parseInt(post.userISN) || moderators.includes(isn)">
                             <span>
                                 <small>Удалить</small>
                             </span>
                         </div>
-                        <div class="p-2">
+                        <!--<div class="p-2">-->
+                            <!--<span>-->
+                                <!--<small>Отредактировать</small>-->
+                            <!--</span>-->
+                        <!--</div>-->
+                        <div class="p-2"
+                             @click="setPinned"
+                             v-if="moderators.includes(isn)">
                             <span>
-                                <small>Отредактировать</small>
+                                <small>Закрепить</small>
                             </span>
                         </div>
                     </div>
@@ -149,6 +159,7 @@
             isn: Number,
             post: Object,
             index: Number,
+            moderators: Array
         },
 
         mounted () {
@@ -212,9 +223,28 @@
                 var vm = this;
                 vm.post.comments.push(response);
             },
+            deletePost: function () {
+                this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
+                    return;
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                });
+            },
 
-
-
+            setPinned: function () {
+                if(this.post.pinned === 0) {
+                    this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
+                        this.$parent.unsetAllPinned(this.index);
+                    }).catch(error => {
+                        alert('Ошибка на стороне сервера');
+                    });
+                }
+                else {
+                    this.axios.post('/unsetPinned', {postId: this.post.postId}).then(response => {
+                        this.$parent.unsetAllPinned(-1)
+                    });
+                }
+            },
         },
 
         directives: {

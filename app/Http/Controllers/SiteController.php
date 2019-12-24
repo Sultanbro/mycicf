@@ -8,6 +8,7 @@ use App\KolesaModel;
 use App\KolesaPrices;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Permissions;
 use App\Providers\KiasServiceProvider;
 use App\User;
 use Illuminate\Http\Request;
@@ -242,6 +243,28 @@ class SiteController extends Controller
             1490780 => 1490780,
             5012 => 5012
         );
+    }
+
+    public function getFullBranch(Request $request){
+        $headData = Branch::where('kias_id', 50)->first();
+        $result = [];
+        if(count($headData->childs)){
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+                'children' => $this->getChild($headData->kias_id),
+            ]);
+        }else{
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+            ]);
+        }
+        $responseData = [
+            'result' => $result,
+            'value' => Auth::user()->ISN,
+        ];
+        return response()->json($responseData)->withCallback($request->input('callback'));
     }
 
     public function postBranchData(Request $request)
@@ -507,5 +530,15 @@ class SiteController extends Controller
             'code' => 200,
             'price' => $model->price
         ]);
+    }
+
+    public function getModerators(){
+        $moderators = [];
+        foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_MODERATOR])->get() as $users){
+            array_push($moderators,
+                $users->user_isn
+            );
+        }
+        return response()->json(['moderators' => $moderators]);
     }
 }

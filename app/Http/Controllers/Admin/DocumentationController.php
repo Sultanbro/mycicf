@@ -196,7 +196,6 @@ class DocumentationController extends Controller
                 'parent' => $item->getParent(),
                 'url' => $item->url,
                 'icon_url' => $item->icon_url,
-
             ]);
         }
         return response()
@@ -231,5 +230,34 @@ class DocumentationController extends Controller
             ->withCallback(
                 $request->input('callback')
             );
+    }
+
+    public function deleteSvg(Request $request){
+        SvgFiles::find($request->id)->delete();
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function deleteWord(Request $request){
+        UploadDocs::find($request->id)->delete();
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function deleteMenu(Request $request){
+        DocumentationStructure::find($request->id)->delete();
+        $this->deleteChilds($request->id);
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function deleteChilds($id){
+        foreach (DocumentationStructure::where('parent_id', $id)->get() as $deleteModel){
+            $this->deleteChilds($deleteModel->id);
+            $deleteModel->delete();
+        }
     }
 }
