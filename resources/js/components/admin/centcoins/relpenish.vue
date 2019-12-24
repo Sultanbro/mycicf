@@ -14,7 +14,7 @@
                 <input class="form-control" type="text" v-model="description" id="description">
             </div>
             <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
-                <button type="button" @click="send" class="btn-info btn-lg btn">Отправить</button>
+                <button type="button" @click="send" class="btn-info btn-lg btn">Сохранить</button>
             </div>
         </form>
     </div>
@@ -36,7 +36,7 @@
         },
         methods : {
             getUserList() {
-                this.axios.post('/getBranchData', {}).then((response) => {
+                this.axios.post('/getFullBranch', {}).then((response) => {
                     this.userList = response.data.result;
                 });
             },
