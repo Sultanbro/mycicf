@@ -22,7 +22,7 @@
 
 <script>
     export default {
-        name: "replenishse",
+        name: "replenish",
         data () {
             return {
                 userList : null,
@@ -49,7 +49,7 @@
                     .then(
                         response => {
                             if(response.data.success){
-                                location.href = '/'
+                                location.reload();
                             }else{
                                 alert(response.data.error)
                             }

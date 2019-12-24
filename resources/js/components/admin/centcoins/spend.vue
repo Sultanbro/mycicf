@@ -49,7 +49,7 @@
                     .then(
                         response => {
                             if(response.data.success){
-                                location.href = '/'
+                                location.reload();
                             }else{
                                 alert(response.data.error)
                             }
