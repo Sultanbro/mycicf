@@ -1,18 +1,36 @@
 <template>
-    <div class="mt-3 pb-2">
-        <div class="pt-4">
-            <div class="bg-white ml-2 mr-2 mt-1 box-shadow border-16 pt-3 pb-3 ad-jc-center-800">
-                <div class="flex jc-sb ad-flex-column-800 ad-alignitems-center-800 ml-0-contain ad-stretch-800">
-                    <div class="ml-2 dealer-raiting-input1-contain dealer-raiting-margins">
+    <div class="box-shadow radius-4px pb-2">
+        <div class="pt-2" v-if="checkUrl()">
+            <div class="bg-white ml-3 mr-3 pt-4 pb-3 flex-column">
+                <div class="flex flex-start ad-flex-column-800 ad-alignitems-center-800 ml-0-contain ad-stretch-800">
+                    <div class="dealer-raiting-input1-contain dealer-raiting-margins">
                         <input v-model="dateBeg" type="month" class="border0 date-color ad-width190-800 bg-darkgray pl-4 pr-2 pt-1 pb-1 dealer-raiting-input1">
                     </div>
-                    <div v-if="checkUrl()" class="dealer-raiting-margins">
+                    <div class="dealer-raiting-margins">
                         <treeselect v-model="ISN" :multiple="false" :options="options" />
                     </div>
                     <div class="dealer-raiting-input3-contain dealer-raiting-margins">
                         <div class="flex-row date-color pl-4 pr-2">
                             <div @click="getRating"
-                                 class="flex-row show-btn-contain border-gray pl-4 width-min-content pr-4 pt-1 pb-1 ad-width190-800 jc-center ad-dealer-raiting-ml-2-800">
+                                 class="flex-row pointer show-btn-contain border-gray pl-4 width-min-content pr-4 pt-1 pb-1 ad-width190-800 jc-center ad-dealer-raiting-ml-2-800">
+                                <div><i class="far fa-eye"></i></div>
+                                <div class="ml-2 show-btn">Показать</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pt-2" v-else>
+            <div class="bg-white ml-3 mr-3 pt-4 pb-3 flex-column">
+                <div class="flex flex-start ad-flex-column-800 ad-alignitems-center-800 ml-0-contain ad-stretch-800">
+                    <div class="dealer-raiting-input1-contain dealer-raiting-margins">
+                        <input v-model="dateBeg" type="month" class="border0 date-color ad-width190-800 bg-darkgray pl-4 pr-2 pt-1 pb-1 dealer-raiting-input1">
+                    </div>
+                    <div class="dealer-raiting-input3-contain dealer-raiting-margins">
+                        <div class="flex-row date-color pl-4 pr-2">
+                            <div @click="getRating"
+                                 class="flex-row show-btn-contain pointer border-gray pl-4 width-min-content pr-4 pt-1 pb-1 ad-width190-800 jc-center ad-dealer-raiting-ml-2-800">
                                 <div><i class="far fa-eye"></i></div>
                                 <div class="ml-2 show-btn">Показать</div>
                             </div>
@@ -23,7 +41,7 @@
         </div>
         <div class="pt-2"
              v-if="showFullInformation">
-            <div class="border-16 flex-row vertical-middle jc-sb bg-white ml-2 mr-2 pt-3 pb-3 border-4px box-shadow pl-2 pr-2 show-btn-contain">
+            <div class="d-flex align-items-center justify-content-between bg-white ml-3 mr-3 pt-3 pb-3">
                 <div>
                     <span class="fs-1 CAPS">{{dutyName}}</span>
                 </div>

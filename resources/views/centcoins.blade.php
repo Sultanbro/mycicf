@@ -40,7 +40,7 @@
         <div class="main_margin flex-row width100">
 {{--            @include('layouts.sidebar')--}}
             <centcoins :isn="{{Auth::user()->ISN}}"></centcoins>
-            <div class="col-md-6" id="employee_info">
+            <div class="col-md-8" id="employee_info">
                 <operations-history :isn="{{Auth::user()->ISN}}"></operations-history>
 {{--                <spend-centcoins :isn="{{Auth::user()->ISN}}"></spend-centcoins>--}}
             </div>
