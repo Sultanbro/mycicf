@@ -97,6 +97,9 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('wnd/menu/list', 'Admin\DocumentationController@menuList')->name('wnd.menu.list');
             Route::post('wnd/get/menuList', 'Admin\DocumentationController@getMenuList');
             Route::post('wnd/delete/menu', 'Admin\DocumentationController@deleteMenu');
+
+            Route::get('wnd/pdf', 'Admin\DocumentationController@loadPdf')->name('wnd.pdf');
+            Route::post('wnd/save_pdf', 'Admin\DocumentationController@savePdf');
         });
     });
 });
@@ -118,19 +121,16 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //DOSSIER
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
-
         //COORIDNATION
         Route::get('/coordination', 'CoordinationController@index')->name('coordination');
         Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
         Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
         Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
-
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
         Route::post('/documentation/save', 'DocumentationController@save');
         Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
-
         //DOCUMENTATION
         Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
         Route::post('/documentation/search', 'DocumentationController@search');
@@ -142,57 +142,48 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
         Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
         Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+        //CENTCOINS
+        Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+        Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
+        Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+        Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+        Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
+        Route::post('/buyItem', 'CentcoinsController@buyItem');
+        //NEWS
+        Route::get('/news', 'NewsController@getView')->name('news');
+        Route::post('/addPost', 'NewsController@addPost');
+        Route::post('/getPosts', 'NewsController@getPosts');
+        Route::post('/deletePost', 'NewsController@deletePost');
+        Route::post('/setPinned', 'NewsController@setPinned');
+        Route::post('/unsetPinned', 'NewsController@unsetPinned');
+        Route::post('/likePost', 'NewsController@likePost');
+        Route::post('/editPost', 'NewsController@editPost');
+        Route::post('/addComment', 'NewsController@addComment');
+        Route::post('/deleteComment', 'NewsController@deleteComment');
+        Route::post('/editComment', 'NewsController@editComment');
+        //RATING
+        Route::get('/rating', 'RatingController@index')->name('rating');
+        Route::post('/getRatingList', 'RatingController@getRatingList');
+        //COLLEAGUES
+        Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
+        Route::post('/colleagues/search', 'ColleaguesController@search');
+        Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
+        Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
+        Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
+        Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
+        Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
+        //UNTITLED
+        Route::get('/name', 'NameController@getView')->name('documentation');
+        Route::post('/getItemsList', 'NameController@getItemsList');
 
-    //CENTCOINS
-    Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
-    Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
-    Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
-    Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-    Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
-    Route::post('/buyItem', 'CentcoinsController@buyItem');
+        Route::get('/report', 'ReportController@index')->name('report');
+        Route::post('/getReport', 'ReportController@getReport');
 
-    //NEWS
-    Route::get('/news', 'NewsController@getView')->name('news');
-    Route::post('/addPost', 'NewsController@addPost');
-    Route::post('/getPosts', 'NewsController@getPosts');
-    Route::post('/deletePost', 'NewsController@deletePost');
-    Route::post('/setPinned', 'NewsController@setPinned');
-    Route::post('/unsetPinned', 'NewsController@unsetPinned');
-    Route::post('/likePost', 'NewsController@likePost');
-    Route::post('/editPost', 'NewsController@editPost');
-    Route::post('/addComment', 'NewsController@addComment');
-    Route::post('/deleteComment', 'NewsController@deleteComment');
-    Route::post('/editComment', 'NewsController@editComment');
+        Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
-    //RATING
-    Route::get('/rating', 'RatingController@index')->name('rating');
-    Route::post('/getRatingList', 'RatingController@getRatingList');
-
-    //COLLEAGUES
-    Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
-    Route::post('/colleagues/search', 'ColleaguesController@search');
-    Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
-    Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
-    Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
-    Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
-    Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
-    //UNTITLED
-    Route::get('/name', 'NameController@getView')->name('documentation');
-    Route::post('/getItemsList', 'NameController@getItemsList');
-
-    Route::get('/report', 'ReportController@index')->name('report');
-    Route::post('/getReport', 'ReportController@getReport');
-
-    Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
-
-
-    Route::get('/logout', 'SiteController@logout');
-
-
-
-    //MOTIVATION
-    Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
-
+        Route::get('/logout', 'SiteController@logout');
+        //MOTIVATION
+        Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
         // MOBILE
         Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
         Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
@@ -202,15 +193,13 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
-        Route::get('employee/dealer-raiting', 'ParseController@dealerRaiting')->name('DealerRaiting');
-
         Route::post('/getUsersData', 'SiteController@getUserData');
         Route::post('/getColleagueData', 'SiteController@getColleagueData');
 
         Route::get('/motivation', 'MotivationController@motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
-        });
     });
+});
 
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');

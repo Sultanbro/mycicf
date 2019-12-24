@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\PdfFiles;
 use App\SvgFiles;
 use App\UploadDocs;
 use App\DocumentationStructure;
@@ -25,6 +26,9 @@ class DocumentationController extends Controller
     }
     public function loadImage(){
         return view('wnd.load.image');
+    }
+    public function loadPdf(){
+        return view('wnd.load.pdf');
     }
     public function menu(){
         return view('wnd.load.menu');
@@ -111,6 +115,28 @@ class DocumentationController extends Controller
                 'success' => true,
                 'error' => '',
                 'url' => "/storage/image/{$fileName}"
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
+    }
+    public function savePdf(Request $request){
+        $file = $request->file;
+        $extension = $file->extension();
+        $content = $file->get();
+        $fileName = time().'.'.$extension;
+        Storage::disk('local')->put("/public/pdf/{$fileName}", $content);
+        $url = "/storage/pdf/{$fileName}";
+        $pdfTable = new PdfFiles();
+        $pdfTable->file_url = $url;
+        $pdfTable->save();
+        $id = $pdfTable->id;
+
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'url' => "/documentation/pdf_{$id}"
             ])
             ->withCallback(
                 $request->input('callback')

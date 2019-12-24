@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\PdfFiles;
 use App\SvgFiles;
 use App\UploadDocs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class DocumentationController extends Controller
 {
@@ -43,6 +45,14 @@ class DocumentationController extends Controller
     }
 
     public function getByUrl($url){
+        if(substr($url, 0, 4) === 'pdf_'){
+            $id = substr($url, 4);
+            $data = PdfFiles::find($id);
+            if(null !== $data){
+//                dd($data->file_url);
+                return \redirect($data->file_url);
+            }
+        }
         if(($page = UploadDocs::where('url', $url)->first())){
             return view('documentation_page', compact('page'));
         }elseif(($page = SvgFiles::where('url', $url)->first())){

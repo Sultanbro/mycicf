@@ -41,6 +41,7 @@
                     <a class="dropdown-item" href="{{route('wnd.org')}}">Орг. структура</a>
                     <a class="dropdown-item" href="{{route('wnd.svg')}}">Загрузка SVG</a>
                     <a class="dropdown-item" href="{{route('wnd.word')}}">Загрузка WORD</a>
+                    <a class="dropdown-item" href="{{route('wnd.pdf')}}">Загрузка PDF</a>
                     <a class="dropdown-item" href="{{route('wnd.image')}}">Загрузка Фотографии</a>
                     <a class="dropdown-item" href="{{route('wnd.menu')}}">Структура меню</a>
                     <a class="dropdown-item" href="{{route('wnd.svg.list')}}">Список SVG</a>

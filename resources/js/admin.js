@@ -36,6 +36,7 @@ Vue.component('org-structure', require('./components/admin/documentation/org-str
 Vue.component('svg-load', require('./components/admin/documentation/svg-load.vue').default);
 Vue.component('image-load', require('./components/admin/documentation/image-load.vue').default);
 Vue.component('menu-load', require('./components/admin/documentation/menu-load.vue').default);
+Vue.component('pdf-load', require('./components/admin/documentation/pdf-load.vue').default);
 
 Vue.component('menu-list', require('./components/admin/documentation/menu-list.vue').default);
 Vue.component('svg-list', require('./components/admin/documentation/svg-list.vue').default);
