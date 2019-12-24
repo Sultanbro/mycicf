@@ -3,15 +3,9 @@
         <div>
             <div class="centcoins-bg-blue color-white">
                 <div class="ml-4 mr-4 pt-2">
-                    <a class="color-white-hover color-white" href="javascript:void(0)">
-                        Назад
-                    </a>
                     <div class="font-size-1_6">Сенткоины</div>
-                    <div>
-                        <small>Доступно</small>
-                    </div>
-                    <div class="flex-row jc-center">
-                        <div class="font-size-4rem">
+                    <div class="flex-row jc-center vertical-middle">
+                        <div class="font-size-4rem centcoins-value">
                             {{this.centcoins}}
                         </div>
                         <div class="font-size-3_8rem ml-2">
@@ -27,19 +21,19 @@
         <div class="mb-5">
             <ul class="flex-column mr-3 ml-3">
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="/centcoins">
-                    <li>
+                    <li class="leftsidebar-icons">
                         <i class="far fa-clipboard"></i>
                         <span>История операций</span>
                     </li>
                 </a>
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="/spendCentcoins">
-                    <li>
+                    <li class="leftsidebar-icons">
                         <i class="far fa-thumbs-up"></i>
                         <span>Потратить Сенткоины</span>
                     </li>
                 </a>
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
-                    <li>
+                    <li class="leftsidebar-icons">
                         <i class="far fa-grin-stars"></i>
                         <span>О Сенткоине</span>
                     </li>

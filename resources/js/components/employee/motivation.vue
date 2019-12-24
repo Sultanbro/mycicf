@@ -54,7 +54,7 @@
         <div class="pt-2">
             <div class="d-flex align-items-center justify-content-between bg-white ml-3 mr-3 pt-3 pb-3">
                 <div>
-                    <span class="fs-1 CAPS">{{label}}</span>
+                    <span class="fs-1 CAPS bold">{{label}}</span>
                 </div>
                 <div>
                     <div class="d-flex align-items-center">

@@ -1,15 +1,17 @@
 <template>
     <div class="news-tape-bg radius-4px mt-3 pb-2">
         <div class="pt-4">
-            <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
+            <div class="border-radius15 flex-row jc-start vertical-middle bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                 <div class="flex-row jc-sb">
-                    <div>
-                        <input type="date" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="datebeg">
+                    <div class="flex-column">
+                        <label for="dateBeg" class="bold">Период от</label>
+                        <input type="date" id="dateBeg" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="datebeg">
                     </div>
-                    <div>
-                        <input type="date" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateend">
+                    <div class="flex-column ml-3">
+                        <label for="dateEnd" class="bold">Период до</label>
+                        <input type="date" id="dateEnd" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateend">
                     </div>
-                    <div>
+                    <div class="flex-column ml-3 dossierIsn">
                         <div v-if="checkUrl()" class="bg-darkgray flex-row date-color pr-1 pt-1 pb-1 date-width">
                             <treeselect v-model="isn" :multiple="false" :options="options" />
                         </div>
