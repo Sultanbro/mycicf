@@ -213,6 +213,22 @@ class CoordinationController extends Controller
                 elseif($key == 'AttrLimit'){
                     $LimitISN = $value;
                 }
+                elseif($key == "KV"){
+                    foreach ($value->row as $kvAttrs) {
+                        foreach ($kvAttrs as $attrKey => $attrValue){
+                            if (in_array($attrKey, array_keys($this->getKVAttributes())) && (string)$attrValue !== "0") {
+                                array_push($attributes, [
+                                    'Name' => (string)$this->getKVAttributes()[$attrKey],
+                                    'Value' => (string)$attrValue,
+                                ]);
+                            }
+                        }
+                        array_push($attributes, [
+                            'Name' => 'Остальные категории',
+                            'Value' => 0,
+                        ]);
+                    }
+                }
             }
         }
         $responseData = array_merge($responseData, [
@@ -278,6 +294,36 @@ class CoordinationController extends Controller
             'SubjName',             //Наименование страхователя
             'SubjDept',             //Департамент страхователя
             'Remark',               //Примечание листа СЗ
+        ];
+    }
+
+    public function getKVAttributes(){
+        return [
+            'dept' => 'Филиал/Подразделение',
+            'curator' => 'ФИО куратора',
+            'agent' => 'ФИО агента',
+            'VTS_Phis' => 'ОГПО ВТС Физ.лицо',
+            'VTS_Jur' => 'ОГПО ВТС Юр.лицо',
+            'KBM_M' => 'КБМ M',
+            'KBM_0' => 'КБМ 0',
+            'KBM_1' => 'КБМ 1',
+            'KBM_2' => 'КБМ 2',
+            'KBM_3' => 'КБМ 3',
+            'KBM_4' => 'КБМ 4',
+            'KBM_5' => 'КБМ 5',
+            'KBM_6' => 'КБМ 6',
+            'KBM_7' => 'КБМ 7',
+            'KBM_8' => 'КБМ 8',
+            'KBM_9' => 'КБМ 9',
+            'KBM_10' => 'КБМ 10',
+            'KBM_11' => 'КБМ 11',
+            'KBM_12' => 'КБМ 12',
+            'KBM_13' => 'КБМ 13',
+            'OGPO_PP' => 'ОГПО ПП',
+            'OSE' => 'ОСЭ',
+            'Notarius' => 'ОГПО ЧН',
+            'OGPO_AO' => 'ОГПО АО',
+            'OGPO_OO' => 'ОГПО ОО',
         ];
     }
 
