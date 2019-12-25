@@ -27,10 +27,10 @@
         </div>
         <div class="ml-2 mr-2" v-show="carier !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
+                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#staff_movement" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Кадровое перемещение</strong>
                 </div>
-                <div>
+                <div id="staff_movement" class="collapse">
                     <table class="dosier-table table text-align-center">
                         <thead>
                         <tr class="header color-white">
@@ -52,10 +52,10 @@
         </div>
         <div class="ml-2 mr-2" v-show="vacation !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
+                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#vacation" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Отпуск</strong>
                 </div>
-                <div>
+                <div class="collapse" id="vacation">
                     <table class="dosier-table table text-align-center">
                         <thead>
                         <tr class="header color-white">
@@ -79,10 +79,10 @@
         </div>
         <div class="ml-2 mr-2" v-show="admins !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
+                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#admin_days" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Административные дни</strong>
                 </div>
-                <div>
+                <div class="collapse" id="admin_days">
                     <table class="dosier-table table text-align-center">
                         <thead>
                         <tr class="header color-white">
@@ -104,10 +104,10 @@
         </div>
         <div class="ml-2 mr-2" v-show="mission !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
+                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#business_trip" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Командировка</strong>
                 </div>
-                <div>
+                <div class="collapse" id="business_trip">
                     <table class="dosier-table table text-align-center">
                         <thead>
                         <tr class="header color-white">
@@ -129,10 +129,10 @@
         </div>
         <div class="ml-2 mr-2" v-show="sick !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
+                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#sick_days" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Больничные дни</strong>
                 </div>
-                <div>
+                <div class="collapse" id="sick_days">
                     <table class="dosier-table table text-align-center">
                         <thead>
                         <tr class="header color-white">
@@ -154,10 +154,10 @@
         </div>
         <div class="ml-2 mr-2" v-show="thanks  !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
+                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#disciplinary_action" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Дисциплинарные взыскания</strong>
                 </div>
-                <div>
+                <div class="collapse" id="disciplinary_action">
                     <table class="dosier-table table text-align-center">
                         <thead>
                         <tr class="header color-white">
