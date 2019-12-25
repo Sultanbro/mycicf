@@ -223,6 +223,10 @@ class CoordinationController extends Controller
                                 ]);
                             }
                         }
+                        array_push($attributes, [
+                            'Name' => 'Остальные категории',
+                            'Value' => 0,
+                        ]);
                     }
                 }
             }
