@@ -87,10 +87,10 @@ use App\Http\Controllers\ParseController;
                     <div class="mr-10">
                         <div>
                             <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
-                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
-                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
-                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
-                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
+                                <option class="but_opacity" value="month" @if($_GET['dateType'] === 'month') selected @endif>месяц</option>
+                                <option class="but_opacity" value="quarter" @if($_GET['dateType'] === 'quarter') selected @endif>квартал</option>
+                                <option class="but_opacity" value="year" @if($_GET['dateType'] === 'year') selected @endif>год</option>
+                                <option class="but_opacity" value="rise" @if($_GET['dateType'] === 'rise') selected @endif>с нарастанием</option>
                             </select>
                         </div>
                     </div>
