@@ -33,7 +33,7 @@
                             </div>
 
                             <!--Column 2-->
-                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
+                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-column" >
                                 <div class="m-2"
                                      v-if="levelOneOpened"
                                      v-for="innerItem in itemsLevelTwo">
