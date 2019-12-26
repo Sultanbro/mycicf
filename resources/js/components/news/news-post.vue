@@ -65,7 +65,7 @@
                     <pre v-if="isAllTextOpened"
                         v-html="post.postText"
                         v-linkified></pre>
-                    <div v-if="post.postText !== null && post.postText.length > 350 && !isAllTextOpened && !editMode">
+                    <div v-if="post.postText !== null && post.postText.length > 300 && !isAllTextOpened && !editMode">
                         <small class="color-blue show-all-btn"
                                @click="showAllText">Показать больше...</small>
                     </div>
