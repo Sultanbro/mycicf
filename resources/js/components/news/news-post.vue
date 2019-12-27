@@ -281,6 +281,13 @@
             },
 
             likePost: function () {
+                if(this.post.isLiked === 1){
+                    this.post.isLiked = 0;
+                    this.post.likes--;
+                }else{
+                    this.post.isLiked = 1;
+                    this.post.likes++;
+                }
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
