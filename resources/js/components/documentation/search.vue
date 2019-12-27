@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="url !== null" class="d-flex justify-content-end">
+        <div v-if="url !== null && url !== ''" class="d-flex justify-content-end">
             <a :href="url" target="_blank">
                 <i class="fas fa-file-word fa-2x"></i>
             </a>
