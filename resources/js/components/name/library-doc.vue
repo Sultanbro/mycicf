@@ -124,8 +124,7 @@
                 }
                 elements[this.index].className = 'highlight selected-highlight';
                 window.scroll({
-                    top: elements[this.index].offsetTop,
-                    left: elements[this.index].offsetLeft,
+                    top: elements[this.index].offsetTop + 100,
                     behavior: 'smooth'
                 });
             },
@@ -139,8 +138,7 @@
                 }
                 elements[this.index].className = 'highlight selected-highlight';
                 window.scroll({
-                    top: elements[this.index].offsetTop,
-                    left: elements[this.index].offsetLeft,
+                    top: elements[this.index].offsetTop + 100,
                     behavior: 'smooth'
                 });
             },
