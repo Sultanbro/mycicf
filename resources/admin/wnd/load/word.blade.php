@@ -20,7 +20,7 @@
 <div class="container" id="app">
     @include('layouts.header')
     <main role="main">
-        <form method="post" action="/wnd/save_word">
+        <form method="post" action="/wnd/save_word" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="title">Наименование документа</label>
@@ -36,6 +36,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="file">Загрузите файл</label>
+                <div class="custom-file">
+                    <input id="file" type="file" onchange="changeLabel()" name="word" class="custom-file-input">
+                    <label class="custom-file-label" for="file" id="fileName">Не выбрано</label>
+                </div>
+            </div>            <div class="form-group">
                 <label for="title">Документ</label>
                 <textarea class="form-control" name="area3" style="width: 100%; height : 500px;"></textarea>
             </div>
@@ -50,5 +56,11 @@
 <script type="text/javascript" src="{{asset('js/nicEdit.js')}}"></script>
 <script type="text/javascript">
     bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+</script>
+<script>
+    function changeLabel() {
+        var name = document.getElementById('file').files[0].name;
+        document.getElementById('fileName').innerHTML = name;
+    }
 </script>
 </html>

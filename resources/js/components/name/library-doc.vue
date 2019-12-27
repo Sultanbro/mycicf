@@ -35,7 +35,10 @@
                             <!--Column 2-->
                             <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" id="searchElem">
                                 <div class="w-100">
-                                    <search v-if="changed" :positionSearch="positionSearch"></search>
+                                    <search v-if="changed"
+                                            :positionSearch="positionSearch"
+                                            :url="url"
+                                    ></search>
                                     <div class="d-flex justify-content-center">
                                         <h2>{{title}}</h2>
                                     </div>
@@ -102,7 +105,11 @@
         props: {
             pinned_id: Number,
             title: String,
-            encodedtext: String
+            encodedtext: String,
+            url : {
+                type : String,
+                default : null,
+            }
         },
         methods: {
             searchText(word){
@@ -342,8 +349,6 @@
             handleScroll(){
                 var elementOffset = document.getElementById('searchElem').offsetTop + document.getElementById('elem_two').offsetTop + 100;
                 var windowTopOffset = document.body.scrollTop;
-                console.log(elementOffset);
-                console.log(windowTopOffset);
                 if(windowTopOffset > elementOffset){
                     this.positionSearch = 'fixed';
                 }else{

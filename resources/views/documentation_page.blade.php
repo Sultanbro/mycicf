@@ -30,7 +30,9 @@
             <div class="col-12 border-20 border-gray">
                 <library-doc :pinned_id="{{ isset($_GET['id']) ? (int)$_GET['id'] : 10 }}"
                              :title="{{json_encode($page->title)}}"
-                             :encodedtext="{{json_encode($page->encoded_text)}}"> </library-doc>
+                             :encodedtext="{{json_encode($page->encoded_text)}}"
+                             :url="{{json_encode($page->file_url ?? null)}}"
+                > </library-doc>
             </div>
         </div>
 {{--        <div class="row">--}}

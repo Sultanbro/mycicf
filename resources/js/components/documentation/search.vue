@@ -1,5 +1,10 @@
 <template>
     <div>
+        <div v-if="url !== null" class="d-flex justify-content-end">
+            <a :href="url" target="_blank">
+                <i class="fas fa-file-word fa-2x"></i>
+            </a>
+        </div>
         <div class="form-group" :class="positionSearch">
             <br>
             <div class="input-group mb-3">
@@ -39,6 +44,10 @@
             positionSearch: {
                 type: String,
                 required: false
+            },
+            url: {
+                type: String,
+                default : null
             }
         },
         methods: {

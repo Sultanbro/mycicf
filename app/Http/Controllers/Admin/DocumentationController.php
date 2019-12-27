@@ -88,9 +88,15 @@ class DocumentationController extends Controller
     public function saveWord(Request $request){
         $table = new UploadDocs();
         $table->url = $request->url;
+        $file = $request->word;
+        $extension = $file->extension();
+        $content = $file->get();
+        $fileName = time().'.'.$extension;
+        Storage::disk('local')->put("/public/word/{$fileName}", $content);
+        $url = "/storage/word/{$fileName}";
         foreach ($this->exceptions as $except){
             if(strpos($table->url,$except)){
-                throw new \Exception('Использование символов ".";",";":";"/" и пробела запрещено', 419);
+                abort(419, 'Использование символов ".";",";":";"/" и пробела запрещено');
             }
         }
         if(!$table->checkUrl()){
@@ -101,6 +107,7 @@ class DocumentationController extends Controller
         $table->only_text = str_replace("&nbsp;", ' ', strip_tags($text));
         $table->user_isn = Auth::user()->ISN;
         $table->title = $request->title;
+        $table->file_url = $url;
         $table->save();
         return redirect('/');
     }
