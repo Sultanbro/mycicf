@@ -1,5 +1,5 @@
 <template>
-    <div class="nav mt-2 d-flex justify-content-center bg-white">
+    <div class="nav mt-2 d-flex justify-content-center bg-white" id="elem_two">
         <div class="nav-container flex-row width100">
             <div class="row width110">
                 <div class="blue-bg-all width100">
@@ -33,14 +33,15 @@
                             </div>
 
                             <!--Column 2-->
-                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
+                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" id="searchElem">
                                 <div class="w-100">
-                                    <search v-if="changed"></search>
+                                    <search v-if="changed" :positionSearch="positionSearch"></search>
                                     <div class="d-flex justify-content-center">
                                         <h2>{{title}}</h2>
                                     </div>
                                     <div class="d-flex justify-content-center" ref="content">
-                                        <div v-html="encodedtext"></div>
+                                        <div v-html="encodedtext" v-if="first"></div>
+                                        <div v-html="newText" v-else></div>
                                     </div>
                                 </div>
                                 <div v-if="levelOneOpened" class="border border-primary p-2 d-flex dropdown-content__inner-list w-100 bg-white justify-content-between flex-column">
@@ -84,7 +85,7 @@
                 isOpened: false,
                 isActive: false,
                 levelOneOpened: false,
-
+                first : true,
                 items: [],
                 itemsLevelZero: [],
                 itemsLevelOne: [],
@@ -93,6 +94,9 @@
                 levelOnePinned: null,
                 levelTwoPinned: null,
                 changed: true,
+                newText: '',
+                index : 0,
+                positionSearch: 'relative'
             }
         },
         props: {
@@ -101,6 +105,45 @@
             encodedtext: String
         },
         methods: {
+            searchText(word){
+                this.first=false;
+                this.newText = this.encodedtext.split(word).join(`<span class="highlight">${word}</span>`);
+                this.index = 0;
+                setTimeout(() => {
+                    var elements = document.getElementsByClassName('highlight');
+                    elements[0].className = 'highlight selected-highlight';
+                }, 100);
+            },
+            prev(){
+                var elements = document.getElementsByClassName('highlight');
+                elements[this.index].className = 'highlight';
+                if(this.index === 0){
+                    this.index = elements.length - 1;
+                }else if(elements.length !== 1){
+                    this.index--;
+                }
+                elements[this.index].className = 'highlight selected-highlight';
+                window.scroll({
+                    top: elements[this.index].offsetTop,
+                    left: elements[this.index].offsetLeft,
+                    behavior: 'smooth'
+                });
+            },
+            next(){
+                var elements = document.getElementsByClassName('highlight');
+                elements[this.index].className = 'highlight';
+                if(this.index === elements.length - 1){
+                    this.index = 0;
+                }else if(elements.length !== 1){
+                    this.index++;
+                }
+                elements[this.index].className = 'highlight selected-highlight';
+                window.scroll({
+                    top: elements[this.index].offsetTop,
+                    left: elements[this.index].offsetLeft,
+                    behavior: 'smooth'
+                });
+            },
             showDropdown: function() {
                 this.isOpened = false;
                 this.levelOneOpened = false;
@@ -297,9 +340,27 @@
                 {
                     document.getElementById('preloader').style.display = 'none';
                 }
+            },
+            handleScroll(){
+                var elementOffset = document.getElementById('searchElem').offsetTop + document.getElementById('elem_two').offsetTop + 100;
+                var windowTopOffset = document.body.scrollTop;
+                console.log(elementOffset);
+                console.log(windowTopOffset);
+                if(windowTopOffset > elementOffset){
+                    this.positionSearch = 'fixed';
+                }else{
+                    this.positionSearch = 'relative';
+                }
             }
 
         },
+        beforeMount () {
+            window.addEventListener("scroll", this.handleScroll);
+        },
+
+        beforeDestroy () {
+            window.removeEventListener("scroll", this.handleScroll);
+        }
     }
 </script>
 

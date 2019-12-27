@@ -1911,3 +1911,26 @@ textarea::-webkit-scrollbar-thumb {
 	background: url(https://niagarastar.ru/niagara8/img8/ng-gyr.png) repeat-x;
 	height: 100px;
 }
+
+.highlight {
+	background-color: yellow;
+}
+
+.selected-highlight {
+	background-color: orange !important;
+}
+
+.fixed{
+	position: fixed;
+	top: 0;
+	width: 80%;
+	background-color: white;
+	border: black solid 1px;
+	padding-left: 10px;
+	padding-right: 10px;
+	left: 10%;
+}
+
+.relative{
+	position: relative;
+}
