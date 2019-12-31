@@ -187,7 +187,7 @@
                 postIds : [],
                 imgMaxSize: 2 * 1024 * 1024,
                 docMaxSize: 10 * 1024 * 1024,
-                imgMaxNumber: 1,
+                imgMaxNumber: 10,
                 docMaxNumber: 5,
                 moderators: [],
                 showToTopBtn: false,
@@ -250,7 +250,7 @@
             },
 
             imageUpload(e) {
-                if(e.target.files.length <= this.docMaxNumber) {
+                if(e.target.files.length <= this.imgMaxNumber) {
                     const files = e.target.files;
                     const vm = this;
                     Array.from(files).forEach(file => {
