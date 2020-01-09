@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 mt-3 pointer" @click="getTables()">
+                    <div class="flex-row border-gray pl-3 width-min-content pr-3 pt-2 pb-2 pointer showBtn" @click="getTables()">
                         <div><i class="far fa-eye"></i></div>
                         <div class="ml-2">Показать</div>
                     </div>
@@ -27,8 +27,9 @@
         </div>
         <div class="ml-2 mr-2" v-show="carier !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#staff_movement" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret()" data-toggle="collapse" href="#staff_movement" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Кадровое перемещение</strong>
+                    <i class="fas " :class="caretClass" data-toggle="collapse" href="#multiCollapseExample1"></i>
                 </div>
                 <div id="staff_movement" class="collapse">
                     <table class="dosier-table table text-align-center">
@@ -52,8 +53,9 @@
         </div>
         <div class="ml-2 mr-2" v-show="vacation !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#vacation" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret2()" data-toggle="collapse" href="#vacation" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Отпуск</strong>
+                    <i class="fas " :class="caretClass2" data-toggle="collapse" href="#multiCollapseExample1"></i>
                 </div>
                 <div class="collapse" id="vacation">
                     <table class="dosier-table table text-align-center">
@@ -79,8 +81,9 @@
         </div>
         <div class="ml-2 mr-2" v-show="admins !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#admin_days" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret3()" data-toggle="collapse" href="#admin_days" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Административные дни</strong>
+                    <i class="fas " :class="caretClass3" data-toggle="collapse" href="#multiCollapseExample1"></i>
                 </div>
                 <div class="collapse" id="admin_days">
                     <table class="dosier-table table text-align-center">
@@ -104,8 +107,9 @@
         </div>
         <div class="ml-2 mr-2" v-show="mission !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#business_trip" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret4()" data-toggle="collapse" href="#business_trip" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Командировка</strong>
+                    <i class="fas " :class="caretClass4" data-toggle="collapse" href="#multiCollapseExample1"></i>
                 </div>
                 <div class="collapse" id="business_trip">
                     <table class="dosier-table table text-align-center">
@@ -129,8 +133,9 @@
         </div>
         <div class="ml-2 mr-2" v-show="sick !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#sick_days" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret5()" data-toggle="collapse" href="#sick_days" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Больничные дни</strong>
+                    <i class="fas " :class="caretClass5" data-toggle="collapse" href="#multiCollapseExample1"></i>
                 </div>
                 <div class="collapse" id="sick_days">
                     <table class="dosier-table table text-align-center">
@@ -154,8 +159,9 @@
         </div>
         <div class="ml-2 mr-2" v-show="thanks  !== null">
             <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2 pointer" data-toggle="collapse" href="#disciplinary_action" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret6()" data-toggle="collapse" href="#disciplinary_action" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Дисциплинарные взыскания</strong>
+                    <i class="fas " :class="caretClass6" data-toggle="collapse" href="#multiCollapseExample1"></i>
                 </div>
                 <div class="collapse" id="disciplinary_action">
                     <table class="dosier-table table text-align-center">
@@ -197,6 +203,12 @@
                 thanks: null,
                 admins: null,
                 options: null,
+                caretClass: 'fa-chevron-down',
+                caretClass2: 'fa-chevron-down',
+                caretClass3: 'fa-chevron-down',
+                caretClass4: 'fa-chevron-down',
+                caretClass5: 'fa-chevron-down',
+                caretClass6: 'fa-chevron-down',
             }
         },
         props : {
@@ -247,7 +259,25 @@
             },
             checkUrl(){
                 return ((window.location.pathname).slice(1,10) !== 'colleague');
-            }
+            },
+            reverseCaret: function () {
+                this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
+            },
+            reverseCaret2: function () {
+                this.caretClass2 = this.caretClass2 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
+            },
+            reverseCaret3: function () {
+                this.caretClass3 = this.caretClass3 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
+            },
+            reverseCaret4: function () {
+                this.caretClass4 = this.caretClass4 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
+            },
+            reverseCaret5: function () {
+                this.caretClass5 = this.caretClass5 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
+            },
+            reverseCaret6: function () {
+                this.caretClass6 = this.caretClass6 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
+            },
         },
 
     }

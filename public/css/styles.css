@@ -40,6 +40,37 @@ ul{
 .mobile-link-padding{
 	padding: 0.3rem;
 }
+.modalImageSize{
+    max-width: 700px;
+}
+.modalImageButtons{
+	/*margin-top: 50%;*/
+	color: #fff;
+}
+.modalImageArrowLeft{
+	padding: 15px 17px 15px 15px;
+	background: white;
+	background: rgba(0,0,0,.15);
+}
+.modalImageArrowLeft:hover{
+	background: rgba(0,0,0,.30);
+	transition: 0.2s ease-in-out;
+}
+.modalImageArrowRight{
+	padding: 15px 15px 15px 17px;
+	background: white;
+	background: rgba(0,0,0,.15);
+}
+.modalImageArrowRight:hover{
+	background: rgba(0,0,0,.30);
+	transition: 0.2s ease-in-out;
+}
+.showBtn{
+	margin-top: 1.8rem;
+}
+.max-height-90vh{
+	max-height: 90vh;
+}
 .dossierIsn{
 	margin-top: 1.95rem;
 }
