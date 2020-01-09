@@ -233,10 +233,10 @@ class ParseController extends Controller
         return view('parse/index');
     }
     public function getFees(){
-        return view('parse/table-fees');
+        return view('parse/table-opu');
     }
     public function getCompetitors(){
-        return view('parse/table-competitors');
+        return view('parse/table-info');
     }
     public function getIndicators(){
         return view('parse/table-indicators');

@@ -141,9 +141,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
         Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
-        Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
+
+//        Route::get('parse/table-opu', 'ParseController@getFees')->name('parse/table-fees');
+//        Route::get('parse/table-balance', 'ParseController@getIndicators')->name('parse/table-indicators');
+//        Route::get('parse/table-info', 'ParseController@getCompetitors')->name('parse/table-competitors');
+
+        Route::get('parse/table-opu', 'ParseController@getFees')->name('parse/table-opu');  // opu
         Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
-        Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+        Route::get('parse/table-info', 'ParseController@getCompetitors')->name('parse/table-info'); //info
         //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
 
 

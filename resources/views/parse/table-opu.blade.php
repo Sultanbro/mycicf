@@ -31,10 +31,15 @@ use App\Http\Controllers\ParseController;
 <main class="flex-column pl-5 pr-5" id="app">
     <div>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-hover table-bordered">
                 <tbody>
                 <tr>
-                    <th scope="col">Сентрас</th>
+                    <th scope="col">Centras</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Kommesk</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -42,16 +47,31 @@ use App\Http\Controllers\ParseController;
                     <td>Показатель</td>
                     <td>Январь 2019</td>
                     <td>Январь 2018</td>
+                    <td>Изм-е</td>
+                    <td></td>
+                    <td>Январь 2019</td>
+                    <td>Январь 2018</td>
+                    <td>Изм-е</td>
                 </tr>
                 <tr class="bold">
-                    <td>Рейтинг</td>
-                    <td>B+ / Fitch Ratings / 01.01.2019</td>
-                    <td>C+ / Fitch Ratings </td>
+                    <td>ДСД</td>
+                    <td>4 000 000</td>
+                    <td>4 000 000</td>
+                    <td>83%</td>
+                    <td></td>
+                    <td>4 000 000</td>
+                    <td>4 000 000</td>
+                    <td>24%</td>
                 </tr>
-                <tr class="bold">
-                    <td>Ренкинг</td>
+                <tr>
+                    <td>ДСД</td>
+                    <td>4 000 000</td>
+                    <td>4 000 000</td>
+                    <td>83%</td>
                     <td></td>
-                    <td></td>
+                    <td>4 000 000</td>
+                    <td>4 000 000</td>
+                    <td>24%</td>
                 </tr>
                 </tbody>
             </table>
