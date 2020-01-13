@@ -19,7 +19,6 @@
                                 class="close-btn"
                                 @click="showDropdown"><i class="fas fa-times"></i></button>
                         <div class="dropdown-content mb-4 flex-row" >
-
                             <!--Column 1-->
                             <div class="dropdown-content__list">
                                 <div v-for="innerItem in itemsLevelOne"
@@ -31,9 +30,8 @@
                                     <span class="d-flex">{{innerItem.label}}</span>
                                 </div>
                             </div>
-
                             <!--Column 2-->
-                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-row" >
+                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-column" >
                                 <div class="m-2"
                                      v-if="levelOneOpened"
                                      v-for="innerItem in itemsLevelTwo">
@@ -42,7 +40,6 @@
                                     <span class="mr-2"><a :href="'/documentation/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

@@ -85,10 +85,10 @@ use App\Http\Controllers\ParseController;
                     <div class="mr-10 parse-top-company-select">
                         <div>
                             <select class="border-0-bottom pb-1 pointer" id="dateType" onchange="checkDateType()">
-                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise' === 'month')) selected @endif>месяц</option>
-                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise' === 'quarter')) selected @endif>квартал</option>
-                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise' === 'year')) selected @endif>год</option>
-                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise' === 'rise')) selected @endif>с нарастанием</option>
+                                <option class="but_opacity" value="rise" @if($_GET['dateType'] === 'rise') selected @endif>с нарастанием</option>
+                                <option class="but_opacity" value="month" @if($_GET['dateType'] === 'month') selected @endif>месяц</option>
+                                <option class="but_opacity" value="quarter" @if($_GET['dateType'] === 'quarter') selected @endif>квартал</option>
+                                <option class="but_opacity" value="year" @if($_GET['dateType'] === 'year') selected @endif>год</option>
                             </select>
                         </div>
                     </div>
@@ -206,7 +206,7 @@ use App\Http\Controllers\ParseController;
                     <tr class="border-table-0">
                         <td colspan="2" class="text-left fs-1_3 pl-0">{{$label}}</td>
                         <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
-                        <td class="pt-3"><a href="/parse/product"><span class="pointer">Топ по классам</span></a></td>
+                        <td class="pt-3"><a onclick="getProducts(0)"><span class="pointer">Топ по классам</span></a></td>
                         <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>

@@ -7,6 +7,7 @@ use App\InsuranceCompany;
 use App\InsuranceProduct;
 use App\ParseBalance;
 use App\ParseFinance;
+use App\ParseInfo;
 use App\ParseOpu;
 use App\ParsePayout;
 use App\ParsePremium;
@@ -1449,6 +1450,126 @@ class ParseController extends Controller
             'controller' => $this,
         ]);
     }
+    /**
+     * Получить данные ОПУ по компаниям
+     * @param Request $request
+     */
+    public function getOpuTopSum(Request $request){
+        /**
+         * $request->company_list
+         * Отправляете с фронта список компании в массиве. Миннимум 1, максимум 3
+         * массив будет содержать ID компании
+         * формат [1,2,3] или [1, 2] или [1]
+         */
+        $companyList = $request->company_list;
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
+        $firstResult = [];
+        $secondResult = [];
+        foreach ($companyList as $company){
+            $opuData = ParseOpu::where('company_id', $company)
+                ->where('month', $firstPeriod)
+                ->where('year', $firstYear)
+                ->first();
+            $tempArray = [];
+            foreach (array_keys($this->getOpuOptions()) as $key){
+                array_push($tempArray, [
+                    $key => $opuData->$key
+                ]);
+            }
+            $firstResult[$company] = $tempArray;
+            $opuData = ParseOpu::where('company_id', $company)
+                ->where('month', $secondPeriod)
+                ->where('year', $secondYear)
+                ->first();
+            $tempArray = [];
+            foreach (array_keys($this->getOpuOptions()) as $key){
+                array_push($tempArray, [
+                    $key => $opuData->$key
+                ]);
+            }
+            $secondResult[$company] = $tempArray;
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'firstPeriodData' => $firstResult,
+                'secondPeriodData' => $secondResult,
+                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear,
+                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
+            ]);
+    }
+    /**
+     * Получить данные Баланс по компаниям
+     * @param Request $request
+     */
+    public function getBalanceTopSum(Request $request){
+        /**
+         * $request->company_list
+         * Отправляете с фронта список компании в массиве. Миннимум 1, максимум 3
+         * массив будет содержать ID компании
+         * формат [1,2,3] или [1, 2] или [1]
+         */
+        $companyList = $request->company_list;
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
+        $firstResult = [];
+        $secondResult = [];
+        foreach ($companyList as $company){
+            $opuData = ParseBalance::where('company_id', $company)
+                ->where('month', $firstPeriod)
+                ->where('year', $firstYear)
+                ->first();
+            $tempArray = [];
+            foreach (array_keys($this->getBalanceOptions()) as $key){
+                array_push($tempArray, [
+                    $key => $opuData->$key
+                ]);
+            }
+            $firstResult[$company] = $tempArray;
+            $opuData = ParseBalance::where('company_id', $company)
+                ->where('month', $secondPeriod)
+                ->where('year', $secondYear)
+                ->first();
+            $tempArray = [];
+            foreach (array_keys($this->getBalanceOptions()) as $key){
+                array_push($tempArray, [
+                    $key => $opuData->$key
+                ]);
+            }
+            $secondResult[$company] = $tempArray;
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'firstPeriodData' => $firstResult,
+                'secondPeriodData' => $secondResult,
+                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear,
+                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
+            ]);
+    }
     public function getFinancialIndicators(){
         $label_first = '';
         $label_second = '';
@@ -2418,7 +2539,6 @@ class ParseController extends Controller
         $model->company_id=$company_id;
         $model->save();
     }
-
     public function getOpuOptions(){
         return [
             'dsd' => 'add(17),add(21),minus(64),add(22)',
@@ -2473,7 +2593,6 @@ class ParseController extends Controller
             'cos' => 'COS',
         ];
     }
-    public function getOpuData(){}
 
     public function parseBalanceData($filePath, $year, $month, $company_id){
         $arr = Excel::toArray(new UsersImport, $filePath);
@@ -2547,6 +2666,28 @@ class ParseController extends Controller
     }
     public function minus($arr, $number){
         return $arr[0][$number-1][2] == null ? 0 : -1*($arr[0][$number-1][2]);
+    }
+
+    public function getAddInfo(){
+        $list = $this->getCompanyListWithId();
+        return view('parse.addInfo', compact('list'));
+    }
+
+    public function postAddInfo(Request $request){
+        $company = $request->company;
+        $year = $request->year;
+        $month = $request->month;
+        $rating = $request->fullname;
+        $model = new ParseInfo();
+        $model->company_id = $company;
+        $model->month = $month;
+        $model->year = $year;
+        $model->rating = $rating;
+        $model->save();
+        return response()
+            ->json([
+               'success' => true
+            ]);
     }
 }
 

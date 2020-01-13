@@ -25,6 +25,7 @@ Vue.component('parse-edit-company', require('./components/admin/parse/editCompan
 Vue.component('parse-add-product', require('./components/admin/parse/addProduct.vue').default);
 Vue.component('parse-edit-product', require('./components/admin/parse/editProduct.vue').default);
 Vue.component('parse-load-data', require('./components/admin/parse/loadData.vue').default);
+Vue.component('parse-add-info', require('./components/admin/parse/addInfo.vue').default);
 
 Vue.component('centcoin-list', require('./components/admin/centcoins/list.vue').default);
 Vue.component('centcoin-history', require('./components/admin/centcoins/history.vue').default);
