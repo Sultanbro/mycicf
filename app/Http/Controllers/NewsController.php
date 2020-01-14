@@ -297,8 +297,6 @@ class NewsController extends Controller
         return $response;
     }
 
-
-
     public function getView() {
         return view('news');
     }

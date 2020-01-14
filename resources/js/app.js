@@ -84,6 +84,8 @@ Vue.component('colleagues-info', require('./components/colleagues/colleagues-inf
 
 Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
 
+Vue.component('image-viewer', require('./components/common/image-viewer.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

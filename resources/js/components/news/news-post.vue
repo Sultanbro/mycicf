@@ -11,7 +11,7 @@
             <div class="flex-column ml-2">
                 <span class="color-blue bold">
                     <a v-if="post.userISN === isn">{{post.fullname}}</a>
-                    <a v-else :href="`/colleagues/${post.userISN}/dossier`">{{post.fullname}}</a>
+                    <a v-else :href="`/colleagues/${post.userISN}/dossier`" class="color-blue">{{post.fullname}}</a>
                 </span>
                 <span class="color-darkgray mt-minus-8px">
                     <small>{{post.date}}</small>
@@ -50,8 +50,15 @@
 
         <div class="pl-2 pr-2">
             <div class="news-block-image-contain">
-                <img :src="image" class="post-image" v-for="(image, index) in post.image" @error="post.image.splice(index, 1)">
+                <img :src="image" class="post-image" v-for="(image, index) in post.image.slice(0, 1)" @error="post.image.splice(index, 1)">
                 <div class="d-flex justify-content-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
+                <div class="d-flex justify-content-center" v-if="post.image.length > 1">
+                    <button type="button" class="color-blue show-all-btn small"
+                       @click="openImageViewer"
+                       data-toggle="modal"
+                       data-target=".bd-example-modal-lg">Показать ещё {{post.image.length - 1}} изображений</button>
+                    <image-viewer :array="post.image"></image-viewer>
+                </div>
             </div>
         </div>
 
@@ -121,7 +128,7 @@
                         </div>
                     </div>
 
-                    <div class="flex-row">
+                    <div class="d-flex">
                         <transition name="transition-opacity">
                             <div class="ml-auto" v-if="editMode">
                                 <transition name="transition-opacity">
@@ -151,7 +158,6 @@
                                           :isn="isn"></news-comment>
                         </div>
 
-
                         <div v-if="allCommentsShown" v-for="(comment, index) in post.comments">
                             <news-comment :comment="comment"
                                           :index="index"
@@ -169,7 +175,6 @@
                         <div>
                             <div class="d-flex">
                                 <div class="d-flex align-items-center">
-                                    <!--                                <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width">-->
                                     <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="MainFakeImage">
                                     <img :src="MainImageUrl" @error="MainFakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
                                 </div>
@@ -201,12 +206,9 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
-        </div>
+    </div>
 </template>
 
 <script>
@@ -223,17 +225,18 @@
                 bottomOfWindow: 0,
                 editMode: false,
                 oldText: this.post.postText,
-                fakeImage : false,
-                imageUrl : null,
+                fakeImage: false,
+                imageUrl: null,
                 commentText: '',
                 isAllTextOpened: false,
                 allCommentsShown: false,
                 comments: [],
                 showVideo: true,
-                MainImageUrl : null,
-                MainFakeImage : false,
+                MainImageUrl: null,
+                MainFakeImage: false,
                 NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
                 EDIT_POST_TEXTAREA: 'EDIT_POST',
+                imageViewerOpened: false,
             }
         },
 
@@ -244,20 +247,26 @@
             moderators : Array,
         },
 
-        mounted () {
+        mounted() {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
-            // this.comments = [...this.post.comments];
         },
 
-        updated () {
+        updated() {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
-            // this.comments = this.allCommentsShown ? this.post.comments.slice() : this.post.comments.slice(0, 3)
         },
 
         methods: {
-            deletePost: function () {
+            openImageViewer() {
+                this.imageViewerOpened = true;
+            },
+
+            closeImageViewer() {
+                this.imageViewerOpened = false;
+            },
+
+            deletePost() {
                 this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
                     return;
                 }).catch(error => {
@@ -265,7 +274,7 @@
                 });
             },
 
-            setPinned: function () {
+            setPinned() {
                 if(this.post.pinned === 0) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
@@ -280,11 +289,12 @@
                 }
             },
 
-            likePost: function () {
-                if(this.post.isLiked === 1){
+            likePost() {
+                if(this.post.isLiked === 1) {
                     this.post.isLiked = 0;
                     this.post.likes--;
-                }else{
+                }
+                else {
                     this.post.isLiked = 1;
                     this.post.likes++;
                 }
@@ -295,7 +305,7 @@
                 });
             },
 
-            fetchLiked: function (response) {
+            fetchLiked(response) {
                 if(response.success === true) {
                     this.post.isLiked = 1;
                 }
@@ -304,7 +314,7 @@
                 }
             },
 
-            editPost: function () {
+            editPost() {
                 setTimeout(() => {
                     this.$refs['textarea-edit-post'].focus();
                 }, 1000);
@@ -321,7 +331,7 @@
                 this.editMode = !this.editMode;
             },
 
-            saveEdited: function () {
+            saveEdited() {
                 this.editMode = !this.editMode;
                 this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     this.fetchSaved(response.data);
@@ -330,36 +340,36 @@
                 });
             },
 
-            fetchSaved: function (response) {
+            fetchSaved(response) {
                 this.post.edited = response.edited;
             },
 
-            exitEdit: function () {
+            exitEdit() {
               this.editMode = !this.editMode;
               this.post.postText = this.oldText;
             },
 
-            addComment: function () {
+            addComment() {
                 this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
                     this.setComments(response.data);
                 });
                 this.commentText = '';
             },
 
-            showAllText: function () {
+            showAllText() {
                 this.isAllTextOpened = true;
             },
 
-            setComments: function (response) {
+            setComments(response) {
                 var vm = this;
                 vm.post.comments.push(response);
             },
 
-            showMoreComments: function () {
+            showMoreComments() {
                 this.allCommentsShown = true;
             },
 
-            deleteComment: function (index) {
+            deleteComment(index) {
                 var vm = this;
                 this.axios.post('/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
                     if(response.data.success) {
@@ -367,7 +377,6 @@
                     }
                 });
             },
-
         }
     }
 </script>
@@ -377,7 +386,6 @@
         border: none !important;
         outline: none !important;
         background-color: transparent;
-        /*transition: 0.4s ease;*/
     }
 
     .custom-button > .fas {
