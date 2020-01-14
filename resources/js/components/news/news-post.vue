@@ -290,7 +290,7 @@
             },
 
             likePost() {
-                if(this.post.isLiked === 1) {
+                if(this.post.isLiked === 1 || this.post.isLiked === '1') {
                     this.post.isLiked = 0;
                     this.post.likes--;
                 }

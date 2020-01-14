@@ -48,16 +48,20 @@ class ParseController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            $acceptedUsers = [];
-            foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_PARSE])->get() as $user){
-                array_push($acceptedUsers, $user->user_isn);
-            }
-            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, $acceptedUsers)){
+            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())){
                 return $next($request);
             }
             abort(403, 'У вас нет доступа для просмотра данной страницы');
             return Redirect::back();
         });
+    }
+
+    public static function getAcceptedUsers(){
+        $acceptedUsers = [];
+        foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_PARSE])->get() as $user){
+            array_push($acceptedUsers, $user->user_isn);
+        }
+        return $acceptedUsers;
     }
 
     public function company()

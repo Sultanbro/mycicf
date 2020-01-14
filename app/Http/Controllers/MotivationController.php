@@ -124,11 +124,23 @@ class MotivationController extends Controller
                 }
                 break;
 //            case 4 :
-//
+//                $category = 3;
+//                $motFirst = 0;
+//                $motSecond = 0;
+//                $list = [];
+//                foreach ($response->Mot->row as $mot){
+//                    array_push($list, [
+//                        'types' => 'Сборы по ОГПО ВТС',
+//                        'sum' => (number_format((double)$mot->AmountF, 0, '.', ' ') ?? 0),
+//                        'color' => 'green',
+//                    ]);
+//                    $motFirst += ((int)$mot->TotalPrem ?? 0);
+//                }
 //                break;
-//            case 5 :
-//
 //                break;
+            case 5 :
+
+                break;
             default :
                 $list = [];
         }
