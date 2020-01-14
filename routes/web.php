@@ -206,6 +206,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::get('/motivation', 'MotivationController@motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
+
+        Route::post('/setToken', 'NotificationController@setToken');
     });
 });
 
