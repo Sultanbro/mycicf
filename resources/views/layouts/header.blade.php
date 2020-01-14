@@ -73,3 +73,8 @@
         <div class="item-5"></div>
     </div>
 </header>
+<script type="text/javascript" src="http://centras.ailabs.kz/aicc/chat-widget2/uniq-chat.js"></script>
+<script>
+var chat_client = 'centras', chat_mode=2, ailabs_user_id = null, ailabs_user_info  = {'user_intent_category_label':"DEFAULT"}; //3-client side, 2-ailabs server, 1-localhost; ailabs_user_id - users(id)
+AILabsChatStart();
+</script>
