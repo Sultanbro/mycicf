@@ -11,6 +11,7 @@
         "php": "^7.2",
         "ext-json": "*",
         "ext-simplexml": "*",
+        "ext-curl": "*",
         "ext-soap": "*",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",

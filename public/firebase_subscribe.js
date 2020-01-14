@@ -53,9 +53,18 @@ function sendTokenToServer(currentToken) {
         console.log('Отправка токена на сервер...');
 
         var url = '/setToken'; // адрес скрипта на сервере который сохраняет ID устройства
-        $.post(url, {
-            token: currentToken
-        });
+        var http = new XMLHttpRequest();
+        var params = currentToken;
+        http.open('POST', url, true);
+
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        http.onreadystatechange = function() {
+            if(http.readyState == 4 && http.status == 200) {
+                alert(http.responseText);
+            }
+        }
+        http.send(params);
 
         setTokenSentToServer(currentToken);
     } else {
