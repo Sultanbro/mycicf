@@ -242,8 +242,8 @@ use App\Http\Controllers\ParseController;
                             <td></td>
                             <td>{{number_format($class_sum[$id]['payout_first'], 0, '.', ' ')}}</td>
                             <td>{{number_format($class_sum[$id]['payout_second'], 0, '.', ' ')}}</td>
-                            <td>{{$controller->getChangedVal($class_sum[$id]['payout_first'],$class_sum[$id]['payout_second'])}}%</td>
-                            <td>{{$controller->getPayoutChange($class_sum[$id]['payout_first'], $class_sum[$id]['premium_second'])}}</td>
+                            <td>{{$controller->getChangedVal($class_sum[$id]['payout_first'],$class_sum[$id]['payout_second'])}}</td>
+                            <td>{{$controller->getPayoutChange($class_sum[$id]['payout_first'], $class_sum[$id]['premium_first'])}}</td>
                             <td>{{$controller->getPayoutChange($class_sum[$id]['payout_second'], $class_sum[$id]['premium_second'])}}</td>
                         </tr>
                         @foreach($premium_first as $product_id => $value)
