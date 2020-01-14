@@ -18,7 +18,7 @@
                         <a class="dropdown-item" href="{{route('parse.add.product')}}">Классы - Новое</a>
                         <a class="dropdown-item" href="{{route('parse.edit.product')}}">Классы - Правка</a>
                         <a class="dropdown-item" href="{{route('parse.load.data')}}">Мониторинг</a>
-
+                        <a class="dropdown-item" href="{{route('parse.add.info')}}">Инфо</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
@@ -66,6 +66,7 @@
                     <a class="nav-link" href="{{route('parse.add.product')}}">Классы - Новое</a>
                     <a class="nav-link" href="{{route('parse.edit.product')}}">Классы - Правка</a>
                     <a class="nav-link" href="{{route('parse.load.data')}}">Мониторинг</a>
+                    <a class="nav-link" href="{{route('parse.add.info')}}">Инфо</a>
 
                 @endif
                 @if(App\User::isOtdeKadrovAdmin())

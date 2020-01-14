@@ -51,6 +51,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('parse/load/data', 'ParseController@getLoadView')->name('parse.load.data');
             Route::post('parse/delete/data', 'ParseController@postDeleteData');
             Route::post('parse/get/data', 'ParseController@getLoadedData');
+            Route::get('/parse/add/info', 'ParseController@getAddInfo')->name('parse.add.info');
+            Route::post('/parse/add/info', 'ParseController@postAddInfo');
         });
 
         Route::group(['middleware' => 'okAdmin'], function (){
@@ -142,6 +144,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
         Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
         Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+        //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
+
+
+        Route::post('/parse/opu/getData', 'ParseController@getOpuTopSum');
+        Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
+        Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
         //CENTCOINS
         Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
         Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
@@ -212,5 +220,3 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
 
-Route::get('/parse/opu/parse', 'ParseController@parseOpuData');
-Route::get('/parse/balance/parse', 'ParseController@parseBalanceData');
