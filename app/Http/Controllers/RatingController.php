@@ -29,7 +29,6 @@ class RatingController extends Controller
         'AverageDaily' => 'среднедневное кол-во договоров',
         'CrossShare' => 'кросс-продажи, %',
         'Loyality' => 'лояльность',
-        'MeanShare' => 'среднее значение по показателям'
     ];
 
     public function getRatingList(Request $request, KiasServiceInterface $kias) {
@@ -57,6 +56,7 @@ class RatingController extends Controller
         $category = null;
         $deptName = null;
         $dutyName = null;
+        $meanShare = null;
         foreach((array)$response->Rate->row as $key => $value) {
             if($key == 'EmplRate') {
                 $emplRate = (string)$value;
@@ -69,6 +69,9 @@ class RatingController extends Controller
             }
             else if($key == 'DutyName') {
                 $dutyName = (string)$value;
+            }
+            else if($key == 'MeanShare'){
+                $meanShare = (int)$value;
             }
             else {
                 array_push($rating, [
@@ -87,7 +90,8 @@ class RatingController extends Controller
                 'emplRate' => $emplRate,
                 'category' => $category,
                 'deptName' => $deptName,
-                'dutyName' => $dutyName
+                'dutyName' => $dutyName,
+                'meanShare' => $meanShare
             ])
             ->withCallback($request->input(
                 'callback'

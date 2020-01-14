@@ -1963,3 +1963,9 @@ textarea::-webkit-scrollbar-thumb {
 .relative{
 	position: relative;
 }
+
+.meanShare{
+	font-weight: bold;
+	background-color: #4267b2;
+	color: white;
+}
