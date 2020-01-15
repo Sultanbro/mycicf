@@ -73,3 +73,4 @@
         <div class="item-5"></div>
     </div>
 </header>
+<script type="text/javascript" src="https://raw.githubusercontent.com/jwagner/smartcrop.js/master/smartcrop.js"></script>
