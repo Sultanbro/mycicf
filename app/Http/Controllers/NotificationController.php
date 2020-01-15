@@ -12,7 +12,9 @@ class NotificationController extends Controller
         foreach($request->all() as $key => $value){
             $requestKey = $key;
         }
-        return UserToken::setToken($requestKey);
+        return response()->json([
+                'success' => UserToken::setToken($requestKey)
+            ]);
     }
 
     public function sendNotify(){

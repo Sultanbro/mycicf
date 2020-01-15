@@ -75,3 +75,6 @@
 </header>
 <script type="text/javascript" src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
 <script type="text/javascript" src="{{asset('firebase_subscribe.js')}}"></script>
+<script>
+    window.onload = subscribe();
+</script>
