@@ -24,13 +24,13 @@ class NotificationController extends Controller
         $YOUR_TOKEN_ID = UserToken::getToken($ISN); // Client token id
         if($YOUR_TOKEN_ID) {
             $request_body = [
-                'to' => $YOUR_TOKEN_ID,
                 'notification' => [
                     'title' => $title,
                     'body' => $messageText,
                     'icon' => 'https://eralash.ru.rsz.io/sites/all/themes/eralash_v5/logo.png?width=192&height=192',
                     'click_action' => 'https://my.cic.kz/coordination',
                 ],
+                'registration_ids' => $YOUR_TOKEN_ID
             ];
 
             $fields = json_encode($request_body);
