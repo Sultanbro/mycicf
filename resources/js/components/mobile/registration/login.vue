@@ -70,7 +70,7 @@
                 }
 
                 if(response.success){
-                    location.href = '/news';
+                    location.href = '/dossier';
                 }
             },
             validate: function () {

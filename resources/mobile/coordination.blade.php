@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="{{asset('css/app.css')}}">
-
     <!-- Bootstrap animations -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -33,14 +31,7 @@
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
-<div id="app" class="modal-open">
-    <div class="preloader" id="preloader">
-        <div class="item-1"></div>
-        <div class="item-2"></div>
-        <div class="item-3"></div>
-        <div class="item-4"></div>
-        <div class="item-5"></div>
-    </div>
+<div id="app">
     @include('layouts.header')
     <main class="bg-white">
         <coordination
@@ -48,21 +39,4 @@
     </main>
 </div>
 </body>
-<script>
-    function changeDisplay(idName){
-        var element = document.getElementById(idName);
-        if(element.classList.contains('active')){
-            element.classList.remove('active');
-            element.style.display = "none";
-        }
-        else {
-            element.classList.add('active');
-            element.style.display = "block";
-        }
-    }
-    
-    function checkStyle() {
-        console.log(document.getElementById('mainModal'));
-    }
-</script>
 </html>

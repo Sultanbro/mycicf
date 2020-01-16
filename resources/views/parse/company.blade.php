@@ -63,7 +63,7 @@
                             </select>
                         </div>
                         <div class="flex">
-                            <form class="h_flex margtop20 padtop7"><label class="h_flex flex-row vertical-middle labelcheck">
+                            <form class="h_flex margtop20 padtop7"><label class="h_flex labelcheck">
                                     <input type="checkbox" name="check" id="checkJs" @if(($_GET['disc'] ?? 0) != 0) checked @endif>
                                     <div class="margleft10">расторжения</div></label>
                             </form>
@@ -154,7 +154,7 @@
                                 топ по классам
                             </div></a>
                     </div>
-                    <div class="margtop20">
+                    <div>
                         <h1 class="h1">{{$label}}</h1>
                     </div>
                 </div>
