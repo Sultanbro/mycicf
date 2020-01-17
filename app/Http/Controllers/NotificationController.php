@@ -52,7 +52,7 @@ class NotificationController extends Controller
     public function sendCentcoinNotify($centcoin){
         $title = "Сенткоин";
         $body = "Пополнение счета на {$centcoin->quantity} ₵";
-        $tokens = UserToken::getToken($centcoin->user_isn);
+        $tokens = UserToken::getToken($centcoin->changed_user_isn);
         $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
     }
 
