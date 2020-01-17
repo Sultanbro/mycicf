@@ -49,12 +49,12 @@ function subscribe() {
 
 // отправка ID на сервер
 function sendTokenToServer(currentToken) {
-    if (!isTokenSentToServer(currentToken)) {
+    // if (!isTokenSentToServer(currentToken)) {
         console.log('Отправка токена на сервер...');
 
         var url = '/setToken'; // адрес скрипта на сервере который сохраняет ID устройства
         var http = new XMLHttpRequest();
-        var params = "'token' : ${currentToken}";
+        var params = currentToken;
         http.open('POST', url, true);
 
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -67,9 +67,9 @@ function sendTokenToServer(currentToken) {
         http.send(params);
 
         setTokenSentToServer(currentToken);
-    } else {
-        console.log('Токен уже отправлен на сервер.');
-    }
+    // } else {
+    //     console.log('Токен уже отправлен на сервер.');
+    // }
 }
 
 // используем localStorage для отметки того,
