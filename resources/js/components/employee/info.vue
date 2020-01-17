@@ -186,7 +186,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -195,7 +194,7 @@
         data() {
             return {
                 datebeg: '1990-01-01',
-                dateend: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDay()+1, 6).toJSON().slice(0, 10),
+                dateend: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                 carier: null,
                 vacation: null,
                 sick: null,
@@ -279,6 +278,5 @@
                 this.caretClass6 = this.caretClass6 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
             },
         },
-
     }
 </script>
