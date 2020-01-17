@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -52,5 +53,6 @@ class CentcoinHistory extends Model
         $this->getTotal();
         parent::save($options);
         $this->setTotal();
+        (new NotificationController())->sendCentcoinNotify($this);
     }
 }

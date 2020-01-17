@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
+use App\Centcoin;
+use App\CentcoinHistory;
+use App\Post;
+use App\User;
 use App\UserToken;
 use Illuminate\Http\Request;
 
@@ -17,22 +22,52 @@ class NotificationController extends Controller
             ]);
     }
 
-    public function sendNotify(){
-        $ISN = 3921599;
-        $title = 'Согласование';
-        $messageText = 'Вам поступил документ на согласование';
+    public function sendCoordinationNotify($ISN){
+        $title = "Согласование";
+        $body = "К вам поступил документ на согласование";
+        $tokens = [];
+        foreach ($ISN as $isn){
+            $tokens = array_merge($tokens, UserToken::getToken($isn));
+        }
+        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/coordination');
+    }
+
+    /**
+     * @param $post Post
+     */
+    public function sendNewPostNotify($post){
+        $title = "Новости";
+        $author = (new User())->getFullName($post->user_isn);
+        $body = "Опубликован новый пост от {$author}";
+        $tokens = [];
+        foreach (UserToken::all() as $token){
+            array_push($tokens, $token->token);
+        }
+        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/news');
+    }
+
+    /**
+     * @param $centcoin CentcoinHistory
+     */
+    public function sendCentcoinNotify($centcoin){
+        $title = "Сенткоин";
+        $body = "Пополнение счета на {$centcoin->quantity}";
+        $tokens = UserToken::getToken($centcoin->user_isn);
+        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
+    }
+
+    public function sendNotify($tokens, $title, $messageText, $action){
         $url = 'https://fcm.googleapis.com/fcm/send';
         $YOUR_API_KEY = env('SERVER_KEY'); // Server key
-        $YOUR_TOKEN_ID = UserToken::getToken($ISN); // Client token id
-        if($YOUR_TOKEN_ID) {
+        if($tokens) {
             $request_body = [
                 'notification' => [
                     'title' => $title,
                     'body' => $messageText,
-                    'icon' => 'https://eralash.ru.rsz.io/sites/all/themes/eralash_v5/logo.png?width=192&height=192',
-                    'click_action' => 'https://my.cic.kz/coordination',
+                    'icon' => "https://kupipolis.kz/images/new-logo-centras.png",
+                    'click_action' => $action,
                 ],
-                'registration_ids' => $YOUR_TOKEN_ID
+                'registration_ids' => $tokens
             ];
 
             $fields = json_encode($request_body);

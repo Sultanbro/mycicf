@@ -359,6 +359,7 @@ class CoordinationController extends Controller
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://bots.n9.kz/notification';
+        (new NotificationController())->sendCoordinationNotify($users);
         foreach ($users as $user){
             $res = $client->request('POST', $url, [
                 'form_params' => [
