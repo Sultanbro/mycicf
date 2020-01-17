@@ -78,11 +78,7 @@
 
             afterLogin: function (response) {
                 if(response.success){
-                    if(history.length === 0){
-                        location.href = '/news';
-                    }else{
-                        history.back();
-                    }
+                    location.href = '/news';
                 }
             },
 
