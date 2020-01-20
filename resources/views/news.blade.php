@@ -42,8 +42,88 @@
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
-        <div class="col-md-6 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
             <post :isn="{{Auth::user()->ISN}}"></post>
+        </div>
+        <div class="col-md-2-sm-3-lg mt-3">
+            <div class="box-shadow">
+                <div class="color-blue pt-2 pl-3 pr-3 pb-2 text-align-center">
+                    <div class="d-flex vertical-middle">
+                        <div class="pr-2 pl-2 pt-2 pb-2 height100 pointer">
+                            <i class="fa fa-long-arrow-alt-left"></i>
+                        </div>
+                        <span class="bold">Ближайшие дни рождения</span>
+                        <div class="pt-2 pr-2 pb-2 pl-2 height100 pointer height100">
+                            <i class="fa fa-long-arrow-alt-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <hr class="mt-0">
+                <div class="pt-2 pl-4 pr-4 pb-2">
+                    <div class="text-center">
+                        <a href="#" class="d-flex flex-column vertical-middle Birthday-margin-inner">
+                            <div class="jc-center d-flex width50">
+                                <img src="images/avatar.png" class="width100">
+                            </div>
+                            <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
+                                <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
+                                    <span>Джумагулов Дмитрий Романович</span>
+                                </div>
+                                <div class="Birthday-line_height mt-1 mb-1">
+                                    <span class="fs-0_9">20.20.2020</span>
+                                </div>
+                                {{--                            <div class="Birthday-line_height mb-1">--}}
+                                {{--                                <span class="fs-0_7">Департамент Программирования</span>--}}
+                                {{--                            </div>--}}
+                            </div>
+                        </a>
+                        <hr>
+                    </div>
+                    <div class="text-center">
+                        <a href="#" class="d-flex flex-column vertical-middle Birthday-margin-inner">
+                            <div class="jc-center d-flex width50">
+                                <img src="images/avatar.png" class="width100">
+                            </div>
+                            <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
+                                <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
+                                    <span>Джумагулов Дмитрий Романович</span>
+                                </div>
+                                <div class="Birthday-line_height mt-1 mb-1">
+                                    <span class="fs-0_9">20.20.2020</span>
+                                </div>
+                                {{--                            <div class="Birthday-line_height mb-1">--}}
+                                {{--                                <span class="fs-0_7">Департамент Программирования</span>--}}
+                                {{--                            </div>--}}
+                            </div>
+                        </a>
+                        <hr>
+                    </div>
+                    <div class="text-center">
+                        <a href="#" class="d-flex flex-column vertical-middle Birthday-margin-inner">
+                            <div class="jc-center d-flex width50">
+                                <img src="images/avatar.png" class="width100">
+                            </div>
+                            <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
+                                <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
+                                    <span>Джумагулов Дмитрий Романович</span>
+                                </div>
+                                <div class="Birthday-line_height mt-1 mb-1">
+                                    <span class="fs-0_9">20.20.2020</span>
+                                </div>
+                                {{--                            <div class="Birthday-line_height mb-1">--}}
+                                {{--                                <span class="fs-0_7">Департамент Программирования</span>--}}
+                                {{--                            </div>--}}
+                            </div>
+                        </a>
+                        <hr>
+                    </div>
+                    <div class="text-center">
+                        <div class="color-darkgray pointer hover-gray hover-gray pt-3 pb-3">
+                            Показать еще
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>
