@@ -27,9 +27,16 @@ class NotificationController extends Controller
         $body = "К вам поступил документ на согласование";
         $tokens = [];
         foreach ($ISN as $isn){
-            $tokens = array_merge($tokens, UserToken::getToken($isn));
+            $token = UserToken::getToken($isn);
+            if(!$token){
+                continue;
+            }else{
+                $tokens = array_merge($tokens, $token);
+            }
         }
-        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/coordination');
+        if(sizeof($tokens) > 0){
+            $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/coordination');
+        }
     }
 
     /**
@@ -53,6 +60,9 @@ class NotificationController extends Controller
         $title = "Сенткоин";
         $body = "Пополнение счета на {$centcoin->quantity} ₵";
         $tokens = UserToken::getToken($centcoin->changed_user_isn);
+        if(!$tokens){
+            return;
+        }
         $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
     }
 
