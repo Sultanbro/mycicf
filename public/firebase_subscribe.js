@@ -11,14 +11,14 @@ if ('Notification' in window) {
     // пользователь уже разрешил получение уведомлений
     // подписываем на уведомления если ещё не подписали
     // if (Notification.permission === 'granted') {
-        subscribe();
+    //     subscribe();
     // }
 
     // по клику, запрашиваем у пользователя разрешение на уведомления
     // и подписываем его
-    $('#subscribe').on('click', function () {
-        subscribe();
-    });
+    // $('#subscribe').on('click', function () {
+    //     subscribe();
+    // });
 }
 
 function subscribe() {
@@ -61,7 +61,7 @@ function sendTokenToServer(currentToken) {
 
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
-                alert(http.responseText);
+                console.log(http.responseText);
             }
         }
         http.send(params);

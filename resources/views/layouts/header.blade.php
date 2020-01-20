@@ -55,6 +55,11 @@
                 </a>
                 <div class="header-section zi-2">
                     <section class="pointer">
+                        <a onclick="subscribe()">
+                            <option style="color:white">
+                                Подписаться на уведомления
+                            </option>
+                        </a>
                         <a href="/logout">
                             <option style="color:white">
                                 Выйти
@@ -73,10 +78,5 @@
         <div class="item-5"></div>
     </div>
 </header>
-@if(!env('APP_DEBUG', false))
 <script type="text/javascript" src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
 <script type="text/javascript" src="{{asset('firebase_subscribe.js')}}"></script>
-{{--<script>--}}
-    {{--window.onload = subscribe();--}}
-{{-- </script>--}}
-@endif
