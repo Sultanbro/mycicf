@@ -3,13 +3,13 @@
         <div class="d-flex justify-content-center pt-4 pb-4">
             <select v-model="itemIndex" class="custom-select w-25">
                 <option :value="null" selected disabled hidden>Выберите товар</option>
-                <option :value="index" v-for="(item, index) in itemsStorage" :disabled="centcoins < item.price">{{item.name}} {{item.price}}</option>
+                <option :value="index" v-for="(item, index) in itemsStorage" :disabled="centcoins < item.price">{{item.name}} - {{item.price}}₵</option>
             </select>
         </div>
 
         <div v-if="price !== 0">
             <div class="font-size-4rem d-flex justify-content-center">
-                <span>{{this.price}}</span>
+                <span>{{this.price}}₵</span>
             </div>
             <div class="d-flex justify-content-center mt-4 mb-4">
                 <button type="button"
@@ -142,6 +142,10 @@
 
     .buy-btn[disabled]:hover {
         box-shadow: none;
+    }
+
+    select:disabled{
+        background-color: #c1c1c1;
     }
 
 </style>
