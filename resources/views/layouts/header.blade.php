@@ -57,7 +57,7 @@
                     <section class="pointer">
                         <a onclick="subscribe()">
                             <option style="color:white">
-                                Подписаться на уведомления
+                                Уведомления
                             </option>
                         </a>
                         <a href="/logout">

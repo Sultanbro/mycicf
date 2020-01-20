@@ -61,7 +61,7 @@ function sendTokenToServer(currentToken) {
 
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
-                console.log(http.responseText);
+                alert("Вы успешно подписались на уведомления");
             }
         }
         http.send(params);
