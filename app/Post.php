@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -132,5 +133,10 @@ class Post extends Model
             default :
                 return 'fa-file-o';
         }
+    }
+
+    public function save(array $options = []){
+        parent::save();
+        (new NotificationController())->sendNewPostNotify($this);
     }
 }

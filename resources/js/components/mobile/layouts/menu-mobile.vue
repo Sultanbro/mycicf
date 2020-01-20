@@ -87,9 +87,15 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="bg-blue-standart height100vh">-->
-                <!--<div class="pt-4 ml-5 mr-5 pb-5 flex-row jc-sb">-->
-                    <!--<div class="flex-column">-->
+            <div class="bg-blue-standart height100vh">
+                <div class="pt-4 ml-5 mr-5 pb-5 flex-row jc-sb">
+                    <div class="flex-column">
+                        <a onclick="subscribe()" class="color-white mobile-navbar-border-bot fs-0_8">
+                            Подписатся на уведомления
+                        </a>
+                    </div>
+                </div>
+            </div>
                         <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
                             <!--PARSE-->
                         <!--</a>-->

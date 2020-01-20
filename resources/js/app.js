@@ -30,7 +30,7 @@ Vue.use(TextareaAutosize);
 
 Vue.directive('linkified', linkify);
 
-Vue.component('login', require('./components/registration/login.vue').default);
+// Vue.component('login', require('./components/registration/login.vue').default);
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
 

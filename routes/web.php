@@ -14,6 +14,8 @@
  * ADMIN PANEL
  * add local url to .env BACKEND_DOMAIN
  */
+Route::get('/sendNotification', 'NotificationController@sendNotify');
+
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/','Admin\SiteController@showLoginForm');
     Route::post('/login','Admin\SiteController@checkLogin');
@@ -206,6 +208,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::get('/motivation', 'MotivationController@motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
+
+        Route::post('/setToken', 'NotificationController@setToken');
     });
 });
 
@@ -218,5 +222,4 @@ Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
-
 
