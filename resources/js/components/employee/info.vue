@@ -4,11 +4,11 @@
             <div class="border-radius15 flex-row jc-start vertical-middle bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                 <div class="flex-row jc-sb">
                     <div class="flex-column">
-                        <label for="dateBeg" class="bold">Период от</label>
+                        <label for="dateBeg" class="bold">Период с</label>
                         <input type="date" id="dateBeg" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="datebeg">
                     </div>
                     <div class="flex-column ml-3">
-                        <label for="dateEnd" class="bold">Период до</label>
+                        <label for="dateEnd" class="bold">Период по</label>
                         <input type="date" id="dateEnd" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateend">
                     </div>
                     <div class="flex-column ml-3 dossierIsn">
@@ -186,7 +186,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -195,7 +194,7 @@
         data() {
             return {
                 datebeg: '1990-01-01',
-                dateend: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDay()+1, 6).toJSON().slice(0, 10),
+                dateend: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                 carier: null,
                 vacation: null,
                 sick: null,
@@ -279,6 +278,5 @@
                 this.caretClass6 = this.caretClass6 === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
             },
         },
-
     }
 </script>

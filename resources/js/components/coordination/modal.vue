@@ -162,7 +162,7 @@
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
-                                        <div class="flex-row pl-4 pb-4 pr-4 pointer" v-if='coordination.DocClass === "883011"'>
+                                        <div class="flex-row pl-4 pb-4 pr-4 pointer" v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401"'>
                                             <div title="Воздержаться" class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"  @click="sendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
