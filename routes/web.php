@@ -105,6 +105,12 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('wnd/pdf', 'Admin\DocumentationController@loadPdf')->name('wnd.pdf');
             Route::post('wnd/save_pdf', 'Admin\DocumentationController@savePdf');
         });
+
+        Route::group(['middleware' => 'senateAdmin'], function (){
+            Route::get('senate/post/new', 'Admin\SenateController@newPost')->name('senate.post.new');
+            Route::post('senate/new/post', 'Admin\SenateController@savePostData');
+
+        });
     });
 });
 

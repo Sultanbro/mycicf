@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Session;
  */
 class User extends Authenticatable
 {
+    const SENATE_ISN = 999999999;
     use Notifiable;
 
     /**
@@ -76,6 +77,9 @@ class User extends Authenticatable
     }
 
     public function getFullName($user_isn){
+        if($user_isn === User::SENATE_ISN){
+            return 'Сенат';
+        }
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
     }
@@ -110,6 +114,10 @@ class User extends Authenticatable
         return (new Permissions())->checkUser([Permissions::ROLE_WND]);
     }
 
+    public static function isSenateAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_SENATE]);
+    }
+
     public static function getMotivationDepartments(){
         return [
             "1445780", "1445781", "1445783", "1445783", "4100260",
@@ -122,6 +130,19 @@ class User extends Authenticatable
             "1445789", "1445790", "1445791", "1445792", "1445793",
             "1445824", "1445826", "3492324", "3492327", "4380822",
             "3994433", "3994439", "3436136",
+
+
+            "1445780", "1445781", "1445783", "1445783", "4100260",
+            "4100283", "4100326", "4100328", "4100332", "4100334",
+            "3629955", "3991836", "3991842", "1445786", "2000",
+            "1445735", "1445814", "1445818", "1445820", "1445821",
+            "1445822", "1445823", "1445825", "1445827", "1445828",
+            "1445833", "1445834", "1445797", "1445798", "1445799",
+            "1445801", "1445802", "1445805", "1497575", "3367227",
+            "3436143", "1445789", "1445790", "1445791", "1445792",
+            "1445793", "1445824", "1445826", "3492324", "3492327",
+            "4380822", "3994433", "3994439", "3436136"
+
         ];
     }
 
