@@ -9,8 +9,10 @@ use App\Post;
 use App\Question;
 use App\User;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class SenateController extends Controller
 {
@@ -34,6 +36,23 @@ class SenateController extends Controller
             $post->post_text = $postText;
             $post->pinned = 0;
             $post->save();
+            /**
+             * @param $file UploadedFile
+             */
+            if(isset($request->postImages)) {
+                foreach ($request->postImages as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$post->id/images/$fileName", $content);
+                }
+            }
+            if(isset($request->postFiles)) {
+                foreach($request->postFiles as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$post->id/documents/$fileName", $content);
+                }
+            }
             if($isPoll){
                 $poll = new Question();
                 $poll->question = $question;
