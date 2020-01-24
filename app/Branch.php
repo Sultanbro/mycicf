@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $has_child int
  * @property $verified int
  * @property $duty string
+ * @property $birthday date
  * @package App
  */
 class Branch extends Model

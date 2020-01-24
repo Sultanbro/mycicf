@@ -66,12 +66,17 @@ class Branches extends Command
     }
 
     public function addToTable($subject){
+        $birthday = (string)$subject->Birthday;
+        if($birthday == "0"){
+            $birthday = null;
+        }
         $model = new Branch();
         $model->fullname = $subject->FullName;
         $model->kias_id = $subject->ISN;
         $model->kias_parent_id = $subject->ParentISN;
         $model->has_child = $subject->Kids;
         $model->verified = 2;
+        $model->birthday = $birthday;
         $model->duty = $subject->Duty;
         try{
             if($model->save()){
