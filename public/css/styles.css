@@ -670,6 +670,12 @@ ul{
     overflow: hidden;
     height: 25px;
 }
+.visibility_hidden{
+	visibility: hidden;
+}
+.absolute-right-0{
+	right: 0;
+}
 .settings-icon-transform{
     transform: rotate(90deg);
 }
@@ -1970,4 +1976,8 @@ textarea::-webkit-scrollbar-thumb {
 }
 .hover-gray:hover{
 	color: gray;
+}
+.events-arrow-bg:hover{
+	/*transition: 0.3s ease-in;*/
+	background: rgba(0,0,0,.1);
 }

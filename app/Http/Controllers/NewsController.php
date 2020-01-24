@@ -271,6 +271,11 @@ class NewsController extends Controller
         return $response;
     }
 
+    public function birthday()
+    {
+        return view('news-birthday');
+    }
+
     public function editComment(Request $request) {
         $success = false;
 
