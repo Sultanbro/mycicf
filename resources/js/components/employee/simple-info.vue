@@ -15,19 +15,19 @@
                 <span><strong>{{duty}}</strong></span>
             </div>
             <div class="left-menu-fonts" v-if="rating !== ''">
-                <span><strong>Рейтинг: &nbsp; </strong><span>{{rating}}</span></span>
+                <span><strong><i class="far color-blue fa-star"></i>&nbsp;</strong><span>{{rating}}</span></span>
             </div>
             <div class="left-menu-fonts">
-                <span><strong>Дата рождения: &nbsp; </strong><span>{{birthday}}</span></span>
+                <span><strong><i class="fas color-blue fa-gift"></i>&nbsp;</strong><span>Родился(-ась) {{birthday}}</span></span>
             </div>
             <div class="left-menu-fonts">
-                <span><strong>Место рождения: &nbsp; </strong><span>{{place_of_birth}}</span></span>
+                <span><strong><i class="fas color-blue fa-map-marker-alt"></i>&nbsp;&nbsp;</strong><span>Из {{place_of_birth}}</span></span>
             </div>
             <div class="left-menu-fonts">
-                <span><strong>Семейное положение: &nbsp; </strong><span>{{married}}</span></span>
+                <span><strong><i class="fas color-blue fa-heart"></i>&nbsp;&nbsp;</strong><span>{{married}}</span></span>
             </div>
             <div class="left-menu-fonts">
-                <span><strong>Образование: &nbsp; </strong><span>{{education}}</span></span>
+                <span><strong><i class="fas color-blue fa-graduation-cap"></i>&nbsp;</strong><span>Учился(-ась) {{education}}</span></span>
             </div>
         </div>
         <hr class="left-menu-border mb-0">
