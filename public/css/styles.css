@@ -1471,6 +1471,9 @@ body {
 .main-data-chart-contains-size{
 	/*width: 50%;*/
 }
+.width-100-imp{
+	width: 100% !important;
+}
 .data-chart-pie{
 	width: 100% !important;
 }
@@ -1980,4 +1983,13 @@ textarea::-webkit-scrollbar-thumb {
 .events-arrow-bg:hover{
 	/*transition: 0.3s ease-in;*/
 	background: rgba(0,0,0,.1);
+}
+.birthday-balls{
+	width: 40%;
+	bottom: -5%;
+	right: -20%;
+}
+.events-window-size{
+	max-width: 80%;
+	min-width: 70%;
 }
