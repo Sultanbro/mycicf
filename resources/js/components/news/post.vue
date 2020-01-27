@@ -114,6 +114,23 @@
                     </transition>
                 </div>
             </div>
+            <div class="ml-4 mr-4 pb-2 pt-2 w-100">
+                <div class="flex-column">
+                    <div v-model="question in questions">
+                        <input type="text" v-model="question">
+                    </div>
+                    <div>
+                        <ol class="pl-0 mt-4">
+                            <li v-for="value in object">
+                                <input type="text" v-model="value" placeholder="Первый вопрос">
+                            </li>
+                        </ol>
+                        <div class="pointer text-center pt-2 pb-2">
+                            <span>Добавить пункт</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -191,6 +208,32 @@
                 docMaxNumber: 5,
                 moderators: [],
                 showToTopBtn: false,
+                object: {
+                    first_question: '',
+                    second_question: '',
+                    third_question: '',
+                    fourth_question: '',
+                    fifth_question: '',
+                    sixth_question: '',
+                    seventh_question: '',
+                    eighth_question: '',
+                    ninth_question: '',
+                    tenth_question: '',
+                },
+                Questions: {
+                    question: 'вопрос',
+                    q_id: 10,
+                    answers: [
+                        {
+                            value: 'Первый',
+                            id: 12,
+                        },
+                        {
+                            value: 'Второй',
+                            id: 13,
+                        },
+                    ],
+                },
             }
         },
 
