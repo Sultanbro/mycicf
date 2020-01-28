@@ -74,7 +74,7 @@
                                 <th scope="col">Оценка</th>
                             </tr>
                             <tr v-for="rating in ratings">
-                                <td :title="rating.tooltip">{{rating.criteria}}</td>
+                                <td><span v-tooltip.top-center="rating.tooltip">{{rating.criteria}}</span></td>
                                 <td>{{rating.mark}}</td>
                                 <td>{{rating.assessment}}</td>
                             </tr>

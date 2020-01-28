@@ -15,13 +15,13 @@
                 <span><strong>{{duty}}</strong></span>
             </div>
             <div class="left-menu-fonts" v-if="rating !== ''">
-                <span><strong><i class="far color-blue fa-star"></i>&nbsp;</strong><span>{{rating}}</span></span>
+                <span><strong><i class="far color-blue fa-star"></i>&nbsp;&nbsp;</strong><span>{{rating}}</span></span>
             </div>
             <div class="left-menu-fonts">
-                <span><strong><i class="fas color-blue fa-gift"></i>&nbsp;</strong><span>Родился(-ась) {{birthday}}</span></span>
+                <span><strong><i class="fas color-blue fa-gift"></i>&nbsp;&nbsp;</strong><span>Родился(-ась) {{birthday}}</span></span>
             </div>
             <div class="left-menu-fonts">
-                <span><strong><i class="fas color-blue fa-map-marker-alt"></i>&nbsp;&nbsp;</strong><span>Из {{place_of_birth}}</span></span>
+                <span><strong><i class="fas color-blue fa-map-marker-alt ml2 mr2"></i>&nbsp;&nbsp;</strong><span>Из {{place_of_birth}}</span></span>
             </div>
             <div class="left-menu-fonts">
                 <span><strong><i class="fas color-blue fa-heart"></i>&nbsp;&nbsp;</strong><span>{{married}}</span></span>
