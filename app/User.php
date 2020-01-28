@@ -89,9 +89,9 @@ class User extends Authenticatable
         $users_data = [
             'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
             'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
-            'Birthday' => (string)$response->Birthday == "0" ? 'Не указано' : (string)$response->Birthday,
-            'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
-            'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
+            'Birthday' => (string)$response->Birthday == "0" ? '' : (string)$response->Birthday,
+            'Married' => (string)$response->Married == "0" ? '' : (string)$response->Married,
+            'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
         ];

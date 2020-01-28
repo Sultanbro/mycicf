@@ -1976,3 +1976,9 @@ textarea::-webkit-scrollbar-thumb {
 .mr2{
 	margin-right: 2px !important;
 }
+
+.count-days{
+	font-weight: bold;
+	text-align: left;
+	background-color: #c2daf0d1;
+}
