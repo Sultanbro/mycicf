@@ -16,6 +16,8 @@ import VueGoogleCharts from 'vue-google-charts'
 
 import {EmojiPickerPlugin} from 'vue-emoji-picker'
 
+import VTooltip from 'v-tooltip'
+
 Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
@@ -27,6 +29,8 @@ Vue.use(VueGoogleCharts);
 Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);
+
+Vue.use(VTooltip);
 
 Vue.directive('linkified', linkify);
 

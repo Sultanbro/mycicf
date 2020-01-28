@@ -1969,3 +1969,10 @@ textarea::-webkit-scrollbar-thumb {
 	background-color: #4267b2;
 	color: white;
 }
+
+.ml2{
+	margin-left : 2px !important;
+}
+.mr2{
+	margin-right: 2px !important;
+}
