@@ -91,10 +91,7 @@
                     <a class="nav-link" href="#">Библиотека - Типы документов</a>
                 @endif
                 @if(App\User::isSenateAdmin())
-                    <a class="nav-link" href="#">Новый пост</a>
-                    <a class="nav-link" href="#"></a>
-                    <a class="nav-link" href="#"></a>
-                    <a class="nav-link" href="#"></a>
+                    <a class="nav-link" href="{{route('senate.post.new')}}">Новый пост</a>
                 @endif
             @endif
         </ul>
