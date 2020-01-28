@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div class="ml-2 mr-2" v-show="admins !== null">
+        <div class="ml-2 mr-2" v-if="admins !== null">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret3()" data-toggle="collapse" href="#admin_days" role="button" aria-expanded="false" aria-controls="collapseExample">
                     <strong>Административные дни</strong>
@@ -99,6 +99,38 @@
                             <td>{{info.Duration}}</td>
                             <td class="thead-border">{{info.Period}}</td>
                             <td>{{info.Remark}}</td>
+                        </tr>
+                        <tr class="count-days">
+                            <td colspan="3">Не использованные административные дни : &nbsp;&nbsp;&nbsp;{{days}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="ml-2 mr-2" v-if="admins === null">
+            <div class="border-radius15 bg-white mt-2">
+                <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret3()" data-toggle="collapse" href="#admin_days" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <strong>Административные дни</strong>
+                    <i class="fas " :class="caretClass3" data-toggle="collapse" href="#multiCollapseExample1"></i>
+                </div>
+                <div class="collapse" id="admin_days">
+                    <table class="dosier-table table text-align-center">
+                        <thead>
+                        <tr class="header color-white">
+                            <th scope="col">Кол-во дней</th>
+                            <th scope="col" class="thead-border">Период</th>
+                            <th scope="col">Примечание</th>
+                        </tr>
+                        </thead>
+                        <tbody class="date-color">
+                        <tr>
+                            <td>Нет данных</td>
+                            <td class="thead-border">Нет данных</td>
+                            <td>Нет данных</td>
+                        </tr>
+                        <tr class="count-days">
+                            <td colspan="3">Не использованные административные дни : &nbsp;&nbsp;&nbsp;{{days}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -202,6 +234,7 @@
                 thanks: null,
                 admins: null,
                 options: null,
+                days: 0,
                 caretClass: 'fa-chevron-down',
                 caretClass2: 'fa-chevron-down',
                 caretClass3: 'fa-chevron-down',
@@ -241,6 +274,7 @@
                     this.mission = response.result.MISSION;
                     this.thanks = response.result.THANKS;
                     this.admins = response.result.ADMINS;
+                    this.days = response.result.DAYS;
                 }else{
                     alert(response.error);
                 }

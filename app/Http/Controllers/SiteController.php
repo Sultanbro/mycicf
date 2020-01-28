@@ -106,6 +106,7 @@ class SiteController extends Controller
 
             return response()->json($result)->withCallback($request->input('callback'));
         }
+        $days = (string)$response->MyDays ?? 0;
         $carier = $vacation = $admins = $sick = $thanks = $mission = null;
         if($success && $response->CARIER->row[0]->datebeg != 0)
         {
@@ -190,6 +191,7 @@ class SiteController extends Controller
             'SICK' => $sick,
             'THANKS' => $thanks,
             'MISSION' => $mission,
+            'DAYS' => $days
         ];
 
         $result = array(
