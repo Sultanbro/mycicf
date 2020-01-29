@@ -169,6 +169,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');
+        Route::post('/news-birthday', 'NewsController@birthday');
         Route::post('/getPosts', 'NewsController@getPosts');
         Route::post('/deletePost', 'NewsController@deletePost');
         Route::post('/setPinned', 'NewsController@setPinned');
