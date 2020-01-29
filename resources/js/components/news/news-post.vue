@@ -48,6 +48,11 @@
         </div>
        <!-- Header of the news post section -->
 
+        <div class="pl-2 pr-2" v-if="has_video">
+            <div class="news-block-image-contain">
+                <d-player :options="options"></d-player>
+            </div>
+        </div>
         <div class="pl-2 pr-2">
             <div class="news-block-image-contain">
                 <img :src="image" class="post-image" v-for="(image, index) in post.image.slice(0, 1)" @error="post.image.splice(index, 1)">
@@ -216,11 +221,18 @@
 
     Vue.directive('linkified', linkify);
 
+    import VueDPlayer from 'vue-dplayer'
+    import 'vue-dplayer/dist/vue-dplayer.css'
+
+
+
     export default {
         name: "news-post",
 
         data() {
             return {
+                options: {},
+                has_video: false,
                 isPinned: false,
                 bottomOfWindow: 0,
                 editMode: false,
@@ -250,11 +262,41 @@
         mounted() {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
+            if(this.post.videos.length>0){
+                this.options = {
+                    video: {
+                        url: this.post.videos[0]
+                    }
+                }
+                this.has_video=true;
+            }else{
+                this.options = {
+                    video: {
+                        url: null
+                    }
+                }
+                this.has_video=false;
+            }
         },
 
         updated() {
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
+            // if(this.post.videos.length>0){
+            //     this.options = {
+            //         video: {
+            //             url: this.post.videos[0]
+            //         }
+            //     }
+            //     this.has_video=true;
+            // }else{
+            //     this.options = {
+            //         video: {
+            //             url: null
+            //         }
+            //     }
+            //     this.has_video=false;
+            // }
         },
 
         methods: {
@@ -377,6 +419,9 @@
                     }
                 });
             },
+        },
+        components: {
+            'd-player': VueDPlayer
         }
     }
 </script>

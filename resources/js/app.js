@@ -122,7 +122,7 @@ window.onload = function(){
             },
         },
         component: {
-
+            'd-player': VueDPlayer
         }
     });
 

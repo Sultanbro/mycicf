@@ -28,6 +28,7 @@
     "v-tooltip": "^2.0.3",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
+    "vue-dplayer": "0.0.10",
     "vue-emoji-picker": "^1.0.1",
     "vue-google-charts": "^0.3.2",
     "vue-linkify": "^1.0.1",

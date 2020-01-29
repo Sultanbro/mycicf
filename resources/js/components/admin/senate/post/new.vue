@@ -5,15 +5,20 @@
             <textarea class="form-control" v-model="postText" id="postText"></textarea>
         </div>
         <div class="form-group offset-md-2 offset-lg-2 offset-0 col-md-8 col-lg-8 col-12 d-flex flex-row">
-            <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2 col-4">
+            <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2 col-3">
                 <i class="fas fa-image color-black file-icons"></i>
                 <label for="photo-upload" class="custom-file-upload">Фото</label>
                 <input type="file" id="photo-upload" @change="imageUpload" accept="image/*" multiple>
             </div>
-            <div class="icons-bg pt-1 pr-2 pl-2 pb-1 col-4 offset-2">
+            <div class="icons-bg pt-1 pr-2 pl-2 pb-1 col-3 offset-1">
                 <i class="fas fa-file-upload color-black file-icons"></i>
                 <label for="file-upload" class="custom-file-upload">Файл</label>
                 <input type="file" id="file-upload" @change="fileUpload" multiple>
+            </div>
+            <div class="icons-bg pt-1 pr-2 pl-2 pb-1 col-3 offset-1">
+                <i class="fas fa-play-circle color-black file-icons"></i>
+                <label for="video-upload" class="custom-file-upload">Видео</label>
+                <input type="file" id="video-upload" @change="videoUpload" accept="video/*">
             </div>
         </div>
         <div class="row offset-md-2 offset-lg-2 offset-0 col-md-8 col-lg-8 col-12">
@@ -39,6 +44,16 @@
                         <div class="p-2">{{document.name}}</div>
                     </div>
                     <button class="border-0 bg-transparent button-delete" @click="deleteFile(index)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div v-for="(document, index) in videos"
+                     class="d-flex justify-content-between bg-white pl-3 pr-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-play text-info fs-1_2"></i>
+                        <div class="p-2">{{document.name}}</div>
+                    </div>
+                    <button class="border-0 bg-transparent button-delete" @click="deleteVideo(index)">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -118,6 +133,8 @@
                     "application/vnd.rar",
                     "application/zip",
                 ],
+                videos: [],
+                videoMaxNumber: 1,
             }
         },
         methods : {
@@ -150,6 +167,9 @@
                 this.images.forEach(file => {
                     form.append('postImages[]', file, file.name);
                 });
+                this.videos.forEach(file => {
+                    form.append("postVideos[]", file, file.name);
+                });
                 if(this.poll){
                     form.append('question', this.question);
                     this.answers.forEach(answer => {
@@ -157,6 +177,27 @@
                     });
                 }
                 return form;
+            },
+            videoUpload(e) {
+                const videos = e.target.files;
+                const vm = this;
+
+                if(videos.length <= this.docMaxNumber) {
+                    Array.from(videos).forEach(video => {
+                        if(video.type.includes("video")) {
+                            vm.videos.push(video);
+                        }
+                        else {
+                            alert("Вы загрузили неверный тип документа");
+                        }
+                    })
+                }
+                else {
+                    alert(`Максимальное кол-во файлов: ${this.videoMaxNumber}`)
+                }
+            },
+            deleteVideo(index){
+                this.videos.splice(index,1);
             },
             imageUpload(e){
                 const documents = e.target.files;

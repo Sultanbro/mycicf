@@ -53,6 +53,13 @@ class SenateController extends Controller
                     Storage::disk('local')->put("public/post_files/$post->id/documents/$fileName", $content);
                 }
             }
+            if(isset($request->postVideos)) {
+                foreach($request->postVideos as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$post->id/videos/$fileName", $content);
+                }
+            }
             if($isPoll){
                 $poll = new Question();
                 $poll->question = $question;
@@ -91,6 +98,7 @@ class SenateController extends Controller
             'documents' => $post->getDocuments(),
             'youtube' => $post->getVideo(),
             'comments' => [],
+            'videos' => $post->getVideoUrl(),
         ];
         broadcast(new NewPost([
             'post' => $response,
