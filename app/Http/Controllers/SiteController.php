@@ -545,4 +545,25 @@ class SiteController extends Controller
         }
         return response()->json(['moderators' => $moderators]);
     }
+
+    public function getBirthdays(){
+        $birthdays = Branch::whereNotNull('birthday')
+            ->whereDay('birthday', '>', date('d', time()))
+            ->whereMonth('birthday', date('m', time()))
+            ->orWhereNotNull('birthday')
+            ->whereMonth('birthday', '>', date('m', time()))
+            ->orderByRaw('MONTH(birthday)')
+            ->orderByRaw('DAY(birthday)')
+            ->limit(10)
+            ->get();
+        $result = [];
+        foreach ($birthdays as $birthday){
+            array_push($result, [
+                "fullname"=> $birthday->fullname,
+                "ISN"=>$birthday->kias_id,
+                "birthday"=>date('d.m.Y', strtotime($birthday->birthday))
+            ]);
+        }
+        return response()->json(['birthdays' => $birthdays]);
+    }
 }

@@ -73,6 +73,11 @@ class Branches extends Command
         $model->has_child = $subject->Kids;
         $model->verified = 2;
         $model->duty = $subject->Duty;
+        if($subject->Birthday != "0"){
+            $model->birthday = date('Y-m-d H:i:s', strtotime($subject->Birthday));
+        }else{
+            $model->birthday = null;
+        }
         try{
             if($model->save()){
                 return true;
