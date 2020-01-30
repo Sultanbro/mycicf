@@ -92,6 +92,10 @@ Vue.component('colleague-info', require('./components/employee/colleague-info.vu
 
 Vue.component('image-viewer', require('./components/common/image-viewer.vue').default);
 
+Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
+
+Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
