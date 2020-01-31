@@ -52,8 +52,8 @@
         name: "operations-history",
         data() {
             return {
-                dateBeg: '2019-01-01',
-                dateEnd: '2019-12-01',
+                dateBeg: new Date().getFullYear()+'-01-01',
+                dateEnd: new Date().getFullYear()+'-12-31',
                 operations: [],
                 centcoins: null,
             }
