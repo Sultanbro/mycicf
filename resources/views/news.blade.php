@@ -46,7 +46,7 @@
             <post :isn="{{Auth::user()->ISN}}"></post>
         </div>
         <div class="col-md-2-sm-3-lg mt-3">
-            <news-birthday></news-birthday>
+            {{--<news-birthday></news-birthday>--}}
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>
