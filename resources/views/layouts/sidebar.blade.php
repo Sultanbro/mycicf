@@ -49,12 +49,14 @@
                     <span>Обучение</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
-                <li class="leftsidebar-icons">
-                    <img src="/images/centcoin-fa.png" style="width: 20px;">
-                    <span>Сенткоины</span>
-                </li>
-            </a>
+            @if(!preg_match("/Директор Департамента/i", Auth::user()->branch->duty))
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
+                    <li class="leftsidebar-icons">
+                        <img src="/images/centcoin-fa.png" style="width: 20px;">
+                        <span>Сенткоины</span>
+                    </li>
+                </a>
+            @endif
         </ul>
     </div>
 </div>
