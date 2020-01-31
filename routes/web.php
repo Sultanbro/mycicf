@@ -160,6 +160,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
         Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
         //CENTCOINS
+//        Route::group(['middleware' => 'centcoinExcepts'])
         Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
         Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
         Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
