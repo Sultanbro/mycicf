@@ -54,6 +54,8 @@ Vue.component('news-post', require('./components/news/news-post.vue').default);
 
 Vue.component('news-comment', require('./components/news/news-comment.vue').default);
 
+Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
+
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
@@ -89,6 +91,10 @@ Vue.component('colleagues-info', require('./components/colleagues/colleagues-inf
 Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
 
 Vue.component('image-viewer', require('./components/common/image-viewer.vue').default);
+
+Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
+
+Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
 
 window.onload = function(){
     var app = new Vue({

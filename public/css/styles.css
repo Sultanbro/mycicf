@@ -701,6 +701,12 @@ ul{
     overflow: hidden;
     height: 25px;
 }
+.visibility_hidden{
+	visibility: hidden;
+}
+.absolute-right-0{
+	right: 0;
+}
 .settings-icon-transform{
     transform: rotate(90deg);
 }
@@ -1496,6 +1502,9 @@ body {
 .main-data-chart-contains-size{
 	/*width: 50%;*/
 }
+.width-100-imp{
+	width: 100% !important;
+}
 .data-chart-pie{
 	width: 100% !important;
 }
@@ -1963,6 +1972,47 @@ textarea::-webkit-scrollbar-thumb {
 .relative{
 	position: relative;
 }
+.Birthday-line_height{
+	line-height: 0.8rem;
+}
+.Birthday-line_height-header{
+	line-height: 1.1rem;
+}
+.Birthday-margin-inner:not(:first-child){
+	padding: 0.5rem 0;
+}
+.Birthday-line_height{
+	line-height: 0.9rem;
+}
+.Birthday-line_height-header{
+	line-height: 1.2rem;
+}
+.Birthday-margin-inner:not(:first-child){
+	padding: 0.5rem 0;
+}
+@media (min-width: 1500px){
+	.col-md-2-sm-3-lg{
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 16.666667%;
+		flex: 0 0 16.666667%;
+		max-width: 16.666667%;
+	}
+}
+@media (max-width: 1499px){
+	.col-md-2-sm-3-lg{
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 25%;
+		flex: 0 0 25%;
+		max-width: 25%;
+	}
+}
+.hover-gray:hover{
+	color: gray;
+}
+.events-arrow-bg:hover{
+	/*transition: 0.3s ease-in;*/
+	background: rgba(0,0,0,.1);
+}
 
 .meanShare{
 	font-weight: bold;
@@ -1981,4 +2031,13 @@ textarea::-webkit-scrollbar-thumb {
 	font-weight: bold;
 	text-align: left;
 	background-color: #c2daf0d1;
+}
+.birthday-balls{
+	width: 40%;
+	bottom: -5%;
+	right: -20%;
+}
+.events-window-size{
+	max-width: 80%;
+	min-width: 70%;
 }

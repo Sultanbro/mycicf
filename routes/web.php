@@ -122,11 +122,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
     Route::get('getModerators', 'SiteController@getModerators');
+    Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
-        Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
+            Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
         //DOSSIER
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
@@ -168,6 +169,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');
+        Route::post('/news-birthday', 'NewsController@birthday');
         Route::post('/getPosts', 'NewsController@getPosts');
         Route::post('/deletePost', 'NewsController@deletePost');
         Route::post('/setPinned', 'NewsController@setPinned');
@@ -228,4 +230,3 @@ Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
-
