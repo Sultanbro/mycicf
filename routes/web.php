@@ -160,13 +160,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
         Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
         //CENTCOINS
-//        Route::group(['middleware' => 'centcoinExcepts'])
-        Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
-        Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
-        Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
-        Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-        Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
-        Route::post('/buyItem', 'CentcoinsController@buyItem');
+        Route::group(['middleware' => 'centcoinExcepts'], function () {
+            Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+            Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
+            Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+            Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+            Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
+            Route::post('/buyItem', 'CentcoinsController@buyItem');
+        });
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');
