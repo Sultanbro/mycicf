@@ -53,6 +53,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function branch(){
+        return $this->hasOne('App\Branch', 'kias_id', 'ISN');
+    }
+
     public function checkSession(){
         $kias = new Kias();
         $response = $kias->request('User_CicHelloSvc', []);
