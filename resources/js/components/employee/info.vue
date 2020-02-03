@@ -63,18 +63,18 @@
                         <tr class="header color-white">
                             <th scope="col">Вид</th>
                             <th scope="col" class="thead-border">Период</th>
-                            <th scope="col" class="thead-border">Период отпуска</th>
+                            <!--<th scope="col" class="thead-border">Период отпуска</th>-->
                             <th scope="col">Использованные дни</th>
-                            <th scope="col">Оставшиеся дни</th>
+                            <!--<th scope="col">Оставшиеся дни</th>-->
                         </tr>
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in vacation">
                             <td>{{info.Fullname}}</td>
                             <td class="table-td-border">{{info.Period}}</td>
-                            <td class="table-td-border">{{info.Date}}</td>
+                            <!--<td class="table-td-border">{{info.Date}}</td>-->
                             <td class="table-td-border">{{info.Duration}}</td>
-                            <td>{{info.Rest}}</td>
+                            <!--<td>{{info.Rest}}</td>-->
                         </tr>
                         </tbody>
                     </table>
