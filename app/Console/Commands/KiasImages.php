@@ -45,7 +45,7 @@ class KiasImages extends Command
         echo "Initialyzing KIAS\n";
         $kias->initSystem();
         echo "Kias initialized\nGetting all images\n";
-        $images = $kias->getEmplImagesByDate(date('d.m.Y', strtotime("-1 day",time() )));
+        $images = $kias->getEmplImagesByDate(date('d.m.Y', strtotime("-1 year",time() )));
         if ($images->error) {
             echo "Error : " . (string)$images->error . "\n";
         } else {
@@ -59,6 +59,7 @@ class KiasImages extends Command
                     $diff = time() - $start;
                     echo "\nFinished at : $diff";
                 }
+                dd($result->FILEDATA);
                 $imageData = base64_decode((string)$result->FILEDATA);
                 Storage::disk('local')->put("public/images/employee/$SubjISN.png", $imageData);
             }

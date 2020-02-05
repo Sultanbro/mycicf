@@ -14,7 +14,9 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Softon\LaravelFaceDetect\Facades\FaceDetect;
 
 class SiteController extends Controller
 {
@@ -565,5 +567,13 @@ class SiteController extends Controller
             ]);
         }
         return response()->json(['birthdays' => $result]);
+    }
+
+    public function cropImage(){
+//        $path = Storage::disk('local')->files("public/images/employee/");
+        $path = 'Ашабаева.jpg';
+        $face = FaceDetect::extract($path)->save('a.png');
+        dd($face);
+        dd($path[152]);
     }
 }

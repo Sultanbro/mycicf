@@ -230,5 +230,16 @@ Route::post('/coordination/notify', 'CoordinationController@sendNotify');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
-//Route::get('test', 'Admin\SiteController@getModelss');
+Route::get('test', 'SiteController@cropImage');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+
+Route::get('/ttt', function(){
+    $result = [];
+    foreach (Storage::disk('local')->files('public/temp') as $file){
+        $t = substr($file, 12);
+//        $t = substr($t, 0, -4);
+        echo "$t<br>";
+    }
+
+
+});

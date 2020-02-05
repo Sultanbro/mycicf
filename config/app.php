@@ -181,6 +181,7 @@ return [
         App\Providers\KiasServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        Softon\LaravelFaceDetect\FaceDetectServiceProvider::class,
     ],
 
     /*
@@ -233,6 +234,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'FaceDetect' => Softon\LaravelFaceDetect\Facades\FaceDetect::class,
     ],
 
 ];
