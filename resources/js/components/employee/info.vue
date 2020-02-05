@@ -72,9 +72,9 @@
                         <tr v-for="(info, index) in vacation">
                             <td>{{info.Fullname}}</td>
                             <td class="table-td-border">{{info.Period}}</td>
-                            <!--<td class="table-td-border">{{info.Date}}</td>-->
+                            <td class="table-td-border">{{info.Date}}</td>
                             <td class="table-td-border">{{info.Duration}}</td>
-                            <!--<td>{{info.Rest}}</td>-->
+                            <td>{{info.Rest}}</td>
                         </tr>
                         </tbody>
                     </table>
