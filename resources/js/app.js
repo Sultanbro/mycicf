@@ -96,6 +96,7 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 
 Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
 
+Vue.component('test', require('./components/test.vue').default);
 window.onload = function(){
     var app = new Vue({
         el: '#app',
