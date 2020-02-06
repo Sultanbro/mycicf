@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Branch;
+use App\Imports\UsersImport;
 use App\KolesaMarks;
 use App\KolesaModel;
 use App\KolesaPrices;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Softon\LaravelFaceDetect\Facades\FaceDetect;
 
 class SiteController extends Controller
@@ -575,5 +577,24 @@ class SiteController extends Controller
         $face = FaceDetect::extract($path)->save('a.png');
         dd($face);
         dd($path[152]);
+    }
+
+    public function convertImages()
+    {
+        $excel = Excel::toArray(new UsersImport(), '123.xlsx')[0];
+        unset($excel[0]);
+        foreach ($excel as $empl){
+            $fileName = $empl[0];
+            $userIsn = $empl[2];
+            $imagePath = "storage/temp/$fileName";
+            $savePath = "images/employeeTemp/$userIsn.png";
+            try{
+                Storage::disk('local')->delete("public/".$savePath);
+            }catch (\Exception $ex){
+                $a = 0;
+            }
+            FaceDetect::extract($imagePath)->save("storage/".$savePath);
+        }
+
     }
 }

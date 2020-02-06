@@ -233,13 +233,6 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 Route::get('test', 'SiteController@cropImage');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-Route::get('/ttt', function(){
-    $result = [];
-    foreach (Storage::disk('local')->files('public/temp') as $file){
-        $t = substr($file, 12);
-//        $t = substr($t, 0, -4);
-        echo "$t<br>";
-    }
+Route::get('/convertImages', 'SiteController@convertImages');
 
 
-});
