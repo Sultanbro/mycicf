@@ -63,9 +63,9 @@
                         <tr class="header color-white">
                             <th scope="col">Вид</th>
                             <th scope="col" class="thead-border">Период</th>
-                            <!--<th scope="col" class="thead-border">Период отпуска</th>-->
+                            <th scope="col" class="thead-border">Период отпуска</th>
                             <th scope="col">Использованные дни</th>
-                            <!--<th scope="col">Оставшиеся дни</th>-->
+                            <th scope="col">Оставшиеся дни</th>
                         </tr>
                         </thead>
                         <tbody class="date-color">
