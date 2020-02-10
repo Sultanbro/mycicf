@@ -16,6 +16,8 @@ import VueGoogleCharts from 'vue-google-charts'
 
 import {EmojiPickerPlugin} from 'vue-emoji-picker'
 
+import VTooltip from 'v-tooltip'
+
 Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
@@ -28,11 +30,13 @@ Vue.use(VueAxios, axios);
 
 Vue.use(TextareaAutosize);
 
+Vue.use(VTooltip);
+
 Vue.directive('linkified', linkify);
 
-Vue.component('login', require('./components/registration/login.vue').default);
+// Vue.component('login', require('./components/registration/login.vue').default);
 
-// Vue.component('treeselect', VueTreeselect.Treeselect);
+Vue.component('treeselect', VueTreeselect.Treeselect);
 
 Vue.component('simple-info', require('./components/employee/simple-info.vue').default);
 
@@ -49,6 +53,8 @@ Vue.component('post', require('./components/news/post.vue').default);
 Vue.component('news-post', require('./components/news/news-post.vue').default);
 
 Vue.component('news-comment', require('./components/news/news-comment.vue').default);
+
+Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
 
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
@@ -84,6 +90,13 @@ Vue.component('colleagues-info', require('./components/colleagues/colleagues-inf
 
 Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
 
+Vue.component('image-viewer', require('./components/common/image-viewer.vue').default);
+
+Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
+
+Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
+
+Vue.component('test', require('./components/test.vue').default);
 Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
 
 Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
@@ -124,7 +137,7 @@ window.onload = function(){
             },
         },
         component: {
-
+            'd-player': VueDPlayer
         }
     });
 

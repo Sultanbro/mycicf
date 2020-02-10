@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -95,6 +96,15 @@ class Post extends Model
         return null;
     }
 
+    public function getVideoUrl(){
+        $file = Storage::disk('local')->files("public/post_files/$this->id/videos");
+        $result = [];
+        foreach ($file as $key => $item){
+                array_push($result, "/storage".substr($item,6));
+        }
+        return $result;
+    }
+
     public function getTypeOfDocument($doc_name){
         $ext = explode('.', $doc_name);
         $ext = end($ext);
@@ -132,5 +142,10 @@ class Post extends Model
             default :
                 return 'fa-file-o';
         }
+    }
+
+    public function save(array $options = []){
+        parent::save();
+        (new NotificationController())->sendNewPostNotify($this);
     }
 }

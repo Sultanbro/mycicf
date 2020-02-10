@@ -74,9 +74,13 @@
                                 <th scope="col">Оценка</th>
                             </tr>
                             <tr v-for="rating in ratings">
-                                <td>{{rating.criteria}}</td>
+                                <td><span v-tooltip.top-center="rating.tooltip">{{rating.criteria}}</span></td>
                                 <td>{{rating.mark}}</td>
                                 <td>{{rating.assessment}}</td>
+                            </tr>
+                            <tr class="meanShare">
+                                <td colspan="2">Итого</td>
+                                <td>{{meanShare}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -118,7 +122,7 @@
                 deptName: null,
                 dutyName: null,
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 6).toJSON().slice(0, 7),
-
+                meanShare : null,
                 fourthChartData: null,
 
                 fourthChartOptions: {
@@ -156,7 +160,8 @@
                         this.emplRate = response.data.emplRate;
                         this.category = response.data.category;
                         this.deptName = response.data.deptName;
-                        this.dutyName = response.data.dutyName
+                        this.dutyName = response.data.dutyName;
+                        this.meanShare = response.data.meanShare;
                     }
                 }).catch(error => {
                     alert(error);

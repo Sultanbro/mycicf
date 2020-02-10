@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
-            <img src="/images/avatar.png" class="image" v-if="fakeImage">
+            <img src="/images/avatar.png" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
@@ -15,19 +15,19 @@
                 <span><strong>{{duty}}</strong></span>
             </div>
             <div class="left-menu-fonts" v-if="rating !== ''">
-                <span><strong>Рейтинг: &nbsp; </strong><span>{{rating}}</span></span>
+                <span><strong><i class="far color-blue fa-star mr2"></i>&nbsp;</strong><span>{{rating}}</span></span>
             </div>
-            <div class="left-menu-fonts">
-                <span><strong>Дата рождения: &nbsp; </strong><span>{{birthday}}</span></span>
+            <div class="left-menu-fonts" v-if="birthday !== ''">
+                <span><strong><i class="fas color-blue fa-gift"></i>&nbsp;&nbsp;</strong><span>Родился(-ась) {{birthday}}</span></span>
             </div>
-            <div class="left-menu-fonts">
-                <span><strong>Место рождения: &nbsp; </strong><span>{{place_of_birth}}</span></span>
+            <div class="left-menu-fonts" v-if="place_of_birth !== ''">
+                <span><strong><i class="fas color-blue fa-map-marker-alt ml2 mr2"></i>&nbsp;&nbsp;</strong><span>Из {{place_of_birth}}</span></span>
             </div>
-            <div class="left-menu-fonts">
-                <span><strong>Семейное положение: &nbsp; </strong><span>{{married}}</span></span>
+            <div class="left-menu-fonts" v-if="married !== ''">
+                <span><strong><i class="fas color-blue fa-heart"></i>&nbsp;&nbsp;</strong><span>{{married}}</span></span>
             </div>
-            <div class="left-menu-fonts">
-                <span><strong>Образование: &nbsp; </strong><span>{{education}}</span></span>
+            <div class="left-menu-fonts" v-if="education !== ''">
+                <span><strong><i class="fas color-blue fa-graduation-cap"></i>&nbsp;</strong><span>Учился(-ась) {{education}}</span></span>
             </div>
         </div>
         <hr class="left-menu-border mb-0">
@@ -41,6 +41,7 @@
             return {
                 caretClass: 'fa-chevron-down',
                 fullname: '',
+                imageCounter: 1,
                 duty: '',
                 birthday: '',
                 place_of_birth: '',
@@ -73,10 +74,12 @@
                     this.married = information.Married;
                     this.education = information.Education;
                     this.rating = information.Rating;
+                    this.place_of_birth = information.City;
                 }else{
                     alert(response.error);
                 }
             },
+
             reverseCaret: function () {
                 this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
             },

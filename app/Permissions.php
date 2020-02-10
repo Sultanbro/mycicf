@@ -27,6 +27,7 @@ class Permissions extends Model
     const ROLE_OTDELKADROV = 3;
     const ROLE_WND = 4;
     const ROLE_MODERATOR = 5;
+    const ROLE_SENATE = 6;
 
     public function __construct(array $attributes = [])
     {

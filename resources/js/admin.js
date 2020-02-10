@@ -43,7 +43,7 @@ Vue.component('menu-list', require('./components/admin/documentation/menu-list.v
 Vue.component('svg-list', require('./components/admin/documentation/svg-list.vue').default);
 Vue.component('word-list', require('./components/admin/documentation/word-list.vue').default);
 
-
+Vue.component('post-new', require('./components/admin/senate/post/new.vue').default);
 
 window.onload = function(){
     var app = new Vue({

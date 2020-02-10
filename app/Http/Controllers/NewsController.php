@@ -29,8 +29,8 @@ class NewsController extends Controller
         }
 
 
-        if($request->postText === null && isset($request->postFiles) && sizeof($request->postFiles) === 0){
-            $error = 'Заполните поле или добавьте фотографию';
+        if($request->postText === null && isset($request->postFiles) && sizeof($request->postFiles) === 0 && isset($request->postVideos) && sizeof($request->postVideos) === 0 && isset($request->postDocuments) && sizeof($request->postDocuments) === 0){
+            $error = 'Заполните поле или добавьте вложения';
             $success = false;
             return [
                 'error' => $error,
@@ -58,6 +58,13 @@ class NewsController extends Controller
                     Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
                 }
             }
+            if(isset($request->postVideos)) {
+                foreach ($request->postVideos as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/videos/$fileName", $content);
+                }
+            }
 
         }catch(\Exception $e) {
             $error = $e->getMessage();
@@ -82,6 +89,7 @@ class NewsController extends Controller
             'image' => $new_post->getImage(),
             'documents' => $new_post->getDocuments(),
             'youtube' => $new_post->getVideo(),
+            'videos' => $new_post->getVideoUrl(),
             'comments' => [],
         ];
 
@@ -128,7 +136,7 @@ class NewsController extends Controller
                 'image' => $item->getImage(),
                 'documents' => $item->getDocuments(),
                 'youtube' => $item->getVideo(),
-
+                'videos' => $item->getVideoUrl(),
             ]);
         }
 
@@ -271,6 +279,11 @@ class NewsController extends Controller
         return $response;
     }
 
+    public function birthday()
+    {
+        return view('news-birthday');
+    }
+
     public function editComment(Request $request) {
         $success = false;
 
@@ -296,8 +309,6 @@ class NewsController extends Controller
 
         return $response;
     }
-
-
 
     public function getView() {
         return view('news');

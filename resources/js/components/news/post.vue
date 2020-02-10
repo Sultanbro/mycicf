@@ -33,7 +33,7 @@
 
             <div class="d-flex w-100 horizontal-line"></div>
 
-            <div class="mt-2" v-if="files.length !== 0 || documents.length !== 0">
+            <div class="mt-2" v-if="files.length !== 0 || documents.length !== 0 || videos.length !== 0">
                 <div class="d-flex">
                     <div class="d-flex ml-2 mr-2 flex-wrap">
                         <div v-for="(image, index) in images"
@@ -78,6 +78,16 @@
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
+                        <div v-for="(video, index) in videos"
+                             class="d-flex justify-content-between bg-white pl-3 pr-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-play color-blue fs-1_2"></i>
+                                <div class="p-2">{{video.name}}</div>
+                            </div>
+                            <button class="border-0 bg-transparent button-delete" @click="deleteVideo(index)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,11 +100,11 @@
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
                         <input type="file" id="photo-upload" @change="imageUpload" accept="image/*" multiple>
                     </div>
-                    <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
-                        <!--<i class="fas fa-play-circle color-black file-icons"></i>-->
-                        <!--<label for="video-upload" class="custom-file-upload">Видео</label>-->
-                        <!--<input type="file" id="video-upload" accept="video/*" multiple>-->
-                    <!--</div>-->
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                        <i class="fas fa-play-circle color-black file-icons"></i>
+                        <label for="video-upload" class="custom-file-upload">Видео</label>
+                        <input type="file" id="video-upload" @change="videoUpload" accept="video/*">
+                    </div>
                     <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
                         <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
                         <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
@@ -106,7 +116,7 @@
                         <input type="file" id="file-upload" @change="fileUpload" multiple>
                     </div>
                     <transition name="transition-opacity">
-                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0 || documents.length > 0">
+                        <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0 || documents.length > 0 || videos.length > 0">
                             <button
                                     @click="addPost"
                                     class="pt-1 pb-1 pr-2 pl-2 common-btn">Опубликовать</button>
@@ -167,6 +177,7 @@
                 files: [],
                 images : [],
                 documents: [],
+                videos: [],
                 lastIndex : null,
                 postText: "",
                 posts: [],
@@ -187,8 +198,9 @@
                 postIds : [],
                 imgMaxSize: 2 * 1024 * 1024,
                 docMaxSize: 10 * 1024 * 1024,
-                imgMaxNumber: 1,
+                imgMaxNumber: 10,
                 docMaxNumber: 5,
+                videoMaxNumber: 1,
                 moderators: [],
                 showToTopBtn: false,
             }
@@ -216,6 +228,24 @@
                     })
                     .catch()
             },
+            videoUpload(e) {
+                const videos = e.target.files;
+                const vm = this;
+
+                if(videos.length <= this.docMaxNumber) {
+                    Array.from(videos).forEach(video => {
+                        if(video.type.includes("video")) {
+                            vm.videos.push(video);
+                        }
+                        else {
+                            alert("Вы загрузили неверный тип документа");
+                        }
+                    })
+                }
+                else {
+                    alert(`Максимальное кол-во файлов: ${this.videoMaxNumber}`)
+                }
+            },
             fileUpload(e) {
                 const documents = e.target.files;
                 const vm = this;
@@ -235,7 +265,7 @@
                     })
                 }
                 else {
-                    alert("Максимальное кол-во файлов: 5")
+                    alert(`Максимальное кол-во файлов: ${this.docMaxNumber}`)
                 }
             },
 
@@ -243,14 +273,16 @@
                 const vm = this;
                 vm.documents.splice(index, 1);
             },
-
+            deleteVideo(index){
+                this.videos.splice(index,1);
+            },
             checkExtension(type, array) {
                 if(array.includes(type)) return true
                 else return false;
             },
 
             imageUpload(e) {
-                if(e.target.files.length <= this.docMaxNumber) {
+                if(e.target.files.length <= this.imgMaxNumber) {
                     const files = e.target.files;
                     const vm = this;
                     Array.from(files).forEach(file => {
@@ -300,7 +332,9 @@
                 this.files.forEach(file => {
                     formData.append("postFiles[]", file, file.name);
                 });
-
+                this.videos.forEach(file => {
+                    formData.append("postVideos[]", file, file.name);
+                });
                 formData.append("postText", this.postText);
                 formData.append("isn", this.isn);
 

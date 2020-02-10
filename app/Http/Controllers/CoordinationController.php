@@ -24,7 +24,7 @@ class CoordinationController extends Controller
             $success = false;
             $error = (string)$response->text;
         }
-        $AC = $SP = $SZ = $KV = $OL = $AD = $RV = $other = null;
+        $AC = $SP = $SZ = $KV = $OL = $AD = $RV = $VC = $other = null;
         if($response->AC->row[0]->docdate != 0){
             $AC = array();
             foreach ($response->AC->row as $row) {
@@ -120,6 +120,20 @@ class CoordinationController extends Controller
                 ]);
             }
         }
+        //1256401
+        if($response->BK->row[0]->docdate != 0){
+            $VC = array();
+            foreach ($response->BK->row as $row) {
+                array_push($VC, [
+                    'ISN' => (integer)$row->ISN,
+                    'type' => (string)$row->type,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                ]);
+            }
+        }
 
         if($response->other->row[0]->docdate != 0){
             $other = array();
@@ -146,6 +160,7 @@ class CoordinationController extends Controller
                 'OL' => $OL,
                 'AD' => $AD,
                 'RV' => $RV,
+                'VC' => $VC,
                 'other' => $other
             )
         ];
@@ -214,19 +229,21 @@ class CoordinationController extends Controller
                     $LimitISN = $value;
                 }
                 elseif($key == "KV"){
-                    foreach ($value->row as $kvAttrs) {
-                        foreach ($kvAttrs as $attrKey => $attrValue){
-                            if (in_array($attrKey, array_keys($this->getKVAttributes())) && (string)$attrValue !== "0") {
-                                array_push($attributes, [
-                                    'Name' => (string)$this->getKVAttributes()[$attrKey],
-                                    'Value' => (string)$attrValue,
-                                ]);
+                    if((string)$response->DocClass == "787161") {
+                        foreach ($value->row as $kvAttrs) {
+                            foreach ($kvAttrs as $attrKey => $attrValue) {
+                                if (in_array($attrKey, array_keys($this->getKVAttributes())) && (string)$attrValue !== "0") {
+                                    array_push($attributes, [
+                                        'Name' => (string)$this->getKVAttributes()[$attrKey],
+                                        'Value' => (string)$attrValue,
+                                    ]);
+                                }
                             }
+                            array_push($attributes, [
+                                'Name' => 'Остальные категории',
+                                'Value' => 0,
+                            ]);
                         }
-                        array_push($attributes, [
-                            'Name' => 'Остальные категории',
-                            'Value' => 0,
-                        ]);
                     }
                 }
             }
@@ -249,7 +266,7 @@ class CoordinationController extends Controller
         $error = '';
         $kias = new Kias();
         $kias->initSystem();
-        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution, $request->Remark);
+        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution, $request->Remark, $request->Resolution);
         if($response->error){
             $success = false;
             $error .= $response->error->text;
@@ -359,6 +376,7 @@ class CoordinationController extends Controller
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://bots.n9.kz/notification';
+        (new NotificationController())->sendCoordinationNotify($users);
         foreach ($users as $user){
             $res = $client->request('POST', $url, [
                 'form_params' => [

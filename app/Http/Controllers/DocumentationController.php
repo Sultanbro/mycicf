@@ -28,11 +28,11 @@ class DocumentationController extends Controller
         $table->url = $request->url;
         foreach ($this->exceptions as $except){
             if(strpos($table->url,$except)){
-                throw new \Exception('Использование символов ".";",";":";"/" и пробела запрещено', 419);
+                abort(419, 'Использование символов ".";",";":";"/" и пробела запрещено');
             }
         }
         if(!$table->checkUrl()){
-            throw new \Exception('Такой URL уже существует', '419');
+            abort(419, 'Такой URL уже существует');
         }
         //TODO substr if 1 char is "/"
         //TODO if string has / raise error

@@ -202,6 +202,35 @@
                 </div>
             </div>
         </div>
+        <div class="ml-2 mr-2" v-show="VC !== null">
+            <div class="border-radius15 bg-white mt-2">
+                <div class="ml-3 pt-2 pb-2">
+                    <strong>Согласование выплатного комитета</strong>
+                </div>
+                <div>
+                    <table class="dosier-table table text-align-center">
+                        <thead>
+                        <tr class="header color-white">
+                            <th scope="col">Номер документа</th>
+                            <th scope="col" class="thead-border">Тип документа</th>
+                            <th scope="col" class="thead-border">Инициатор</th>
+                            <th scope="col" class="thead-border">Подразделение</th>
+                            <th scope="col">Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody class="date-color">
+                        <tr v-for="(info, index) in VC" :key="info.isn">
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" class="thead-border">{{info.type}}</td>
+                            <td scope="col" class="thead-border">{{info.curator}}</td>
+                            <td scope="col" class="thead-border">{{info.DeptName}}</td>
+                            <td scope="col">{{info.docdate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <div class="ml-2 mr-2" v-show="other !== null">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2">
@@ -257,6 +286,7 @@
                 OL: null,
                 AD: null,
                 RV: null,
+                VC: null,
                 other: null,
                 none: false,
                 coordination: {},
@@ -268,6 +298,10 @@
         },
         props: {
             isn: Number,
+            isDirector: {
+                type : Boolean,
+                default : false,
+            }
         },
         methods: {
             getTables: function(){
@@ -285,6 +319,7 @@
                     this.OL = response.result.OL;
                     this.AD = response.result.AD;
                     this.RV = response.result.RV;
+                    this.VC = response.result.VC;
                     this.other = response.result.other;
                 }else{
                     alert(response.error);

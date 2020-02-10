@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Session;
  */
 class User extends Authenticatable
 {
+    const SENATE_ISN = 999999999;
+    const DIRECTOR_LABEL = "Председатель Правления";
     use Notifiable;
 
     /**
@@ -52,6 +54,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function branch(){
+        return $this->hasOne('App\Branch', 'kias_id', 'ISN');
+    }
+
     public function checkSession(){
         $kias = new Kias();
         $response = $kias->request('User_CicHelloSvc', []);
@@ -75,7 +81,14 @@ class User extends Authenticatable
         return true;
     }
 
+    public static function checkIsDirector(){
+        return Auth::user()->branch->duty == self::DIRECTOR_LABEL ? 'true' : 'false';
+    }
+
     public function getFullName($user_isn){
+        if($user_isn === User::SENATE_ISN){
+            return 'Сенат';
+        }
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
     }
@@ -85,10 +98,11 @@ class User extends Authenticatable
         $users_data = [
             'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
             'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
-            'Birthday' => (string)$response->Birthday == "0" ? 'Не указано' : (string)$response->Birthday,
-            'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
-            'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
+            'Birthday' => (string)$response->Birthday == "0" ? '' : (string)$response->Birthday,
+            'Married' => (string)$response->Married == "0" ? '' : (string)$response->Married,
+            'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
         ];
         return $users_data;
     }
@@ -109,6 +123,10 @@ class User extends Authenticatable
         return (new Permissions())->checkUser([Permissions::ROLE_WND]);
     }
 
+    public static function isSenateAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_SENATE]);
+    }
+
     public static function getMotivationDepartments(){
         return [
             "1445780", "1445781", "1445783", "1445783", "4100260",
@@ -121,6 +139,19 @@ class User extends Authenticatable
             "1445789", "1445790", "1445791", "1445792", "1445793",
             "1445824", "1445826", "3492324", "3492327", "4380822",
             "3994433", "3994439", "3436136",
+
+
+            "1445780", "1445781", "1445783", "1445783", "4100260",
+            "4100283", "4100326", "4100328", "4100332", "4100334",
+            "3629955", "3991836", "3991842", "1445786", "2000",
+            "1445735", "1445814", "1445818", "1445820", "1445821",
+            "1445822", "1445823", "1445825", "1445827", "1445828",
+            "1445833", "1445834", "1445797", "1445798", "1445799",
+            "1445801", "1445802", "1445805", "1497575", "3367227",
+            "3436143", "1445789", "1445790", "1445791", "1445792",
+            "1445793", "1445824", "1445826", "3492324", "3492327",
+            "4380822", "3994433", "3994439", "3436136"
+
         ];
     }
 
@@ -146,5 +177,20 @@ class User extends Authenticatable
             }
         }
         return $result;
+    }
+
+    public static function getCentcoinExcepts(){
+        return array(
+            'Председатель Правления',
+            'Заместитель Председателя Правления по финансам',
+            'Заместитель Председателя Правления',
+            'Советник Председателя Правления',
+            'Управляющий директор - член Правления',
+            'Управляющий Директор',
+            'Главный Бухгалтер',
+            'Комплаенс-Контролер',
+            'Риск-Менеджер',
+            'Директор Департамента',
+        );
     }
 }

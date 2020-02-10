@@ -14,6 +14,8 @@
  * ADMIN PANEL
  * add local url to .env BACKEND_DOMAIN
  */
+Route::get('/sendNotification', 'NotificationController@sendNotify');
+
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/','Admin\SiteController@showLoginForm');
     Route::post('/login','Admin\SiteController@checkLogin');
@@ -103,6 +105,12 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('wnd/pdf', 'Admin\DocumentationController@loadPdf')->name('wnd.pdf');
             Route::post('wnd/save_pdf', 'Admin\DocumentationController@savePdf');
         });
+
+        Route::group(['middleware' => 'senateAdmin'], function (){
+            Route::get('senate/post/new', 'Admin\SenateController@newPost')->name('senate.post.new');
+            Route::post('senate/new/post', 'Admin\SenateController@savePostData');
+
+        });
     });
 });
 
@@ -114,11 +122,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
     Route::get('getModerators', 'SiteController@getModerators');
+    Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
-        Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
+            Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
         Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         //DOSSIER
@@ -154,15 +163,18 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
         Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
         //CENTCOINS
-        Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
-        Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
-        Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
-        Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-        Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
-        Route::post('/buyItem', 'CentcoinsController@buyItem');
+        Route::group(['middleware' => 'centcoinExcepts'], function () {
+            Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+            Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
+            Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+            Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+            Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
+            Route::post('/buyItem', 'CentcoinsController@buyItem');
+        });
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');
+        Route::post('/news-birthday', 'NewsController@birthday');
         Route::post('/getPosts', 'NewsController@getPosts');
         Route::post('/deletePost', 'NewsController@deletePost');
         Route::post('/setPinned', 'NewsController@setPinned');
@@ -209,6 +221,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::get('/motivation', 'MotivationController@motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
+
+        Route::post('/setToken', 'NotificationController@setToken');
     });
 });
 
@@ -222,4 +236,6 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-
+Route::get('test', function (){
+    return view('test');
+});
