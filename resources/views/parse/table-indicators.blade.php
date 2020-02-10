@@ -24,6 +24,11 @@ use App\Http\Controllers\ParseController;
         <!-- include vue-treeselect & its styles. you can change the version tag to better suit your needs. -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+        <!-- include vue-treeselect & its styles. you can change the version tag to better suit your needs. -->
+        <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
+
+
         <script src="{{asset('js/app.js')}}"></script>
     </head>
     <body>
