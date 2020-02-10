@@ -65,7 +65,10 @@
                                                     </div>
                                                     <span class="ml-2">Инициатор</span>
                                                 </div>
-                                                <div class="pt-2 pb-2">
+                                                <div class="pt-2 pb-2" v-if="coordination.DocClass === '1010031'">
+                                                    <span>{{coordination.SubjDept}} {{coordination.SubjName}}</span>
+                                                </div>
+                                                <div class="pt-2 pb-2" v-else>
                                                     <span>{{coordination.Curator}}</span>
                                                 </div>
                                             </div>
@@ -86,6 +89,10 @@
                                             <tr v-for="attribute in coordination.Attributes">
                                                 <td>{{attribute.Name}}</td>
                                                 <td>{{attribute.Value}}</td>
+                                            </tr>
+                                            <tr v-if="coordination.DocClass === '1010031'">
+                                                <td>Куратор</td>
+                                                <td>{{coordination.Curator}}</td>
                                             </tr>
                                             </tbody>
                                         </table>

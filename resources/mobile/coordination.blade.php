@@ -46,7 +46,8 @@
     @include('layouts.header')
     <main class="bg-white">
         <coordination
-            :isn = {{auth()->user()->ISN}}></coordination>
+            :isn = "{{auth()->user()->ISN}}"
+            :is-director="{{\App\User::checkIsDirector()}}" ></coordination>
     </main>
 </div>
 </body>

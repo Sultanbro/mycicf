@@ -109,6 +109,19 @@
                         </div>
                         <div class="matching-note-border">
                             <div>
+
+                                <div v-if="coordination.DocClass === '804911' && checkIsDir()">
+                                    <div class="ml-4 mr-4 mt-4">
+                                        <span>Резолюция председателя :</span>
+                                        <select class="custom-select w-25" v-model="resolution">
+                                            <option value="0">Не выбрано</option>
+                                            <option value="815971">В приказ</option>
+                                            <option value="815981">Вынести вопрос на Совет директоров</option>
+                                            <option value="815991">Вынести вопрос в правление</option>
+                                        </select>
+
+                                    </div>
+                                </div>
                                 <div>
                                     <div class="ml-4 mr-4 mt-4">
                                         <textarea class="resize modal-textarea-comment-solid width100"
@@ -219,7 +232,8 @@
             return {
                 Remark: "",
                 longText: "",
-                longTitle: ""
+                longTitle: "",
+                resolution: "0",
             }
         },
         props: {
@@ -234,7 +248,8 @@
                         DocISN: this.coordination.ISN,
                         ISN: this.isn,
                         Solution: Solution,
-                        Remark: this.Remark
+                        Remark: this.Remark,
+                        Resolution : this.resolution
                     }).then((response) => {
                         if (!response.data.success) {
                             alert(response.data.error);
