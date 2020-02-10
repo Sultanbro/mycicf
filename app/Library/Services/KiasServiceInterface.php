@@ -70,7 +70,7 @@ interface KiasServiceInterface
      * @param $Solution
      * @return mixed
      */
-    public function setCoordination($DocISN, $EmplISN, $Solution, $Remark);
+    public function setCoordination($DocISN, $EmplISN, $Solution, $Remark, $Resolution);
 
     /**
      * Получение списка прикреплении

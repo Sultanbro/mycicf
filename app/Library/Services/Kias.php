@@ -227,13 +227,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function setCoordination($DocISN, $EmplISN, $Solution, $Remark)
+    public function setCoordination($DocISN, $EmplISN, $Solution, $Remark, $Resolution)
     {
         return $this->request('User_CicSetCoordinationList', [
             'DocISN' => $DocISN,
             'EmplISN' => $EmplISN,
             'Solution' => $Solution,
-            'Remark' => $Remark
+            'Remark' => $Remark,
+            'Resolution' => $Resolution == "0" ? "" : $Resolution
         ]);
     }
 

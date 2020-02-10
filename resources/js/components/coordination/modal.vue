@@ -1,6 +1,7 @@
 <template>
     <div class="">
-        <div class="modal fade bd-example-modal-lg" id="test" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg" id="test" tabindex="-1" role="dialog"
+             aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content products-margin modal-lg-custom modal-custom-border-top">
                     <div>
@@ -8,7 +9,8 @@
                             <div class="bg-blue-standart modal-custom-border-top">
                                 <div class="border-bottom-white">
                                     <div class="pl-5 pt-4 pb-4 pr-5">
-                                        <div @click="close" class="color-white-standart vertical-middle pt-3 pb-3 inline pointer">
+                                        <div @click="close"
+                                             class="color-white-standart vertical-middle pt-3 pb-3 inline pointer">
                                             <i class="fas fa-chevron-circle-left"></i>
                                             <span class="pl-1">НАЗАД</span>
                                         </div>
@@ -81,21 +83,22 @@
                                     <div class="table-responsive-sm">
                                         <table class="table table-bordered table-striped">
                                             <tbody>
-                                                <tr v-for="attribute in coordination.Attributes">
-                                                    <td>{{attribute.Name}}</td>
-                                                    <td>{{attribute.Value}}</td>
-                                                </tr>
+                                            <tr v-for="attribute in coordination.Attributes">
+                                                <td>{{attribute.Name}}</td>
+                                                <td>{{attribute.Value}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 <!--<div class="flex-row" v-show="coordination.DocClass === '883011'">-->
-                                    <!--<div class="bg-blue-standart pl-4 pr-4 pt-2 pb-2">-->
-                                        <!--<span class="color-white" >Повестка АС по вопросу</span>-->
-                                    <!--</div>-->
+                                <!--<div class="bg-blue-standart pl-4 pr-4 pt-2 pb-2">-->
+                                <!--<span class="color-white" >Повестка АС по вопросу</span>-->
+                                <!--</div>-->
                                 <!--</div>-->
                                 <div class="mt-4">
-                                    <textarea name="comment-modal" rows="3" v-model="coordination.Remark" class="resize modal-textarea-comment width100" disabled></textarea>
+                                    <textarea name="comment-modal" rows="3" v-model="coordination.Remark"
+                                              class="resize modal-textarea-comment width100" disabled></textarea>
                                 </div>
                             </div>
                         </div>
@@ -112,18 +115,21 @@
                         <div>
                             <div>
                                 <div class="pl-5 pt-4 pb-4 pr-5 flex-row flex-wrap jc-sb">
-                                    <div v-if="coordination.Limit !== null" class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
+                                    <div v-if="coordination.Limit !== null"
+                                         class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
                                         <div class="attachment-bg flex-row vertical-middle ">
                                             <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
                                                 <i class="fas fa-paperclip rotate-45"></i>
                                             </div>
                                             <div class="pl-5 pr-5 text-dec-underline pointer pt-2 pb-2">
-                                                <a :href="`/getPrintableDocument/${coordination.Limit}/3015/3`" target="_blank">Изменение лимитов на подписание ДС</a>
+                                                <a :href="`/getPrintableDocument/${coordination.Limit}/3015/3`"
+                                                   target="_blank">Изменение лимитов на подписание ДС</a>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div v-for="attachment in attachments" class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
+                                    <div v-for="attachment in attachments"
+                                         class="col-md-4 col-lg-4 flex-row vertical-middle mt-3">
                                         <div class="attachment-bg flex-row vertical-middle ">
                                             <div class="attachment-border pt-2 pr-4 pb-2 pl-4">
                                                 <i class="fas fa-paperclip rotate-45"></i>
@@ -148,22 +154,42 @@
                         <div>
                             <div>
                                 <div>
+                                    <div class="pl-5 pt-4 pb-4 pr-5 "
+                                        v-if="coordination.DocClass === '804911' && checkIsDir()">
+                                        <span>Резолюция председателя :</span>
+                                        <br>
+
+                                        <select class="custom-select w-25" v-model="resolution">
+                                            <option value="0">Не выбрано</option>
+                                            <option value="815971">В приказ</option>
+                                            <option value="815981">Вынести вопрос на Совет директоров</option>
+                                            <option value="815991">Вынести вопрос в правление</option>
+                                        </select>
+                                    </div>
                                     <div class="pl-5 pt-4 pb-4 pr-5">
-                                        <textarea rows="4" v-model="Remark" class="resize modal-note width100"></textarea>
+                                        <textarea rows="4" v-model="Remark"
+                                                  class="resize modal-note width100"></textarea>
                                     </div>
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
-                                            <div title="Согласовать" class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(1)">
+                                            <div title="Согласовать"
+                                                 class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
+                                                 @click="sendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4 pointer">
-                                            <div title="Отказать" class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1" @click="sendSolution(0)">
+                                            <div title="Отказать"
+                                                 class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
+                                                 @click="sendSolution(0)">
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
-                                        <div class="flex-row pl-4 pb-4 pr-4 pointer" v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401"'>
-                                            <div title="Воздержаться" class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"  @click="sendSolution(2)">
+                                        <div class="flex-row pl-4 pb-4 pr-4 pointer"
+                                             v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401"'>
+                                            <div title="Воздержаться"
+                                                 class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"
+                                                 @click="sendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
                                         </div>
@@ -174,30 +200,34 @@
                                         <div class="table-responsive-sm">
                                             <table class="table table-bordered table-striped matching-table">
                                                 <thead>
-                                                    <tr>
-                                                        <td>ФИО</td>
-                                                        <td>Виза</td>
-                                                        <td>Примечание</td>
-                                                        <td>Подразделение</td>
-                                                        <td>Дата</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>ФИО</td>
+                                                    <td>Виза</td>
+                                                    <td>Примечание</td>
+                                                    <td>Подразделение</td>
+                                                    <td>Дата</td>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="none">
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr v-for="users in coordination.Coordinations">
-                                                        <td>{{users.FullName}}</td>
-                                                        <td>
-                                                            <i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>
-                                                            <i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>
-                                                            <i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>
-                                                            <i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>
-                                                        </td>
-                                                        <td>{{users.Remark}}</td>
-                                                        <td>{{users.Dept}}</td>
-                                                        <td>{{users.Date}}</td>
-                                                    </tr>
+                                                <tr class="none">
+                                                    <td></td>
+                                                </tr>
+                                                <tr v-for="users in coordination.Coordinations">
+                                                    <td>{{users.FullName}}</td>
+                                                    <td>
+                                                        <i v-if="users.Solution === '-1'"
+                                                           class="far fa-question-circle blue-button"></i>
+                                                        <i v-if="users.Solution === '0'"
+                                                           class="far fa-times-circle red-button"></i>
+                                                        <i v-if="users.Solution === '1'"
+                                                           class="far fa-check-circle green-button"></i>
+                                                        <i v-if="users.Solution === '2'"
+                                                           class="far fa-dot-circle yellow-button"></i>
+                                                    </td>
+                                                    <td>{{users.Remark}}</td>
+                                                    <td>{{users.Dept}}</td>
+                                                    <td>{{users.Date}}</td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -218,27 +248,37 @@
         data() {
             return {
                 Remark: "",
+                resolution: "0",
             }
         },
         props: {
-            coordination : Object,
-            isn : Number,
-            attachments : Array || Object,
+            coordination: Object,
+            isn: Number,
+            attachments: Array || Object,
         },
         methods: {
             sendSolution: function (Solution) {
-                if(confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")){
-                    this.axios.post("/setCoordination", {DocISN: this.coordination.ISN, ISN : this.isn, Solution: Solution, Remark: this.Remark}).then((response) => {
-                        if(!response.data.success){
+                if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                    this.axios.post("/setCoordination", {
+                        DocISN: this.coordination.ISN,
+                        ISN: this.isn,
+                        Solution: Solution,
+                        Remark: this.Remark,
+                        Resolution : this.resolution
+                    }).then((response) => {
+                        if (!response.data.success) {
                             alert(response.data.error);
-                        }else{
+                        } else {
                             location.reload();
                         }
                     });
                 }
             },
-            close () {
+            close() {
                 this.$parent.$refs.modalButton.click()
+            },
+            checkIsDir(){
+                return this.$parent.isDirector;
             }
         },
     }

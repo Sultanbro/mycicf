@@ -266,7 +266,7 @@ class CoordinationController extends Controller
         $error = '';
         $kias = new Kias();
         $kias->initSystem();
-        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution, $request->Remark);
+        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution, $request->Remark, $request->Resolution);
         if($response->error){
             $success = false;
             $error .= $response->error->text;

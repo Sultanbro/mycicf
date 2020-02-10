@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Session;
 class User extends Authenticatable
 {
     const SENATE_ISN = 999999999;
+    const DIRECTOR_LABEL = "Председатель Правления";
     use Notifiable;
 
     /**
@@ -78,6 +79,10 @@ class User extends Authenticatable
         $User->session_id = $response->Sid;
         $User->save();
         return true;
+    }
+
+    public static function checkIsDirector(){
+        return Auth::user()->branch->duty == self::DIRECTOR_LABEL ? 'true' : 'false';
     }
 
     public function getFullName($user_isn){

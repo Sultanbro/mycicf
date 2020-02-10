@@ -33,15 +33,17 @@
     <script src="{{asset('js/app.js')}}"></script>
 {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
+@php(\App\User::checkIsDirector())
 <body>
     @include('layouts.header')
     <main class="flex-row"  id="app">
         <div class="main_margin flex-row width100">
             @include('layouts.sidebar')
-
             <div class="col-md-10" id="coordination">
                 <coordination
-                    :isn="{{ Auth::user()->ISN }}"></coordination>
+                    :isn="{{ Auth::user()->ISN }}"
+                    :is-director="{{\App\User::checkIsDirector()}}"
+                    ></coordination>
             </div>
 
             {{--RIGHT SIDE BAR GOES HERE--}}

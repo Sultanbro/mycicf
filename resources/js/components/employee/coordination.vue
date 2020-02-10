@@ -298,6 +298,10 @@
         },
         props: {
             isn: Number,
+            isDirector: {
+                type : Boolean,
+                default : false,
+            }
         },
         methods: {
             getTables: function(){

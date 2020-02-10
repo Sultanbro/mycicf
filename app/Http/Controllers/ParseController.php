@@ -2365,7 +2365,7 @@ class ParseController extends Controller
         $list = $this->getProductListWithId();
         return view('parse.editProduct', compact('list'));
     }
-    public function postEditProduct(Request $request){
+    public function postEditProductp(Request $request){
         if($request->product == ''){
             return  'Выберите продукт';
         }
