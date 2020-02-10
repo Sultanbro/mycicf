@@ -32,7 +32,7 @@ Vue.directive('linkified', linkify);
 
 Vue.component('login', require('./components/registration/login.vue').default);
 
-Vue.component('treeselect', VueTreeselect.Treeselect);
+// Vue.component('treeselect', VueTreeselect.Treeselect);
 
 Vue.component('simple-info', require('./components/employee/simple-info.vue').default);
 
@@ -83,6 +83,14 @@ Vue.component('colleagues', require('./components/colleagues/colleagues.vue').de
 Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
 
 Vue.component('colleague-info', require('./components/employee/colleague-info.vue').default);
+
+Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
+
+Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
+
+Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
+
+Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
 window.onload = function(){
     var app = new Vue({

@@ -18,7 +18,9 @@ use App\PreviousProductName;
 
 use App\Imports\UsersImport;
 
+use DateTime;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -27,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use function Couchbase\defaultEncoder;
 
 class ParseController extends Controller
 {
@@ -232,13 +235,13 @@ class ParseController extends Controller
     public function index(){
         return view('parse/index');
     }
-    public function getFees(){
+    public function getOpuTable(){
         return view('parse/table-opu');
     }
-    public function getCompetitors(){
+    public function getInfoTable(){
         return view('parse/table-info');
     }
-    public function getIndicators(){
+    public function getIndicatorsTable(){
         return view('parse/table-indicators');
     }
     public function upload(Request $request){
@@ -447,6 +450,17 @@ class ParseController extends Controller
         }
         return $result;
 
+    }
+    public function getCompanies(){
+        $model = InsuranceCompany::all();
+        $result = [];
+        foreach ($model as $item) {
+            array_push($result, [
+               'id' => $item->id,
+               'name' => $item->short_name
+            ]);
+        }
+        return $result;
     }
     public function getProductListWithId(){
         $model = InsuranceProduct::all();
@@ -1475,40 +1489,175 @@ class ParseController extends Controller
         $firstPeriod = $request->first_period;
         $secondPeriod = $request->second_period;
 
-        $firstResult = [];
-        $secondResult = [];
-        foreach ($companyList as $company){
-            $opuData = ParseOpu::where('company_id', $company)
+        $opu_data = [];
+
+        foreach ($companyList as $company) {
+            $first_period = ParseOpu::where('company_id', $company)
                 ->where('month', $firstPeriod)
                 ->where('year', $firstYear)
                 ->first();
-            $tempArray = [];
-            foreach (array_keys($this->getOpuOptions()) as $key){
-                array_push($tempArray, [
-                    $key => $opuData->$key
-                ]);
-            }
-            $firstResult[$company] = $tempArray;
-            $opuData = ParseOpu::where('company_id', $company)
+
+            $second_period = ParseOpu::where('company_id', $company)
                 ->where('month', $secondPeriod)
                 ->where('year', $secondYear)
                 ->first();
-            $tempArray = [];
-            foreach (array_keys($this->getOpuOptions()) as $key){
-                array_push($tempArray, [
-                    $key => $opuData->$key
+
+            $opu_result = [];
+
+            foreach (array_keys($this->getOpuOptions()) as $key) {
+                $first = (int)$first_period->$key;
+                $second = (int)$second_period->$key;
+                array_push($opu_result, [
+                    'label' => $this->getOpuLabels((string)$key),
+                    'firstPeriod' => $first,
+                    'secondPeriod' => $second,
+                    'changes' => (string)$this->getOpuChanges($first, $second) . '%',
                 ]);
             }
-            $secondResult[$company] = $tempArray;
-        }
-        return response()
-            ->json([
-                'success' => true,
-                'firstPeriodData' => $firstResult,
-                'secondPeriodData' => $secondResult,
-                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear,
-                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
+
+            array_push($opu_data, [
+                "companyId" => $company,
+                "opuResult" => $opu_result,
             ]);
+        }
+
+        $firstPer = DateTime::createFromFormat('!m', $firstPeriod);
+        $secondPer = DateTime::createFromFormat('!m', $secondPeriod);
+        $firstMonth = $firstPer->format('F');
+        $secondMonth = $secondPer->format('F');
+        $firstMonth = $this->getMonthsLabel($firstMonth);
+        $secondMonth = $this->getMonthsLabel($secondMonth);
+
+
+        $table_headers = ["Показатели", $firstMonth . " " . $firstYear, $secondMonth . " " . $secondYear, "Изменения", " ", $firstMonth . " " . $firstYear, $secondMonth . " " . $secondYear, "Изменения", " ", $firstMonth . " " . $firstYear, $secondMonth .  " " . $secondYear, "Изменения"];
+
+        return response()->json([
+            'success' => true,
+            "tableHeaders" => $table_headers,
+            'opuData' => $opu_data,
+        ]);
+
+//        foreach ($companyList as $company){
+//            $opuData = ParseOpu::where('company_id', $company)
+//                ->where('month', $firstPeriod)
+//                ->where('year', $firstYear)
+//                ->first();
+//            $tempArray = [];
+//            foreach (array_keys($this->getOpuOptions()) as $key){
+//                array_push($tempArray, [
+//                    $key => $opuData->$key
+//                ]);
+//            }
+//            $firstResult[$company] = $tempArray;
+//            $opuData = ParseOpu::where('company_id', $company)
+//                ->where('month', $secondPeriod)
+//                ->where('year', $secondYear)
+//                ->first();
+//            $tempArray = [];
+//            foreach (array_keys($this->getOpuOptions()) as $key){
+//                array_push($tempArray, [
+//                    $key => $opuData->$key,
+//                ]);
+//            }
+//            $secondResult[$company] = $tempArray;
+//        }
+//        return response()
+//            ->json([
+//                'success' => true,
+//                'firstPeriodData' => $firstResult,
+//                'secondPeriodData' => $secondResult,
+//                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear,
+//                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
+//            ]);
+    }
+    public function getCurrentPeriods($type) {
+        try {
+            switch ($type) {
+                case "OPU":
+                    $first_year = ParseOpu::max('year');
+                    $first_period = ParseOpu::select('month')->where('year', $first_year)->first();
+                    $first_period = $first_period['month'];
+                    break;
+                case "BALANCE":
+                    $first_year = ParseBalance::max('year');
+                    $first_period = ParseBalance::select('month')->where('year', $first_year)->first();
+                    $first_period = $first_period['month'];
+                    break;
+                case "INFO":
+                    break;
+                default:
+                    break;
+            }
+            $second_year = $first_year - 1;
+//            $second_year = $first_year;
+            $second_period = $first_period;
+
+            $months = [
+                1 => "Январь",
+                2 => "Февраль",
+                3 => "Март",
+                4 => "Апрель",
+                5 => "Май",
+                6 => "Июнь",
+                7 => "Июль",
+                8 => "Август",
+                9 => "Сентябрь",
+                10 => "Октябрь",
+                11 => "Ноябрь",
+                12 => "Декабрь"
+            ];
+
+            $periods = [
+                "first_year" => $first_year,
+                "first_period" => $first_period,
+                "second_year" => $second_year,
+                "second_period" => $second_period,
+            ];
+
+            $companies = $this->getCompanyListWithId();
+
+            return response()->json([
+                "success" => true,
+                "months" => $months,
+                "periods" => $periods,
+                "companies" => $companies,
+            ]);
+        }
+        catch(Exception $e) {
+            $e->getMessage();
+        }
+    }
+
+
+
+    private function getMonthsLabel($month_name) {
+        $months = [
+            "January" => "Январь",
+            "February" => "Ферварь",
+            "March" => "Март",
+            "April" => "Апрель",
+            "May" => "Май",
+            "June" => "Июнь",
+            "July" => "Июль",
+            "August" => "Август",
+            "September" => "Сентябрь",
+            "October" => "Октябрь",
+            "November" => "Ноябрь",
+            "December" => "Декабрь",
+        ];
+        foreach($months as $key => $value) {
+            if($month_name === $key) {
+                return $value;
+            }
+        }
+    }
+    private function getOpuChanges($firstPeriod, $secondPeriod) {
+        if($secondPeriod === 0){
+            return 0;
+        }
+        else {
+            return (1 - ($firstPeriod / $secondPeriod)) * 100;
+        }
     }
     /**
      * Получить данные Баланс по компаниям
@@ -1535,26 +1684,122 @@ class ParseController extends Controller
         $firstPeriod = $request->first_period;
         $secondPeriod = $request->second_period;
 
+        $balance_data = [];
+
+        foreach ($companyList as $company) {
+            $first_period = ParseOpu::where('company_id', $company)
+                ->where('month', $firstPeriod)
+                ->where('year', $firstYear)
+                ->first();
+
+            $second_period = ParseOpu::where('company_id', $company)
+                ->where('month', $secondPeriod)
+                ->where('year', $secondYear)
+                ->first();
+
+            $balance_result = [];
+
+            foreach (array_keys($this->getBalanceOptions()) as $key) {
+                $first = (int)$first_period->$key;
+                $second = (int)$second_period->$key;
+                array_push($balance_result, [
+                    'label' => $this->getBalanceLabels((string)$key),
+                    'firstPeriod' => $first,
+                    'secondPeriod' => $second,
+//                    'changes' => (string)$this->getOpuChanges($first, $second) . '%',
+                ]);
+            }
+
+            array_push($balance_data, [
+                "companyId" => $company,
+                "balanceResult" => $balance_result,
+            ]);
+        }
+
+        $firstPer = DateTime::createFromFormat('!m', $firstPeriod);
+        $secondPer = DateTime::createFromFormat('!m', $secondPeriod);
+        $firstMonth = $firstPer->format('F');
+        $secondMonth = $secondPer->format('F');
+        $firstMonth = $this->getMonthsLabel($firstMonth);
+        $secondMonth = $this->getMonthsLabel($secondMonth);
+
+        $table_headers = ["Показатели", $firstMonth . " " . $firstYear, $secondMonth . " " . $secondYear, " ", $firstMonth . " " . $firstYear, $secondMonth . " " . $secondYear, " ", $firstMonth . " " . $firstYear, $secondMonth .  " " . $secondYear];
+
+        return response()->json([
+            'success' => true,
+            "tableHeaders" => $table_headers,
+            'balanceData' => $balance_data,
+        ]);
+
+
+//        foreach ($companyList as $company){
+//            $opuData = ParseBalance::where('company_id', $company)
+//                ->where('month', $firstPeriod)
+//                ->where('year', $firstYear)
+//                ->first();
+//            $tempArray = [];
+//            foreach (array_keys($this->getBalanceOptions()) as $key){
+//                array_push($tempArray, [
+//                    $key => $opuData->$key
+//                ]);
+//            }
+//            $firstResult[$company] = $tempArray;
+//            $opuData = ParseBalance::where('company_id', $company)
+//                ->where('month', $secondPeriod)
+//                ->where('year', $secondYear)
+//                ->first();
+//            $tempArray = [];
+//            foreach (array_keys($this->getBalanceOptions()) as $key){
+//                array_push($tempArray, [
+//                    $key => $opuData->$key
+//                ]);
+//            }
+//            $secondResult[$company] = $tempArray;
+//        }
+//        return response()
+//            ->json([
+//                'success' => true,
+//                'firstPeriodData' => $firstResult,
+//                'secondPeriodData' => $secondResult,
+//                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear,
+//                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
+//            ]);
+    }
+    public function getCompanyTopInfo(Request $request) {
+        $companyList = $request->company_list;
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
         $firstResult = [];
         $secondResult = [];
         foreach ($companyList as $company){
-            $opuData = ParseBalance::where('company_id', $company)
+            $opuData = ParseOpu::where('company_id', $company)
                 ->where('month', $firstPeriod)
                 ->where('year', $firstYear)
                 ->first();
             $tempArray = [];
-            foreach (array_keys($this->getBalanceOptions()) as $key){
+            foreach (array_keys($this->getOpuOptions()) as $key){
                 array_push($tempArray, [
                     $key => $opuData->$key
                 ]);
             }
             $firstResult[$company] = $tempArray;
-            $opuData = ParseBalance::where('company_id', $company)
+            $opuData = ParseOpu::where('company_id', $company)
                 ->where('month', $secondPeriod)
                 ->where('year', $secondYear)
                 ->first();
             $tempArray = [];
-            foreach (array_keys($this->getBalanceOptions()) as $key){
+            foreach (array_keys($this->getOpuOptions()) as $key){
                 array_push($tempArray, [
                     $key => $opuData->$key
                 ]);
@@ -2564,8 +2809,8 @@ class ParseController extends Controller
             'net_income' => 'add(brut_income),minus(kpn)',
         ];
     }
-    public function getOpuLabels(){
-        return [
+    public function getOpuLabels($label){
+        $opuLabels = [
             'dsd' => 'ДСД',
             'brut_prem' => 'Брутто премии',
             'own_ret' => 'Собст. удер',
@@ -2592,6 +2837,12 @@ class ParseController extends Controller
             'roe' => 'ROE',
             'cos' => 'COS',
         ];
+
+        foreach ($opuLabels as $key => $value) {
+            if($key === $label) {
+                return $value;
+            }
+        }
     }
 
     public function parseBalanceData($filePath, $year, $month, $company_id){
@@ -2629,6 +2880,45 @@ class ParseController extends Controller
         $model->company_id=$company_id;
         $model->save();
     }
+
+    public function getBalanceLabels($label) {
+        $balanceLabels = [
+            'actives' => 'Активы',
+            'cash' => 'Денежные средства',
+            'deposits' => 'Вклады',
+            'securities' => 'Ценные бумаги',
+            'rev_repo' => 'Обратное РЕПО',
+            'OS' => 'ОС',
+            'NMA' => 'НМА',
+            'ins_dz' => 'Страховая ДЗ',
+            'other_dz' => 'Прочая ДЗ',
+            'other_actives' => 'Прочие активы',
+            'liability' => 'Обязательства',
+            'repo' => 'РЕПО',
+            'reins_calcs' => 'Расчеты с посредниками',
+            'middleman_calcs' => 'Расчеты с перестраховщиками',
+            'invoices_to_pay' => 'Счета к уплате',
+//            'other_credits' => '',
+            'other_liability' => 'Прочие обязательства',
+            'rnp' => 'РНП',
+            'rznu' => 'РЗНУ',
+            'rpnu' => 'РПНУ',
+            'reserves' => 'Резервы',
+            'capital' => 'Капитал',
+            'authorized_capital' => 'Уставной капитал',
+            'other_rezerves' => 'Прочие резервы',
+            'retained_earnings' => 'Нераспределенная прибыль',
+            'current_period' => '- отчетного периода',
+            'last_years' => '- предыдущих лет',
+        ];
+
+        foreach ($balanceLabels as $key => $value) {
+            if($key === $label) {
+                return $value;
+            }
+        }
+    }
+
     public function getBalanceOptions(){
         return [
             'actives' => 'add(41)',
