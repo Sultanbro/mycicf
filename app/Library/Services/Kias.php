@@ -282,4 +282,10 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getCoordinationCount($ISN){
+        return $this->request('User_CicCountEmplCoordination', [
+            'EmplISN' => $ISN,
+        ]);
+    }
+
 }

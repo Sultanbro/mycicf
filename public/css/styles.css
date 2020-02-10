@@ -2041,3 +2041,13 @@ textarea::-webkit-scrollbar-thumb {
 	max-width: 80%;
 	min-width: 70%;
 }
+.pending-count{
+	display: inline-block;
+	border-radius: 8px;
+	background-color: #68adff;
+	text-align: center;
+	color: white;
+	width: 30px;
+	height: 30px;
+	align-items: end;
+}

@@ -2312,8 +2312,8 @@ class ParseController extends Controller
     }
     public function postAddProduct(Request $request){
         $this->validate($request, [
-            'fullname' => 'required|unique:insurance_products|max:255',
-            'shortname' => 'required|unique:insurance_products|max:255',
+            'fullname' => 'required|max:255',
+            'shortname' => 'required|max:255',
         ]);
         $model = new InsuranceProduct();
         $model->full_name = $request->fullname;
@@ -2321,7 +2321,7 @@ class ParseController extends Controller
         if($model->save()){
             $previousName = new PreviousProductName();
             $previousName->product_id = $model->id;
-            $previousName->name = $request->full_name;
+            $previousName->name = $request->fullname;
             if($previousName->save()){
                 echo 'Успешно добавлена';
             }else{
@@ -2374,7 +2374,7 @@ class ParseController extends Controller
             return  'как миннимум одно из двух текстовых  полей должна быть заполнена';
         }
         $result = '';
-        if($request->full_name != ''){
+        if($request->fullname != ''){
             $previousName = new PreviousProductName();
             $previousName->product_id = $id;
             $previousName->name = $request->fullname;
@@ -2382,7 +2382,7 @@ class ParseController extends Controller
             $result .= 'Добавлена полное наименование<br>';
         }
 
-        if($request->short_name != ''){
+        if($request->shortname != ''){
             $model = InsuranceProduct::findOrFail($id);
             $model->short_name = $request->shortname;
             $model->save();

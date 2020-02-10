@@ -54,6 +54,22 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public static function getCoordinationCount(){
+//        'User_CicCountEmplCoordination';     EmplISN
+        try{
+            $session = null;
+            if(Auth::check()){
+                $session = Auth::user()->session_id;
+            }
+            $kias = new Kias();
+            $kias->init($session);
+            $count = (string)$kias->getCoordinationCount(Auth::user()->ISN)->MyCoord;
+            return $count;
+        }catch (\Exception $ex){
+            return 0;
+        }
+    }
+
     public function branch(){
         return $this->hasOne('App\Branch', 'kias_id', 'ISN');
     }
