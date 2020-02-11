@@ -181,6 +181,8 @@ return [
         App\Providers\KiasServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        Yajra\Oci8\Oci8ServiceProvider::class,
+
     ],
 
     /*

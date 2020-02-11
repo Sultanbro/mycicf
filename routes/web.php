@@ -236,3 +236,8 @@ Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 Route::get('test', function (){
     return view('test');
 });
+
+Route::get('ttt', function (){
+    $a = \Illuminate\Support\Facades\DB::connection('oracle')->table('agreements')->first();
+    dd($a);
+});
