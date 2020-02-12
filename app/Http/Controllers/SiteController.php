@@ -562,6 +562,7 @@ class SiteController extends Controller
                 "fullname"=> $birthday->fullname,
                 "ISN"=>$birthday->kias_id,
                 "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
+                "fakeImage"=> !Branch::checkImageExists($birthday->kias_id)
             ]);
         }
         return response()->json(['birthdays' => $result]);

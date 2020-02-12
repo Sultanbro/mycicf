@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Branch
@@ -38,4 +39,7 @@ class Branch extends Model
         'verified' => 0,
     ];
 
+    public static function checkImageExists($ISN){
+        return Storage::disk('local')->exists("public/images/employee/$ISN.png");
+    }
 }

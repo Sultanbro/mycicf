@@ -3,7 +3,7 @@
         <div class="jc-center d-flex width50 events-window-size relative">
             <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" class="absolute width100 height100" />
             <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
-            <img :src="imageUrl" @error="fakeImage = true" class="width100" v-if="!fakeImage">
+            <img :src="imageUrl" class="width100" v-if="!fakeImage">
             <img :src="fakeImageUrl" class="width100" v-else>
         </div>
         <!--                            <div class="width50">-->
@@ -25,7 +25,6 @@
         name: "simpleBirthday",
         data() {
             return {
-                fakeImage : false,
                 imageUrl : null,
                 fakeImageUrl : '/images/avatar.png'
             }
@@ -33,22 +32,14 @@
         props : {
             fullName: String,
             date: String,
-            ISN : Number
+            ISN : Number,
+            fakeImage : Boolean
         },
         mounted(){
             this.imageUrl = `/storage/images/employee/${this.ISN}.png`;
         },
         updated(){
-            this.check();
-        },
-        methods: {
-            check(){
-                var url = `/storage/images/employee/${this.ISN}.png`;
-                if(this.imageUrl !== url){
-                    this.imageUrl = `/storage/images/employee/${this.ISN}.png`;
-                    this.fakeImage = false;
-                }
-            }
+            this.imageUrl = `/storage/images/employee/${this.ISN}.png`;
         },
     }
 </script>
