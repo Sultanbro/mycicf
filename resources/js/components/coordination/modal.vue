@@ -91,7 +91,7 @@
                                                 <td>{{attribute.Value}}</td>
                                             </tr>
                                             <tr v-if="coordination.DocClass === '1010031'">
-                                                <td>Куратор</td>
+                                                <td>Куратор документа</td>
                                                 <td>{{coordination.Curator}}</td>
                                             </tr>
                                             </tbody>

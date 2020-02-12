@@ -41,7 +41,10 @@
                                     <div class="width50">
                                         <strong>Инициатор</strong>
                                     </div>
-                                    <div class="width50">
+                                    <div class="width50" v-if="coordination.DocClass === '1010031'">
+                                        {{coordination.SubjDept}} {{coordination.SubjName}}
+                                    </div>
+                                    <div class="width50" v-else>
                                         {{coordination.Curator}}
                                     </div>
                                 </div>
@@ -62,6 +65,10 @@
                                         <td>{{attribute.Name}}</td>
                                         <td v-if="attribute.Value.length > 200" @click="openLongText(attribute.Name, attribute.Value)">{{attribute.Value.substring(0,200)}}...</td>
                                         <td v-else>{{attribute.Value}}</td>
+                                    </tr>
+                                    <tr v-if="coordination.DocClass === '1010031'" class="coordinationModalTr">
+                                        <td>Куратор документа</td>
+                                        <td>{{coordination.Curator}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
