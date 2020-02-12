@@ -314,22 +314,22 @@ class ParseController extends Controller
         ];
         echo json_encode($result);
         switch ($document_type){
-            case 1 :
+            case self::FINANCE :
                 $this->parseXlsFinance($filePath, $year, $month,$productStart);
                 break;
-            case 2 :
+            case self::PREMIUM :
                 $this->parseXlsPremium($filePath, $year, $month,$productStart);
                 break;
-            case 3 :
+            case self::PAYMENTS :
                 $this->parseXlsPayout($filePath, $year, $month,$productStart);
                 break;
-            case 4 :
+            case self::STANDART :
                 $this->parseXlsStandart($filePath, $year, $month,$productStart);
                 break;
-            case 5 :
+            case self::OPU :
                 $this->parseOpuData($filePath, $year, $month, $companyId);
                 break;
-            case 6 :
+            case self::BALANCE :
                 $this->parseBalanceData($filePath, $year, $month, $companyId);
                 break;
         }
@@ -2243,29 +2243,19 @@ class ParseController extends Controller
     public function getDefaultDates($type){
         switch ($type){
             case self::PREMIUM :
-                $model = ParsePremium::all();
+                $year = ParsePremium::max('year');
+                $month = ParsePremium::where('year', $year)->max('month');
                 break;
             case self::PAYMENTS :
                 $model = ParsePayout::all();
                 break;
             case self::FINANCE :
-                $model = ParseFinance::all();
+                $year = ParseFinance::max('year');
+                $month = ParseFinance::where('year', $year)->max('month');
                 break;
             default :
-                $model = ParsePremium::all();
-        }
-        $year = 0;
-        foreach ($model as $data){
-            if($year < (integer)$data->year){
-                $year = (integer)$data->year;
-            }
-        }
-
-        $month = 1;
-        foreach ($model as $data){
-            if((integer)$data->month > $month && (integer)$data->year == $year){
-                $month = (integer)$data->month;
-            }
+                $year = ParsePremium::max('year');
+                $month = ParsePremium::where('year', $year)->max('month');
         }
         $result = [
             'second_period' => $month,
