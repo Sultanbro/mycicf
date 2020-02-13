@@ -61,13 +61,20 @@
                                 <td>{{centrasOpu.secondPeriod.toLocaleString()}}</td>
                                 <td>{{centrasOpu.changes}}</td>
                                 <td class="bg-grayblue"></td>
-                                <td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_1][index].changes}}</td>
+                                <!--<td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>-->
+                                <!--<td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>-->
+                                <!--<td>{{opuCompanies[index_1][index].changes}}</td>-->
+                                <!--<td class="bg-grayblue"></td>-->
+                                <!--<td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>-->
+                                <!--<td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>-->
+                                <!--<td>{{opuCompanies[index_2][index].changes}}</td>-->
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
                                 <td class="bg-grayblue"></td>
-                                <td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_2][index].changes}}</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
                             </tr>
                         </tbody>
                     </table>
@@ -83,7 +90,7 @@
 
         data() {
             return {
-                company_list: [1, 2, 8],
+                company_list: [8],
 
                 periods: {
                     first_year: null,
