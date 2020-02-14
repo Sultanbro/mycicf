@@ -34,6 +34,19 @@ ul{
 .bg-color-blue{
 	background: #4267b2;
 }
+.vote-answer-hover{
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	background-color: #4267b2 !important;
+}
+.margin0-auto{
+	margin: 0 auto;
+	width: 100%;
+}
+.vote-answer-hover:hover{
+	background: #7094de;
+}
 .mobile-centras-logo{
 	width: 4.5rem;
 }
@@ -1992,4 +2005,24 @@ textarea::-webkit-scrollbar-thumb {
 .events-window-size{
 	max-width: 80%;
 	min-width: 70%;
+}
+.height-auto{
+    height: auto;
+}
+.voting-inputs{
+	border-radius: 5px;
+	border: 1px solid #4267b2;
+	color: #4267b2;
+}
+.voting-inputs::-webkit-input-placeholder{
+	color:#4267b2;
+}
+.voting-inputs::-moz-placeholder{
+	color:#4267b2;
+}
+.voting-inputs:-moz-placeholder{
+	color:#4267b2;
+}
+.voting-inputs:-ms-input-placeholder{
+	color:#4267b2;
 }

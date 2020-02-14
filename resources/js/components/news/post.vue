@@ -85,10 +85,10 @@
 
             <div class="flex-row">
                 <div class="flex-row ml-4 mr-4 pb-2 pt-2 w-100">
-                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
+                    <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2 pointer" @change="imageUpload">
                         <i class="fas fa-image color-black file-icons"></i>
                         <label for="photo-upload" class="custom-file-upload">Фото</label>
-                        <input type="file" id="photo-upload" @change="imageUpload" accept="image/*" multiple>
+                        <input type="file" id="photo-upload" accept="image/*" multiple>
                     </div>
                     <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
                         <!--<i class="fas fa-play-circle color-black file-icons"></i>-->
@@ -100,10 +100,15 @@
                         <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
                         <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
                     <!--</div>-->
-                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
+                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1 pointer" @change="fileUpload">
                         <i class="fas fa-file-upload color-black file-icons"></i>
                         <label for="file-upload" class="custom-file-upload">Файл</label>
-                        <input type="file" id="file-upload" @change="fileUpload" multiple>
+                        <input type="file" id="file-upload" multiple>
+                    </div>
+                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1 ml-2 pointer" @click="voting()">
+                        <i class="fas fa-poll color-black file-icons"></i>
+                        <label class="custom-file-upload">Опрос</label>
+                        <input type="file" multiple>
                     </div>
                     <transition name="transition-opacity">
                         <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0 || documents.length > 0">
@@ -114,19 +119,31 @@
                     </transition>
                 </div>
             </div>
-            <div class="ml-4 mr-4 pb-2 pt-2 w-100">
+            <div class="pl-4 pr-4 pb-2 pt-2 w-100" v-if="VotingCounter % 2 !== 0">
                 <div class="flex-column">
-                    <div v-model="question in questions">
-                        <input type="text" v-model="question">
+<!--                    <div v-for="qqq in Questions">-->
+<!--                        <div v-for="answers in qqq">-->
+<!--                            {{qqq.answers}}-->
+<!--&lt;!&ndash;                        <input type="text" v-model="question">&ndash;&gt;-->
+<!--&lt;!&ndash;                    {{Questions.answers[0]}}&ndash;&gt;-->
+<!--&lt;!&ndash;                    {{kkk.wwww}}&ndash;&gt;-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div>
+                        <input type="text" :placeholder="Questions.question" class="width50 voting-inputs pt-2 pb-2 pl-2 pr-2">
                     </div>
                     <div>
-                        <ol class="pl-0 mt-4">
-                            <li v-for="value in object">
-                                <input type="text" v-model="value" placeholder="Первый вопрос">
+                        <ul class="pl-0 mt-4">
+<!--                            <li v-for="value in object">-->
+                            <li class="d-flex mt-2" v-for="(question, index) in Questions.answers">
+                                <input class="width50 voting-inputs pt-1 pb-1 pl-2 pr-2" type="text" :placeholder="index+1" v-model="question.value">
+                                <div class="height-auto d-flex vertical-middle pl-2 pr-2 pointer color-blue" v-if="Questions.answers.length > 2" @click="remove(index)">
+                                    <i class="fas fa-minus-circle"></i>
+                                </div>
                             </li>
-                        </ol>
-                        <div class="pointer text-center pt-2 pb-2">
-                            <span>Добавить пункт</span>
+                        </ul>
+                        <div class="pointer text-center events-arrow-bg pt-2 pb-2 mt-2" @click="add">
+                            <span>Добавить пункт <i class="fa fa-plus fs-0_8"></i></span>
                         </div>
                     </div>
                 </div>
@@ -164,6 +181,18 @@
         name: "post",
         data() {
             return {
+                Questions: {
+                    question: 'Введите заголовок',
+                    answers: [
+                        {
+                            value: '',
+                        },
+                        {
+                            value: '',
+                        },
+                    ],
+                },
+                VotingCounter: 0,
                 imgExtensions: [
                     "image/jpeg",
                     "image/jpg",
@@ -220,20 +249,6 @@
                     ninth_question: '',
                     tenth_question: '',
                 },
-                Questions: {
-                    question: 'вопрос',
-                    q_id: 10,
-                    answers: [
-                        {
-                            value: 'Первый',
-                            id: 12,
-                        },
-                        {
-                            value: 'Второй',
-                            id: 13,
-                        },
-                    ],
-                },
             }
         },
 
@@ -252,6 +267,17 @@
         },
 
         methods: {
+            voting(){
+                this.VotingCounter++;
+            },
+            add(){
+                this.Questions.answers.push({
+                    value : "",
+                });
+            },
+            remove(index){
+                this.Questions.answers.splice(index, 1);
+            },
             getModerators: function () {
                 this.axios.get('/getModerators', {})
                     .then(response => {
