@@ -238,6 +238,8 @@ Route::get('test', function (){
 });
 
 Route::get('ttt', function (){
-    $a = \Illuminate\Support\Facades\DB::connection('oracle')->table('agreements')->first();
+//    oci_connect('MYCIC', 'QwMcIcerty23#');
+    $query =
+    $a = \Illuminate\Support\Facades\DB::connection('oracle')->select('select * from subject where isn in (3921599, 3600338)');
     dd($a);
 });
