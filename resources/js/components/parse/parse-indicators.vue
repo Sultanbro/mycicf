@@ -60,11 +60,16 @@
                             <td>{{centrasBalance.firstPeriod.toLocaleString()}}</td>
                             <td>{{centrasBalance.secondPeriod.toLocaleString()}}</td>
                             <td class="bg-grayblue"></td>
-                            <td>{{balanceCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
-                            <td>{{balanceCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
+                            <!--<td>{{balanceCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>-->
+                            <!--<td>{{balanceCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>-->
+                            <!--<td class="bg-grayblue"></td>-->
+                            <!--<td>{{balanceCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>-->
+                            <!--<td>{{balanceCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>-->
+                            <td>0</td>
+                            <td>0</td>
                             <td class="bg-grayblue"></td>
-                            <td>{{balanceCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
-                            <td>{{balanceCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
+                            <td>0</td>
+                            <td>0</td>
                         </tr>
                         </tbody>
                     </table>
@@ -80,7 +85,7 @@
 
         data() {
             return {
-                company_list: [1, 2, 8],
+                company_list: [8],
 
                 periods: {
                     first_year: null,
