@@ -47,6 +47,12 @@ class ParseController extends Controller
     //PRODUCT
     public const MST_ID = 3;
 
+    public $percentColumns = [
+        'own_ret' => 'own_ret',
+        'lost_perc' => 'lost_perc',
+        'av_perc' => 'av_perc',
+        'fot_dsd' => 'fot_dsd',
+    ];
 
     public function __construct()
     {
@@ -1509,8 +1515,13 @@ class ParseController extends Controller
             $opu_result = [];
 
             foreach (array_keys($this->getOpuLabels()) as $key) {
-                $first = (int)$first_period->$key;
-                $second = (int)$second_period->$key;
+                if(in_array($key,$this->percentColumns)){
+                    $first = (int)$first_period->$key * 100;
+                    $second = (int)$second_period->$key * 100;
+                } else {
+                    $first = (int)$first_period->$key;
+                    $second = (int)$second_period->$key;
+                }
                 array_push($opu_result, [
                     'label' => $this->getOpuLabels()[$key],
                     'firstPeriod' => $first,
@@ -2802,7 +2813,7 @@ class ParseController extends Controller
             'adm_expenses'=>'add(71)',
             'fot' => 'add(73)',
             'fot_dsd' => 'division(adm_expenses;dsd)',
-            'fin_result' => 'add(adm_expenses),minus(fot),minus(77)',
+            'fin_result' => 'add(net_ins_income),minus(adm_expenses),minus(77)',
             'reserve_changes' => 'add(18),minus(19),add(59),minus(60),add(61),minus(62)',
             'fin_changes' => 'add(fin_result),minus(reserve_changes)',
             'invest_income' => 'add(23),minus(65),minus(70)',
