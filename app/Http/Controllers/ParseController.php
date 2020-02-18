@@ -1489,9 +1489,9 @@ class ParseController extends Controller
          * $secondPeriod месяц до (INT)
          */
         $firstYear = $request->first_year;
-        $secondYear = $request->second_year;
+        $secondYear = $request->first_year;
         $firstPeriod = $request->first_period;
-        $secondPeriod = $request->second_period;
+        $secondPeriod = $request->first_period;
 
         $opu_data = [];
 
@@ -1508,11 +1508,11 @@ class ParseController extends Controller
 
             $opu_result = [];
 
-            foreach (array_keys($this->getOpuOptions()) as $key) {
+            foreach (array_keys($this->getOpuLabels()) as $key) {
                 $first = (int)$first_period->$key;
                 $second = (int)$second_period->$key;
                 array_push($opu_result, [
-                    'label' => $this->getOpuLabels((string)$key),
+                    'label' => $this->getOpuLabels()[$key],
                     'firstPeriod' => $first,
                     'secondPeriod' => $second,
                     'changes' => (string)$this->getOpuChanges($first, $second) . '%',
@@ -2813,8 +2813,8 @@ class ParseController extends Controller
             'net_income' => 'add(brut_income),minus(kpn)',
         ];
     }
-    public function getOpuLabels($label){
-        $opuLabels = [
+    public function getOpuLabels(){
+        return [
             'dsd' => 'ДСД',
             'brut_prem' => 'Брутто премии',
             'own_ret' => 'Собст. удер',
@@ -2841,12 +2841,6 @@ class ParseController extends Controller
             'roe' => 'ROE',
             'cos' => 'COS',
         ];
-
-        foreach ($opuLabels as $key => $value) {
-            if($key === $label) {
-                return $value;
-            }
-        }
     }
 
     public function parseBalanceData($filePath, $year, $month, $company_id){
