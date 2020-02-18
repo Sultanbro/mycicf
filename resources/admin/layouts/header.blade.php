@@ -57,7 +57,7 @@
                     <a class="dropdown-item" href="{{route('role.permission.list')}}">Управление доступом</a>
                 </div>
             </li>
-                <li class="nav-item dropdown">
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">Сенат</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
@@ -94,6 +94,13 @@
                     <a class="nav-link" href="{{route('senate.post.new')}}">Новый пост</a>
                 @endif
             @endif
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Новый раздел</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="javascript: void(0)">Новый пост</a>
+                    </div>
+                </li>
         </ul>
         <form class="form-inline my-2 my-md-0">
             <a href="/logout" class="logout">Выйти</a>
