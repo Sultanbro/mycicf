@@ -110,7 +110,11 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
         Route::group(['middleware' => 'senateAdmin'], function (){
             Route::get('senate/post/new', 'Admin\SenateController@newPost')->name('senate.post.new');
             Route::post('senate/new/post', 'Admin\SenateController@savePostData');
+        });
 
+        Route::group(['middleware' => 'readingClubAdmin'], function (){
+            Route::get('rclub/post/new', 'Admin\ReadingClubController@newPost')->name('reading.post.new');
+            Route::post('rclub/new/post', 'Admin\ReadingClubController@savePostData');
         });
     });
 });

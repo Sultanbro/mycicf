@@ -24,7 +24,7 @@
     @include('layouts.header')
     <main role="main">
         <post-new
-                :is-senate="true"></post-new>
+            :is-reading-club="true"></post-new>
     </main>
 </div>
 </body>

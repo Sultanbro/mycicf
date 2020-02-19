@@ -64,6 +64,14 @@
                     <a class="dropdown-item" href="{{route('senate.post.new')}}">Новый пост</a>
                 </div>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Читательский клуб</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown09">
+                    <a class="dropdown-item" href="{{route('reading.post.new')}}">Новый пост</a>
+                </div>
+            </li>
+
             @else
                 {{--TODO if(has permission to)--}}
                 @if(App\User::isParseAdmin())
@@ -92,6 +100,9 @@
                 @endif
                 @if(App\User::isSenateAdmin())
                     <a class="nav-link" href="{{route('senate.post.new')}}">Новый пост</a>
+                @endif
+                @if(App\User::isReadingClubAdmin())
+                    <a class="nav-link" href="{{route('reading.post.new')}}">Новый пост</a>
                 @endif
             @endif
                 <li class="nav-item dropdown">
