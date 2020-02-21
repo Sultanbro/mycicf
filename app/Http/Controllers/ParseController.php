@@ -1695,19 +1695,19 @@ class ParseController extends Controller
          * $secondPeriod месяц до (INT)
          */
         $firstYear = $request->first_year;
-        $secondYear = $request->second_year;
+        $secondYear = $request->first_year;
         $firstPeriod = $request->first_period;
-        $secondPeriod = $request->second_period;
+        $secondPeriod = $request->first_period;
 
         $balance_data = [];
 
         foreach ($companyList as $company) {
-            $first_period = ParseOpu::where('company_id', $company)
+            $first_period = ParseBalance::where('company_id', $company)
                 ->where('month', $firstPeriod)
                 ->where('year', $firstYear)
                 ->first();
 
-            $second_period = ParseOpu::where('company_id', $company)
+            $second_period = ParseBalance::where('company_id', $company)
                 ->where('month', $secondPeriod)
                 ->where('year', $secondYear)
                 ->first();
@@ -2904,15 +2904,15 @@ class ParseController extends Controller
             'other_actives' => 'Прочие активы',
             'liability' => 'Обязательства',
             'repo' => 'РЕПО',
-            'reins_calcs' => 'Расчеты с посредниками',
-            'middleman_calcs' => 'Расчеты с перестраховщиками',
+            'reins_calcs' => 'РЕ',
+            'middleman_calcs' => 'Расчеты с посредниками',
             'invoices_to_pay' => 'Счета к уплате',
-//            'other_credits' => '',
+            'other_credits' => 'Прочая кредиторская задолженность',
             'other_liability' => 'Прочие обязательства',
+            'reserves' => 'Резервы',
             'rnp' => 'РНП',
             'rznu' => 'РЗНУ',
             'rpnu' => 'РПНУ',
-            'reserves' => 'Резервы',
             'capital' => 'Капитал',
             'authorized_capital' => 'Уставной капитал',
             'other_rezerves' => 'Прочие резервы',
