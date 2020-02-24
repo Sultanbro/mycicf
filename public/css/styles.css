@@ -2051,3 +2051,6 @@ textarea::-webkit-scrollbar-thumb {
 	height: 30px;
 	align-items: end;
 }
+.input7-size{
+	min-width: 176px;
+}

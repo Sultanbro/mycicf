@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Session;
 class User extends Authenticatable
 {
     const SENATE_ISN = 999999999;
+    const READING_CLUB_ISN = 999999998;
     const DIRECTOR_LABEL = "Председатель Правления";
     use Notifiable;
 
@@ -104,6 +105,8 @@ class User extends Authenticatable
     public function getFullName($user_isn){
         if($user_isn === User::SENATE_ISN){
             return 'Сенат';
+        }else if($user_isn === User::READING_CLUB_ISN){
+            return 'Читательский клуб';
         }
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
@@ -141,6 +144,10 @@ class User extends Authenticatable
 
     public static function isSenateAdmin(){
         return (new Permissions())->checkUser([Permissions::ROLE_SENATE]);
+    }
+
+    public static function isReadingClubAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_READING_CLUB]);
     }
 
     public static function getMotivationDepartments(){

@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'okAdmin' => \App\Http\Middleware\checkOkAuth::class,
         'wndAdmin' => \App\Http\Middleware\checkWndAdmin::class,
         'senateAdmin' => \App\Http\Middleware\senateAdmin::class,
+        'readingClubAdmin' => \App\Http\Middleware\ReadingClubAdmin::class,
         'superAdmin' => \App\Http\Middleware\checkSuperAdmin::class,
         'centcoinExcepts' => \App\Http\Middleware\centcoinExcepts::class
     ];
@@ -90,6 +91,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\checkSession::class,
         \App\Http\Middleware\ParseAdmin::class,
         \App\Http\Middleware\checkWndAdmin::class,
-        \App\Http\Middleware\CheckAdminAuth::class
+        \App\Http\Middleware\CheckAdminAuth::class,
+        \App\Http\Middleware\ReadingClubAdmin::class,
     ];
 }
