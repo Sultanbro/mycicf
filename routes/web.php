@@ -192,6 +192,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
         Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
         Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
+        Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');

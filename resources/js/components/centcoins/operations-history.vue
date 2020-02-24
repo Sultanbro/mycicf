@@ -52,7 +52,7 @@
         name: "operations-history",
         data() {
             return {
-                dateBeg: new Date().getFullYear()+'-01-01',
+                dateBeg: (new Date().getFullYear()-1)+'-01-01',
                 dateEnd: new Date().getFullYear()+'-12-31',
                 operations: [],
                 centcoins: null,
