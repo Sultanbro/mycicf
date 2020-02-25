@@ -284,6 +284,9 @@
                     document.getElementById('preloader').style.display = 'none';
                 }
             },
+            checkIsDir(){
+                return this.$parent.isDirector;
+            }
         },
     }
 </script>
