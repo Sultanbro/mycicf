@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Notification;
 use App\Providers\KiasServiceProvider;
 use Illuminate\Http\Request;
 
@@ -378,6 +379,15 @@ class CoordinationController extends Controller
         $url = 'https://bots.n9.kz/notification';
         (new NotificationController())->sendCoordinationNotify($users);
         foreach ($users as $user){
+            if($this->checkNotificationSended($user, $doc_no, $doc_type)){
+                continue;
+            }
+            $model = new Notification();
+            $model->user_isn = $user;
+            $model->doc_no = $doc_no;
+            $model->doc_type = $doc_type;
+            $model->sendDate = date('d.m.Y', time());
+            $model->save();
             $res = $client->request('POST', $url, [
                 'form_params' => [
                     'isn' => $user,
@@ -391,5 +401,14 @@ class CoordinationController extends Controller
             }
         }
         return true;
+    }
+
+    public function checkNotificationSended($isn, $no, $type){
+        $data = Notification::where('user_isn', $isn)
+            ->where('doc_no', $no)
+            ->where('doc_type', $type)
+            ->where('sendDate', date('d.m.Y', time()))
+            ->get();
+        return sizeof($data) > 0;
     }
 }

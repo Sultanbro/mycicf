@@ -137,6 +137,16 @@
                 videoMaxNumber: 1,
             }
         },
+        props: {
+            isSenate : {
+                type : Boolean,
+                default : false,
+            },
+            isReadingClub : {
+                type : Boolean,
+                default : false,
+            }
+        },
         methods : {
             add(){
                 this.answers.push("");
@@ -145,7 +155,13 @@
                 this.answers.splice(index, 1);
             },
             send(){
-                this.axios.post('/senate/new/post', this.getFormData())
+                var url = "";
+                if(this.isSenate){
+                    url = '/senate/new/post';
+                }else if(this.isReadingClub){
+                    url = '/rclub/new/post';
+                }
+                this.axios.post(url, this.getFormData())
                     .then(response => {
                         if(response.data.success){
                             location.href = '/';

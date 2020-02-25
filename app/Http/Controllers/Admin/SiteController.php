@@ -21,6 +21,10 @@ class SiteController extends Controller
         }
     }
 
+    public function dimaAdmin(){
+        return view('/dima');
+    }
+
     public function checkLogin(KiasServiceInterface $kias, Request $request){
         $success = true;
         $error = '';
