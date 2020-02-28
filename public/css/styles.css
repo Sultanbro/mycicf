@@ -2054,3 +2054,31 @@ textarea::-webkit-scrollbar-thumb {
 .input7-size{
 	min-width: 176px;
 }
+
+.date-products{
+	border-bottom-color: #88e1f9;
+	border-bottom: 1;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	height: 40px;
+	background: white;
+}
+
+.custom-select{
+	height: 40px !important;
+	border: 1.75px solid #88e1f8 !important;
+}
+
+.attr-text{
+	border-bottom: 1.75px solid #88e1f8;
+	height: 30px;
+	background: white;
+	color: black;
+}
+
+.attr-input-text{
+	outline: 0;
+	border-width: 0 0 2px;
+	border-color: #88e1f8;
+}

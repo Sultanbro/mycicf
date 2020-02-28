@@ -239,6 +239,44 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-Route::get('test', function (){
-    return view('test');
+Route::get('kolesa/parseMarks', function (){
+    $url = 'https://kolesa.kz/a/get-search-form/?category=cars';
+
+    $request_headers = [
+        'Accept: application/json, text/javascript, */*; q=0.01',
+        'Accept-Encoding: gzip, deflate, br',
+        'Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Connection: keep-alive',
+        'Sec-Fetch-Mode: cors',
+        'Sec-Fetch-Site: same-origin',
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+        'X-Requested-With: XMLHttpRequest',
+
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $response = curl_exec($ch);
+    dd(curl_error($ch));
+    curl_close($ch);
+    dd($response);
+
+    return view('kolesamarks');
 });
+Route::get('products/test', 'ProductsController@index');
+/**
+ * TEST
+ */
+/**
+Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
+Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
+Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+*/
