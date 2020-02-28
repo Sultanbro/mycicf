@@ -228,7 +228,20 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/setToken', 'NotificationController@setToken');
     });
 });
+Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
+        Route::get('/', 'SiteController@parseAuth');
+        Route::post('/login', 'SiteController@parseLogin');
 
+        Route::group(['middleware' => 'parseDomainAuth'], function (){
+        Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+        Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+        Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
+        Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
+        Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+    });
+});
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
