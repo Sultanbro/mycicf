@@ -233,13 +233,13 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
         Route::post('/login', 'SiteController@parseLogin');
 
         Route::group(['middleware' => 'parseDomainAuth'], function (){
-        Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
-        Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
-        Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
-        Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
-        Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
-        Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+        Route::get('parse/company', 'ParseController@getCompanyTopSum');
+        Route::get('parse/product', 'ParseController@getClassTopSum');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators');
+        Route::get('parse', 'ParseController@redirectToCompany');
+        Route::get('parse/table-fees', 'ParseController@getFees');
+        Route::get('parse/table-indicators', 'ParseController@getIndicators');
+        Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
 //RELOG

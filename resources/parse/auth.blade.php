@@ -41,7 +41,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="password" class="text-info">Пароль:</label><br>
-                                <input type="text" name="password" id="password" class="form-control">
+                                <input type="password" name="password" id="password" class="form-control">
                             </div>
                             <div class="form-group d-flex justify-content-center">
                                 <input type="submit" name="submit" class="btn btn-info btn-md" value="Войти">

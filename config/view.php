@@ -9,9 +9,7 @@ switch($_SERVER['HTTP_HOST'] ?? env('FRONTEND_DOMAIN')){
         break;
     case env('FRONTEND_DOMAIN') :
         $agent = new \Jenssegers\Agent\Agent;
-
         $result = $agent->isDesktop();
-
         $viewPath = $result ? 'views' : 'mobile';
         break;
 }

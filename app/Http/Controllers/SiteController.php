@@ -572,7 +572,7 @@ class SiteController extends Controller
         if(Session::get('authenticated', false)){
             return redirect('/parse/company');
         }
-        return view('parse.auth');
+        return view('auth');
     }
 
     public function parseLogin(Request $request){

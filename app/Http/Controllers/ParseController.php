@@ -2497,7 +2497,7 @@ class ParseController extends Controller
             );
     }
     public function redirectToCompany(){
-        return redirect(route('parse/company'));
+        return redirect('/parse/company');
     }
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
