@@ -31,6 +31,8 @@
             <input type="date" id="dateEnd" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="dateEnd" :disabled="period !== '0'" required>
         </div>
     </div>
+    <div class="col-12 mt-2 row ml-1">
+    </div>
     <agr-attributes></agr-attributes>
     <agr-roles></agr-roles>
     <agr-drivers></agr-drivers>

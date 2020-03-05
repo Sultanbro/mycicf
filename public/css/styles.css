@@ -2056,23 +2056,23 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 .date-products{
-	border-bottom-color: #88e1f9;
-	border-bottom: 1;
+	border-bottom-color: #dee2e6	;
+	border-bottom: 1 solid ;
 	border-top: 0;
 	border-left: 0;
 	border-right: 0;
-	height: 40px;
+	height: 35px;
 	background: white;
 }
 
 .custom-select{
-	height: 40px !important;
-	border: 1.75px solid #88e1f8 !important;
+	height: 35px !important;
+	border: 1.75px solid #dee2e6 !important;
 }
 
 .attr-text{
-	border-bottom: 1.75px solid #88e1f8;
-	height: 30px;
+	border-bottom: 1.75px solid #dee2e6;
+	height: 35px;
 	background: white;
 	color: black;
 }
@@ -2080,5 +2080,14 @@ textarea::-webkit-scrollbar-thumb {
 .attr-input-text{
 	outline: 0;
 	border-width: 0 0 2px;
-	border-color: #88e1f8;
+	border-color: #dee2e6;
+	height: 35px;
+}
+
+.add-button{
+	cursor : pointer;
+	background-color : white;
+	color : black;
+	border : 1px solid #dee2e6;
+	padding: 10px;
 }
