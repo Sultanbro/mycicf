@@ -47,13 +47,16 @@ class ParseController extends Controller
 
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())){
-                return $next($request);
-            }
-            abort(403, 'У вас нет доступа для просмотра данной страницы');
-            return Redirect::back();
-        });
+            $this->middleware(function ($request, $next) {
+                if(Session::get('authenticated', false)){
+                    return $next($request);
+                }
+                if (Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())) {
+                    return $next($request);
+                }
+                abort(403, 'У вас нет доступа для просмотра данной страницы');
+                return Redirect::back();
+            });
     }
 
     public static function getAcceptedUsers(){
@@ -2494,7 +2497,7 @@ class ParseController extends Controller
             );
     }
     public function redirectToCompany(){
-        return redirect(route('parse/company'));
+        return redirect('/parse/company');
     }
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
