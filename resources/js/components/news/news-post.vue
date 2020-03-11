@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <div class="pl-4 pr-4" v-if="post.post_poll.question !== null">
+        <div class="pl-4 pr-4" v-if="post.post_poll.question_title !== null">
             <div class="d-flex justify-content-center">
                 <h5>{{post.post_poll.question_title}}</h5>
             </div>
@@ -69,7 +69,7 @@
                      aria-valuemin="0"
                      aria-valuemax="100">
                     <div class="p-2">
-                        <span class="fs-1" :class="post.isVoted === 1 ? 'color-white' : 'color-black'">{{post.isVoted ? answer.answer_votes : answer.answer_title}}</span>
+                        <span class="fs-1" :class="post.isVoted === 1 ? 'color-white' : 'color-black'">{{post.isVoted === 1 ? answer.answer_votes : answer.answer_title}}</span>
                     </div>
                 </div>
                 <div class='d-flex align-items-center' v-if="post.isVoted === 1">
@@ -79,7 +79,12 @@
                 </div>
             </div>
             <div>
-                <span>Количество голосов: {{post.post_poll.total_votes}}</span>
+                <h6 class="color-dimgray">
+                    <small>
+                        Количество голосов: {{post.post_poll.total_votes}}
+                    </small>
+                </h6>
+<!--                <span class="color-dimgray"></span>-->
             </div>
         </div>
 

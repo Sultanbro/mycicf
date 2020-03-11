@@ -367,7 +367,6 @@
 
             addPost() {
                 this.preloader(true);
-
                 this.axios.post("/addPost", this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
@@ -410,6 +409,9 @@
                 this.files = [];
                 this.images = [];
                 this.documents = [];
+                this.poll = false;
+                this.question = null;
+                this.answers = ["", ""];
                 //     this.posts.unshift({
                 //         isn: response.userISN,
                 //         postText: response.postText,
