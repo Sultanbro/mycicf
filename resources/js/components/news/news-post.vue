@@ -53,6 +53,36 @@
                 <d-player :options="options"></d-player>
             </div>
         </div>
+
+        <div class="pl-4 pr-4" v-if="post.post_poll.question !== null">
+            <div class="d-flex justify-content-center">
+                <h5>{{post.post_poll.question_title}}</h5>
+            </div>
+            <div v-for="(answer, index) in post.post_poll.answers"
+                 @click="vote(answer)"
+                 class="progress mb-2 progress-bar-hover d-flex"
+                 :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
+                 style="height: 40px;">
+                <div class="progress-bar"
+                     role="progressbar"
+                     :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    <div class="p-2">
+                        <span class="fs-1" :class="post.isVoted === 1 ? 'color-white' : 'color-black'">{{post.isVoted ? answer.answer_votes : answer.answer_title}}</span>
+                    </div>
+                </div>
+                <div class='d-flex align-items-center' v-if="post.isVoted === 1">
+                    <span class="p-2 color-black">
+                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}
+                    </span>
+                </div>
+            </div>
+            <div>
+                <span>Количество голосов: {{post.post_poll.total_votes}}</span>
+            </div>
+        </div>
+
         <div class="pl-2 pr-2">
             <div class="news-block-image-contain">
                 <img :src="image" class="post-image" v-for="(image, index) in post.image.slice(0, 1)" @error="post.image.splice(index, 1)">
@@ -155,7 +185,6 @@
 
                 <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
                     <div class="comments-container w-100">
-
                         <div v-if="!allCommentsShown"
                              v-for="(comment, index) in post.comments.slice(0, 3)">
                             <news-comment :comment="comment"
@@ -232,6 +261,7 @@
         data() {
             return {
                 options: {},
+                isVoted: false,
                 has_video: false,
                 isPinned: false,
                 bottomOfWindow: 0,
@@ -419,6 +449,35 @@
                     }
                 });
             },
+
+            vote(object) {
+                if(this.post.isVoted === 1 || this.post.isVoted === '1') {
+                    return;
+                }
+                else {
+                    object.answer_votes++;
+                    this.post.post_poll.total_votes++;
+                    this.post.isVoted = 1;
+                    this.axios.post('/vote', {
+                        postId: this.postId,
+                        isn: this.isn,
+                        answerId: object.answer_id,
+                        questionId: this.post.post_poll.question_id
+                    }).then(response => {
+                        this.fetchVote(response.data);
+                    }).catch(error => {
+                        alert(error);
+                    })
+                }
+            },
+            fetchVote(response) {
+                if(response.success === true) {
+                    this.post.isVoted = 1;
+                }
+                else {
+                    this.post.isVoted = 0;
+                }
+            }
         },
         components: {
             'd-player': VueDPlayer
