@@ -1516,8 +1516,8 @@ class ParseController extends Controller
 
             foreach (array_keys($this->getOpuLabels()) as $key) {
                 if(in_array($key,$this->percentColumns)){
-                    $first = (int)$first_period->$key * 100;
-                    $second = (int)$second_period->$key * 100;
+                    $first = $first_period === null ? 0 : (int)$first_period->$key * 100;
+                    $second = $second_period === null ? 0 : (int)$second_period->$key * 100;
                 } else {
                     $first = (int)$first_period->$key;
                     $second = (int)$second_period->$key;
@@ -1592,11 +1592,13 @@ class ParseController extends Controller
                     $first_year = ParseOpu::max('year');
                     $first_period = ParseOpu::select('month')->where('year', $first_year)->first();
                     $first_period = $first_period['month'];
+                    $company_ids = ParseOpu::select('company_id')->distinct();
                     break;
                 case "BALANCE":
                     $first_year = ParseBalance::max('year');
                     $first_period = ParseBalance::select('month')->where('year', $first_year)->first();
                     $first_period = $first_period['month'];
+                    $company_ids = ParseBalance::select('company_id')->distinct();
                     break;
                 case "INFO":
                     break;
@@ -1628,8 +1630,12 @@ class ParseController extends Controller
                 "second_year" => $second_year,
                 "second_period" => $second_period,
             ];
-
-            $companies = $this->getCompanyListWithId();
+            $companies = [];
+            $list = InsuranceCompany::whereIn('id', $company_ids)->get();
+            foreach ($list as $comp){
+                $companies[$comp->id] = $comp->short_name;
+            }
+//            $companies = $this->getCompanyListWithId();
 
             return response()->json([
                 "success" => true,
@@ -1715,8 +1721,8 @@ class ParseController extends Controller
             $balance_result = [];
 
             foreach (array_keys($this->getBalanceOptions()) as $key) {
-                $first = (int)$first_period->$key;
-                $second = (int)$second_period->$key;
+                $first = $first_period === null ? 0 : (int)$first_period->$key;
+                $second = $second_period === null ? 0 : (int)$second_period->$key;
                 array_push($balance_result, [
                     'label' => $this->getBalanceLabels((string)$key),
                     'firstPeriod' => $first,
