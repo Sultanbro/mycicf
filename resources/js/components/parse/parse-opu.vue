@@ -61,20 +61,13 @@
                                 <td>{{centrasOpu.secondPeriod.toLocaleString()}}</td>
                                 <td>{{centrasOpu.changes}}</td>
                                 <td class="bg-grayblue"></td>
-                                <!--<td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>-->
-                                <!--<td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>-->
-                                <!--<td>{{opuCompanies[index_1][index].changes}}</td>-->
-                                <!--<td class="bg-grayblue"></td>-->
-                                <!--<td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>-->
-                                <!--<td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>-->
-                                <!--<td>{{opuCompanies[index_2][index].changes}}</td>-->
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
+                                <td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
+                                <td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
+                                <td>{{opuCompanies[index_1][index].changes}}</td>
                                 <td class="bg-grayblue"></td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
+                                <td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
+                                <td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
+                                <td>{{opuCompanies[index_2][index].changes}}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -60,16 +60,11 @@
                             <td>{{centrasBalance.firstPeriod.toLocaleString()}}</td>
                             <td>{{centrasBalance.secondPeriod.toLocaleString()}}</td>
                             <td class="bg-grayblue"></td>
-                            <!--<td>{{balanceCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>-->
-                            <!--<td>{{balanceCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>-->
-                            <!--<td class="bg-grayblue"></td>-->
-                            <!--<td>{{balanceCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>-->
-                            <!--<td>{{balanceCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>-->
-                            <td>0</td>
-                            <td>0</td>
+                            <td>{{balanceCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
+                            <td>{{balanceCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
                             <td class="bg-grayblue"></td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>{{balanceCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
+                            <td>{{balanceCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
                         </tr>
                         </tbody>
                     </table>
