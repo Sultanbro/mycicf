@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 row mt-2 mb-2">
+    <div class="col-12 row mt-2 mb-2 agreement-block">
         <h4>Участники договора</h4>
         <table class="table table-bordered">
             <thead>
@@ -43,7 +43,7 @@
                 </tr>
             </tbody>
         </table>
-        <button type="button" class="add-button width100">Добавить</button>
+        <button type="button" class="add-button width100" @click="openParticipantForm">Добавить</button>
     </div>
 </template>
 
@@ -55,6 +55,21 @@
 
             }
         },
+        methods : {
+            openParticipantForm(userId = 0) {
+                window.scroll({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                this.$parent.showParticipantForm = true;
+            },
+            initParticipantFormData(userData){
+
+            },
+            showParticipantForm(){
+
+            }
+        }
     }
 </script>
 

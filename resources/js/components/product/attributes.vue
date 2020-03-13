@@ -1,14 +1,14 @@
 <template>
-    <div class="col-12 row mt-2 mb-2">
+    <div class="col-12 row mt-2 mb-2 agreement-block">
         <h4>Дополнительные атрибуты договора</h4>
         <div class="row col-12">
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Атрибут : </label>
                 <div class="attr-text">
                     Текст
                 </div>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Значение : </label>
                 <input type="text" class="attr-input-text col-12">
             </div>
@@ -18,13 +18,13 @@
             </div>
         </div>
         <div class="row col-12">
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Атрибут : </label>
                 <div class="attr-text">
                     Тру Фолс
                 </div>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Значение : </label>
                 <input type="checkbox" class="attr-input-text col-12">
             </div>
@@ -34,13 +34,13 @@
             </div>
         </div>
         <div class="row col-12">
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Атрибут : </label>
                 <div class="attr-text">
                     Число
                 </div>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Значение : </label>
                 <input type="number" class="attr-input-text col-12">
             </div>
@@ -50,13 +50,13 @@
             </div>
         </div>
         <div class="row col-12">
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Атрибут : </label>
                 <div class="attr-text">
                     Справочник
                 </div>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Значение : </label>
                 <select class="custom-select">
                     <option value="12">12 месяцев</option>
@@ -83,13 +83,13 @@
             </div>
         </div>
         <div class="row col-12">
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Атрибут : </label>
                 <div class="attr-text">
                     Дата
                 </div>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Значение : </label>
                 <input type="date" class="attr-input-text col-12">
             </div>

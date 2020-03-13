@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 row mt-2 mb-2">
+    <div class="col-12 row mt-2 mb-2 agreement-block">
         <h4>Лица допущенные к вождению</h4>
         <table class="table table-bordered">
             <thead>

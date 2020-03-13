@@ -1873,11 +1873,9 @@ textarea::-webkit-scrollbar-thumb {
 .colleagues-section {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
-
 .colleagues-section__header__nav {
     position: relative;
 }
-
 .colleagues-section__header__nav input {
     border: none;
     outline: none;
@@ -1885,11 +1883,9 @@ textarea::-webkit-scrollbar-thumb {
     border-bottom: 1px solid #000;
     width: 180px;
 }
-
 .colleagues-section__header__nav input:focus {
     border-bottom: 1px solid cornflowerblue;
 }
-
 .colleagues-section__header__nav:focus-within > .fas {
     color: cornflowerblue;
 }
@@ -1913,51 +1909,41 @@ textarea::-webkit-scrollbar-thumb {
 .min-height-15{
     min-height: 15px;
 }
-
 .colleagues-section__header__nav span {
     position: absolute;
     right: 7px;
     top: 7px;
 }
-
 .colleagues-section__btn {
     transition: 0.4s ease;
 }
-
 .colleagues-section__btn:hover {
     background-color: cornflowerblue;
 }
-
 .colleagues-section__body {
     display: grid;
     grid-template-columns: auto auto;
 }
-
 .vw90{
 	width: 90vw;
 }
-
 .to-top-btn {
 	position: fixed;
 	right: 50px;
 	bottom: 50px;
 }
-
 .parse-info{
 	text-align: right;
 	width: 100%;
 	color: gray;
 	margin-right: 55px;
 }
-
 .highlight {
 	background-color: yellow;
 }
-
 .selected-highlight {
 	background-color: orange !important;
 }
-
 .fixed{
 	position: fixed;
 	top: 0;
@@ -1968,7 +1954,6 @@ textarea::-webkit-scrollbar-thumb {
 	padding-right: 10px;
 	left: 10%;
 }
-
 .relative{
 	position: relative;
 }
@@ -2013,20 +1998,17 @@ textarea::-webkit-scrollbar-thumb {
 	/*transition: 0.3s ease-in;*/
 	background: rgba(0,0,0,.1);
 }
-
 .meanShare{
 	font-weight: bold;
 	background-color: #4267b2;
 	color: white;
 }
-
 .ml2{
 	margin-left : 2px !important;
 }
 .mr2{
 	margin-right: 2px !important;
 }
-
 .count-days{
 	font-weight: bold;
 	text-align: left;
@@ -2054,40 +2036,49 @@ textarea::-webkit-scrollbar-thumb {
 .input7-size{
 	min-width: 176px;
 }
-
 .date-products{
-	border-bottom-color: #dee2e6	;
-	border-bottom: 1 solid ;
+	border-bottom: 1px solid #dee2e6;
 	border-top: 0;
 	border-left: 0;
 	border-right: 0;
 	height: 35px;
 	background: white;
 }
-
 .custom-select{
 	height: 35px !important;
 	border: 1.75px solid #dee2e6 !important;
 }
-
 .attr-text{
 	border-bottom: 1.75px solid #dee2e6;
 	height: 35px;
 	background: white;
 	color: black;
 }
-
 .attr-input-text{
 	outline: 0;
 	border-width: 0 0 2px;
 	border-color: #dee2e6;
 	height: 35px;
 }
-
 .add-button{
 	cursor : pointer;
 	background-color : white;
 	color : black;
 	border : 1px solid #dee2e6;
 	padding: 10px;
+}
+.participant-form{
+    width: 100vw;
+	min-height: 150vh;
+    position: absolute;
+	left: 0;
+	top : 0;
+	z-index : 1;
+	background-color : white;
+	overflow-y:scroll;
+}
+.agreement-block{
+	box-shadow: 0 0 5px .5px #888888;
+	padding: 30px;
+	border-radius: 10px;
 }
