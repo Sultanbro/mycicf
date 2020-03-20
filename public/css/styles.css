@@ -2069,13 +2069,9 @@ textarea::-webkit-scrollbar-thumb {
 }
 .participant-form{
     width: 100vw;
-	min-height: 150vh;
-    position: absolute;
-	left: 0;
-	top : 0;
-	z-index : 1;
+	min-height: 100vh;
+	height: auto;
 	background-color : white;
-	overflow-y:scroll;
 }
 .agreement-block{
 	box-shadow: 0 0 5px .5px #888888;

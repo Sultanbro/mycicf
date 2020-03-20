@@ -45,6 +45,9 @@ Vue.component('word-list', require('./components/admin/documentation/word-list.v
 
 Vue.component('post-new', require('./components/admin/senate/post/new.vue').default);
 
+Vue.component('express-list', require('./components/admin/products/express/list.vue').default);
+Vue.component('express-create', require('./components/admin/products/express/create.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

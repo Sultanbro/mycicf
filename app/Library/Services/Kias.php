@@ -288,4 +288,39 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getExpressAttributes($product){
+        return $this->request('User_CicGetAttrExpress', [
+            'Product' => $product,
+        ]);
+    }
+
+    public function getDictiList($parent)
+    {
+        return $this->request('GETDICTILIST', [
+            'DictiISN' => $parent,
+            'Mode' => 0
+        ]);
+    }
+
+    public function getSubject($firstName, $lastName, $patronymic, $iin)
+    {
+        return $this->request('User_CicSearchSubject', [
+            'IIN'          => $iin,
+            'FIRSTNAME'    => $firstName,
+            'LASTNAME'     => $lastName,
+            'PARENTNAME'   => $patronymic,
+        ]);
+    }
+
+    public function expressCalculator($ISN, $SubjISN, $addAttr)
+    {
+        return $this->request('User_CicExpressCalculator', [
+            'ProductISN' => $ISN,
+            'SubjISN' => $SubjISN,
+            'DeptISN' => '1445791',
+            'ADDATTR' => [
+                'row' => $addAttr
+            ]
+        ]);
+    }
 }

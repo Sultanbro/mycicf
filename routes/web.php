@@ -116,6 +116,13 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('rclub/post/new', 'Admin\ReadingClubController@newPost')->name('reading.post.new');
             Route::post('rclub/new/post', 'Admin\ReadingClubController@savePostData');
         });
+
+        Route::group(['middleware' => 'productsAdmin'], function(){
+            Route::get('calc/express/create', 'ProductsController@createExpress')->name('create.express');
+            Route::post('calc/express/create', 'ProductsController@setExpressData');
+            Route::get('calc/express/list', 'ProductsController@listExpress')->name('list.express');
+            Route::post('calc/express/list', 'ProductsController@getExpressList');
+        });
     });
 });
 
@@ -226,6 +233,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
 
         Route::post('/setToken', 'NotificationController@setToken');
+
+        Route::get('/express', 'ProductsController@expressList');
+        Route::get('/express/calc/{ID}', 'ProductsController@express');
+        Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
+
+        Route::post('/getDictiList', 'SiteController@getDicti');
+        Route::post('/searchSubject', 'SiteController@searchSubject');
+        Route::post('/express/calculate', 'ProductsController@expressCalc');
     });
 });
 

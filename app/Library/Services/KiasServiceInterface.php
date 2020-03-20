@@ -126,4 +126,22 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getCoordinationCount($ISN);
+
+    /**
+     * Получить список доп атрибутов экспресс котировок
+     * @param $product ISN продукта
+     * @return mixed
+     */
+    public function getExpressAttributes($product);
+
+    /**
+     * Получить чайлды из справочника
+     * @param $parent ParentISN
+     * @return mixed
+     */
+    public function getDictiList($parent);
+
+    public function getSubject($firstName, $lastName, $patronymic, $iin);
+
+    public function expressCalculator($ISN, $SubjISN, $addAttr);
 }
