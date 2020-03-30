@@ -67,7 +67,7 @@
                                 <td class="bg-grayblue"></td>
                                 <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
                                 <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_2][index].changes}}</td>
+                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_2][index].changes}}</td>
                             </tr>
                         </tbody>
                     </table>
