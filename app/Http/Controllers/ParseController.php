@@ -255,8 +255,8 @@ class ParseController extends Controller
         return view('parse/table-indicators');
     }
     public function upload(Request $request){
-        ini_set('memory_limit', '256M');
         //TODO VALIDATE
+        ini_set('memory_limit', '-1');
         $document_type = $request->type;
         $month = $request->month;
         $year = $request->year;
@@ -2772,7 +2772,7 @@ class ParseController extends Controller
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
     {
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '-1');
         $arr = Excel::toArray(new UsersImport, $filePath);
         $model = new ParseOpu();
         foreach ($this->getOpuOptions() as $key => $functionsString){

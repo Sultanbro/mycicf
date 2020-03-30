@@ -61,13 +61,13 @@
                                 <td>{{centrasOpu.secondPeriod.toLocaleString()}}</td>
                                 <td>{{centrasOpu.changes}}</td>
                                 <td class="bg-grayblue"></td>
-                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
-                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
-                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_1][index].changes}}</td>
+                                <td v-if="Object.keys(opuCompanies[0]).length > 0">{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
+                                <td v-if="Object.keys(opuCompanies[0]).length > 0">{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
+                                <td v-if="Object.keys(opuCompanies[0]).length > 0">{{opuCompanies[index_1][index].changes}}</td>
                                 <td class="bg-grayblue"></td>
-                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
-                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
-                                <td v-if="Object.keys(opuCompanies).length > 1">{{opuCompanies[index_2][index].changes}}</td>
+                                <td v-if="Object.keys(opuCompanies[0]).length > 0">{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
+                                <td v-if="Object.keys(opuCompanies[0]).length > 0">{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
+                                <td v-if="Object.keys(opuCompanies[0]).length > 0">{{opuCompanies[index_2][index].changes}}</td>
                             </tr>
                         </tbody>
                     </table>
