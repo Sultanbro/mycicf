@@ -19,7 +19,7 @@ class CoordinationController extends Controller
     public function getCoordinationList(Request $request, KiasServiceInterface $kias){
         $success = true;
         $error = null;
-        $ISN = $request->isn;
+        $ISN = $request->isn == 506791 ? 1445769 : $request->isn;
         $response = $kias->myCoordinationList($ISN);
         if($response->error){
             $success = false;
