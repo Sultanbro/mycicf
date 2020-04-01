@@ -170,6 +170,11 @@
                         id: parseInt(company),
                         name: response.companies[company],
                     });
+                    if(Object.keys(this.company_list).length < 3) {
+                        if(parseInt(company) != this.centras_id) {
+                            this.company_list.push(parseInt(company));
+                        }
+                    }
                 }
 
                 for(let month in response.months) {
