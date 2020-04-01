@@ -1495,9 +1495,9 @@ class ParseController extends Controller
          * $secondPeriod месяц до (INT)
          */
         $firstYear = $request->first_year;
-        $secondYear = $request->first_year;
+        $secondYear = $request->second_year;
         $firstPeriod = $request->first_period;
-        $secondPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
 
         $opu_data = [];
 

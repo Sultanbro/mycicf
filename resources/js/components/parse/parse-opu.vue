@@ -166,10 +166,12 @@
             },
             setCurrentPeriods(response) {
                 for(let company in response.companies) {
-                    this.companies.push({
-                        id: parseInt(company),
-                        name: response.companies[company],
-                    });
+                    if(parseInt(company) != this.centras_id) {
+                        this.companies.push({
+                            id: parseInt(company),
+                            name: response.companies[company],
+                        });
+                    }
                     if(Object.keys(this.company_list).length < 3) {
                         if(parseInt(company) != this.centras_id) {
                             this.company_list.push(parseInt(company));
