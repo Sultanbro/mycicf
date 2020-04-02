@@ -1500,6 +1500,7 @@ class ParseController extends Controller
         $secondPeriod = $request->second_period;
 
         $opu_data = [];
+        $percentSymbol = '';
 
         foreach ($companyList as $company) {
             $first_period = ParseOpu::where('company_id', $company)
@@ -1518,14 +1519,16 @@ class ParseController extends Controller
                 if(in_array($key,$this->percentColumns)){
                     $first = $first_period === null ? 0 : (int)$first_period->$key * 100;
                     $second = $second_period === null ? 0 : (int)$second_period->$key * 100;
+                    $percentSymbol = '%';
                 } else {
                     $first = (int)$first_period->$key;
                     $second = (int)$second_period->$key;
+                    $percentSymbol = '';
                 }
                 array_push($opu_result, [
                     'label' => $this->getOpuLabels()[$key],
-                    'firstPeriod' => $first,
-                    'secondPeriod' => $second,
+                    'firstPeriod' => $first.$percentSymbol,
+                    'secondPeriod' => $second.$percentSymbol,
                     'changes' => (string)$this->getOpuChanges($first, $second) . '%',
                 ]);
             }
@@ -1677,7 +1680,7 @@ class ParseController extends Controller
             return 0;
         }
         else {
-            return (1 - ($firstPeriod / $secondPeriod)) * 100;
+            return round((1 - ($firstPeriod / $secondPeriod)) * 100);
         }
     }
     /**
