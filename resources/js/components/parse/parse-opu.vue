@@ -183,9 +183,8 @@
                             id: parseInt(company),
                             name: response.companies[company],
                         });
-                    }
-                    if(Object.keys(this.company_list).length < 3) {
-                        if(parseInt(company) != this.centras_id) {
+
+                        if(Object.keys(this.company_list).length < 3) {
                             this.company_list.push(parseInt(company));
                             this.first_company_list.push(parseInt(company));
                         }
@@ -357,9 +356,7 @@
                 }
             },
             showNewData(){
-                //this.getCurrentPeriods().then(() => {
-                    this.getOpuData('new_date');
-                //});
+                this.getOpuData('new_date');
             }
         },
 

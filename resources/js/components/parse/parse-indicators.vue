@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <parse-top :periods="periods" :months="months" :years="years" :getData="getBalanceData"></parse-top>
+        <parse-top :periods="periods" :months="months" :years="years" :getData="showNewBalanceData"></parse-top>
 
         <div class="bg-white pl-3 pr-3 mt-3 mb-3 box-shadow border-16" v-if="showTable">
             <div class="d-flex justify-content-between align-items-center pr-3 pl-3">
@@ -81,6 +81,7 @@
         data() {
             return {
                 company_list: [8],
+                first_company_list: [8],
 
                 periods: {
                     first_year: null,
@@ -110,10 +111,20 @@
         },
 
         methods: {
-            getBalanceData() {
-                this.sendedCompanies = this.company_list;
+            getBalanceData(new_date = null) {
+                if(new_date != null){
+                    this.preloader(true);
+                    this.index_1 = 0;
+                    this.index_2 = 1;
+                    this.balanceCompanies = [];
+                    this.sendedCompanies = this.first_company_list;
+                    this.current_index = null;
+                    this.company_id = 3;
+                } else {
+                    this.sendedCompanies = this.company_list;
+                }
                 this.axios.post('/parse/balance/getData', {
-                    company_list: this.company_list,
+                    company_list: this.first_company_list,
                     first_year: this.periods.first_year,
                     second_year: this.periods.second_year,
                     first_period: this.periods.first_period,
@@ -122,7 +133,9 @@
                     if(response.data.success) {
                         this.setBalanceData(response.data);
                     }
+                    this.preloader(false);
                 }).catch(error => {
+                    this.preloader(false);
                     alert(error);
                 });
             },
@@ -163,10 +176,17 @@
             },
             setCurrentPeriods(response) {
                 for(let company in response.companies) {
-                    this.companies.push({
-                        id: parseInt(company),
-                        name: response.companies[company],
-                    });
+                    if(parseInt(company) != this.centras_id) {
+                        this.companies.push({
+                            id: parseInt(company),
+                            name: response.companies[company],
+                        });
+
+                        if(Object.keys(this.company_list).length < 3) {
+                            this.company_list.push(parseInt(company));
+                            this.first_company_list.push(parseInt(company));
+                        }
+                    }
                 }
 
                 for(let month in response.months) {
@@ -337,6 +357,10 @@
                     document.getElementById("preloader").style.display = "none";
                 }
             },
+
+            showNewBalanceData(){
+                this.getBalanceData('new_date');
+            }
         },
 
         mounted() {
