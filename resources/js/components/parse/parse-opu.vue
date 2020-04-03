@@ -57,17 +57,17 @@
                         <tbody>
                             <tr v-for="(centrasOpu, index) in centrasOpuData">
                                 <td class="text-left">{{centrasOpu.label}}</td>
-                                <td>{{centrasOpu.firstPeriod.toLocaleString()}}</td>
-                                <td>{{centrasOpu.secondPeriod.toLocaleString()}}</td>
-                                <td>{{centrasOpu.changes}}</td>
+                                <td>{{centrasOpu.firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                                <td>{{centrasOpu.secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                                <td><span v-if="showPercent(index) == ''">{{centrasOpu.changes}}</span></td>
                                 <td class="bg-grayblue"></td>
-                                <td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_1][index].changes}}</td>
+                                <td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                                <td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                                <td><span v-if="showPercent(index) == ''">{{opuCompanies[index_1][index].changes}}</span></td>
                                 <td class="bg-grayblue"></td>
-                                <td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
-                                <td>{{opuCompanies[index_2][index].changes}}</td>
+                                <td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                                <td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                                <td><span v-if="showPercent(index) == ''">{{opuCompanies[index_2][index].changes}}</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -357,6 +357,25 @@
             },
             showNewData(){
                 this.getOpuData('new_date');
+            },
+
+            showPercent(index){
+                var percent = '';
+                switch(index){
+                    case 2:
+                        percent = '%';
+                        break;
+                    case 5:
+                        percent = '%';
+                        break;
+                    case 7:
+                        percent = '%';
+                        break;
+                    case 11:
+                        percent = '%';
+                        break;
+                }
+                return percent;
             }
         },
 
