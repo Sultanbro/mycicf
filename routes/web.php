@@ -141,6 +141,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+        Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         //DOSSIER
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
@@ -162,12 +163,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
         Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
-        Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
-        Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
-        Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+
+        Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
+        Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
+        Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
+
         //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
-
-
+        Route::get('/parse/getCurrentPeriods/{type}', ['uses' => 'ParseController@getCurrentPeriods']);
+        Route::get('/parse/getCompanies', 'ParseController@getCompanies');
         Route::post('/parse/opu/getData', 'ParseController@getOpuTopSum');
         Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
         Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');

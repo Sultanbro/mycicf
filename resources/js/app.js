@@ -101,6 +101,14 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
 
 Vue.component('test', require('./components/test.vue').default);
+Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
+
+Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
+
+Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
+
+Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
+
 
 Vue.component('express-calc', require('./components/product/express.vue').default);
 
