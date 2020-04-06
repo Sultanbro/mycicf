@@ -363,7 +363,7 @@
             },
 
             textStyle(label){
-                var textStyle = 'bold fs-0_9';
+                var textStyle = 'bold fs-0_9 bg-grayblue';
                 textStyle = label == 'Активы' || label == 'Обязательства' || label == 'Резервы' || label == 'Капитал' ? textStyle : '';
                 return textStyle;
             }
