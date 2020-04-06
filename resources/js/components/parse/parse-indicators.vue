@@ -55,7 +55,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(centrasBalance, index) in centrasBalanceData">
+                        <tr v-for="(centrasBalance, index) in centrasBalanceData" :class="textStyle(centrasBalance.label)">
                             <td class="text-left">{{centrasBalance.label}}</td>
                             <td>{{centrasBalance.firstPeriod.toLocaleString()}}</td>
                             <td>{{centrasBalance.secondPeriod.toLocaleString()}}</td>
@@ -360,6 +360,12 @@
 
             showNewBalanceData(){
                 this.getBalanceData('new_date');
+            },
+
+            textStyle(label){
+                var textStyle = 'bold fs-0_9';
+                textStyle = label == 'Активы' || label == 'Обязательства' || label == 'Резервы' || label == 'Капитал' ? textStyle : '';
+                return textStyle;
             }
         },
 
