@@ -26,13 +26,13 @@
                         <span>История операций</span>
                     </li>
                 </a>
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/spendCentcoins">
+                <a v-if="!colleaguesMode" class="pt-2 pb-2 color-blue font-size-1_2" href="/spendCentcoins">
                     <li class="leftsidebar-icons">
                         <i class="far fa-thumbs-up"></i>
                         <span>Потратить Сенткоины</span>
                     </li>
                 </a>
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+                <a v-if="!colleaguesMode" class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
                     <li class="leftsidebar-icons">
                         <i class="far fa-grin-stars"></i>
                         <span>О Сенткоине</span>
@@ -50,6 +50,7 @@
         data() {
             return {
                 centcoins: '',
+                colleaguesMode: false,
             }
         },
 
@@ -58,10 +59,16 @@
         },
 
         mounted() {
+            if(this.checkColleagues()){
+                this.colleaguesMode = true;
+            }
             this.getCentcoins();
         },
 
         methods: {
+            checkColleagues(){
+                return (window.location.pathname).slice(1,10) === 'colleague';
+            },
             getCentcoins: function () {
                 this.axios.post('/getCentcoins', {isn: this.isn}).then(response => {
                     this.fetchCentcoins(response.data);

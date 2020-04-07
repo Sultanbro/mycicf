@@ -102,6 +102,10 @@ class ColleaguesController extends Controller {
         }
     }
 
+    public function showCentcoinsByIsn($ISN){
+        return view('colleagues.centcoins', compact('ISN'));
+    }
+
     public function redirectToDossier($ISN){
         return redirect("/colleagues/$ISN/dossier");
     }

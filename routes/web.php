@@ -17,6 +17,7 @@
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
+    Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/','Admin\SiteController@showLoginForm');
     Route::post('/login','Admin\SiteController@checkLogin');
     Route::group(['middleware' => ['checkAuth','checkSession','checkAdminAuth']], function (){
@@ -109,7 +110,11 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
         Route::group(['middleware' => 'senateAdmin'], function (){
             Route::get('senate/post/new', 'Admin\SenateController@newPost')->name('senate.post.new');
             Route::post('senate/new/post', 'Admin\SenateController@savePostData');
+        });
 
+        Route::group(['middleware' => 'readingClubAdmin'], function (){
+            Route::get('rclub/post/new', 'Admin\ReadingClubController@newPost')->name('reading.post.new');
+            Route::post('rclub/new/post', 'Admin\ReadingClubController@savePostData');
         });
     });
 });
@@ -195,6 +200,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
         Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
         Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
+        Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');
@@ -225,7 +231,20 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/setToken', 'NotificationController@setToken');
     });
 });
+Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
+        Route::get('/', 'SiteController@parseAuth');
+        Route::post('/login', 'SiteController@parseLogin');
 
+        Route::group(['middleware' => 'parseDomainAuth'], function (){
+        Route::get('parse/company', 'ParseController@getCompanyTopSum');
+        Route::get('parse/product', 'ParseController@getClassTopSum');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators');
+        Route::get('parse', 'ParseController@redirectToCompany');
+        Route::get('parse/table-fees', 'ParseController@getFees');
+        Route::get('parse/table-indicators', 'ParseController@getIndicators');
+        Route::get('parse/table-competitors', 'ParseController@getCompetitors');
+    });
+});
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');

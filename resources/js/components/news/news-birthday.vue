@@ -25,6 +25,7 @@
                             :fullName="birthdays[index].fullname"
                             :date="birthdays[index].birthday"
                             :ISN="birthdays[index].ISN"
+                            :fakeImage="birthdays[index].fakeImage"
                         ></simple-birthday>
                     </div>
                     <hr>

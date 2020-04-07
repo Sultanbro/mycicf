@@ -562,8 +562,28 @@ class SiteController extends Controller
                 "fullname"=> $birthday->fullname,
                 "ISN"=>$birthday->kias_id,
                 "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
+                "fakeImage"=> !Branch::checkImageExists($birthday->kias_id)
             ]);
         }
         return response()->json(['birthdays' => $result]);
+    }
+
+    public function parseAuth(){
+        if(Session::get('authenticated', false)){
+            return redirect('/parse/company');
+        }
+        return view('auth');
+    }
+
+    public function parseLogin(Request $request){
+        $username = $request->username;
+        $password = $request->password;
+        if($username === env('PARSE_LOGIN') && $password === env('PARSE_PASSWORD')){
+            Session::put('authenticated', true);
+            return redirect('/parse/company');
+        }else{
+            Session::flush();
+            echo "Пароль введен неверно";
+        }
     }
 }

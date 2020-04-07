@@ -18,7 +18,7 @@ class CentcoinsController extends Controller
 
         $histories = CentcoinHistory::where('created_at', '>', $dateBeg)
             ->where('created_at', '<', $dateEnd)
-            ->where('changed_user_isn', Auth::user()->ISN)
+            ->where('changed_user_isn', $request->isn)
             ->get();
 
         $response = [];

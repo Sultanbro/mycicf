@@ -2073,3 +2073,17 @@ textarea::-webkit-scrollbar-thumb {
 .custom-primary-button-inverse:hover {
     box-shadow: 0 0 12px 0 rgba(80, 143, 244, 0.3);
 }
+
+.pending-count{
+	display: inline-block;
+	border-radius: 8px;
+	background-color: #68adff;
+	text-align: center;
+	color: white;
+	width: 30px;
+	height: 30px;
+	align-items: end;
+}
+.input7-size{
+	min-width: 176px;
+}

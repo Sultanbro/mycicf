@@ -119,4 +119,11 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getPrintableDocument($isn, $template, $classId);
+
+    /**
+     * Получить список документов на согласовании
+     * @param $ISN
+     * @return mixed
+     */
+    public function getCoordinationCount($ISN);
 }

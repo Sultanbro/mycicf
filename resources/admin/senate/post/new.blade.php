@@ -23,7 +23,8 @@
 <div class="container" id="app">
     @include('layouts.header')
     <main role="main">
-        <post-new></post-new>
+        <post-new
+                :is-senate="true"></post-new>
     </main>
 </div>
 </body>

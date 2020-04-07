@@ -56,13 +56,16 @@ class ParseController extends Controller
 
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())){
-                return $next($request);
-            }
-            abort(403, 'У вас нет доступа для просмотра данной страницы');
-            return Redirect::back();
-        });
+            $this->middleware(function ($request, $next) {
+                if(Session::get('authenticated', false)){
+                    return $next($request);
+                }
+                if (Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())) {
+                    return $next($request);
+                }
+                abort(403, 'У вас нет доступа для просмотра данной страницы');
+                return Redirect::back();
+            });
     }
 
     public static function getAcceptedUsers(){
@@ -323,22 +326,22 @@ class ParseController extends Controller
         ];
         echo json_encode($result);
         switch ($document_type){
-            case 1 :
+            case self::FINANCE :
                 $this->parseXlsFinance($filePath, $year, $month,$productStart);
                 break;
-            case 2 :
+            case self::PREMIUM :
                 $this->parseXlsPremium($filePath, $year, $month,$productStart);
                 break;
-            case 3 :
+            case self::PAYMENTS :
                 $this->parseXlsPayout($filePath, $year, $month,$productStart);
                 break;
-            case 4 :
+            case self::STANDART :
                 $this->parseXlsStandart($filePath, $year, $month,$productStart);
                 break;
-            case 5 :
+            case self::OPU :
                 $this->parseOpuData($filePath, $year, $month, $companyId);
                 break;
-            case 6 :
+            case self::BALANCE :
                 $this->parseBalanceData($filePath, $year, $month, $companyId);
                 break;
         }
@@ -2508,29 +2511,19 @@ class ParseController extends Controller
     public function getDefaultDates($type){
         switch ($type){
             case self::PREMIUM :
-                $model = ParsePremium::all();
+                $year = ParsePremium::max('year');
+                $month = ParsePremium::where('year', $year)->max('month');
                 break;
             case self::PAYMENTS :
                 $model = ParsePayout::all();
                 break;
             case self::FINANCE :
-                $model = ParseFinance::all();
+                $year = ParseFinance::max('year');
+                $month = ParseFinance::where('year', $year)->max('month');
                 break;
             default :
-                $model = ParsePremium::all();
-        }
-        $year = 0;
-        foreach ($model as $data){
-            if($year < (integer)$data->year){
-                $year = (integer)$data->year;
-            }
-        }
-
-        $month = 1;
-        foreach ($model as $data){
-            if((integer)$data->month > $month && (integer)$data->year == $year){
-                $month = (integer)$data->month;
-            }
+                $year = ParsePremium::max('year');
+                $month = ParsePremium::where('year', $year)->max('month');
         }
         $result = [
             'second_period' => $month,
@@ -2577,8 +2570,8 @@ class ParseController extends Controller
     }
     public function postAddProduct(Request $request){
         $this->validate($request, [
-            'fullname' => 'required|unique:insurance_products|max:255',
-            'shortname' => 'required|unique:insurance_products|max:255',
+            'fullname' => 'required|max:255',
+            'shortname' => 'required|max:255',
         ]);
         $model = new InsuranceProduct();
         $model->full_name = $request->fullname;
@@ -2586,7 +2579,7 @@ class ParseController extends Controller
         if($model->save()){
             $previousName = new PreviousProductName();
             $previousName->product_id = $model->id;
-            $previousName->name = $request->full_name;
+            $previousName->name = $request->fullname;
             if($previousName->save()){
                 echo 'Успешно добавлена';
             }else{
@@ -2639,7 +2632,7 @@ class ParseController extends Controller
             return  'как миннимум одно из двух текстовых  полей должна быть заполнена';
         }
         $result = '';
-        if($request->full_name != ''){
+        if($request->fullname != ''){
             $previousName = new PreviousProductName();
             $previousName->product_id = $id;
             $previousName->name = $request->fullname;
@@ -2647,7 +2640,7 @@ class ParseController extends Controller
             $result .= 'Добавлена полное наименование<br>';
         }
 
-        if($request->short_name != ''){
+        if($request->shortname != ''){
             $model = InsuranceProduct::findOrFail($id);
             $model->short_name = $request->shortname;
             $model->save();
@@ -2769,7 +2762,7 @@ class ParseController extends Controller
             );
     }
     public function redirectToCompany(){
-        return redirect(route('parse/company'));
+        return redirect('/parse/company');
     }
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
