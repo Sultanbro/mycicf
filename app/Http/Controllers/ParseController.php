@@ -2671,6 +2671,16 @@ class ParseController extends Controller
                     ->where('year', $year)
                     ->get();
                 $result[$year][$month]['finance'] = sizeof($finance) < 1 ? 0 : 1;
+
+                $opu = ParseOpu::where('month', $month)
+                    ->where('year', $year)
+                    ->get();
+                $result[$year][$month]['opu'] = sizeof($opu) < 1 ? 0 : 1;
+
+                $balance = ParseBalance::where('month', $month)
+                    ->where('year', $year)
+                    ->get();
+                $result[$year][$month]['balance'] = sizeof($balance) < 1 ? 0 : 1;
             }
         }
         return response()->json([
