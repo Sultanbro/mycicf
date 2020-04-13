@@ -246,7 +246,20 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/express/calculate', 'ProductsController@expressCalc');
     });
 });
+Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
+        Route::get('/', 'SiteController@parseAuth');
+        Route::post('/login', 'SiteController@parseLogin');
 
+        Route::group(['middleware' => 'parseDomainAuth'], function (){
+        Route::get('parse/company', 'ParseController@getCompanyTopSum');
+        Route::get('parse/product', 'ParseController@getClassTopSum');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators');
+        Route::get('parse', 'ParseController@redirectToCompany');
+        Route::get('parse/table-fees', 'ParseController@getFees');
+        Route::get('parse/table-indicators', 'ParseController@getIndicators');
+        Route::get('parse/table-competitors', 'ParseController@getCompetitors');
+    });
+});
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');

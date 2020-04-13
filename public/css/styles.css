@@ -2111,3 +2111,16 @@ textarea::-webkit-scrollbar-thumb {
 	padding: 30px;
 	border-radius: 10px;
 }
+.pending-count{
+	display: inline-block;
+	border-radius: 8px;
+	background-color: #68adff;
+	text-align: center;
+	color: white;
+	width: 30px;
+	height: 30px;
+	align-items: end;
+}
+.input7-size{
+	min-width: 176px;
+}

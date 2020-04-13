@@ -320,7 +320,7 @@ class CoordinationController extends Controller
             'dept' => 'Филиал/Подразделение',
             'curator' => 'ФИО куратора',
             'agent' => 'ФИО агента',
-            'VTS_Phis' => 'ОГПО ВТС Физ.лицо',
+            'VTS_Phis' => 'ОГПО ВТС Врем.въезд',
             'VTS_Jur' => 'ОГПО ВТС Юр.лицо',
             'KBM_M' => 'КБМ M',
             'KBM_0' => 'КБМ 0',

@@ -56,13 +56,16 @@ class ParseController extends Controller
 
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())){
-                return $next($request);
-            }
-            abort(403, 'У вас нет доступа для просмотра данной страницы');
-            return Redirect::back();
-        });
+            $this->middleware(function ($request, $next) {
+                if(Session::get('authenticated', false)){
+                    return $next($request);
+                }
+                if (Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, self::getAcceptedUsers())) {
+                    return $next($request);
+                }
+                abort(403, 'У вас нет доступа для просмотра данной страницы');
+                return Redirect::back();
+            });
     }
 
     public static function getAcceptedUsers(){
@@ -2668,6 +2671,16 @@ class ParseController extends Controller
                     ->where('year', $year)
                     ->get();
                 $result[$year][$month]['finance'] = sizeof($finance) < 1 ? 0 : 1;
+
+                $opu = ParseOpu::where('month', $month)
+                    ->where('year', $year)
+                    ->get();
+                $result[$year][$month]['opu'] = sizeof($opu) < 1 ? 0 : 1;
+
+                $balance = ParseBalance::where('month', $month)
+                    ->where('year', $year)
+                    ->get();
+                $result[$year][$month]['balance'] = sizeof($balance) < 1 ? 0 : 1;
             }
         }
         return response()->json([
@@ -2759,7 +2772,7 @@ class ParseController extends Controller
             );
     }
     public function redirectToCompany(){
-        return redirect(route('parse/company'));
+        return redirect('/parse/company');
     }
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
