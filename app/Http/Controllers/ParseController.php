@@ -1509,11 +1509,13 @@ class ParseController extends Controller
             $first_period = ParseOpu::where('company_id', $company)
                 ->where('month', $firstPeriod)
                 ->where('year', $firstYear)
+                ->orderby('id', 'desc')
                 ->first();
 
             $second_period = ParseOpu::where('company_id', $company)
                 ->where('month', $secondPeriod)
                 ->where('year', $secondYear)
+                ->orderby('id', 'desc')
                 ->first();
 
             $opu_result = [];
@@ -1717,11 +1719,13 @@ class ParseController extends Controller
             $first_period = ParseBalance::where('company_id', $company)
                 ->where('month', $firstPeriod)
                 ->where('year', $firstYear)
+                ->orderby('id', 'desc')
                 ->first();
 
             $second_period = ParseBalance::where('company_id', $company)
                 ->where('month', $secondPeriod)
                 ->where('year', $secondYear)
+                ->orderby('id', 'desc')
                 ->first();
 
             $balance_result = [];
