@@ -8,6 +8,7 @@
             <div class="col-12">
                 <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
                 <span class="fs-2" v-if="calculated">{{price}} Тенге</span>
+                <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
         </div>
         <modal name="participant-form"
@@ -158,6 +159,23 @@
                 .catch(error => {
                     alert(error)
                 });
+            },
+            createFullQuotation(){
+                this.axios.post('/full-quotation/create', {
+                    subjISN : this.subjISN,
+                    id : this.id,
+                    attributes : this.attributes
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            window.location.href="/full-quotation/calc/"+this.id+"/"+response.data.id+"";
+                        }else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
             }
         },
         watch : {

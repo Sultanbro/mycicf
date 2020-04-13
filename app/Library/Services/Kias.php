@@ -294,6 +294,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getFullQuotationAttributes($product){
+        return $this->request('User_CicGetAttrExpress', [
+            'Product' => $product,
+        ]);
+    }
+
     public function getDictiList($parent)
     {
         return $this->request('GETDICTILIST', [
@@ -313,6 +319,18 @@ class Kias implements KiasServiceInterface
     }
 
     public function expressCalculator($ISN, $SubjISN, $addAttr)
+    {
+        return $this->request('User_CicExpressCalculator', [
+            'ProductISN' => $ISN,
+            'SubjISN' => $SubjISN,
+            'DeptISN' => '1445791',
+            'ADDATTR' => [
+                'row' => $addAttr
+            ]
+        ]);
+    }
+
+    public function fullQuotationCalculator($ISN, $SubjISN, $addAttr)
     {
         return $this->request('User_CicExpressCalculator', [
             'ProductISN' => $ISN,

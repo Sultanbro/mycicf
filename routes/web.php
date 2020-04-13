@@ -122,6 +122,14 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('calc/express/create', 'ProductsController@setExpressData');
             Route::get('calc/express/list', 'ProductsController@listExpress')->name('list.express');
             Route::post('calc/express/list', 'ProductsController@getExpressList');
+
+            Route::get('calc/full/create', 'ProductsController@createFullQuotation')->name('create.full');
+            Route::post('calc/full/create', 'ProductsController@setFullQuotationData');
+            Route::get('calc/full/list', 'ProductsController@listFullQuotation')->name('list.full');
+            Route::post('calc/full/list', 'ProductsController@getFullQuotationList');
+            Route::get('calc/full-constructor/{id}', 'ProductsController@fullQuotationConstructor')->name('constructor.full');
+            Route::post('calc/full-constructor', 'ProductsController@setFullQuotationConstructor');
+            Route::post('calc/getDicti', 'ProductsController@getDicti');
         });
     });
 });
@@ -237,10 +245,15 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/express', 'ProductsController@expressList');
         Route::get('/express/calc/{ID}', 'ProductsController@express');
         Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
+        Route::get('/full-quotation', 'ProductsController@fullQuotationList');
+        Route::get('/full-quotation/calc/{ID}/{quotationId}', 'ProductsController@fullQuotation');
+        Route::post('/full-quotation/create', 'ProductsController@fullQuotationCreate');
+        Route::post('/getFullQuotationAttributes', 'ProductsController@getFullQuotationAttributes');
 
         Route::post('/getDictiList', 'SiteController@getDicti');
         Route::post('/searchSubject', 'SiteController@searchSubject');
         Route::post('/express/calculate', 'ProductsController@expressCalc');
+        Route::post('/full-quotation/calculate', 'ProductsController@fullQuotationCalc');
     });
 });
 
