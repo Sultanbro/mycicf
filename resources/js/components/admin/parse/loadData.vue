@@ -15,6 +15,8 @@
                         <span :style="{color: month.premium === 0 ? 'red' : 'green'}">П</span>
                         <span :style="{color: month.standart === 0 ? 'red' : 'green'}">М</span>
                         <span :style="{color: month.finance === 0 ? 'red' : 'green'}">Ф</span>
+                        <span :style="{color: month.opu === 0 ? 'red' : 'green'}">О</span>
+                        <span :style="{color: month.balance === 0 ? 'red' : 'green'}">Б</span>
                     </th>
                 </tr>
             </tbody>
