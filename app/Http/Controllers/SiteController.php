@@ -586,4 +586,110 @@ class SiteController extends Controller
             echo "Пароль введен неверно";
         }
     }
+
+    public function getDicti(Request $request){
+        $kias = new Kias();
+        $kias->initSystem();
+        $parent = $request->parent;
+        $response = $kias->getDictiList($parent);
+        $result = [];
+        if(isset($response->ROWSET->row)){
+            foreach ($response->ROWSET->row as $row){
+                array_push($result, [
+                    'Value' => $row->ISN,
+                    'Label' => $row->FULLNAME
+                ]);
+            }
+        }
+        return response()->json([
+            'result' => $result,
+            'success' => true,
+        ]);
+    }
+
+    public function getDictiList($parent){
+        $kias = new Kias();
+        $kias->initSystem();
+        $response = $kias->getDictiList($parent);
+        $result = [];
+        array_push($result, [
+            'Value' => null,
+            'Label' => 'Не выбрано'
+        ]);
+        if(isset($response->ROWSET->row)){
+            foreach ($response->ROWSET->row as $row){
+                if($row->N_KIDS == '1'){
+                    $child_response = $kias->getDictiList((string)$row->ISN);
+                    if(isset($child_response->ROWSET->row)){
+                        foreach ($child_response->ROWSET->row as $child_row){
+                            array_push($result, [
+                                'Value' => (string)$child_row->ISN,
+                                'Label' => (string)$row->FULLNAME." ".(string)$child_row->FULLNAME
+                            ]);
+                        }
+                    }else{
+                        array_push($result, [
+                            'Value' => (string)$row->ISN,
+                            'Label' => (string)$row->FULLNAME
+                        ]);
+                    }
+                }else{
+                    array_push($result, [
+                        'Value' => (string)$row->ISN,
+                        'Label' => (string)$row->FULLNAME
+                    ]);
+                }
+            }
+        }
+        return $result;
+    }
+
+    public function searchSubject(Request $request, KiasServiceInterface $kias){
+        $firstName = $request->firstName ?? '';
+        $lastName = $request->lastName ?? '';
+        $patronymic = $request->patronymic ?? '';
+        $iin = $request->iin ?? '';
+        $response = $kias->getSubject($firstName, $lastName, $patronymic, $iin);
+        if($response->error){
+            return response()->json([
+                'success' => false,
+                'error' => $response->error->errorText
+            ]);
+        }
+        if(!isset($response->ROWSET->row)){
+            return response()->json([
+                'success' => false,
+                'error' => "Контрагент не найден"
+            ]);
+        }
+
+        if(count($response->ROWSET->row) > 1){
+            $participants = [];
+            foreach ($response->ROWSET->row as $row){
+                array_push($participants, [
+                    'ISN' => (string)$row->ISN,
+                    'Data' =>   (string)$row->FIRSTNAME.' '.(string)$row->LASTNAME.' '.(string)$row->PARENTNAME.' '.
+                                (string)$row->BIRTHDAY.' '.(string)$row->COUNTRYNAME
+                ]);
+            }
+            $result = [
+                'success' => true,
+                'count' => count($participants),
+                'participant' => $participants,
+            ];
+        }else{
+            $result = [
+                'success' => true,
+                'count' => 1,
+                'participant' => [
+                    'ISN' => (string)$response->ROWSET->row->ISN,
+                    'IIN' => (string)$response->ROWSET->row->IIN,
+                    'FirstName' => (string)$response->ROWSET->row->FIRSTNAME,
+                    'LastName' => (string)$response->ROWSET->row->LASTNAME,
+                    'Patronymic' => (string)$response->ROWSET->row->PARENTNAME,
+                ]
+            ];
+        }
+        return response()->json($result);
+    }
 }

@@ -45,6 +45,17 @@ Vue.component('word-list', require('./components/admin/documentation/word-list.v
 
 Vue.component('post-new', require('./components/admin/senate/post/new.vue').default);
 
+Vue.component('express-list', require('./components/admin/products/express/list.vue').default);
+Vue.component('express-create', require('./components/admin/products/express/create.vue').default);
+
+Vue.component('full-list', require('./components/admin/products/full/list.vue').default);
+Vue.component('full-create', require('./components/admin/products/full/create.vue').default);
+Vue.component('full-constructor-create', require('./components/admin/products/full_constructor/create.vue').default);
+Vue.component('constructor-participants', require('./components/admin/products/full_constructor/constructor-participants.vue').default);
+Vue.component('constructor-objects', require('./components/admin/products/full_constructor/constructor-objects.vue').default);
+Vue.component('constructor-attributes', require('./components/admin/products/full_constructor/constructor-attributes.vue').default);
+Vue.component('constructor', require('./components/admin/products/full_constructor/constructor.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

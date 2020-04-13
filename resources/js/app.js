@@ -18,6 +18,10 @@ import {EmojiPickerPlugin} from 'vue-emoji-picker'
 
 import VTooltip from 'v-tooltip'
 
+import vmodal from 'vue-js-modal'
+
+Vue.use(vmodal);
+
 Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
@@ -97,6 +101,16 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
 
 Vue.component('test', require('./components/test.vue').default);
+
+Vue.component('express-calc', require('./components/product/express.vue').default);
+
+Vue.component('full-quotation-calc', require('./components/product/full-quotation.vue').default);
+
+Vue.component('participant', require('./components/product/participants.vue').default);
+
+Vue.component('agr-attributes', require('./components/product/attributes.vue').default);
+
+
 Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
 
 Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
