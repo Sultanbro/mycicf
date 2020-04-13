@@ -312,6 +312,27 @@ class ProductsController extends Controller
         ]);
     }
 
+    public function getFullParticipants(Request $request, KiasServiceInterface $kias){
+        $ID = $request->id;
+        $constructor = FullConstructor::where('product_id',$ID)->first();
+
+        $participants = [];
+        foreach (json_decode($constructor->participants) as $row){
+            array_push($participants, [
+                'ISN' => $row->ISN,
+                'label' => $row->label,
+                'lastName' => '',
+                'firstName' => '',
+                'patronymic' => '',
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'participants' => $participants
+        ]);
+    }
+
     public function fullQuotationCalc(Request $request, KiasServiceInterface $kias){
         $product_id = $request->id;
         if(($model = FullProduct::find($product_id)) === null){

@@ -9,7 +9,7 @@
         <constructor-attributes :attributes="attributes"></constructor-attributes-->
 
         <constructor :items="participants" :title="participantTitle" :parent-isn="19"></constructor>
-        <constructor :items="objects" :title="objecttTitle" :parent-isn="4"></constructor>
+        <constructor :items="objects" :title="objecttTitle" :parent-isn="10"></constructor>
         <constructor :items="attributes" :title="attributeTitle" :parent-isn="10"></constructor>
 
 

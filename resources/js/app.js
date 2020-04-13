@@ -108,6 +108,8 @@ Vue.component('full-quotation-calc', require('./components/product/full-quotatio
 
 Vue.component('participant', require('./components/product/participants.vue').default);
 
+Vue.component('participant-form', require('./components/product/participantForm.vue').default);
+
 Vue.component('agr-attributes', require('./components/product/attributes.vue').default);
 
 

@@ -250,6 +250,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full-quotation/create', 'ProductsController@fullQuotationCreate');
         Route::post('/getFullQuotationAttributes', 'ProductsController@getFullQuotationAttributes');
 
+        Route::post('/getFullParticipants', 'ProductsController@getFullParticipants');
+
         Route::post('/getDictiList', 'SiteController@getDicti');
         Route::post('/searchSubject', 'SiteController@searchSubject');
         Route::post('/express/calculate', 'ProductsController@expressCalc');

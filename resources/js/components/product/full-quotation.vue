@@ -54,11 +54,11 @@
                 attributes: [],
                 moreParticipant : false,
                 participants: [
-                    {ISN:1,new: false,data:'insurant',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    {ISN:2,new: false,data:'participant',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    {ISN:3,new: false,data:'agent',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    {ISN:4,new: false,data:'receiver',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    {ISN:5,new: false,data:'person',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
+                    // {ISN:1,new: false,data:'insurant',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
+                    // {ISN:2,new: false,data:'participant',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
+                    // {ISN:3,new: false,data:'agent',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
+                    // {ISN:4,new: false,data:'receiver',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
+                    // {ISN:5,new: false,data:'person',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
                 ],
                 isn: '',
                 subjISN : '',
@@ -77,7 +77,8 @@
             this.height = window.innerHeight;
         },
         mounted() {
-            this.getFullQuotationAttributes()
+            this.getFullQuotationAttributes();
+            this.getFullParticipants();
         },
         methods: {
             getFullQuotationAttributes() {
@@ -85,16 +86,32 @@
                     id: this.id,
                     quotationId: this.quotationId
                 })
-                .then(response => {
-                    if(response.data.success){
-                        this.attributes = response.data.attributes;
-                    }else{
-                        alert(response.data.error);
-                    }
+                    .then(response => {
+                        if(response.data.success){
+                            this.attributes = response.data.attributes;
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+            },
+            getFullParticipants() {
+                this.axios.post('/getFullParticipants', {
+                    id: this.id,
+                    quotationId: this.quotationId
                 })
-                .catch(error => {
-                    alert(error);
-                });
+                    .then(response => {
+                        if(response.data.success){
+                            this.participants = response.data.participants;
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
             },
             calculate(){
                 this.axios.post('/full-quotation/calculate', {
