@@ -20,6 +20,10 @@ import VTooltip from 'v-tooltip'
 
 import vmodal from 'vue-js-modal'
 
+const moment = require('vue-moment');
+
+Vue.use(moment);
+
 Vue.use(vmodal);
 
 Vue.use(FlashMessage);
@@ -107,6 +111,8 @@ Vue.component('express-calc', require('./components/product/express.vue').defaul
 Vue.component('full-quotation-calc', require('./components/product/full-quotation.vue').default);
 
 Vue.component('participant', require('./components/product/participants.vue').default);
+
+Vue.component('period', require('./components/product/period.vue').default);
 
 Vue.component('participant-form', require('./components/product/participantForm.vue').default);
 

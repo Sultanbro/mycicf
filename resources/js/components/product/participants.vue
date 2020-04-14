@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="col-md-6">
         <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
             Добавить ({{ participant.label }})
         </button>

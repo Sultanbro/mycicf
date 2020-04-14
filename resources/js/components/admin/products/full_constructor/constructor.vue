@@ -7,8 +7,8 @@
             <button type="button" @click="addItem" class="btn-info btn-lg btn">Добавить</button>
         </div>
         <div v-for="(item,index) in items" class="form-group col-md-3 col-lg-3 col-6 text-center">
-            <select class="custom-select" v-model="item.ISN" @change="showInConsole">
-                <option v-for="cons in itemsConstructor" :value="cons.Value" :name="cons.Label">{{cons.Label}} - {{cons.Value}}</option>
+            <select class="custom-select" v-model="item.ISN" @change="onChangeSelect($event,index)">
+                <option v-for="cons in itemsConstructor" :value="cons.Value" :data-name="cons.Label">{{cons.Label}} - {{cons.Value}}</option>
             </select>
             <a @click="deleteItem(index)">Удалить</a>
         </div>
@@ -57,7 +57,10 @@
                     .catch(error => {
                         alert(error);
                     });
-            }
+            },
+            onChangeSelect: function(e,index){
+                this.items[index].label = e.target.options[e.target.options.selectedIndex].dataset.name;
+            },
         },
         mounted(){
             this.getDicti();

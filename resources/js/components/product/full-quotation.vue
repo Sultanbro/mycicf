@@ -1,33 +1,21 @@
 <template>
     <div>
-
-        <div>
-            <div class="col-12 row mt-2 mb-2 agreement-block">
-                <h4>Дата начала / окончания договора</h4>
-                <div class="row col-12">
-                    <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Дата начало договора</label>
-                        <input type="date" class="attr-input-text col-12"  v-model="contractDate.begin">
-                    </div>
-                    <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Дата окончания договора</label>
-                        <input type="date" class="attr-input-text col-12"  v-model="contractDate.end">
-                    </div>
-                    <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Дата подписания договора</label>
-                        <input type="date" class="attr-input-text col-12"  v-model="contractDate.sign">
-                    </div>
-                </div>
+        <div class="col-md-12 mb-4">
+            <div class="row">
+                <participant v-for="(participant,index) in participants"
+                             :key="index"
+                             :p-index="index"
+                             :participant="participant"
+                             :participants="participants"
+                             :product-id="id">
+                </participant>
             </div>
         </div>
 
-        <participant v-for="(participant,index) in participants"
-                     :key="index"
-                     :p-index="index"
-                     :participant="participant"
-                     :participants="participants"
-                     :product-id="id">
-        </participant>
+        <div>
+            <period :period="period"></period>
+        </div>
+
         <div v-for="attribute in attributes">
             <agr-attributes :attribute="attribute"></agr-attributes>
         </div>
@@ -46,26 +34,21 @@
         name: "full-quotation",
         data() {
             return {
-                contractDate: {
-                    begin: '', //moment(new Date()).add(15,'days').toDate()
-                    end: '',  //moment(new Date()).add(15,'days').toDate()
-                    sign: '',
-                },
+                participants: [],
                 attributes: [],
                 moreParticipant : false,
-                participants: [
-                    // {ISN:1,new: false,data:'insurant',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    // {ISN:2,new: false,data:'participant',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    // {ISN:3,new: false,data:'agent',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    // {ISN:4,new: false,data:'receiver',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                    // {ISN:5,new: false,data:'person',iin: '',subjISN: '',lastName: '',firstName: '',patronymic: ''},
-                ],
                 isn: '',
                 subjISN : '',
                 width : 0,
                 height : 0,
                 calculated : false,
                 price : 0,
+                period: {
+                    dateBeg : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                    dateEnd : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                    period : 12,
+                    dateSig: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                }
             }
         },
         props: {
