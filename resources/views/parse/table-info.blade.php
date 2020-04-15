@@ -7,7 +7,7 @@ use App\Http\Controllers\ParseController;
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>i-ci.kz</title>
+        <title>Конкуренты</title>
 
         <!-- Fonts-->
         <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -28,13 +28,12 @@ use App\Http\Controllers\ParseController;
         <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
-
         <script src="{{asset('js/app.js')}}"></script>
     </head>
     <body>
         @include('layouts.header')
         <main class="flex-column pl-5 pr-5" id="app">
-            <parse-indicators></parse-indicators>
+            <parse-info></parse-info>
         </main>
     </body>
 </html>

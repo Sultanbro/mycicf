@@ -57,28 +57,28 @@ use App\Http\Controllers\ParseController;
     <div class="bg-white pl-3 pr-3 box-shadow border-16">
         <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
             <div class="flex-row jc-sb">
-                <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                     <i class="fa fa-chart-pie"></i>
                     <div class="mt-1 fs-0_8">
                         Сборы
                     </div>
                 </div>
                 <a href="/parse/finance">
-                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                    <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-sliders-h settings-icon-transform270"></i>
                         <div class="mt-1 fs-0_8">
                             Показатели
                         </div>
                     </div>
                 </a>
-                {{--<a href="/KONKURETI">--}}
-                    {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
-                        {{--<i class="fa fa-user-friends"></i>--}}
-                        {{--<div class="mt-1 fs-0_8">--}}
-                            {{--Конкуренты--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</a>--}}
+                <a href="/parse/table-opu">
+                    <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-user-friends"></i>
+                        <div class="mt-1 fs-0_8">
+                            Конкуренты
+                        </div>
+                    </div>
+                </a>
             </div>
             <div>
                 <div class="flex-row">
@@ -184,7 +184,7 @@ use App\Http\Controllers\ParseController;
                     </div>
                     <div class="mr-4 ml-4">
                         <div class="flex-row date-color">
-                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
+                            <div onclick="load({{$_GET['productId'] ?? 0}})" class="flex-row custom-primary-button-inverse pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
                                 <div>
                                     <i class="fa fa-filter"></i>
                                 </div>
