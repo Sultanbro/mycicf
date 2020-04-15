@@ -10,7 +10,7 @@
 
         <constructor :items="participants" :title="participantTitle" :parent-isn="19"></constructor>
         <constructor :items="objects" :title="objecttTitle" :parent-isn="10"></constructor>
-        <constructor :items="attributes" :title="attributeTitle" :parent-isn="10"></constructor>
+        <constructor :items="attributes" :title="attributeTitle" :parent-isn="220169"></constructor>
 
 
         <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
@@ -30,7 +30,7 @@
                 attributes: [],
                 participantTitle: 'Участники',
                 objecttTitle: 'Объекты',
-                attributeTitle: 'Атрибуты',
+                attributeTitle: 'Атрибуты договора',
             }
         },
         props: {

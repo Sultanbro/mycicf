@@ -7,6 +7,7 @@ use App\FullProduct;
 use App\FullQuotation;
 use App\FullConstructor;
 use App\InsProduct;
+use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,7 +102,7 @@ class ProductsController extends Controller
             );
     }
 
-    public function setFullQuotationData(Request $request){
+    public function createFullProduct(Request $request){
         try{
             $model = new FullProduct();
             $model->name = $request->name;
@@ -118,24 +119,33 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function fullQuotationConstructor ($id){
+    public function getFullConstructor ($id){
         $product = FullProduct::find($id);
         $constructor = FullConstructor::where('product_id',$id)->first();
-        $participants = $constructor->participants ?? json_encode([]);
-        $objects = $constructor->objects ?? json_encode([]);
-        $attributes = $constructor->attributes ?? json_encode([]);
+        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
+
+        $participants = isset($data->participants) ? json_encode($data->participants) : json_encode([]);
+        $objects = isset($data->objects) ? json_encode($data->objects) : json_encode([]);
+        $attributes = isset($data->attributes) ? json_encode($data->attributes) : json_encode([]);
         return view('products.create.full_constructor',compact(['product','participants','objects','attributes']));
     }
 
-    public function setFullQuotationConstructor(Request $request){
+    public function setFullConstructor(Request $request){
         try{
             $constructor = FullConstructor::find($request->id) ?? new FullConstructor();
             $constructor->product_id = $request->id;
             $constructor->product_isn = $request->product_isn;
             $constructor->user_isn = Auth::user()->ISN;
-            $constructor->participants = json_encode($request->participants);
-            $constructor->objects = json_encode($request->objects);
-            $constructor->attributes = json_encode($request->attr);
+
+            $constructor->data = json_encode(array(
+                'participants' => $request->participants,
+                'objects' => $request->objects,
+                'attributes' => $request->attr,
+            ));
+
+//            $constructor->participants = json_encode($request->participants);
+//            $constructor->objects = json_encode($request->objects);
+//            $constructor->attributes = json_encode($request->attr);
             $constructor->save();
         }catch (\Exception $ex){
             return response()->json([
@@ -151,6 +161,17 @@ class ProductsController extends Controller
     public function getDicti(Request $request){
         try{
             $result = (new SiteController())->getDictiList((string)$request->ISN);
+
+            $i = 0;
+            foreach($result as $r){
+                if(isset($r['Type']) && $r['Type'] == 'DICTI'){
+                    $result[$i]['child'] = (new SiteController())->getDictiList((string)$r['Value']);
+                } else {
+                    $result[$i]['child'] = '';
+                }
+                $i++;
+            }
+            //exit();
             return response()->json([
                 'success' => true,
                 'result' => $result
@@ -234,7 +255,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function fullQuotationList(){
+    public function fullList(){
         $products = [];
         foreach (FullProduct::all() as $product){
             array_push($products, [
@@ -245,7 +266,7 @@ class ProductsController extends Controller
         return view('fullquotation.list', compact('products'));
     }
 
-    public function fullQuotationCreate(Request $request){
+    public function fullCreate(Request $request){
         if(($model = FullProduct::find($request->id)) === null){
             return response()->json([
                 'success' => false,
@@ -266,18 +287,48 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function fullQuotation($ID,$quotationId,Request $request){
+    public function full($ID,$quotationId,Request $request){
         if(($model = FullProduct::find($ID)) === null){
             return response()->json([
                 'success' => false,
                 'error' => 'Продукт который вы хотите рассчитать не найден'
             ]);
         }
+        $productName = $model->name;
 
-        return view('fullquotation.create', compact(['ID','quotationId']));
+        return view('fullquotation.create', compact(['ID','quotationId','productName']));
     }
 
-    public function getFullQuotationAttributes(Request $request, KiasServiceInterface $kias){
+    public function getFullAttributes(Request $request, KiasServiceInterface $kias){
+        $ID = $request->id;
+        $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
+        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
+
+        $attributes = [];
+        if(isset($data->attributes)) {
+            foreach ($data->attributes as $attr) {
+                $row = $this->getDictis($attr->ISN);
+                print_r($row);exit();
+                array_push($attributes, [
+                    'AttrISN' => (string)$attr->ISN,
+                    'Type' => '',
+                    'Label' => (string)$attr->label,
+                    'ParentISN' => '',
+                    'Value' => '',
+                    'Remark' => null,
+                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'attributes' => $attributes
+        ]);
+
+
+
+
         $ID = $request->id;
         $quotationId = $request->quotationId;
         $ProductISN = FullProduct::find($ID)->product_isn;
@@ -314,17 +365,20 @@ class ProductsController extends Controller
 
     public function getFullParticipants(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
-        $constructor = FullConstructor::where('product_id',$ID)->first();
+        $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
+        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
 
         $participants = [];
-        foreach (json_decode($constructor->participants) as $row){
-            array_push($participants, [
-                'ISN' => $row->ISN,
-                'label' => $row->label,
-                'lastName' => '',
-                'firstName' => '',
-                'patronymic' => '',
-            ]);
+        if(isset($data->participants)) {
+            foreach ($data->participants as $row) {
+                array_push($participants, [
+                    'ISN' => $row->ISN,
+                    'label' => $row->label,
+                    'lastName' => '',
+                    'firstName' => '',
+                    'patronymic' => '',
+                ]);
+            }
         }
 
         return response()->json([
@@ -333,7 +387,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function fullQuotationCalc(Request $request, KiasServiceInterface $kias){
+    public function fullCalc(Request $request, KiasServiceInterface $kias){
         $product_id = $request->id;
         if(($model = FullProduct::find($product_id)) === null){
             return response()->json([
@@ -422,5 +476,24 @@ class ProductsController extends Controller
             default :
                 return $value;
         }
+    }
+
+
+
+    public function getDictis($isn){
+        $kias = new Kias();
+        $kias->initSystem();
+        $response = $kias->getDictiList($isn);
+        print '<pre>';print $isn.'==='; print_r($response);print '</pre>'; exit();
+        $result = [];
+        if(isset($response->ROWSET->row)){
+            foreach ($response->ROWSET->row as $row){
+                array_push($result, [
+                    'Value' => (string)$row->ISN,
+                    'Label' => (string)$row->FULLNAME
+                ]);
+            }
+        }
+        return $result;
     }
 }

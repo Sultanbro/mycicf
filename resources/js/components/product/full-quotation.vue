@@ -60,12 +60,12 @@
             this.height = window.innerHeight;
         },
         mounted() {
-            this.getFullQuotationAttributes();
+            this.getFullAttributes();
             this.getFullParticipants();
         },
         methods: {
-            getFullQuotationAttributes() {
-                this.axios.post('/getFullQuotationAttributes', {
+            getFullAttributes() {
+                this.axios.post('/getFullAttributes', {
                     id: this.id,
                     quotationId: this.quotationId
                 })
@@ -97,7 +97,7 @@
                     });
             },
             calculate(){
-                this.axios.post('/full-quotation/calculate', {
+                this.axios.post('/full/calculate', {
                     subjISN : this.subjISN,
                     id : this.id,
                     participants: this.participants,

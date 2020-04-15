@@ -63,32 +63,32 @@
             //...
         },
         watch: {
-            period(val){
+            'period.period': function (val, oldVal){
                 val = parseInt(val);
                 if(val > 0 && val < 13){
-                    this.period.dateEnd = this.$moment(this.dateBeg, 'YYYY-MM-DD')
+                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
                         .add(this.period.period, 'month')
                         .add(-1, 'days')
                         .format('YYYY-MM-DD');
                 }else if(val !== 0){
-                    this.period.dateEnd = this.$moment(this.dateBeg, 'YYYY-MM-DD')
+                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
                         .add(this.period.period/10 - 1, 'days')
                         .format('YYYY-MM-DD');
                 }
             },
-            dateBeg(val){
+            'period.dateBeg': function (val, oldVal){
                 val = parseInt(this.period.period);
+                this.period.dateSig = this.$moment(this.period.dateBeg, 'YYYY-MM-DD').format('YYYY-MM-DD');
                 if(val > 0 && val < 13){
-                    this.period.dateEnd = this.$moment(this.dateBeg, 'YYYY-MM-DD')
+                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
                         .add(this.period.period, 'month')
                         .add(-1, 'days')
                         .format('YYYY-MM-DD');
                 }else if(val !== 0){
-                    this.period.dateEnd = this.$moment(this.dateBeg, 'YYYY-MM-DD')
+                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
                         .add(this.period.period/10 - 1, 'days')
                         .format('YYYY-MM-DD');
                 }
-                this.period.dateSig = this.period.dateBeg;
             }
         }
     }

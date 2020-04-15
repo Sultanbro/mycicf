@@ -40,10 +40,10 @@
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="save">Сохранить</button>
                     </div>
-                    <div v-if="participant.ISN == 2" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще {{ participant.data }}</button>
                     </div>
-                    <div v-if="participant.ISN == 2 && participant.new" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div v-if="participant.ISN == 2082 && participant.new" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="deleteParticipant">Удалить {{ participant.data }}</button>
                     </div>
                 </div>
