@@ -118,6 +118,8 @@ Vue.component('participant-form', require('./components/product/participantForm.
 
 Vue.component('agr-attributes', require('./components/product/attributes.vue').default);
 
+Vue.component('agr-clause', require('./components/product/agrclause.vue').default);
+
 
 window.onload = function(){
     var app = new Vue({

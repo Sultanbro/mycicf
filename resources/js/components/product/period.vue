@@ -4,7 +4,7 @@
         <div class="row col-12">
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата начала : </label>
-                <input type="date" id="dateBeg" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.dateBeg" required>
+                <input type="date" id="dateBeg" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.begin" required>
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-12">
                 <label>Период : </label>
@@ -29,11 +29,11 @@
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата окончания : </label>
-                <input type="date" id="dateEnd" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.dateEnd" :disabled="period.period !== '0'" required>
+                <input type="date" id="dateEnd" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.end" :disabled="period.period !== '0'" required>
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата подписания : </label>
-                <input type="date" id="dateSig" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.dateSig" required>
+                <input type="date" id="dateSig" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.sig" required>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@
             period: Object
         },
         mounted(){
-            this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
+            this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
                 .add(this.period.period, 'month')
                 .add(-1, 'days')
                 .format('YYYY-MM-DD');
@@ -66,26 +66,26 @@
             'period.period': function (val, oldVal){
                 val = parseInt(val);
                 if(val > 0 && val < 13){
-                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
+                    this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
                         .add(this.period.period, 'month')
                         .add(-1, 'days')
                         .format('YYYY-MM-DD');
                 }else if(val !== 0){
-                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
+                    this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
                         .add(this.period.period/10 - 1, 'days')
                         .format('YYYY-MM-DD');
                 }
             },
             'period.dateBeg': function (val, oldVal){
                 val = parseInt(this.period.period);
-                this.period.dateSig = this.$moment(this.period.dateBeg, 'YYYY-MM-DD').format('YYYY-MM-DD');
+                this.period.sig = this.$moment(this.period.begin, 'YYYY-MM-DD').format('YYYY-MM-DD');
                 if(val > 0 && val < 13){
-                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
+                    this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
                         .add(this.period.period, 'month')
                         .add(-1, 'days')
                         .format('YYYY-MM-DD');
                 }else if(val !== 0){
-                    this.period.dateEnd = this.$moment(this.period.dateBeg, 'YYYY-MM-DD')
+                    this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
                         .add(this.period.period/10 - 1, 'days')
                         .format('YYYY-MM-DD');
                 }

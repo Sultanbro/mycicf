@@ -10,7 +10,7 @@
     @include('layouts.treeselect')
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/navbars/">
     <link rel="stylesheet" href="{{asset('css/admin_head.css')}}">
-    <title>Navbar Template · Bootstrap</title>
+    <title>Конструктор · Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -22,11 +22,24 @@
     <main role="main">
         <full-constructor-create
                 :product="{{ json_encode($product) }}"
+                :data="{{ json_encode($data) }}"
+                :parentisn="{{ json_encode($parentisns) }}">
+        </full-constructor-create>
+        <!--full-constructor-create
+                :product="{{-- json_encode($product) }}"
                 :participants-base="{{ $participants  }}"
                 :objects-base="{{ $objects  }}"
-                :attributes-base="{{ $attributes  }}">
-        </full-constructor-create>
+                :attributes-base="{{ $attributes  }}"
+                :agrclause-base="{{ $agrclause  --}}">
+        </full-constructor-create-->
     </main>
+</div>
+<div class="preloader" id="preloader" style="top : 0">
+    <div class="item-1"></div>
+    <div class="item-2"></div>
+    <div class="item-3"></div>
+    <div class="item-4"></div>
+    <div class="item-5"></div>
 </div>
 </body>
 <script src="{{asset('js/admin.js')}}"></script>
@@ -34,9 +47,19 @@
 <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
 </html>
-<script>
-    // import FullConstructorCreate from "../../../js/components/admin/products/full_constructor/create";
-    // export default {
-    //     components: {FullConstructorCreate}
-    // }
-</script>
+<style>
+    .preloader {
+        z-index: 1001;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        overflow: hidden;
+        -webkit-animation-delay: 1s;
+        animation-delay: 1s;
+        background: #00dcff4d;
+        opacity: 0.8;
+    }
+</style>

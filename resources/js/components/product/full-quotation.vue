@@ -20,6 +20,10 @@
             <agr-attributes :attribute="attribute"></agr-attributes>
         </div>
 
+        <div v-for="agrclause in agrclauses">
+            <agr-clause :agrclause="agrclause"></agr-clause>
+        </div>
+
         <div class="d-flex justify-content-end col-12">
             <div class="col-12">
                 <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
@@ -36,6 +40,7 @@
             return {
                 participants: [],
                 attributes: [],
+                agrclauses: [],
                 moreParticipant : false,
                 isn: '',
                 subjISN : '',
@@ -44,10 +49,10 @@
                 calculated : false,
                 price : 0,
                 period: {
-                    dateBeg : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
-                    dateEnd : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                    begin : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                    end : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                     period : 12,
-                    dateSig: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                    sig: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                 }
             }
         },
@@ -60,17 +65,21 @@
             this.height = window.innerHeight;
         },
         mounted() {
-            this.getFullAttributes();
-            this.getFullParticipants();
+            // this.getFullAttributes();
+            // this.getFullParticipants();
+            // this.getFullAgrclause();
+            this.getFullData();
         },
         methods: {
-            getFullAttributes() {
-                this.axios.post('/getFullAttributes', {
+            getFullData() {
+                this.axios.post('/getFullData', {
                     id: this.id,
                     quotationId: this.quotationId
                 })
                     .then(response => {
                         if(response.data.success){
+                            this.participants = response.data.participants;
+                            this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
                         }else{
                             alert(response.data.error);
@@ -80,41 +89,85 @@
                         alert(error);
                     });
             },
-            getFullParticipants() {
-                this.axios.post('/getFullParticipants', {
-                    id: this.id,
-                    quotationId: this.quotationId
-                })
-                    .then(response => {
-                        if(response.data.success){
-                            this.participants = response.data.participants;
-                        }else{
-                            alert(response.data.error);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                    });
-            },
+            // getFullAttributes() {
+            //     this.axios.post('/getFullAttributes', {
+            //         id: this.id,
+            //         quotationId: this.quotationId
+            //     })
+            //         .then(response => {
+            //             if(response.data.success){
+            //                 this.attributes = response.data.attributes;
+            //             }else{
+            //                 alert(response.data.error);
+            //             }
+            //         })
+            //         .catch(error => {
+            //             alert(error);
+            //         });
+            // },
+            // getFullParticipants() {
+            //     this.axios.post('/getFullParticipants', {
+            //         id: this.id,
+            //         quotationId: this.quotationId
+            //     })
+            //         .then(response => {
+            //             if(response.data.success){
+            //                 this.participants = response.data.participants;
+            //             }else{
+            //                 alert(response.data.error);
+            //             }
+            //         })
+            //         .catch(error => {
+            //             alert(error);
+            //         });
+            // },
+            // getFullAgrclause() {
+            //     this.axios.post('/getFullAgrclause', {
+            //         id: this.id,
+            //         quotationId: this.quotationId
+            //     })
+            //         .then(response => {
+            //             if(response.data.success){
+            //                 this.agrclauses = response.data.agrclauses;
+            //             }else{
+            //                 alert(response.data.error);
+            //             }
+            //         })
+            //         .catch(error => {
+            //             alert(error);
+            //         });
+            // },
             calculate(){
-                this.axios.post('/full/calculate', {
-                    subjISN : this.subjISN,
-                    id : this.id,
-                    participants: this.participants,
-                    attributes : this.attributes,
-                    contractDate: this.contractDate,
-                })
-                .then(response => {
-                    if(response.data.success){
-                        this.price = response.data.premium;
-                        this.calculated = true;
-                    }else{
-                        alert(response.data.error)
-                    }
-                })
-                .catch(error => {
-                    alert(error)
-                });
+                if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
+                    this.axios.post('/full/calculate', {
+                        subjISN: this.subjISN,
+                        id: this.id,
+                        participants: this.participants,
+                        attributes: this.attributes,
+                        agrclauses: this.agrclauses,
+                        contractDate: this.period,
+                    })
+                        .then(response => {
+                            if (response.data.success) {
+                                this.price = response.data.premium;
+                                this.calculated = true;
+                            } else {
+                                alert(response.data.error)
+                            }
+                        })
+                        .catch(error => {
+                            alert(error)
+                        });
+                } else {
+                    alert('Укажите пожалуйста все данные')
+                }
+            },
+            checkInputs(section){
+                let result = true;
+                for(let item in section){
+                    section[item].Value == '' || section[item].Value == null ? result = false : '';
+                }
+                return result;
             }
         },
         watch : {

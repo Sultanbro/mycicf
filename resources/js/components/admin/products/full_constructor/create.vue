@@ -1,20 +1,19 @@
 <template>
     <div class="row">
-        <div class="form-group col-md-12 col-lg-12 col-12 text-center">
-            {{ product.name }}
+        <div class="form-group col-md-12 col-lg-12 col-12 text-center font-weight-bold">
+            Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
         </div>
 
-        <!--constructor-participants :participants="participants"></constructor-participants>
-        <!--constructor-objects :objects="objects"></constructor-objects>
-        <constructor-attributes :attributes="attributes"></constructor-attributes-->
-
-        <constructor :items="participants" :title="participantTitle" :parent-isn="19"></constructor>
-        <constructor :items="objects" :title="objecttTitle" :parent-isn="10"></constructor>
-        <constructor :items="attributes" :title="attributeTitle" :parent-isn="220169"></constructor>
-
+        <formular :items="sections.formular" :parentisns="parentisns" title="Формуляр" type="formular"></formular>
+        <constructor v-for="(section,key) in sections" v-if="key != 'formular'"
+                     :iIndex="key"
+                     :key="key"
+                     :parentisns="parentisns"
+                     :items="section">
+        </constructor>
 
         <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
-            <button type="button" @click="send" class="btn-info btn-lg btn">Сохранить</button>
+            <button type="button" @click="save" class="btn-info btn-lg btn">Сохранить</button>
         </div>
     </div>
 </template>
@@ -25,34 +24,38 @@
         data() {
             return {
                 ISN : null,
-                participants: [],
-                objects: [],
-                attributes: [],
-                participantTitle: 'Участники',
-                objecttTitle: 'Объекты',
-                attributeTitle: 'Атрибуты договора',
+                sections:Object,
+                parentisns: {              // Если в базе нету prentIsns то берем вот эти по умолчанию
+                    formular: {
+                        insurant: 2103,
+                        curator: 221346,
+                        status: 223367
+                    },
+                    participants: 19,
+                    attributes: 220169,
+                    agrclause: 2031,
+                    objects: 19,
+                }
             }
         },
         props: {
             product: Object,
-            participantsBase: Array,        // Данные из базы
-            objectsBase: Array,
-            attributesBase: Array,
+            data: Object,       // Конструктор из базы
+            parentisn: Object  // Parentisns из базы
         },
         created(){
-            this.participants = this.participantsBase;  // Записываем данные из базы
-            this.objects = this.objectsBase;
-            this.attributes = this.attributesBase;
+            this.sections = this.data;                      // Дает возможность манипулировать объектом sections
+            if(Object.keys(this.parentisn).length != 0){
+                this.parentisns = this.parentisn;           // Дает возможность манипулировать объектом parentisns
+            }
         },
         methods: {
-            send(){
-                this.axios.post('/calc/full-constructor', {
-                    product_isn : this.product.product_isn,
-                    id:this.product.id,
-                    participants: this.participants,
-                    objects: this.objects,
-                    attr: this.attributes
-                })
+            save(){
+                //this.preloader(true);
+                this.sections.product_isn = this.product.product_isn;
+                this.sections.id = this.product.id;
+                this.sections.parentisns = this.parentisns;
+                this.axios.post('/calc/full-constructor', this.sections)
                     .then(response => {
                         if(response.data.success){
                             alert('Данные успешно записаны');
@@ -64,6 +67,9 @@
                         alert(error);
                     });
             },
+            preloader(show){
+                show ? document.getElementById('preloader').style.display = 'flex' : document.getElementById('preloader').style.display = 'none';
+            },
         },
         mounted(){
             //...
@@ -73,5 +79,18 @@
 </script>
 
 <style scoped>
-
+    .preloader {
+        z-index: 1001;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        overflow: hidden;
+        -webkit-animation-delay: 1s;
+        animation-delay: 1s;
+        background: #00dcff4d;
+        opacity: 0.8;
+    }
 </style>

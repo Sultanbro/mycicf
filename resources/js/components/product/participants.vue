@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-6">
         <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
-            Добавить ({{ participant.label }})
+            Добавить ({{ participant.Label }})
         </button>
         <modal :name="modalName"
                :width="width"
@@ -115,6 +115,7 @@
             },
             save(){
                 this.participant.subjISN = this.isn;
+                this.participant.Value = this.isn;
                 this.subjISN = this.isn;
                 this.closeParticipantForm(this.pIndex);
                 alert('Страхователь успешно добавлен!');
@@ -123,9 +124,11 @@
                 this.participants.push({
                     ISN:this.participant.ISN,
                     data:this.participant.data,
+                    Label:this.participant.Label,
                     new: true,
                     iin: '',
                     subjISN: '',
+                    Value: '',
                     lastName: '',
                     firstName: '',
                     patronymic: ''
