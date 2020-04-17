@@ -455,6 +455,20 @@ class ParseController extends Controller
         ];
         return $attributes;
     }
+    public function getCompaniesList(){
+        try {
+            $result = $this->getCompanyListWithId();
+        }catch(Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'result' => $result
+        ]);
+    }
     public function getCompanyListWithId(){
         $model = InsuranceCompany::all();
         $result = [];
@@ -462,7 +476,6 @@ class ParseController extends Controller
             $result[$item->id] = $item->short_name;
         }
         return $result;
-
     }
     public function getCompanies(){
         $model = InsuranceCompany::all();
@@ -2658,31 +2671,37 @@ class ParseController extends Controller
             for($month = 1; $month <= 12 ; $month++){
                 $premium = ParsePremium::where('month', $month)
                     ->where('year', $year)
+                    ->where('company_id',$request->company)
                     ->get();
                 $result[$year][$month]['premium'] = sizeof($premium) < 1 ? 0 : 1;
 
                 $payout = ParsePayout::where('month', $month)
                     ->where('year', $year)
+                    ->where('company_id',$request->company)
                     ->get();
                 $result[$year][$month]['payout'] = sizeof($payout) < 1 ? 0 : 1;
 
                 $standart = ParseStandart::where('month', $month)
                     ->where('year', $year)
+                    ->where('company_id',$request->company)
                     ->get();
                 $result[$year][$month]['standart'] = sizeof($standart) < 1 ? 0 : 1;
 
                 $finance = ParseFinance::where('month', $month)
                     ->where('year', $year)
+                    ->where('company_id',$request->company)
                     ->get();
                 $result[$year][$month]['finance'] = sizeof($finance) < 1 ? 0 : 1;
 
                 $opu = ParseOpu::where('month', $month)
                     ->where('year', $year)
+                    ->where('company_id',$request->company)
                     ->get();
                 $result[$year][$month]['opu'] = sizeof($opu) < 1 ? 0 : 1;
 
                 $balance = ParseBalance::where('month', $month)
                     ->where('year', $year)
+                    ->where('company_id',$request->company)
                     ->get();
                 $result[$year][$month]['balance'] = sizeof($balance) < 1 ? 0 : 1;
             }
@@ -2713,13 +2732,23 @@ class ParseController extends Controller
                     ->where('year', $year)
                     ->delete();
                 break;
-            case self::PAYOUT :
+            case self::PAYMENTS :
                 ParsePayout::where('month', $month)
                     ->where('year', $year)
                     ->delete();
                 break;
             case self::STANDART :
                 ParseStandart::where('month', $month)
+                    ->where('year', $year)
+                    ->delete();
+                break;
+            case self::OPU :
+                ParseOpu::where('month', $month)
+                    ->where('year', $year)
+                    ->delete();
+                break;
+            case self::BALANCE :
+                ParseBalance::where('month', $month)
                     ->where('year', $year)
                     ->delete();
                 break;
