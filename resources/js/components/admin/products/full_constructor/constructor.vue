@@ -7,7 +7,7 @@
             <button type="button" @click="addItem" class="btn-info btn-lg btn float-right">Добавить</button>
         </div>
         <div v-for="(item,index) in items" class="form-group col-md-4 col-lg-4 col-6 text-center">
-            <treeselect v-model="item.ISN" :options="itemsConstructor" @select="onChangeSelect($event,index)" />
+            <treeselect v-model="item.ISN" :options="dictiOptions" @select="onChangeSelect($event,index)" />
             <a @click="deleteItem(index)">Удалить</a>
         </div>
     </div>
@@ -19,7 +19,7 @@
         data() {
             return {
                 parentChanged: false,
-                itemsConstructor: [],
+                dictiOptions: [],
                 currentIndex: 0,
                 title: {
                     formular:'Формуляр',
@@ -55,7 +55,7 @@
                     .then(response => {
                         if(response.data.success){
                             if(isn == null) {
-                                this.itemsConstructor = response.data.result;
+                                this.dictiOptions = response.data.result;
                             } else {
                                 this.items[this.currentIndex].Childs = response.data.result;
                             }

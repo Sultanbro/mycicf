@@ -4,7 +4,12 @@
             <span class="font-weight-bold" @click="parentChanged = true">{{ title }}</span>
         </div>
         <div class="form-group col-md-4 col-lg-4 col-6 text-center">
-            <label>Страхователь</label>
+            <label @click="parentChanged.insurant = true">Страхователь</label>
+            <div class="row">
+                <input type="text"
+                       v-model="parentisns.formular.insurant"
+                       v-show="parentChanged.insurant" class="attr-input-text custom-input ml-3 mb-2"  size="6">
+            </div>
             <div class="row">
                 <div class="form-group col-md-6 col-lg-6 col-6">
                     <label>Физ.лицо</label>
@@ -18,17 +23,22 @@
         </div>
 
         <div class="form-group col-md-4 col-lg-4 col-6 text-center">
-            <label @click="parentChanged = true">Статус</label>
+            <label @click="parentChanged.status = true">Статус</label>
             <div class="row">
-                <input type="text" v-model="parentisns.formular.status" v-show="parentChanged" class="attr-input-text custom-input ml-3 mb-2"  size="6">
-                <a v-if="parentChanged" @click="getDicti()" class="mt-2 ml-2">Обновить</a>
+                <input type="text" v-model="parentisns.formular.status" v-show="parentChanged.status" class="attr-input-text custom-input ml-3 mb-2"  size="6">
+                <a v-if="parentChanged.status" @click="getDicti()" class="mt-2 ml-2">Обновить</a>
             </div>
-            <treeselect v-model="items[0].status.Value" :options="itemsConstructor" />
+            <treeselect v-model="items[0].status.Value" :options="dictiOptions" />
         </div>
 
         <div class="form-group col-md-4 col-lg-4 col-6 text-center">
-            <label>Куратор</label>
-            <input type="text" v-model="items[0].curator.Value" class="custom-input col-md-12" disabled="true">
+            <label @click="parentChanged.curator = true">Куратор</label>
+            <div class="row">
+                <input type="text"
+                       v-model="parentisns.formular.curator"
+                       v-show="parentChanged.curator" class="attr-input-text custom-input ml-3 mb-2"  size="6">
+            </div>
+            <treeselect v-model="items[0].curator.Value" :options="curatorOptions" />
         </div>
 
 
@@ -40,8 +50,9 @@
         name: "formular",
         data() {
             return {
-                parentChanged: false,
-                itemsConstructor: [],
+                dictiOptions: [],
+                curatorOptions: [{ id:0, label: 'По умолчанию' },{ id:1, label: 'Выбрать куратора'}],
+                parentChanged: { insurant: false, curator: false, status: false }
             }
         },
         props: {
@@ -57,7 +68,7 @@
                         phys: true,
                     },
                     curator:{
-                        Value:'',
+                        Value:0,
                     },
                     status:{
                         Value:223368,
@@ -74,14 +85,14 @@
                 }
             },
             getDicti(){         // Берем справочник из Киаса
-                this.parentChanged = false;
+                this.parentChanged.status = false;
                 return this.axios.post('/calc/getDicti', {
                     ISN:this.parentisns.formular.status,    //items[0].status.ISN,
                     type:''
                 })
                     .then(response => {
                         if(response.data.success){
-                            this.itemsConstructor = response.data.result;
+                            this.dictiOptions = response.data.result;
                         }else{
                             alert(response.data.error);
                         }
