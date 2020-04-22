@@ -142,6 +142,13 @@
             modalName(){
                 return 'participant-form-'+this.pIndex;
             }
+        },
+        watch: {
+            'participant.Value': function (val, oldVal) {
+                if (this.participant.ISN == 2103) {
+                    this.$parent.subjISN = val;
+                }
+            }
         }
     }
 </script>

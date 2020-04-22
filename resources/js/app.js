@@ -120,6 +120,8 @@ Vue.component('agr-attributes', require('./components/product/attributes.vue').d
 
 Vue.component('agr-clause', require('./components/product/agrclause.vue').default);
 
+Vue.component('agr-object', require('./components/product/agrobjects.vue').default);
+
 
 window.onload = function(){
     var app = new Vue({

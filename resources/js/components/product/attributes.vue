@@ -1,6 +1,6 @@
 <template>
     <div class="col-12 row mt-2 mb-2 ml-0 agreement-block">
-        <h4>Дополнительные атрибуты договора</h4>
+        <h4>Дополнительные атрибуты</h4>
         <div class="row col-12">
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label class="bold">Атрибут : </label>

@@ -76,7 +76,7 @@
                         .format('YYYY-MM-DD');
                 }
             },
-            'period.dateBeg': function (val, oldVal){
+            'period.begin': function (val, oldVal){
                 val = parseInt(this.period.period);
                 this.period.sig = this.$moment(this.period.begin, 'YYYY-MM-DD').format('YYYY-MM-DD');
                 if(val > 0 && val < 13){

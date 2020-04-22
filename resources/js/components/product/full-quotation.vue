@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="col-md-12 mb-4">
+        <!--div class="col-md-12 mb-4">
             <div class="row">
                 <participant v-for="(participant,index) in participants"
                              :key="index"
@@ -11,7 +11,6 @@
                 </participant>
             </div>
         </div>
-
         <div>
             <period :period="period"></period>
         </div>
@@ -22,12 +21,21 @@
 
         <div v-for="agrclause in agrclauses">
             <agr-clause :agrclause="agrclause"></agr-clause>
+        </div-->
+
+        <div v-for="agrobject in agrobjects">
+            <agr-object :agrobject="agrobject"></agr-object>
         </div>
 
         <div class="d-flex justify-content-end col-12">
             <div class="col-12">
                 <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
                 <span class="fs-2" v-if="calculated">{{price}} Тенге</span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end col-12">
+            <div class="col-12">
+                <button class="btn btn-outline-info" @click="getFullObjects">Добавить еще</button>
             </div>
         </div>
     </div>
@@ -41,8 +49,9 @@
                 participants: [],
                 attributes: [],
                 agrclauses: [],
+                formular: [],
+                agrobjects: [],
                 moreParticipant : false,
-                isn: '',
                 subjISN : '',
                 width : 0,
                 height : 0,
@@ -68,9 +77,30 @@
             // this.getFullAttributes();
             // this.getFullParticipants();
             // this.getFullAgrclause();
-            this.getFullData();
+            //this.getFullData();
+            this.getFullObjects();
         },
         methods: {
+            getFullObjects() {
+                this.axios.post('/getFullObjects', {
+                    id: this.id,
+                    quotationId: this.quotationId
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            // if(Object.keys(this.agrobjects).length == 0){
+                            //     this.agrobjects = response.data.objects;
+                            // } else {
+                                this.agrobjects.push(response.data.objects);
+                            //}
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+            },
             getFullData() {
                 this.axios.post('/getFullData', {
                     id: this.id,
@@ -78,9 +108,10 @@
                 })
                     .then(response => {
                         if(response.data.success){
-                            this.participants = response.data.participants;
+                            // this.formular = response.data.formular;
+                            // this.participants = response.data.participants;
                             this.agrclauses = response.data.agrclauses;
-                            this.attributes = response.data.attributes;
+                            //this.attributes = response.data.attributes;
                         }else{
                             alert(response.data.error);
                         }
@@ -138,13 +169,14 @@
             //         });
             // },
             calculate(){
-                if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
+                //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
                     this.axios.post('/full/calculate', {
                         subjISN: this.subjISN,
                         id: this.id,
                         participants: this.participants,
                         attributes: this.attributes,
                         agrclauses: this.agrclauses,
+                        formular: this.formular,
                         contractDate: this.period,
                     })
                         .then(response => {
@@ -158,9 +190,9 @@
                         .catch(error => {
                             alert(error)
                         });
-                } else {
-                    alert('Укажите пожалуйста все данные')
-                }
+                // } else {
+                //     alert('Укажите пожалуйста все данные')
+                // }
             },
             checkInputs(section){
                 let result = true;

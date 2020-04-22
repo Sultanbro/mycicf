@@ -249,6 +249,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@full');
         Route::post('/full/create', 'ProductsController@fullCreate');
         Route::post('/getFullAttributes', 'ProductsController@getFullAttributes');
+        Route::post('/getFullObjects', 'ProductsController@getFullObjects');
         Route::post('/getFullParticipants', 'ProductsController@getFullParticipants');
         Route::post('/getFullAgrclause', 'ProductsController@getFullAgrclause');
         Route::post('/getFullData', 'ProductsController@getFullData');

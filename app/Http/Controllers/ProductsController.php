@@ -290,7 +290,7 @@ class ProductsController extends Controller
         return view('fullquotation.create', compact(['ID','quotationId','productName']));
     }
 
-    public function getFullAttributes(Request $request, KiasServiceInterface $kias){
+    /*public function getFullAttributes(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
         $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
         $data = isset($constructor->data) ? json_decode($constructor->data) : [];
@@ -336,7 +336,7 @@ class ProductsController extends Controller
             'success' => true,
             'agrclauses' => $agrclause
         ]);
-    }
+    }*/
 
     public function getFullData(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
@@ -346,12 +346,128 @@ class ProductsController extends Controller
         $participants = isset($data->participants) ? $data->participants : [];
         $agrclause = isset($data->agrclause) ? $data->agrclause : [];
         $attributes = isset($data->attributes) ? $data->attributes : [];
+        $formular = isset($data->formular) ? $data->formular[0] : [];
 
         return response()->json([
             'success' => true,
             'participants' => $participants,
             'agrclauses' => $agrclause,
             'attributes' => $attributes,
+            'formular' => $formular
+        ]);
+    }
+
+    public function getFullObjects(Request $request, KiasServiceInterface $kias){
+        $ID = $request->id;
+        $constructor = FullProduct::find($ID);
+        $responses = $kias->getFullObject($constructor->product_isn);
+        $objects = [];
+        $risks = [];    //RiskPack
+        $ageclause = [];
+        //print '<pre>';print_r($responses);print '</pre>';exit();
+
+
+
+        if(isset($responses)){
+            foreach($responses as $response) {
+                $risks = 0;
+                if (isset($response->Object->row)) {
+                    //$object = $response->Object->row;
+                    $objects['ClassISN'] = (string)$response->Object->row->classobjisn;
+                    $objects['classobjname'] = (string)$response->Object->row->classobjname;
+                    $objects['Value'] = '';
+                    $i = 0;
+                    foreach($response->Object->row as $object) {
+                        $subIsn = (string)$object->subclassobjisn;
+                        $objects['obj'][$i]['SubClassISN'] = $subIsn;
+                        $objects['obj'][$i]['ObjName'] = (string)$object->subclassobjname;
+                        $objects['AGROBJECT_ADDATTR'][$subIsn] = [];
+                        $objects['AGRCOND'][$subIsn] = [];
+                        if (isset($object->ObjAttr->row)) {
+                            foreach ($object->ObjAttr->row as $row) {
+                                //array_push($objects['AGROBJECT_ADDATTR'], [
+                                $objects['AGROBJECT_ADDATTR'][$subIsn][(string)$row->AttrISN] = array(
+                                    'AttrISN' => (string)$row->AttrISN,
+                                    'Type' => (string)$row->TypeValue,
+                                    'Label' => (string)$row->AttrName,
+                                    'ParentISN' => (string)$row->NumCode,
+                                    'Value' => null,
+                                    'Remark' => null,
+                                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
+                                );
+                                //]);
+                            }
+                            if (isset($response->RiskPack->row[$i])) {
+                                if(count($response->RiskPack->row) == count($response->Object->row)) {
+                                    $row = $response->RiskPack->row[$i];
+                                    array_push($objects['AGRCOND'][$subIsn], [
+                                        'InsClassisn' => (string)$row->InsClassisn,
+                                        'InsClassname' => (string)$row->InsClassname,
+                                        'RiskPackisn' => (string)$row->RiskPackisn,
+                                        'RiskPackname' => (string)$row->RiskPackname,
+                                        //'Risk' => $riskChilds
+                                    ]);
+                                }
+                            }
+                        }
+                        $i++;
+                    }
+                }
+
+//                if (isset($response->RiskPack->row)) {
+//                    foreach ($response->RiskPack->row as $row) {
+//                        array_push($objects['AGRCOND'][$subIsn], [
+//                            'InsClassisn' => (string)$row->InsClassisn,
+//                            'InsClassname' => (string)$row->InsClassname,
+//                            'RiskPackisn' => (string)$row->RiskPackisn,
+//                            'RiskPackname' => (string)$row->RiskPackname,
+//                            //'Risk' => $riskChilds
+//                        ]);
+//                    }
+//                }
+
+            }
+        }
+//
+        //print '<pre>';print_r($responses);print '</pre>';exit();
+
+        /*if(isset($response->RiskPack->row)){
+            foreach ($response->RiskPack->row as $row) {
+//                array_push($risks, [
+//                    //$objects[(string)$row->AttrISN] = array(
+//                    'AttrISN' => (string)$row->AttrISN,
+//                    'Type' => (string)$row->TypeValue,
+//                    'Label' => (string)$row->AttrName,
+//                    'ParentISN' => (string)$row->NumCode,
+//                    'Value' => null,
+//                    'Remark' => null,
+//                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
+//                ]);
+//                $riskChilds = [];
+//                if(isset($row->Risk->row)) {
+//                    foreach ($row->Risk->row as $rows) {
+//                        array_push($riskChilds,[
+//                            'InsClassisn' => (string)$rows->InsClassisn,
+//                            'RiskPackisn' => (string)$rows->RiskPackisn,
+//                            'riskisn' => (string)$rows->riskisn,
+//                            'riskname' => (string)$rows->riskname
+//                        ]);
+//                    }
+//                }
+                array_push($objects['AGRCOND'],[
+                    'InsClassisn' => (string)$row->InsClassisn,
+                    'InsClassname' => (string)$row->InsClassname,
+                    'RiskPackisn' => (string)$row->RiskPackisn,
+                    'RiskPackname' => (string)$row->RiskPackname,
+                    //'Risk' => $riskChilds
+                ]);
+            }
+        }*/
+
+        //print '<pre>';print_r($response);print '</pre>';exit();
+        return response()->json([
+            'success' => true,
+            'objects' => $objects
         ]);
     }
 
@@ -364,16 +480,21 @@ class ProductsController extends Controller
             ]);
         }
 
-        $prodIsn = $model->product_isn;
-        $subjISN = $request->subjISN;
-        $participants = $this->participantsToKiasAddAttr($request->all());
-        $attributes = $this->attributesToKiasAddAttr($request->all()['attributes']);
-        $agrclauses = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
+        $order['prodIsn'] = $model->product_isn;
+//        $order['subjISN'] = $request->subjISN;
+//        $order['participants'] = $this->participantsToKiasAddAttr($request->all());
+//        $order['attributes'] = $this->attributesToKiasAddAttr($request->all()['attributes']);
+//        $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
+//        $order['contractDate'] = $request->all()['contractDate'];
+//        $order['formular'] = $request->all()['formular'];
 
-        print '<pre>';print_r($agrclauses);print '</pre>';exit();
+        $response = $kias->calcFull($order);
+        print '<pre>';print_r($response); print '</pre>';exit();
+        //print $order['formular']['status']['Value'];exit();
+        print '<pre>';print_r($order);print '</pre>';exit();
 
 
-        $response = $kias->fullQuotationCalculator($prodIsn, $subjISN, $attributes);
+        $response = $kias->calcFull($order);
         if(isset($response->error)){
             return response()->json([
                 'success' => false,

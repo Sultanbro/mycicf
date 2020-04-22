@@ -29,6 +29,11 @@ class Kias implements KiasServiceInterface
     const APP_ID = 868281;
     public $tries = 0;
 
+    const DICT_CURRENCY_USD = 9716;
+    const DICT_CURRENCY_RUB = 9788;
+    const DICT_CURRENCY_EURO = 9721;
+    const DICT_CURRENCY_TENGE = 9813;
+
     /**
      * @var string Ссылка на сервис
      */
@@ -294,9 +299,9 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getFullQuotationAttributes($product){
-        return $this->request('User_CicGetAttrExpress', [
-            'Product' => $product,
+    public function getFullObject($product){
+        return $this->request('User_CicGetProductInform', [
+            'ProductISN' => $product
         ]);
     }
 
@@ -330,15 +335,147 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function fullQuotationCalculator($ISN, $SubjISN, $addAttr)
+    public function calcFull($order)
     {
-        return $this->request('User_CicExpressCalculator', [
-            'ProductISN' => $ISN,
-            'SubjISN' => $SubjISN,
-            'DeptISN' => '1445791',
-            'ADDATTR' => [
-                'row' => $addAttr
+
+        return $this->request('User_CicGetProductInform', [
+            'ProductISN' => $order['prodIsn']
+        ]);
+
+        /*$vi = 0;
+        foreach ($vehicles as $vehicle) {
+            if($vi != 0){
+                break;
+            }
+            array_push($agr_object,
+                [
+                    'ClassISN' => 2118,
+                    'SubClassISN' => 3366,
+                    'OrderNo' => 1,
+                    'AGROBJECT_ADDATTR' => [
+                        'row' => [
+                            [
+                                'ATTRISN' => 513541,
+                                'TYPEVALUE' => 'DICTI',
+                                'FULLNAME' => 'Порядок и форма страхового возмещения',
+                                'ORDERNO' => 1,
+                                'VAL' => intval($order['compensation']),
+                            ], [
+                                'ATTRISN' => 513491,
+                                'TYPEVALUE' => 'DICTI',
+                                'FULLNAME' => 'Вызов ДП',
+                                'ORDERNO' => 2,
+                                'VAL' => intval($order['callPolicy']),
+                            ], [
+                                'ATTRISN' => 513581,
+                                'TYPEVALUE' => 'DICTI',
+                                'FULLNAME' => 'Территория страхования',
+                                'ORDERNO' => 3,
+                                'VAL' => intval($order['insureTerritory']),
+                                //<VALUE>Республика Казахстан и Страны СНГ</VALUE>
+                            ],
+                            [
+                                'ATTRISN' => 513431,
+                                'TYPEVALUE' => 'DICTI',
+                                'FULLNAME' => 'Класс КБМ',
+                                'ORDERNO' => 4,
+                                'VAL' => intval($order['classKBM']),
+                            ],
+//                            [
+//                                'ATTRISN'	=>	720321,
+//                                'TYPEVALUE'	=>	'INTEGER',
+//                                'FULLNAME'	=>	'Бонус Безопасный пробег (км)',
+//                                'ORDERNO'	=>	5,
+//                                'VAL'		=>	699141, //intval($order['safeKm']),
+//                            ],
+                            [
+                                'ATTRISN' => 475611,
+                                'TYPEVALUE' => 'NUMBER',
+                                'FULLNAME' => 'Действительная стоимость Объекта',
+                                'ORDERNO' => 6,
+                                'VAL' => intval($order['marketCost']),
+                            ]
+                        ]
+                    ],
+                    'AGROBJCAR' => [
+                        'ModelISN' => intval($vehicle['modelIsn']),
+                        'MarkaISN' => intval($vehicle['markIsn']),
+                        'ClassISN' => 3366,
+                        'ReleaseDate' => '01.01.' . $vehicle['year'],
+                        'VIN' => $vehicle['vin'],
+                        'REGNO' => $vehicle['plate'],
+                        'OwnerJuridical' => 'N',
+                        'TerritoryISN' => $vehicle['territory_isn'],
+                        'PROBEG' => intval($order['probeg']),
+                        'REALPRICE' => intval($order['marketCost'])
+                    ],
+                    'AGRCOND' => [
+                        'row' => [
+                            'RiskISN' => $order['riskPacket'],   //513741,
+                            'InsClassISN' => 437341,
+                            'DateSign' => date('d.m.Y', time()),
+                            'DateBeg' => date('d.m.Y', $order['contract_begin_date']),
+                            'DateEnd' => date('d.m.Y', $order['contract_end_date']),
+                            'CurrISN' => self::DICT_CURRENCY_TENGE,
+                            'CurrSumISN' => self::DICT_CURRENCY_TENGE,
+                            'LimitSum' => $order['insureSum'],
+                            'LimitSumType' => 'А',
+                            'FranchType' => 'Б',
+                            'FranchSum' => $order['franch'],
+                        ]
+                    ],
+                ]
+            );
+            $vi++;
+        }
+
+        $result = $this->request('User_CicSaveAgrCalc', [
+
+            'ISN' => '',
+            'ID' => "TEMP_515431_" . $order['prodIsn'] . "_" . time(),
+            'CLIENTISN' => $order['subjISN'],
+            'PRODUCTISN' => $order['prodIsn'],
+            'CLASSISN' => 220603,
+            'STATUSISN'    => $order['formular']['status']['Value'],            //223368
+            'CURRISN' => self::DICT_CURRENCY_TENGE,
+            'DATESIGN' => date('d.m.Y', strtotime($order['contractDate']['sig'])),
+            'DATEBEG' => date('d.m.Y', strtotime($order['contractDate']['begin'])),
+            'DATEEND' => date('d.m.Y', strtotime($order['contractDate']['end'])),
+            'CURRCODE' => 'KZT',
+
+            'AGREEMENT_ADDATTR' => [
+                'row' => $order['attributes']
+            ],
+
+            'AGROBJECT' => [
+                'ClassISN' => 2118,
+                'SubClassISN' => 3366,
+                'OrderNo' => 1,
+                'AGROBJECT_ADDATTR' => [],
+                'AGROBJCAR' => [
+                    'ModelISN' => intval($vehicle['modelIsn']),
+                    'MarkaISN' => intval($vehicle['markIsn']),
+                    'ClassISN' => 3366,
+                    'ReleaseDate' => '01.01.' . $vehicle['year'],
+                    'VIN' => $vehicle['vin'],
+                    'REGNO' => $vehicle['plate'],
+                    'OwnerJuridical' => 'N',
+                    'TerritoryISN' => $vehicle['territory_isn'],
+                    'PROBEG' => intval($order['probeg']),
+                    'REALPRICE' => intval($order['marketCost'])
+                ],
+                'AGRCOND' => [],
+            ],
+
+            'AGRROLE' => [
+                'row' => $order['participants'],
+            ],
+
+            'AGRCLAUSE' => [
+                'row' => $order['agrclause']
             ]
         ]);
+
+        return $result;*/
     }
 }
