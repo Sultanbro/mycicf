@@ -43,9 +43,12 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+            <h4 class="text-center mt-2">Экспресс котировка</h4>
             @foreach($products as $product)
-                <div class="col-3 mt-2 bg-white border-8">
-                    <a href="{{$product['url']}}">{{$product['name']}}</a>
+                <div class="d-flex mt-2 bg-white border-8 product-list">
+                    <a class="d-flex p-2 justify-content-center border-8 w-100" href="{{$product['url']}}">
+                        <span>{{$product['name']}}</span>
+                    </a>
                 </div>
             @endforeach
         </div>

@@ -2066,7 +2066,13 @@ textarea::-webkit-scrollbar-thumb {
 	color : black;
 	border : 1px solid #dee2e6;
 	padding: 10px;
+    transition: 0.4s ease;
 }
+.add-button:hover {
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+}
+
 .participant-form{
     width: 100vw;
 	min-height: 100vh;
@@ -2077,4 +2083,30 @@ textarea::-webkit-scrollbar-thumb {
 	box-shadow: 0 0 5px .5px #888888;
 	padding: 30px;
 	border-radius: 10px;
+    height: 200px;
+}
+
+.product-list a{
+    color: cornflowerblue;
+    transition: 0.4s ease;
+}
+
+.product-list a:hover {
+    box-shadow: 0px 0px 10px 0 rgba(100,149,237 , .5);
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.agr-block {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .agr-block {
+        display: grid;
+        grid-template-columns: 2fr;
+        grid-gap: 20px;
+    }
 }
