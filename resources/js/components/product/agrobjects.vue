@@ -2,41 +2,50 @@
     <div class="col-12 row mt-2 mb-2 ml-0 agreement-block">
         <h4>Объект</h4>
         <div class="row col-12">
-            <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
+            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
                 <label class="bold">Класс объекта : </label>
-                <!--div class="attr-text">
-                    {{agrobject.ObjName}}
-                </div-->
-                <select class="custom-select" v-model="agrobject.Value">
-                    <option v-for="dicti in agrobject.obj" :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
+                <select class="custom-select" v-model="agrobject.ClassISN">
+                    <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
-            <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12 mb-3">
+
+            <div v-if="agrobject.ClassISN != ''" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Тип объекта : </label>
-                <div class="attr-text">
-                    {{agrobject.classobjname}}
-                </div>
+                <select class="custom-select" v-model="agrobject.SubClassISN">
+                    <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj" :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
+                </select>
             </div>
 
-            <div class="col-12"
-                 v-if="Object.keys(agrobject.AGRCOND).length > 0 && index == selectedObject"
-                 v-for="(agrCond,index) in agrobject.AGRCOND"
-                 :key="index">
-                <div class="col-12 row mt-2 mb-2 ml-0 agreement-block">
+            <div class="col-12" v-if="agrobject.ClassISN != ''">
+                <div class="col-12 row mt-2 mb-2 ml-0 agreement-block"
+                     v-for="(agrcond,index) in agrobject.objekt[agrobject.ClassISN].AGRCOND"
+                     v-if="index == agrobject.ClassISN+agrobject.SubClassISN">
                     <h4>Риски</h4>
                     <div class="row col-12">
                         <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12">
                             <label class="bold">Значение : </label>
-                            <select class="custom-select">
-                                <option v-for="dicti in agrCond" :value="dicti.RiskPackisn">{{dicti.RiskPackname}}</option>
+                            <select class="custom-select" v-model="agrobject.RiskISN">
+                                <option v-for="(dicti,index) in agrcond" :value="dicti.RiskPackisn">{{dicti.RiskPackname}}</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div v-for="(agrobjectAddatr,index) in agrobject.AGROBJECT_ADDATTR" v-if="index == selectedObject" class="col-12">
-                <agr-attributes v-for="(agrobj,index) in agrobjectAddatr" :attribute="agrobj" :key="index"></agr-attributes>
+            <div v-if="agrobject.ClassISN != ''" class="col-12">
+                <div class="col-12" v-if="Object.keys(agrobject.objekt[agrobject.ClassISN].AGROBJCAR).length > 0">
+                    <agrobjcar v-for="(agrobjcar,index) in agrobject.objekt[agrobject.ClassISN].AGROBJCAR"
+                            :agrobjcar="agrobjcar" :agrobject="agrobject" :key="index" :cIndex="index"></agrobjcar>
+                </div>
+            </div>
+
+            <div v-if="agrobject.ClassISN != ''" class="col-12"> <!-- Атрибуты объекта -->
+                <div class="col-12">
+                    <agr-attributes
+                            v-for="(agrobj,index) in agrobject.objekt[agrobject.ClassISN].AGROBJECT_ADDATTR" :attribute="agrobj"
+                            :key="index">
+                    </agr-attributes>
+                </div>
             </div>
 
         </div>
@@ -49,14 +58,19 @@
         data() {
             return {
                 selectedObject: '',
+                selectedSubObject: '',
             }
         },
         props: {
             agrobject : Object,
+            aIndex: Number
         },
         watch: {
-            'agrobject.Value': function(val,oldVal){
+            'agrobject.ClassISN': function(val,oldVal){
                 this.selectedObject = val;
+            },
+            'agrobject.SubClassISN': function(val,oldVal){
+                this.selectedSubObject = val;
             }
         }
     }

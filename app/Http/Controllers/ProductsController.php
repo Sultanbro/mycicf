@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductsController extends Controller
 {
+    const DICT_CURRENCY_USD = 9716;
+    const DICT_CURRENCY_RUB = 9788;
+    const DICT_CURRENCY_EURO = 9721;
+    const DICT_CURRENCY_TENGE = 9813;
+
     public function index($id = 1){
         $data = InsProduct::findOrFail($id);
         $consturction = json_decode($data->construction);
@@ -360,33 +365,40 @@ class ProductsController extends Controller
     public function getFullObjects(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
         $constructor = FullProduct::find($ID);
-        $responses = $kias->getFullObject($constructor->product_isn);
+        $response = $kias->getFullObject($constructor->product_isn);
         $objects = [];
         $risks = [];    //RiskPack
         $ageclause = [];
-        //print '<pre>';print_r($responses);print '</pre>';exit();
-
-
-
-        if(isset($responses)){
-            foreach($responses as $response) {
+        if(isset($response)){
+            //foreach($responses as $response) {
                 $risks = 0;
                 if (isset($response->Object->row)) {
                     //$object = $response->Object->row;
-                    $objects['ClassISN'] = (string)$response->Object->row->classobjisn;
-                    $objects['classobjname'] = (string)$response->Object->row->classobjname;
-                    $objects['Value'] = '';
+                    $objects['ClassISN'] = '';
+                    $objects['SubClassISN'] = '';
+                    $objects['ObjName'] = '';
+//                    $objects['SubISN'] = '';
+                    $objects['RiskISN'] = '';
+                    $objects['InsClassISN'] = '';
+//                    $objects['classobjname'] = (string)$response->Object->row->classobjname;
+//                    $objects['Value'] = '';
                     $i = 0;
                     foreach($response->Object->row as $object) {
+                        $isn = (string)$object->classobjisn;
                         $subIsn = (string)$object->subclassobjisn;
-                        $objects['obj'][$i]['SubClassISN'] = $subIsn;
-                        $objects['obj'][$i]['ObjName'] = (string)$object->subclassobjname;
-                        $objects['AGROBJECT_ADDATTR'][$subIsn] = [];
-                        $objects['AGRCOND'][$subIsn] = [];
+                        $objects['objekt'][$isn]['ClassISN'] = (string)$object->classobjisn;
+                        $objects['objekt'][$isn]['classobjname'] = (string)$object->classobjname;
+                        $objects['objekt'][$isn]['Value'] = '';
+                        $objects['objekt'][$isn]['SubjISN'] = '';
+                        $objects['objekt'][$isn]['obj'][$i]['SubClassISN'] = $subIsn;
+                        $objects['objekt'][$isn]['obj'][$i]['ObjName'] = (string)$object->subclassobjname;
+                        $objects['objekt'][$isn]['AGROBJECT_ADDATTR'] = [];
+                        $objects['objekt'][$isn]['AGROBJCAR'] = [];
+                        $objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn] = [];
                         if (isset($object->ObjAttr->row)) {
                             foreach ($object->ObjAttr->row as $row) {
                                 //array_push($objects['AGROBJECT_ADDATTR'], [
-                                $objects['AGROBJECT_ADDATTR'][$subIsn][(string)$row->AttrISN] = array(
+                                $objects['objekt'][$isn]['AGROBJECT_ADDATTR'][(string)$row->AttrISN] = array(
                                     'AttrISN' => (string)$row->AttrISN,
                                     'Type' => (string)$row->TypeValue,
                                     'Label' => (string)$row->AttrName,
@@ -397,74 +409,52 @@ class ProductsController extends Controller
                                 );
                                 //]);
                             }
-                            if (isset($response->RiskPack->row[$i])) {
-                                if(count($response->RiskPack->row) == count($response->Object->row)) {
-                                    $row = $response->RiskPack->row[$i];
-                                    array_push($objects['AGRCOND'][$subIsn], [
-                                        'InsClassisn' => (string)$row->InsClassisn,
-                                        'InsClassname' => (string)$row->InsClassname,
-                                        'RiskPackisn' => (string)$row->RiskPackisn,
-                                        'RiskPackname' => (string)$row->RiskPackname,
-                                        //'Risk' => $riskChilds
-                                    ]);
-                                }
+                        }
+
+                        if($isn == 2118) {
+                            $objects['objekt'][$isn]['AGROBJCAR'][0] = [
+                                'ModelISN' => '',
+                                'MarkaISN' => '',
+                                'ClassISN' => '',
+                                'ReleaseDate' => '',
+                                'VIN' => '',
+                                'REGNO' => '',
+                                'OwnerJuridical' => 'N',
+                                'TerritoryISN' => '',
+                                'PROBEG' => '',
+                                'REALPRICE' => ''
+                            ];
+                        }
+
+                        if (isset($response->RiskPack->row)) {
+                            foreach ($response->RiskPack->row as $row) {
+//                                if($row->ClassObjISN == '' || $row->ClassObjISN == null){
+//                                    array_push($objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn], [
+//                                        'InsClassisn' => (string)$row->InsClassisn,
+//                                        'InsClassname' => (string)$row->InsClassname,
+//                                        'RiskPackisn' => (string)$row->RiskPackisn,
+//                                        'RiskPackname' => (string)$row->RiskPackname,
+//                                        //'Risk' => $riskChilds
+//                                    ]);
+//                                } else {
+                                    //if ($row->SubClassObjISN == $subIsn && $row->ClassObjISN == $isn) {
+                                        array_push($objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn], [
+                                            'InsClassisn' => (string)$row->InsClassisn,
+                                            'InsClassname' => (string)$row->InsClassname,
+                                            'RiskPackisn' => (string)$row->RiskPackisn,
+                                            'RiskPackname' => (string)$row->RiskPackname,
+                                            //'Risk' => $riskChilds
+                                        ]);
+                                    //}
+                                //}
                             }
                         }
                         $i++;
                     }
-                }
-
-//                if (isset($response->RiskPack->row)) {
-//                    foreach ($response->RiskPack->row as $row) {
-//                        array_push($objects['AGRCOND'][$subIsn], [
-//                            'InsClassisn' => (string)$row->InsClassisn,
-//                            'InsClassname' => (string)$row->InsClassname,
-//                            'RiskPackisn' => (string)$row->RiskPackisn,
-//                            'RiskPackname' => (string)$row->RiskPackname,
-//                            //'Risk' => $riskChilds
-//                        ]);
-//                    }
-//                }
 
             }
         }
-//
-        //print '<pre>';print_r($responses);print '</pre>';exit();
 
-        /*if(isset($response->RiskPack->row)){
-            foreach ($response->RiskPack->row as $row) {
-//                array_push($risks, [
-//                    //$objects[(string)$row->AttrISN] = array(
-//                    'AttrISN' => (string)$row->AttrISN,
-//                    'Type' => (string)$row->TypeValue,
-//                    'Label' => (string)$row->AttrName,
-//                    'ParentISN' => (string)$row->NumCode,
-//                    'Value' => null,
-//                    'Remark' => null,
-//                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
-//                ]);
-//                $riskChilds = [];
-//                if(isset($row->Risk->row)) {
-//                    foreach ($row->Risk->row as $rows) {
-//                        array_push($riskChilds,[
-//                            'InsClassisn' => (string)$rows->InsClassisn,
-//                            'RiskPackisn' => (string)$rows->RiskPackisn,
-//                            'riskisn' => (string)$rows->riskisn,
-//                            'riskname' => (string)$rows->riskname
-//                        ]);
-//                    }
-//                }
-                array_push($objects['AGRCOND'],[
-                    'InsClassisn' => (string)$row->InsClassisn,
-                    'InsClassname' => (string)$row->InsClassname,
-                    'RiskPackisn' => (string)$row->RiskPackisn,
-                    'RiskPackname' => (string)$row->RiskPackname,
-                    //'Risk' => $riskChilds
-                ]);
-            }
-        }*/
-
-        //print '<pre>';print_r($response);print '</pre>';exit();
         return response()->json([
             'success' => true,
             'objects' => $objects
@@ -481,17 +471,18 @@ class ProductsController extends Controller
         }
 
         $order['prodIsn'] = $model->product_isn;
-//        $order['subjISN'] = $request->subjISN;
-//        $order['participants'] = $this->participantsToKiasAddAttr($request->all());
-//        $order['attributes'] = $this->attributesToKiasAddAttr($request->all()['attributes']);
-//        $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
-//        $order['contractDate'] = $request->all()['contractDate'];
-//        $order['formular'] = $request->all()['formular'];
+        $order['subjISN'] = $request->subjISN;
+        $order['participants'] = $this->participantsToKiasAddAttr($request->all());
+        $order['attributes'] = $this->attributesToKiasAddAttr($request->all()['attributes']);
+        $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
+        $order['contractDate'] = $request->all()['contractDate'];
+        $order['formular'] = $request->all()['formular'];
+        $order['agrobject'] = $this->agrobjectToKiasAdd($request->all());
 
-        $response = $kias->calcFull($order);
-        print '<pre>';print_r($response); print '</pre>';exit();
+        //$response = $kias->calcFull($order);
+        //print '<pre>';print_r($response); print '</pre>';exit();
         //print $order['formular']['status']['Value'];exit();
-        print '<pre>';print_r($order);print '</pre>';exit();
+        print '<pre>';print_r($order['agrobject']);print '</pre>';exit();
 
 
         $response = $kias->calcFull($order);
@@ -544,6 +535,69 @@ class ProductsController extends Controller
             ]);
         }
         return $result;
+    }
+
+    public function objcarToKiasAdd($agrobjcar){
+        $result = [];
+        foreach ($agrobjcar as $car){
+            array_push($result, [
+                'AGROBJCAR' => [
+                    'ModelISN' => intval($car['ModelISN']),
+                    'MarkaISN' => intval($car['MarkaISN']),
+                    'ClassISN' => intval($car['ClassISN']),
+                    'ReleaseDate' => $car['ReleaseDate'],
+                    'VIN' => $car['VIN'],
+                    'REGNO' => $car['REGNO'],
+                    'OwnerJuridical' => 'N',
+                    'TerritoryISN' => $car['TerritoryISN'],
+                    'PROBEG' => intval($car['PROBEG']),
+                    'REALPRICE' => intval($car['REALPRICE'])
+                ]
+            ]);
+        }
+        return $result;
+    }
+
+    public function agrobjectToKiasAdd($order){
+        if(count($order['agrobjects']) > 0) {
+            $agr_object = [];
+            foreach($order['agrobjects'] as $obj) {
+                $agrobjectAddatr = $this->attributesToKiasAddAttr($obj['objekt'][$obj['ClassISN']]['AGROBJECT_ADDATTR']);
+                $agrobjCar = $this->objcarToKiasAdd($obj['objekt'][$obj['ClassISN']]['AGROBJCAR']);
+                array_push($agr_object,
+                    [
+                        'ClassISN' => $obj['ClassISN'],
+                        'SubClassISN' => $obj['SubClassISN'],
+                        'ObjName' => $obj['ObjName'],
+                        'OrderNo' => 1,
+                        'AGROBJECT_ADDATTR' => [
+                            'row' => $agrobjectAddatr
+                        ],
+                        'AGROBJECT'    => [
+                            'row' => $agrobjCar
+                        ],
+                        'AGRCOND' => [
+                            'row' => [
+                                'RiskISN' => intval($obj['RiskISN']),   //513741,
+                                'InsClassISN' => intval($obj['InsClassISN']),
+                                'DateSign' => date('d.m.Y', strtotime($order['contractDate']['sig'])), //date('d.m.Y', time()),
+                                'DateBeg' => date('d.m.Y', strtotime($order['contractDate']['begin'])),
+                                'DateEnd' => date('d.m.Y', strtotime($order['contractDate']['end'])),
+                                'CurrISN' => self::DICT_CURRENCY_TENGE,
+                                'CurrSumISN' => self::DICT_CURRENCY_TENGE,
+                                'LimitSum' => 1000000,
+                                'LimitSumType' => 'А',
+                                'FranchType' => 'Б',
+                                //'FranchSum' => $order['franch'],
+                            ]
+                        ],
+                    ]
+                );
+            }
+            return $agr_object;
+        } else {
+            return '';
+        }
     }
 
     public function getAttrType($type)
@@ -642,22 +696,46 @@ class ProductsController extends Controller
                     ]);
                 }
             }
-
-
-
-
-//            foreach ($response->ROWSET->row as $row){
-//                array_push($result, [
-//                    'Label' => (string)$row->FULLNAME,
-//                    'id' => (string)$row->ISN,
-//                    'Value' => (string)$row->ISN,
-//                    'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
-//                    'Type' => (string)$row->CODE,
-//                    'NumCode' => (string)$row->NUMCODE,
-//                    'N_Kids' => (string)$row->N_KIDS,
-//                ]);
-//            }
         }
         return $result;
+    }
+
+    public function getVehicle(Request $request){
+        $success = false;
+        $error = '';
+        $kias = new Kias();
+        $kias->initSystem();
+        $vin = $request->VIN ?? null;
+        $tfNumber = $request->REGNO ?? null;
+        $result = $kias->getVehicle($vin, null, $tfNumber, null);
+        if(!isset($result->VIN)){
+            $result = $kias->getVehicle($vin, null, $tfNumber, null,1);
+        }
+
+        if(isset($result->VIN)){
+            $success = true;
+            $result = array(
+                'ModelISN' => (string)$result->MODELISN,
+                'Model' => (string)$result->MODELNAME,
+                'MarkaISN' => (string)$result->MARKISN,
+                'Mark' => (string)$result->MARKNAME,
+                'ClassISN' => $request->ClassISN,
+                'ReleaseDate' => '01.01.'.(string)$result->REALESE_DATE,
+                'VIN' => (string)$result->VIN,
+                'REGNO' => (string)$result->REG_NUM,
+                'OwnerJuridical' => 'N',
+                'TerritoryISN' => (string)$result->REG_TERRITORY,
+                'TerritoryName' => (string)$result->REG_TERRITORY,
+                'PROBEG' => '',
+                'REALPRICE' => ''
+            );
+        } else {
+            $error = 'Транспортное средство не найдено';
+        }
+        return response()->json([
+            'success' => $success,
+            'error' => $error,
+            'result' => $result
+        ]);
     }
 }

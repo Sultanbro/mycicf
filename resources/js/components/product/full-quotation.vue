@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--div class="col-md-12 mb-4">
+        <div class="col-md-12 mb-4">
             <div class="row">
                 <participant v-for="(participant,index) in participants"
                              :key="index"
@@ -21,20 +21,17 @@
 
         <div v-for="agrclause in agrclauses">
             <agr-clause :agrclause="agrclause"></agr-clause>
-        </div-->
+        </div>
 
-        <div v-for="agrobject in agrobjects">
-            <agr-object :agrobject="agrobject"></agr-object>
+        <div v-for="(agrobject,index) in agrobjects">
+            <agr-object :agrobject="agrobject" :aIndex="index"></agr-object>
         </div>
 
         <div class="d-flex justify-content-end col-12">
             <div class="col-12">
                 <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
                 <span class="fs-2" v-if="calculated">{{price}} Тенге</span>
-            </div>
-        </div>
-        <div class="d-flex justify-content-end col-12">
-            <div class="col-12">
+                <button class="btn btn-outline-info" @click="getFullObjects">Отправить в ДА</button>
                 <button class="btn btn-outline-info" @click="getFullObjects">Добавить еще</button>
             </div>
         </div>
@@ -74,11 +71,8 @@
             this.height = window.innerHeight;
         },
         mounted() {
-            // this.getFullAttributes();
-            // this.getFullParticipants();
-            // this.getFullAgrclause();
-            //this.getFullData();
-            this.getFullObjects();
+            this.getFullData();
+
         },
         methods: {
             getFullObjects() {
@@ -89,7 +83,7 @@
                     .then(response => {
                         if(response.data.success){
                             // if(Object.keys(this.agrobjects).length == 0){
-                            //     this.agrobjects = response.data.objects;
+                            //      this.agrobjects = response.data.objects;
                             // } else {
                                 this.agrobjects.push(response.data.objects);
                             //}
@@ -108,10 +102,11 @@
                 })
                     .then(response => {
                         if(response.data.success){
-                            // this.formular = response.data.formular;
-                            // this.participants = response.data.participants;
+                            this.formular = response.data.formular;
+                            this.participants = response.data.participants;
                             this.agrclauses = response.data.agrclauses;
-                            //this.attributes = response.data.attributes;
+                            this.attributes = response.data.attributes;
+                            this.getFullObjects();
                         }else{
                             alert(response.data.error);
                         }
@@ -120,54 +115,6 @@
                         alert(error);
                     });
             },
-            // getFullAttributes() {
-            //     this.axios.post('/getFullAttributes', {
-            //         id: this.id,
-            //         quotationId: this.quotationId
-            //     })
-            //         .then(response => {
-            //             if(response.data.success){
-            //                 this.attributes = response.data.attributes;
-            //             }else{
-            //                 alert(response.data.error);
-            //             }
-            //         })
-            //         .catch(error => {
-            //             alert(error);
-            //         });
-            // },
-            // getFullParticipants() {
-            //     this.axios.post('/getFullParticipants', {
-            //         id: this.id,
-            //         quotationId: this.quotationId
-            //     })
-            //         .then(response => {
-            //             if(response.data.success){
-            //                 this.participants = response.data.participants;
-            //             }else{
-            //                 alert(response.data.error);
-            //             }
-            //         })
-            //         .catch(error => {
-            //             alert(error);
-            //         });
-            // },
-            // getFullAgrclause() {
-            //     this.axios.post('/getFullAgrclause', {
-            //         id: this.id,
-            //         quotationId: this.quotationId
-            //     })
-            //         .then(response => {
-            //             if(response.data.success){
-            //                 this.agrclauses = response.data.agrclauses;
-            //             }else{
-            //                 alert(response.data.error);
-            //             }
-            //         })
-            //         .catch(error => {
-            //             alert(error);
-            //         });
-            // },
             calculate(){
                 //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
                     this.axios.post('/full/calculate', {
@@ -177,6 +124,7 @@
                         attributes: this.attributes,
                         agrclauses: this.agrclauses,
                         formular: this.formular,
+                        agrobjects: this.agrobjects,
                         contractDate: this.period,
                     })
                         .then(response => {

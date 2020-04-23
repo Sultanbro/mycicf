@@ -122,6 +122,8 @@ Vue.component('agr-clause', require('./components/product/agrclause.vue').defaul
 
 Vue.component('agr-object', require('./components/product/agrobjects.vue').default);
 
+Vue.component('agrobjcar', require('./components/product/agrobjcar.vue').default);
+
 
 window.onload = function(){
     var app = new Vue({

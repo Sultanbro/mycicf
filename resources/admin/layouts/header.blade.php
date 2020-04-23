@@ -83,11 +83,12 @@
                 </li>
             @endif
             @if(App\User::isProductsAdmin())
-                <li class="nav-item dropdown">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Продукты</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown09">
                             <a class="dropdown-item" href="{{route('list.express')}}">Экспресс котировка</a>
+                            <a class="dropdown-item" href="{{route('list.full')}}">Полная котировка</a>
                         </div>
                     </li>
             @endif
