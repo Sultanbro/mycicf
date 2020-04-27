@@ -110,7 +110,6 @@
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;
                             this.getFullObjects();
-                            this.preloader(false);
                         }else{
                             alert(response.data.error);
                             this.preloader(false);
