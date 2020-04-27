@@ -18,9 +18,6 @@ class CreateFullQuotationConstructorTable extends Migration
             $table->integer('product_id');
             $table->integer('product_isn');
             $table->integer('user_isn');
-            $table->longtext('participants')->nullable();
-            $table->longtext('objects')->nullable();
-            $table->longtext('attributes')->nullable();
             $table->longtext('data')->nullable();
             $table->timestamps();
 

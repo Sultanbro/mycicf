@@ -33,7 +33,7 @@
                     },
                     participants: 19,
                     attributes: 220169,
-                    agrclause: 2031,
+                    agrclauses: 2031,
                     objects: 19,
                 }
             }

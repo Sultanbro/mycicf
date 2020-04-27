@@ -11,9 +11,16 @@
 
             <div v-if="agrobject.ClassISN != ''" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Тип объекта : </label>
-                <select class="custom-select" v-model="agrobject.SubClassISN">
-                    <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj" :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
+                <select class="custom-select" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName')">
+                    <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj"
+                            :data-option="dicti.ObjName"
+                            :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
                 </select>
+            </div>
+
+            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
+                <label class="bold">Сумма страхования : </label>
+                <input type="text" class="attr-input-text col-12"  v-model="agrobject.insureSum">
             </div>
 
             <div class="col-12" v-if="agrobject.ClassISN != ''">
@@ -24,8 +31,10 @@
                     <div class="row col-12">
                         <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12">
                             <label class="bold">Значение : </label>
-                            <select class="custom-select" v-model="agrobject.RiskISN">
-                                <option v-for="(dicti,index) in agrcond" :value="dicti.RiskPackisn">{{dicti.RiskPackname}}</option>
+                            <select class="custom-select" v-model="agrobject.RiskISN" @change="changeSelect($event,'InsClassISN')">
+                                <option v-for="(dicti,index) in agrcond"
+                                        :value="dicti.RiskPackisn"
+                                        :data-option="dicti.InsClassisn">{{dicti.RiskPackname}}</option>
                             </select>
                         </div>
                     </div>
@@ -71,6 +80,13 @@
             },
             'agrobject.SubClassISN': function(val,oldVal){
                 this.selectedSubObject = val;
+            }
+        },
+        methods: {
+            changeSelect(e,index) {
+                if(e.target.options.selectedIndex > -1) {
+                    this.agrobject[index] = e.target.options[e.target.options.selectedIndex].dataset.option;
+                }
             }
         }
     }

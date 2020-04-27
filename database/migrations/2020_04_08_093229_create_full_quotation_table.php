@@ -19,8 +19,6 @@ class CreateFullQuotationTable extends Migration
             $table->integer('user_isn');
             $table->integer('sabj_isn')->nullable();
             $table->longtext('object_card')->nullable();
-            $table->longtext('participants')->nullable();
-            $table->longtext('attributes')->nullable();
             $table->string('contract_number',50)->default("");
             $table->integer('contract_begin_date')->nullable()->comment("Дата начала действия договора");
             $table->integer('contract_end_date')->nullable()->comment("Дата конца действия договора");

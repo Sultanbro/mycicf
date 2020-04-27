@@ -135,10 +135,35 @@ interface KiasServiceInterface
     public function getExpressAttributes($product);
 
     /**
+     * Получить список объектов полной котировки
+     * @param $product ISN продукта
+     * @return mixed
+     */
+    public function getFullObject($product);
+
+    /**
+     * Сделать расчет полной котироки
+     * @param $order параметры котировки
+     * @return mixed
+     */
+    public function calcFull($order);
+
+    /**
+     * Сохранение прикрплений в киас
+     * @param $refisn int исн документа
+     * @param $type
+     * @param $name string название файла
+     * @param $data
+     * @return SimpleXMLElement
+     */
+    public function saveAttachment($refisn, $name, $file, $type = 'J');
+
+    /**
      * Получить чайлды из справочника
      * @param $parent ParentISN
      * @return mixed
      */
+
     public function getDictiList($parent);
 
     public function getSubject($firstName, $lastName, $patronymic, $iin);

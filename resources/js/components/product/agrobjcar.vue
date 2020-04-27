@@ -52,15 +52,12 @@
         },
         methods:{
             getVehicle(){
-                this.axios.post('/get-vehicle', this.agrobjcar)
+                this.axios.post('/full/get-vehicle', this.agrobjcar)
                     .then(response => {
                         if(response.data.success){
                             for(var prop in response.data.result){
                                 this.agrobjcar[prop] = response.data.result[prop];
                             }
-                            //this.agrobjcar = response.data.result;
-                            //this.agrobjcar.VIN = response.data.result.VIN;
-                            //console.log(this.agrobject.objekt[this.agrobject.ClassISN].AGROBJCAR[this.cIndex]);
                         }else{
                             alert(response.data.error);
                         }

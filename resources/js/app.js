@@ -124,6 +124,8 @@ Vue.component('agr-object', require('./components/product/agrobjects.vue').defau
 
 Vue.component('agrobjcar', require('./components/product/agrobjcar.vue').default);
 
+Vue.component('upload-docs', require('./components/product/uploadDocs.vue').default);
+
 
 window.onload = function(){
     var app = new Vue({

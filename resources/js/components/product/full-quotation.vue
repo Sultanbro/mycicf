@@ -27,12 +27,18 @@
             <agr-object :agrobject="agrobject" :aIndex="index"></agr-object>
         </div>
 
+        <upload-docs :docs="docs" :quotationId="quotationId"></upload-docs>
+
         <div class="d-flex justify-content-end col-12">
             <div class="col-12">
-                <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
+                <button v-if="contract_number === null && quotationId == 0" class="btn btn-outline-info" @click="calculate">
+                    Рассчитать стоимость
+                </button>
                 <span class="fs-2" v-if="calculated">{{price}} Тенге</span>
-                <button class="btn btn-outline-info" @click="getFullObjects">Отправить в ДА</button>
-                <button class="btn btn-outline-info" @click="getFullObjects">Добавить еще</button>
+                <div @click="sendDocs">sendDocs</div>
+                <!--button class="btn btn-outline-info" @click="getFullObjects">Отправить в ДА</button>
+                <button class="btn btn-outline-info" @click="getFullObjects">Добавить еще</button-->
+                <button v-if="contract_number === null && calc_isn != null" class="btn btn-outline-info" @click="createAgr">Выпустить договор</button>
             </div>
         </div>
     </div>
@@ -43,6 +49,11 @@
         name: "full-quotation",
         data() {
             return {
+                calc_isn: null,
+                contract_number: null,
+                docs: {
+                    files: []
+                },
                 participants: [],
                 attributes: [],
                 agrclauses: [],
@@ -69,6 +80,7 @@
         created(){
             this.width = window.innerWidth;
             this.height = window.innerHeight;
+            this.quotationId == 0 ? this.calculated = false : this.calculated = true;
         },
         mounted() {
             this.getFullData();
@@ -76,17 +88,17 @@
         },
         methods: {
             getFullObjects() {
-                this.axios.post('/getFullObjects', {
+                this.axios.post('/full/getFullObjects', {
                     id: this.id,
                     quotationId: this.quotationId
                 })
                     .then(response => {
                         if(response.data.success){
-                            // if(Object.keys(this.agrobjects).length == 0){
-                            //      this.agrobjects = response.data.objects;
-                            // } else {
+                            if(this.quotationId != 0){
+                                 this.agrobjects = response.data.objects;
+                            } else {
                                 this.agrobjects.push(response.data.objects);
-                            //}
+                            }
                         }else{
                             alert(response.data.error);
                         }
@@ -96,7 +108,7 @@
                     });
             },
             getFullData() {
-                this.axios.post('/getFullData', {
+                this.axios.post('/full/getFullData', {
                     id: this.id,
                     quotationId: this.quotationId
                 })
@@ -106,6 +118,10 @@
                             this.participants = response.data.participants;
                             this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
+                            this.calc_isn = response.data.calc_isn;
+                            this.contract_number = response.data.contract_number;
+                            this.price = parseInt(response.data.price);
+                            this.docs.files = response.data.docs;
                             this.getFullObjects();
                         }else{
                             alert(response.data.error);
@@ -115,11 +131,14 @@
                         alert(error);
                     });
             },
+
             calculate(){
                 //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
-                    this.axios.post('/full/calculate', {
+                this.axios.post('/full/calculate',
+                    {
                         subjISN: this.subjISN,
                         id: this.id,
+                        quotationId: this.quotationId,
                         participants: this.participants,
                         attributes: this.attributes,
                         agrclauses: this.agrclauses,
@@ -127,10 +146,80 @@
                         agrobjects: this.agrobjects,
                         contractDate: this.period,
                     })
+                    .then(response => {
+                        if (response.data.success) {
+                            this.price = response.data.premium;
+                            this.calculated = true;
+                            this.calc_isn = response.data.calc_isn;
+                            if(response.data.calc_isn != '') {
+                                this.sendDocs();
+                            }
+                        } else {
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+                // } else {
+                //     alert('Укажите пожалуйста все данные')
+                // }
+            },
+            createAgr(){        // Выпустить договор
+                this.axios.post('/full/create-agr',
+                    {
+                        calc_isn: this.calc_isn
+                    })
+                    .then(response => {
+                        if (response.data.success) {
+                            this.contract_number = response.data.contract_number;
+                        } else {
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
+            },
+            // calculate(){
+            //     //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
+            //     this.axios.post('/full/calculate', this.getFormData(), {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            //         .then(response => {
+            //             if (response.data.success) {
+            //                 this.price = response.data.premium;
+            //                 this.calculated = true;
+            //             } else {
+            //                 alert(response.data.error)
+            //             }
+            //         })
+            //         .catch(error => {
+            //             alert(error)
+            //         });
+            //     // } else {
+            //     //     alert('Укажите пожалуйста все данные')
+            //     // }
+            // },
+            sendDocs(){
+                let formData = new FormData();
+                formData.append('id', this.id);
+                //formData.append('quotationId', this.quotationId);
+                formData.append('calc_isn', this.calc_isn);
+                if(Object.keys(this.docs.files).length > 0) {
+                    for (let i in this.docs.files) {
+                        formData.append('files[' + i + ']', this.docs.files[i]);
+                    }
+                    this.axios.post('/full/send-docs', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
                         .then(response => {
                             if (response.data.success) {
-                                this.price = response.data.premium;
-                                this.calculated = true;
+                                console.log('Files sended successfull');
                             } else {
                                 alert(response.data.error)
                             }
@@ -138,10 +227,26 @@
                         .catch(error => {
                             alert(error)
                         });
-                // } else {
-                //     alert('Укажите пожалуйста все данные')
-                // }
+                }
             },
+            // getFormData() {
+            //     let formData = new FormData();
+            //     formData.append('subjISN', this.subjISN);
+            //     formData.append('id', this.id);
+            //     formData.append('quotationId', JSON.stringify(this.quotationId));
+            //     formData.append('participants', JSON.stringify(this.participants));
+            //     formData.append('attributes', JSON.stringify(this.attributes));
+            //     formData.append('agrclauses', JSON.stringify(this.agrclauses));
+            //     formData.append('formular', JSON.stringify(this.formular));
+            //     formData.append('agrobjects', JSON.stringify(this.agrobjects));
+            //     formData.append('contractDate', JSON.stringify(this.period));
+            //     if(Object.keys(this.docs.files).length > 0) {
+            //         for (let i in this.docs.files) {
+            //             formData.append('files[' + i + ']', this.docs.files[i]);
+            //         }
+            //     }
+            //     return formData;
+            // },
             checkInputs(section){
                 let result = true;
                 for(let item in section){
@@ -152,12 +257,16 @@
         },
         watch : {
             attributes(){
-                this.calculated = false;
-                this.price = 0;
+                if(this.quotationId == 0) {
+                    this.calculated = false;
+                    this.price = 0;
+                }
             },
             SubjISN(){
-                this.calculated = false;
-                this.price = 0;
+                if(this.quotationId == 0) {
+                    this.calculated = false;
+                    this.price = 0;
+                }
             }
         }
     }

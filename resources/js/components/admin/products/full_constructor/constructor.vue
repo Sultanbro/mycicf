@@ -25,7 +25,7 @@
                     formular:'Формуляр',
                     participants:'Участники',
                     attributes:'Дополнительные атрибуты договора',
-                    agrclause:'Оговорки и ограничения',
+                    agrclauses:'Оговорки и ограничения',
                     objects:'Объекты',
                 },
             }
@@ -83,12 +83,12 @@
 
                     // Begin если справочник, берем данные справочника из киаса
                     if(e.N_Kids == 1){
-                        e.NumCode != '' ? this.getDicti(e.NumCode) : this.getDicti(e.id);
+                        //e.NumCode != '' ? this.getDicti(e.NumCode) : this.getDicti(e.id);
                         this.items[index].Type = 'DICTI';
                     } else {
-                        if(e.Type == 'DICTI'){
-                            e.NumCode != '' ? this.getDicti(e.NumCode) : this.getDicti(e.id);
-                        }
+                        // if(e.Type == 'DICTI'){
+                        //     e.NumCode != '' ? this.getDicti(e.NumCode) : this.getDicti(e.id);
+                        // }
                     }
                     // End
                 }
@@ -98,7 +98,7 @@
                     this.items[index].AttrISN = e.id;
                 }
 
-                if(this.iIndex == 'agrclause') {
+                if(this.iIndex == 'agrclauses') {
                     //this.items[index].Type = 'DICTI';
                 }
             },

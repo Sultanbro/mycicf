@@ -337,6 +337,15 @@ class Kias implements KiasServiceInterface
 
     public function calcFull($order)
     {
+//        $result = [];
+//        $response = $this->request('GetAgreement', [
+//            'AgrISN' => '00036205',
+//            'ProductISN' => 437401,
+//        ]);
+//
+//        print '<pre>'; print_r($response);print '</pre>';exit();
+
+
         $result = $this->request('User_CicSaveAgrCalc', [
             'ISN' => '',
             'ID' => "TEMP_515431_" . $order['prodIsn'] . "_" . time(),
@@ -363,11 +372,16 @@ class Kias implements KiasServiceInterface
             ],
 
             'AGRCLAUSE' => [
-                'row' => $order['agrclause']
+                'row' => $order['agrclauses']
             ]
         ]);
 
         return $result;
+    }
+
+    public function createAgrFromAgrCalc($agrCalcIsn){
+        return $this->request('User_CicCreateAgrFromAgrCalc',
+            ['AgrCalcISN' => $agrCalcIsn ]);
     }
 
     public function getVehicle($vin = null, $engine = null, $tfNumber = null, $srts = null,$secondSearch = null)
@@ -384,5 +398,25 @@ class Kias implements KiasServiceInterface
 
         if ($result)
             return $result;
+    }
+
+    /**
+     * Сохранение прикрплений в киас
+     * @param $refisn int исн документа
+     * @param $type
+     * @param $name string название файла
+     * @param $data
+     * @return SimpleXMLElement
+     */
+
+    public function saveAttachment($refisn, $name, $file, $type = 'J'){
+        return $this->request('SAVEATTACHMENT', [
+            'REFISN' => $refisn,
+            'PICTTYPE' => $type,
+            'FILEREMARK' => '',
+            'FILENAME' => $name,
+            'ACTIVE ' => 'Y',
+            'OLEOBJECT' => $file
+        ]);
     }
 }

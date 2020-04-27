@@ -11,6 +11,7 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
 {
@@ -133,7 +134,7 @@ class ProductsController extends Controller
         $data['participants'] = isset($sections->participants) ? $sections->participants : [];
         //$data['objects'] = isset($constructor->objects) ? $constructor->objects : [];
         $data['attributes'] = isset($sections->attributes) ? $sections->attributes : [];
-        $data['agrclause'] = isset($sections->agrclause) ? $sections->agrclause : [];
+        $data['agrclauses'] = isset($sections->agrclauses) ? $sections->agrclauses : [];
         $data['formular'] = isset($sections->formular) ? $sections->formular : [];
         return view('products.create.full_constructor',compact(['product','data','parentisns']));
     }
@@ -149,7 +150,7 @@ class ProductsController extends Controller
                 'participants' => $request->participants,
                 //'objects' => $request->objects,
                 'attributes' => $request->all()['attributes'],
-                'agrclause' => $request->agrclause,
+                'agrclauses' => $request->agrclauses,
                 'formular' => $request->formular,
             ));
             $constructor->parentisns = json_encode($request->parentisns);
@@ -181,11 +182,6 @@ class ProductsController extends Controller
     }
 
     // End Admin routes
-
-
-
-
-
 
     public function expressList(){
         $products = [];
@@ -255,11 +251,22 @@ class ProductsController extends Controller
         $products = [];
         foreach (FullProduct::all() as $product){
             array_push($products, [
-                'url' => "/full-quotation/calc/{$product->id}/0",
+                'url' => "/full/calc/{$product->id}/0",
                 'name' => $product->name,
             ]);
         }
-        return view('fullquotation.list', compact('products'));
+        return view('full.list', compact('products'));
+    }
+
+    public function fullQuotationList(){
+        $quotations = [];
+        foreach (FullQuotation::all() as $quotation){
+            array_push($quotations, [
+                'url' => "/full/calc/{$quotation->product->id}/{$quotation->id}",
+                'calc_isn' => $quotation->calc_isn,
+            ]);
+        }
+        return view('full.quotation_list', compact('quotations'));
     }
 
     public function fullCreate(Request $request){
@@ -283,7 +290,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function full($ID,$quotationId,Request $request){
+    public function fullCreateEdit($ID,$quotationId,Request $request){
         if(($model = FullProduct::find($ID)) === null){
             return response()->json([
                 'success' => false,
@@ -291,97 +298,90 @@ class ProductsController extends Controller
             ]);
         }
         $productName = $model->name;
-
-        return view('fullquotation.create', compact(['ID','quotationId','productName']));
+        return view('full.create', compact(['ID','quotationId','productName']));
     }
-
-    /*public function getFullAttributes(Request $request, KiasServiceInterface $kias){
-        $ID = $request->id;
-        $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
-        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
-
-        $attributes = [];
-        if(isset($data->attributes)) {
-            $attributes = $data->attributes;
-        }
-
-        return response()->json([
-            'success' => true,
-            'attributes' => $attributes
-        ]);
-    }
-
-    public function getFullParticipants(Request $request, KiasServiceInterface $kias){
-        $ID = $request->id;
-        $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
-        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
-
-        $participants = [];
-        if(isset($data->participants)) {
-            $participants = $data->participants;
-        }
-
-        return response()->json([
-            'success' => true,
-            'participants' => $participants
-        ]);
-    }
-
-    public function getFullAgrclause(Request $request, KiasServiceInterface $kias){
-        $ID = $request->id;
-        $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
-        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
-
-        $agrclause = [];
-        if(isset($data->agrclause)) {
-            $agrclause = $data->agrclause;
-        }
-
-        return response()->json([
-            'success' => true,
-            'agrclauses' => $agrclause
-        ]);
-    }*/
 
     public function getFullData(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
-        $constructor = FullConstructor::select('data')->where('product_id',$ID)->first();
-        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
+        $constructor = FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first();
 
+        if($request->quotationId != 0) {
+            $constructor = FullQuotation::where('product_isn', $constructor->product_isn)->where('id', $request->quotationId)->first();
+            $calc_isn = $constructor->calc_isn;
+            $contract_number = $constructor->contract_number;
+            $premiumSum = $constructor->premiumSum;
+            $docs = json_decode($constructor->docs);
+        }
+
+        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
+        $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular : $data->formular[0] : [];
         $participants = isset($data->participants) ? $data->participants : [];
-        $agrclause = isset($data->agrclause) ? $data->agrclause : [];
+
+        if(isset($data->agrclauses)){
+            $agrclauses = $data->agrclauses;
+            foreach($agrclauses as $agrclause){
+                if($agrclause->Type == 'DICTI' || $agrclause->N_Kids == 1){
+                    $isn = $agrclause->NumCode != '' ? $agrclause->NumCode : $agrclause->ISN;
+                    $agrclause->Childs = $this->getDictis($isn,'');
+                }
+            }
+        } else {
+            $agrclauses = [];
+        }
+
+        if(isset($data->attributes)){
+            $attributes = $data->attributes;
+            foreach($attributes as $attribute){
+                if($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1){
+                    $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
+                    $attribute->Childs = $this->getDictis($isn,'attributes');
+                }
+            }
+        } else {
+            $attributes = [];
+        }
+
         $attributes = isset($data->attributes) ? $data->attributes : [];
-        $formular = isset($data->formular) ? $data->formular[0] : [];
 
         return response()->json([
             'success' => true,
             'participants' => $participants,
-            'agrclauses' => $agrclause,
+            'agrclauses' => $agrclauses,
             'attributes' => $attributes,
-            'formular' => $formular
+            'formular' => $formular,
+            'calc_isn' => isset($calc_isn) && $calc_isn != '' ? $calc_isn : null,
+            'contract_number' => isset($contract_number) && $contract_number != '' ? $contract_number : null,
+            'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
+            'docs' => isset($docs) && $docs != '' ? $docs : []
         ]);
     }
 
     public function getFullObjects(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
         $constructor = FullProduct::find($ID);
+        if($request->quotationId != 0) {        // Если котировка уже есть в нашей базе
+            $quotation = FullQuotation::where('product_isn', $constructor->product_isn)->where('id', $request->quotationId)->first();
+            $objects = isset(json_decode($quotation->data)->agrobjects) ? json_decode($quotation->data)->agrobjects : [];
+
+            return response()->json([
+                'success' => true,
+                'objects' => $objects
+            ]);
+        }
+
         $response = $kias->getFullObject($constructor->product_isn);
         $objects = [];
         $risks = [];    //RiskPack
         $ageclause = [];
         if(isset($response)){
-            //foreach($responses as $response) {
                 $risks = 0;
                 if (isset($response->Object->row)) {
-                    //$object = $response->Object->row;
                     $objects['ClassISN'] = '';
                     $objects['SubClassISN'] = '';
                     $objects['ObjName'] = '';
-//                    $objects['SubISN'] = '';
                     $objects['RiskISN'] = '';
                     $objects['InsClassISN'] = '';
-//                    $objects['classobjname'] = (string)$response->Object->row->classobjname;
-//                    $objects['Value'] = '';
+                    $objects['insureSum'] = '';
                     $i = 0;
                     foreach($response->Object->row as $object) {
                         $isn = (string)$object->classobjisn;
@@ -397,7 +397,6 @@ class ProductsController extends Controller
                         $objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn] = [];
                         if (isset($object->ObjAttr->row)) {
                             foreach ($object->ObjAttr->row as $row) {
-                                //array_push($objects['AGROBJECT_ADDATTR'], [
                                 $objects['objekt'][$isn]['AGROBJECT_ADDATTR'][(string)$row->AttrISN] = array(
                                     'AttrISN' => (string)$row->AttrISN,
                                     'Type' => (string)$row->TypeValue,
@@ -407,7 +406,6 @@ class ProductsController extends Controller
                                     'Remark' => null,
                                     'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
                                 );
-                                //]);
                             }
                         }
 
@@ -428,25 +426,23 @@ class ProductsController extends Controller
 
                         if (isset($response->RiskPack->row)) {
                             foreach ($response->RiskPack->row as $row) {
-//                                if($row->ClassObjISN == '' || $row->ClassObjISN == null){
-//                                    array_push($objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn], [
-//                                        'InsClassisn' => (string)$row->InsClassisn,
-//                                        'InsClassname' => (string)$row->InsClassname,
-//                                        'RiskPackisn' => (string)$row->RiskPackisn,
-//                                        'RiskPackname' => (string)$row->RiskPackname,
-//                                        //'Risk' => $riskChilds
-//                                    ]);
-//                                } else {
-                                    //if ($row->SubClassObjISN == $subIsn && $row->ClassObjISN == $isn) {
+                                if($row->ClassObjISN == '' || $row->ClassObjISN == null){
+                                    array_push($objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn], [
+                                        'InsClassisn' => (string)$row->InsClassisn,
+                                        'InsClassname' => (string)$row->InsClassname,
+                                        'RiskPackisn' => (string)$row->RiskPackisn,
+                                        'RiskPackname' => (string)$row->RiskPackname,
+                                    ]);
+                                } else {
+                                    if ($row->SubClassObjISN == $subIsn && $row->ClassObjISN == $isn) {
                                         array_push($objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn], [
                                             'InsClassisn' => (string)$row->InsClassisn,
                                             'InsClassname' => (string)$row->InsClassname,
                                             'RiskPackisn' => (string)$row->RiskPackisn,
                                             'RiskPackname' => (string)$row->RiskPackname,
-                                            //'Risk' => $riskChilds
                                         ]);
-                                    //}
-                                //}
+                                    }
+                                }
                             }
                         }
                         $i++;
@@ -470,20 +466,16 @@ class ProductsController extends Controller
             ]);
         }
 
+        //print '<pre>';print_r($request->all());print '</pre>';exit();
+
         $order['prodIsn'] = $model->product_isn;
         $order['subjISN'] = $request->subjISN;
         $order['participants'] = $this->participantsToKiasAddAttr($request->all());
-        $order['attributes'] = $this->attributesToKiasAddAttr($request->all()['attributes']);
+        $order['attributes'] = $this->attributesToKiasAddAttrs($request->all()['attributes']);
         $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
         $order['contractDate'] = $request->all()['contractDate'];
         $order['formular'] = $request->all()['formular'];
         $order['agrobject'] = $this->agrobjectToKiasAdd($request->all());
-
-        //$response = $kias->calcFull($order);
-        //print '<pre>';print_r($response); print '</pre>';exit();
-        //print $order['formular']['status']['Value'];exit();
-        print '<pre>';print_r($order['agrobject']);print '</pre>';exit();
-
 
         $response = $kias->calcFull($order);
         if(isset($response->error)){
@@ -493,10 +485,49 @@ class ProductsController extends Controller
             ]);
         }
 
-        return response()->json([
-            'success' => true,
-            'premium' => (int)$response->ROWSET->row->Premiumsum
-        ]);
+        if(isset($response->PremiumSum)) {
+            $quotation = $request->quotationId != 0 ? FullQuotation::find($request->quotationId) : new FullQuotation;
+            //$quotation = new FullQuotation;
+            $quotation->product_isn = $order['prodIsn'];
+            $quotation->user_isn = Auth::user()->ISN;
+            $quotation->calc_isn = (int)$response->AgrCalcISN;
+            $quotation->premiumSum = (int)$response->PremiumSum;
+            $quotation->data = json_encode($request->all());
+            $quotation->save();
+
+            return response()->json([
+                'success' => true,
+                'premium' => (int)$response->PremiumSum,
+                'calc_isn' => (int)$response->AgrCalcISN
+            ]);
+        }
+    }
+
+    public function createAgr(Request $request, KiasServiceInterface $kias){
+        if($request->calc_isn != '' && $request->calc_isn != null) {
+            $quotation = FullQuotation::find($request->calc_isn);
+            $success = false;
+            $error = '';
+            $contractNumber = null;
+            try{
+                $result = $kias->createAgrFromAgrCalc($request->calc_isn);
+                if(isset($result->error)){
+                    $error = (string)$result->error->text;
+                } else {
+                    //$quotation->kias_id = (string) $result->AgrISN;
+                    $quotation->contract_number = $contractNumber = $result->AgrID;
+                    $quotation->save();
+                    $success = true;
+                }
+            }catch (\Exception $ex){
+                $error = $ex->getMessage();
+            }
+            return response()->json([
+                'success' => $success,
+                'error' => $error,
+                'contractNumber' => $contractNumber
+            ]);
+        }
     }
 
     public function attributesToKiasAddAttr($attributes){
@@ -506,6 +537,19 @@ class ProductsController extends Controller
                 'ATTRISN' => $attribute['AttrISN'],
                 'TYPEVALUE' => $attribute['Type'],//$this->getAttrType($attribute['Type']),
                 'ATRVALUE' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
+            ]);
+        }
+        return $result;
+    }
+
+    public function attributesToKiasAddAttrs($attributes){
+        $result = [];
+        foreach ($attributes as $attribute){
+            array_push($result, [
+                'ATTRISN' => $attribute['AttrISN'],
+                'TYPEVALUE' => $attribute['Type'],//$this->getAttrType($attribute['Type']),
+                'ATRVALUE' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
+                'VAL' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
             ]);
         }
         return $result;
@@ -537,11 +581,10 @@ class ProductsController extends Controller
         return $result;
     }
 
-    public function objcarToKiasAdd($agrobjcar){
+    public function objcarToKiasAdd($car){
         $result = [];
-        foreach ($agrobjcar as $car){
+        //foreach ($agrobjcar as $car){
             array_push($result, [
-                'AGROBJCAR' => [
                     'ModelISN' => intval($car['ModelISN']),
                     'MarkaISN' => intval($car['MarkaISN']),
                     'ClassISN' => intval($car['ClassISN']),
@@ -552,52 +595,64 @@ class ProductsController extends Controller
                     'TerritoryISN' => $car['TerritoryISN'],
                     'PROBEG' => intval($car['PROBEG']),
                     'REALPRICE' => intval($car['REALPRICE'])
-                ]
+
             ]);
-        }
+        //}
         return $result;
     }
 
     public function agrobjectToKiasAdd($order){
         if(count($order['agrobjects']) > 0) {
             $agr_object = [];
+            $subjISN = '';
             foreach($order['agrobjects'] as $obj) {
-                $agrobjectAddatr = $this->attributesToKiasAddAttr($obj['objekt'][$obj['ClassISN']]['AGROBJECT_ADDATTR']);
-                $agrobjCar = $this->objcarToKiasAdd($obj['objekt'][$obj['ClassISN']]['AGROBJCAR']);
-                array_push($agr_object,
-                    [
-                        'ClassISN' => $obj['ClassISN'],
-                        'SubClassISN' => $obj['SubClassISN'],
-                        'ObjName' => $obj['ObjName'],
-                        'OrderNo' => 1,
-                        'AGROBJECT_ADDATTR' => [
-                            'row' => $agrobjectAddatr
-                        ],
-                        'AGROBJECT'    => [
-                            'row' => $agrobjCar
-                        ],
-                        'AGRCOND' => [
-                            'row' => [
-                                'RiskISN' => intval($obj['RiskISN']),   //513741,
-                                'InsClassISN' => intval($obj['InsClassISN']),
-                                'DateSign' => date('d.m.Y', strtotime($order['contractDate']['sig'])), //date('d.m.Y', time()),
-                                'DateBeg' => date('d.m.Y', strtotime($order['contractDate']['begin'])),
-                                'DateEnd' => date('d.m.Y', strtotime($order['contractDate']['end'])),
-                                'CurrISN' => self::DICT_CURRENCY_TENGE,
-                                'CurrSumISN' => self::DICT_CURRENCY_TENGE,
-                                'LimitSum' => 1000000,
-                                'LimitSumType' => 'А',
-                                'FranchType' => 'Б',
-                                //'FranchSum' => $order['franch'],
-                            ]
-                        ],
-                    ]
-                );
+                $agrobjectAddatr = $this->attributesToKiasAddAttrs($obj['objekt'][$obj['ClassISN']]['AGROBJECT_ADDATTR']);
+                $agrobjCar = $obj['ClassISN'] == 2118 ? $this->objcarToKiasAdd($obj['objekt'][$obj['ClassISN']]['AGROBJCAR'][0]) : [];
+
+                if($obj['ClassISN'] == 2135) {  // Человек
+                    foreach($order['participants'] as $part) {
+                        if($part['ISN'] == 2082) {
+                            $subjISN = $part['Value'];
+                            array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN));
+                        }
+                    }
+                } else {
+                    array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN));
+                }
             }
             return $agr_object;
         } else {
             return '';
         }
+    }
+
+    public function objectToKiasAdd($obj,$agrobjectAddatr,$agrobjCar,$order,$subjISN){
+        return [
+            'ClassISN' => $obj['ClassISN'],
+            'SubClassISN' => $obj['SubClassISN'],
+            'ObjName' => $obj['ObjName'],
+            'OrderNo' => 1,
+            'SubjISN' => $subjISN,
+            'AGROBJECT_ADDATTR' => [
+                'row' => $agrobjectAddatr
+            ],
+            'AGROBJCAR' => $agrobjCar,
+            'AGRCOND' => [
+                'row' => [
+                    'RiskISN' => intval($obj['RiskISN']),   //513741,
+                    'InsClassISN' => intval($obj['InsClassISN']),
+                    'DateSign' => date('d.m.Y', strtotime($order['contractDate']['sig'])), //date('d.m.Y', time()),
+                    'DateBeg' => date('d.m.Y', strtotime($order['contractDate']['begin'])),
+                    'DateEnd' => date('d.m.Y', strtotime($order['contractDate']['end'])),
+                    'CurrISN' => self::DICT_CURRENCY_TENGE,
+                    'CurrSumISN' => self::DICT_CURRENCY_TENGE,
+                    'LimitSum' => $obj['insureSum'],
+                    'LimitSumType' => 'А',
+                    'FranchType' => 'Б',
+                    //'FranchSum' => $order['franch'],
+                ]
+            ],
+        ];
     }
 
     public function getAttrType($type)
@@ -736,6 +791,55 @@ class ProductsController extends Controller
             'success' => $success,
             'error' => $error,
             'result' => $result
+        ]);
+    }
+
+    public function sendDocs(Request $request, KiasServiceInterface $kias){
+        if(count($request->file('files')) > 0){
+            $product = FullProduct::find($request->id);
+            $uploaded = [];
+            foreach($request->file('files') as $file) {
+                $contents = $file->get();
+                $extension = $file->extension();
+                $filename = str_replace(' ','_',$product->name).mt_rand(1000000, 9999999).'.'.$extension;
+                $filePath = "products/{$filename}";
+                if(Storage::disk('local')->put("/public/{$filePath}", $contents)) {
+                    array_push($uploaded, [
+                        'file' => '/public/products/' . $filename,
+                        'originalName' => $file->getClientOriginalName()
+                    ]);
+                }
+
+//                $extension = $file->extension();
+//                $filename = str_replace(' ','_',$product->name).'_'.mt_rand(1000000, 9999999) . $file->getBasename(). '.' . $extension;
+//                array_push($uploaded,'/public/products/'.$filename);
+//                Storage::putFileAs(
+//                    '/public/products', $file, $filename
+//                );
+
+                $contractNumber  = str_replace('-','',$request->calc_isn);
+                $file = Storage::get('/public/products/'.$filename);
+                try {
+                    $results = $kias->saveAttachment(
+                        $contractNumber,
+                        basename($filename),
+                        base64_encode($file),
+                        'C'
+                    );
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'result' => $e->getMessage()
+                    ]);
+                }
+            }
+            $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
+            $quotation->docs = json_encode($uploaded);
+            $quotation->save();
+        }
+        return response()->json([
+            'success' => true,
+            'error' => ''
         ]);
     }
 }

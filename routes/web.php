@@ -246,14 +246,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/express/calc/{ID}', 'ProductsController@express');
         Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
         Route::get('/full', 'ProductsController@fullList');
-        Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@full');
+        Route::get('/full/quotations', 'ProductsController@fullQuotationList');
+        Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@fullCreateEdit');
         Route::post('/full/create', 'ProductsController@fullCreate');
-        Route::post('/getFullAttributes', 'ProductsController@getFullAttributes');
-        Route::post('/getFullObjects', 'ProductsController@getFullObjects');
-        Route::post('/get-vehicle', 'ProductsController@getVehicle');
-        Route::post('/getFullParticipants', 'ProductsController@getFullParticipants');
-        Route::post('/getFullAgrclause', 'ProductsController@getFullAgrclause');
-        Route::post('/getFullData', 'ProductsController@getFullData');
+        Route::post('/full/getFullObjects', 'ProductsController@getFullObjects');
+        Route::post('/full/getFullData', 'ProductsController@getFullData');
+        Route::post('/full/get-vehicle', 'ProductsController@getVehicle');
+        Route::post('/full/send-docs', 'ProductsController@sendDocs');
+        Route::post('/full/create-agr', 'ProductsController@createAgr');
 
         Route::post('/getDictiList', 'SiteController@getDicti');
         Route::post('/searchSubject', 'SiteController@searchSubject');
