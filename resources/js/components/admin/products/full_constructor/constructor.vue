@@ -76,6 +76,7 @@
                     this.items[index].lastName = '';
                     this.items[index].patronymic = '';
                     this.items[index].subjISN = '';
+                    this.items[index].orgName = '';
                 } else {
                     this.items[index].Type = e.Type;
                     this.items[index].NumCode = e.NumCode;

@@ -258,15 +258,16 @@ class ProductsController extends Controller
         return view('full.list', compact('products'));
     }
 
-    public function fullQuotationList(){
+    public function fullQuotationList($productISN){
         $quotations = [];
-        foreach (FullQuotation::all() as $quotation){
+        foreach (FullQuotation::where('product_isn',$productISN)->get() as $quotation){
             array_push($quotations, [
                 'url' => "/full/calc/{$quotation->product->id}/{$quotation->id}",
-                'calc_isn' => $quotation->calc_isn,
+                'calc_isn' => $quotation->calc_isn
             ]);
         }
-        return view('full.quotation_list', compact('quotations'));
+        $product_name = FullProduct::where('product_isn',$productISN)->first()->name;
+        return view('full.quotation_list', compact(['quotations','product_name']));
     }
 
     public function fullCreate(Request $request){
@@ -505,22 +506,26 @@ class ProductsController extends Controller
 
     public function createAgr(Request $request, KiasServiceInterface $kias){
         if($request->calc_isn != '' && $request->calc_isn != null) {
-            $quotation = FullQuotation::find($request->calc_isn);
+            $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
             $success = false;
             $error = '';
             $contractNumber = null;
-            try{
-                $result = $kias->createAgrFromAgrCalc($request->calc_isn);
-                if(isset($result->error)){
-                    $error = (string)$result->error->text;
-                } else {
-                    //$quotation->kias_id = (string) $result->AgrISN;
-                    $quotation->contract_number = $contractNumber = $result->AgrID;
-                    $quotation->save();
-                    $success = true;
+            if($quotation->contract_number == '' || $quotation->contract_number == null) {
+                try {
+                    $result = $kias->createAgrFromAgrCalc($request->calc_isn);
+                    if (isset($result->error)) {
+                        $error = (string)$result->error->text;
+                    } else {
+                        $quotation->kias_id = (string)$result->AgrISN;
+                        $quotation->contract_number = $contractNumber = (string)$result->AgrID;
+                        $quotation->save();
+                        $success = true;
+                    }
+                } catch (\Exception $ex) {
+                    $error = $ex->getMessage();
                 }
-            }catch (\Exception $ex){
-                $error = $ex->getMessage();
+            } else {
+                $error = 'Договор уже оформлен. Номер договора '.$quotation->contract_number;
             }
             return response()->json([
                 'success' => $success,
@@ -768,6 +773,9 @@ class ProductsController extends Controller
         }
 
         if(isset($result->VIN)){
+            $releaseDate = isset($result->REALESE_DATE) ? '01.12.'.(string)$result->REALESE_DATE : (string)$result->DATERELEASE;
+            $territory_isn = isset($result->REG_TERRITORY) ? (string)$result->REG_TERRITORY : 17;
+            $territory_name = isset($result->REG_TERRITORY_NAME) ? (string)$result->REG_TERRITORY_NAME : 'Временный въезд';
             $success = true;
             $result = array(
                 'ModelISN' => (string)$result->MODELISN,
@@ -775,12 +783,12 @@ class ProductsController extends Controller
                 'MarkaISN' => (string)$result->MARKISN,
                 'Mark' => (string)$result->MARKNAME,
                 'ClassISN' => $request->ClassISN,
-                'ReleaseDate' => '01.01.'.(string)$result->REALESE_DATE,
+                'ReleaseDate' => $releaseDate,
                 'VIN' => (string)$result->VIN,
                 'REGNO' => (string)$result->REG_NUM,
                 'OwnerJuridical' => 'N',
-                'TerritoryISN' => (string)$result->REG_TERRITORY,
-                'TerritoryName' => (string)$result->REG_TERRITORY,
+                'TerritoryISN' => $territory_isn,
+                'TerritoryName' => $territory_name,
                 'PROBEG' => '',
                 'REALPRICE' => ''
             );

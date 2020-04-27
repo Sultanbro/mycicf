@@ -43,7 +43,7 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <h4 class="text-center mt-2">Полная котировка</h4>
+            <h4 class="text-center mt-2">Полная котировка - {{ $product_name }}</h4>
             @foreach($quotations as $quotation)
                 <div class="col-3 mt-2 bg-white border-8">
                     <a href="{{$quotation['url']}}">{{$quotation['calc_isn']}}</a>

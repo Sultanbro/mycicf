@@ -7,17 +7,17 @@
             <label @click="parentChanged.insurant = true">Страхователь</label>
             <div class="row">
                 <input type="text"
-                       v-model="parentisns.formular.insurant"
+                       v-model="formular[0].insurant.isn"
                        v-show="parentChanged.insurant" class="attr-input-text custom-input ml-3 mb-2"  size="6">
             </div>
             <div class="row">
                 <div class="form-group col-md-6 col-lg-6 col-6">
                     <label>Физ.лицо</label>
-                    <input type="checkbox" class="attr-input-text col-12" v-model="items[0].insurant.phys" @change="insurantChange('phys')">
+                    <input type="checkbox" class="attr-input-text col-12" v-model="formular[0].insurant.phys" @change="insurantChange('phys')">
                 </div>
                 <div class="form-group col-md-6 col-lg-6 col-6">
                     <label>Юр.лицо</label>
-                    <input type="checkbox" class="attr-input-text col-12" v-model="items[0].insurant.jur" @change="insurantChange('jur')">
+                    <input type="checkbox" class="attr-input-text col-12" v-model="formular[0].insurant.jur" @change="insurantChange('jur')">
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                 <input type="text" v-model="parentisns.formular.status" v-show="parentChanged.status" class="attr-input-text custom-input ml-3 mb-2"  size="6">
                 <a v-if="parentChanged.status" @click="getDicti()" class="mt-2 ml-2">Обновить</a>
             </div>
-            <treeselect v-model="items[0].status.Value" :options="dictiOptions" />
+            <treeselect v-model="formular[0].status.Value" :options="dictiOptions" />
         </div>
 
         <div class="form-group col-md-4 col-lg-4 col-6 text-center">
@@ -38,7 +38,7 @@
                        v-model="parentisns.formular.curator"
                        v-show="parentChanged.curator" class="attr-input-text custom-input ml-3 mb-2"  size="6">
             </div>
-            <treeselect v-model="items[0].curator.Value" :options="curatorOptions" />
+            <treeselect v-model="formular[0].curator.Value" :options="curatorOptions" />
         </div>
 
 
@@ -57,13 +57,14 @@
         },
         props: {
             title: String,
-            items: Array,
+            formular: Array,
             parentisns: Object
         },
         created() {
-            if(Object.keys(this.items).length == 0){
-                this.items.push({
+            if(Object.keys(this.formular).length == 0){
+                this.formular.push({
                     insurant: {
+                        isn: 2103,
                         jur: false,
                         phys: true,
                     },
@@ -79,16 +80,16 @@
         methods: {
             insurantChange(changed){
                 if(changed == 'jur') {
-                    this.items[0].insurant.jur == false ? this.items[0].insurant.phys = true : '';
+                    this.formular[0].insurant.jur == false ? this.formular[0].insurant.phys = true : '';
                 } else {
-                    this.items[0].insurant.phys == false ? this.items[0].insurant.jur = true : '';
+                    this.formular[0].insurant.phys == false ? this.formular[0].insurant.jur = true : '';
                 }
             },
             getDicti(){         // Берем справочник из Киаса
                 this.parentChanged.status = false;
                 return this.axios.post('/calc/getDicti', {
-                    ISN:this.parentisns.formular.status,    //items[0].status.ISN,
-                    type:''
+                    ISN: this.parentisns.formular.status,    //formular[0].status.ISN,
+                    type: ''
                 })
                     .then(response => {
                         if(response.data.success){
@@ -106,7 +107,7 @@
             // parentisns: {
             //     formular: {
             //         status: function (val, oldVal) {
-            //             this.items[0].status.ISN = val;
+            //             this.formular[0].status.ISN = val;
             //         }
             //     }
             // }

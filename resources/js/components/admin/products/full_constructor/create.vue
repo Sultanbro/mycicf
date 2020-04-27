@@ -4,7 +4,7 @@
             Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
         </div>
 
-        <formular :items="sections.formular" :parentisns="parentisns" title="Формуляр" type="formular"></formular>
+        <formular :formular="sections.formular" :parentisns="parentisns" title="Формуляр" type="formular"></formular>
         <constructor v-for="(section,key) in sections" v-if="key != 'formular'"
                      :iIndex="key"
                      :key="key"
@@ -27,7 +27,7 @@
                 sections:Object,
                 parentisns: {              // Если в базе нету prentIsns то берем вот эти по умолчанию
                     formular: {
-                        insurant: 2103,
+                        //insurant: 2103,
                         curator: 221346,
                         status: 223367
                     },

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div class="text-center" v-if="calc_isn != null"><h5>Котировка {{ calc_isn }}</h5></div>
         <div class="col-md-12 mb-4">
             <div class="row">
                 <participant v-for="(participant,index) in participants"
@@ -7,6 +8,8 @@
                              :p-index="index"
                              :participant="participant"
                              :participants="participants"
+                             :formular="formular"
+                             :preloader="preloader"
                              :product-id="id">
                 </participant>
             </div>
@@ -24,21 +27,23 @@
         </div>
 
         <div v-for="(agrobject,index) in agrobjects">
-            <agr-object :agrobject="agrobject" :aIndex="index"></agr-object>
+            <agr-object :agrobject="agrobject" :aIndex="index" :preloader="preloader"></agr-object>
         </div>
 
         <upload-docs :docs="docs" :quotationId="quotationId"></upload-docs>
 
         <div class="d-flex justify-content-end col-12">
             <div class="col-12">
+
+                <span class="fs-2" v-if="calculated">Сумма премий {{price}} Тенге</span>
+                <div class="fs-2" v-if="contract_number != null">Номер договора {{contract_number}}</div>
+
                 <button v-if="contract_number === null && quotationId == 0" class="btn btn-outline-info" @click="calculate">
                     Рассчитать стоимость
                 </button>
-                <span class="fs-2" v-if="calculated">{{price}} Тенге</span>
-                <div @click="sendDocs">sendDocs</div>
-                <!--button class="btn btn-outline-info" @click="getFullObjects">Отправить в ДА</button>
-                <button class="btn btn-outline-info" @click="getFullObjects">Добавить еще</button-->
-                <button v-if="contract_number === null && calc_isn != null" class="btn btn-outline-info" @click="createAgr">Выпустить договор</button>
+                <button v-if="contract_number === null && calc_isn != null" class="btn btn-outline-info" @click="createAgr">
+                    Выпустить договор
+                </button>
             </div>
         </div>
     </div>
@@ -52,7 +57,8 @@
                 calc_isn: null,
                 contract_number: null,
                 docs: {
-                    files: []
+                    files: [],
+                    sendedFail: false
                 },
                 participants: [],
                 attributes: [],
@@ -87,27 +93,8 @@
 
         },
         methods: {
-            getFullObjects() {
-                this.axios.post('/full/getFullObjects', {
-                    id: this.id,
-                    quotationId: this.quotationId
-                })
-                    .then(response => {
-                        if(response.data.success){
-                            if(this.quotationId != 0){
-                                 this.agrobjects = response.data.objects;
-                            } else {
-                                this.agrobjects.push(response.data.objects);
-                            }
-                        }else{
-                            alert(response.data.error);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                    });
-            },
             getFullData() {
+                this.preloader(true);
                 this.axios.post('/full/getFullData', {
                     id: this.id,
                     quotationId: this.quotationId
@@ -123,17 +110,44 @@
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;
                             this.getFullObjects();
+                            this.preloader(false);
                         }else{
                             alert(response.data.error);
+                            this.preloader(false);
                         }
                     })
                     .catch(error => {
                         alert(error);
+                        this.preloader(false);
+                    });
+            },
+            getFullObjects() {
+                this.axios.post('/full/getFullObjects', {
+                    id: this.id,
+                    quotationId: this.quotationId
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            if(this.quotationId != 0){
+                                this.agrobjects = response.data.objects;
+                            } else {
+                                this.agrobjects.push(response.data.objects);
+                            }
+                            this.preloader(false);
+                        }else{
+                            alert(response.data.error);
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
                     });
             },
 
             calculate(){
                 //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
+                this.preloader(true);
                 this.axios.post('/full/calculate',
                     {
                         subjISN: this.subjISN,
@@ -157,58 +171,22 @@
                         } else {
                             alert(response.data.error)
                         }
+                        this.preloader(false);
                     })
                     .catch(error => {
                         alert(error)
+                        this.preloader(false);
                     });
                 // } else {
                 //     alert('Укажите пожалуйста все данные')
                 // }
             },
-            createAgr(){        // Выпустить договор
-                this.axios.post('/full/create-agr',
-                    {
-                        calc_isn: this.calc_isn
-                    })
-                    .then(response => {
-                        if (response.data.success) {
-                            this.contract_number = response.data.contract_number;
-                        } else {
-                            alert(response.data.error)
-                        }
-                    })
-                    .catch(error => {
-                        alert(error)
-                    });
-            },
-            // calculate(){
-            //     //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
-            //     this.axios.post('/full/calculate', this.getFormData(), {
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         }
-            //     })
-            //         .then(response => {
-            //             if (response.data.success) {
-            //                 this.price = response.data.premium;
-            //                 this.calculated = true;
-            //             } else {
-            //                 alert(response.data.error)
-            //             }
-            //         })
-            //         .catch(error => {
-            //             alert(error)
-            //         });
-            //     // } else {
-            //     //     alert('Укажите пожалуйста все данные')
-            //     // }
-            // },
             sendDocs(){
                 let formData = new FormData();
                 formData.append('id', this.id);
-                //formData.append('quotationId', this.quotationId);
                 formData.append('calc_isn', this.calc_isn);
                 if(Object.keys(this.docs.files).length > 0) {
+                    this.preloader(true);
                     for (let i in this.docs.files) {
                         formData.append('files[' + i + ']', this.docs.files[i]);
                     }
@@ -222,38 +200,52 @@
                                 console.log('Files sended successfull');
                             } else {
                                 alert(response.data.error)
+                                this.docs.sendedFail = true;
                             }
+                            this.preloader(false);
                         })
                         .catch(error => {
                             alert(error)
+                            this.preloader(false);
                         });
                 }
             },
-            // getFormData() {
-            //     let formData = new FormData();
-            //     formData.append('subjISN', this.subjISN);
-            //     formData.append('id', this.id);
-            //     formData.append('quotationId', JSON.stringify(this.quotationId));
-            //     formData.append('participants', JSON.stringify(this.participants));
-            //     formData.append('attributes', JSON.stringify(this.attributes));
-            //     formData.append('agrclauses', JSON.stringify(this.agrclauses));
-            //     formData.append('formular', JSON.stringify(this.formular));
-            //     formData.append('agrobjects', JSON.stringify(this.agrobjects));
-            //     formData.append('contractDate', JSON.stringify(this.period));
-            //     if(Object.keys(this.docs.files).length > 0) {
-            //         for (let i in this.docs.files) {
-            //             formData.append('files[' + i + ']', this.docs.files[i]);
-            //         }
-            //     }
-            //     return formData;
-            // },
+            createAgr(){        // Выпустить договор
+                this.preloader(true);
+                this.axios.post('/full/create-agr',
+                    {
+                        calc_isn: this.calc_isn
+                    })
+                    .then(response => {
+                        if (response.data.success) {
+                            this.contract_number = response.data.contract_number;
+                        } else {
+                            alert(response.data.error)
+                        }
+                        this.preloader(false);
+                    })
+                    .catch(error => {
+                        alert(error)
+                        this.preloader(false);
+                    });
+            },
             checkInputs(section){
                 let result = true;
                 for(let item in section){
                     section[item].Value == '' || section[item].Value == null ? result = false : '';
                 }
                 return result;
-            }
+            },
+            preloader(show) {
+                if(show)
+                {
+                    document.getElementById("preloader").style.display = "flex";
+                }
+                else
+                {
+                    document.getElementById("preloader").style.display = "none";
+                }
+            },
         },
         watch : {
             attributes(){

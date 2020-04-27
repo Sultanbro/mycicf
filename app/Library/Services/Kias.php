@@ -337,14 +337,6 @@ class Kias implements KiasServiceInterface
 
     public function calcFull($order)
     {
-//        $result = [];
-//        $response = $this->request('GetAgreement', [
-//            'AgrISN' => '00036205',
-//            'ProductISN' => 437401,
-//        ]);
-//
-//        print '<pre>'; print_r($response);print '</pre>';exit();
-
 
         $result = $this->request('User_CicSaveAgrCalc', [
             'ISN' => '',

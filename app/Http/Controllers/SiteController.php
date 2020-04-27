@@ -649,8 +649,7 @@ class SiteController extends Controller
             foreach ($response->ROWSET->row as $row){
                 array_push($participants, [
                     'ISN' => (string)$row->ISN,
-                    'Data' =>   (string)$row->FIRSTNAME.' '.(string)$row->LASTNAME.' '.(string)$row->PARENTNAME.' '.
-                                (string)$row->BIRTHDAY.' '.(string)$row->COUNTRYNAME
+                    'Data' =>   (string)$row->ORGNAME != null ? (string)$row->ORGNAME.' ('.(string)$row->ECONOMICNAME.') '.(string)$row->COUNTRYNAME : (string)$row->FIRSTNAME.' '.(string)$row->LASTNAME.' '.(string)$row->PARENTNAME.' '.(string)$row->BIRTHDAY.' '.(string)$row->COUNTRYNAME
                 ]);
             }
             $result = [
@@ -668,6 +667,7 @@ class SiteController extends Controller
                     'FirstName' => (string)$response->ROWSET->row->FIRSTNAME,
                     'LastName' => (string)$response->ROWSET->row->LASTNAME,
                     'Patronymic' => (string)$response->ROWSET->row->PARENTNAME,
+                    'OrgName' => (string)$response->ROWSET->row->ORGNAME
                 ]
             ];
         }

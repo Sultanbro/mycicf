@@ -22,6 +22,10 @@
                 <label class="bold">Модель</label>
                 <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.Model" disabled="true">
             </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Территория регистрации</label>
+                <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.TerritoryName" disabled="true">
+            </div>
 
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Пробег авто </label>
@@ -49,21 +53,26 @@
             agrobjcar : Object,
             agrobject: Object,
             cIndex: Number,
+            preloader: Function,
         },
         methods:{
             getVehicle(){
+                this.preloader(true);
                 this.axios.post('/full/get-vehicle', this.agrobjcar)
                     .then(response => {
                         if(response.data.success){
                             for(var prop in response.data.result){
                                 this.agrobjcar[prop] = response.data.result[prop];
                             }
+                            this.preloader(false);
                         }else{
                             alert(response.data.error);
+                            this.preloader(false);
                         }
                     })
                     .catch(error => {
                         alert(error);
+                        this.preloader(false);
                     });
             },
             chooseSearch(searchType){

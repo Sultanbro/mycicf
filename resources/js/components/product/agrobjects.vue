@@ -44,7 +44,11 @@
             <div v-if="agrobject.ClassISN != ''" class="col-12">
                 <div class="col-12" v-if="Object.keys(agrobject.objekt[agrobject.ClassISN].AGROBJCAR).length > 0">
                     <agrobjcar v-for="(agrobjcar,index) in agrobject.objekt[agrobject.ClassISN].AGROBJCAR"
-                            :agrobjcar="agrobjcar" :agrobject="agrobject" :key="index" :cIndex="index"></agrobjcar>
+                            :agrobjcar="agrobjcar"
+                           :agrobject="agrobject"
+                           :key="index"
+                           :preloader="preloader"
+                           :cIndex="index" ></agrobjcar>
                 </div>
             </div>
 
@@ -72,7 +76,8 @@
         },
         props: {
             agrobject : Object,
-            aIndex: Number
+            aIndex: Number,
+            preloader: Function
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){
