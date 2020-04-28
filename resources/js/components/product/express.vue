@@ -161,14 +161,14 @@
                 });
             },
             createFullQuotation(){
-                this.axios.post('/full-quotation/create', {
+                this.axios.post('/full/create', {
                     subjISN : this.subjISN,
                     id : this.id,
                     attributes : this.attributes
                 })
                     .then(response => {
                         if(response.data.success){
-                            window.location.href="/full-quotation/calc/"+this.id+"/"+response.data.id+"";
+                            window.location.href="/full/calc/"+this.id+"/"+response.data.id+"";
                         }else{
                             alert(response.data.error)
                         }
