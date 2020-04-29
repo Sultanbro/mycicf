@@ -411,4 +411,29 @@ class Kias implements KiasServiceInterface
             'OLEOBJECT' => $file
         ]);
     }
+
+//    public function CheckAgrIssetProduct($productISN, $clientISN, $dateBeg, $dateEnd, $order_id){
+//
+//        $dateSign = date("d.m.Y", time());
+//
+//        if(time() >= $dateBeg){
+//            $dateBeg = date("d.m.Y", strtotime("+1 day", time()));
+//        }
+//        else {
+//            $dateBeg = date("d.m.Y", $dateBeg);
+//        }
+//
+//        $dateEnd = date('d.m.Y',$dateEnd);
+//
+//        $result = $this->request('User_CicCheckAgr', [
+//            'ProductISN'    => $productISN,
+//            'ClientISN'     => $clientISN,
+//            'DATEBEG'       => $dateBeg,
+//            'DATEEND'       => $dateEnd,
+//            'DATESIGN'      => $dateSign,
+//            'OrderNO'       => $order_id,
+//        ]);
+//
+//        return $result;
+//    }
 }

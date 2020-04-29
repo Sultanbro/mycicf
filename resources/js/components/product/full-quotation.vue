@@ -15,7 +15,7 @@
             </div>
         </div>
         <div>
-            <period :period="period"></period>
+            <period :period="period" :quotationId="quotationId"></period>
         </div>
 
         <div v-for="attribute in attributes">
@@ -213,7 +213,9 @@
                 this.preloader(true);
                 this.axios.post('/full/create-agr',
                     {
-                        calc_isn: this.calc_isn
+                        calc_isn: this.calc_isn,
+                        subjISN: this.subjISN,
+                        contractDate: this.period,
                     })
                     .then(response => {
                         if (response.data.success) {

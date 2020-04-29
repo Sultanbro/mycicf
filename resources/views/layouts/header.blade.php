@@ -32,16 +32,19 @@
                         Библиотека
                     </li>
                 </a>
-                    <a class="header-navigation" href="/express">
+                <li class="products-link" style="display:inline-flex">
+                    <ul id="products-nav">
                         <li>
-                            Экспресс котировка
+                            <a class="products-item" href="javascript:void(0);" tabindex="1" >
+                                Продукты <span class="ml-2"><i class="fas fa-caret-down"></i></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li id="express"><a href="/express" class="item">Экспресс котировка</a></li>
+                                <li id="full"><a href="/full" class="item">Полная котировка</a></li>
+                            </ul>
                         </li>
-                    </a>
-                    <a class="header-navigation" href="/full">
-                        <li>
-                            Полная котировка
-                        </li>
-                    </a>
+                    </ul>
+                </li>
             </ul>
         </div>
         <div class="col-md-4">

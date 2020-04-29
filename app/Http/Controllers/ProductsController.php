@@ -511,19 +511,26 @@ class ProductsController extends Controller
             $error = '';
             $contractNumber = null;
             if($quotation->contract_number == '' || $quotation->contract_number == null) {
-                try {
-                    $result = $kias->createAgrFromAgrCalc($request->calc_isn);
-                    if (isset($result->error)) {
-                        $error = (string)$result->error->text;
-                    } else {
-                        $quotation->kias_id = (string)$result->AgrISN;
-                        $quotation->contract_number = $contractNumber = (string)$result->AgrID;
-                        $quotation->save();
-                        $success = true;
+//                $begin = $request['contractDate']['begin'];
+//                $end = $request['contractDate']['end'];
+//                $checkAgr = $kias->CheckAgrIssetProduct($quotation->product_isn, $request['subjISN'], $begin, $end, null);
+//                if($checkAgr->Result == 1){
+//                    $error = 'Уже есть договор';
+//                } else {
+                    try {
+                        $result = $kias->createAgrFromAgrCalc($request->calc_isn);
+                        if (isset($result->error)) {
+                            $error = (string)$result->error->text;
+                        } else {
+                            $quotation->kias_id = (string)$result->AgrISN;
+                            $quotation->contract_number = $contractNumber = (string)$result->AgrID;
+                            $quotation->save();
+                            $success = true;
+                        }
+                    } catch (\Exception $ex) {
+                        $error = $ex->getMessage();
                     }
-                } catch (\Exception $ex) {
-                    $error = $ex->getMessage();
-                }
+                //}
             } else {
                 $error = 'Договор уже оформлен. Номер договора '.$quotation->contract_number;
             }

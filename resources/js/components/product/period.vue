@@ -4,11 +4,17 @@
         <div class="row col-12">
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата начала : </label>
-                <input type="date" id="dateBeg" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.begin" required>
+                <input  type="date"
+                        id="dateBeg"
+                        class="date-products col-12"
+                        dateFormat="dd.mm.YYYY"
+                        v-model="period.begin"
+                        required
+                        disabled="computedDisable">
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-12">
                 <label>Период : </label>
-                <select class="custom-select" v-model="period.period">
+                <select class="custom-select" v-model="period.period" disabled="computedDisable">
                     <option value="12">12 месяцев</option>
                     <option value="11">11 месяц</option>
                     <option value="10">10 месяц</option>
@@ -29,11 +35,19 @@
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата окончания : </label>
-                <input type="date" id="dateEnd" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.end" :disabled="period.period !== '0'" required>
+                <input
+                        type="date"
+                        id="dateEnd"
+                        class="date-products col-12"
+                        dateFormat="dd.mm.YYYY"
+                        v-model="period.end"
+                        :disabled="period.period !== '0'"
+                        required
+                        disabled="computedDisable">
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата подписания : </label>
-                <input type="date" id="dateSig" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.sig" required>
+                <input type="date" id="dateSig" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.sig" required disabled="true">
             </div>
         </div>
     </div>
@@ -56,11 +70,10 @@
                 .add(-1, 'days')
                 .format('YYYY-MM-DD');
         },
-        created(){
-            //...
-        },
-        methods: {
-            //...
+        computed: {
+            computedDisable(){
+                return this.quotationId != 0 ? true : false;
+            }
         },
         watch: {
             'period.period': function (val, oldVal){
@@ -78,7 +91,7 @@
             },
             'period.begin': function (val, oldVal){
                 val = parseInt(this.period.period);
-                this.period.sig = this.$moment(this.period.begin, 'YYYY-MM-DD').format('YYYY-MM-DD');
+                //this.period.sig = this.$moment(this.period.begin, 'YYYY-MM-DD').format('YYYY-MM-DD');
                 if(val > 0 && val < 13){
                     this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
                         .add(this.period.period, 'month')
