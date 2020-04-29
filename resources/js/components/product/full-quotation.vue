@@ -18,12 +18,14 @@
             <period :period="period" :quotationId="quotationId"></period>
         </div>
 
-        <div v-for="attribute in attributes">
-            <agr-attributes :attribute="attribute"></agr-attributes>
-        </div>
+        <div class="agr-block">
+            <div v-for="attribute in attributes">
+                <agr-attributes :attribute="attribute"></agr-attributes>
+            </div>
 
-        <div v-for="agrclause in agrclauses">
-            <agr-clause :agrclause="agrclause"></agr-clause>
+            <div v-for="agrclause in agrclauses">
+                <agr-clause :agrclause="agrclause"></agr-clause>
+            </div>
         </div>
 
         <div v-for="(agrobject,index) in agrobjects">
@@ -32,9 +34,8 @@
 
         <upload-docs :docs="docs" :quotationId="quotationId"></upload-docs>
 
-        <div class="d-flex justify-content-end col-12">
-            <div class="col-12">
-
+        <div class="d-flex justify-content-center w-100 mt-3 mb-3">
+            <div>
                 <span class="fs-2" v-if="calculated">Сумма премий {{price}} Тенге</span>
                 <div class="fs-2" v-if="contract_number != null">Номер договора {{contract_number}}</div>
 
