@@ -150,7 +150,7 @@
                     this.participant.Value = this.isn;
                     this.subjISN = this.isn;
                     this.closeParticipantForm(this.pIndex);
-                    alert('Страхователь успешно добавлен!');
+                    alert(this.participant.Label+' успешно добавлен!');
                 } else {
                     alert('Не выбран страхователь');
                 }

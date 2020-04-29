@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block">
+    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
         <h4>Прикрепление файлов</h4>
         <label for="file-driving-input" class="form-row mb-1 col-12">
             <div class="col-12" v-html="files_count"></div>

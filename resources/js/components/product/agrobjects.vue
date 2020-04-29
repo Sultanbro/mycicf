@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block">
+    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
         <h4>Объект</h4>
         <div class="row col-12">
             <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
@@ -53,7 +53,7 @@
             </div>
 
             <div v-if="agrobject.ClassISN != ''" class="col-12"> <!-- Атрибуты объекта -->
-                <div class="col-12">
+                <div class="col-12 agr-block">
                     <agr-attributes
                             v-for="(agrobj,index) in agrobject.objekt[agrobject.ClassISN].AGROBJECT_ADDATTR" :attribute="agrobj"
                             :key="index">

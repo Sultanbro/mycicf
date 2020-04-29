@@ -10,11 +10,11 @@
                         dateFormat="dd.mm.YYYY"
                         v-model="period.begin"
                         required
-                        disabled="computedDisable">
+                        :disabled="computedDisable">
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-12">
                 <label>Период : </label>
-                <select class="custom-select" v-model="period.period" disabled="computedDisable">
+                <select class="custom-select" v-model="period.period" :disabled="computedDisable">
                     <option value="12">12 месяцев</option>
                     <option value="11">11 месяц</option>
                     <option value="10">10 месяц</option>
@@ -41,9 +41,8 @@
                         class="date-products col-12"
                         dateFormat="dd.mm.YYYY"
                         v-model="period.end"
-                        :disabled="period.period !== '0'"
-                        required
-                        disabled="computedDisable">
+                        :disabled="computedDisable == false && period.period !== '0' || computedDisable == true"
+                        required>
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                 <label>Дата подписания : </label>
@@ -62,7 +61,8 @@
             }
         },
         props: {
-            period: Object
+            period: Object,
+            quotationId: String
         },
         mounted(){
             this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
@@ -72,7 +72,7 @@
         },
         computed: {
             computedDisable(){
-                return this.quotationId != 0 ? true : false;
+                return parseInt(this.quotationId) != 0 ? true : false;
             }
         },
         watch: {
