@@ -95,7 +95,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\checkWndAdmin::class,
         \App\Http\Middleware\CheckAdminAuth::class,
         \App\Http\Middleware\ReadingClubAdmin::class,
-        \App\Http\Middleware\ProductsAdmin::class
+        \App\Http\Middleware\ProductsAdmin::class,
         \App\Http\Middleware\parseDomainAuth::class,
     ];
 }
