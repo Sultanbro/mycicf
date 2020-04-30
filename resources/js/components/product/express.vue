@@ -4,10 +4,10 @@
         <div v-for="attribute in attributes">
             <agr-attributes :attribute="attribute"></agr-attributes>
         </div>
-        <div class="d-flex justify-content-end col-12">
-            <div class="col-12">
+        <div class="d-flex justify-content-end col-12 p-0 mb-5">
+            <div class="col-12 text-center p-0">
                 <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
-                <span class="fs-2" v-if="calculated">{{price}} Тенге</span>
+                <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
         </div>
@@ -161,21 +161,22 @@
                 });
             },
             createFullQuotation(){
-                this.axios.post('/full/create', {
-                    subjISN : this.subjISN,
-                    id : this.id,
-                    attributes : this.attributes
-                })
-                    .then(response => {
-                        if(response.data.success){
-                            window.location.href="/full/calc/"+this.id+"/"+response.data.id+"";
-                        }else{
-                            alert(response.data.error)
-                        }
-                    })
-                    .catch(error => {
-                        alert(error)
-                    });
+                window.location.href="/full/calc/"+this.id+"/0";
+                // this.axios.post('/full/create', {
+                //     subjISN : this.subjISN,
+                //     id : this.id,
+                //     attributes : this.attributes
+                // })
+                //     .then(response => {
+                //         if(response.data.success){
+                //             window.location.href="/full/calc/"+this.id+"/0"+response.data.id;
+                //         }else{
+                //             alert(response.data.error)
+                //         }
+                //     })
+                //     .catch(error => {
+                //         alert(error)
+                //     });
             }
         },
         watch : {

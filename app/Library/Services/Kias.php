@@ -412,6 +412,13 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getPrintableDocumentList($contract_number){
+        return $this->request('User_CicGetPrintableDocumentList', [
+            'AgrISN' => $contract_number,
+            'TemplateISN' => null
+        ]);
+    }
+
 //    public function CheckAgrIssetProduct($productISN, $clientISN, $dateBeg, $dateEnd, $order_id){
 //
 //        $dateSign = date("d.m.Y", time());

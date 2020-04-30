@@ -537,7 +537,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => $success,
                 'error' => $error,
-                'contractNumber' => $contractNumber
+                'contract_number' => $contractNumber
             ]);
         }
     }
@@ -825,13 +825,6 @@ class ProductsController extends Controller
                     ]);
                 }
 
-//                $extension = $file->extension();
-//                $filename = str_replace(' ','_',$product->name).'_'.mt_rand(1000000, 9999999) . $file->getBasename(). '.' . $extension;
-//                array_push($uploaded,'/public/products/'.$filename);
-//                Storage::putFileAs(
-//                    '/public/products', $file, $filename
-//                );
-
                 $contractNumber  = str_replace('-','',$request->calc_isn);
                 $file = Storage::get('/public/products/'.$filename);
                 try {
@@ -856,5 +849,15 @@ class ProductsController extends Controller
             'success' => true,
             'error' => ''
         ]);
+    }
+
+    public function getPrintableForm(Request $request, KiasServiceInterface $kias){
+        $result = $kias->getPrintableDocumentList($request->contract_number);
+        print_r($result);exit();
+        if (isset($result->error)) {
+            $error = (string)$result->error->text;
+        } else {
+            print '<pre>';print_r($result);print '</pre>';exit();
+        }
     }
 }

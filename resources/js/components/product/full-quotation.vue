@@ -35,8 +35,8 @@
         <upload-docs :docs="docs" :quotationId="quotationId"></upload-docs>
 
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
-            <div>
-                <span class="fs-2" v-if="calculated">Сумма премий {{price}} Тенге</span>
+            <div class="text-center">
+                <div class="fs-2" v-if="calculated">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null">Номер договора {{contract_number}}</div>
 
                 <button v-if="contract_number === null && quotationId == 0" class="btn btn-outline-info" @click="calculate">
@@ -44,6 +44,9 @@
                 </button>
                 <button v-if="contract_number === null && calc_isn != null" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
+                </button>
+                <button v-if="contract_number != null && contract_number != ''" class="btn btn-outline-info" @click="getPrintableForm">
+                    Печатная форма
                 </button>
             </div>
         </div>
@@ -221,6 +224,25 @@
                     .then(response => {
                         if (response.data.success) {
                             this.contract_number = response.data.contract_number;
+                        } else {
+                            alert(response.data.error)
+                        }
+                        this.preloader(false);
+                    })
+                    .catch(error => {
+                        alert(error)
+                        this.preloader(false);
+                    });
+            },
+            getPrintableForm(){
+                this.preloader(true);
+                this.axios.post('/full/getPrintableForm',
+                    {
+                        contract_number: this.contract_number
+                    })
+                    .then(response => {
+                        if (response.data.success) {
+                            //...
                         } else {
                             alert(response.data.error)
                         }
