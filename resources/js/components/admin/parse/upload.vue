@@ -124,7 +124,8 @@
                     .then(response => {
                         if(response.data.success){
                             alert('Данные успешно получены, подождите пока идёт обработка полученных данных');
-                            location.href='/';
+                            //location.href='/';
+                            location.reload();
                         }else{
                             alert(response.data.error);
                         }

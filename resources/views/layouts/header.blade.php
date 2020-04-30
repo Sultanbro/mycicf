@@ -45,6 +45,11 @@
                         </li>
                     </ul>
                 </li>
+                <a class="header-navigation" href="javascript:void(0)">
+                    <li>
+                        Обучение
+                    </li>
+                </a>
             </ul>
         </div>
         <div class="col-md-4">
@@ -53,7 +58,7 @@
                    class="flex-row header-avatar-contain header-menu-hover text-decoration pt-1 pb-1">
                     <div href="javascript:void(0)" class="small-avatar-circle-width ml-2">
                         <user-image
-                                :isn="{{ auth()->user()->ISN }}"></user-image>
+                            :isn="{{ auth()->user()->ISN }}"></user-image>
                     </div>
 
                     <div class="vertical-middle header-avatar-nickname">

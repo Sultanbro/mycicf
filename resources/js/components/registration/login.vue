@@ -79,6 +79,12 @@
             afterLogin: function (response) {
                 if(response.success){
                     location.href = '/news';
+                }else{
+                    this.flashMessage.error({
+                        title: "Ошибка",
+                        message: response.error,
+                        time: 5000
+                    });
                 }
             },
 

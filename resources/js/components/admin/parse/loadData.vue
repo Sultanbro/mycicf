@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div class="form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
+            <label for="company">Компания</label>
+            <select id="company" class="form-control" v-model="company">
+                <option v-for="(item, index) in companies" :value="index">{{item}}</option>
+            </select>
+        </div>
+        <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
+            <button type="button" @click="getDataTable" class="btn-primary btn-lg btn">Показать</button>
+        </div>
         <table class="table table-responsive-sm table-striped table-bordered">
             <thead>
                 <tr>
@@ -15,6 +24,8 @@
                         <span :style="{color: month.premium === 0 ? 'red' : 'green'}">П</span>
                         <span :style="{color: month.standart === 0 ? 'red' : 'green'}">М</span>
                         <span :style="{color: month.finance === 0 ? 'red' : 'green'}">Ф</span>
+                        <span :style="{color: month.opu === 0 ? 'red' : 'green'}">О</span>
+                        <span :style="{color: month.balance === 0 ? 'red' : 'green'}">Б</span>
                     </th>
                 </tr>
             </tbody>
@@ -50,7 +61,9 @@
         data() {
             return {
                 table: [],
+                companies: [],
                 monthLabels: [],
+                company: 8,
                 month: 1,
                 year : 2014,
                 docType: 1,
@@ -59,14 +72,28 @@
             }
         },
         mounted () {
+            this.getCompanies();
             this.getDataTable();
             this.getMonthLabels();
             this.getDocTypes();
             this.getYearLabels();
         },
         methods: {
+            getCompanies() {
+                this.axios.post('/parse/get/companies', {})
+                    .then(response => {
+                        if(response.data.success){
+                            this.companies = response.data.result;
+                        } else {
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
+            },
             getDataTable() {
-                this.axios.post('/parse/get/data', {})
+                this.axios.post('/parse/get/data', {company: this.company})
                     .then(response => {
                         if(response.data.success){
                             this.table = response.data.data;

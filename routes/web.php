@@ -42,6 +42,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
             Route::post('parse/getDocTypes', 'ParseController@getDocTypes');
+            Route::post('parse/get/companies', 'ParseController@getCompaniesList');
 
             Route::get('parse/add/company', 'ParseController@getAddCompany')->name('parse.add.company');
             Route::post('parse/add/company', 'ParseController@postAddCompany');
@@ -149,6 +150,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+        Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         //DOSSIER
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
@@ -170,12 +172,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
         Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
-        Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
-        Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
-        Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+
+        Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
+        Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
+        Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
+
         //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
-
-
+        Route::get('/parse/getCurrentPeriods/{type}', ['uses' => 'ParseController@getCurrentPeriods']);
+        Route::get('/parse/getCompanies', 'ParseController@getCompanies');
         Route::post('/parse/opu/getData', 'ParseController@getOpuTopSum');
         Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
         Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
@@ -262,7 +266,20 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full/calculate', 'ProductsController@fullCalc');
     });
 });
+Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
+        Route::get('/', 'SiteController@parseAuth');
+        Route::post('/login', 'SiteController@parseLogin');
 
+        Route::group(['middleware' => 'parseDomainAuth'], function (){
+        Route::get('parse/company', 'ParseController@getCompanyTopSum');
+        Route::get('parse/product', 'ParseController@getClassTopSum');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators');
+        Route::get('parse', 'ParseController@redirectToCompany');
+        Route::get('parse/table-fees', 'ParseController@getFees');
+        Route::get('parse/table-indicators', 'ParseController@getIndicators');
+        Route::get('parse/table-competitors', 'ParseController@getCompetitors');
+    });
+});
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
