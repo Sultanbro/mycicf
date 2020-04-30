@@ -253,6 +253,7 @@
                         this.preloader(false);
                     });
             },
+
             checkInputs(section){
                 let result = true;
                 for(let item in section){
