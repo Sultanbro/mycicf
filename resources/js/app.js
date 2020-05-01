@@ -134,6 +134,8 @@ Vue.component('agrobjcar', require('./components/product/agrobjcar.vue').default
 
 Vue.component('upload-docs', require('./components/product/uploadDocs.vue').default);
 
+Vue.component('printable-form', require('./components/product/printableForm.vue').default);
+
 
 window.onload = function(){
     var app = new Vue({

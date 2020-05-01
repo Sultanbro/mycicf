@@ -14,11 +14,11 @@
                 </participant>
             </div>
         </div>
-        <div>
+        <div class="mb-4">
             <period :period="period" :quotationId="quotationId"></period>
         </div>
 
-        <div class="agr-block">
+        <div class="agr-block mb-4">
             <div v-for="attribute in attributes">
                 <agr-attributes :attribute="attribute"></agr-attributes>
             </div>
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div v-for="(agrobject,index) in agrobjects">
+        <div v-for="(agrobject,index) in agrobjects"class="mb-4">
             <agr-object :agrobject="agrobject" :aIndex="index" :preloader="preloader"></agr-object>
         </div>
 
@@ -45,9 +45,9 @@
                 <button v-if="contract_number === null && calc_isn != null" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
                 </button>
-                <button v-if="contract_number != null && contract_number != ''" class="btn btn-outline-info" @click="getPrintableForm">
-                    Печатная форма
-                </button>
+                <printable-form v-if="contract_number != null && contract_number != ''"
+                                :preloader="preloader"
+                                :contract_number="contract_number"></printable-form>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
                     end : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                     period : 12,
                     sig: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
-                }
+                },
             }
         },
         props: {
@@ -94,7 +94,6 @@
         },
         mounted() {
             this.getFullData();
-
         },
         methods: {
             getFullData() {
@@ -234,26 +233,6 @@
                         this.preloader(false);
                     });
             },
-            getPrintableForm(){
-                this.preloader(true);
-                this.axios.post('/full/getPrintableForm',
-                    {
-                        contract_number: this.contract_number
-                    })
-                    .then(response => {
-                        if (response.data.success) {
-                            //...
-                        } else {
-                            alert(response.data.error)
-                        }
-                        this.preloader(false);
-                    })
-                    .catch(error => {
-                        alert(error)
-                        this.preloader(false);
-                    });
-            },
-
             checkInputs(section){
                 let result = true;
                 for(let item in section){
@@ -262,12 +241,9 @@
                 return result;
             },
             preloader(show) {
-                if(show)
-                {
+                if(show){
                     document.getElementById("preloader").style.display = "flex";
-                }
-                else
-                {
+                } else {
                     document.getElementById("preloader").style.display = "none";
                 }
             },

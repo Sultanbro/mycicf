@@ -467,8 +467,6 @@ class ProductsController extends Controller
             ]);
         }
 
-        //print '<pre>';print_r($request->all());print '</pre>';exit();
-
         $order['prodIsn'] = $model->product_isn;
         $order['subjISN'] = $request->subjISN;
         $order['participants'] = $this->participantsToKiasAddAttr($request->all());
@@ -511,9 +509,8 @@ class ProductsController extends Controller
             $error = '';
             $contractNumber = null;
             if($quotation->contract_number == '' || $quotation->contract_number == null) {
-//                $begin = $request['contractDate']['begin'];
-//                $end = $request['contractDate']['end'];
-//                $checkAgr = $kias->CheckAgrIssetProduct($quotation->product_isn, $request['subjISN'], $begin, $end, null);
+//                $date = $request['contractDate'];
+//                $checkAgr = $kias->CheckAgrIssetProduct($quotation->product_isn, $request['subjISN'], $date, null);
 //                if($checkAgr->Result == 1){
 //                    $error = 'Уже есть договор';
 //                } else {
@@ -851,13 +848,48 @@ class ProductsController extends Controller
         ]);
     }
 
+    public function getPrintableFormList(Request $request, KiasServiceInterface $kias){
+        $order = FullQuotation::where('contract_number',$request->contract_number)->first();
+        $response = $kias->getPrintableDocumentList($order->kias_id);
+        $success = false;
+
+        if(isset($response->ROWSET->row)){
+            $success = true;
+        }
+
+        return response()->json([
+            'success' => $success,
+            'error' => isset($response->error) ? $response->error->text : [],
+            'printableForms' => isset($response->ROWSET->row) ? (array)$response->ROWSET : [],
+        ]);
+    }
+
     public function getPrintableForm(Request $request, KiasServiceInterface $kias){
-        $result = $kias->getPrintableDocumentList($request->contract_number);
-        print_r($result);exit();
-        if (isset($result->error)) {
-            $error = (string)$result->error->text;
-        } else {
-            print '<pre>';print_r($result);print '</pre>';exit();
+        $order = FullQuotation::where('contract_number',$request->contract_number)->first();
+        $response = $kias->getPrintableDocument($order->kias_id ,$request->temp, $request->classisn);
+
+        if (isset($response->Error)) {
+            echo 'Произошла ошибка. '.$response->Error;
+        }
+
+        if (isset($response->Bytes, $response->FileName)) {
+            $decoded = base64_decode($response->Bytes);
+            $str = str_replace('\\', '/', (string)$response->FileName);
+            $pathinfo = pathinfo($str);
+            file_put_contents($pathinfo['basename'], $decoded);
+
+            if (file_exists($pathinfo['basename'])) {
+                header('Content-Description: File Transfer');
+                header('Charset: UTF-8');
+                //header('Content-Type: application/octet-stream');
+                header('Content-Type: application/'.$pathinfo['extension']);
+                header('Content-Disposition: attachment; filename="' . basename($pathinfo['basename']) . '"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                readfile($pathinfo['basename']);
+                exit;
+            }
         }
     }
 }

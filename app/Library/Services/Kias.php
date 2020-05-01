@@ -415,32 +415,34 @@ class Kias implements KiasServiceInterface
     public function getPrintableDocumentList($contract_number){
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
-            'TemplateISN' => null
+            'TemplateISN' => ''
         ]);
     }
 
-//    public function CheckAgrIssetProduct($productISN, $clientISN, $dateBeg, $dateEnd, $order_id){
-//
-//        $dateSign = date("d.m.Y", time());
-//
-//        if(time() >= $dateBeg){
+    public function CheckAgrIssetProduct($productISN, $clientISN, $date, $order_id){
+
+        $dateSign = date("d.m.Y", time());
+
+//        if(time() >= $date['begin']){
 //            $dateBeg = date("d.m.Y", strtotime("+1 day", time()));
 //        }
 //        else {
-//            $dateBeg = date("d.m.Y", $dateBeg);
-//        }
-//
-//        $dateEnd = date('d.m.Y',$dateEnd);
-//
-//        $result = $this->request('User_CicCheckAgr', [
-//            'ProductISN'    => $productISN,
-//            'ClientISN'     => $clientISN,
-//            'DATEBEG'       => $dateBeg,
-//            'DATEEND'       => $dateEnd,
-//            'DATESIGN'      => $dateSign,
-//            'OrderNO'       => $order_id,
-//        ]);
-//
-//        return $result;
-//    }
+            $dateBeg = date("d.m.Y", strtotime($date['begin']));
+        //}
+
+        $dateEnd = date('d.m.Y',strtotime($date['end']));
+
+
+
+        $result = $this->request('User_CicCheckAgr', [
+            'ProductISN'    => $productISN,
+            'ClientISN'     => $clientISN,
+            'DATEBEG'       => $dateBeg,
+            'DATEEND'       => $dateEnd,
+            'DATESIGN'      => $dateSign,
+            //'OrderNO'       => null,
+        ]);
+
+        return $result;
+    }
 }

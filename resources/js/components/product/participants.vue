@@ -152,7 +152,7 @@
                     this.closeParticipantForm(this.pIndex);
                     alert(this.participant.Label+' успешно добавлен!');
                 } else {
-                    alert('Не выбран страхователь');
+                    alert('Не выбран '+this.participant.Label);
                 }
             },
             addParticipant(){
