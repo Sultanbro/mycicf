@@ -2143,3 +2143,7 @@ textarea::-webkit-scrollbar-thumb {
         grid-gap: 20px;
     }
 }
+
+.quotation-list .pagination {
+	display:inline-flex;
+}

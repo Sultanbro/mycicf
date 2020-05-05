@@ -20,8 +20,14 @@
 
             <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Сумма страхования : </label>
-                <input type="text" class="attr-input-text col-12"  v-model="agrobject.insureSum">
+                <input type="number" class="attr-input-text col-12"  v-model="agrobject.insureSum">
             </div>
+
+            <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
+                <label class="bold">Сумма премии : </label>
+                <input type="number" class="attr-input-text col-12"  v-model="agrobject.DAsum">
+            </div>
+
 
             <div class="col-12" v-if="agrobject.ClassISN != ''">
                 <div class="col-12 row mt-2 mb-2 ml-0 agreement-block"
@@ -77,7 +83,8 @@
         props: {
             agrobject : Object,
             aIndex: Number,
-            preloader: Function
+            preloader: Function,
+            DA: Object
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){
@@ -85,6 +92,10 @@
             },
             'agrobject.SubClassISN': function(val,oldVal){
                 this.selectedSubObject = val;
+            },
+            'DA.calcDA': function(){
+                this.agrobject.DAsum = null;
+                this.DA.remark = null;
             }
         },
         methods: {

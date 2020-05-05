@@ -20,6 +20,8 @@ import VTooltip from 'v-tooltip'
 
 import vmodal from 'vue-js-modal'
 
+import VueTheMask from 'vue-the-mask'
+
 const moment = require('vue-moment');
 
 Vue.use(moment);
@@ -39,6 +41,8 @@ Vue.use(VueAxios, axios);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
+
+Vue.use(VueTheMask);
 
 Vue.directive('linkified', linkify);
 

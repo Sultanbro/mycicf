@@ -259,13 +259,7 @@ class ProductsController extends Controller
     }
 
     public function fullQuotationList($productISN){
-        $quotations = [];
-        foreach (FullQuotation::where('product_isn',$productISN)->get() as $quotation){
-            array_push($quotations, [
-                'url' => "/full/calc/{$quotation->product->id}/{$quotation->id}",
-                'calc_isn' => $quotation->calc_isn
-            ]);
-        }
+        $quotations = FullQuotation::where('product_isn',$productISN)->paginate(15);
         $product_name = FullProduct::where('product_isn',$productISN)->first()->name;
         return view('full.quotation_list', compact(['quotations','product_name']));
     }
@@ -317,6 +311,7 @@ class ProductsController extends Controller
         $data = isset($constructor->data) ? json_decode($constructor->data) : [];
         $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular : $data->formular[0] : [];
         $participants = isset($data->participants) ? $data->participants : [];
+        $DAremark = isset($data->DAremark) ? $data->DAremark : null;
 
         if(isset($data->agrclauses)){
             $agrclauses = $data->agrclauses;
@@ -353,7 +348,9 @@ class ProductsController extends Controller
             'calc_isn' => isset($calc_isn) && $calc_isn != '' ? $calc_isn : null,
             'contract_number' => isset($contract_number) && $contract_number != '' ? $contract_number : null,
             'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
-            'docs' => isset($docs) && $docs != '' ? $docs : []
+            'docs' => isset($docs) && $docs != '' ? $docs : [],
+            'calc_da' => isset($constructor->calc_da) ? intval($constructor->calc_da) : 0,
+            'DAremark' => $DAremark
         ]);
     }
 
@@ -383,6 +380,7 @@ class ProductsController extends Controller
                     $objects['RiskISN'] = '';
                     $objects['InsClassISN'] = '';
                     $objects['insureSum'] = '';
+                    $objects['DAsum'] = null;
                     $i = 0;
                     foreach($response->Object->row as $object) {
                         $isn = (string)$object->classobjisn;
@@ -475,6 +473,8 @@ class ProductsController extends Controller
         $order['contractDate'] = $request->all()['contractDate'];
         $order['formular'] = $request->all()['formular'];
         $order['agrobject'] = $this->agrobjectToKiasAdd($request->all());
+        $order['calcDA'] = $request->calcDA;
+        $order['DAremark'] = $request->DAremark;
 
         $response = $kias->calcFull($order);
         if(isset($response->error)){
@@ -490,8 +490,9 @@ class ProductsController extends Controller
             $quotation->product_isn = $order['prodIsn'];
             $quotation->user_isn = Auth::user()->ISN;
             $quotation->calc_isn = (int)$response->AgrCalcISN;
-            $quotation->premiumSum = (int)$response->PremiumSum;
+            $quotation->premiumSum = $request->calcDA == 1 ? 0 : (int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
+            $quotation->calc_da = $order['calcDA'];
             $quotation->save();
 
             return response()->json([
@@ -657,6 +658,8 @@ class ProductsController extends Controller
                     'CurrSumISN' => self::DICT_CURRENCY_TENGE,
                     'LimitSum' => $obj['insureSum'],
                     'LimitSumType' => 'А',
+                    'PremiumSum' => $obj['DAsum'],
+                    'PremiumSumTariff' => $obj['DAsum'],
                     'FranchType' => 'Б',
                     //'FranchSum' => $order['franch'],
                 ]
@@ -810,6 +813,8 @@ class ProductsController extends Controller
         if(count($request->file('files')) > 0){
             $product = FullProduct::find($request->id);
             $uploaded = [];
+            $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
+            $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';
             foreach($request->file('files') as $file) {
                 $contents = $file->get();
                 $extension = $file->extension();
@@ -822,14 +827,14 @@ class ProductsController extends Controller
                     ]);
                 }
 
-                $contractNumber  = str_replace('-','',$request->calc_isn);
+                $calc_isn  = str_replace('-','',$request->calc_isn);
                 $file = Storage::get('/public/products/'.$filename);
                 try {
                     $results = $kias->saveAttachment(
-                        $contractNumber,
+                        $calc_isn,
                         basename($filename),
                         base64_encode($file),
-                        'C'
+                        $sendType
                     );
                 } catch (Exception $e) {
                     return response()->json([
@@ -838,7 +843,6 @@ class ProductsController extends Controller
                     ]);
                 }
             }
-            $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
             $quotation->docs = json_encode($uploaded);
             $quotation->save();
         }

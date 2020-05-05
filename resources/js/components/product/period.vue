@@ -14,7 +14,7 @@
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-12">
                 <label>Период : </label>
-                <select class="custom-select" v-model="period.period" :disabled="computedDisable">
+                <select class="custom-select" v-model="period.period" :disabled="computedDisable" @change="calcChanged">
                     <option value="12">12 месяцев</option>
                     <option value="11">11 месяц</option>
                     <option value="10">10 месяц</option>
@@ -62,7 +62,8 @@
         },
         props: {
             period: Object,
-            quotationId: String
+            quotationId: String,
+            calcChanged: Function
         },
         mounted(){
             this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')

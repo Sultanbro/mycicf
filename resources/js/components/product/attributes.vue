@@ -4,7 +4,8 @@
         <div>
             <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2">
                 <label class="bold mb-0 mr-2">Значение: </label>
-                <input type="text" class="attr-input-text w-100" v-model="attribute.Value">
+                <input v-if="attribute.AttrISN != 831381" type="text" class="attr-input-text w-100" v-model="attribute.Value">
+                <input v-if="attribute.AttrISN == 831381" type="tel" v-model="attribute.Value" v-mask="'+#######-##-##'" class="attr-input-text w-100">
             </div>
             <div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
                 <label class="bold mb-0 mr-2">Значение: </label>
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+    import {mask} from 'vue-the-mask'
     export default {
         name: "attributes",
         data() {
@@ -40,6 +42,7 @@
 
             }
         },
+        directives: {mask},
         props: {
             attribute : Object,
         },

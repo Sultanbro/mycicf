@@ -341,6 +341,8 @@ class Kias implements KiasServiceInterface
         $result = $this->request('User_CicSaveAgrCalc', [
             'ISN' => '',
             'ID' => "TEMP_515431_" . $order['prodIsn'] . "_" . time(),
+            'CalcDA'       => $order['calcDA'],
+            'ReqText' => $order['DAremark'],
             'CLIENTISN' => $order['subjISN'],
             'PRODUCTISN' => $order['prodIsn'],
             'CLASSISN' => 220603,

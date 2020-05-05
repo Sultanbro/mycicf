@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div class="text-center" v-if="calc_isn != null"><h5>Котировка {{ calc_isn }}</h5></div>
+        <div class="text-center" v-if="calc_isn != null">
+            <h5>Котировка {{ calc_isn }}</h5>
+        </div>
         <div class="col-md-12 mb-4">
             <div class="row">
                 <participant v-for="(participant,index) in participants"
@@ -14,8 +16,19 @@
                 </participant>
             </div>
         </div>
+
+        <div v-if="quotationId == 0 && contract_number == null" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+            <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
+            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true">
+        </div>
+
+        <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
+            <label class="bold">Текст заявки </label>
+            <input type="text" class="attr-input-text col-12"  v-model="DA.remark">
+        </div>
+
         <div class="mb-4">
-            <period :period="period" :quotationId="quotationId"></period>
+            <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
         </div>
 
         <div class="agr-block mb-4">
@@ -24,30 +37,35 @@
             </div>
 
             <div v-for="agrclause in agrclauses">
-                <agr-clause :agrclause="agrclause"></agr-clause>
+                <agr-clause :agrclause="agrclause" :calcChanged="calcChanged"></agr-clause>
             </div>
         </div>
 
         <div v-for="(agrobject,index) in agrobjects"class="mb-4">
-            <agr-object :agrobject="agrobject" :aIndex="index" :preloader="preloader"></agr-object>
+            <agr-object :agrobject="agrobject" :aIndex="index" :preloader="preloader" :DA="DA"></agr-object>
         </div>
 
         <upload-docs :docs="docs" :quotationId="quotationId"></upload-docs>
 
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
-                <div class="fs-2" v-if="calculated">Сумма премий {{price}} Тенге</div>
-                <div class="fs-2" v-if="contract_number != null">Номер договора {{contract_number}}</div>
+                <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
+                <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
+                <div class="fs-2" v-if="DA.orderCreated">Номер заявки {{ DA.orderNumber }}</div>
 
-                <button v-if="contract_number === null && quotationId == 0" class="btn btn-outline-info" @click="calculate">
+                <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
                 </button>
-                <button v-if="contract_number === null && calc_isn != null" class="btn btn-outline-info" @click="createAgr">
+                <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
+                    Отправить в ДА
+                </button>
+                <button v-if="contract_number === null && calc_isn != null && !DA.calcDA" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
                 </button>
                 <printable-form v-if="contract_number != null && contract_number != ''"
                                 :preloader="preloader"
-                                :contract_number="contract_number"></printable-form>
+                                :contract_number="contract_number">
+                </printable-form>
             </div>
         </div>
     </div>
@@ -71,6 +89,13 @@
                 agrobjects: [],
                 moreParticipant : false,
                 subjISN : '',
+                DA: {               // Департамент андеррайтинга
+                    calcDA: false,
+                    orderCreated: false,
+                    orderNumber: '',
+                    remark: null
+                },
+                DAsum: null,
                 width : 0,
                 height : 0,
                 calculated : false,
@@ -112,6 +137,11 @@
                             this.contract_number = response.data.contract_number;
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;
+
+                            this.DA.calcDA = response.data.calc_da == 1 ? true : false;
+                            this.DA.orderCreated = response.data.calc_da == 1 ? true : false;
+                            this.DA.orderNumber = response.data.calc_isn;
+                            this.DA.remark = response.data.DAremark;
                             this.getFullObjects();
                         }else{
                             alert(response.data.error);
@@ -161,19 +191,30 @@
                         formular: this.formular,
                         agrobjects: this.agrobjects,
                         contractDate: this.period,
+                        calcDA: this.DA.calcDA == true ? 1 : 0,
+                        DAremark: this.DA.remark,
                     })
                     .then(response => {
                         if (response.data.success) {
-                            this.price = response.data.premium;
-                            this.calculated = true;
+                            if(this.DA.calcDA) {
+                                alert('Заявка успешно создана.Номер заявки '+response.data.calc_isn);
+                                this.DA.orderNumber = response.data.calc_isn;
+                                this.DA.orderCreated = true;
+                            } else {
+                                this.price = response.data.premium;
+                                this.calculated = true;
+                            }
                             this.calc_isn = response.data.calc_isn;
                             if(response.data.calc_isn != '') {
+                                this.preloader(false);
                                 this.sendDocs();
+                            } else {
+                                this.preloader(false);
                             }
                         } else {
                             alert(response.data.error)
+                            this.preloader(false);
                         }
-                        this.preloader(false);
                     })
                     .catch(error => {
                         alert(error)
@@ -200,11 +241,12 @@
                         .then(response => {
                             if (response.data.success) {
                                 console.log('Files sended successfull');
+                                this.preloader(false);
                             } else {
                                 alert(response.data.error)
                                 this.docs.sendedFail = true;
+                                this.preloader(false);
                             }
-                            this.preloader(false);
                         })
                         .catch(error => {
                             alert(error)
@@ -247,20 +289,23 @@
                     document.getElementById("preloader").style.display = "none";
                 }
             },
-        },
-        watch : {
-            attributes(){
-                if(this.quotationId == 0) {
-                    this.calculated = false;
-                    this.price = 0;
-                }
-            },
-            SubjISN(){
+            calcChanged(){
                 if(this.quotationId == 0) {
                     this.calculated = false;
                     this.price = 0;
                 }
             }
+        },
+        watch : {
+            subjISN(){
+                if(this.quotationId == 0) {
+                    this.calculated = false;
+                    this.price = 0;
+                }
+            },
+            // calcDA(){
+            //     this.DAsum
+            // }
         }
     }
 </script>
