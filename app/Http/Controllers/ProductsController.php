@@ -258,10 +258,26 @@ class ProductsController extends Controller
         return view('full.list', compact('products'));
     }
 
-    public function fullQuotationList($productISN){
-        $quotations = FullQuotation::where('product_isn',$productISN)->paginate(15);
-        $product_name = ExpressProduct::where('product_isn',$productISN)->first()->name;
-        return view('full.quotation_list', compact(['quotations','product_name']));
+    public function fullQuotationList($productISN,Request $request){
+        $quotations = FullQuotation::where('product_isn',$productISN)->where('user_isn',Auth::user()->ISN);
+
+        $calc_da = $request->DA != 1 ? 0 : 1;
+        $quotations = $quotations->where('calc_da',$calc_da);
+
+        if($request->status != ''){
+            $quotations = $quotations->where('status',$request->status);
+        }
+
+        if ($request->type == 1) {
+            $quotations = $quotations->whereNotNull('contract_number')->where('contract_number', '!=', '');
+        } else {
+            $quotations = $quotations->where('contract_number','');
+        }
+
+        $quotations = $quotations->paginate(15);
+        $product = ExpressProduct::where('product_isn',$productISN)->first();
+        $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
+        return view('full.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
     }
 
     public function fullCreate(Request $request){
@@ -495,6 +511,14 @@ class ProductsController extends Controller
             $quotation->premiumSum = $request->calcDA == 1 ? 0 : (int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->calc_da = $order['calcDA'];
+
+            $getStatus = $kias->getAgrStatus((int)$response->AgrCalcISN);
+            if(isset($getStatus->error)){
+                $quotation->status = $order['formular']['status']['Value'];
+            } else {
+                //$quotation->status = (string)$getStatus->ROWSET->row->status;
+            }
+
             $quotation->save();
 
             return response()->json([
@@ -524,6 +548,12 @@ class ProductsController extends Controller
                         } else {
                             $quotation->kias_id = (string)$result->AgrISN;
                             $quotation->contract_number = $contractNumber = (string)$result->AgrID;
+
+//                            $getStatus = $kias->getAgrStatus((string)$result->AgrID);
+//                            if(isset($getStatus->ROWSET->row)){
+//                                $quotation->status = (string)$getStatus->ROWSET->row->status;
+//                            }
+
                             $quotation->save();
                             $success = true;
                         }

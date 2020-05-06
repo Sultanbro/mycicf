@@ -422,30 +422,35 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function CheckAgrIssetProduct($productISN, $clientISN, $date, $order_id){
-
-        $dateSign = date("d.m.Y", time());
-
-//        if(time() >= $date['begin']){
-//            $dateBeg = date("d.m.Y", strtotime("+1 day", time()));
-//        }
-//        else {
-            $dateBeg = date("d.m.Y", strtotime($date['begin']));
-        //}
-
-        $dateEnd = date('d.m.Y',strtotime($date['end']));
-
-
-
-        $result = $this->request('User_CicCheckAgr', [
-            'ProductISN'    => $productISN,
-            'ClientISN'     => $clientISN,
-            'DATEBEG'       => $dateBeg,
-            'DATEEND'       => $dateEnd,
-            'DATESIGN'      => $dateSign,
-            //'OrderNO'       => null,
+    public function getAgrStatus($ISN){
+        return $this->request('User_CicGetAgrStatus', [
+            'AgrID'    => $ISN
         ]);
-
-        return $result;
     }
+
+//    public function CheckAgrIssetProduct($productISN, $clientISN, $date, $order_id){
+//
+//        $dateSign = date("d.m.Y", time());
+//
+////        if(time() >= $date['begin']){
+////            $dateBeg = date("d.m.Y", strtotime("+1 day", time()));
+////        }
+////        else {
+//            $dateBeg = date("d.m.Y", strtotime($date['begin']));
+//        //}
+//
+//        $dateEnd = date('d.m.Y',strtotime($date['end']));
+//
+//
+//
+//        $result = $this->request('User_CicCheckAgr', [
+//            'ProductISN'    => $productISN,
+//            'ClientISN'     => $clientISN,
+//            'DATEBEG'       => $dateBeg,
+//            'DATEEND'       => $dateEnd,
+//            'DATESIGN'      => $dateSign,
+//        ]);
+//
+//        return $result;
+//    }
 }

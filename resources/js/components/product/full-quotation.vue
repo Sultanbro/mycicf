@@ -175,7 +175,7 @@
                                 this.agrobjects.push(response.data.objects);
                             }
                             this.preloader(false);
-                            if(this.formular.curator.Value == 1) {
+                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) {
                                 this.getUserList();
                             }
                         }else{

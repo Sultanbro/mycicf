@@ -37,68 +37,106 @@
     <script src="{{asset('js/app.js')}}"></script>
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
-<body >
+<body>
 @include('layouts.header')
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <h4 class="text-center mt-2 col-12">Полная котировка - {{ $product_name }}</h4>
-            <!--div class="row">
-                <div  class="mr-4 ml-4">
-                    <label>Отправлен в ДА</label>
-                    <select  id="fYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1">
-                        <option  selected="selected" value="">Не выбрано</option>
-                        <option  value="1">Да</option>
-                        <option  value="0">Нет</option>
-                    </select>
-                </div>
-                <div class="mr-4 ml-4">
-                    <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer">
-                        <div>
-                            <i class="fa fa-filter"></i>
-                            <span class="pl-2">Показать</span>
+
+            <quotation-list inline-template
+                            parametres="{{ json_encode($request) }}"
+                            page-url="{{ route('full_quotations_list',['productISN' => $product->product_isn]) }}">
+                <div>
+                    <h4 class="text-center mt-2 col-12">Полная котировка - {{ $product->name }}</h4>
+                    <div class="col-md-12 mt-4 bg-white pt-3 pb-3 rounded box-shadow text-center">
+                        <div class="row">
+                            <div  class="col-md-4">
+                                <label>Отправлен в ДА</label>
+                                <select v-model="sendDA"
+                                        class="date-color pl-2 pr-2 pt-1 pb-1 ml-2"
+                                        style="border: 1px solid rgba(0,123,255,.25);border-radius: 5px; outline: none;">
+                                    <option  value="1">Да</option>
+                                    <option  value="0">Нет</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4" v-if="!contractSelected">
+                                <label>Статус</label>
+                                <select  v-model="quotationStatus"
+                                         class="date-color pl-2 pr-2 pt-1 pb-1 ml-2"
+                                         style="border: 1px solid rgba(0,123,255,.25);border-radius: 5px; outline: none;">
+                                    @foreach($statuses as $status)
+                                        <option  value="{{ $status['Value'] }}">{{ $status['Label'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Тип</label>
+                                <select  v-model="type"
+                                         class="date-color pl-2 pr-2 pt-1 pb-1 ml-2"
+                                         style="border: 1px solid rgba(0,123,255,.25);border-radius: 5px; outline: none;">
+                                    <option  value="0">Котировка</option>
+                                    <option  value="1">Договор</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 mt-3 color-white button-accept pointer" style="width:145px;margin: 0 auto;">
+                            <div @click="filter">
+                                <i class="fa fa-filter"></i>
+                                <span class="pl-2">Показать</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div-->
-            @if(count($quotations) > 0)
-                <div class="bg-white mt-3 mb-3 box-shadow border-16">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="w-100 table-responsive">
-                            <table class="table table-hover text-align-center fs-0_8">
-                                <thead >
-                                    <tr class="bg-grayblue color-light-gray">
-                                        <td class="text-left">#</td>
-                                        <td class="">Котировка</td>
-                                        <td class="">Договор</td>
-                                        <td class="">Отправлен в ДА</td>
-                                        <td class="">Статус</td>
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                @foreach($quotations as $quotation)
-                                    <tr>
-                                        <td class="text-left">{{ $quotation->id }}</td>
-                                        <td>
-                                            <a href="{{ route('full_front', ['ID' => $quotation->product->id,'quotationId' => $quotation->id]) }}">
-                                                {{ $quotation->calc_isn }}
-                                            </a>
-                                        </td>
-                                        <td>{{ $quotation->contract_number == '' ? '-' : $quotation->contract_number }}</td>
-                                        <td><span >{{ $quotation->calc_da == 1 ? 'да' : 'нет' }}</span></td>
-                                        <td>Не указан</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                    @if(count($quotations) > 0)
+                        <div class="bg-white mt-3 mb-3 box-shadow border-16">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="w-100 table-responsive">
+                                    <table class="table table-hover text-align-center fs-0_8">
+                                        <thead >
+                                        <tr class="bg-grayblue color-light-gray">
+                                            <td class="text-left">#</td>
+                                            <td class="">Котировка</td>
+                                            <td class="">Договор</td>
+                                            <td class="">Отправлен в ДА</td>
+                                            <td class="">Статус</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($quotations as $quotation)
+                                            <tr>
+                                                <td class="text-left">{{ $quotation->id }}</td>
+                                                <td>
+                                                    <a href="{{ route('full_front', ['ID' => $quotation->product->id,'quotationId' => $quotation->id]) }}" target="_blank">
+                                                        {{ $quotation->calc_isn }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $quotation->contract_number == '' ? '-' : $quotation->contract_number }}</td>
+                                                <td><span >{{ $quotation->calc_da == 1 ? 'да' : 'нет' }}</span></td>
+                                                <td>
+                                                    @if($quotation->status == 0)
+                                                        не указан
+                                                    @else
+                                                        @foreach($statuses as $status)
+                                                            @if($quotation->status == $status['Value'])
+                                                                {{ $status['Label'] }}
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="col-md-12 text-align-center quotation-list">
+                            {{ $quotations->appends($request)->links() }}
+                        </div>
+                    @endif
                 </div>
-                <div class="col-md-12 text-align-center quotation-list">
-                    {{ $quotations->links() }}
-                </div>
-            @endif
+            </quotation-list>
+
         </div>
     </div>
 </main>

@@ -140,6 +140,7 @@ Vue.component('upload-docs', require('./components/product/uploadDocs.vue').defa
 
 Vue.component('printable-form', require('./components/product/printableForm.vue').default);
 
+Vue.component('quotation-list', require('./components/product/quotation-list.vue').default);
 
 window.onload = function(){
     var app = new Vue({
@@ -173,7 +174,8 @@ window.onload = function(){
             },
         },
         component: {
-            'd-player': VueDPlayer
+            'd-player': VueDPlayer,
+            //'compa' : compa
         }
     });
 
