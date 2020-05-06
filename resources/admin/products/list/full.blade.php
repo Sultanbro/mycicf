@@ -21,7 +21,7 @@
     @include('layouts.header')
     <main role="main">
         <div class="d-flex justify-content-end">
-            <a href="{{route('create.full')}}"><button class="btn btn-success">Добавить</button></a>
+            <a href="{{route('create.express')}}"><button class="btn btn-success">Добавить</button></a>
         </div>
         <full-list>
         </full-list>

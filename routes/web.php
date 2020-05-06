@@ -260,6 +260,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full/create-agr', 'ProductsController@createAgr');
         Route::post('/full/getPrintableFormList','ProductsController@getPrintableFormList');
         Route::get('/full/getPrintableForm','ProductsController@getPrintableForm');
+        Route::post('/full/getFullBranch','SiteController@getFullBranch');
 
         Route::post('/getDictiList', 'SiteController@getDicti');
         Route::post('/searchSubject', 'SiteController@searchSubject');

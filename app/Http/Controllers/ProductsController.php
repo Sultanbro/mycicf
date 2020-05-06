@@ -81,7 +81,7 @@ class ProductsController extends Controller
     }
 
     public function createFullQuotation(){
-        return view('products.create.full');
+        //return view('products.create.full');
     }
 
     public function listFullQuotation(){
@@ -90,7 +90,7 @@ class ProductsController extends Controller
 
     public function getFullQuotationList(Request $request){
         $result = [];
-        foreach(FullProduct::all() as $data){
+        foreach(ExpressProduct::all() as $data){
             array_push($result, [
                 'id' => $data->id,
                 'name' => $data->name,
@@ -108,25 +108,25 @@ class ProductsController extends Controller
             );
     }
 
-    public function createFullProduct(Request $request){
-        try{
-            $model = new FullProduct();
-            $model->name = $request->name;
-            $model->product_isn = $request->product_isn;
-            $model->save();
-        }catch (\Exception $ex){
-            return response()->json([
-                'success' => false,
-                'error' => $ex->getMessage()
-            ]);
-        }
-        return response()->json([
-            'success' => true
-        ]);
-    }
+//    public function createFullProduct(Request $request){
+//        try{
+//            $model = new ExpressProduct();
+//            $model->name = $request->name;
+//            $model->product_isn = $request->product_isn;
+//            $model->save();
+//        }catch (\Exception $ex){
+//            return response()->json([
+//                'success' => false,
+//                'error' => $ex->getMessage()
+//            ]);
+//        }
+//        return response()->json([
+//            'success' => true
+//        ]);
+//    }
 
     public function getFullConstructor ($id){
-        $product = FullProduct::find($id);
+        $product = ExpressProduct::find($id);
         $constructor = FullConstructor::where('product_id',$id)->first();
         $sections = isset($constructor->data) ? json_decode($constructor->data) : [];
         $parentisns = isset($constructor->parentisns) ? json_decode($constructor->parentisns) : (object)[];
@@ -249,7 +249,7 @@ class ProductsController extends Controller
 
     public function fullList(){
         $products = [];
-        foreach (FullProduct::all() as $product){
+        foreach (ExpressProduct::all() as $product){
             array_push($products, [
                 'url' => "/full/calc/{$product->id}/0",
                 'name' => $product->name,
@@ -260,12 +260,12 @@ class ProductsController extends Controller
 
     public function fullQuotationList($productISN){
         $quotations = FullQuotation::where('product_isn',$productISN)->paginate(15);
-        $product_name = FullProduct::where('product_isn',$productISN)->first()->name;
+        $product_name = ExpressProduct::where('product_isn',$productISN)->first()->name;
         return view('full.quotation_list', compact(['quotations','product_name']));
     }
 
     public function fullCreate(Request $request){
-        if(($model = FullProduct::find($request->id)) === null){
+        if(($model = ExpressProduct::find($request->id)) === null){
             return response()->json([
                 'success' => false,
                 'error' => 'Продукт который вы хотите рассчитать не найден'
@@ -286,7 +286,7 @@ class ProductsController extends Controller
     }
 
     public function fullCreateEdit($ID,$quotationId,Request $request){
-        if(($model = FullProduct::find($ID)) === null){
+        if(($model = ExpressProduct::find($ID)) === null){
             return response()->json([
                 'success' => false,
                 'error' => 'Продукт который вы хотите рассчитать не найден'
@@ -356,7 +356,7 @@ class ProductsController extends Controller
 
     public function getFullObjects(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
-        $constructor = FullProduct::find($ID);
+        $constructor = ExpressProduct::find($ID);
         if($request->quotationId != 0) {        // Если котировка уже есть в нашей базе
             $quotation = FullQuotation::where('product_isn', $constructor->product_isn)->where('id', $request->quotationId)->first();
             $objects = isset(json_decode($quotation->data)->agrobjects) ? json_decode($quotation->data)->agrobjects : [];
@@ -458,7 +458,7 @@ class ProductsController extends Controller
 
     public function fullCalc(Request $request, KiasServiceInterface $kias){
         $product_id = $request->id;
-        if(($model = FullProduct::find($product_id)) === null){
+        if(($model = ExpressProduct::find($product_id)) === null){
             return response()->json([
                 'success' => false,
                 'error' => 'Продукт который вы хотите рассчитать не найден'
@@ -475,6 +475,8 @@ class ProductsController extends Controller
         $order['agrobject'] = $this->agrobjectToKiasAdd($request->all());
         $order['calcDA'] = $request->calcDA;
         $order['DAremark'] = $request->DAremark;
+        $curator = $request->all()['formular']['curator'];
+        $order['curator'] = $curator['Value'] != 0 && isset($curator['subjISN']) && $curator['subjISN'] != null ? $curator['subjISN'] : null;
 
         $response = $kias->calcFull($order);
         if(isset($response->error)){
@@ -811,7 +813,7 @@ class ProductsController extends Controller
 
     public function sendDocs(Request $request, KiasServiceInterface $kias){
         if(count($request->file('files')) > 0){
-            $product = FullProduct::find($request->id);
+            $product = ExpressProduct::find($request->id);
             $uploaded = [];
             $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
             $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';

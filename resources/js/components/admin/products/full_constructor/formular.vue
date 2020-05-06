@@ -69,10 +69,13 @@
                         phys: true,
                     },
                     curator:{
-                        Value:0,
+                        Value: 0,
+                        ISN: 221346,
+                        subjISN: null,
+                        label: null,
                     },
                     status:{
-                        Value:223368,
+                        Value: 223368,
                     }
                 });
             }
@@ -104,6 +107,12 @@
             },
         },
         watch: {
+            // 'formular.curator.Value': function(){
+            //     this.formular.curator.subjISN = null;
+            //     this.formular.curator.firstName = null;
+            //     this.formular.curator.lastName = null;
+            //     this.formular.curator.patronymic = null;
+            // }
             // parentisns: {
             //     formular: {
             //         status: function (val, oldVal) {

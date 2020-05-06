@@ -73,6 +73,7 @@
                                         <td class="">Котировка</td>
                                         <td class="">Договор</td>
                                         <td class="">Отправлен в ДА</td>
+                                        <td class="">Статус</td>
                                     </tr>
                                 </thead>
                                 <tbody >
@@ -86,6 +87,7 @@
                                         </td>
                                         <td>{{ $quotation->contract_number == '' ? '-' : $quotation->contract_number }}</td>
                                         <td><span >{{ $quotation->calc_da == 1 ? 'да' : 'нет' }}</span></td>
+                                        <td>Не указан</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

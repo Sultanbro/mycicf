@@ -344,6 +344,7 @@ class Kias implements KiasServiceInterface
             'CalcDA'       => $order['calcDA'],
             'ReqText' => $order['DAremark'],
             'CLIENTISN' => $order['subjISN'],
+            'EMPLISN' => $order['curator'],
             'PRODUCTISN' => $order['prodIsn'],
             'CLASSISN' => 220603,
             'STATUSISN'    => $order['formular']['status']['Value'],            //223368

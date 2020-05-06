@@ -14,10 +14,15 @@
                              :preloader="preloader"
                              :product-id="id">
                 </participant>
+
+                <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1" class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
+                    <label>Выберите куратора</label>
+                    <treeselect v-model="formular.curator.subjISN" :options="userList" />
+                </div>
             </div>
         </div>
 
-        <div v-if="quotationId == 0 && contract_number == null" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+        <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
             <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true">
         </div>
@@ -51,7 +56,7 @@
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
-                <div class="fs-2" v-if="DA.orderCreated">Номер заявки {{ DA.orderNumber }}</div>
+                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Номер заявки {{ DA.orderNumber }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
@@ -61,6 +66,9 @@
                 </button>
                 <button v-if="contract_number === null && calc_isn != null && !DA.calcDA" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
+                </button>
+                <button v-if="docs.sendedFail" class="btn btn-outline-info" @click="sendDocs">
+                    Отправить документы
                 </button>
                 <printable-form v-if="contract_number != null && contract_number != ''"
                                 :preloader="preloader"
@@ -76,6 +84,7 @@
         name: "full-quotation",
         data() {
             return {
+                userList: null,
                 calc_isn: null,
                 contract_number: null,
                 docs: {
@@ -166,6 +175,9 @@
                                 this.agrobjects.push(response.data.objects);
                             }
                             this.preloader(false);
+                            if(this.formular.curator.Value == 1) {
+                                this.getUserList();
+                            }
                         }else{
                             alert(response.data.error);
                             this.preloader(false);
@@ -175,6 +187,11 @@
                         alert(error);
                         this.preloader(false);
                     });
+            },
+            getUserList() {
+                this.axios.post('/full/getFullBranch', {}).then((response) => {
+                    this.userList = response.data.result;
+                });
             },
 
             calculate(){
@@ -241,6 +258,7 @@
                         .then(response => {
                             if (response.data.success) {
                                 console.log('Files sended successfull');
+                                this.docs.sendedFail = false;
                                 this.preloader(false);
                             } else {
                                 alert(response.data.error)
