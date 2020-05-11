@@ -60,7 +60,7 @@
                                     <option  value="0">Нет</option>
                                 </select>
                             </div>
-                            <div class="col-md-4" v-if="!contractSelected">
+                            <!--div class="col-md-4" v-if="!contractSelected">
                                 <label>Статус</label>
                                 <select  v-model="quotationStatus"
                                          class="date-color pl-2 pr-2 pt-1 pb-1 ml-2"
@@ -69,7 +69,7 @@
                                         <option  value="{{ $status['Value'] }}">{{ $status['Label'] }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div-->
                             <div class="col-md-4">
                                 <label>Тип</label>
                                 <select  v-model="type"
@@ -79,15 +79,23 @@
                                     <option  value="1">Договор</option>
                                 </select>
                             </div>
+                            <div class="col-md-4">
+                                <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer" style="width:145px;">
+                                    <div @click="filter">
+                                        <i class="fa fa-filter"></i>
+                                        <span class="pl-2">Показать</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-inline-flex">
-                            <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 mt-3 color-white button-accept pointer">
+                            <!--div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 mt-3 color-white button-accept pointer">
                                 <div @click="filter">
                                     <i class="fa fa-filter"></i>
                                     <span class="pl-2">Показать</span>
                                 </div>
-                            </div>
+                            </div-->
 
                             <a href="{{ route('full_front',['ID' => $product->id,'quotationId' => 0]) }}" target="_blank">
                                 <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 ml-2 pt-1 pb-1 mt-3 color-white button-accept pointer">
@@ -115,7 +123,7 @@
                                             <td class="">Котировка</td>
                                             <td class="">Договор</td>
                                             <td class="">Отправлен в ДА</td>
-                                            <td class="">Статус</td>
+                                            <!--td class="">Статус</td-->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -129,7 +137,7 @@
                                                 </td>
                                                 <td>{{ $quotation->contract_number == '' ? '-' : $quotation->contract_number }}</td>
                                                 <td><span >{{ $quotation->calc_da == 1 ? 'да' : 'нет' }}</span></td>
-                                                <td>
+                                                <!--td>
                                                     @if($quotation->status == 0)
                                                         не указан
                                                     @else
@@ -139,7 +147,7 @@
                                                             @endif
                                                         @endforeach
                                                     @endif
-                                                </td>
+                                                </td-->
                                             </tr>
                                         @endforeach
                                         </tbody>
