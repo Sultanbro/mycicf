@@ -35,7 +35,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
     <script src="{{asset('js/app.js')}}"></script>
-    {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
 @include('layouts.header')
@@ -90,13 +89,6 @@
                         </div>
 
                         <div class="d-inline-flex">
-                            <!--div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 mt-3 color-white button-accept pointer">
-                                <div @click="filter">
-                                    <i class="fa fa-filter"></i>
-                                    <span class="pl-2">Показать</span>
-                                </div>
-                            </div-->
-
                             <a href="{{ route('full_front',['ID' => $product->id,'quotationId' => 0]) }}" target="_blank">
                                 <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 ml-2 pt-1 pb-1 mt-3 color-white button-accept pointer">
                                     <div>
@@ -105,12 +97,6 @@
                                 </div>
                             </a>
                         </div>
-                        <!--div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 mt-3 color-white button-accept pointer" style="width:145px;">
-                            <div @click="filter">
-                                <i class="fa fa-filter"></i>
-                                <span class="pl-2">Показать</span>
-                            </div>
-                        </div-->
                     </div>
                     @if(count($quotations) > 0)
                         <div class="bg-white mt-3 mb-3 box-shadow border-16">

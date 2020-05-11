@@ -24,10 +24,10 @@
                 <label class="bold mb-0 mr-2">Значение: </label>
                 <input type="number" class="attr-input-text w-100" v-model="agrclause.Value" @change="calcChanged">
             </div>
-            <div class="d-flex align-items-center mb-2">
+            <!--div class="d-flex align-items-center mb-2">
                 <label class="bold mb-0 mr-2">Примечание: </label>
                 <input type="text" class="attr-input-text w-100" v-model="agrclause.Remark" @change="calcChanged">
-            </div>
+            </div-->
         </div>
     </div>
 </template>

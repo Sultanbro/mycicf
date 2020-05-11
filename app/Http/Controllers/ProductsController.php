@@ -108,23 +108,6 @@ class ProductsController extends Controller
             );
     }
 
-//    public function createFullProduct(Request $request){
-//        try{
-//            $model = new ExpressProduct();
-//            $model->name = $request->name;
-//            $model->product_isn = $request->product_isn;
-//            $model->save();
-//        }catch (\Exception $ex){
-//            return response()->json([
-//                'success' => false,
-//                'error' => $ex->getMessage()
-//            ]);
-//        }
-//        return response()->json([
-//            'success' => true
-//        ]);
-//    }
-
     public function getFullConstructor ($id){
         $product = ExpressProduct::find($id);
         $constructor = FullConstructor::where('product_id',$id)->first();
@@ -325,11 +308,13 @@ class ProductsController extends Controller
             $docs = json_decode($constructor->docs);
 
             //if($constructor->status != 223371 && $constructor->status != 223370) {  //223371 - отказано, 223370 - согласовано
-                $getStatus = $kias->getAgrStatus($constructor->calc_isn);
-                if (isset($getStatus->Product) && $getStatus->Product == $constructor->product_isn) {
-                    $constructor->status = (int)$getStatus->StatusISN;
-                    $constructor->status_name = (string)$getStatus->Status;
-                    $constructor->save();
+                if($constructor->contract_number == '' || $constructor->contract_number == null) {
+                    $getStatus = $kias->getAgrStatus($constructor->calc_isn);
+                    if (isset($getStatus->Product) && $getStatus->Product == $constructor->product_isn) {
+                        $constructor->status = (int)$getStatus->StatusISN;
+                        $constructor->status_name = (string)$getStatus->Status;
+                        $constructor->save();
+                    }
                 }
             //}
         }
@@ -349,18 +334,6 @@ class ProductsController extends Controller
             }
         } else {
             $agrclauses = [];
-        }
-
-        if(isset($data->attributes)){
-            $attributes = $data->attributes;
-            foreach($attributes as $attribute){
-                if($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1){
-                    $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
-                    $attribute->Childs = $this->getDictis($isn,'attributes');
-                }
-            }
-        } else {
-            $attributes = [];
         }
 
         $attributes = isset($data->attributes) ? $data->attributes : [];
@@ -515,7 +488,6 @@ class ProductsController extends Controller
 
         if(isset($response->PremiumSum)) {
             $quotation = $request->quotationId != 0 ? FullQuotation::find($request->quotationId) : new FullQuotation;
-            //$quotation = new FullQuotation;
             $quotation->product_isn = $order['prodIsn'];
             $quotation->user_isn = Auth::user()->ISN;
             $quotation->calc_isn = (int)$response->AgrCalcISN;
@@ -551,11 +523,6 @@ class ProductsController extends Controller
             $error = '';
             $contractNumber = null;
             if($quotation->contract_number == '' || $quotation->contract_number == null) {
-//                $date = $request['contractDate'];
-//                $checkAgr = $kias->CheckAgrIssetProduct($quotation->product_isn, $request['subjISN'], $date, null);
-//                if($checkAgr->Result == 1){
-//                    $error = 'Уже есть договор';
-//                } else {
                     try {
                         $result = $kias->createAgrFromAgrCalc($request->calc_isn);
                         if (isset($result->error)) {
@@ -563,19 +530,12 @@ class ProductsController extends Controller
                         } else {
                             $quotation->kias_id = (string)$result->AgrISN;
                             $quotation->contract_number = $contractNumber = (string)$result->AgrID;
-
-//                            $getStatus = $kias->getAgrStatus((string)$result->AgrID);
-//                            if(isset($getStatus->ROWSET->row)){
-//                                $quotation->status = (string)$getStatus->ROWSET->row->status;
-//                            }
-
                             $quotation->save();
                             $success = true;
                         }
                     } catch (\Exception $ex) {
                         $error = $ex->getMessage();
                     }
-                //}
             } else {
                 $error = 'Договор уже оформлен. Номер договора '.$quotation->contract_number;
             }

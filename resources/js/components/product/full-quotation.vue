@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null">
-            <h5>Котировка {{ calc_isn }} (статус - {{ status_name }})</h5>
+            <h5>Котировка {{ calc_isn }}
+                <span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span>
+            </h5>
         </div>
         <div class="col-md-12 mb-4">
             <div class="row">
@@ -144,7 +146,7 @@
                             this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
                             this.calc_isn = response.data.calc_isn;
-                            this.status_name = response.data.status_name;
+                            this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
                             this.contract_number = response.data.contract_number;
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;
