@@ -323,6 +323,15 @@ class ProductsController extends Controller
             $contract_number = $constructor->contract_number;
             $premiumSum = $constructor->premiumSum;
             $docs = json_decode($constructor->docs);
+
+            //if($constructor->status != 223371 && $constructor->status != 223370) {  //223371 - отказано, 223370 - согласовано
+                $getStatus = $kias->getAgrStatus($constructor->calc_isn);
+                if (isset($getStatus->Product) && $getStatus->Product == $constructor->product_isn) {
+                    $constructor->status = (int)$getStatus->StatusISN;
+                    $constructor->status_name = (string)$getStatus->Status;
+                    $constructor->save();
+                }
+            //}
         }
 
         $data = isset($constructor->data) ? json_decode($constructor->data) : [];
@@ -367,6 +376,7 @@ class ProductsController extends Controller
             'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
             'docs' => isset($docs) && $docs != '' ? $docs : [],
             'calc_da' => isset($constructor->calc_da) ? intval($constructor->calc_da) : 0,
+            'status_name' => isset($constructor->status_name) ? $constructor->status_name : 'Оформление',
             'DAremark' => $DAremark
         ]);
     }
@@ -513,11 +523,14 @@ class ProductsController extends Controller
             $quotation->data = json_encode($request->all());
             $quotation->calc_da = $order['calcDA'];
 
-            $getStatus = $kias->getAgrStatus((int)$response->AgrCalcISN);
-            if(isset($getStatus->error)){
+            $getStatus = $kias->getAgrStatus($response->AgrCalcISN);    // Берем статус из киаса
+            if(isset($getStatus->error)){   // Если вернулась ошибка, записываем первоначальный статус
                 $quotation->status = $order['formular']['status']['Value'];
             } else {
-                //$quotation->status = (string)$getStatus->ROWSET->row->status;
+                if(isset($getStatus->Product) && $getStatus->Product == $order['prodIsn']){
+                    $quotation->status = (int)$getStatus->StatusISN;
+                    $quotation->status_name = (string)$getStatus->Status;
+                }
             }
 
             $quotation->save();
@@ -525,7 +538,8 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => true,
                 'premium' => (int)$response->PremiumSum,
-                'calc_isn' => (int)$response->AgrCalcISN
+                'calc_isn' => (int)$response->AgrCalcISN,
+                'status_name' => (string)$getStatus->Status
             ]);
         }
     }

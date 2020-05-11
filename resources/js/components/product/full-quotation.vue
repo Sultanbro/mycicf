@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null">
-            <h5>Котировка {{ calc_isn }}</h5>
+            <h5>Котировка {{ calc_isn }} (статус - {{ status_name }})</h5>
         </div>
         <div class="col-md-12 mb-4">
             <div class="row">
@@ -86,6 +86,7 @@
             return {
                 userList: null,
                 calc_isn: null,
+                status_name: 'Оформление',
                 contract_number: null,
                 docs: {
                     files: [],
@@ -143,6 +144,7 @@
                             this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
                             this.calc_isn = response.data.calc_isn;
+                            this.status_name = response.data.status_name;
                             this.contract_number = response.data.contract_number;
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;
@@ -195,6 +197,18 @@
             },
 
             calculate(){
+                if(this.DA.calcDA){
+                    let checkDA = this.DA.remark == '' || this.DA.remark == null ? 1 : 0;
+                    for(index in this.agrobjects){
+                        if(this.agrobjects[index].DAsum == '' || this.agrobjects[index].DAsum == null){
+                            checkDA = 1;
+                        }
+                    }
+                    if(checkDA == 1){
+                        alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
+                        return false;
+                    }
+                }
                 //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
                 this.preloader(true);
                 this.axios.post('/full/calculate',
@@ -222,6 +236,7 @@
                                 this.calculated = true;
                             }
                             this.calc_isn = response.data.calc_isn;
+                            this.status_name = response.data.status_name;
                             if(response.data.calc_isn != '') {
                                 this.preloader(false);
                                 this.sendDocs();

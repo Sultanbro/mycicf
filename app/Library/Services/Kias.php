@@ -423,9 +423,12 @@ class Kias implements KiasServiceInterface
     }
 
     public function getAgrStatus($ISN){
-        return $this->request('User_CicGetAgrStatus', [
-            'AgrID'    => $ISN
+        return $this->request('User_CicGetAgrCalcStatus',[
+            'AgrID' => $ISN
         ]);
+//        return $this->request('User_CicGetAgrStatus', [
+//            'AgrID'    => $ISN
+//        ]);
     }
 
 //    public function CheckAgrIssetProduct($productISN, $clientISN, $date, $order_id){
