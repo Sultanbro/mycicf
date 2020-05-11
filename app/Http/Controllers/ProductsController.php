@@ -253,6 +253,7 @@ class ProductsController extends Controller
             array_push($products, [
                 'url' => "/full/calc/{$product->id}/0",
                 'name' => $product->name,
+                'isn' => $product->product_isn
             ]);
         }
         return view('full.list', compact('products'));
