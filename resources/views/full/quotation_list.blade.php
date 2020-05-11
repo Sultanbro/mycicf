@@ -80,7 +80,7 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer" style="width:145px;">
+                                <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer m-auto" style="width:145px;">
                                     <div @click="filter">
                                         <i class="fa fa-filter"></i>
                                         <span class="pl-2">Показать</span>
