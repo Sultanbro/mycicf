@@ -1534,15 +1534,17 @@ class ParseController extends Controller
             $opu_result = [];
 
             foreach (array_keys($this->getOpuLabels()) as $key) {
-                if(in_array($key,$this->percentColumns)){
-                    $first_period->$key = $first_period->$key == 0.00 ? 0 : $first_period->$key;
-                    $second_period->$key = $second_period->$key == 0.00 ? 0 : $second_period->$key;
-                    $first = $first_period === null ? 0 : $first_period->$key * 100;
-                    $second = $second_period === null ? 0 : $second_period->$key * 100;
-                } else {
-                    $first = (int)$first_period->$key;
-                    $second = (int)$second_period->$key;
-                }
+                $first = 0;
+                $second = 0;
+                    if (in_array($key, $this->percentColumns)) {
+                        $first_period_key = isset($first_period->$key) ? $first_period->$key == 0.00 ? 0 : $first_period->$key : 0;
+                        $second_period_key = isset($second_period->$key) ? $second_period->$key == 0.00 ? 0 : $second_period->$key : 0;
+                        $first = $first_period === null ? 0 : $first_period_key * 100;
+                        $second = $second_period === null ? 0 : $second_period_key * 100;
+                    } else {
+                        $first = isset($first_period->$key) ? (int)$first_period->$key : 0;
+                        $second = isset($second_period->$key) ? (int)$second_period->$key : 0;
+                    }
                 array_push($opu_result, [
                     'label' => $this->getOpuLabels()[$key],
                     'firstPeriod' => $first,

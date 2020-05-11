@@ -86,10 +86,10 @@
                 company_list: [8],
                 first_company_list: [8],
                 periods: {
-                    first_year: null,
-                    second_year: null,
-                    first_period: null,
-                    second_period: null,
+                    first_year: 2019,
+                    second_year: 2018,
+                    first_period: 1,
+                    second_period: 12,
                 },
                 months: [],
                 years: [],
@@ -134,6 +134,8 @@
                 }).then(response => {
                     if(response.data.success) {
                         this.setOpuData(response.data);
+                    } else {
+                        alert(response.data.error);
                     }
                     this.preloader(false);
                 }).catch(error => {
