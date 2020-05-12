@@ -336,6 +336,18 @@ class ProductsController extends Controller
             $agrclauses = [];
         }
 
+        if(isset($data->attributes)){
+            $attributes = $data->attributes;
+            foreach($attributes as $attribute){
+                    if($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1){
+                            $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
+                            $attribute->Childs = $this->getDictis($isn,'attributes');
+                        }
+            }
+        } else {
+            $attributes = [];
+        }
+
         $attributes = isset($data->attributes) ? $data->attributes : [];
 
         return response()->json([
