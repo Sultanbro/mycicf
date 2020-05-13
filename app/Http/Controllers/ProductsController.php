@@ -494,7 +494,7 @@ class ProductsController extends Controller
         if(isset($response->error)){
             return response()->json([
                 'success' => false,
-                'error' => (string)$response->error->text
+                'error' => (string)$response->error->fulltext
             ]);
         }
 
@@ -538,7 +538,7 @@ class ProductsController extends Controller
                     try {
                         $result = $kias->createAgrFromAgrCalc($request->calc_isn);
                         if (isset($result->error)) {
-                            $error = (string)$result->error->text;
+                            $error = (string)$result->error->fulltext;
                         } else {
                             $quotation->kias_id = (string)$result->AgrISN;
                             $quotation->contract_number = $contractNumber = (string)$result->AgrID;

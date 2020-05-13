@@ -161,7 +161,10 @@
                 });
             },
             createFullQuotation(){
-                window.location.href="/full/calc/"+this.id+"/0";
+                var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
+                if(full) {
+                    window.location.href = "/full/calc/" + this.id + "/0";
+                }
                 // this.axios.post('/full/create', {
                 //     subjISN : this.subjISN,
                 //     id : this.id,

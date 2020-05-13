@@ -201,15 +201,15 @@
             calculate(){
                 if(this.DA.calcDA){
                     let checkDA = this.DA.remark == '' || this.DA.remark == null ? 1 : 0;
-                    for(index in this.agrobjects){
-                        if(this.agrobjects[index].DAsum == '' || this.agrobjects[index].DAsum == null){
-                            checkDA = 1;
-                        }
-                    }
-                    if(checkDA == 1){
-                        alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
-                        return false;
-                    }
+                    // for(index in this.agrobjects){
+                    //     if(this.agrobjects[index].DAsum == '' || this.agrobjects[index].DAsum == null){
+                    //         checkDA = 1;
+                    //     }
+                    // }
+                    // if(checkDA == 1){
+                    //     alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
+                    //     return false;
+                    // }
                 }
                 //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
                 this.preloader(true);
