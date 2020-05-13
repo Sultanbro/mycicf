@@ -23,7 +23,7 @@
             </div>
             <div v-else class="d-flex align-items-center mb-2">
                 <label class="bold mb-0 mr-2">Значение: </label>
-                <input type="number" class="attr-input-text w-100"  v-model="attribute.Value">
+                <input type="text" class="attr-input-text w-100"  v-model="attribute.Value">
             </div>
             <!--div class="d-flex align-items-center mb-2">
                 <label class="bold mb-0 mr-2">Примечание: </label>
