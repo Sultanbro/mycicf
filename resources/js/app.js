@@ -124,6 +124,8 @@ Vue.component('full-quotation-calc', require('./components/product/full-quotatio
 
 Vue.component('participant', require('./components/product/participants.vue').default);
 
+Vue.component('participant-create', require('./components/product/participantCreate.vue').default);
+
 Vue.component('period', require('./components/product/period.vue').default);
 
 Vue.component('participant-form', require('./components/product/participantForm.vue').default);

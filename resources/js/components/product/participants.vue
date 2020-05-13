@@ -1,7 +1,17 @@
 <template>
     <div class="col-md-4">
-        <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
-            Добавить ({{ participant.Label }})
+        <div v-show="participant.subjISN != null">
+            <div class="col-md-12 text-center">
+                <span v-if="participant.lastName != null" >{{ participant.lastName+' '+participant.firstName+' '+participant.patronymic }}</span>
+                <span v-else>{{ participant.orgName }}</span>
+            </div>
+
+            <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
+                Изменить ({{ participant.Label }})
+            </button>
+        </div>
+        <button v-show="participant.subjISN == null" type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
+            Указать ({{ participant.Label }})
         </button>
         <modal :name="modalName"
                :width="width"
@@ -10,7 +20,7 @@
                 <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">ИИН/БИН : {{ participant.data }}</label>
-                        <input type="text" v-model="participant.iin" class="attr-input-text col-12">
+                        <input type="text" v-model="participant.iin" class="attr-input-text col-12" maxlength="12">
                     </div>
 
                     <div v-if="computedPhysical" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
@@ -25,8 +35,6 @@
                         <label class="bold">Отчество : </label>
                         <input type="text" v-model="participant.patronymic" class="attr-input-text col-12 bg-white" disabled="true">
                     </div>
-
-
                     <div v-if="computedJuridical" class="col-lg-7 col-xl-7 col-md-6 col-sm-6 col-12">
                         <label class="bold">Наименование организации : </label>
                         <input type="text" v-model="participant.orgName" class="attr-input-text col-12 bg-white" disabled="true">
@@ -41,11 +49,14 @@
                 </div>
 
                 <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
+                    <div v-if="search.not_found" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <button class="width100 btn btn-outline-info" @click="addParticipantToKias(pIndex)">Добавить {{ participant.Label }}</button>
+                    </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="closeParticipantForm(pIndex)">Закрыть</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="search">Поиск</button>
+                        <button class="width100 btn btn-outline-info" @click="searchParticipant">Поиск</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="save">Сохранить</button>
@@ -59,6 +70,12 @@
                 </div>
             </div>
         </modal>
+        <participant-create
+                v-if="search.not_found"
+                :pIndex="pIndex"
+                :participant="participant"
+                :searchParticipant="searchParticipant"
+                :preloader="preloader"></participant-create>
     </div>
 </template>
 
@@ -68,11 +85,14 @@
         data() {
             return {
                 moreParticipant : false,
-                isn: '',
+                isn: null,
                 subjISN: '',
                 width : 0,
                 height : 0,
                 aFewParticipants: [],
+                search: {
+                    not_found: false
+                }
             }
         },
         props: {
@@ -88,13 +108,16 @@
             this.height = window.innerHeight;
         },
         methods: {
+            addParticipantToKias(pIndex){
+                this.$modal.show('participant-create-'+pIndex);
+            },
             openParticipantForm(pIndex){
                 this.$modal.show('participant-form-'+pIndex);
             },
             closeParticipantForm(pIndex){
                 this.$modal.hide('participant-form-'+pIndex);
             },
-            search(){
+            searchParticipant(){
                 this.preloader(true);
                 this.axios.post('/searchSubject', {
                     iin : this.participant.iin,
@@ -109,6 +132,7 @@
             },
             fetchParticipantSearch(response){
                 if(response.success){
+                    this.moreParticipant = false;
                     if(response.count === 1){
                         if(this.formular.insurant.isn == this.participant.ISN && this.formular.insurant.phys && !this.formular.insurant.jur){
                             if(response.participant.FirstName == null || response.participant.FirstName == ''){
@@ -140,6 +164,9 @@
                     }
                     this.preloader(false);
                 }else{
+                    if(response.not_found){
+                        this.search.not_found = true;
+                    }
                     alert(response.error);
                     this.preloader(false);
                 }

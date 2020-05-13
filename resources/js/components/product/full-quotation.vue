@@ -5,7 +5,7 @@
                 <span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span>
             </h5>
         </div>
-        <div class="col-md-12 mb-4">
+        <div class="col-md-12 mb-4 mt-4">
             <div class="row">
                 <participant v-for="(participant,index) in participants"
                              :key="index"

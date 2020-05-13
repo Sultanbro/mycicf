@@ -264,6 +264,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::post('/getDictiList', 'SiteController@getDicti');
         Route::post('/searchSubject', 'SiteController@searchSubject');
+        Route::post('/calc/saveSubject', 'SiteController@saveSubject');
         Route::post('/express/calculate', 'ProductsController@expressCalc');
         Route::post('/full/calculate', 'ProductsController@fullCalc');
     });

@@ -634,13 +634,15 @@ class SiteController extends Controller
         if($response->error){
             return response()->json([
                 'success' => false,
-                'error' => $response->error->errorText
+                'error' => $response->error->errorText ? (string)$response->error->errorText : (string)$response->error->text,
+                'not_found' => false
             ]);
         }
         if(!isset($response->ROWSET->row)){
             return response()->json([
                 'success' => false,
-                'error' => "Контрагент не найден"
+                'error' => "Контрагент не найден",
+                'not_found' => true
             ]);
         }
 
@@ -672,6 +674,28 @@ class SiteController extends Controller
             ];
         }
         return response()->json($result);
+    }
+
+    public function saveSubject(Request $request, KiasServiceInterface $kias){
+        $success = false;
+        $participant = null;
+        $new_participant = $request->newParticipant;
+        $new_participant['SHORTNAME'] = $new_participant['LASTNAME'];
+
+        $response = $kias->saveSubject($new_participant);
+        if(isset($response->error)){
+            $success = false;
+            $result = $response->error->fulltext;
+        } else {
+            $result = 'Данные успешно добавлены';
+            $success = true;
+        }
+
+        return response()->json([
+            'success' => $success,
+            'result' => $result
+        ]);
+
     }
 
     public function parseAuth(){
