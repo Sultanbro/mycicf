@@ -325,7 +325,6 @@ class Kias implements KiasServiceInterface
 
     public function saveSubject($participant){
         return $this->request('User_CicSaveSubject', array_merge($participant,[
-                'JURIDICAL' => "N",
                 'RESIDENT' => "Y",
                 'COUNTRYISN' => "9515"
             ])

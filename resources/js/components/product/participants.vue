@@ -74,6 +74,7 @@
                 v-if="search.not_found"
                 :pIndex="pIndex"
                 :participant="participant"
+                :search="search"
                 :searchParticipant="searchParticipant"
                 :preloader="preloader"></participant-create>
     </div>

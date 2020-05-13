@@ -678,14 +678,14 @@ class SiteController extends Controller
 
     public function saveSubject(Request $request, KiasServiceInterface $kias){
         $success = false;
-        $participant = null;
-        $new_participant = $request->newParticipant;
+        $new_participant = $request->participant;
         $new_participant['SHORTNAME'] = $new_participant['LASTNAME'];
+        $new_participant['JURIDICAL'] = $request->juridical;
 
         $response = $kias->saveSubject($new_participant);
         if(isset($response->error)){
             $success = false;
-            $result = $response->error->fulltext;
+            $result = $response->error->text;
         } else {
             $result = 'Данные успешно добавлены';
             $success = true;
