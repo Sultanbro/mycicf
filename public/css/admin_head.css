@@ -34,3 +34,11 @@ body {
 .flex{
     display: flex;
 }
+
+#admin-constructor-loader {
+    height: 120px;
+}
+
+#admin-constructor-loader img {
+    height: 160px;
+}

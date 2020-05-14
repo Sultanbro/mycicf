@@ -7,31 +7,33 @@
         </div>
         <div class="col-md-12 mb-4 mt-4">
             <div class="row">
-                <participant v-for="(participant,index) in participants"
-                             :key="index"
-                             :p-index="index"
-                             :participant="participant"
-                             :participants="participants"
-                             :formular="formular"
-                             :preloader="preloader"
-                             :product-id="id">
-                </participant>
+                <div class="col-md-4" v-for="(participant,index) in participants">
+                    <participant :key="index"
+                                 :p-index="index"
+                                 :participant="participant"
+                                 :participants="participants"
+                                 :formular="formular"
+                                 :preloader="preloader"
+                                 :calc-changed="calcChanged"
+                                 :product-id="id">
+                    </participant>
+                </div>
 
                 <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1" class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
                     <label>Выберите куратора</label>
-                    <treeselect v-model="formular.curator.subjISN" :options="userList" />
+                    <treeselect v-model="formular.curator.subjISN" :options="userList" @change="calcChanged" />
                 </div>
             </div>
         </div>
 
         <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
-            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true">
+            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
         </div>
 
         <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
             <label class="bold">Текст заявки </label>
-            <input type="text" class="attr-input-text col-12"  v-model="DA.remark">
+            <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
         </div>
 
         <div class="mb-4">
@@ -40,19 +42,25 @@
 
         <div class="agr-block mb-4">
             <div v-for="attribute in attributes">
-                <agr-attributes :attribute="attribute"></agr-attributes>
+                <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
             </div>
 
             <div v-for="agrclause in agrclauses">
-                <agr-clause :agrclause="agrclause" :calcChanged="calcChanged"></agr-clause>
+                <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
             </div>
         </div>
 
         <div v-for="(agrobject,index) in agrobjects"class="mb-4">
-            <agr-object :agrobject="agrobject" :aIndex="index" :preloader="preloader" :DA="DA"></agr-object>
+            <agr-object :agrobject="agrobject"
+                        :aIndex="index"
+                        :preloader="preloader"
+                        :express-attr="expressAttr"
+                        :calc-changed="calcChanged"
+                        :DA="DA">
+            </agr-object>
         </div>
 
-        <upload-docs :docs="docs" :quotationId="quotationId"></upload-docs>
+        <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
 
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
@@ -66,7 +74,7 @@
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Отправить в ДА
                 </button>
-                <button v-if="contract_number === null && calc_isn != null && !DA.calcDA" class="btn btn-outline-info" @click="createAgr">
+                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
                 </button>
                 <button v-if="docs.sendedFail" class="btn btn-outline-info" @click="sendDocs">
@@ -123,6 +131,7 @@
         props: {
             id: String,
             quotationId: String,
+            expressAttr: Object
         },
         created(){
             this.width = window.innerWidth;
@@ -201,15 +210,15 @@
             calculate(){
                 if(this.DA.calcDA){
                     let checkDA = this.DA.remark == '' || this.DA.remark == null ? 1 : 0;
-                    // for(index in this.agrobjects){
-                    //     if(this.agrobjects[index].DAsum == '' || this.agrobjects[index].DAsum == null){
-                    //         checkDA = 1;
-                    //     }
-                    // }
-                    // if(checkDA == 1){
-                    //     alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
-                    //     return false;
-                    // }
+                    for(let index in this.agrobjects){
+                        if(this.agrobjects[index].DAsum == '' || this.agrobjects[index].DAsum == null){
+                            checkDA = 1;
+                        }
+                    }
+                    if(checkDA == 1){
+                        alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
+                        return false;
+                    }
                 }
                 //if(this.checkInputs(this.participants) && this.checkInputs(this.attributes)&& this.checkInputs(this.agrclauses)) {
                 this.preloader(true);

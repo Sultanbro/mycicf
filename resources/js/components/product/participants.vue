@@ -1,17 +1,25 @@
 <template>
-    <div class="col-md-4">
-        <div v-show="participant.subjISN != null">
+    <div>
+        <div v-show="participant.subjISN != null && participant.subjISN != ''">
             <div class="col-md-12 text-center">
                 <span v-if="participant.lastName != null" >{{ participant.lastName+' '+participant.firstName+' '+participant.patronymic }}</span>
                 <span v-else>{{ participant.orgName }}</span>
             </div>
 
             <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
-                Изменить ({{ participant.Label }})
+                Изменить
+                <span v-if="!moreParticipant">
+                    <span v-if="participant.Label">({{ participant.Label }})</span>
+                    <span v-else>(Страхователь)</span>
+                </span>
             </button>
         </div>
-        <button v-show="participant.subjISN == null" type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
-            Указать ({{ participant.Label }})
+        <button v-show="participant.subjISN == null || participant.subjISN == ''"
+                type="button" class="add-button width100 mt-2"
+                @click="openParticipantForm(pIndex)">
+            Указать
+            <span v-if="participant.Label">({{ participant.Label }})</span>
+            <span v-else>(Страхователь)</span>
         </button>
         <modal :name="modalName"
                :width="width"
@@ -76,7 +84,8 @@
                 :participant="participant"
                 :search="search"
                 :searchParticipant="searchParticipant"
-                :preloader="preloader"></participant-create>
+                :preloader="preloader">
+        </participant-create>
     </div>
 </template>
 
@@ -102,7 +111,8 @@
             pIndex: Number,
             participants: Array,
             preloader: Function,
-            formular: Object
+            formular: Object,
+            calcChanged: Function
         },
         created(){
             this.width = window.innerWidth;
@@ -135,20 +145,22 @@
                 if(response.success){
                     this.moreParticipant = false;
                     if(response.count === 1){
-                        if(this.formular.insurant.isn == this.participant.ISN && this.formular.insurant.phys && !this.formular.insurant.jur){
-                            if(response.participant.FirstName == null || response.participant.FirstName == ''){
-                                alert('Физическое лицо не найдено');
-                                this.preloader(false);
-                                this.participant.iin = '';
-                                return false;
+                        if(Object.keys(this.formular).length > 0) {
+                            if (this.formular.insurant.isn == this.participant.ISN && this.formular.insurant.phys && !this.formular.insurant.jur) {
+                                if (response.participant.FirstName == null || response.participant.FirstName == '') {
+                                    alert('Физическое лицо не найдено');
+                                    this.preloader(false);
+                                    this.participant.iin = '';
+                                    return false;
+                                }
                             }
-                        }
-                        if(this.formular.insurant.isn == this.participant.ISN && this.formular.insurant.jur && !this.formular.insurant.phys){
-                            if(response.participant.OrgName == null || response.participant.OrgName == ''){
-                                alert('Юридическое лицо не найдено');
-                                this.preloader(false);
-                                this.participant.iin = '';
-                                return false;
+                            if (this.formular.insurant.isn == this.participant.ISN && this.formular.insurant.jur && !this.formular.insurant.phys) {
+                                if (response.participant.OrgName == null || response.participant.OrgName == '') {
+                                    alert('Юридическое лицо не найдено');
+                                    this.preloader(false);
+                                    this.participant.iin = '';
+                                    return false;
+                                }
                             }
                         }
 
@@ -173,14 +185,15 @@
                 }
             },
             save(){
+                let partName = this.participant.Label ? this.participant.Label : 'Страхователь';
                 if(this.isn != null && this.isn != '') {
                     this.participant.subjISN = this.isn;
                     this.participant.Value = this.isn;
                     this.subjISN = this.isn;
                     this.closeParticipantForm(this.pIndex);
-                    alert(this.participant.Label+' успешно добавлен!');
+                    alert(partName+' успешно добавлен!');
                 } else {
-                    alert('Не выбран '+this.participant.Label);
+                    alert('Не выбран '+partName);
                 }
             },
             addParticipant(){
@@ -225,9 +238,12 @@
         },
         watch: {
             'participant.Value': function (val, oldVal) {
-                if (this.participant.ISN == this.formular.insurant.isn) {
-                    this.$parent.subjISN = val;
+                if(Object.keys(this.formular).length > 0) {
+                    if (this.participant.ISN == this.formular.insurant.isn) {
+                        this.$parent.subjISN = val;
+                    }
                 }
+                this.calcChanged();
             }
         }
     }

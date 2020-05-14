@@ -292,8 +292,9 @@ class ProductsController extends Controller
                 'error' => 'Продукт который вы хотите рассчитать не найден'
             ]);
         }
+        $expressAttr = isset($request->all()['attributes']) ? json_decode($request->all()['attributes']) : (object)[];
         $productName = $model->name;
-        return view('full.create', compact(['ID','quotationId','productName']));
+        return view('full.create', compact(['ID','quotationId','productName','expressAttr']));
     }
 
     public function getFullData(Request $request, KiasServiceInterface $kias){
@@ -382,7 +383,6 @@ class ProductsController extends Controller
         $response = $kias->getFullObject($constructor->product_isn);
         $objects = [];
         $risks = [];    //RiskPack
-        $ageclause = [];
         if(isset($response)){
                 $risks = 0;
                 if (isset($response->Object->row)) {

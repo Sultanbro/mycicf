@@ -42,6 +42,7 @@
                         dateFormat="dd.mm.YYYY"
                         v-model="period.end"
                         :disabled="computedDisable == false && period.period !== '0' || computedDisable == true"
+                        @change="calcChanged"
                         required>
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
@@ -103,6 +104,7 @@
                         .add(this.period.period/10 - 1, 'days')
                         .format('YYYY-MM-DD');
                 }
+                this.calcChanged();
             }
         }
     }

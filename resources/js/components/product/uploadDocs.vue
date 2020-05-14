@@ -10,7 +10,7 @@
             <input v-if="quotationId == 0" type="file"
                    v-show="false"
                    multiple
-                   @change="uploadImages($event)"
+                   @change="uploadImages($event);calcChanged()"
                    id="file-driving-input">
         </label>
     </div>
@@ -27,7 +27,8 @@
         },
         props: {
             docs : Object,
-            quotationId: String
+            quotationId: String,
+            calcChanged: Function
         },
         methods: {
             uploadImages(event, type, docType) {

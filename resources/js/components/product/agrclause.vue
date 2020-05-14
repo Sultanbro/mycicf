@@ -42,8 +42,14 @@
         },
         props: {
             agrclause : Object,
-            calcChanged: Function
+            calcChanged : Function,
+            expressAttr : Object
         },
+        created(){
+            if(this.expressAttr[this.agrclause.ISN] && this.expressAttr[this.agrclause.ISN] != null){
+                this.agrclause.Value = this.expressAttr[this.agrclause.ISN];
+            }
+        }
     }
 </script>
 

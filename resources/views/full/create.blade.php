@@ -41,7 +41,11 @@
 <main class="flex-row"  id="app">
     <div class="main_margin width100" id="order">
         <h4 class="text-center mt-3">Полная котировка по продукту {{ $productName }}</h4>
-        <full-quotation-calc :id="{{json_encode($ID)}}" :quotation-id="{{json_encode($quotationId)}}"></full-quotation-calc>
+        <full-quotation-calc
+                :id="{{json_encode($ID)}}"
+                :express-attr="{{json_encode($expressAttr)}}"
+                :quotation-id="{{json_encode($quotationId)}}">
+        </full-quotation-calc>
     </div>
 </main>
 {{--FOOTER GOES HERE--}}

@@ -1,8 +1,17 @@
 <template>
     <div>
-        <button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button>
+        <participant :key="1"
+                     :p-index="1"
+                     :participant="participant"
+                     :participants="[]"
+                     :formular="{}"
+                     :preloader="preloader"
+                     :calc-changed="calcChanged"
+                     :product-id="id">
+        </participant>
+        <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
         <div v-for="attribute in attributes">
-            <agr-attributes :attribute="attribute"></agr-attributes>
+            <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes>
         </div>
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
@@ -11,7 +20,7 @@
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
         </div>
-        <modal name="participant-form"
+        <!--modal name="participant-form"
             :width="width"
             :minHeight="height">
             <div class="participant-form">
@@ -50,7 +59,7 @@
                     </div>
                 </div>
             </div>
-        </modal>
+        </modal-->
     </div>
 </template>
 
@@ -62,6 +71,15 @@
                 attributes: [],
                 moreParticipant : false,
                 participants: [],
+                participant: {
+                    Value : null,
+                    firstName : null,
+                    iin : null,
+                    lastName : null,
+                    orgName : null,
+                    patronymic : null,
+                    subjISN : null
+                },
                 isn: '',
                 subjISN : '',
                 iin: '',
@@ -100,48 +118,49 @@
                     alert(error);
                 });
             },
-            openParticipantForm(){
-                this.$modal.show('participant-form');
-            },
-            closeParticipantForm(){
-                this.$modal.hide('participant-form');
-            },
-            search(){
-                this.axios.post('/searchSubject', {
-                    firstName : this.firstName,
-                    lastName : this.lastName,
-                    patronymic : this.patronymic,
-                    iin : this.iin,
-                })
-                .then(response => {
-                    this.fetchParticipantSearch(response.data);
-                })
-                .catch(error => {
-                    alert(error);
-                });
-            },
-            fetchParticipantSearch(response){
-                if(response.success){
-                    if(response.count === 1){
-                        this.moreParticipant = false;
-                        this.firstName = response.participant.FirstName;
-                        this.lastName = response.participant.LastName;
-                        this.patronymic = response.participant.Patronymic;
-                        this.iin = response.participant.IIN;
-                        this.isn = response.participant.ISN;
-                    }else{
-                        this.moreParticipant = true;
-                        this.participants = response.participant;
-                    }
-                }else{
-                    alert(response.error);
-                }
-            },
-            save(){
-                this.subjISN = this.isn;
-                this.closeParticipantForm();
-                alert('Страхователь успешно добавлен!');
-            },
+            // openParticipantForm(){
+            //     this.$modal.show('participant-form');
+            // },
+            // closeParticipantForm(){
+            //     this.$modal.hide('participant-form');
+            // },
+            // search(){
+            //     this.axios.post('/searchSubject', {
+            //         firstName : this.firstName,
+            //         lastName : this.lastName,
+            //         patronymic : this.patronymic,
+            //         iin : this.iin,
+            //     })
+            //     .then(response => {
+            //         this.fetchParticipantSearch(response.data);
+            //     })
+            //     .catch(error => {
+            //         alert(error);
+            //     });
+            // },
+            // fetchParticipantSearch(response){
+            //     if(response.success){
+            //         if(response.count === 1){
+            //             this.moreParticipant = false;
+            //             this.firstName = response.participant.FirstName;
+            //             this.lastName = response.participant.LastName;
+            //             this.patronymic = response.participant.Patronymic;
+            //             this.iin = response.participant.IIN;
+            //             this.isn = response.participant.ISN;
+            //         }else{
+            //             this.moreParticipant = true;
+            //             this.participants = response.participant;
+            //         }
+            //     }else{
+            //         alert(response.error);
+            //     }
+            // },
+            // save(){
+            //     this.subjISN = this.isn;
+            //     this.closeParticipantForm();
+            //     this.calcChanged();
+            //     alert('Страхователь успешно добавлен!');
+            // },
             calculate(){
                 this.axios.post('/express/calculate', {
                     subjISN : this.subjISN,
@@ -160,27 +179,51 @@
                     alert(error)
                 });
             },
+            calcChanged(){
+                this.calculated = false;
+                this.price = 0;
+            },
             createFullQuotation(){
                 var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
                 if(full) {
-                    window.location.href = "/full/calc/" + this.id + "/0";
+                    let attr = '';
+                    let i = 1;
+                    for(let index in this.attributes){
+                        if(this.attributes[index].Value == null) {
+                            attr = attr + '"' + index + '":' + this.attributes[index].Value;
+                        } else {
+                            attr = attr + '"' + index + '":"' + this.attributes[index].Value + '"';
+                        }
+                        if(i != Object.keys(this.attributes).length){
+                            attr = attr+',';
+                        }
+                        i++;
+                    }
+                    window.location.href = "/full/calc/" + this.id + "/0?attributes={"+attr+'}';
+                    // this.axios.post('/full/create', {
+                    //     subjISN : this.subjISN,
+                    //     id : this.id,
+                    //     attributes : this.attributes
+                    // })
+                    //     .then(response => {
+                    //         if(response.data.success){
+                    //             window.location.href="/full/calc/"+this.id+"/0"+response.data.id;
+                    //         }else{
+                    //             alert(response.data.error)
+                    //         }
+                    //     })
+                    //     .catch(error => {
+                    //         alert(error)
+                    //     });
                 }
-                // this.axios.post('/full/create', {
-                //     subjISN : this.subjISN,
-                //     id : this.id,
-                //     attributes : this.attributes
-                // })
-                //     .then(response => {
-                //         if(response.data.success){
-                //             window.location.href="/full/calc/"+this.id+"/0"+response.data.id;
-                //         }else{
-                //             alert(response.data.error)
-                //         }
-                //     })
-                //     .catch(error => {
-                //         alert(error)
-                //     });
-            }
+            },
+            preloader(show) {
+                if(show){
+                    document.getElementById("preloader").style.display = "flex";
+                } else {
+                    document.getElementById("preloader").style.display = "none";
+                }
+            },
         },
         watch : {
             attributes(){
@@ -190,6 +233,9 @@
             SubjISN(){
                 this.calculated = false;
                 this.price = 0;
+            },
+            'participant.Value': function(val){
+                this.subjISN = val;
             }
         }
     }
