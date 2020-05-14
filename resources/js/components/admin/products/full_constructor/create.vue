@@ -5,12 +5,17 @@
         </div>
 
         <formular :formular="sections.formular" :parentisns="parentisns" title="Формуляр" type="formular"></formular>
-        <constructor v-for="(section,key) in sections" v-if="key != 'formular'"
+        <constructor v-for="(section,key) in sections"
+                     v-if="key != 'formular' && key != 'agrobjects' && key != 'id' && key != 'parentisns'&& key != 'product_isn'"
                      :iIndex="key"
                      :key="key"
                      :parentisns="parentisns"
                      :items="section">
         </constructor>
+
+        <div v-if="preloader" id="admin-constructor-loader" class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
+            <img src="/images/loader.gif">
+        </div>
 
         <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
             <button type="button" @click="save" class="btn-info btn-lg btn">Сохранить</button>
@@ -25,6 +30,7 @@
             return {
                 ISN : null,
                 sections:Object,
+                preloader: false,
                 parentisns: {              // Если в базе нету prentIsns то берем вот эти по умолчанию
                     formular: {
                         //insurant: 2103,
@@ -51,7 +57,7 @@
         },
         methods: {
             save(){
-                //this.preloader(true);
+                this.showPreloader(event,true);
                 this.sections.product_isn = this.product.product_isn;
                 this.sections.id = this.product.id;
                 this.sections.parentisns = this.parentisns;
@@ -59,17 +65,23 @@
                     .then(response => {
                         if(response.data.success){
                             alert('Данные успешно записаны');
+                            this.showPreloader(event,false);
                         }else{
                             alert(response.data.error);
+                            this.showPreloader(event,false);
                         }
                     })
                     .catch(error => {
                         alert(error);
+                        this.showPreloader(event,false);
                     });
             },
-            preloader(show){
-                show ? document.getElementById('preloader').style.display = 'flex' : document.getElementById('preloader').style.display = 'none';
-            },
+            showPreloader(e,action){
+                this.preloader = action;
+                if(action == true){
+                    e.scrollTop = Math.ceil(e.scrollHeight - e.clientHeight);
+                }
+            }
         },
         mounted(){
             //...
@@ -77,20 +89,3 @@
 
     }
 </script>
-
-<style scoped>
-    .preloader {
-        z-index: 1001;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        width: 100vw;
-        position: fixed;
-        overflow: hidden;
-        -webkit-animation-delay: 1s;
-        animation-delay: 1s;
-        background: #00dcff4d;
-        opacity: 0.8;
-    }
-</style>
