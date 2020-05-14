@@ -211,9 +211,6 @@ class ProductsController extends Controller
                 }
             }
 
-
-            dd($request->all()['attributes']);exit();
-
             $constructor->data = json_encode(array(
                 'agrobjects' => $objects,
                 'participants' => $request->participants,
