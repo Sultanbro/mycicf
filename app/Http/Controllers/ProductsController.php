@@ -211,11 +211,35 @@ class ProductsController extends Controller
                 }
             }
 
+            if(isset($request->agrclauses)){
+                $agrclauses = $request->agrclauses;
+                foreach($agrclauses as $key => $agrclause){
+                    if($agrclause['Type'] == 'DICTI' || $agrclause['N_Kids'] == 1){
+                        $isn = $agrclause['NumCode'] != '' && $agrclause['NumCode'] != null ? $agrclause['NumCode'] : $agrclause['ISN'];
+                        $agrclauses[$key]['Childs'] = $this->getDictis($isn,'');
+                    }
+                }
+            } else {
+                $agrclauses = [];
+            }
+
+            if(isset($request->all()['attributes'])){
+                $attributes = $request->all()['attributes'];
+                foreach($attributes as $key => $attribute){
+                    if($attribute['Type'] == 'DICTI' || isset($attribute['N_Kids']) && $attribute['N_Kids'] == 1){
+                        $isn = isset($attribute['NumCode']) && $attribute['NumCode'] != '' ? $attribute['NumCode'] : $attribute['ISN'];
+                        $attributes[$key]['Childs'] = $this->getDictis($isn,'attributes');
+                    }
+                }
+            } else {
+                $attributes = [];
+            }
+
             $constructor->data = json_encode(array(
                 'agrobjects' => $objects,
                 'participants' => $request->participants,
-                'attributes' => $request->all()['attributes'],
-                'agrclauses' => $request->agrclauses,
+                'attributes' => $agrclauses,    //$request->all()['attributes'],
+                'agrclauses' => $attributes,    //$request->agrclauses,
                 'formular' => $request->formular,
             ));
             $constructor->parentisns = json_encode($request->parentisns);
@@ -407,30 +431,31 @@ class ProductsController extends Controller
         $participants = isset($data->participants) ? $data->participants : [];
         $DAremark = isset($data->DAremark) ? $data->DAremark : null;
 
-        if(isset($data->agrclauses)){
-            $agrclauses = $data->agrclauses;
-            foreach($agrclauses as $agrclause){
-                if($agrclause->Type == 'DICTI' || $agrclause->N_Kids == 1){
-                    $isn = $agrclause->NumCode != '' ? $agrclause->NumCode : $agrclause->ISN;
-                    $agrclause->Childs = $this->getDictis($isn,'');
-                }
-            }
-        } else {
-            $agrclauses = [];
-        }
+//        if(isset($data->agrclauses)){
+//            $agrclauses = $data->agrclauses;
+//            foreach($agrclauses as $agrclause){
+//                if($agrclause->Type == 'DICTI' || $agrclause->N_Kids == 1){
+//                    $isn = $agrclause->NumCode != '' ? $agrclause->NumCode : $agrclause->ISN;
+//                    $agrclause->Childs = $this->getDictis($isn,'');
+//                }
+//            }
+//        } else {
+//            $agrclauses = [];
+//        }
+//
+//        if(isset($data->attributes)){
+//            $attributes = $data->attributes;
+//            foreach($attributes as $attribute){
+//                    if($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1){
+//                            $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
+//                            $attribute->Childs = $this->getDictis($isn,'attributes');
+//                        }
+//            }
+//        } else {
+//            $attributes = [];
+//        }
 
-        if(isset($data->attributes)){
-            $attributes = $data->attributes;
-            foreach($attributes as $attribute){
-                    if($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1){
-                            $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
-                            $attribute->Childs = $this->getDictis($isn,'attributes');
-                        }
-            }
-        } else {
-            $attributes = [];
-        }
-
+        $agrclauses = isset($data->agrclauses) ? $data->agrclauses : [];
         $attributes = isset($data->attributes) ? $data->attributes : [];
 
         return response()->json([
