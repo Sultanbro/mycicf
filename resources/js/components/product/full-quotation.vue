@@ -51,7 +51,7 @@
         </div>
 
         <transition-group name="slide-fade">
-        <div key="1" v-for="(agrobject,index) in agrobjects" class="mb-4" >
+        <div :key="index+1" v-for="(agrobject,index) in agrobjects" class="mb-4" >
             <agr-object :agrobject="agrobject"
                         :aIndex="index"
                         :preloader="preloader"
