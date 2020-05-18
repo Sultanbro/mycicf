@@ -51,17 +51,18 @@
         </div>
 
         <transition-group name="slide-fade">
-        <div :key="index+1" v-for="(agrobject,index) in agrobjects" class="mb-4" >
-            <agr-object :agrobject="agrobject"
-                        :aIndex="index"
-                        :preloader="preloader"
-                        :express-attr="expressAttr"
-                        :calc-changed="calcChanged"
-                        :new-agrobject="newAgrobject"
-                        :agrobjects="agrobjects"
-                        :DA="DA">
-            </agr-object>
-        </div>
+            <div v-for="(agrobject,index) in agrobjects" :key="index+1" class="mb-4" >
+                <agr-object :agrobject="agrobject"
+                            :aIndex="index"
+                            :preloader="preloader"
+                            :express-attr="expressAttr"
+                            :calc-changed="calcChanged"
+                            :new-agrobject="newAgrobject"
+                            :agrobjects="agrobjects"
+                            :quotation-id="quotationId"
+                            :DA="DA">
+                </agr-object>
+            </div>
         </transition-group>
 
         <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
