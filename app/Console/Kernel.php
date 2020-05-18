@@ -32,9 +32,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('kias:branches')
                 ->dailyAt('03:00')
                 ->timezone('Asia/Almaty');
-            $schedule->command('full:constructor')
-                ->dailyAt('03:00')
-                ->timezone('Asia/Almaty');
+//            $schedule->command('full:constructor')
+//                ->dailyAt('03:00')
+//                ->timezone('Asia/Almaty');
         }catch (\Exception $e){
             Log::error($e->getMessage());
         }
