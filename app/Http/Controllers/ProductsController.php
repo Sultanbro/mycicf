@@ -238,8 +238,8 @@ class ProductsController extends Controller
             $constructor->data = json_encode(array(
                 'agrobjects' => $objects,
                 'participants' => $request->participants,
-                'attributes' => $agrclauses,    //$request->all()['attributes'],
-                'agrclauses' => $attributes,    //$request->agrclauses,
+                'attributes' => $attributes,    //$request->all()['attributes'],
+                'agrclauses' => $agrclauses,    //$request->agrclauses,
                 'formular' => $request->formular,
             ));
             $constructor->parentisns = json_encode($request->parentisns);

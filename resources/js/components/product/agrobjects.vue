@@ -1,6 +1,8 @@
 <template>
     <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
         <h4>Объект</h4>
+        <button @click="addObject()" class="btn btn-outline-info ml-3">Добавить еще</button>
+        <button v-if="agrobjects.length > 1" @click="deleteObject()" class="btn btn-outline-info ml-3">Удалить</button>
         <div class="row col-12">
             <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
                 <label class="bold">Класс объекта : </label>
@@ -91,7 +93,9 @@
             preloader: Function,
             DA: Object,
             expressAttr: Object,
-            calcChanged: Function
+            calcChanged: Function,
+            newAgrobject: Array,
+            agrobjects: Array
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){
@@ -110,6 +114,12 @@
                 if(e.target.options.selectedIndex > -1) {
                     this.agrobject[index] = e.target.options[e.target.options.selectedIndex].dataset.option;
                 }
+            },
+            addObject(){
+                this.agrobjects.push(this.newAgrobject[0]);
+            },
+            deleteObject(){
+                this.agrobjects.splice(this.aIndex,1);
             }
         }
     }

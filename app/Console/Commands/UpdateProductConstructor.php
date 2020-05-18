@@ -56,8 +56,8 @@ class UpdateProductConstructor extends Command
                     $newconstructor->data = json_encode(array(
                         'agrobjects' => $agrobjects,
                         'participants' => $data->participants,
-                        'attributes' => $agrclauses,
-                        'agrclauses' => $attributes,
+                        'attributes' => $attributes,
+                        'agrclauses' => $agrclauses,
                         'formular' => $data->formular,
                     ));
                     try{
