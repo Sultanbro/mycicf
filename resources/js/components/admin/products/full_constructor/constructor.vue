@@ -8,6 +8,11 @@
         </div>
         <div v-for="(item,index) in items" class="form-group col-md-4 col-lg-4 col-6 text-center">
             <treeselect v-model="item.ISN" :options="dictiOptions" @select="onChangeSelect($event,index)" />
+            <treeselect v-if="iIndex == 'attributes' && items[index].Childs != null || iIndex == 'agrclauses' && items[index].Childs != null"
+                        v-model="item.Value"
+                        class="mt-1"
+                        :options="items[index].Childs"
+                        @select="onSelectChilds($event,index)" />
             <a @click="deleteItem(index)">Удалить</a>
         </div>
     </div>
@@ -15,37 +20,38 @@
 
 <script>
     export default {
-        name: "constructor",
+        name : "constructor",
         data() {
             return {
-                parentChanged: false,
-                dictiOptions: [],
-                currentIndex: 0,
+                parentChanged : false,
+                dictiOptions : [],
+                currentIndex : 0,
                 title: {
-                    formular:'Формуляр',
-                    participants:'Участники',
-                    attributes:'Дополнительные атрибуты договора',
-                    agrclauses:'Оговорки и ограничения',
-                    objects:'Объекты',
+                    formular : 'Формуляр',
+                    participants : 'Участники',
+                    attributes : 'Дополнительные атрибуты договора',
+                    agrclauses : 'Оговорки и ограничения',
+                    objects : 'Объекты',
                 },
             }
         },
         props: {
-            items: Array,
-            iIndex: String,
-            parentisns: Object,
+            items : Array,
+            iIndex : String,
+            parentisns : Object,
         },
         methods: {
             addItem(){
                 this.items.push({
-                    Label: '',
-                    ISN: 0
+                    Label : '',
+                    ISN : 0,
+                    Childs : null
                 });
             },
             deleteItem(id){
                 this.items.splice(id,1);
             },
-            getDicti(isn = null){         // Берем справочник из Киаса
+            getDicti(isn = null,index){         // Берем справочник из Киаса
                 let ISN = isn != null ? isn : this.parentisns[this.iIndex];  //this.parent.isn;
                 this.parentChanged = false;
                 return this.axios.post('/calc/getDicti', {
@@ -57,7 +63,9 @@
                             if(isn == null) {
                                 this.dictiOptions = response.data.result;
                             } else {
-                                this.items[this.currentIndex].Childs = response.data.result;
+                                //this.items[index].Childs = [];
+                                this.items[index].Childs = response.data.result;
+                                //console.log(index);
                             }
                         }else{
                             alert(response.data.error);
@@ -84,12 +92,12 @@
 
                     // Begin если справочник, берем данные справочника из киаса
                     if(e.N_Kids == 1){
-                        //e.NumCode != '' ? this.getDicti(e.NumCode) : this.getDicti(e.id);
+                        e.NumCode != '' ? this.getDicti(e.NumCode,index) : this.getDicti(e.id,index);
                         this.items[index].Type = 'DICTI';
                     } else {
-                        // if(e.Type == 'DICTI'){
-                        //     e.NumCode != '' ? this.getDicti(e.NumCode) : this.getDicti(e.id);
-                        // }
+                        if(e.Type == 'DICTI'){
+                            e.NumCode != '' ? this.getDicti(e.NumCode,index) : this.getDicti(e.id,index);
+                        }
                     }
                     // End
                 }
@@ -103,6 +111,9 @@
                     //this.items[index].Type = 'DICTI';
                 }
             },
+            onSelectChilds(e,index){
+                this.items[index].Value = e.id == 0 ? null : e.id;
+            }
         },
         mounted(){
             this.getDicti();    // Получаем справочники

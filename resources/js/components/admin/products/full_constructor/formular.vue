@@ -50,32 +50,32 @@
         name: "formular",
         data() {
             return {
-                dictiOptions: [],
-                curatorOptions: [{ id:0, label: 'По умолчанию' },{ id:1, label: 'Выбрать куратора'}],
-                parentChanged: { insurant: false, curator: false, status: false }
+                dictiOptions : [],
+                curatorOptions : [{ id : 0, label : 'По умолчанию' },{ id : 1, label : 'Выбрать куратора'}],
+                parentChanged : { insurant : false, curator : false, status : false }
             }
         },
         props: {
-            title: String,
-            formular: Array,
-            parentisns: Object
+            title : String,
+            formular : Array,
+            parentisns : Object
         },
         created() {
             if(Object.keys(this.formular).length == 0){
                 this.formular.push({
-                    insurant: {
-                        isn: 2103,
-                        jur: false,
-                        phys: true,
+                    insurant : {
+                        isn : 2103,
+                        jur : false,
+                        phys : true,
                     },
                     curator:{
-                        Value: 0,
-                        ISN: 221346,
-                        subjISN: null,
-                        label: null,
+                        Value : 0,
+                        ISN : 221346,
+                        subjISN : null,
+                        label : null,
                     },
                     status:{
-                        Value: 223368,
+                        Value : 223368,
                     }
                 });
             }

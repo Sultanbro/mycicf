@@ -29,25 +29,25 @@
         data() {
             return {
                 ISN : null,
-                sections:Object,
-                preloader: false,
-                parentisns: {              // Если в базе нету prentIsns то берем вот эти по умолчанию
-                    formular: {
-                        //insurant: 2103,
-                        curator: 221346,
-                        status: 223367
+                sections : Object,
+                preloader : false,
+                parentisns : {              // Если в базе нету prentIsns то берем вот эти по умолчанию
+                    formular : {
+                        //insurant : 2103,
+                        curator : 221346,
+                        status : 223367
                     },
-                    participants: 19,
-                    attributes: 220169,
-                    agrclauses: 2031,
-                    objects: 19,
+                    participants : 19,
+                    attributes : 220169,
+                    agrclauses : 2031,
+                    objects : 19,
                 }
             }
         },
         props: {
-            product: Object,
-            data: Object,       // Конструктор из базы
-            parentisn: Object  // Parentisns из базы
+            product : Object,
+            data : Object,       // Конструктор из базы
+            parentisn : Object  // Parentisns из базы
         },
         created(){
             this.sections = this.data;                      // Дает возможность манипулировать объектом sections

@@ -59,7 +59,7 @@
                             :calc-changed="calcChanged"
                             :new-agrobject="newAgrobject"
                             :agrobjects="agrobjects"
-                            :quotation-id="quotationId"
+                            :quotationId="quotationId"
                             :DA="DA">
                 </agr-object>
             </div>

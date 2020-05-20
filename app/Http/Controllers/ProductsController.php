@@ -211,29 +211,31 @@ class ProductsController extends Controller
                 }
             }
 
-            if(isset($request->agrclauses)){
-                $agrclauses = $request->agrclauses;
-                foreach($agrclauses as $key => $agrclause){
-                    if($agrclause['Type'] == 'DICTI' || $agrclause['N_Kids'] == 1){
-                        $isn = $agrclause['NumCode'] != '' && $agrclause['NumCode'] != null ? $agrclause['NumCode'] : $agrclause['ISN'];
-                        $agrclauses[$key]['Childs'] = $this->getDictis($isn,'');
-                    }
-                }
-            } else {
-                $agrclauses = [];
-            }
-
-            if(isset($request->all()['attributes'])){
-                $attributes = $request->all()['attributes'];
-                foreach($attributes as $key => $attribute){
-                    if($attribute['Type'] == 'DICTI' || isset($attribute['N_Kids']) && $attribute['N_Kids'] == 1){
-                        $isn = isset($attribute['NumCode']) && $attribute['NumCode'] != '' ? $attribute['NumCode'] : $attribute['ISN'];
-                        $attributes[$key]['Childs'] = $this->getDictis($isn,'attributes');
-                    }
-                }
-            } else {
-                $attributes = [];
-            }
+            $agrclauses = $request->agrclauses;
+            $attributes = $request->all()['attributes'];
+//            if(isset($request->agrclauses)){
+//                $agrclauses = $request->agrclauses;
+//                foreach($agrclauses as $key => $agrclause){
+//                    if(isset($agrclause['Type']) && $agrclause['Type'] == 'DICTI' || isset($agrclause['N_Kids']) && $agrclause['N_Kids'] == 1){
+//                        $isn = $agrclause['NumCode'] != '' && $agrclause['NumCode'] != null ? $agrclause['NumCode'] : $agrclause['ISN'];
+//                        $agrclauses[$key]['Childs'] = $this->getDictis($isn,'');
+//                    }
+//                }
+//            } else {
+//                $agrclauses = [];
+//            }
+//
+//            if(isset($request->all()['attributes'])){
+//                $attributes = $request->all()['attributes'];
+//                foreach($attributes as $key => $attribute){
+//                    if(isset($attribute['Type']) && $attribute['Type'] == 'DICTI' || isset($attribute['N_Kids']) && $attribute['N_Kids'] == 1){
+//                        $isn = isset($attribute['NumCode']) && $attribute['NumCode'] != '' ? $attribute['NumCode'] : $attribute['ISN'];
+//                        $attributes[$key]['Childs'] = $this->getDictis($isn,'attributes');
+//                    }
+//                }
+//            } else {
+//                $attributes = [];
+//            }
 
             $constructor->data = json_encode(array(
                 'agrobjects' => $objects,
@@ -762,32 +764,32 @@ class ProductsController extends Controller
         if(isset($response->ROWSET->row)){
             foreach ($response->ROWSET->row as $row){
                 if($type == 'attributes'){
-                    if($row->N_KIDS == '1'){
-                        $child_response = $kias->getDictiList((string)$row->ISN);
-                        if(isset($child_response->ROWSET->row)){
-                            foreach ($child_response->ROWSET->row as $child_row){
-                                array_push($result, [
-                                    'Value' => (string)$child_row->ISN,
-                                    'Label' => (string)$child_row->FULLNAME,
-                                    'Type' => (string)$child_row->CODE,
-                                    'NumCode' => (string)$child_row->NUMCODE,
-                                    'N_Kids' => (string)$child_row->N_KIDS,
-                                    'id' => (string)$child_row->ISN,
-                                    'label' => (string)$child_row->ISN." - ".(string)$row->FULLNAME." ".(string)$child_row->FULLNAME,
-                                ]);
-                            }
-                        }else{
-                            array_push($result, [
-                                'Label' => (string)$row->FULLNAME,
-                                'id' => (string)$row->ISN,
-                                'Value' => (string)$row->ISN,
-                                'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
-                                'Type' => (string)$row->CODE,
-                                'NumCode' => (string)$row->NUMCODE,
-                                'N_Kids' => (string)$row->N_KIDS,
-                            ]);
-                        }
-                    }else{
+//                    if($row->N_KIDS == '1'){
+//                        $child_response = $kias->getDictiList((string)$row->ISN);
+//                        if(isset($child_response->ROWSET->row)){
+//                            foreach ($child_response->ROWSET->row as $child_row){
+//                                array_push($result, [
+//                                    'Value' => (string)$child_row->ISN,
+//                                    'Label' => (string)$child_row->FULLNAME,
+//                                    'Type' => (string)$child_row->CODE,
+//                                    'NumCode' => (string)$child_row->NUMCODE,
+//                                    'N_Kids' => (string)$child_row->N_KIDS,
+//                                    'id' => (string)$child_row->ISN,
+//                                    'label' => (string)$child_row->ISN." - ".(string)$row->FULLNAME." ".(string)$child_row->FULLNAME,
+//                                ]);
+//                            }
+//                        }else{
+//                            array_push($result, [
+//                                'Label' => (string)$row->FULLNAME,
+//                                'id' => (string)$row->ISN,
+//                                'Value' => (string)$row->ISN,
+//                                'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
+//                                'Type' => (string)$row->CODE,
+//                                'NumCode' => (string)$row->NUMCODE,
+//                                'N_Kids' => (string)$row->N_KIDS,
+//                            ]);
+//                        }
+//                    }else{
                         array_push($result, [
                             'Label' => (string)$row->FULLNAME,
                             'id' => (string)$row->ISN,
@@ -797,7 +799,7 @@ class ProductsController extends Controller
                             'NumCode' => (string)$row->NUMCODE,
                             'N_Kids' => (string)$row->N_KIDS,
                         ]);
-                    }
+                    //}
                 } else {
                     array_push($result, [
                         'Label' => (string)$row->FULLNAME,

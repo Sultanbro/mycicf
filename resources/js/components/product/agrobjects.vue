@@ -96,7 +96,7 @@
             calcChanged: Function,
             newAgrobject: Array,
             agrobjects: Array,
-            quotationId: Number
+            quotationId: String
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){
