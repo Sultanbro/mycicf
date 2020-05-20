@@ -10,8 +10,19 @@
                      :product-id="id">
         </participant>
         <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
-        <div v-for="attribute in attributes">
-            <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes>
+        <div class="col-md-12">
+            <div class="row">
+
+                <agr-attributes v-if="Object.keys(attributes).length != 0 && attributes[value] != undefined && attributes[value] != null"
+                                :key="value"
+                                v-for="value,key in ISNS"
+                                :attribute="attributes[value]"
+                                :express-attr="{}"
+                                :calc-changed="calcChanged"></agr-attributes>
+
+                <!--agr-attributes :key="key" v-for="attribute,key in attributes" :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes-->
+
+            </div>
         </div>
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
@@ -20,6 +31,7 @@
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
         </div>
+
         <!--modal name="participant-form"
             :width="width"
             :minHeight="height">
@@ -90,6 +102,21 @@
                 height : 0,
                 calculated : false,
                 price : 0,
+                ISNS : [
+                    1289051, //Пакет рисков
+                    708061, //Виды спорта ( НС Спорт)
+                    1289111, //Территория страхования
+                    860231, //Тип продаж
+                    708881, //Время действия страховки (НС Стандарт, НС Grand)
+                    709261,
+                    501441, //Количество Застрахованных
+                    514581, //"% "АВ" к согласованию (гросс)
+                    708071, //Профессии и виды деятельности (НС Стандарт, НС Grand)
+                    857211, //Страховая сумма
+                    857901, //Срок страхования
+                    798456,
+
+                ]
             }
         },
         props: {
@@ -107,17 +134,36 @@
                 this.axios.post('/getExpressAttributes', {
                     id: this.id
                 })
-                .then(response => {
-                    if(response.data.success){
-                        this.attributes = response.data.attributes;
-                    }else{
-                        alert(response.data.error);
-                    }
-                })
-                .catch(error => {
-                    alert(error);
-                });
+                    .then(response => {
+                        if(response.data.success){
+                            this.attributes = response.data.attributes;
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
             },
+            // getVal(){
+            //     let ISN=[
+            //         501441, //Количество Застрахованных
+            //         514581, //"% "АВ" к согласованию (гросс)
+            //         708061, //Виды спорта ( НС Спорт)
+            //         708071, //Профессии и виды деятельности (НС Стандарт, НС Grand)
+            //         708881, //Время действия страховки (НС Стандарт, НС Grand)
+            //         709261,
+            //         857211, //Страховая сумма
+            //         857901, //Срок страхования
+            //         860231, //Тип продаж
+            //         1289051, //Пакет рисков
+            //         1289111 //Территория страхования
+            //     ];
+            //     let back=[];
+            //     for (this.ISN == 1289051 &&  ){
+            //
+            //     }
+            // },
             // openParticipantForm(){
             //     this.$modal.show('participant-form');
             // },
@@ -167,22 +213,23 @@
                     id : this.id,
                     attributes : this.attributes
                 })
-                .then(response => {
-                    if(response.data.success){
-                        this.price = response.data.premium;
-                        this.calculated = true;
-                    }else{
-                        alert(response.data.error)
-                    }
-                })
-                .catch(error => {
-                    alert(error)
-                });
+                    .then(response => {
+                        if(response.data.success){
+                            this.price = response.data.premium;
+                            this.calculated = true;
+                        }else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
             },
             calcChanged(){
                 this.calculated = false;
                 this.price = 0;
             },
+
             createFullQuotation(){
                 var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
                 if(full) {

@@ -15,7 +15,7 @@
             </button>
         </div>
         <button v-show="participant.subjISN == null || participant.subjISN == ''"
-                type="button" class="add-button width100 mt-2"
+                type="button" class="btn btn-outline-info marg-left"
                 @click="openParticipantForm(pIndex)">
             Указать
             <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -79,12 +79,12 @@
             </div>
         </modal>
         <participant-create
-                v-if="search.not_found"
-                :pIndex="pIndex"
-                :participant="participant"
-                :search="search"
-                :searchParticipant="searchParticipant"
-                :preloader="preloader">
+            v-if="search.not_found"
+            :pIndex="pIndex"
+            :participant="participant"
+            :search="search"
+            :searchParticipant="searchParticipant"
+            :preloader="preloader">
         </participant-create>
     </div>
 </template>
@@ -133,13 +133,13 @@
                 this.axios.post('/searchSubject', {
                     iin : this.participant.iin,
                 })
-                .then(response => {
-                    this.fetchParticipantSearch(response.data);
-                })
-                .catch(error => {
-                    alert(error);
-                    this.preloader(false);
-                });
+                    .then(response => {
+                        this.fetchParticipantSearch(response.data);
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
             },
             fetchParticipantSearch(response){
                 if(response.success){
@@ -169,7 +169,7 @@
                         this.participant.lastName = response.participant.LastName;
                         this.participant.patronymic = response.participant.Patronymic;
                         this.participant.orgName = response.participant.OrgName,
-                        this.participant.iin = response.participant.IIN;
+                            this.participant.iin = response.participant.IIN;
                         this.isn = response.participant.ISN;
                     }else{
                         this.moreParticipant = true;
