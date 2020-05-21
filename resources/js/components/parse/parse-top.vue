@@ -21,10 +21,10 @@
             </div>
 
             <div class="d-flex">
-                <a href="/parse/table-opu">
+                <a @click="changePage('/parse/table-opu')" href="javascript:void(0);">
                     <div class="p-2">ОПУ</div>
                 </a>
-                <a href="/parse/table-indicators">
+                <a @click="changePage('/parse/table-indicators')" href="javascript:void(0);">
                     <div class="p-2">БАЛАНС</div>
                 </a>
 <!--                <a href="/parse/table-info">-->
@@ -36,7 +36,10 @@
                 <div class="mr-10 parse-top-company-select">
                     <div>
                         <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
-                            <option v-for="dateType in dateTypes" :value="dateType.value" >{{dateType.name}}</option>
+                            <option v-for="dateType in dateTypes"
+                                    :value="dateType.value">
+                                {{dateType.name}}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -115,7 +118,16 @@
             months: Array,
             years: Array,
             getData: Function,
+            request: Object
         },
+        methods: {
+            changePage(url){
+                window.location.href= url + "?firstPeriod="+this.periods.first_period+"&secondPeriod="+this.periods.second_period+"&firstYear="+this.periods.first_year+"&secondYear="+this.periods.second_year+"&type="+this.type;
+            }
+        },
+        created(){
+            this.type = this.request.type ? this.request.type : this.type;
+        }
     }
 </script>
 

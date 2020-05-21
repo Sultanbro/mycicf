@@ -248,14 +248,14 @@ class ParseController extends Controller
     public function index(){
         return view('parse/index');
     }
-    public function getOpuTable(){
-        return view('parse/table-opu');
+    public function getOpuTable(Request $request){
+        return view('parse/table-opu',['request' => (object)$request->all()]);
     }
     public function getInfoTable(){
         return view('parse/table-info');
     }
-    public function getIndicatorsTable(){
-        return view('parse/table-indicators');
+    public function getIndicatorsTable(Request $request){
+        return view('parse/table-indicators',['request' => (object)$request->all()]);
     }
     public function upload(Request $request){
         //TODO VALIDATE
