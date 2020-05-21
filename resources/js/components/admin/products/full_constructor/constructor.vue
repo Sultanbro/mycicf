@@ -39,7 +39,8 @@
             items : Array,
             iIndex : String,
             parentisns : Object,
-            checkOptions : Object
+            checkOptions : Object,
+            preloader : Function
         },
         methods: {
             addItem(){
@@ -53,6 +54,7 @@
                 this.items.splice(id,1);
             },
             getDicti(isn = null,index){         // Берем справочник из Киаса
+                this.preloader(true);
                 let ISN = isn != null ? isn : this.parentisns[this.iIndex];  //this.parent.isn;
                 this.parentChanged = false;
                 return this.axios.post('/calc/getDicti', {
@@ -68,12 +70,15 @@
                                 this.items[index].Childs = response.data.result;
                                 //console.log(index);
                             }
+                            this.preloader(false);
                         }else{
                             alert(response.data.error);
+                            this.preloader(false);
                         }
                     })
                     .catch(error => {
                         alert(error);
+                        this.preloader(false);
                     });
             },
             onChangeSelect: function(e,index){      // Создаем массив для вывода на фронте

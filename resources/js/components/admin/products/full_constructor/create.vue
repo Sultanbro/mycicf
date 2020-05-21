@@ -7,6 +7,7 @@
         <formular :checkOptions="checkOptions"
                   :formular="sections.formular"
                   :parentisns="parentisns"
+                  :preloader = "preloader"
                   title="Формуляр"
                   type="formular"></formular>
         <!--constructor v-for="(section,key) in sections"
@@ -20,22 +21,21 @@
                      :checkOptions="checkOptions"
                      iIndex="participants"
                      :parentisns="parentisns"
+                     :preloader = "preloader"
                      :items="sections.participants">
         </constructor>
         <constructor v-if="checkOptions.participants"
                      :checkOptions="checkOptions" iIndex="attributes"
                      :parentisns="parentisns"
+                     :preloader = "preloader"
                      :items="sections.attributes">
         </constructor>
         <constructor v-if="checkOptions.attributes"
                      :checkOptions="checkOptions" iIndex="agrclauses"
                      :parentisns="parentisns"
+                     :preloader = "preloader"
                      :items="sections.agrclauses">
         </constructor>
-
-        <div v-if="preloader" id="admin-constructor-loader" class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
-            <img src="/images/loader.gif">
-        </div>
 
         <div class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
             <button type="button" @click="save" class="btn-info btn-lg btn">Сохранить</button>
@@ -50,7 +50,6 @@
             return {
                 ISN : null,
                 sections : Object,
-                preloader : false,
                 parentisns : {              // Если в базе нету prentIsns то берем вот эти по умолчанию
                     formular : {
                         //insurant : 2103,
@@ -83,7 +82,7 @@
         },
         methods: {
             save(){
-                this.showPreloader(event,true);
+                this.preloader(true);
                 this.sections.product_isn = this.product.product_isn;
                 this.sections.id = this.product.id;
                 this.sections.parentisns = this.parentisns;
@@ -91,21 +90,28 @@
                     .then(response => {
                         if(response.data.success){
                             alert('Данные успешно записаны');
-                            this.showPreloader(event,false);
+                            this.preloader(false);
                         }else{
                             alert(response.data.error);
-                            this.showPreloader(event,false);
+                            this.preloader(false);
                         }
                     })
                     .catch(error => {
                         alert(error);
-                        this.showPreloader(event,false);
+                        this.preloader(false);
                     });
             },
-            showPreloader(e,action){
-                this.preloader = action;
-                if(action == true){
-                    e.scrollTop = Math.ceil(e.scrollHeight - e.clientHeight);
+            // showPreloader(e,action){
+            //     this.preloader = action;
+            //     if(action == true){
+            //         e.scrollTop = Math.ceil(e.scrollHeight - e.clientHeight);
+            //     }
+            // },
+            preloader(show){
+                if(show) {
+                    document.getElementById('preloader').style.display = 'flex';
+                } else {
+                    document.getElementById('preloader').style.display = 'none';
                 }
             }
         },

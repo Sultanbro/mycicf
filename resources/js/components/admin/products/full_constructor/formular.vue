@@ -59,7 +59,8 @@
             title : String,
             formular : Array,
             parentisns : Object,
-            checkOptions : Object
+            checkOptions : Object,
+            preloader : Function
         },
         created() {
             if(Object.keys(this.formular).length == 0){
@@ -90,6 +91,7 @@
                 }
             },
             getDicti(){         // Берем справочник из Киаса
+                this.preloader(true);
                 this.parentChanged.status = false;
                 return this.axios.post('/calc/getDicti', {
                     ISN: this.parentisns.formular.status,    //formular[0].status.ISN,
@@ -101,9 +103,11 @@
                         }else{
                             alert(response.data.error);
                         }
+                        this.preloader(false);
                     })
                     .catch(error => {
                         alert(error);
+                        this.preloader(false);
                     });
             },
         },

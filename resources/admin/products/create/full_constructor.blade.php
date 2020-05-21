@@ -17,6 +17,13 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+<div class="preloader" id="preloader">
+    <div class="item-1"></div>
+    <div class="item-2"></div>
+    <div class="item-3"></div>
+    <div class="item-4"></div>
+    <div class="item-5"></div>
+</div>
 <div class="container" id="app">
     @include('layouts.header')
     <main role="main">
@@ -34,32 +41,9 @@
         </full-constructor-create-->
     </main>
 </div>
-<div class="preloader" id="preloader" style="top : 0">
-    <div class="item-1"></div>
-    <div class="item-2"></div>
-    <div class="item-3"></div>
-    <div class="item-4"></div>
-    <div class="item-5"></div>
-</div>
 </body>
 <script src="{{asset('js/admin.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
 </html>
-<style>
-    .preloader {
-        z-index: 1001;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        width: 100vw;
-        position: fixed;
-        overflow: hidden;
-        -webkit-animation-delay: 1s;
-        animation-delay: 1s;
-        background: #00dcff4d;
-        opacity: 0.8;
-    }
-</style>
