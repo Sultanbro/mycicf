@@ -70,11 +70,12 @@
                         <button class="width100 btn btn-outline-info" @click="save">Сохранить</button>
                     </div>
                     <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще {{ participant.data }}</button>
+                        <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще</button>
                     </div>
-                    <div v-if="participant.ISN == 2082 && participant.new" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="deleteParticipant">Удалить {{ participant.data }}</button>
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <button class="width100 btn btn-outline-info" @click="deleteParticipant">Удалить этот раздел</button>
                     </div>
+                    <!-- v-if="participant.ISN == 2082 && participant.new"  -->
                 </div>
             </div>
         </modal>
@@ -220,7 +221,10 @@
                 this.participant.Value = '';
             },
             deleteParticipant(){
-                this.participants.splice(this.pIndex,1);
+                if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
+                    this.participants.splice(this.pIndex, 1);
+                    this.calcChanged();
+                }
             }
         },
         computed: {
