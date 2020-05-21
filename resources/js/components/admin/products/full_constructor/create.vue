@@ -4,13 +4,33 @@
             Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
         </div>
 
-        <formular :formular="sections.formular" :parentisns="parentisns" title="Формуляр" type="formular"></formular>
-        <constructor v-for="(section,key) in sections"
+        <formular :checkOptions="checkOptions"
+                  :formular="sections.formular"
+                  :parentisns="parentisns"
+                  title="Формуляр"
+                  type="formular"></formular>
+        <!--constructor v-for="(section,key) in sections"
                      v-if="key != 'formular' && key != 'agrobjects' && key != 'id' && key != 'parentisns'&& key != 'product_isn'"
                      :iIndex="key"
                      :key="key"
                      :parentisns="parentisns"
                      :items="section">
+        </constructor-->
+        <constructor v-if="checkOptions.formular"
+                     :checkOptions="checkOptions"
+                     iIndex="participants"
+                     :parentisns="parentisns"
+                     :items="sections.participants">
+        </constructor>
+        <constructor v-if="checkOptions.participants"
+                     :checkOptions="checkOptions" iIndex="attributes"
+                     :parentisns="parentisns"
+                     :items="sections.attributes">
+        </constructor>
+        <constructor v-if="checkOptions.attributes"
+                     :checkOptions="checkOptions" iIndex="agrclauses"
+                     :parentisns="parentisns"
+                     :items="sections.agrclauses">
         </constructor>
 
         <div v-if="preloader" id="admin-constructor-loader" class="flex justify-content-center form-group offset-md-2 offset-ld-2 offset-0 col-md-8 col-lg-8 col-12">
@@ -41,6 +61,12 @@
                     attributes : 220169,
                     agrclauses : 2031,
                     objects : 19,
+                },
+                checkOptions : {
+                    formular : false,
+                    participants : false,
+                    attributes : false,
+                    agrclauses : false
                 }
             }
         },

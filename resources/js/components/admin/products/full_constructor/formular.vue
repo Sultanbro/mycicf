@@ -58,7 +58,8 @@
         props: {
             title : String,
             formular : Array,
-            parentisns : Object
+            parentisns : Object,
+            checkOptions : Object
         },
         created() {
             if(Object.keys(this.formular).length == 0){
@@ -107,6 +108,9 @@
             },
         },
         watch: {
+            dictiOptions(){
+                this.checkOptions.formular = true;
+            }
             // 'formular.curator.Value': function(){
             //     this.formular.curator.subjISN = null;
             //     this.formular.curator.firstName = null;

@@ -39,6 +39,7 @@
             items : Array,
             iIndex : String,
             parentisns : Object,
+            checkOptions : Object
         },
         methods: {
             addItem(){
@@ -117,6 +118,11 @@
         },
         mounted(){
             this.getDicti();    // Получаем справочники
+        },
+        watch: {
+            dictiOptions(){
+                this.checkOptions[this.iIndex] = true;
+            }
         }
     }
 </script>
