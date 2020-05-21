@@ -1692,14 +1692,14 @@ class ParseController extends Controller
                 $result = round((($firstPeriod/ $secondPeriod)-1) * 100);
             }
             if($secondYear > $firstYear) {
-                $result = round((1 - ($secondPeriod / $firstPeriod)) * 100);
+                $result = round((($secondPeriod / $firstPeriod)-1) * 100);
             }
             if($secondYear === $firstYear) {
                 if($firstMonth > $secondMonth) {
-                    $result = round((1 - ($firstPeriod / $secondPeriod)) * 100);
+                    $result = round((($firstPeriod / $secondPeriod)-1) * 100);
                 }
                 if($secondMonth > $firstMonth) {
-                    $result = round((1 - ($secondPeriod / $firstPeriod)) * 100);
+                    $result = round((($secondPeriod / $firstPeriod)-1) * 100);
                 }
                 if($secondMonth === $firstMonth) {
                     $result = 0;
