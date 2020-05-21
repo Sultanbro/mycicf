@@ -131,6 +131,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('calc/full-constructor/{id}', 'ProductsController@getFullConstructor')->name('constructor.full');
             Route::post('calc/full-constructor', 'ProductsController@setFullConstructor');
             Route::post('calc/getDicti', 'ProductsController@getDicti');
+            Route::post('/updateProductsDicti','ProductsController@updateProductsDicti');
         });
     });
 });

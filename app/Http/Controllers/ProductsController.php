@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ProductsDicti;
 use App\ExpressProduct;
 use App\FullProduct;
 use App\FullQuotation;
@@ -12,6 +13,7 @@ use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
@@ -766,43 +768,43 @@ class ProductsController extends Controller
             foreach ($response->ROWSET->row as $row){
                 if($type == 'attributes'){
                     if($row->N_KIDS == '1'){
-                          array_push($childIsns,[
-                              'ISN' => (string)$row->ISN,
-                              'parentLabel' => (string)$row->FULLNAME,
-                              'data' => [
-                                  'Label' => (string)$row->FULLNAME,
-                                  'id' => (string)$row->ISN,
-                                  'Value' => (string)$row->ISN,
-                                  'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
-                                  'Type' => (string)$row->CODE,
-                                  'NumCode' => (string)$row->NUMCODE,
-                                  'N_Kids' => (string)$row->N_KIDS,
-                              ]
-                        ]);
-//                        $child_response = $kias->getDictiList((string)$row->ISN);
-//                        if(isset($child_response->ROWSET->row)){
-//                            foreach ($child_response->ROWSET->row as $child_row){
-//                                array_push($result, [
-//                                    'Value' => (string)$child_row->ISN,
-//                                    'Label' => (string)$child_row->FULLNAME,
-//                                    'Type' => (string)$child_row->CODE,
-//                                    'NumCode' => (string)$child_row->NUMCODE,
-//                                    'N_Kids' => (string)$child_row->N_KIDS,
-//                                    'id' => (string)$child_row->ISN,
-//                                    'label' => (string)$child_row->ISN." - ".(string)$row->FULLNAME." ".(string)$child_row->FULLNAME,
-//                                ]);
-//                            }
-//                        }else{
-//                            array_push($result, [
-//                                'Label' => (string)$row->FULLNAME,
-//                                'id' => (string)$row->ISN,
-//                                'Value' => (string)$row->ISN,
-//                                'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
-//                                'Type' => (string)$row->CODE,
-//                                'NumCode' => (string)$row->NUMCODE,
-//                                'N_Kids' => (string)$row->N_KIDS,
-//                            ]);
-//                        }
+//                          array_push($childIsns,[
+//                              'ISN' => (string)$row->ISN,
+//                              'parentLabel' => (string)$row->FULLNAME,
+//                              'data' => [
+//                                  'Label' => (string)$row->FULLNAME,
+//                                  'id' => (string)$row->ISN,
+//                                  'Value' => (string)$row->ISN,
+//                                  'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
+//                                  'Type' => (string)$row->CODE,
+//                                  'NumCode' => (string)$row->NUMCODE,
+//                                  'N_Kids' => (string)$row->N_KIDS,
+//                              ]
+//                        ]);
+                        $child_response = $kias->getDictiList((string)$row->ISN);
+                        if(isset($child_response->ROWSET->row)){
+                            foreach ($child_response->ROWSET->row as $child_row){
+                                array_push($result, [
+                                    'Value' => (string)$child_row->ISN,
+                                    'Label' => (string)$child_row->FULLNAME,
+                                    'Type' => (string)$child_row->CODE,
+                                    'NumCode' => (string)$child_row->NUMCODE,
+                                    'N_Kids' => (string)$child_row->N_KIDS,
+                                    'id' => (string)$child_row->ISN,
+                                    'label' => (string)$child_row->ISN." - ".(string)$row->FULLNAME." ".(string)$child_row->FULLNAME,
+                                ]);
+                            }
+                        }else{
+                            array_push($result, [
+                                'Label' => (string)$row->FULLNAME,
+                                'id' => (string)$row->ISN,
+                                'Value' => (string)$row->ISN,
+                                'label' => (string)$row->ISN.' - '.(string)$row->FULLNAME,
+                                'Type' => (string)$row->CODE,
+                                'NumCode' => (string)$row->NUMCODE,
+                                'N_Kids' => (string)$row->N_KIDS,
+                            ]);
+                        }
                     }else{
                         array_push($result, [
                             'Label' => (string)$row->FULLNAME,
@@ -826,26 +828,26 @@ class ProductsController extends Controller
                     ]);
                 }
             }
-            if(count($childIsns) > 0){
-                foreach($childIsns as $child){
-                    $child_response = $kias->getDictiList($child['ISN']);
-                    if(isset($child_response->ROWSET->row)){
-                        foreach ($child_response->ROWSET->row as $child_row){
-                            array_push($result, [
-                                'Value' => (string)$child_row->ISN,
-                                'Label' => (string)$child_row->FULLNAME,
-                                'Type' => (string)$child_row->CODE,
-                                'NumCode' => (string)$child_row->NUMCODE,
-                                'N_Kids' => (string)$child_row->N_KIDS,
-                                'id' => (string)$child_row->ISN,
-                                'label' => (string)$child_row->ISN." - ".$child['parentLabel']." ".(string)$child_row->FULLNAME,
-                            ]);
-                        }
-                    }else{
-                        array_push($result, $child['data']);
-                    }
-                }
-            }
+//            if(count($childIsns) > 0){
+//                foreach($childIsns as $child){
+//                    $child_response = $kias->getDictiList($child['ISN']);
+//                    if(isset($child_response->ROWSET->row)){
+//                        foreach ($child_response->ROWSET->row as $child_row){
+//                            array_push($result, [
+//                                'Value' => (string)$child_row->ISN,
+//                                'Label' => (string)$child_row->FULLNAME,
+//                                'Type' => (string)$child_row->CODE,
+//                                'NumCode' => (string)$child_row->NUMCODE,
+//                                'N_Kids' => (string)$child_row->N_KIDS,
+//                                'id' => (string)$child_row->ISN,
+//                                'label' => (string)$child_row->ISN." - ".$child['parentLabel']." ".(string)$child_row->FULLNAME,
+//                            ]);
+//                        }
+//                    }else{
+//                        array_push($result, $child['data']);
+//                    }
+//                }
+//            }
         }
         return $result;
     }
@@ -976,6 +978,107 @@ class ProductsController extends Controller
                 header('Pragma: public');
                 readfile($pathinfo['basename']);
                 exit;
+            }
+        }
+    }
+
+    public function updateProductsDicti(Request $request){
+        $kias = new Kias();
+        $kias->initSystem();
+        $response = $kias->getDictiList($request->isn);
+
+        if(isset($response->ROWSET->row)) {
+            $childIsns = [];
+            DB::table('products_dicti')->where('parent_isn', $request->isn)->delete();
+            foreach ($response->ROWSET->row as $row) {
+
+                //if($request->isn == 220169) {
+//                    if($row->N_KIDS == '1' || $row->N_KIDS == 1) {
+//                        try{
+//                            $child_response = $kias->getDictiList((string)$row->ISN);
+//                        } catch (Exception $e) {
+//                            return response()->json([
+//                                'success' => false,
+//                                'error' => $e->getMessage()
+//                            ]);
+//                        }
+//                        if(isset($child_response->ROWSET->row)){
+//                            foreach ($child_response->ROWSET->row as $child_row){
+//                                $dictiCH = new ProductsDicti;
+//                                $dictiCH->isn = (string)$child_row->ISN;
+//                                $dictiCH->fullname = (string)$child_row->FULLNAME;
+//                                $dictiCH->code = (string)$child_row->CODE;
+//                                $dictiCH->numcode = (string)$child_row->NUMCODE;
+//                                $dictiCH->n_kids = (string)$child_row->N_KIDS;
+//                                $dictiCH->parent_isn = (string)$row->ISN;
+//                                $dictiCH->parent_name = (string)$row->FULLNAME." ".(string)$child_row->FULLNAME;
+//                                $dictiCH->save();
+//                            }
+//                        }
+//                        //else{
+//                            $dicti = new ProductsDicti;
+//                            $dicti->isn = (string)$row->ISN;
+//                            $dicti->fullname = (string)$row->FULLNAME;
+//                            $dicti->code = (string)$row->CODE;
+//                            $dicti->numcode = (string)$row->NUMCODE;
+//                            $dicti->n_kids = (string)$row->N_KIDS;
+//                            $dicti->parent_isn = $request->isn;
+//                        //}
+//                    } else {
+//                        $dicti = new ProductsDicti;
+//                        $dicti->isn = (string)$row->ISN;
+//                        $dicti->fullname = (string)$row->FULLNAME;
+//                        $dicti->code = (string)$row->CODE;
+//                        $dicti->numcode = (string)$row->NUMCODE;
+//                        $dicti->n_kids = (string)$row->N_KIDS;
+//                        $dicti->parent_isn = $request->isn;
+//                    }
+//                } else {
+                    $dicti = new ProductsDicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = $request->isn;
+//                }
+                $dicti->save();
+            }
+
+            $this->updateNkids($request->isn);
+
+            return response()->json([
+                'success' => true
+            ]);
+        }
+    }
+
+    public function updateNkids($parent){
+        $kias = new Kias();
+        $kias->initSystem();
+        $response = $kias->getDictiList($parent);
+        $parents = ProductsDicti::where('parent_isn',$parent)->where('n_kids',1)->get();
+        foreach($parents as $p) {
+            try {
+                $child_response = $kias->getDictiList($p->isn);
+            } catch (Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            if (isset($child_response->ROWSET->row)) {
+                foreach ($child_response->ROWSET->row as $child_row) {
+                    $dictiCH = new ProductsDicti;
+                    $dictiCH->isn = (string)$child_row->ISN;
+                    $dictiCH->fullname = (string)$child_row->FULLNAME;
+                    $dictiCH->code = (string)$child_row->CODE;
+                    $dictiCH->numcode = (string)$child_row->NUMCODE;
+                    $dictiCH->n_kids = (string)$child_row->N_KIDS;
+                    $dictiCH->parent_isn = $p->isn;
+                    $dictiCH->parent_name = $p->fullname . " " . (string)$child_row->FULLNAME;
+                    $dictiCH->save();
+                }
             }
         }
     }

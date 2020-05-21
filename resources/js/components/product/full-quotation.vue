@@ -50,9 +50,11 @@
             </div>
         </div>
 
-        <transition-group name="slide-fade">
-            <div v-for="(agrobject,index) in agrobjects" :key="index+1" class="mb-4" >
-                <agr-object :agrobject="agrobject"
+
+
+                <agr-object v-for="(agrobject,index) in agrobjects"
+                            :key="index"
+                            :agrobject="agrobject"
                             :aIndex="index"
                             :preloader="preloader"
                             :express-attr="expressAttr"
@@ -60,10 +62,11 @@
                             :new-agrobject="newAgrobject"
                             :agrobjects="agrobjects"
                             :quotationId="quotationId"
+                            :product-id="id"
                             :DA="DA">
                 </agr-object>
-            </div>
-        </transition-group>
+
+
 
         <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
 
@@ -112,7 +115,7 @@
                 agrclauses: [],
                 formular: [],
                 agrobjects: [],
-                newAgrobject:[],
+                newAgrobject:{},
                 moreParticipant : false,
                 subjISN : '',
                 DA: {               // Департамент андеррайтинга
@@ -192,7 +195,7 @@
                                 this.agrobjects = response.data.objects;
                             } else {
                                 this.agrobjects.push(response.data.objects);
-                                this.newAgrobject.push(response.data.objects);
+                                //this.newAgrobject = response.data.objects;
                             }
                             this.preloader(false);
                             if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) {

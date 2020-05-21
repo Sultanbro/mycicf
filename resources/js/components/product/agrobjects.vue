@@ -94,9 +94,10 @@
             DA: Object,
             expressAttr: Object,
             calcChanged: Function,
-            newAgrobject: Array,
+            newAgrobject: Object,
             agrobjects: Array,
-            quotationId: String
+            quotationId: String,
+            productId: String
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){
@@ -117,7 +118,24 @@
                 }
             },
             addObject(){
-                this.agrobjects.push(this.newAgrobject[0]);
+                this.preloader(true);
+                this.axios.post('/full/getFullObjects', {
+                    id: this.productId,
+                    quotationId: this.quotationId
+                })
+                .then(response => {
+                    if(response.data.success){
+                        this.agrobjects.push(response.data.objects);
+                        this.preloader(false);
+                    }else{
+                        alert(response.data.error);
+                        this.preloader(false);
+                    }
+                })
+                .catch(error => {
+                    alert(error);
+                    this.preloader(false);
+                });
             },
             deleteObject(){
                 this.agrobjects.splice(this.aIndex,1);
