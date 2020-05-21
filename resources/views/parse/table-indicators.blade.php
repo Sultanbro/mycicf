@@ -34,7 +34,7 @@ use App\Http\Controllers\ParseController;
     <body>
         @include('layouts.header')
         <main class="flex-column pl-5 pr-5" id="app">
-            <parse-indicators></parse-indicators>
+            <parse-indicators :request="{{ json_encode($request) }}"></parse-indicators>
         </main>
     </body>
 </html>

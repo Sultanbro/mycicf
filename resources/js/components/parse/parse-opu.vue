@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <parse-top :periods="periods" :months="months" :years="years" :getData="showNewData"></parse-top>
+        <parse-top :periods="periods" :months="months" :years="years" :request="request" :getData="showNewData"></parse-top>
 
         <div class="bg-white pl-3 pr-3 mt-3 mb-3 box-shadow border-16" v-if="showTable">
             <div class="d-flex justify-content-between align-items-center pr-3 pl-3">
@@ -111,7 +111,9 @@
                 showTable: false,
             }
         },
-
+        props: {
+            request: Object
+        },
         methods: {
             getOpuData(new_date = null) {
                 if(new_date != null){
@@ -204,10 +206,10 @@
                     this.years.push(year);
                 }
 
-                this.periods.first_year = response.periods.first_year;
-                this.periods.first_period = response.periods.first_period;
-                this.periods.second_year = response.periods.second_year;
-                this.periods.second_period = response.periods.second_period;
+                this.periods.first_year = this.request.firstYear ? this.request.firstYear : response.periods.first_year;
+                this.periods.first_period = this.request.firstPeriod ? this.request.firstPeriod : response.periods.first_period;
+                this.periods.second_year = this.request.secondYear ? this.request.secondYear : response.periods.second_year;
+                this.periods.second_period = this.request.secondPeriod ? this.request.secondPeriod : response.periods.second_period;
             },
 
             async getNextOpu() {

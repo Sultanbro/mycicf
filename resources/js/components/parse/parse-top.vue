@@ -2,10 +2,12 @@
     <div class="bg-white pl-3 pr-3 box-shadow border-16">
         <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
             <div class="flex-row jc-sb">
-                <div class="custom-primary-button-inverse pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
-                    <i class="fa fa-chart-pie"></i>
-                    <div class="mt-1 fs-0_8">Сборы</div>
-                </div>
+                <a href="/parse/company">
+                    <div class="custom-primary-button-inverse pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-chart-pie"></i>
+                        <div class="mt-1 fs-0_8">Сборы</div>
+                    </div>
+                </a>
                 <a href="/parse/finance">
                     <div class="custom-primary-button-inverse pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-sliders-h settings-icon-transform270"></i>
@@ -19,10 +21,10 @@
             </div>
 
             <div class="d-flex">
-                <a href="/parse/table-opu">
+                <a @click="changePage('/parse/table-opu')" href="javascript:void(0);">
                     <div class="p-2">ОПУ</div>
                 </a>
-                <a href="/parse/table-indicators">
+                <a @click="changePage('/parse/table-indicators')" href="javascript:void(0);">
                     <div class="p-2">БАЛАНС</div>
                 </a>
 <!--                <a href="/parse/table-info">-->
@@ -34,7 +36,10 @@
                 <div class="mr-10 parse-top-company-select">
                     <div>
                         <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
-                            <option v-for="dateType in dateTypes" :value="dateType.value" >{{dateType.name}}</option>
+                            <option v-for="dateType in dateTypes"
+                                    :value="dateType.value">
+                                {{dateType.name}}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -113,7 +118,16 @@
             months: Array,
             years: Array,
             getData: Function,
+            request: Object
         },
+        methods: {
+            changePage(url){
+                window.location.href= url + "?firstPeriod="+this.periods.first_period+"&secondPeriod="+this.periods.second_period+"&firstYear="+this.periods.first_year+"&secondYear="+this.periods.second_year+"&type="+this.type;
+            }
+        },
+        created(){
+            this.type = this.request.type ? this.request.type : this.type;
+        }
     }
 </script>
 

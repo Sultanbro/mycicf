@@ -248,14 +248,14 @@ class ParseController extends Controller
     public function index(){
         return view('parse/index');
     }
-    public function getOpuTable(){
-        return view('parse/table-opu');
+    public function getOpuTable(Request $request){
+        return view('parse/table-opu',['request' => (object)$request->all()]);
     }
     public function getInfoTable(){
         return view('parse/table-info');
     }
-    public function getIndicatorsTable(){
-        return view('parse/table-indicators');
+    public function getIndicatorsTable(Request $request){
+        return view('parse/table-indicators',['request' => (object)$request->all()]);
     }
     public function upload(Request $request){
         //TODO VALIDATE
@@ -1549,7 +1549,7 @@ class ParseController extends Controller
                     'label' => $this->getOpuLabels()[$key],
                     'firstPeriod' => $first,
                     'secondPeriod' => $second,
-                    'changes' => (string)$this->getOpuChanges($first, $second) . '%',
+                    'changes' => (string)$this->getOpuChanges($first, $second, $firstYear, $secondYear, $firstPeriod, $secondPeriod) . '%',
                 ]);
             }
 
@@ -1695,12 +1695,30 @@ class ParseController extends Controller
             }
         }
     }
-    private function getOpuChanges($firstPeriod, $secondPeriod) {
-        if($secondPeriod === 0){
+    private function getOpuChanges($firstPeriod, $secondPeriod, $firstYear, $secondYear, $firstMonth, $secondMonth) {
+        $result = 0;
+        if($secondPeriod === 0 || $firstPeriod === 0){
             return 0;
         }
         else {
-            return round((1 - ($firstPeriod / $secondPeriod)) * 100);
+            if($firstYear > $secondYear) {
+                $result = round((($firstPeriod/ $secondPeriod)-1) * 100);
+            }
+            if($secondYear > $firstYear) {
+                $result = round((($secondPeriod / $firstPeriod)-1) * 100);
+            }
+            if($secondYear === $firstYear) {
+                if($firstMonth > $secondMonth) {
+                    $result = round((($firstPeriod / $secondPeriod)-1) * 100);
+                }
+                if($secondMonth > $firstMonth) {
+                    $result = round((($secondPeriod / $firstPeriod)-1) * 100);
+                }
+                if($secondMonth === $firstMonth) {
+                    $result = 0;
+                }
+            }
+            return $result;
         }
     }
     /**
@@ -2894,10 +2912,10 @@ class ParseController extends Controller
             'brut_income' => 'Прибыль до налогов',
             'kpn' => 'КПН',
             'net_income' => 'Чистая прибыль',
-            'ros' => 'ROS',
-            'roa' => 'ROA',
-            'roe' => 'ROE',
-            'cos' => 'COS',
+//            'ros' => 'ROS',
+//            'roa' => 'ROA',
+//            'roe' => 'ROE',
+//            'cos' => 'COS',
         ];
     }
 
