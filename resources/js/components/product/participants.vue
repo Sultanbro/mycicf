@@ -223,6 +223,7 @@
             deleteParticipant(){
                 if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
                     this.participants.splice(this.pIndex, 1);
+                    this.closeParticipantForm(this.pIndex);
                     this.calcChanged();
                 }
             }
