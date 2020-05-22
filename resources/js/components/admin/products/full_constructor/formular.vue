@@ -95,7 +95,8 @@
                 this.parentChanged.status = false;
                 return this.axios.post('/calc/getDicti', {
                     ISN: this.parentisns.formular.status,    //formular[0].status.ISN,
-                    type: ''
+                    type: '',
+                    getFromKias: 1
                 })
                     .then(response => {
                         if(response.data.success){

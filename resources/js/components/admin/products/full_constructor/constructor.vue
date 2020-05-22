@@ -53,22 +53,21 @@
             deleteItem(id){
                 this.items.splice(id,1);
             },
-            getDicti(isn = null,index){         // Берем справочник из Киаса
+            getDicti(isn = null, index = null, getFromKias = null){         // Берем справочник из Киаса
                 this.preloader(true);
                 let ISN = isn != null ? isn : this.parentisns[this.iIndex];  //this.parent.isn;
                 this.parentChanged = false;
                 return this.axios.post('/calc/getDicti', {
                     ISN:ISN,
-                    type:this.iIndex
+                    type:this.iIndex,
+                    getFromKias: getFromKias
                 })
                     .then(response => {
                         if(response.data.success){
                             if(isn == null) {
                                 this.dictiOptions = response.data.result;
                             } else {
-                                //this.items[index].Childs = [];
                                 this.items[index].Childs = response.data.result;
-                                //console.log(index);
                             }
                             this.preloader(false);
                         }else{
@@ -98,11 +97,11 @@
 
                     // Begin если справочник, берем данные справочника из киаса
                     if(e.N_Kids == 1){
-                        e.NumCode != '' ? this.getDicti(e.NumCode,index) : this.getDicti(e.id,index);
+                        e.NumCode != '' ? this.getDicti(e.NumCode,index,1) : this.getDicti(e.id,index,1);
                         this.items[index].Type = 'DICTI';
                     } else {
                         if(e.Type == 'DICTI'){
-                            e.NumCode != '' ? this.getDicti(e.NumCode,index) : this.getDicti(e.id,index);
+                            e.NumCode != '' ? this.getDicti(e.NumCode,index,1) : this.getDicti(e.id,index,1);
                         }
                     }
                     // End
@@ -122,7 +121,11 @@
             }
         },
         mounted(){
-            this.getDicti();    // Получаем справочники
+            if(this.iIndex == 'attributes' || this.iIndex == 'agrclauses') {
+                this.getDicti();    // Получаем справочники из базы sql
+            } else {
+                this.getDicti(null,null,1);    // Получаем справочники из киаса
+            }
         },
         watch: {
             dictiOptions(){

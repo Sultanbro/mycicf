@@ -50,23 +50,19 @@
             </div>
         </div>
 
-
-
-                <agr-object v-for="(agrobject,index) in agrobjects"
-                            :key="index"
-                            :agrobject="agrobject"
-                            :aIndex="index"
-                            :preloader="preloader"
-                            :express-attr="expressAttr"
-                            :calc-changed="calcChanged"
-                            :new-agrobject="newAgrobject"
-                            :agrobjects="agrobjects"
-                            :quotationId="quotationId"
-                            :product-id="id"
-                            :DA="DA">
-                </agr-object>
-
-
+        <agr-object v-for="(agrobject,index) in agrobjects"
+                    :key="index"
+                    :agrobject="agrobject"
+                    :aIndex="index"
+                    :preloader="preloader"
+                    :express-attr="expressAttr"
+                    :calc-changed="calcChanged"
+                    :new-agrobject="newAgrobject"
+                    :agrobjects="agrobjects"
+                    :quotationId="quotationId"
+                    :product-id="id"
+                    :DA="DA">
+        </agr-object>
 
         <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
 
