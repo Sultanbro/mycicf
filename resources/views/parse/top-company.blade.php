@@ -63,14 +63,14 @@ use App\Http\Controllers\ParseController;
                         Сборы
                     </div>
                 </div>
-                <a href="/parse/finance">
+                <!--a href="/parse/finance">
                     <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-sliders-h settings-icon-transform270"></i>
                         <div class="mt-1 fs-0_8">
                             Показатели
                         </div>
                     </div>
-                </a>
+                </a-->
                 <a href="/parse/table-opu">
                     <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-user-friends"></i>
