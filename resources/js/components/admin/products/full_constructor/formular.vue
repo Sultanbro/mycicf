@@ -1,7 +1,7 @@
 <template>
     <div class="form-group col-md-12 col-lg-12 col-12 text-left row mt-3 box-block ml-0 mr-0" style="border-bottom:1px solid #ced4da;">
         <div class="col-12 mb-3">
-            <span class="font-weight-bold" @click="parentChanged = true">{{ title }}</span>
+            <span class="font-weight-bold">{{ title }}</span>
         </div>
         <div class="form-group col-md-4 col-lg-4 col-6 text-center">
             <label @click="parentChanged.insurant = true">Страхователь</label>

@@ -2,8 +2,16 @@
     <div class="form-group col-md-12 col-lg-12 col-12 text-left row mt-3 box-block ml-0 mr-0" style="border-bottom:1px solid #ced4da;">
         <div class="col-12 mb-3">
             <span class="font-weight-bold" @click="parentChanged = true">{{ title[iIndex] }}</span>
-            <input type="text" v-model="parentisns[iIndex]" v-show="parentChanged" class="attr-input-text custom-input ml-3"  size="6">
-            <button type="button" v-if="parentChanged" @click="getDicti()" class="btn-info btn-lg btn float-right">Обновить</button>
+            <input v-if="iIndex == 'participants'"
+                   type="text"
+                   v-model="parentisns[iIndex]"
+                   v-show="parentChanged"
+                   class="attr-input-text custom-input ml-3"
+                   size="6">
+            <button  v-if="parentChanged && iIndex == 'participants'"
+                     type="button"
+                     @click="getDicti(null,null,1)"
+                     class="btn-info btn-lg btn float-right">Обновить</button>
             <button type="button" @click="addItem" class="btn-info btn-lg btn float-right">Добавить</button>
         </div>
         <div v-for="(item,index) in items" class="form-group col-md-4 col-lg-4 col-6 text-center">

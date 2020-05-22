@@ -2,9 +2,11 @@
     <div class="row">
         <div class="form-group col-md-12 col-lg-12 col-12 text-center font-weight-bold">
             Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
-            <button type="button"
+            <!--button type="button"
                     @click="updateProductsDicti('attributes',true)"
-                    class="btn-info btn-lg btn float-right">Обновить справочник</button>
+                    class="btn-info btn-lg btn float-right">
+                    Обновить справочник
+            </button-->
         </div>
 
         <formular :checkOptions="checkOptions"
@@ -12,7 +14,8 @@
                   :parentisns="parentisns"
                   :preloader = "preloader"
                   title="Формуляр"
-                  type="formular"></formular>
+                  type="formular">
+        </formular>
         <!--constructor v-for="(section,key) in sections"
                      v-if="key != 'formular' && key != 'agrobjects' && key != 'id' && key != 'parentisns'&& key != 'product_isn'"
                      :iIndex="key"

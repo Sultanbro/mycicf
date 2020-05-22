@@ -495,7 +495,7 @@ class ProductsController extends Controller
             ]);
         } else {
             $constructor = FullConstructor::where('product_isn',$product->product_isn)->first();
-            $objects = isset(json_decode($constructor->data)->agrobjects) ? json_decode($constructor->data)->agrobjects : [];
+            $objects = $constructor && isset(json_decode($constructor->data)->agrobjects) ? json_decode($constructor->data)->agrobjects : (object)[];
         }
 
         return response()->json([

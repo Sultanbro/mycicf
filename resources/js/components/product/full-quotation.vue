@@ -50,7 +50,8 @@
             </div>
         </div>
 
-        <agr-object v-for="(agrobject,index) in agrobjects"
+        <agr-object v-if="Object.keys(agrobjects) > 0"
+                    v-for="(agrobject,index) in agrobjects"
                     :key="index"
                     :agrobject="agrobject"
                     :aIndex="index"

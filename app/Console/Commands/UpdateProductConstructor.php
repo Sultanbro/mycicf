@@ -79,6 +79,7 @@ class UpdateProductConstructor extends Command
     public function updateAgrobject($constructor,$objects,$kias){
         $response = $kias->getFullObject($constructor->product_isn);
         $objects = $objects;
+        $checkResponse = 0;
         if(isset($response)){
             if (isset($response->Object->row)) {
                 $objects = [];
@@ -154,8 +155,11 @@ class UpdateProductConstructor extends Command
                     }
                     $i++;
                 }
-
+                $checkResponse = 1;
             }
+        }
+        if($checkResponse == 1){
+            echo 'Данные объекта получены ';
         }
         return $objects;
     }
@@ -163,13 +167,18 @@ class UpdateProductConstructor extends Command
     public function updateAgrclause($data){
         if(isset($data->agrclauses)){
             $agrclauses = $data->agrclauses;
+            $checkResponse = 0;
             foreach($agrclauses as $key => $agrclause){
                 if(isset($agrclause->ISN)) {
                     if ($agrclause->Type == 'DICTI' || $agrclause->N_Kids == 1) {
                         $isn = $agrclause->NumCode != '' && $agrclause->NumCode != null ? $agrclause->NumCode : $agrclause->ISN;
-                        $agrclauses[$key]->Childs = (new ProductsController())->getDictis($isn, '');
+                        $agrclauses[$key]->Childs = (new ProductsController())->getDictiKias($isn, '');
+                        $checkResponse = 1;
                     }
                 }
+            }
+            if($checkResponse == 1){
+                echo 'Данные оговорок и ограничений получены ';
             }
             return $agrclauses;
         }
@@ -178,13 +187,18 @@ class UpdateProductConstructor extends Command
     public function updateAgrattribute($data){
         if(isset($data->attributes)){
             $attributes = $data->attributes;
+            $checkResponse = 0;
             foreach($attributes as $key => $attribute){
                 if(isset($attribute->ISN)) {
                     if ($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1) {
                         $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
-                        $attributes[$key]->Childs = (new ProductsController())->getDictis($isn, 'attributes');
+                        $attributes[$key]->Childs = (new ProductsController())->getDictiKias($isn, 'attributes');
+                        $checkResponse = 1;
                     }
                 }
+            }
+            if($checkResponse == 1){
+                echo 'Данные атрибутов получены ';
             }
             return $attributes;
         }
