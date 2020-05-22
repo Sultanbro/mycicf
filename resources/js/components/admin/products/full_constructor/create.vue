@@ -104,13 +104,13 @@
                         this.preloader(false);
                     });
             },
-            updateProductsDicti(dicti,todo){
+            updateProductsDicti(dicti,send){
                 this.preloader(true);
                 this.axios.post('/updateProductsDicti', {isn: this.parentisns[dicti],type : dicti})
                     .then(response => {
                         if (response.data.success) {
                             this.preloader(false);
-                            if(todo == true) {
+                            if(send == true) {
                                 this.updateProductsDicti('agrclauses', false);
                             }
                         } else {
