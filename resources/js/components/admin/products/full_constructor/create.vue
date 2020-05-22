@@ -2,7 +2,9 @@
     <div class="row">
         <div class="form-group col-md-12 col-lg-12 col-12 text-center font-weight-bold">
             Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
-            <button type="button" @click="updateProductsDicti()" class="btn-info btn-lg btn float-right">Обновить справочник</button>
+            <button type="button"
+                    @click="updateProductsDicti('attributes',true)"
+                    class="btn-info btn-lg btn float-right">Обновить справочник</button>
         </div>
 
         <formular :checkOptions="checkOptions"
@@ -102,13 +104,16 @@
                         this.preloader(false);
                     });
             },
-            updateProductsDicti(){
+            updateProductsDicti(dicti,todo){
                 this.preloader(true);
-                this.axios.post('/updateProductsDicti', { isn : this.parentisns.attributes })
+                this.axios.post('/updateProductsDicti', {isn: this.parentisns[dicti],type : dicti})
                     .then(response => {
-                        if(response.data.success){
+                        if (response.data.success) {
                             this.preloader(false);
-                        }else{
+                            if(todo == true) {
+                                this.updateProductsDicti('agrclauses', false);
+                            }
+                        } else {
                             alert(response.data.error);
                             this.preloader(false);
                         }

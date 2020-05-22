@@ -988,64 +988,23 @@ class ProductsController extends Controller
         $response = $kias->getDictiList($request->isn);
 
         if(isset($response->ROWSET->row)) {
+            $oldDicti = ProductsDicti::where('parent_isn',$request->isn)->delete();
             $childIsns = [];
             DB::table('products_dicti')->where('parent_isn', $request->isn)->delete();
             foreach ($response->ROWSET->row as $row) {
-
-                //if($request->isn == 220169) {
-//                    if($row->N_KIDS == '1' || $row->N_KIDS == 1) {
-//                        try{
-//                            $child_response = $kias->getDictiList((string)$row->ISN);
-//                        } catch (Exception $e) {
-//                            return response()->json([
-//                                'success' => false,
-//                                'error' => $e->getMessage()
-//                            ]);
-//                        }
-//                        if(isset($child_response->ROWSET->row)){
-//                            foreach ($child_response->ROWSET->row as $child_row){
-//                                $dictiCH = new ProductsDicti;
-//                                $dictiCH->isn = (string)$child_row->ISN;
-//                                $dictiCH->fullname = (string)$child_row->FULLNAME;
-//                                $dictiCH->code = (string)$child_row->CODE;
-//                                $dictiCH->numcode = (string)$child_row->NUMCODE;
-//                                $dictiCH->n_kids = (string)$child_row->N_KIDS;
-//                                $dictiCH->parent_isn = (string)$row->ISN;
-//                                $dictiCH->parent_name = (string)$row->FULLNAME." ".(string)$child_row->FULLNAME;
-//                                $dictiCH->save();
-//                            }
-//                        }
-//                        //else{
-//                            $dicti = new ProductsDicti;
-//                            $dicti->isn = (string)$row->ISN;
-//                            $dicti->fullname = (string)$row->FULLNAME;
-//                            $dicti->code = (string)$row->CODE;
-//                            $dicti->numcode = (string)$row->NUMCODE;
-//                            $dicti->n_kids = (string)$row->N_KIDS;
-//                            $dicti->parent_isn = $request->isn;
-//                        //}
-//                    } else {
-//                        $dicti = new ProductsDicti;
-//                        $dicti->isn = (string)$row->ISN;
-//                        $dicti->fullname = (string)$row->FULLNAME;
-//                        $dicti->code = (string)$row->CODE;
-//                        $dicti->numcode = (string)$row->NUMCODE;
-//                        $dicti->n_kids = (string)$row->N_KIDS;
-//                        $dicti->parent_isn = $request->isn;
-//                    }
-//                } else {
-                    $dicti = new ProductsDicti;
-                    $dicti->isn = (string)$row->ISN;
-                    $dicti->fullname = (string)$row->FULLNAME;
-                    $dicti->code = (string)$row->CODE;
-                    $dicti->numcode = (string)$row->NUMCODE;
-                    $dicti->n_kids = (string)$row->N_KIDS;
-                    $dicti->parent_isn = $request->isn;
-//                }
+                $dicti = new ProductsDicti;
+                $dicti->isn = (string)$row->ISN;
+                $dicti->fullname = (string)$row->FULLNAME;
+                $dicti->code = (string)$row->CODE;
+                $dicti->numcode = (string)$row->NUMCODE;
+                $dicti->n_kids = (string)$row->N_KIDS;
+                $dicti->parent_isn = $request->isn;
                 $dicti->save();
             }
 
-            $this->updateNkids($request->isn);
+            if($request->type == 'attributes') {
+                $this->updateNkids($request->isn);
+            }
 
             return response()->json([
                 'success' => true
@@ -1059,6 +1018,7 @@ class ProductsController extends Controller
         $response = $kias->getDictiList($parent);
         $parents = ProductsDicti::where('parent_isn',$parent)->where('n_kids',1)->get();
         foreach($parents as $p) {
+            $oldDicti = ProductsDicti::where('parent_isn',$p->isn)->delete();
             try {
                 $child_response = $kias->getDictiList($p->isn);
             } catch (Exception $e) {
