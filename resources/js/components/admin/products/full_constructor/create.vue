@@ -106,7 +106,7 @@
             },
             updateProductsDicti(dicti,send){
                 this.preloader(true);
-                this.axios.post('/updateProductsDicti', {isn: this.parentisns[dicti],type : dicti})
+                this.axios.post('/updateProductsDicti', {isn: this.parentisns[dicti],type : dicti+'Main'})
                     .then(response => {
                         if (response.data.success) {
                             this.preloader(false);

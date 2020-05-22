@@ -761,51 +761,51 @@ class ProductsController extends Controller
         ]);
 
 
-        if($type != 'attributes' && $type != 'agrclauses') {
+        if($type != 'attributesMain' && $type != 'agrclausesMain') {
             $kias = new Kias();
             $kias->initSystem();
             $response = $kias->getDictiList($isn);
             if (isset($response->ROWSET->row)) {
                 $childIsns = [];
                 foreach ($response->ROWSET->row as $row) {
-//                    if ($type == 'attributes') {
-//                        if ($row->N_KIDS == '1') {
-//                            $child_response = $kias->getDictiList((string)$row->ISN);
-//                            if (isset($child_response->ROWSET->row)) {
-//                                foreach ($child_response->ROWSET->row as $child_row) {
-//                                    array_push($result, [
-//                                        'Value' => (string)$child_row->ISN,
-//                                        'Label' => (string)$child_row->FULLNAME,
-//                                        'Type' => (string)$child_row->CODE,
-//                                        'NumCode' => (string)$child_row->NUMCODE,
-//                                        'N_Kids' => (string)$child_row->N_KIDS,
-//                                        'id' => (string)$child_row->ISN,
-//                                        'label' => (string)$child_row->ISN . " - " . (string)$row->FULLNAME . " " . (string)$child_row->FULLNAME,
-//                                    ]);
-//                                }
-//                            } else {
-//                                array_push($result, [
-//                                    'Label' => (string)$row->FULLNAME,
-//                                    'id' => (string)$row->ISN,
-//                                    'Value' => (string)$row->ISN,
-//                                    'label' => (string)$row->ISN . ' - ' . (string)$row->FULLNAME,
-//                                    'Type' => (string)$row->CODE,
-//                                    'NumCode' => (string)$row->NUMCODE,
-//                                    'N_Kids' => (string)$row->N_KIDS,
-//                                ]);
-//                            }
-//                        } else {
-//                            array_push($result, [
-//                                'Label' => (string)$row->FULLNAME,
-//                                'id' => (string)$row->ISN,
-//                                'Value' => (string)$row->ISN,
-//                                'label' => (string)$row->ISN . ' - ' . (string)$row->FULLNAME,
-//                                'Type' => (string)$row->CODE,
-//                                'NumCode' => (string)$row->NUMCODE,
-//                                'N_Kids' => (string)$row->N_KIDS,
-//                            ]);
-//                        }
-//                    } else {
+                    if ($type == 'attributes') {
+                        if ($row->N_KIDS == '1') {
+                            $child_response = $kias->getDictiList((string)$row->ISN);
+                            if (isset($child_response->ROWSET->row)) {
+                                foreach ($child_response->ROWSET->row as $child_row) {
+                                    array_push($result, [
+                                        'Value' => (string)$child_row->ISN,
+                                        'Label' => (string)$child_row->FULLNAME,
+                                        'Type' => (string)$child_row->CODE,
+                                        'NumCode' => (string)$child_row->NUMCODE,
+                                        'N_Kids' => (string)$child_row->N_KIDS,
+                                        'id' => (string)$child_row->ISN,
+                                        'label' => (string)$child_row->ISN . " - " . (string)$row->FULLNAME . " " . (string)$child_row->FULLNAME,
+                                    ]);
+                                }
+                            } else {
+                                array_push($result, [
+                                    'Label' => (string)$row->FULLNAME,
+                                    'id' => (string)$row->ISN,
+                                    'Value' => (string)$row->ISN,
+                                    'label' => (string)$row->ISN . ' - ' . (string)$row->FULLNAME,
+                                    'Type' => (string)$row->CODE,
+                                    'NumCode' => (string)$row->NUMCODE,
+                                    'N_Kids' => (string)$row->N_KIDS,
+                                ]);
+                            }
+                        } else {
+                            array_push($result, [
+                                'Label' => (string)$row->FULLNAME,
+                                'id' => (string)$row->ISN,
+                                'Value' => (string)$row->ISN,
+                                'label' => (string)$row->ISN . ' - ' . (string)$row->FULLNAME,
+                                'Type' => (string)$row->CODE,
+                                'NumCode' => (string)$row->NUMCODE,
+                                'N_Kids' => (string)$row->N_KIDS,
+                            ]);
+                        }
+                    } else {
                         array_push($result, [
                             'Label' => (string)$row->FULLNAME,
                             'id' => (string)$row->ISN,
@@ -815,14 +815,14 @@ class ProductsController extends Controller
                             'NumCode' => (string)$row->NUMCODE,
                             'N_Kids' => (string)$row->N_KIDS,
                         ]);
-                    //}
+                    }
                 }
             }
         } else {
             $dicties = ProductsDicti::where('parent_isn',$isn)->get();
             if(count($dicties) > 0){
                 foreach($dicties as $dicti){
-                    if ($type == 'attributes') {
+                    if ($type == 'attributesMain') {
                         if ($dicti->n_kids == 1) {
                             $childs = ProductsDicti::where('parent_isn', $dicti->isn)->get();
                             if (count($childs) > 0) {
