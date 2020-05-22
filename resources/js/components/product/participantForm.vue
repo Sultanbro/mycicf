@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="col-12 mt-2 row">
+    <div class="col- mt-2 row">
         <div class="col-lg-3 col-xl-3 col-md-6 col-12">
             <label>Дата начала : </label>
             <input type="date" id="dateBeg" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="dateBeg" required>

@@ -24,6 +24,15 @@ ul{
 .md-7{
     margin-top: 10px;
 }
+.md-8{
+    margin-top:20px;
+}
+.mg-9{
+    margin-top:40px;
+}
+.mg-10{
+    margin-top: 200px;
+}
 .assets-string{
     background: #adc973;
 }
@@ -344,7 +353,7 @@ ul{
     background: #ffffff;
 }
 .attachment-border{
-    border-right: 1px dashed #8cc2f9;
+    border-right: 1px dashed #dae1ef;
 }
 .text-dec-underline{
     text-decoration: underline;
@@ -2076,7 +2085,7 @@ textarea::-webkit-scrollbar-thumb {
     min-width: 176px;
 }
 .date-products{
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid #82a9f8;
     border-top: 0;
     border-left: 0;
     border-right: 0;
@@ -2085,8 +2094,8 @@ textarea::-webkit-scrollbar-thumb {
 }
 .custom-select{
     height: 35px !important;
-    border: 1.75px solid #dee2e6 !important;
-    width: 70% !important;
+    border: 1.75px solid #82a9f8 !important;
+
 }
 .attr-text{
     border-bottom: 1.75px solid #dee2e6;
@@ -2097,7 +2106,7 @@ textarea::-webkit-scrollbar-thumb {
 .attr-input-text{
     outline: 0;
     border-width: 0 0 2px;
-    border-color: #dee2e6;
+    border-color: #82a9f8;
     height: 35px;
 
 }
@@ -2107,7 +2116,20 @@ textarea::-webkit-scrollbar-thumb {
 .w-70{
     width: 70% !important;
 }
+.hr-dashed {
+    margin: 20px 0;
+    padding: 0;
+    height: 0;
+    border: none;
+    border-top: 2px dashed #c1cdd9;
+}
 
+.align{
+    text-align: center;
+}
+.marg-bottom{
+    margin-bottom: 20px;
+}
 .add-button{
     cursor : pointer;
     background-color : white;
@@ -2122,6 +2144,17 @@ textarea::-webkit-scrollbar-thumb {
 }
 .marg-left{
     margin-left: 720px;
+}
+.marg{
+        margin-left:50px;
+}
+.div-size{
+    margin-left: 20px;
+}
+.btnprimary {
+    color: #fff;
+    background-color: #4267b2;
+    border-color: #4267b2;
 }
 
 

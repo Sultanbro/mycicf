@@ -36,21 +36,28 @@
             <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 agreement-block ">
             <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
         </div>
 
-        <div class="agr-block mb-4">
-            <div v-for="attribute in attributes">
-                <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
+        <div >
+            <div class=" marg-bottom agreement-block">
+                <div v-for="attribute in attributes" class=" col-md-12  ">
+                    <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
+                </div>
             </div>
 
-            <div v-for="agrclause in agrclauses">
-                <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
+            <div class=" agreement-block d-flex">
+                <div v-for="agrclause in agrclauses">
+                    <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
+                </div>
             </div>
         </div>
 
-        <div v-for="(agrobject,index) in agrobjects"class="mb-4">
+
+
+
+        <div v-for="(agrobject,index) in agrobjects"class="mb-4  md-8 agreement-block">
             <agr-object :agrobject="agrobject"
                         :aIndex="index"
                         :preloader="preloader"
@@ -59,8 +66,11 @@
                         :DA="DA">
             </agr-object>
         </div>
+        <div class="agreement-block ">
+            <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+        </div>
 
-        <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+
 
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">

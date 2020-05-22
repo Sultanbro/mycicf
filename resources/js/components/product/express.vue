@@ -10,7 +10,7 @@
                      :product-id="id">
         </participant>
         <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
-        <div class="col-md-12">
+        <div class="col-md-12 agreement-block mg-9">
             <div class="row">
 
                 <agr-attributes v-if="Object.keys(attributes).length != 0 && attributes[value] != undefined && attributes[value] != null"
@@ -26,7 +26,7 @@
         </div>
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
-                <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
+                <button class="btn btn-outline-info mg-9" @click="calculate">Рассчитать стоимость</button>
                 <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>

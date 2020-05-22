@@ -1,10 +1,11 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
-        <h4>Объект</h4>
-        <div class="row col-12">
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
-                <label class="bold">Класс объекта : </label>
-                <select class="custom-select" v-model="agrobject.ClassISN" @change="calcChanged">
+
+    <div class="ml-0 mb-2 ">  <!--class="col-12 row mt-2 mb-2 ml-0  h-auto"-->
+        <h5 class="font-shif">Объект</h5>
+        <div class="row ">
+            <div class="col-lg-3 col-xl-3 col-md-6 ">
+                <label class="font-shif">Класс объекта : </label>
+                <select class="custom-select w-50" v-model="agrobject.ClassISN" @change="calcChanged">
                     <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
@@ -18,9 +19,9 @@
                 </select>
             </div>
 
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="bold">Сумма страхования : </label>
-                <input type="number" class="attr-input-text col-12"  v-model="agrobject.insureSum" @keyup="calcChanged">
+            <div class="col-lg-3 col-xl-3 col-md-6 ">
+                <label class="font-shif">Сумма страхования : </label>
+                <input type="number" class="attr-input-text w-50"  v-model="agrobject.insureSum" @keyup="calcChanged">
             </div>
 
             <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
