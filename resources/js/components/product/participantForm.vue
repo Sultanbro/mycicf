@@ -33,6 +33,7 @@
     </div>
     <div class="col-12 mt-2 row ml-1">
     </div>
+
     <agr-attributes></agr-attributes>
     <agr-roles></agr-roles>
     <agr-drivers></agr-drivers>
