@@ -38,6 +38,7 @@
         </div>
         <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('vin')">Пойск по ВИН</button>
         <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('tNumber')">Пойск по гос. номеру</button>
+        <button v-if="notFound" class="btn btn-outline-info mt-3 mr-3" @click="addAutoToKias()">Добавить авто</button>
     </div>
 </template>
 
@@ -47,6 +48,7 @@
         data() {
             return {
                 searchType: 'tNumber',
+                notFound: false,
             }
         },
         props: {
@@ -58,6 +60,7 @@
         },
         methods:{
             getVehicle(){
+                if(this.agrobjcar['REGNO'] == '' && this.agrobjcar['VIN'] == ''){
                 this.preloader(true);
                 this.axios.post('/full/get-vehicle', this.agrobjcar)
                     .then(response => {
@@ -66,8 +69,14 @@
                                 this.agrobjcar[prop] = response.data.result[prop];
                             }
                             this.preloader(false);
+                            this.notFound = false;
                         }else{
-                            alert(response.data.error);
+                            let error = response.data.error;
+                            if(response.data.error === 'not_found'){
+                                error = 'Транспортное средство не найдено, добавьте пожалуйста транспортное средство';
+                                this.notFound = true;
+                            }
+                            alert(error);
                             this.preloader(false);
                         }
                     })

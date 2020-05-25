@@ -912,7 +912,7 @@ class ProductsController extends Controller
                 'REALPRICE' => ''
             );
         } else {
-            $error = 'Транспортное средство не найдено';
+            $error = 'not_found';
         }
         return response()->json([
             'success' => $success,
