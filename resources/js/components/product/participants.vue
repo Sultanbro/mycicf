@@ -2,7 +2,9 @@
     <div>
         <div v-show="participant.subjISN != null && participant.subjISN != ''">
             <div class="col-md-12 text-center">
-                <span v-if="participant.lastName != null" >{{ participant.lastName+' '+participant.firstName+' '+participant.patronymic }}</span>
+                <span v-if="participant.lastName != null" >
+                    {{ participant.lastName+' '+participant.firstName+' '+participant.patronymic }}
+                </span>
                 <span v-else>{{ participant.orgName }}</span>
             </div>
 
@@ -26,26 +28,56 @@
                :minHeight="height">
             <div class="participant-form">
                 <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
+                    <div class="col-12"><label v-if="participant.Label" class="bold">{{ participant.Label }}</label></div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">ИИН/БИН : {{ participant.data }}</label>
                         <input type="text" v-model="participant.iin" class="attr-input-text col-12" maxlength="12">
                     </div>
 
-                    <div v-if="computedPhysical" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Фамилия : </label>
                         <input type="text" v-model="participant.lastName" class="attr-input-text col-12 bg-white" disabled="true">
                     </div>
-                    <div v-if="computedPhysical" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Имя : </label>
                         <input type="text" v-model="participant.firstName" class="attr-input-text col-12 bg-white" disabled="true">
                     </div>
-                    <div v-if="computedPhysical" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Отчество : </label>
                         <input type="text" v-model="participant.patronymic" class="attr-input-text col-12 bg-white" disabled="true">
                     </div>
-                    <div v-if="computedJuridical" class="col-lg-7 col-xl-7 col-md-6 col-sm-6 col-12">
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Тип документа : </label>
+                        <input type="text" v-model="participant.docType" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Номер документа : </label>
+                        <input type="text" v-model="participant.docNumber" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Дата документа : </label>
+                        <input type="text" v-model="participant.docDate" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Email : </label>
+                        <input type="text" v-model="participant.email" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Номер телефона : </label>
+                        <input type="text" v-model="participant.phone" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+
+                    <div v-if="computedJuridical && !moreParticipant" class="col-lg-7 col-xl-7 col-md-6 col-sm-6 col-12">
                         <label class="bold">Наименование организации : </label>
                         <input type="text" v-model="participant.orgName" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+                    <div v-if="computedJuridical && !moreParticipant" class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Вид деятельности : </label>
+                        <input type="text" v-model="participant.okvdName" class="attr-input-text col-12 bg-white" disabled="true">
+                    </div>
+                    <div v-if="computedJuridical && !moreParticipant" class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Сектор экономики : </label>
+                        <input type="text" v-model="participant.economicName" class="attr-input-text col-12 bg-white" disabled="true">
                     </div>
 
                     <div v-if="moreParticipant" class="col-lg-12 mt-3">
@@ -169,7 +201,17 @@
                         this.participant.firstName = response.participant.FirstName;
                         this.participant.lastName = response.participant.LastName;
                         this.participant.patronymic = response.participant.Patronymic;
-                        this.participant.orgName = response.participant.OrgName,
+                        this.participant.orgName = response.participant.OrgName;
+                        this.participant.docType = response.participant.docType;
+                        this.participant.docNumber = response.participant.docNumber;
+                        this.participant.docDate = response.participant.docDate;
+                        this.participant.email = response.participant.email;
+                        this.participant.phone = response.participant.phone;
+                        this.participant.juridical = response.participant.Juridical;
+                        this.participant.birthDay = response.participant.birthDay;
+                        this.participant.okvdName = response.participant.okvdName;
+                        this.participant.economicName = response.participant.economicName;
+
                         this.participant.iin = response.participant.IIN;
                         this.isn = response.participant.ISN;
                     }else{
@@ -209,7 +251,16 @@
                     lastName: '',
                     firstName: '',
                     patronymic: '',
-                    orgName: ''
+                    orgName: '',
+                    docType: '',
+                    docNumber: '',
+                    docDate: '',
+                    email: '',
+                    phone: '',
+                    juridical: '',
+                    birthDay: '',
+                    okvdName: '',
+                    economicName: '',
                 });
             },
             clearParticipant(){
@@ -219,6 +270,15 @@
                 this.participant.orgName = null;
                 this.participant.iin = null;
                 this.participant.Value = '';
+                this.participant.docType = null;
+                this.participant.docNumber = null;
+                this.participant.docDate = null;
+                this.participant.email = null;
+                this.participant.phone = null;
+                this.participant.juridical = null;
+                this.participant.birthDay = null;
+                this.participant.okvdName = null;
+                this.participant.economicName = null;
             },
             deleteParticipant(){
                 if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
@@ -233,11 +293,13 @@
                 return 'participant-form-'+this.pIndex;
             },
             computedPhysical(){
-                let result = !this.moreParticipant && this.participant.lastName != null && this.participant.lastName != '' ? true : false;
+                //let result = !this.moreParticipant && this.participant.lastName != null && this.participant.lastName != '' ? true : false;
+                let result = !this.modeParticipant && this.participant.juridical == 'N' ? true : false;
                 return result;
             },
             computedJuridical(){
-                let result = !this.moreParticipant && this.participant.orgName != null && this.participant.orgName != '' ? true : false;
+                //let result = !this.moreParticipant && this.participant.orgName != null && this.participant.orgName != '' ? true : false;
+                let result = !this.modeParticipant && this.participant.juridical == 'Y' ? true : false;
                 return result;
             }
         },

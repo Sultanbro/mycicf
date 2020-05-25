@@ -669,11 +669,59 @@ class SiteController extends Controller
                     'FirstName' => (string)$response->ROWSET->row->FIRSTNAME,
                     'LastName' => (string)$response->ROWSET->row->LASTNAME,
                     'Patronymic' => (string)$response->ROWSET->row->PARENTNAME,
-                    'OrgName' => (string)$response->ROWSET->row->ORGNAME
+                    'OrgName' => (string)$response->ROWSET->row->ORGNAME,
+                    'Juridical' => (string)$response->ROWSET->row->JURIDICAL,
+                    'docType' => (string)$response->ROWSET->row->DOCCLASSNAME,
+                    'docNumber' => $this->hideMiddle((string)$response->ROWSET->row->DOCNO),
+                    'docDate' => (string)$response->ROWSET->row->DOCDATE,
+                    'email' => $this->obfuscate_email((string)$response->ROWSET->row->EMAIL),
+                    'phone' => $this->hidePhone((string)$response->ROWSET->row->PHONE_M),
+                    'birthDay' => (string)$response->ROWSET->row->BIRTHDAY,
+                    'okvdName' => (string)$response->ROWSET->row->OKVDNAME,
+                    'economicName' => (string)$response->ROWSET->row->ECONOMICNAME
                 ]
             ];
         }
         return response()->json($result);
+    }
+
+    /**
+     * функция для частичного скрытия email адреса
+     * @param $email
+     * @return string
+     */
+    public static function obfuscate_email($email)
+    {
+        // todo проверить где ожидает null а не ''
+        if (strlen($email) == 0) return '';
+        $em   = explode("@",$email);
+        $name = implode(array_slice($em, 0, count($em)-1), '@');
+        $len  = floor(strlen($name)/2);
+
+        return substr($name,0, $len) . str_repeat('*', $len) . "@" . end($em);
+    }
+
+    /**
+     * ф-я дял частичного скрытия номера телефона
+     * @param $phone
+     * @return string
+     */
+    public static function hidePhone($phone){
+        if (strlen($phone) == 0) return '';
+        if($phone[0] !== '+'){
+            $phone = '+' . $phone;
+            $phone[1] = '7';
+        }
+        $phone[5] = '*';
+        $phone[6] = '*';
+        $phone[7] = '*';
+        return $phone;
+    }
+
+    public static function hideMiddle($value){
+        if (strlen($value) < 3 || $value == 'НЕ УКАЗАН') return null;
+        $textLength = strlen($value);
+        return substr_replace($value, '***', ($textLength/2)-1, ($textLength/2)-1);
     }
 
     public function saveSubject(Request $request, KiasServiceInterface $kias){

@@ -98,6 +98,15 @@
                     this.items[index].patronymic = '';
                     this.items[index].subjISN = '';
                     this.items[index].orgName = '';
+                    this.items[index].docType = '';
+                    this.items[index].docNumber = '';
+                    this.items[index].docDate = '';
+                    this.items[index].email = '';
+                    this.items[index].phone = '';
+                    this.items[index].juridical = '';
+                    this.items[index].birthDay = '';
+                    this.items[index].okvdName = '';
+                    this.items[index].economicName = '';
                 } else {
                     this.items[index].Type = e.Type;
                     this.items[index].NumCode = e.NumCode;
