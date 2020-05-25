@@ -27,7 +27,7 @@
 
             <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Сумма премии : </label>
-                <input type="number" class="attr-input-text col-12"  v-model="agrobject.DAsum" @keyup="calcChanged">
+                <input type="number" class="attr-input-text col-12" v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
 
@@ -106,9 +106,10 @@
             'agrobject.SubClassISN': function(val,oldVal){
                 this.selectedSubObject = val;
             },
-            'DA.calcDA': function(){
+            'DA.calcDA': function(val){
                 this.agrobject.DAsum = null;
                 this.DA.remark = null;
+                this.agrobject.DAsum = val && this.expressAttr.premium ? this.expressAttr.premium : null;
             }
         },
         methods: {
@@ -139,6 +140,11 @@
             },
             deleteObject(){
                 this.agrobjects.splice(this.aIndex,1);
+            }
+        },
+        created(){
+            if(this.expressAttr[857211]){
+                this.agrobject.insureSum = this.expressAttr[857211];
             }
         }
     }

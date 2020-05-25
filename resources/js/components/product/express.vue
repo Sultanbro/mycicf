@@ -4,7 +4,7 @@
                      :p-index="1"
                      :participant="participant"
                      :participants="[]"
-                     :formular="{}"
+                     :formular="{insurant : { isn:2103,jur:true,phys:true}}"
                      :preloader="preloader"
                      :calc-changed="calcChanged"
                      :product-id="id">
@@ -78,7 +78,20 @@
                     lastName : null,
                     orgName : null,
                     patronymic : null,
-                    subjISN : null
+                    subjISN : null,
+                    ISN:2103,
+                    data:null,
+                    Label: 'Страхователь',
+                    new: true,
+                    docType: '',
+                    docNumber: '',
+                    docDate: '',
+                    email: '',
+                    phone: '',
+                    juridical: '',
+                    birthDay: '',
+                    okvdName: '',
+                    economicName: ''
                 },
                 isn: '',
                 subjISN : '',
@@ -186,7 +199,7 @@
             createFullQuotation(){
                 var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
                 if(full) {
-                    let attr = '';
+                    let attr = '"premium":"'+this.price+'",';
                     let i = 1;
                     for(let index in this.attributes){
                         if(this.attributes[index].Value == null) {
@@ -199,7 +212,7 @@
                         }
                         i++;
                     }
-                    window.location.href = "/full/calc/" + this.id + "/0?attributes={"+attr+'}';
+                    window.location.href = "/full/calc/" + this.id + "/0?attributes={"+attr+"}";
                     // this.axios.post('/full/create', {
                     //     subjISN : this.subjISN,
                     //     id : this.id,
