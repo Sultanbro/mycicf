@@ -60,7 +60,7 @@
         },
         methods:{
             getVehicle(){
-                if(this.agrobjcar['REGNO'] == '' && this.agrobjcar['VIN'] == ''){
+                //if(this.agrobjcar['REGNO'] == '' && this.agrobjcar['VIN'] == ''){
                 this.preloader(true);
                 this.axios.post('/full/get-vehicle', this.agrobjcar)
                     .then(response => {
@@ -92,6 +92,9 @@
                     this.agrobjcar.REGNO = '';
                 }
                 this.getVehicle();
+            },
+            addAutoToKias(){
+                //...
             }
         },
         watch: {

@@ -79,7 +79,7 @@
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Отправить в ДА
                 </button>
-                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA" class="btn btn-outline-info" @click="createAgr">
+                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA || calculated && contract_number === null && calc_isn != null && DA.calcDA && status == 223370" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
                 </button>
                 <button v-if="docs.sendedFail" class="btn btn-outline-info" @click="sendDocs">
@@ -102,6 +102,7 @@
                 userList: null,
                 calc_isn: null,
                 status_name: 'Оформление',
+                status: null,
                 contract_number: null,
                 docs: {
                     files: [],
@@ -162,6 +163,7 @@
                             this.attributes = response.data.attributes;
                             this.calc_isn = response.data.calc_isn;
                             this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
+                            this.status = response.data.status;
                             this.contract_number = response.data.contract_number;
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;

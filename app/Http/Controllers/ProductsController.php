@@ -414,19 +414,20 @@ class ProductsController extends Controller
     public function getFullData(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
         $constructor = FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first();
-
+        $status = 0;
         if($request->quotationId != 0) {
             $constructor = FullQuotation::where('product_isn', $constructor->product_isn)->where('id', $request->quotationId)->first();
             $calc_isn = $constructor->calc_isn;
             $contract_number = $constructor->contract_number;
             $premiumSum = $constructor->premiumSum;
             $docs = json_decode($constructor->docs);
-
+            $status = $constructor->status;
             //if($constructor->status != 223371 && $constructor->status != 223370) {  //223371 - отказано, 223370 - согласовано
                 if($constructor->contract_number == '' || $constructor->contract_number == null) {
                     $getStatus = $kias->getAgrStatus($constructor->calc_isn);
                     if (isset($getStatus->Product) && $getStatus->Product == $constructor->product_isn) {
                         $constructor->status = (int)$getStatus->StatusISN;
+                        $status = (int)$getStatus->StatusISN;
                         $constructor->status_name = (string)$getStatus->Status;
                         $constructor->save();
                     }
@@ -478,7 +479,8 @@ class ProductsController extends Controller
             'docs' => isset($docs) && $docs != '' ? $docs : [],
             'calc_da' => isset($constructor->calc_da) ? intval($constructor->calc_da) : 0,
             'status_name' => isset($constructor->status_name) ? $constructor->status_name : 'Оформление',
-            'DAremark' => $DAremark
+            'DAremark' => $DAremark,
+            'status' => $status
         ]);
     }
 
