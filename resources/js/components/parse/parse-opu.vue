@@ -55,7 +55,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(centrasOpu, index) in centrasOpuData">
+                            <tr v-for="(centrasOpu, index) in centrasOpuData" :class="textStyle(index)">
                                 <td class="text-left">{{centrasOpu.label}}</td>
                                 <td>{{centrasOpu.firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
                                 <td>{{centrasOpu.secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
@@ -380,6 +380,12 @@
                         break;
                 }
                 return percent;
+            },
+
+            textStyle(index){
+                var textStyle = 'bold fs-0_9 bg-grayblue';
+                textStyle = index == 0 || index == 3 || index == 8 || index == 12 || index == 14 || index == 18 || index == 20 ? textStyle : '';
+                return textStyle;
             }
         },
 
