@@ -2,11 +2,11 @@
     <div class="row">
         <div class="form-group col-md-12 col-lg-12 col-12 text-center font-weight-bold">
             Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
-            <!--button type="button"
+            <button type="button"
                     @click="updateProductsDicti('attributes',true)"
                     class="btn-info btn-lg btn float-right">
                     Обновить справочник
-            </button-->
+            </button>
         </div>
 
         <formular :checkOptions="checkOptions"

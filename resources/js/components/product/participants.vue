@@ -294,12 +294,12 @@
             },
             computedPhysical(){
                 //let result = !this.moreParticipant && this.participant.lastName != null && this.participant.lastName != '' ? true : false;
-                let result = !this.modeParticipant && this.participant.juridical == 'N' ? true : false;
+                let result = !this.moreParticipant && this.participant.juridical == 'N' ? true : false;
                 return result;
             },
             computedJuridical(){
                 //let result = !this.moreParticipant && this.participant.orgName != null && this.participant.orgName != '' ? true : false;
-                let result = !this.modeParticipant && this.participant.juridical == 'Y' ? true : false;
+                let result = !this.moreParticipant && this.participant.juridical == 'Y' ? true : false;
                 return result;
             }
         },
