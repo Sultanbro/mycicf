@@ -14,6 +14,11 @@
  * ADMIN PANEL
  * add local url to .env BACKEND_DOMAIN
  */
+
+// Роуты для Песочницы
+Route::get('/index', 'SandboxController@index');
+
+
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
@@ -230,6 +235,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
 
         Route::post('/setToken', 'NotificationController@setToken');
+        //PreInsuranceInspection
+        Route::get('insurance/inspection', 'PreInsuranceInspectionController@index')->name('insurance/inspection');
+        Route::get('insurance/inspection/{isn}', 'PreInsuranceInspectionController@show')->name('insurance/inspection/show');
+        Route::post('getInsuranceInspectionList', 'PreInsuranceInspectionController@getInsuranceInspectionList');
+        Route::post('getInsuranceInspectionInfo', 'PreInsuranceInspectionController@getInsuranceInspectionInfo');
+        Route::post('setInspection', 'PreInsuranceInspectionController@setInspection');
+        Route::post('upload', 'PreInsuranceInspectionController@upload');
+        Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){

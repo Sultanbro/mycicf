@@ -7,6 +7,7 @@
  */
 
 namespace App\Library\Services;
+
 use Exception;
 use Faker\Guesser\Name;
 use Illuminate\Database\Eloquent\Model;
@@ -54,6 +55,7 @@ class Kias implements KiasServiceInterface
 
     /**
      * Получить Soap-клиент
+     *
      * @return SoapClient
      */
     public function getClient()
@@ -61,33 +63,36 @@ class Kias implements KiasServiceInterface
         if (!$this->client) {
             $this->client = new SoapClient($this->url, [
                 'cache_wsdl' => WSDL_CACHE_NONE,
-                'trace' => 1,
+                'trace'      => 1,
             ]);
         }
 
         return $this->client;
     }
 
-    public function request($name, $params = []){
-        try{
+    public function request($name, $params = [])
+    {
+        try {
             $xml = new SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-                . $this->client->ExecProc([
+                .$this->client->ExecProc([
                     'pData' => $this->createRequestData($name, $params),
                 ])->ExecProcResult->any
             );
-        }catch (\SoapFault $exception){
+        } catch (\SoapFault $exception) {
             return $this->request($name, $params);
         }
 
-        if(env('APP_ENV', 'local') !== 'production') {
-            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList' && $name != 'Auth' && $name != 'GETATTACHMENTDATA') {
-                $t = microtime(true) + 6 * 60 * 60;
+        if (env('APP_ENV', 'local') !== 'production') {
+            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList'
+                && $name != 'Auth'
+                && $name != 'GETATTACHMENTDATA') {
+                $t     = microtime(true) + 6 * 60 * 60;
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-                $d = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
-                $date = $d->format('d-m-Y_H-i-s-u');
+                $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
+                $date  = $d->format('d-m-Y_H-i-s-u');
                 file_put_contents(
-                    storage_path() . "/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
                     $xml->asXml()
                 );
             }
@@ -95,13 +100,14 @@ class Kias implements KiasServiceInterface
         if (isset($xml->error)) {
             if (isset($xml->error->code) && $xml->error->code == '001') {
                 $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);
-                if($response->error){
+                if ($response->error) {
                     Auth::logout();
-                }else{
-                    $User = Auth::user();
+                } else {
+                    $User             = Auth::user();
                     $User->session_id = $response->Sid;
-                    $this->_sId = $response->Sid;
+                    $this->_sId       = $response->Sid;
                     $User->save();
+
                     return $this->request($name, $params);
                 }
             }
@@ -113,28 +119,31 @@ class Kias implements KiasServiceInterface
     public function createRequestData($name, $params)
     {
         $params['Sid'] = $this->_sId;
-        if($name == 'Auth'){
+        if ($name == 'Auth') {
             unset($params['Sid']);
         }
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><data></data>');
+        $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><data></data>');
         $request = $xml->addChild('request');
         $request->addChild('reqName', $name);
         $request->addChild('AppId', static::APP_ID);
         $request->addChild('RequestIp', $_SERVER['REMOTE_ADDR'] ?? '1');
         $request->addChild('UserAgent', $_SERVER['HTTP_USER_AGENT'] ?? '1');
         self::addXmlChildren($request->addChild('params'), $params);
-        if(env('APP_ENV', 'local') !== 'production') {
-            if($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList' && $name != 'Auth'  && $name!='GETATTACHMENTDATA') {
-                $t = microtime(true) + 6 * 60 * 60;
+        if (env('APP_ENV', 'local') !== 'production') {
+            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList'
+                && $name != 'Auth'
+                && $name != 'GETATTACHMENTDATA') {
+                $t     = microtime(true) + 6 * 60 * 60;
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-                $d = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
-                $date = $d->format('d-m-Y_H-i-s-u');
+                $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
+                $date  = $d->format('d-m-Y_H-i-s-u');
                 file_put_contents(
-                    storage_path() . "/kias_logs/" . $date . "_kias_agent_" . $name . "_.xml",
+                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
                     $xml->asXML()
                 );
             }
         }
+
         return $xml->asXML();
     }
 
@@ -162,7 +171,7 @@ class Kias implements KiasServiceInterface
     {
         return $this->request('Auth', [
             'Name' => $username,
-            'Pwd' => $password,
+            'Pwd'  => $password,
         ]);
     }
 
@@ -170,9 +179,9 @@ class Kias implements KiasServiceInterface
     {
         $response = $this->request('Auth', [
             'Name' => env('KIAS_LOGIN'),
-            'Pwd' => hash('sha512', env('KIAS_PASSWORD')),
+            'Pwd'  => hash('sha512', env('KIAS_PASSWORD')),
         ]);
-        if($response->error){
+        if ($response->error) {
             throw new Exception('Authentication failed', '419');
         }
 
@@ -181,7 +190,7 @@ class Kias implements KiasServiceInterface
 
     public function getBranches()
     {
-        return $this->request('User_CicGetUserList',[
+        return $this->request('User_CicGetUserList', [
             'number' => 1,
         ]);
     }
@@ -205,9 +214,9 @@ class Kias implements KiasServiceInterface
     public function getAttachmentData($refisn, $isn, $pictType)
     {
         return $this->request('GETATTACHMENTDATA', [
-            'REFISN' => $refisn,
-            'ISN' => $isn,
-            'PICTTYPE' => $pictType
+            'REFISN'   => $refisn,
+            'ISN'      => $isn,
+            'PICTTYPE' => $pictType,
         ]);
     }
 
@@ -223,42 +232,46 @@ class Kias implements KiasServiceInterface
     public function getCoordination($docIsn)
     {
         return $this->request('User_CicGetCoordinationList', [
-            'DocISN' => $docIsn
+            'DocISN' => $docIsn,
         ]);
     }
 
     public function setCoordination($DocISN, $EmplISN, $Solution, $Remark, $Resolution)
     {
         return $this->request('User_CicSetCoordinationList', [
-            'DocISN' => $DocISN,
-            'EmplISN' => $EmplISN,
-            'Solution' => $Solution,
-            'Remark' => $Remark,
-            'Resolution' => $Resolution == "0" ? "" : $Resolution
+            'DocISN'     => $DocISN,
+            'EmplISN'    => $EmplISN,
+            'Solution'   => $Solution,
+            'Remark'     => $Remark,
+            'Resolution' => $Resolution == "0" ? "" : $Resolution,
         ]);
     }
 
-    public function getAttachmentsList($docIsn){
+    public function getAttachmentsList($docIsn)
+    {
         return $this->request('User_CicGetAttachmentList', [
             'ISN' => $docIsn,
         ]);
     }
 
-    public function getEmplImagesByDate($date){
+    public function getEmplImagesByDate($date)
+    {
         return $this->request('User_CicGetEmplImagesByDate', [
             'Date' => $date,
         ]);
     }
 
-    public function getEmplMotivation($isn, $begin) {
+    public function getEmplMotivation($isn, $begin)
+    {
         return $this->request('User_CicGetEmplMotivation', [
             'EmplISN' => $isn,
-            'Month' => date('m', strtotime($begin)),
-            'Year' => date('Y', strtotime($begin)),
+            'Month'   => date('m', strtotime($begin)),
+            'Year'    => date('Y', strtotime($begin)),
         ]);
     }
 
-    public function GetInfoUser($dateBeg, $dateEnd, $emplIsn){
+    public function GetInfoUser($dateBeg, $dateEnd, $emplIsn)
+    {
         return $this->request('User_CicGetUserInfo', [
             'DateBeg' => $dateBeg,
             'DateEnd' => $dateEnd,
@@ -266,25 +279,88 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getEmplRating($isn, $begin) {
+    public function getEmplRating($isn, $begin)
+    {
         return $this->request('User_CicGetEmplRating', [
-           'EmplISN' => $isn,
-           'Month' => date('m', strtotime($begin)),
-           'Year' =>  date('Y', strtotime($begin))
+            'EmplISN' => $isn,
+            'Month'   => date('m', strtotime($begin)),
+            'Year'    => date('Y', strtotime($begin)),
         ]);
     }
 
-    public function getPrintableDocument($isn, $template, $classId){
+    public function getPrintableDocument($isn, $template, $classId)
+    {
         return $this->request('GetPrintableDocument', [
-            'ISN' => $isn,
+            'ISN'         => $isn,
             'TemplateISN' => $template,
-            'ClassID' => $classId,
+            'ClassID'     => $classId,
         ]);
     }
 
-    public function getCoordinationCount($ISN){
+    public function getCoordinationCount($ISN)
+    {
         return $this->request('User_CicCountEmplCoordination', [
             'EmplISN' => $ISN,
+        ]);
+    }
+
+    /**
+     * @param $isn
+     *
+     * @return mixed|SimpleXMLElement
+     */
+    public function getInsuranceInspectionList($isn, $status)
+    {
+        return $this->request('User_CicGetOsmotrRequest', [
+            'EmplISN'   => $isn,
+            'StatusISN' => $status,
+        ]);
+    }
+
+    /**
+     * @param $agrisn
+     * @param $agrcalcisn
+     * @param $isn
+     *
+     * @return mixed|SimpleXMLElement
+     */
+    public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn)
+    {
+        return $this->request('User_CicGetOsmotrDocs', [
+            'Agrisn'     => $agrisn,
+            'Agrcalcisn' => $agrcalcisn,
+            'Request'    => $isn,
+        ]);
+    }
+
+    /**
+     * Назначить оператора
+     *
+     * @param $emplIsn
+     * @param $docIsn
+     *
+     * @return SimpleXMLElement
+     */
+    public function setAppointmentOperator($emplIsn, $docIsn)
+    {
+        return $this->request('User_CicSetOsmotrRequest', [
+            'OperatorISN' => $emplIsn,
+            'RequestISN'  => $docIsn,
+        ]);
+    }
+
+    /**
+     * Получить справочники
+     * @param $dictiISN
+     * @param $mode
+     *
+     * @return SimpleXMLElement
+     */
+    public function getDictList($dictiISN, $mode)
+    {
+        return $this->request('GetDictiList', [
+            'DictiISN' => $dictiISN,
+            'Mode'     => $mode,
         ]);
     }
 

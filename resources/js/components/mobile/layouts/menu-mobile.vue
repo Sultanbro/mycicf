@@ -61,6 +61,12 @@
                                     <span>Отчет</span>
                                 </li>
                             </a>
+                            <a href="/insurance/inspection" class="pt-2 pb-2 color-darkgray font-size-1_2">
+                                <li>
+                                    <i class="fa fa-car" aria-hidden="true"></i>
+                                    <span>Предстраховой осмотр</span>
+                                </li>
+                            </a>
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2">-->
                                 <!--<li>-->
                                     <!--<i class="far fa-star"></i>-->
