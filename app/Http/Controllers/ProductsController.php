@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductsDicti;
+use App\Dicti;
 use App\ExpressProduct;
 use App\FullProduct;
 use App\FullQuotation;
@@ -834,12 +834,12 @@ class ProductsController extends Controller
             'Type' => ''
         ]);
 
-        $dicties = ProductsDicti::where('parent_isn',$isn)->get();
+        $dicties = Dicti::where('parent_isn',$isn)->get();
         if(count($dicties) > 0){
             foreach($dicties as $dicti){
                 if ($type == 'attributes') {
                     if ($dicti->n_kids == 1) {
-                        $childs = ProductsDicti::where('parent_isn', $dicti->isn)->get();
+                        $childs = Dicti::where('parent_isn', $dicti->isn)->get();
                         if (count($childs) > 0) {
                             foreach ($childs as $child) {
                                 array_push($result, [
@@ -1017,11 +1017,11 @@ class ProductsController extends Controller
         $response = $kias->getDictiList($request->isn);
 
         if(isset($response->ROWSET->row)) {
-            $oldDicti = ProductsDicti::where('parent_isn',$request->isn)->delete();
+            $oldDicti = Dicti::where('parent_isn',$request->isn)->delete();
             $childIsns = [];
             DB::table('products_dicti')->where('parent_isn', $request->isn)->delete();
             foreach ($response->ROWSET->row as $row) {
-                $dicti = new ProductsDicti;
+                $dicti = new Dicti;
                 $dicti->isn = (string)$row->ISN;
                 $dicti->fullname = (string)$row->FULLNAME;
                 $dicti->code = (string)$row->CODE;
@@ -1044,9 +1044,9 @@ class ProductsController extends Controller
     public function updateNkids($parent){
         $kias = new Kias();
         $kias->initSystem();
-        $parents = ProductsDicti::where('parent_isn',$parent)->where('n_kids',1)->get();
+        $parents = Dicti::where('parent_isn',$parent)->where('n_kids',1)->get();
         foreach($parents as $parent) {
-            $oldDicti = ProductsDicti::where('parent_isn',$parent->isn)->delete();
+            $oldDicti = Dicti::where('parent_isn',$parent->isn)->delete();
             try {
                 $child_response = $kias->getDictiList($parent->isn);
             } catch (Exception $e) {
@@ -1057,7 +1057,7 @@ class ProductsController extends Controller
             }
             if (isset($child_response->ROWSET->row)) {
                 foreach ($child_response->ROWSET->row as $child_row) {
-                    $dictiCH = new ProductsDicti;
+                    $dictiCH = new Dicti;
                     $dictiCH->isn = (string)$child_row->ISN;
                     $dictiCH->fullname = (string)$child_row->FULLNAME;
                     $dictiCH->code = (string)$child_row->CODE;

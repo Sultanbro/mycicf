@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\FullConstructor;
-use App\ProductsDicti;
+use App\Dicti;
 use DB;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SiteController;
@@ -59,11 +59,11 @@ class UpdateProductDicti extends Command
             $response = $kias->getDictiList($isn);
 
             if(isset($response->ROWSET->row)) {
-                $oldDicti = ProductsDicti::where('parent_isn',$isn)->delete();
+                $oldDicti = Dicti::where('parent_isn',$isn)->delete();
                 $childIsns = [];
                 DB::table('products_dicti')->where('parent_isn', $isn)->delete();
                 foreach ($response->ROWSET->row as $row) {
-                    $dicti = new ProductsDicti;
+                    $dicti = new Dicti;
                     $dicti->isn = (string)$row->ISN;
                     $dicti->fullname = (string)$row->FULLNAME;
                     $dicti->code = (string)$row->CODE;
@@ -88,9 +88,9 @@ class UpdateProductDicti extends Command
         try{
             $kias = new Kias();
             $kias->initSystem();
-            $parents = ProductsDicti::where('parent_isn',$parent)->where('n_kids',1)->get();
+            $parents = Dicti::where('parent_isn',$parent)->where('n_kids',1)->get();
             foreach($parents as $parent) {
-                $oldDicti = ProductsDicti::where('parent_isn',$parent->isn)->delete();
+                $oldDicti = Dicti::where('parent_isn',$parent->isn)->delete();
                 try {
                     $child_response = $kias->getDictiList($parent->isn);
                 } catch (Exception $e) {
@@ -101,7 +101,7 @@ class UpdateProductDicti extends Command
                 }
                 if (isset($child_response->ROWSET->row)) {
                     foreach ($child_response->ROWSET->row as $child_row) {
-                        $dictiCH = new ProductsDicti;
+                        $dictiCH = new Dicti;
                         $dictiCH->isn = (string)$child_row->ISN;
                         $dictiCH->fullname = (string)$child_row->FULLNAME;
                         $dictiCH->code = (string)$child_row->CODE;
