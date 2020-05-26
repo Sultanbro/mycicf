@@ -4,6 +4,7 @@
             <h5>Котировка {{ calc_isn }}
                 <span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span>
             </h5>
+            <h5 v-if="calc_id != null">Номер котировки {{ calc_id }}</h5>
         </div>
         <div class="col-md-12 mb-4 mt-4">
             <div class="row">
@@ -71,7 +72,8 @@
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
-                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Номер заявки {{ DA.orderNumber }}</div>
+                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA.orderNumber }}</div>
+                <div class="fs-2" v-if="calc_id != null">Номер заявки {{ calc_id }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
@@ -101,6 +103,7 @@
             return {
                 userList: null,
                 calc_isn: null,
+                calc_id: null,
                 status_name: 'Оформление',
                 status: null,
                 contract_number: null,
@@ -162,6 +165,7 @@
                             this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
                             this.calc_isn = response.data.calc_isn;
+                            this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
                             this.status = response.data.status;
                             this.contract_number = response.data.contract_number;
@@ -256,6 +260,7 @@
                                 this.calculated = true;
                             }
                             this.calc_isn = response.data.calc_isn;
+                            this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name;
                             if(response.data.calc_isn != '') {
                                 this.preloader(false);
@@ -345,6 +350,8 @@
             calcChanged(){
                 if(this.quotationId == 0) {
                     this.calculated = false;
+                    this.calc_id = null;
+                    this.calc_isn = null;
                     this.price = 0;
                 }
             }

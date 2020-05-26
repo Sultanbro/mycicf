@@ -418,6 +418,7 @@ class ProductsController extends Controller
         if($request->quotationId != 0) {
             $constructor = FullQuotation::where('product_isn', $constructor->product_isn)->where('id', $request->quotationId)->first();
             $calc_isn = $constructor->calc_isn;
+            $calc_id = $constructor->calc_id;
             $contract_number = $constructor->contract_number;
             $premiumSum = $constructor->premiumSum;
             $docs = json_decode($constructor->docs);
@@ -474,6 +475,7 @@ class ProductsController extends Controller
             'attributes' => $attributes,
             'formular' => $formular,
             'calc_isn' => isset($calc_isn) && $calc_isn != '' ? $calc_isn : null,
+            'calc_id' => isset($calc_id) && $calc_id != '' ? $calc_id : null,
             'contract_number' => isset($contract_number) && $contract_number != '' ? $contract_number : null,
             'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
             'docs' => isset($docs) && $docs != '' ? $docs : [],
@@ -541,6 +543,7 @@ class ProductsController extends Controller
             $quotation->product_isn = $order['prodIsn'];
             $quotation->user_isn = Auth::user()->ISN;
             $quotation->calc_isn = (int)$response->AgrCalcISN;
+            $quotation->calc_id = (string)$response->CalcID;
             $quotation->premiumSum = $request->calcDA == 1 ? 0 : (int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->calc_da = $order['calcDA'];
@@ -561,6 +564,7 @@ class ProductsController extends Controller
                 'success' => true,
                 'premium' => (int)$response->PremiumSum,
                 'calc_isn' => (int)$response->AgrCalcISN,
+                'calc_id' => (string)$response->CalcID,
                 'status_name' => (string)$getStatus->Status
             ]);
         }
