@@ -33,7 +33,7 @@ use App\Http\Controllers\ParseController;
     <body>
         @include('layouts.header')
         <main class="flex-column pl-5 pr-5" id="app">
-            <parse-opu></parse-opu>
+            <parse-opu :request="{{ json_encode($request) }}"></parse-opu>
         </main>
     </body>
 </html>

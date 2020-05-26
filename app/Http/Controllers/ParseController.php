@@ -248,14 +248,14 @@ class ParseController extends Controller
     public function index(){
         return view('parse/index');
     }
-    public function getOpuTable(){
-        return view('parse/table-opu');
+    public function getOpuTable(Request $request){
+        return view('parse/table-opu',['request' => (object)$request->all()]);
     }
     public function getInfoTable(){
         return view('parse/table-info');
     }
-    public function getIndicatorsTable(){
-        return view('parse/table-indicators');
+    public function getIndicatorsTable(Request $request){
+        return view('parse/table-indicators',['request' => (object)$request->all()]);
     }
     public function upload(Request $request){
         //TODO VALIDATE
@@ -1534,20 +1534,22 @@ class ParseController extends Controller
             $opu_result = [];
 
             foreach (array_keys($this->getOpuLabels()) as $key) {
-                if(in_array($key,$this->percentColumns)){
-                    $first_period->$key = $first_period->$key == 0.00 ? 0 : $first_period->$key;
-                    $second_period->$key = $second_period->$key == 0.00 ? 0 : $second_period->$key;
-                    $first = $first_period === null ? 0 : $first_period->$key * 100;
-                    $second = $second_period === null ? 0 : $second_period->$key * 100;
-                } else {
-                    $first = (int)$first_period->$key;
-                    $second = (int)$second_period->$key;
-                }
+                $first = 0;
+                $second = 0;
+                    if (in_array($key, $this->percentColumns)) {
+                        $first_period_key = isset($first_period->$key) ? $first_period->$key == 0.00 ? 0 : $first_period->$key : 0;
+                        $second_period_key = isset($second_period->$key) ? $second_period->$key == 0.00 ? 0 : $second_period->$key : 0;
+                        $first = $first_period === null ? 0 : $first_period_key * 100;
+                        $second = $second_period === null ? 0 : $second_period_key * 100;
+                    } else {
+                        $first = isset($first_period->$key) ? (int)$first_period->$key : 0;
+                        $second = isset($second_period->$key) ? (int)$second_period->$key : 0;
+                    }
                 array_push($opu_result, [
                     'label' => $this->getOpuLabels()[$key],
                     'firstPeriod' => $first,
                     'secondPeriod' => $second,
-                    'changes' => (string)$this->getOpuChanges($first, $second) . '%',
+                    'changes' => (string)$this->getOpuChanges($first, $second, $firstYear, $secondYear, $firstPeriod, $secondPeriod) . '%',
                 ]);
             }
 
@@ -1693,12 +1695,30 @@ class ParseController extends Controller
             }
         }
     }
-    private function getOpuChanges($firstPeriod, $secondPeriod) {
-        if($secondPeriod === 0){
+    private function getOpuChanges($firstPeriod, $secondPeriod, $firstYear, $secondYear, $firstMonth, $secondMonth) {
+        $result = 0;
+        if($secondPeriod === 0 || $firstPeriod === 0){
             return 0;
         }
         else {
-            return round((1 - ($firstPeriod / $secondPeriod)) * 100);
+            if($firstYear > $secondYear) {
+                $result = round((($firstPeriod/ $secondPeriod)-1) * 100);
+            }
+            if($secondYear > $firstYear) {
+                $result = round((($secondPeriod / $firstPeriod)-1) * 100);
+            }
+            if($secondYear === $firstYear) {
+                if($firstMonth > $secondMonth) {
+                    $result = round((($firstPeriod / $secondPeriod)-1) * 100);
+                }
+                if($secondMonth > $firstMonth) {
+                    $result = round((($secondPeriod / $firstPeriod)-1) * 100);
+                }
+                if($secondMonth === $firstMonth) {
+                    $result = 0;
+                }
+            }
+            return $result;
         }
     }
     /**
@@ -2892,10 +2912,10 @@ class ParseController extends Controller
             'brut_income' => 'Прибыль до налогов',
             'kpn' => 'КПН',
             'net_income' => 'Чистая прибыль',
-            'ros' => 'ROS',
-            'roa' => 'ROA',
-            'roe' => 'ROE',
-            'cos' => 'COS',
+//            'ros' => 'ROS',
+//            'roa' => 'ROA',
+//            'roe' => 'ROE',
+//            'cos' => 'COS',
         ];
     }
 

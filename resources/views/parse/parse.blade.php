@@ -85,10 +85,10 @@
                         <i class="fa fa-chart-pie"></i>
                         <div class="mt-1 fs-0_8">Сборы</div>
                     </div>
-                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                    <!--div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-sliders-h settings-icon-transform270"></i>
                         <div class="mt-1 fs-0_8">Показатели</div>
-                    </div>
+                    </div-->
                     <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-user-friends"></i>
                         <div class="mt-1 fs-0_8">Конкуренты</div>
