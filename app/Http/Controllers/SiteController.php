@@ -693,6 +693,7 @@ class SiteController extends Controller
      */
     public static function obfuscate_email($email)
     {
+        return $email;
         // todo проверить где ожидает null а не ''
         if (strlen($email) == 0) return '';
         $em   = explode("@",$email);
@@ -708,6 +709,7 @@ class SiteController extends Controller
      * @return string
      */
     public static function hidePhone($phone){
+        return $phone;
         if (strlen($phone) == 0) return '';
         if($phone[0] !== '+'){
             $phone = '+' . $phone;
@@ -720,6 +722,7 @@ class SiteController extends Controller
     }
 
     public static function hideMiddle($value){
+        return $value;
         if (strlen($value) < 3 || $value == 'НЕ УКАЗАН') return null;
         $textLength = strlen($value);
         return substr_replace($value, '***', ($textLength/2)-1, ($textLength/2)-1);

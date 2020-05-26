@@ -16,6 +16,7 @@
                                  :formular="formular"
                                  :preloader="preloader"
                                  :calc-changed="calcChanged"
+                                 :attributes="attributes"
                                  :product-id="id">
                     </participant>
                 </div>
@@ -362,10 +363,7 @@
                     this.calculated = false;
                     this.price = 0;
                 }
-            },
-            // calcDA(){
-            //     this.DAsum
-            // }
+            }
         }
     }
 </script>

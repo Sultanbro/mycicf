@@ -86,9 +86,21 @@
                             <option v-for="participant in aFewParticipants" :value="participant.ISN">{{participant.Data}}</option>
                         </select>
                     </div>
+
+                    <!--div v-for="part,index in participants"
+                         v-if="participant.ISN == formular.insurant.isn && part.ISN == 2082"
+                         class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 mt-4 mb-4">
+                        <label for="yes" class="bold">{{ participant.Label }} является {{ part.Label }}</label>
+                        <input type="checkbox"
+                               class="mt-2 ml-2"
+                               id="yes"
+                               v-model="insurantIsParticipant"
+                               value="true"
+                               @change="calcChanged,participantIs(part,index,$event)">
+                    </div-->
                 </div>
 
-                <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
+                <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-3">
                     <div v-if="search.not_found" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="addParticipantToKias(pIndex)">Добавить {{ participant.Label }}</button>
                     </div>
@@ -109,7 +121,6 @@
                                 class="width100 btn btn-outline-info"
                                 @click="deleteParticipant">Удалить этот раздел</button>
                     </div>
-                    <!-- v-if="participant.ISN == 2082 && participant.new"  -->
                 </div>
             </div>
         </modal>
@@ -130,6 +141,8 @@
         data() {
             return {
                 moreParticipant : false,
+                insurantIsParticipant: false,
+                insurantIsReceiver: false,
                 isn: null,
                 subjISN: '',
                 width : 0,
@@ -147,7 +160,8 @@
             participants: Array,
             preloader: Function,
             formular: Object,
-            calcChanged: Function
+            calcChanged: Function,
+            attributes: Array
         },
         created(){
             this.width = window.innerWidth;
@@ -265,28 +279,62 @@
                     economicName: '',
                 });
             },
-            clearParticipant(){
-                this.participant.firstName = null;
-                this.participant.lastName = null;
-                this.participant.patronymic = null;
-                this.participant.orgName = null;
-                this.participant.iin = null;
-                this.participant.Value = '';
-                this.participant.docType = null;
-                this.participant.docNumber = null;
-                this.participant.docDate = null;
-                this.participant.email = null;
-                this.participant.phone = null;
-                this.participant.juridical = null;
-                this.participant.birthDay = null;
-                this.participant.okvdName = null;
-                this.participant.economicName = null;
+            clearParticipant(ind = null){
+                let index = ind == null ? this.pIndex : ind;
+                this.participants[index].firstName = null;
+                this.participants[index].lastName = null;
+                this.participants[index].patronymic = null;
+                this.participants[index].orgName = null;
+                this.participants[index].iin = null;
+                this.participants[index].Value = '';
+                this.participants[index].docType = null;
+                this.participants[index].docNumber = null;
+                this.participants[index].docDate = null;
+                this.participants[index].email = null;
+                this.participants[index].phone = null;
+                this.participants[index].juridical = null;
+                this.participants[index].birthDay = null;
+                this.participants[index].okvdName = null;
+                this.participants[index].economicName = null;
             },
             deleteParticipant(){
                 if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
                     this.participants.splice(this.pIndex, 1);
                     this.closeParticipantForm(this.pIndex);
                     this.calcChanged();
+                }
+            },
+            participantIs(part,index,e){
+                e.preventDefault();
+                if(this.participant.Value == null || this.participant.Value == ''){
+                    alert('Сначало укажите пожалуйста '+this.participant.Label);
+                    return false;
+                }
+                if(this.insurantIsParticipant || this.insurantIsReceiver) {
+                    this.participants[index] = this.participant;
+                    this.participants[index].ISN = part.ISN;
+                    // this.participants[index].Value = this.participant.Value;
+                    // this.participants[index].ISN = this.participant.ISN;
+                    // this.participants[index].data = this.participant.data;
+                    // this.participants[index].Label = this.participant.Label;
+                    // this.participants[index].iin = this.participant.iin;
+                    // this.participants[index].subjISN = this.participant.subjISN;
+                    // this.participants[index].Value = this.participant.Value;
+                    // this.participants[index].lastName = this.participant.lastName;
+                    // this.participants[index].firstName = this.participant.firstName;
+                    // this.participants[index].patronymic = this.participant.patronymic;
+                    // this.participants[index].orgName = this.participant.orgName;
+                    // this.participants[index].docType = this.participant.docType;
+                    // this.participants[index].docNumber = this.participant.docNumber;
+                    // this.participants[index].docDate = this.participant.docDate;
+                    // this.participants[index].email = this.participant.email;
+                    // this.participants[index].phone = this.participant.phone;
+                    // this.participants[index].juridical = this.participant.juridical;
+                    // this.participants[index].birthDay = this.participant.birthDay;
+                    // this.participants[index].okvdName = this.participant.okvdName;
+                    // this.participants[index].economicName = this.participant.economicName;
+                } else {
+                    this.clearParticipant(index);
                 }
             }
         },
@@ -295,12 +343,10 @@
                 return 'participant-form-'+this.pIndex;
             },
             computedPhysical(){
-                //let result = !this.moreParticipant && this.participant.lastName != null && this.participant.lastName != '' ? true : false;
                 let result = !this.moreParticipant && this.participant.juridical == 'N' ? true : false;
                 return result;
             },
             computedJuridical(){
-                //let result = !this.moreParticipant && this.participant.orgName != null && this.participant.orgName != '' ? true : false;
                 let result = !this.moreParticipant && this.participant.juridical == 'Y' ? true : false;
                 return result;
             }
@@ -313,6 +359,16 @@
                     }
                 }
                 this.calcChanged();
+                if (this.formular.insurant.isn == this.participant.ISN) {
+                    for(let i = 0;i < this.attributes.length;i++){
+                        if (this.attributes[i].AttrISN == 720671) {
+                            this.attributes[i].Value = this.participant.email;
+                        }
+                        if (this.attributes[i].AttrISN == 831381) {
+                            this.attributes[i].Value = this.participant.phone;
+                        }
+                    }
+                }
             }
         }
     }
