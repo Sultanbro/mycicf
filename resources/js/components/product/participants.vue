@@ -25,7 +25,7 @@
         </button>
         <modal :name="modalName"
                :width="width"
-               :minHeight="height">
+               :height="height">
             <div class="participant-form">
                 <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
                     <div class="col-12"><label v-if="participant.Label" class="bold">{{ participant.Label }}</label></div>
@@ -105,7 +105,9 @@
                         <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="deleteParticipant">Удалить этот раздел</button>
+                        <button v-if="participant.ISN != 2103"
+                                class="width100 btn btn-outline-info"
+                                @click="deleteParticipant">Удалить этот раздел</button>
                     </div>
                     <!-- v-if="participant.ISN == 2082 && participant.new"  -->
                 </div>
@@ -149,7 +151,7 @@
         },
         created(){
             this.width = window.innerWidth;
-            this.height = window.innerHeight;
+            this.height = 500;  //window.innerHeight;
         },
         methods: {
             addParticipantToKias(pIndex){
