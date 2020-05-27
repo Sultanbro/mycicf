@@ -982,7 +982,7 @@ class ProductsController extends Controller
         return response()->json([
             'success' => $success,
             'error' => isset($response->error) ? $response->error->text : [],
-            'printableForms' => isset($response->ROWSET->row) ? (array)$response->ROWSET : [],
+            'printableForms' =>isset($response->ROWSET->row) ? (array)$response->ROWSET : [],
         ]);
     }
 
