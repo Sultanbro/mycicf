@@ -17,6 +17,8 @@
                                  :preloader="preloader"
                                  :calc-changed="calcChanged"
                                  :attributes="attributes"
+                                 :insurant-is="insurantIs"
+                                 :participant-is="participantIs"
                                  :product-id="id">
                     </participant>
                 </div>
@@ -102,6 +104,13 @@
         name: "full-quotation",
         data() {
             return {
+                insurantIs: {
+                    participant: false,
+                    receiver: false,
+                },
+                participantIs: {
+                    receiver: false,
+                },
                 userList: null,
                 calc_isn: null,
                 calc_id: null,

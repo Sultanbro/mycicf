@@ -87,17 +87,39 @@
                         </select>
                     </div>
 
-                    <!--div v-for="part,index in participants"
-                         v-if="participant.ISN == formular.insurant.isn && part.ISN == 2082"
-                         class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 mt-4 mb-4">
-                        <label for="yes" class="bold">{{ participant.Label }} является {{ part.Label }}</label>
-                        <input type="checkbox"
-                               class="mt-2 ml-2"
-                               id="yes"
-                               v-model="insurantIsParticipant"
-                               value="true"
-                               @change="calcChanged,participantIs(part,index,$event)">
-                    </div-->
+                    <div class="pl-0 mt-3 mb-3 col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
+                        <div v-for="part,index in participants"
+                             class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
+                            <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082'"
+                                   for="yes" class="bold">{{ part.Label }}</label>
+                            <input type="checkbox"
+                                   @change="calcChanged();insPartIs(part,index,$event)"
+                                   v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082'"
+                                   class="mt-2 ml-2"
+                                   id="yes"
+                                   v-model="insurantIs.participant">
+
+                            <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2081'"
+                                   for="yesp" class="bold">{{ part.Label }}</label>
+                            <input type="checkbox"
+                                   @change="calcChanged();insPartIs(part,index,$event)"
+                                   v-if="participant.ISN == formular.insurant.isn && part.ISN == '2081'"
+                                   class="mt-2 ml-2"
+                                   id="yesp"
+                                   v-model="insurantIs.receiver"
+                                   value="true">
+
+                            <label v-if="participant.ISN == '2082' && part.ISN == '2081'"
+                                   for="yesr" class="bold">{{ part.Label }}</label>
+                            <input type="checkbox"
+                                   @change="calcChanged();insPartIs(part,index,$event)"
+                                   v-if="participant.ISN == '2082' && part.ISN == '2081'"
+                                   class="mt-2 ml-2"
+                                   id="yesr"
+                                   v-model="participantIs.receiver"
+                                   value="true">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-3">
@@ -111,7 +133,7 @@
                         <button class="width100 btn btn-outline-info" @click="searchParticipant">Поиск</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="save">Сохранить</button>
+                        <button class="width100 btn btn-outline-info" @click="save()">Сохранить</button>
                     </div>
                     <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще</button>
@@ -141,8 +163,6 @@
         data() {
             return {
                 moreParticipant : false,
-                insurantIsParticipant: false,
-                insurantIsReceiver: false,
                 isn: null,
                 subjISN: '',
                 width : 0,
@@ -161,7 +181,9 @@
             preloader: Function,
             formular: Object,
             calcChanged: Function,
-            attributes: Array
+            attributes: Array,
+            insurantIs: Object,
+            participantIs: Object
         },
         created(){
             this.width = window.innerWidth;
@@ -243,16 +265,55 @@
                     this.preloader(false);
                 }
             },
-            save(){
-                let partName = this.participant.Label ? this.participant.Label : 'Страхователь';
-                if(this.isn != null && this.isn != '') {
-                    this.participant.subjISN = this.isn;
-                    this.participant.Value = this.isn;
-                    this.subjISN = this.isn;
-                    this.closeParticipantForm(this.pIndex);
-                    alert(partName+' успешно добавлен!');
+            save(ind = null){
+                let index = ind == null ? this.pIndex : ind;
+                let partName = this.participants[index].Label ? this.participants[index].Label : 'Страхователь';
+                if(ind == null) {
+                    if (this.isn != null && this.isn != '') {
+                        this.participant.subjISN = this.isn;
+                        this.participant.Value = this.isn;
+                        this.subjISN = this.isn;
+                        //this.closeParticipantForm(this.pIndex);
+                        if(this.participant.ISN == this.formular.insurant.isn || this.participant.ISN == '2082'){
+                            for(index in this.participants) {
+                                if(this.participant.ISN == this.formular.insurant.isn) {
+                                    if (this.insurantIs.participant) {
+                                        if (this.participants[index].ISN == '2082') {
+                                            this.clearParticipant(index);
+                                            this.insurantIs.participant = false;
+                                        }
+                                    }
+                                    if (this.insurantIs.receiver) {
+                                        if (this.participants[index].ISN == '2081') {
+                                            this.clearParticipant(index);
+                                            this.insurantIs.receiver = false;
+                                        }
+                                    }
+                                }
+                                if(this.participant.ISN == '2082' && this.participantIs.receiver) {
+                                    if(this.participants[index].ISN == '2081') {
+                                        this.clearParticipant(index);
+                                        this.participantIs.receiver = false;
+                                    }
+                                }
+                            }
+                        }
+                        alert(partName + ' успешно добавлен!');
+                    } else {
+                        alert('Не выбран ' + partName);
+                    }
                 } else {
-                    alert('Не выбран '+partName);
+                    this.participants[index].subjISN = this.participant.subjISN;
+                    this.participants[index].Value = this.participant.subjISN;
+                    alert(partName + ' успешно добавлен!');
+
+                    if(this.participant.ISN == this.formular.insurant.isn && this.participants[index].ISN === '2081' && this.participantIs.receiver){
+                        this.participantIs.receiver = false;
+                    }
+
+                    if(this.participant.ISN == '2082' && this.participants[index].ISN === '2081' && this.insurantIs.receiver){
+                        this.insurantIs.receiver = false;
+                    }
                 }
             },
             addParticipant(){
@@ -287,6 +348,7 @@
                 this.participants[index].orgName = null;
                 this.participants[index].iin = null;
                 this.participants[index].Value = '';
+                this.participants[index].subjISN = '';
                 this.participants[index].docType = null;
                 this.participants[index].docNumber = null;
                 this.participants[index].docDate = null;
@@ -304,36 +366,54 @@
                     this.calcChanged();
                 }
             },
-            participantIs(part,index,e){
-                e.preventDefault();
-                if(this.participant.Value == null || this.participant.Value == ''){
-                    alert('Сначало укажите пожалуйста '+this.participant.Label);
-                    return false;
-                }
-                if(this.insurantIsParticipant || this.insurantIsReceiver) {
-                    this.participants[index] = this.participant;
-                    this.participants[index].ISN = part.ISN;
-                    // this.participants[index].Value = this.participant.Value;
-                    // this.participants[index].ISN = this.participant.ISN;
-                    // this.participants[index].data = this.participant.data;
-                    // this.participants[index].Label = this.participant.Label;
-                    // this.participants[index].iin = this.participant.iin;
-                    // this.participants[index].subjISN = this.participant.subjISN;
-                    // this.participants[index].Value = this.participant.Value;
-                    // this.participants[index].lastName = this.participant.lastName;
-                    // this.participants[index].firstName = this.participant.firstName;
-                    // this.participants[index].patronymic = this.participant.patronymic;
-                    // this.participants[index].orgName = this.participant.orgName;
-                    // this.participants[index].docType = this.participant.docType;
-                    // this.participants[index].docNumber = this.participant.docNumber;
-                    // this.participants[index].docDate = this.participant.docDate;
-                    // this.participants[index].email = this.participant.email;
-                    // this.participants[index].phone = this.participant.phone;
-                    // this.participants[index].juridical = this.participant.juridical;
-                    // this.participants[index].birthDay = this.participant.birthDay;
-                    // this.participants[index].okvdName = this.participant.okvdName;
-                    // this.participants[index].economicName = this.participant.economicName;
-                } else {
+            insPartIs(part,index,e){
+                if(e.srcElement.checked == true || e.srcElement.checked == 'true') {
+                    if (this.participant.Value == null || this.participant.Value == '') {
+                        alert('Сначало сохраните пожалуйста участника ' + this.participant.Label);
+                        if(this.participant.ISN == this.formular.insurant.isn) {
+                            if(part.ISN == '2082'){
+                                if (this.insurantIs.participant == true) {
+                                    this.insurantIs.participant = false;
+                                    e.target.checked = false;
+                                }
+                            } else {
+                                if (this.insurantIs.receiver == true) {
+                                    this.insurantIs.receiver = false;
+                                    e.target.checked = false;
+                                }
+                            }
+                        } else {
+                            if (this.participantIs.receiver == true) {
+                                this.participantIs.receiver = false;
+                                e.target.checked = false;
+                            }
+                        }
+                    } else {
+                        //if (part.ISN === '2082' && this.insurantIs.participant || part.ISN === '2081' && this.insurantIs.receiver || part.ISN === '2081' && this.participantIs.receiver) {
+                            this.participants[index].Value = this.participant.Value;
+                            this.participants[index].data = this.participant.data;
+                            this.participants[index].iin = this.participant.iin;
+                            this.participants[index].subjISN = this.participant.subjISN;
+                            this.participants[index].Value = this.participant.Value;
+                            this.participants[index].lastName = this.participant.lastName;
+                            this.participants[index].firstName = this.participant.firstName;
+                            this.participants[index].patronymic = this.participant.patronymic;
+                            this.participants[index].orgName = this.participant.orgName;
+                            this.participants[index].docType = this.participant.docType;
+                            this.participants[index].docNumber = this.participant.docNumber;
+                            this.participants[index].docDate = this.participant.docDate;
+                            this.participants[index].email = this.participant.email;
+                            this.participants[index].phone = this.participant.phone;
+                            this.participants[index].juridical = this.participant.juridical;
+                            this.participants[index].birthDay = this.participant.birthDay;
+                            this.participants[index].okvdName = this.participant.okvdName;
+                            this.participants[index].economicName = this.participant.economicName;
+                            this.save(index);
+                        // } else {
+                        //     this.clearParticipant(index);
+                        // }
+                    }
+                }else {
                     this.clearParticipant(index);
                 }
             }

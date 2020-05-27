@@ -7,6 +7,7 @@
                      :formular="{insurant : { isn:2103,jur:true,phys:true}}"
                      :preloader="preloader"
                      :calc-changed="calcChanged"
+                     :insurant-is="{participant:false,receiver:false}"
                      :product-id="id">
         </participant>
         <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
