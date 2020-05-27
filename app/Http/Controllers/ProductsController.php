@@ -1018,31 +1018,57 @@ class ProductsController extends Controller
     public function updateProductsDicti(Request $request){
         $kias = new Kias();
         $kias->initSystem();
-        $response = $kias->getDictiList($request->isn);
 
-        if(isset($response->ROWSET->row)) {
-            $oldDicti = Dicti::where('parent_isn',$request->isn)->delete();
-            $childIsns = [];
-            DB::table('products_dicti')->where('parent_isn', $request->isn)->delete();
-            foreach ($response->ROWSET->row as $row) {
-                $dicti = new Dicti;
-                $dicti->isn = (string)$row->ISN;
-                $dicti->fullname = (string)$row->FULLNAME;
-                $dicti->code = (string)$row->CODE;
-                $dicti->numcode = (string)$row->NUMCODE;
-                $dicti->n_kids = (string)$row->N_KIDS;
-                $dicti->parent_isn = $request->isn;
-                $dicti->save();
+        //if($request->type == 'attributes') {
+            $response = $kias->getDictiList($request->isn);
+            if (isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn', $request->isn)->delete();
+                $childIsns = [];
+                DB::table('dicti')->where('parent_isn', $request->isn)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = $request->isn;
+                    $dicti->save();
+                }
+
+                if ($request->type == 'attributes') {
+                    $this->updateNkids($request->isn);
+                }
+
+                return response()->json([
+                    'success' => true
+                ]);
             }
-
-            if($request->type == 'attributes') {
-                $this->updateNkids($request->isn);
-            }
-
-            return response()->json([
-                'success' => true
-            ]);
-        }
+//        } else {
+//            $isns = [2103,2032,12200,12200,2034,848541];
+//            foreach($isn as $isns){
+//                $response = $kias->getDictiList($request->isn);
+//                if (isset($response->ROWSET->row)) {
+//                    $oldDicti = Dicti::where('parent_isn', $request->isn)->delete();
+//                    $childIsns = [];
+//                    DB::table('dicti')->where('parent_isn', $request->isn)->delete();
+//                    foreach ($response->ROWSET->row as $row) {
+//                        $dicti = new Dicti;
+//                        $dicti->isn = (string)$row->ISN;
+//                        $dicti->fullname = (string)$row->FULLNAME;
+//                        $dicti->code = (string)$row->CODE;
+//                        $dicti->numcode = (string)$row->NUMCODE;
+//                        $dicti->n_kids = (string)$row->N_KIDS;
+//                        $dicti->parent_isn = $request->isn;
+//                        $dicti->save();
+//                    }
+//                }
+//            }
+//
+//            return response()->json([
+//                'success' => true
+//            ]);
+//        }
     }
 
     public function updateNkids($parent){

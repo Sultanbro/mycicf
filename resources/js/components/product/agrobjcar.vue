@@ -36,9 +36,23 @@
                 <input type="text" class="attr-input-text col-12" v-model="agrobjcar.REALPRICE" @keyup="calcChanged">
             </div>
         </div>
-        <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('vin')">Пойск по ВИН</button>
-        <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('tNumber')">Пойск по гос. номеру</button>
-        <button v-if="notFound" class="btn btn-outline-info mt-3 mr-3" @click="addAutoToKias()">Добавить авто</button>
+        <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('vin')">Поиск по ВИН</button>
+        <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('tNumber')">Поиск по гос. номеру</button>
+        <button v-if="!notFound" class="btn btn-outline-info mt-3 mr-3" @click="showModal()">Добавить авто</button>
+
+
+        <modal :name="modalName"
+               :width="width"
+               :height="height">
+            <new-vehicle v-if="!notFound"
+                         :c-index="cIndex"
+                         :preloader="preloader"
+                         :calc-changed="calcChanged"
+                         :agrobject="agrobject"
+                         :agrobjcar="agrobjcar">
+            </new-vehicle>
+        </modal>
+
     </div>
 </template>
 
@@ -75,6 +89,7 @@
                             if(response.data.error === 'not_found'){
                                 error = 'Транспортное средство не найдено, добавьте пожалуйста транспортное средство';
                                 this.notFound = true;
+                                this.$modal.show('create-vehicle');
                             }
                             alert(error);
                             this.preloader(false);
@@ -93,15 +108,24 @@
                 }
                 this.getVehicle();
             },
-            addAutoToKias(){
-                //...
+            showModal(){
+                this.$modal.show('create-vehicle-'+this.cIndex)
             }
+        },
+        computed:{
+            modalName(){
+                return 'create-vehicle-'+this.cIndex;
+            },
         },
         watch: {
             'agrobject.SubClassISN': function(val,oldVal){
                 this.agrobjcar.ClassISN = val;
             }
-        }
+        },
+        created(){
+            this.width = window.innerWidth;
+            this.height = 500;  //window.innerHeight;
+        },
     }
 </script>
 

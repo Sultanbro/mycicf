@@ -31,13 +31,15 @@
                      :items="sections.participants">
         </constructor>
         <constructor v-if="checkOptions.participants"
-                     :checkOptions="checkOptions" iIndex="attributes"
+                     :checkOptions="checkOptions"
+                     iIndex="attributes"
                      :parentisns="parentisns"
                      :preloader = "preloader"
                      :items="sections.attributes">
         </constructor>
         <constructor v-if="checkOptions.attributes"
-                     :checkOptions="checkOptions" iIndex="agrclauses"
+                     :checkOptions="checkOptions"
+                     iIndex="agrclauses"
                      :parentisns="parentisns"
                      :preloader = "preloader"
                      :items="sections.agrclauses">
