@@ -204,9 +204,9 @@
                     let i = 1;
                     for(let index in this.attributes){
                         if(this.attributes[index].Value == null) {
-                            attr = attr + '"' + index + '":' + this.attributes[index].Value;
+                            attr = attr + '"' + this.attributes[index].AttrISN + '":' + this.attributes[index].Value;
                         } else {
-                            attr = attr + '"' + index + '":"' + this.attributes[index].Value + '"';
+                            attr = attr + '"' + this.attributes[index].AttrISN + '":"' + this.attributes[index].Value + '"';
                         }
                         if(i != Object.keys(this.attributes).length){
                             attr = attr+',';

@@ -298,17 +298,27 @@ class ProductsController extends Controller
         $attributes = [];
         if(isset($response->ROWSET->row)){
             foreach ($response->ROWSET->row as $row){
-                //array_push($attributes, [
-                $attributes[(string)$row->AttrISN] = array(
+                $value = null;
+                if(isset($row->DefValN) && (string)$row->DefValN != null){
+                    $value = (string)$row->DefValN;
+                }
+                if(isset($row->DefValC) && (string)$row->DefValC != null){
+                    $value = (string)$row->DefValC;
+                }
+                if(isset($row->DefValD) && (string)$row->DefValD != null){
+                    $value = (string)$row->DefValD;
+                }
+                array_push($attributes, [
+                //$attributes[(string)$row->AttrISN] = array(
                     'AttrISN' => (string)$row->AttrISN,
                     'Type' => (string)$row->TypeValue,
                     'Label' => (string)$row->AttrName,
                     'ParentISN' => (string)$row->NumCode,
-                    'Value' => null,
+                    'Value' => $value,
                     'Remark' => null,
-                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
-                );
-                //]);
+                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode),
+                //);
+                ]);
             }
         }
         return response()->json([
