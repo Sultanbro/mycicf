@@ -435,19 +435,26 @@ class CoordinationController extends Controller
             'pinned' => 0,
             'postText' => $new_post->getText(),
             'postId' => $new_post->id,
-            'image' => $new_post->getImage(),
-            'documents' => $new_post->getDocuments(),
-            'youtube' => $new_post->getVideo(),
-            'videos' => $new_post->getVideoUrl(),
+            'image' => [],  //$new_post->getImage(),
+            'documents' => [],  //$new_post->getDocuments(),
+            'youtube' => '',    //$new_post->getVideo(),
+            'videos' => [], //$new_post->getVideoUrl(),
             'comments' => [],
         ];
 
-        broadcast(new NewPost([
-            'post' => $response,
-            'type' => Post::NEW_POST
-        ]));
+        try {
+            broadcast(new NewPost([
+                'post' => $response,
+                'type' => Post::NEW_POST
+            ]));
+        }catch(\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
 
-        return true;
+        return [ 'success' => true ];
     }
 
     public function checkNotificationSended($isn, $no, $type){
