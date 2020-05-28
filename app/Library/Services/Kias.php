@@ -22,13 +22,16 @@ use App\Library\Services\KiasServiceInterface;
 
 class Kias implements KiasServiceInterface
 {
+    const APP_ID = 868281;
+    const ACTIVE = 'Y';
+
     public $username;
     public $password;
     public $client;
     public $request;
     public $_sId;
-    const APP_ID = 868281;
     public $tries = 0;
+
 
     /**
      * @var string Ссылка на сервис
@@ -114,6 +117,104 @@ class Kias implements KiasServiceInterface
         }
 
         return $xml->result ?? $xml;
+    }
+
+
+    public function request1($name, $params = [])
+    {
+        try {
+            $xml = new SimpleXMLElement(
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+                .$this->client->ExecProc([
+                    'pData' => $this->createRequestData1($name, $params),
+                ])->ExecProcResult->any
+            );
+        } catch (\SoapFault $exception) {
+            return $this->request1($name, $params);
+        }
+
+        if (env('APP_ENV', 'local') !== 'production') {
+            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList'
+                && $name != 'Auth'
+                && $name != 'GETATTACHMENTDATA') {
+                $t     = microtime(true) + 6 * 60 * 60;
+                $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+                $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
+                $date  = $d->format('d-m-Y_H-i-s-u');
+                file_put_contents(
+                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+                    $xml->asXml()
+                );
+            }
+        }
+        if (isset($xml->error)) {
+            if (isset($xml->error->code) && $xml->error->code == '001') {
+                $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);
+                if ($response->error) {
+                    Auth::logout();
+                } else {
+                    $User             = Auth::user();
+                    $User->session_id = $response->Sid;
+                    $this->_sId       = $response->Sid;
+                    $User->save();
+
+                    return $this->request1($name, $params);
+                }
+            }
+        }
+
+        return $xml->result ?? $xml;
+    }
+
+    public function createRequestData1($name, $params)
+    {
+        $params['Sid'] = $this->_sId;
+        if ($name == 'Auth') {
+            unset($params['Sid']);
+        }
+        $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><data></data>');
+        $request = $xml->addChild('request');
+        $request->addChild('reqName', $name);
+        $request->addChild('AppId', static::APP_ID);
+        $request->addChild('RequestIp', $_SERVER['REMOTE_ADDR'] ?? '1');
+        $request->addChild('UserAgent', $_SERVER['HTTP_USER_AGENT'] ?? '1');
+        self::addXmlChildren1($request->addChild('params'), $params);
+        if (env('APP_ENV', 'local') !== 'production') {
+            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList'
+                && $name != 'Auth'
+                && $name != 'GETATTACHMENTDATA') {
+                $t     = microtime(true) + 6 * 60 * 60;
+                $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+                $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
+                $date  = $d->format('d-m-Y_H-i-s-u');
+                file_put_contents(
+                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
+                    $xml->asXML()
+                );
+            }
+        }
+        dd($xml->asXML());
+        return $xml->asXML();
+    }
+
+    protected static function addXmlChildren1($object, $params, $parentName = null)
+    {
+        foreach ($params as $paramName => $paramValue) {
+            if (is_array($paramValue)) {
+                $integerArray = isset($paramValue[0]);
+                static::addXmlChildren1(
+                    ($integerArray)
+                        ? $object
+                        : $object->addChild((is_int($paramName) && $parentName)
+                        ? $parentName : $paramName
+                    ),
+                    $paramValue,
+                    $integerArray ? $paramName : null
+                );
+            } else {
+                $object->addChild($paramName, $paramValue);
+            }
+        }
     }
 
     public function createRequestData($name, $params)
@@ -309,11 +410,13 @@ class Kias implements KiasServiceInterface
      *
      * @return mixed|SimpleXMLElement
      */
-    public function getInsuranceInspectionList($isn, $status)
+    public function getInsuranceInspectionList($isn, $status, $DateBeg, $DateEnd)
     {
         return $this->request('User_CicGetOsmotrRequest', [
             'EmplISN'   => $isn,
             'StatusISN' => $status,
+            'DateBeg'   => $DateBeg,
+            'DateEnd'   => $DateEnd,
         ]);
     }
 
@@ -330,6 +433,14 @@ class Kias implements KiasServiceInterface
             'Agrisn'     => $agrisn,
             'Agrcalcisn' => $agrcalcisn,
             'Request'    => $isn,
+        ]);
+    }
+
+    public function setInsuranceInspectionInfo($docIsn, $data)
+    {
+        return $this->request1('User_CicSetOsmotrDocs', [
+            'docisn'     => $docIsn,
+            'Details' => $data,
         ]);
     }
 
@@ -351,6 +462,7 @@ class Kias implements KiasServiceInterface
 
     /**
      * Получить справочники
+     *
      * @param $dictiISN
      * @param $mode
      *
@@ -364,4 +476,24 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * Загрузка файлов
+     * @param        $refisn
+     * @param        $name
+     * @param        $file
+     * @param string $type
+     *
+     * @return SimpleXMLElement
+     */
+    public function saveAttachment($refisn, $name, $file, $type = 'J')
+    {
+        return $this->request('SAVEATTACHMENT', [
+            'REFISN'     => $refisn,
+            'PICTTYPE'   => $type,
+            'FILEREMARK' => '',
+            'FILENAME'   => $name,
+            'ACTIVE '    => self::ACTIVE,
+            'OLEOBJECT'  => $file,
+        ]);
+    }
 }

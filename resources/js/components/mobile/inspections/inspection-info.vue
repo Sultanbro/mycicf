@@ -17,10 +17,10 @@
                         </tr>
                         </thead>
                         <tbody class="date-color font-size-0_7">
-                        <tr v-if="inspections_data.length > 0">
-                            <td class="pointer" scope="col">{{inspections_data[0].Operator}}</td>
-                            <td scope="col" class="thead-border">{{inspections_data[0].Adress}}</td>
-                            <td scope="col" class="thead-border">{{inspections_data[0].Operator}}</td>
+                        <tr>
+                            <td class="pointer" scope="col">{{inspections_data.Contact.FIO}}</td>
+                            <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
+                            <td scope="col" class="thead-border">{{inspections_data.Contact.Contact}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -29,7 +29,7 @@
             <div class="ml-1 mr-1 pb-4">
                 <strong>Акт предстрахового осмотра</strong>
                 <div class="row">
-                    <div class="dis-block w-100" v-for="info in inspections_data">
+                    <div class="dis-block w-100" v-for="info in inspections_data.row">
                         <input type="hidden" name="doc_ids[]" :value="info.DocID">
                         <span class="ml-3 pointer" data-key="info.DocID" @click="toggleShowDescription(info.DocID)">
                             {{info.DocID}}</span>
@@ -81,6 +81,7 @@
                                     <CarForm v-if="info.SubClass=='Легковые автомобили'"></CarForm>
                                     <SpecialCarForm v-if="info.SubClass=='Спец'"></SpecialCarForm>
                                     <OtherForm v-if="info.SubClass=='Иные'"></OtherForm>
+                                    <upload-image></upload-image>
                                 </div>
                             </div>
                         </div>
@@ -123,6 +124,7 @@
     import CarForm from '../../employee/includes/car-form'
     import SpecialCarForm from '../../employee/includes/specialCar-form'
     import OtherForm from '../../employee/includes/other-form'
+    import ImageUploader from '../../common/upload-image'
 
     export default {
         name: "inspection-info",
@@ -130,6 +132,7 @@
             CarForm,
             SpecialCarForm,
             OtherForm,
+            ImageUploader
         },
         data() {
             return {

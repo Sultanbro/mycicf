@@ -6,7 +6,9 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="engineType">Тип двигателя</label>
-                        <select class="form-control" id="engineType" name="engineType">
+                        <input type="hidden" name="engineType['isn']" value="asd">
+                        <input type="hidden" name="engineType['damageIsn']" value="lklkl">
+                        <select class="form-control" id="engineType" name="engineType['damage']">
                             <option>1</option>
                             <option>2</option>
                         </select>
@@ -16,7 +18,7 @@
                     <div class="form-group">
                         <label for="numberKey">Количество ключей</label>
                         <select class="form-control" id="numberKey" name="numberKey">
-                            <option>1</option>
+                            <option value="эвы">1</option>
                             <option>2</option>
                         </select>
                     </div>
@@ -119,21 +121,16 @@
                 </div>
             </div>
         </form>
-        <upload-image></upload-image>
     </div>
 </template>
 
 <script>
-    import ImageUploader from '../../common/upload-image'
-
     export default {
         name: "car-form",
         data() {
             return {}
         },
-        components: {
-            ImageUploader
-        },
+        components: {},
         props: {},
         methods: {
             saveToDraft: function (e) {

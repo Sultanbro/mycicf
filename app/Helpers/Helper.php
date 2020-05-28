@@ -22,13 +22,17 @@ class Helper
         if (empty($xmlObject)) {
             return [];
         }
-
-        if (!isset($xmlObject['row'][0])) {
-            $xmlArray['row'][] = $xmlObject['row'];
-
-            return $xmlArray;
+        $xmlArray = [];
+        foreach ($xmlObject as $key => $value) {
+            if ($key == 'row') {
+                if (empty($xmlObject['row'][0])) {
+                    $xmlArray[$key][] = $xmlObject['row'];
+                    continue;
+                }
+            }
+            $xmlArray[$key] = $value;
         }
 
-        return $xmlObject;
+        return $xmlArray;
     }
 }

@@ -17,10 +17,10 @@
                         </tr>
                         </thead>
                         <tbody class="date-color">
-                        <tr v-if="inspections_data.length > 0">
-                            <td class="pointer" scope="col">{{inspections_data[0].Operator}}</td>
-                            <td scope="col" class="thead-border">{{inspections_data[0].Adress}}</td>
-                            <td scope="col" class="thead-border">{{inspections_data[0].Operator}}</td>
+                        <tr>
+                            <td class="pointer" scope="col">{{inspections_data.Contact.FIO}}</td>
+                            <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
+                            <td scope="col" class="thead-border">{{inspections_data.Contact.Contact}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -29,7 +29,7 @@
             <div class="">
                 <strong>Акт предстрахового осмотра</strong>
                 <div class="row">
-                    <div class="dis-block w-100" v-for="info in inspections_data">
+                    <div class="dis-block w-100" v-for="info in inspections_data.row">
                         <input type="hidden" name="doc_ids[]" :value="info.DocID">
                         <span class="ml-3 pointer" data-key="info.DocID" @click="toggleShowDescription(info.DocID)">{{info.DocID}}</span>
                         <div class="col-md-12" :class="showDescription?'show':'hide'"
@@ -76,9 +76,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <CarForm v-if="info.SubClass=='Легковые автомобили'"></CarForm>
-                                    <SpecialCarForm v-if="info.SubClass=='Спец'"></SpecialCarForm>
-                                    <OtherForm v-if="info.SubClass=='Иные'"></OtherForm>
+                                    <CarForm v-if="info.ClassType==1"></CarForm>
+                                    <SpecialCarForm v-if="info.ClassType==2"></SpecialCarForm>
+                                    <OtherForm v-if="info.ClassType==3"></OtherForm>
+                                    <upload-image></upload-image>
                                 </div>
                             </div>
                         </div>
@@ -123,6 +124,7 @@
     import CarForm from './includes/car-form'
     import SpecialCarForm from './includes/specialCar-form'
     import OtherForm from './includes/other-form'
+    import ImageUploader from '../common/upload-image'
 
     export default {
         name: "inspection-info",
@@ -130,10 +132,11 @@
             CarForm,
             SpecialCarForm,
             OtherForm,
+            ImageUploader,
         },
         data() {
             return {
-                inspections_data: [],
+                inspections_data: {},
                 none: false,
                 inspection: {},
                 showDescription: false,
@@ -173,7 +176,6 @@
             },
             fetchResponse: function (response) {
                 let isEmpty = $.isEmptyObject(response.result);
-                console.log(response.result)
                 if (response.success) {
                     if (!isEmpty) {
                         this.inspections_data = response.result;
@@ -184,6 +186,7 @@
                 if (isEmpty) {
                     this.none = true;
                 }
+                console.log(this.inspections_data)
                 this.preloader(false);
             },
             updateToCompleted() {

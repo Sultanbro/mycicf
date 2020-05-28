@@ -313,7 +313,6 @@
                 </div>
             </div>
         </form>
-        <upload-image></upload-image>
     </div>
 
 </template>

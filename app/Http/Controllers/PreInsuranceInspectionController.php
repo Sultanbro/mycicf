@@ -53,9 +53,11 @@ class PreInsuranceInspectionController extends Controller
      */
     public function getInsuranceInspectionList(Request $request, KiasServiceInterface $kias)
     {
-        $isn = $request->isn; //4110211;
+        $isn     = $request->isn; //4110211;
+        $DateBeg = '01.05.2020';
+        $DateEnd = '27.05.2020';
         try {
-            $getInspections = $kias->getInsuranceInspectionList($isn, self::STATUS_ALL);
+            $getInspections = $kias->getInsuranceInspectionList($isn, self::STATUS_ALL, $DateBeg, $DateEnd);
         } catch (\Exception $e) {
             Log::info('Ошибка при подключении к KIAS'.$e->getMessage());
         }
@@ -89,11 +91,11 @@ class PreInsuranceInspectionController extends Controller
      */
     public function getInsuranceInspectionInfo(Request $request, KiasServiceInterface $kias)
     {
-        $isn = $request->isn;
+        $isn        = $request->isn;
         $agrCalcIsn = $request->argcalcisn != 0 ? $request->argcalcisn : '';
-        $agrIsn = $request->agrisn != 0 ? $request->agrisn : '';
+        $agrIsn     = $request->agrisn != 0 ? $request->agrisn : '';
         try {
-            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1929111, 237600);
+            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1842964, 238369);
         } catch (\Exception $e) {
             Log::info('Ошибка при подключении к KIAS'.$e->getMessage());
         }
@@ -106,7 +108,7 @@ class PreInsuranceInspectionController extends Controller
         $result = [
             'success' => $this->success,
             'error'   => $this->error,
-            'result'  => $inspectionsInfo['row'],
+            'result'  => $inspectionsInfo,
         ];
 
         return response()->json($result)->withCallback($request->input('callback'));
@@ -121,6 +123,18 @@ class PreInsuranceInspectionController extends Controller
      */
     public function setInspection(Request $request)
     {
+        $data = [
+            'Details' => [
+                'row' => [
+                    'ISN'       => '',
+                    "Damageisn" => [],
+                    "Damage"    => [],
+                    "Remark"    => [],
+                ],
+            ],
+        ];
+        dd($request->all());
+
         $inspections = [];
         $data        = Session::get('inspection');
         if (Session::has('inspection')) {
@@ -163,12 +177,30 @@ class PreInsuranceInspectionController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function upload(Request $request)
+    public function upload(Request $request, KiasServiceInterface $kias)
     {
         if (count($request->images)) {
             foreach ($request->images as $image) {
-                $name = $image->getClientOriginalName();
-                Storage::disk('public')->put($name, File::get($image));
+                $contents = $image->get();
+                $name     = $image->getClientOriginalName();
+                $filename = mt_rand(10, 9999).str_replace('-', '_', $name);
+                $filePath = "online_inspections/{$filename}";
+                Storage::disk('local')->put("/public/{$filePath}", $contents);
+                try {
+                    $results = $kias->saveAttachment(
+                        $calc_isn,
+                        basename($filename),
+                        base64_encode($file),
+                        $sendType
+                    );
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'result'  => $e->getMessage(),
+                    ]);
+                }
+                $file = Storage::get('/public/'.$filePath);
+                dd($file);
             }
         }
         $result = [

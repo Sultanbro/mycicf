@@ -165,7 +165,7 @@ interface KiasServiceInterface
      *
      * @return mixed
      */
-    public function getInsuranceInspectionList($isn, $status);
+    public function getInsuranceInspectionList($isn, $status, $DateBeg, $DateEnd);
 
     /**
      * Получение предстраховой информации
@@ -177,6 +177,8 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn);
+
+    public function setInsuranceInspectionInfo($docIsn, $data);
 
     /**
      * Назначить оператора
@@ -196,4 +198,14 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getDictList($dictiISN, $mode);
+
+    /**
+     * @param        $refisn
+     * @param        $name
+     * @param        $file
+     * @param string $type
+     *
+     * @return mixed
+     */
+    public function saveAttachment($refisn, $name, $file, $type);
 }
