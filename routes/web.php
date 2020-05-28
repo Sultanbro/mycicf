@@ -250,6 +250,7 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
