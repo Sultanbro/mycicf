@@ -12,7 +12,6 @@ use App\Events\NewPost;
 use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class CoordinationController extends Controller
 {
