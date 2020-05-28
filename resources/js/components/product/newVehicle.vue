@@ -12,6 +12,20 @@
                     <input type="text" class="attr-input-text col-12" v-model="newVehicle.VIN" @keyup="calcChanged">
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="bold">СРТС номер </label>
+                    <input type="text" class="attr-input-text col-12" v-model="newVehicle.SRTS" @keyup="calcChanged">
+                </div>
+                <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="bold">Тип транспортного средства</label>
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged();getDicti('marks')"
+                            v-if="typeTS.length > 0"
+                            v-model="newVehicle.CLASSISN"
+                            :disabled="computedType">
+                        <option v-if="typeTS.length > 0" v-for="item in typeTS" :value="item.Value[0]">{{ item.Label[0] }}</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Дата выпуска авто </label>
                     <select class="attr-input-text col-12 bg-white"
                             @change="calcChanged"
@@ -21,17 +35,16 @@
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Марка</label>
-                    <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.MARKISN" @keyup="calcChanged">
                     <select class="attr-input-text col-12 bg-white"
                             v-model="newVehicle.MARKISN"
-                            @change="searchVehicleModels($event);calcChanged()">
+                            @change="getDicti('models');calcChanged()">
                         <option v-if="marksCar.length > 0" v-for="item in marksCar" :value="item.Value[0]">{{ item.Label[0] }}</option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Модель</label>
                     <select class="attr-input-text col-12 bg-white"
-                            @change="calcChanged"
+                            @change="calcChanged();getDicti('colors')"
                             v-model="newVehicle.MODELISN">
                         <option v-if="modelsCar.length > 0" v-for="item in modelsCar" :value="item.Value[0]">{{ item.Label[0] }}</option>
                     </select>
@@ -39,14 +52,26 @@
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Цвет</label>
                     <select class="attr-input-text col-12 bg-white"
-                            @keyup="calcChanged"
+                            @change="calcChanged"
                             v-model="newVehicle.COLORISN">
                         <option v-if="colorsCar.length > 0" v-for="item in colorsCar" :value="item.Value[0]">{{ item.Label[0] }}</option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
-                    <label class="bold">CLASSISN</label>
-                    <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.CLASSISN" @keyup="calcChanged">
+                    <label class="bold">Регион регистрации</label>
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged"
+                            v-model="newVehicle.regionIsn">
+                        <option v-if="regions.length > 0" v-for="item in regions" :value="item.Value[0]">{{ item.Label[0] }}</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="bold">Город</label>
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged"
+                            v-model="newVehicle.cityIsn">
+                        <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value[0]">{{ item.Label[0] }}</option>
+                    </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Номер двигателя</label>
@@ -84,6 +109,7 @@
                 newVehicle: {
                     PLATE: null,
                     VIN: null,
+                    SRTS: null,
                     CLASSISN: 3366,
                     MARKISN: null,
                     MODELISN: null,
@@ -94,10 +120,16 @@
                     ENGINE_VOLUME: null,
                     RIGHT_HAND_DRIVE_BOOL: null,
                     TF_ID: null,
+                    regionIsn: null,
+                    cityIsn: null,
                 },
                 marksCar: [],
                 modelsCar: [],
-                colorsCar: []
+                colorsCar: [],
+                typeTS: [],
+                regions: [],
+                cities: []
+
             }
         },
         props: {
@@ -129,66 +161,67 @@
                         this.preloader(false);
                     });
             },
-            searchVehicleMarks: async function(e){
-                this.preloader(true);
-                this.axios.post('/getDictiList', {
-                    parent: this.newVehicle.CLASSISN
-                })
-                    .then(response => {
-                        console.log(response);
-                        if(response.data.success){
-                            this.marksCar = response.data.result;
-                            this.searchVehicleColors();
-                            this.preloader(false);
-                        } else {
-                            alert('К сожалению, данные по маркам не найдены в базе данных');
-                            this.preloader(false);
-                        }
+            getDicti:async function(dicti = null){
+                let parent = 2118;
+                switch(dicti){
+                    case 'marks':
+                        parent = this.newVehicle.CLASSISN;
+                        break;
+                    case 'models':
+                        parent = this.newVehicle.MARKISN;
+                        break;
+                    case 'colors':
+                        parent = 2028;
+                        break;
+                }
+                if(this.colorsCar.length > 0 && dicti == 'colors') {
+                    //...
+                } else {
+                    this.preloader(true);
+                    this.axios.post('/getDictiList', {
+                        parent: parent
                     })
-                    .catch(error => {
-                        alert(error);
-                        this.preloader(false);
-                    });
-            },
-            searchVehicleModels: async function(e){
-                this.preloader(true);
-                this.axios.post('/getDictiList', {
-                    parent: this.newVehicle.MARKISN
-                })
-                    .then(response => {
-                        if(response.data.success){
-                            this.modelsCar = response.data.result;
-                            this.preloader(false);
-                        } else {
-                            alert('К сожалению, данные по моделям не найдены в базе данных');
-                            this.preloader(false);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                        this.preloader(false);
-                    });
-            },
+                        .then(response => {
+                            console.log(response);
+                            if (response.data.success) {
+                                switch (dicti) {
+                                    case 'marks':
+                                        this.marksCar = response.data.result;
+                                        break;
+                                    case 'models':
+                                        this.modelsCar = response.data.result;
+                                        break;
+                                    case 'colors':
+                                        this.colorsCar = response.data.result;
+                                        break;
+                                    default:
+                                        this.typeTS = response.data.result;
+                                        break;
+                                }
 
-            searchVehicleColors: async function(e){
-                this.preloader(true);
-                this.axios.post('/getDictiList', {
-                    parent: 2028
-                })
-                    .then(response => {
-                        if(response.data.success){
-                            this.colorsCar = response.data.result;
+
+                                this.preloader(false);
+                            } else {
+                                alert('К сожалению, данные по маркам не найдены в базе данных');
+                                this.preloader(false);
+                            }
+                        })
+                        .catch(error => {
+                            alert(error);
                             this.preloader(false);
-                        } else {
-                            alert('К сожалению, данные по моделям не найдены в базе данных');
-                            this.preloader(false);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                        this.preloader(false);
-                    });
+                        });
+                }
+                if(this.marksCar.length == 0 && dicti == null) {
+                    this.getDicti('marks');
+                }
             },
+        },
+        computed:{
+            computedType(){
+                if(this.agrobjects[this.aIndex].SubClassISN != '' && this.agrobjects[this.aIndex].SubClassISN != null){
+                    return true;
+                }
+            }
         },
         watch: {
             //...
@@ -197,7 +230,7 @@
             this.newVehicle.PLATE = this.agrobjcar.REGNO;
             this.newVehicle.VIN = this.agrobjcar.VIN;
             this.newVehicle.CLASSISN = this.agrobjects[this.aIndex].SubClassISN ? this.agrobjects[this.aIndex].SubClassISN : 3366;
-            this.searchVehicleMarks();
+            this.getDicti();
         }
     }
 </script>
