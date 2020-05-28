@@ -53,12 +53,15 @@
             <div v-if="agrobject.ClassISN != ''" class="col-12">
                 <div class="col-12" v-if="Object.keys(agrobject.objekt[agrobject.ClassISN].AGROBJCAR).length > 0">
                     <agrobjcar v-for="(agrobjcar,index) in agrobject.objekt[agrobject.ClassISN].AGROBJCAR"
-                            :agrobjcar="agrobjcar"
-                           :agrobject="agrobject"
-                           :key="index"
-                           :preloader="preloader"
-                           :calc-changed="calcChanged"
-                           :cIndex="index" ></agrobjcar>
+                               :agrobjcar="agrobjcar"
+                               :agrobject="agrobject"
+                               :agrobjects="agrobjects"
+                               :key="index"
+                               :preloader="preloader"
+                               :calc-changed="calcChanged"
+                               :aIndex="aIndex"
+                               :cIndex="index" >
+                    </agrobjcar>
                 </div>
             </div>
 

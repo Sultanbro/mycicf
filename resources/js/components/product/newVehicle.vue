@@ -13,19 +13,36 @@
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Дата выпуска авто </label>
-                    <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.DATERELEASE" @keyup="calcChanged">
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged"
+                            v-model="newVehicle.DATERELEASE">
+                        <!--option v-for="item in vehicleProperty.dateCar" :value="item">{{ item }}</option-->
+                    </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Марка</label>
                     <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.MARKISN" @keyup="calcChanged">
+                    <select class="attr-input-text col-12 bg-white"
+                            v-model="newVehicle.MARKISN"
+                            @change="searchVehicleModels($event);calcChanged()">
+                        <option v-if="marksCar.length > 0" v-for="item in marksCar" :value="item.Value[0]">{{ item.Label[0] }}</option>
+                    </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Модель</label>
-                    <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.MODELISN" @keyup="calcChanged">
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged"
+                            v-model="newVehicle.MODELISN">
+                        <option v-if="modelsCar.length > 0" v-for="item in modelsCar" :value="item.Value[0]">{{ item.Label[0] }}</option>
+                    </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Цвет</label>
-                    <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.COLORISN" @keyup="calcChanged">
+                    <select class="attr-input-text col-12 bg-white"
+                            @keyup="calcChanged"
+                            v-model="newVehicle.COLORISN">
+                        <option v-if="colorsCar.length > 0" v-for="item in colorsCar" :value="item.Value[0]">{{ item.Label[0] }}</option>
+                    </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">CLASSISN</label>
@@ -45,7 +62,13 @@
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                     <label class="bold">Расположение руля</label>
-                    <input type="text" class="attr-input-text col-12 bg-white" v-model="newVehicle.RIGHT_HAND_DRIVE_BOOL" @keyup="calcChanged">
+                    <select class="attr-input-text col-12 bg-white"
+                            v-model="newVehicle.RIGHT_HAND_DRIVE_BOOL"
+                            @change="calcChanged"
+                    >
+                        <option value="Y">Праворульная</option>
+                        <option value="N">Леворульная</option>
+                    </select>
                 </div>
             </div>
             <button class="btn btn-outline-info mt-3 mr-3" @click="addToKias()">Сохранить</button>
@@ -59,36 +82,123 @@
         data() {
             return {
                 newVehicle: {
-                    MODELISN: null,
-                    COLORISN: null,
-                    MARKISN: null,
-                    DATERELEASE: null,
-                    CLASSISN: 3366,
                     PLATE: null,
                     VIN: null,
+                    CLASSISN: 3366,
+                    MARKISN: null,
+                    MODELISN: null,
+                    COLORISN: null,
+                    DATERELEASE: null,
                     ENGINE_NUMBER: null,
                     ENGINE_POWER: null,
                     ENGINE_VOLUME: null,
                     RIGHT_HAND_DRIVE_BOOL: null,
                     TF_ID: null,
-                }
+                },
+                marksCar: [],
+                modelsCar: [],
+                colorsCar: []
             }
         },
         props: {
             agrobjcar : Object,
             agrobject : Object,
+            agrobjects : Array,
             cIndex: Number,
+            aIndex: Number,
             preloader: Function,
             calcChanged: Function
         },
         methods:{
-            addToKias(){
-                //...
-            }
+            addToKias: async function(e){
+                this.preloader(true);
+                this.axios.post('/saveVehicle', {
+                    data: this.newVehicle
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            alert('Авто успешно добавлено');
+                            this.preloader(false);
+                        } else {
+                            alert(response.data.error);
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
+            searchVehicleMarks: async function(e){
+                this.preloader(true);
+                this.axios.post('/getDictiList', {
+                    parent: this.newVehicle.CLASSISN
+                })
+                    .then(response => {
+                        console.log(response);
+                        if(response.data.success){
+                            this.marksCar = response.data.result;
+                            this.searchVehicleColors();
+                            this.preloader(false);
+                        } else {
+                            alert('К сожалению, данные по маркам не найдены в базе данных');
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
+            searchVehicleModels: async function(e){
+                this.preloader(true);
+                this.axios.post('/getDictiList', {
+                    parent: this.newVehicle.MARKISN
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            this.modelsCar = response.data.result;
+                            this.preloader(false);
+                        } else {
+                            alert('К сожалению, данные по моделям не найдены в базе данных');
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
+
+            searchVehicleColors: async function(e){
+                this.preloader(true);
+                this.axios.post('/getDictiList', {
+                    parent: 2028
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            this.colorsCar = response.data.result;
+                            this.preloader(false);
+                        } else {
+                            alert('К сожалению, данные по моделям не найдены в базе данных');
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
         },
         watch: {
             //...
         },
+        created(){
+            this.newVehicle.PLATE = this.agrobjcar.REGNO;
+            this.newVehicle.VIN = this.agrobjcar.VIN;
+            this.newVehicle.CLASSISN = this.agrobjects[this.aIndex].SubClassISN ? this.agrobjects[this.aIndex].SubClassISN : 3366;
+            this.searchVehicleMarks();
+        }
     }
 </script>
 

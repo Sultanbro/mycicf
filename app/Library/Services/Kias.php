@@ -397,10 +397,31 @@ class Kias implements KiasServiceInterface
             'TF_NUMBER' => $tfNumber,
             'SRTS'      => $srts,
         ]);
-        $result = $secondSearch != null ? $result->ROWSET->row[0] : $result;
+        $result = $secondSearch == null ? $result : $result->ROWSET->row[0];
 
         if ($result)
             return $result;
+    }
+
+    public function saveVehicle($data)
+    {
+        $data['DATERELEASE'] = '01.01.'.$data['DATERELEASE'];
+
+        return $this->request('User_CicSaveTFESBD', [
+            'TF_ID' => $data['TF_ID'],
+            'MARKISN' => $data['MARKISN'],
+            'PLATE' => $data['PLATE'],
+            'MODELISN' => $data['MODELISN'],
+            'CLASSISN' => $data['CLASSISN'],
+            'VIN' => $data['VIN'],
+            'DATERELEASE' => $data['DATERELEASE'],
+            'ENGINE_NUMBER' => isset($data['ENGINE_NUMBER']) ? 0 : $data['ENGINE_NUMBER'],
+            'ENGINE_POWER' => $data['ENGINE_POWER'],
+            'ENGINE_VOLUME' => $data['ENGINE_VOLUME'],
+            'RIGHT_HAND_DRIVE_BOOL' => $data['RIGHT_HAND_DRIVE_BOOL'] == 1 ? 'Y' : 'N',
+            'COLORISN' => $data['COLORISN'],
+            'COLOR' => $data['COLORISN'],
+        ]);
     }
 
     /**

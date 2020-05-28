@@ -46,9 +46,11 @@
                :height="height">
             <new-vehicle v-if="!notFound"
                          :c-index="cIndex"
+                         :aIndex="aIndex"
                          :preloader="preloader"
                          :calc-changed="calcChanged"
                          :agrobject="agrobject"
+                         :agrobjects="agrobjects"
                          :agrobjcar="agrobjcar">
             </new-vehicle>
         </modal>
@@ -68,7 +70,9 @@
         props: {
             agrobjcar : Object,
             agrobject: Object,
+            agrobjects: Array,
             cIndex: Number,
+            aIndex: Number,
             preloader: Function,
             calcChanged: Function
         },

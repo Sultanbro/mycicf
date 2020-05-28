@@ -1110,4 +1110,39 @@ class ProductsController extends Controller
             }
         }
     }
+
+    public function saveVehicle(Request $request){
+        $kias = new Kias();
+        $kias->initSystem();
+//        $plate = null;
+//        $vin = $request->data['VIN'];
+//        $srts = null;
+//
+//        $check = VehicleController::getVehicle($vin, $plate, $srts, $kias);
+//
+//        if(isset($check[1]) && !$check[1]->error){
+//            // Проверяем есть ли в гос базе данных ТС с таким VIN номером
+//            return response()->json([
+//                'success' => false,
+//                'vehicle' => [],
+//                'error' =>  'ТС с таким VIN номером уже есть в базе данных',
+//            ]);
+//        } else {
+//            $checkKias = VehicleController::searchTFESBD($vin, $plate, $srts, $kias);
+//            if(isset($checkKias[1]) && !$checkKias[1]->error){
+//                // Проверяем есть ли в киасе ТС с таким VIN номером
+//                return response()->json([
+//                    'success' => false,
+//                    'vehicle' => [],
+//                    'error' =>  'ТС с таким VIN номером уже есть в базе данных',
+//                ]);
+//            } else {
+                try {
+                    $setVehicle = $kias->saveVehicle($request->data);
+                } catch (KiasRequestException $e) {
+                    return $e->getMessage();
+                }
+            //}
+        //}
+    }
 }

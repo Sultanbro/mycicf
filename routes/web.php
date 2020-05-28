@@ -268,6 +268,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/calc/saveSubject', 'SiteController@saveSubject');
         Route::post('/express/calculate', 'ProductsController@expressCalc');
         Route::post('/full/calculate', 'ProductsController@fullCalc');
+        Route::post('/saveVehicle','ProductsController@saveVehicle');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
