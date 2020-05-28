@@ -11,6 +11,8 @@ use App\Comment;
 use App\Events\NewPost;
 use App\Like;
 use App\Post;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CoordinationController extends Controller
 {
@@ -409,8 +411,6 @@ class CoordinationController extends Controller
 
     public function closeDecade(Request $request){
         $content = $request->all()['content'];
-        $success = false;
-        $error = '';
 
         try {
             $new_post = new Post();
@@ -419,11 +419,9 @@ class CoordinationController extends Controller
             $new_post->pinned = 0;
             $new_post->save();
         }catch(\Exception $e) {
-            $error = $e->getMessage();
-            $success = false;
             return [
-                'success' => $success,
-                'error' => $error
+                'success' => false,
+                'error' => $e->getMessage()
             ];
         }
 
