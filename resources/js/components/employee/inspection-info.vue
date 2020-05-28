@@ -17,7 +17,7 @@
                         </tr>
                         </thead>
                         <tbody class="date-color">
-                        <tr>
+                        <tr v-if="inspections_data.length > 0">
                             <td class="pointer" scope="col">{{inspections_data.Contact.FIO}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Contact}}</td>

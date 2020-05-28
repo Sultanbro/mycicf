@@ -17,7 +17,7 @@
                         </tr>
                         </thead>
                         <tbody class="date-color font-size-0_7">
-                        <tr>
+                        <tr v-if="inspections_data.length > 0">
                             <td class="pointer" scope="col">{{inspections_data.Contact.FIO}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Contact}}</td>
@@ -78,9 +78,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <CarForm v-if="info.SubClass=='Легковые автомобили'"></CarForm>
-                                    <SpecialCarForm v-if="info.SubClass=='Спец'"></SpecialCarForm>
-                                    <OtherForm v-if="info.SubClass=='Иные'"></OtherForm>
+                                    <CarForm v-if="info.ClassType==1"></CarForm>
+                                    <SpecialCarForm v-if="info.ClassType==2"></SpecialCarForm>
+                                    <OtherForm v-if="info.ClassType==3"></OtherForm>
                                     <upload-image></upload-image>
                                 </div>
                             </div>
