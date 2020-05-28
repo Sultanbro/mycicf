@@ -558,13 +558,54 @@ class SiteController extends Controller
             ->limit(10)
             ->get();
         $result = [];
-        foreach ($birthdays as $birthday){
-            array_push($result, [
-                "fullname"=> $birthday->fullname,
-                "ISN"=>$birthday->kias_id,
-                "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
-                "fakeImage"=> !Branch::checkImageExists($birthday->kias_id)
-            ]);
+        $lbDate[0] = $lbDate[1] = null;
+        $kkk = null;
+        foreach ($birthdays as $key => $birthday){
+            $bDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
+            $today = explode('.',date('d.m.Y'));
+
+
+            //print $lbDate[0].'='.$bDate[0].'///'.$lbDate[1].'='.$bDate[1].'<br>';
+            if($lbDate[0] == $bDate[0] && $lbDate[1] == $bDate[1]){
+                //print $kkk; print_r($result[$kkk]);
+//                if($kkk != null) {
+//                    array_push($result[$kkk]['aFew'], [
+//                        "fullname" => $birthday->fullname,
+//                        "ISN" => $birthday->kias_id,
+//                        "birthday" => date('d.m.Y', strtotime($birthday->birthday)),
+//                        "fakeImage" => !Branch::checkImageExists($birthday->kias_id)
+//                    ]);
+//                }
+                $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
+            } else {
+                //print $kkk;
+                array_push($result, [
+                    "fullname"=> $birthday->fullname,
+                    "ISN"=>$birthday->kias_id,
+                    "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
+                    'aFew' => []
+                ]);
+                $kkk = $key;
+                $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
+            }
+            print $kkk.'='.$lbDate[0].'='.$bDate[0].'!!!';
+//            if($bDate[0] == $today[0] && $bDate[1] == $today[1] && $key != 0){
+//                array_push($result[0]['aFew'],[
+//                    "fullname"=> $birthday->fullname,
+//                    "ISN"=>$birthday->kias_id,
+//                    "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
+//                    "fakeImage"=> !Branch::checkImageExists($birthday->kias_id)
+//                ]);
+//            } else {
+//                array_push($result, [
+//                    "fullname"=> $birthday->fullname,
+//                    "ISN"=>$birthday->kias_id,
+//                    "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
+//                    "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
+//                    'aFew' => []
+//                ]);
+//            }
         }
         return response()->json(['birthdays' => $result]);
     }

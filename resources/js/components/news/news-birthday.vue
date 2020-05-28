@@ -26,7 +26,17 @@
                             :date="birthdays[index].birthday"
                             :ISN="birthdays[index].ISN"
                             :fakeImage="birthdays[index].fakeImage"
+                            :aFew="birthdays[index].aFew"
                         ></simple-birthday>
+                        <!--simple-birthday
+                                v-for="birthday,key in birthdays"
+                                :key="key"
+                                v-if="birthdays.length > 0"
+                                :fullName="birthday.fullname"
+                                :date="birthday.birthday"
+                                :ISN="birthday.ISN"
+                                :fakeImage="birthday.fakeImage"
+                        ></simple-birthday-->
                     </div>
                     <hr>
                 </div>
