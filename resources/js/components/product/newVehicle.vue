@@ -30,7 +30,7 @@
                     <select class="attr-input-text col-12 bg-white"
                             @change="calcChanged"
                             v-model="newVehicle.DATERELEASE">
-                        <!--option v-for="item in vehicleProperty.dateCar" :value="item">{{ item }}</option-->
+                        <option v-for="n in 10" value="n">{{ n }}</option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
@@ -198,8 +198,6 @@
                                         this.typeTS = response.data.result;
                                         break;
                                 }
-
-
                                 this.preloader(false);
                             } else {
                                 alert('К сожалению, данные по маркам не найдены в базе данных');
@@ -221,6 +219,10 @@
                 if(this.agrobjects[this.aIndex].SubClassISN != '' && this.agrobjects[this.aIndex].SubClassISN != null){
                     return true;
                 }
+            },
+            computedDate(){
+                var date = new Date();
+                return date.day;
             }
         },
         watch: {
