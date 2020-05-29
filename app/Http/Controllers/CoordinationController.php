@@ -409,7 +409,7 @@ class CoordinationController extends Controller
     }
 
     public function closeDecade(Request $request){
-        $content = $request->all()['content'];
+        $content = $request->postText;
 
         try {
             $new_post = new Post();
@@ -437,7 +437,7 @@ class CoordinationController extends Controller
             'postId' => $new_post->id,
             'image' => [],  //$new_post->getImage(),
             'documents' => [],  //$new_post->getDocuments(),
-            'youtube' => '',    //$new_post->getVideo(),
+            'youtube' => null,    //$new_post->getVideo(),
             'videos' => [], //$new_post->getVideoUrl(),
             'comments' => [],
         ];
