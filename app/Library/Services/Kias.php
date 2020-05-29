@@ -313,6 +313,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getRegions($parent){
+        return $this->request('User_CicGetRegionsAndCity', [
+            'region' => $parent
+        ]);
+    }
+
     public function getSubject($firstName, $lastName, $patronymic, $iin)
     {
         return $this->request('User_CicSearchSubject', [

@@ -44,7 +44,10 @@ class UpdateRegions extends Command
      */
     public function handle(){
         try{
-            $this->updateRegions(123456);
+            $regions = $this->updateRegions(0);
+            if(count($regions) > 0){
+                $this->updateChilds($regions);
+            }
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
@@ -56,39 +59,40 @@ class UpdateRegions extends Command
             $kias->initSystem();
             $response = $kias->getRegions($isn);
 
-            if(isset($response->ROWSET->row)) {
+            $parent_isns = [];
+            if(isset($response->rowset->row)) {
                 DB::table('regions')->where('parent_isn', $isn)->delete();
-                foreach ($response->ROWSET->row as $row) {
+                foreach ($response->rowset->row as $row) {
                     $region = new Region;
-                    $region->isn = (string)$row->ISN;
-                    $region->fullname = (string)$row->FULLNAME;
+                    $region->isn = (string)$row->isn;
+                    $region->fullname = (string)$row->name;
                     $region->code = (string)$row->CODE;
                     $region->numcode = (string)$row->NUMCODE;
                     $region->n_kids = (string)$row->N_KIDS;
                     $region->parent_isn = $isn;
-                    $region->save();
-                }
-
-                if($type == 'attributes') {
-                    $this->updateNkids($isn);
+                    if($region->save()){
+                        array_push($parent_isns,(string)$row->ISN);
+                        echo 'Данные по '.(string)$row->FULLNAME.' успешно записаны. ';
+                    } else {
+                        echo 'Ошибка записи '.(string)$row->FULLNAME.' ';
+                    }
                 }
             }
-            echo 'Данные по '.$type.' успешно записаны. ';
-            return true;
+            return $parent_isns;
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
     }
 
-    public function updateNkids($parent){
+    public function updateChilds($parents){
         try{
             $kias = new Kias();
             $kias->initSystem();
-            $parents = Dicti::where('parent_isn',$parent)->where('n_kids',1)->get();
+            $parent_isns = [];
             foreach($parents as $parent) {
-                $oldDicti = Dicti::where('parent_isn',$parent->isn)->delete();
+                $oldDicti = Region::where('parent_isn',$parent)->delete();
                 try {
-                    $child_response = $kias->getDictiList($parent->isn);
+                    $child_response = $kias->getRegions($parent);
                 } catch (Exception $e) {
                     return response()->json([
                         'success' => false,
@@ -97,7 +101,7 @@ class UpdateRegions extends Command
                 }
                 if (isset($child_response->ROWSET->row)) {
                     foreach ($child_response->ROWSET->row as $child_row) {
-                        $dictiCH = new Dicti;
+                        $dictiCH = new Region;
                         $dictiCH->isn = (string)$child_row->ISN;
                         $dictiCH->fullname = (string)$child_row->FULLNAME;
                         $dictiCH->code = (string)$child_row->CODE;
@@ -105,11 +109,16 @@ class UpdateRegions extends Command
                         $dictiCH->n_kids = (string)$child_row->N_KIDS;
                         $dictiCH->parent_isn = $parent->isn;
                         $dictiCH->parent_name = $parent->fullname . " " . (string)$child_row->FULLNAME;
-                        $dictiCH->save();
+                        if($dictiCH->save()){
+                            array_push($parent_isns,(string)$child_row->ISN);
+                            echo 'Данные по '.(string)$child_row->FULLNAME.' успешно записаны. ';
+                        } else {
+                            echo 'Ошибка записи '.(string)$child_row->FULLNAME.' ';
+                        }
                     }
                 }
             }
-            return true;
+            return $parent_isns;
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
