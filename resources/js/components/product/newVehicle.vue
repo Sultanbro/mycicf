@@ -30,7 +30,7 @@
                     <select class="attr-input-text col-12 bg-white"
                             @change="calcChanged"
                             v-model="newVehicle.DATERELEASE">
-                        <option v-for="n in 10" value="n">{{ n }}</option>
+                        <option v-for="n in computedDate" :value="currentYear-n">{{ currentYear-n }}</option>
                     </select>
                 </div>
                 <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
@@ -128,7 +128,9 @@
                 colorsCar: [],
                 typeTS: [],
                 regions: [],
-                cities: []
+                cities: [],
+                startYear: 1980,
+                currentYear: null
 
             }
         },
@@ -221,8 +223,8 @@
                 }
             },
             computedDate(){
-                var date = new Date();
-                return date.day;
+                this.currentYear = parseInt(new Date().getFullYear());
+                return this.currentYear-parseInt(this.startYear);
             }
         },
         watch: {

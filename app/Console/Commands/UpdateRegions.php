@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\FullConstructor;
-use App\Dicti;
+use App\Region;
 use DB;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SiteController;
@@ -11,21 +11,21 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Console\Command;
 
-class UpdateProductDicti extends Command
+class UpdateRegions extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'products:dicti';
+    protected $signature = 'update:regions';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Обновить аттрибуты и оговорки и ограничения для конструктора';
+    protected $description = 'Обновить регионы';
 
     /**
      * Create a new command instance.
@@ -44,26 +44,20 @@ class UpdateProductDicti extends Command
      */
     public function handle(){
         try{
-            $regions = $this->updateProductsDicti(220169);
-            if(count($regions) > 0){
-                $this->updateChilds($regions);
-            } else {
-                echo 'Ошибка записи регионов';
-            }
+            $this->updateRegions(123456);
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
     }
 
-    public function updateProductsDicti($isn){
+    public function updateRegions($isn){
         try{
             $kias = new Kias();
             $kias->initSystem();
-            $response = $kias->getDictiList($isn);
+            $response = $kias->getRegions($isn);
 
             if(isset($response->ROWSET->row)) {
                 DB::table('regions')->where('parent_isn', $isn)->delete();
-                $parent_isns = [];
                 foreach ($response->ROWSET->row as $row) {
                     $region = new Region;
                     $region->isn = (string)$row->ISN;
@@ -73,26 +67,28 @@ class UpdateProductDicti extends Command
                     $region->n_kids = (string)$row->N_KIDS;
                     $region->parent_isn = $isn;
                     $region->save();
-                    array_push($parent_isns,(string)$row->ISN);
                 }
-                echo 'Данные по областям успешно записаны. ';
-            } else {
-                echo 'Ошибка получения данных из киаса';
+
+                if($type == 'attributes') {
+                    $this->updateNkids($isn);
+                }
             }
-            return $parent_isns;
+            echo 'Данные по '.$type.' успешно записаны. ';
+            return true;
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
     }
 
-    public function updateChilds($parents){
+    public function updateNkids($parent){
         try{
             $kias = new Kias();
             $kias->initSystem();
+            $parents = Dicti::where('parent_isn',$parent)->where('n_kids',1)->get();
             foreach($parents as $parent) {
-                $oldDicti = Region::where('parent_isn',$parent)->delete();
+                $oldDicti = Dicti::where('parent_isn',$parent->isn)->delete();
                 try {
-                    $child_response = $kias->getDictiList($parent);
+                    $child_response = $kias->getDictiList($parent->isn);
                 } catch (Exception $e) {
                     return response()->json([
                         'success' => false,
@@ -101,7 +97,7 @@ class UpdateProductDicti extends Command
                 }
                 if (isset($child_response->ROWSET->row)) {
                     foreach ($child_response->ROWSET->row as $child_row) {
-                        $dictiCH = new Region;
+                        $dictiCH = new Dicti;
                         $dictiCH->isn = (string)$child_row->ISN;
                         $dictiCH->fullname = (string)$child_row->FULLNAME;
                         $dictiCH->code = (string)$child_row->CODE;
@@ -111,7 +107,6 @@ class UpdateProductDicti extends Command
                         $dictiCH->parent_name = $parent->fullname . " " . (string)$child_row->FULLNAME;
                         $dictiCH->save();
                     }
-                    echo 'Регионы успешно записаны ';
                 }
             }
             return true;
