@@ -78,10 +78,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <CarForm v-if="info.ClassType==1"></CarForm>
+                                    <CarForm v-if="info.ClassType==1" :details="info"></CarForm>
                                     <SpecialCarForm v-if="info.ClassType==2"></SpecialCarForm>
                                     <OtherForm v-if="info.ClassType==3"></OtherForm>
-                                    <upload-image></upload-image>
+                                    <ImageUploader :info="info"></ImageUploader>
                                 </div>
                             </div>
                         </div>

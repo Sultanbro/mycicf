@@ -178,6 +178,13 @@ interface KiasServiceInterface
      */
     public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn);
 
+    /**
+     * Отправить данные для сохранения в КИАС
+     * @param $docIsn
+     * @param $data
+     *
+     * @return mixed
+     */
     public function setInsuranceInspectionInfo($docIsn, $data);
 
     /**

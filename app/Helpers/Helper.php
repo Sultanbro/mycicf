@@ -20,7 +20,7 @@ class Helper
     {
         $xmlObject = json_decode(json_encode($xmlObject), true);
         if (empty($xmlObject)) {
-            return [];
+            throw new \Exception('Пустые данные');
         }
         $xmlArray = [];
         foreach ($xmlObject as $key => $value) {

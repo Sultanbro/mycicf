@@ -140,6 +140,7 @@
             <div class="file-input">
                 <label for="file">Выберите файл</label>
                 <input type="file" id="file" @change="onInputChange" multiple>
+                <input type="hidden" name="refIsn" :value="info.ISN">
             </div>
         </div>
 
@@ -173,6 +174,9 @@
             images: [],
             maxCount: 2
         }),
+        props: {
+            info: Object,
+        },
         methods: {
             OnDragEnter(e) {
                 e.preventDefault();
@@ -225,13 +229,16 @@
             },
             upload() {
                 const formData = new FormData();
-                console.log(this.files.length, this.images.length)
+                let values = $("input[name='refIsn']").map(function () {
+                    return $(this).val();
+                }).get();
                 if (this.files.length > this.maxCount) {
                     this.$toastr.e(`Максимальное количество ${this.maxCount} файл`);
                     return;
                 }
                 this.files.forEach(file => {
                     formData.append('images[]', file, file.name);
+                    formData.append('refIsn', values)
                 });
                 axios.post('/upload', formData)
                     .then(response => {

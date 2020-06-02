@@ -309,6 +309,7 @@
                     </div>
                 </div>
                 <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
+                    <input type="hidden" name="inspectionCount" :value="count">
                     <button title="Сохранить" type="submit" class="btn btn-primary">Сохранить</button>
                 </div>
             </div>
@@ -321,9 +322,13 @@
     export default {
         name: "other-form",
         data() {
-            return {}
+            return {
+                count: 0,
+            }
         },
-        props: {},
+        props: {
+            details: Object,
+        },
         methods: {
             saveToDraft: function (e) {
                 var form = document.getElementById('other-form');
@@ -333,6 +338,10 @@
                         .then((response) => {
                             if (!response.data.success) {
                                 alert(response.data.error);
+                            } else {
+                                if (this.count == 0) {
+                                    this.count += 1;
+                                }
                             }
                         })
                         .catch(function (error) {

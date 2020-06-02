@@ -76,10 +76,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <CarForm v-if="info.ClassType==1"></CarForm>
-                                    <SpecialCarForm v-if="info.ClassType==2"></SpecialCarForm>
-                                    <OtherForm v-if="info.ClassType==3"></OtherForm>
-                                    <upload-image></upload-image>
+                                    <CarForm v-if="info.ClassType==1" :details="info"></CarForm>
+                                    <SpecialCarForm v-if="info.ClassType==2" :details="info"></SpecialCarForm>
+                                    <OtherForm v-if="info.ClassType==3" :details="info"></OtherForm>
+                                    <ImageUploader :info="info"></ImageUploader>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +90,8 @@
                             </button>
                         </div>
                         <div class="pull-right">
-                            <button @click="updateToCompleted" class="btn btn-success mr-2">Исполнена</button>
+                            <input type="hidden" name="" :value="this.countForDisabled">
+                            <button @click="updateToCompleted" class="btn btn-success mr-2">Исполнено</button>
                         </div>
                     </div>
                 </div>
@@ -142,6 +143,7 @@
                 showDescription: false,
                 songsDisplayingDescription: [],
                 reason: this.$slots.default ? this.$slots.default[0].text : '',
+                countForDisabled: 0,
             }
         },
         mounted() {
@@ -186,7 +188,6 @@
                 if (isEmpty) {
                     this.none = true;
                 }
-                console.log(this.inspections_data)
                 this.preloader(false);
             },
             updateToCompleted() {
@@ -219,6 +220,9 @@
                 } else {
                     document.getElementById('preloader').style.display = 'none';
                 }
+            },
+            onClickChild(value) {
+                console.log(value) // someValue
             }
         },
     }

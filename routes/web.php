@@ -16,7 +16,7 @@
  */
 
 // Роуты для Песочницы
-Route::get('/index', 'SandboxController@index');
+Route::get('/sandbox/index', 'SandboxController@index');
 
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
