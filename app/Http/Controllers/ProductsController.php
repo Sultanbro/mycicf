@@ -173,6 +173,7 @@ class ProductsController extends Controller
 
                         if($isn == 2118) {
                             $objects['objekt'][$isn]['AGROBJCAR'][0] = [
+                                'ExtSystemKey' => '',
                                 'ModelISN' => '',
                                 'MarkaISN' => '',
                                 'ClassISN' => '',
@@ -180,6 +181,9 @@ class ProductsController extends Controller
                                 'VIN' => '',
                                 'REGNO' => '',
                                 'OwnerJuridical' => 'N',
+                                'GRNZ' => '',
+                                'SRTSNUM' =>  '',
+                                'SRTSDATE' => '',
                                 'TerritoryISN' => '',
                                 'PROBEG' => '',
                                 'REALPRICE' => ''
@@ -674,6 +678,10 @@ class ProductsController extends Controller
                     'REGNO' => $car['REGNO'],
                     'OwnerJuridical' => 'N',
                     'TerritoryISN' => $car['TerritoryISN'],
+                    'ExtSystemKey' => '',
+                    'GRNZ' => $car['REGNO'],
+                    'SRTSNUM' =>  '',
+                    'SRTSDATE' => '',
                     'PROBEG' => intval($car['PROBEG']),
                     'REALPRICE' => intval($car['REALPRICE'])
 
@@ -895,48 +903,6 @@ class ProductsController extends Controller
         return $result;
     }
 
-    public function getVehicle(Request $request){
-        $success = false;
-        $error = '';
-        $kias = new Kias();
-        $kias->initSystem();
-        $vin = $request->VIN ?? null;
-        $tfNumber = $request->REGNO ?? null;
-        $result = $kias->getVehicle($vin, null, $tfNumber, null);
-        if(!isset($result->VIN)){
-            $result = $kias->getVehicle($vin, null, $tfNumber, null,1);
-        }
-
-        if(isset($result->VIN)){
-            $releaseDate = isset($result->REALESE_DATE) ? '01.12.'.(string)$result->REALESE_DATE : (string)$result->DATERELEASE;
-            $territory_isn = isset($result->REG_TERRITORY) ? (string)$result->REG_TERRITORY : 17;
-            $territory_name = isset($result->REG_TERRITORY_NAME) ? (string)$result->REG_TERRITORY_NAME : 'Временный въезд';
-            $success = true;
-            $result = array(
-                'ModelISN' => (string)$result->MODELISN,
-                'Model' => (string)$result->MODELNAME,
-                'MarkaISN' => (string)$result->MARKISN,
-                'Mark' => (string)$result->MARKNAME,
-                'ClassISN' => $request->ClassISN,
-                'ReleaseDate' => $releaseDate,
-                'VIN' => (string)$result->VIN,
-                'REGNO' => (string)$result->REG_NUM,
-                'OwnerJuridical' => 'N',
-                'TerritoryISN' => $territory_isn,
-                'TerritoryName' => $territory_name,
-                'PROBEG' => '',
-                'REALPRICE' => ''
-            );
-        } else {
-            $error = 'not_found';
-        }
-        return response()->json([
-            'success' => $success,
-            'error' => $error,
-            'result' => $result
-        ]);
-    }
-
     public function sendDocs(Request $request, KiasServiceInterface $kias){
         if(count($request->file('files')) > 0){
             $product = ExpressProduct::find($request->id);
@@ -1029,56 +995,30 @@ class ProductsController extends Controller
         $kias = new Kias();
         $kias->initSystem();
 
-        //if($request->type == 'attributes') {
-            $response = $kias->getDictiList($request->isn);
-            if (isset($response->ROWSET->row)) {
-                $oldDicti = Dicti::where('parent_isn', $request->isn)->delete();
-                $childIsns = [];
-                DB::table('dicti')->where('parent_isn', $request->isn)->delete();
-                foreach ($response->ROWSET->row as $row) {
-                    $dicti = new Dicti;
-                    $dicti->isn = (string)$row->ISN;
-                    $dicti->fullname = (string)$row->FULLNAME;
-                    $dicti->code = (string)$row->CODE;
-                    $dicti->numcode = (string)$row->NUMCODE;
-                    $dicti->n_kids = (string)$row->N_KIDS;
-                    $dicti->parent_isn = $request->isn;
-                    $dicti->save();
-                }
-
-                if ($request->type == 'attributes') {
-                    $this->updateNkids($request->isn);
-                }
-
-                return response()->json([
-                    'success' => true
-                ]);
+        $response = $kias->getDictiList($request->isn);
+        if (isset($response->ROWSET->row)) {
+            $oldDicti = Dicti::where('parent_isn', $request->isn)->delete();
+            $childIsns = [];
+            DB::table('dicti')->where('parent_isn', $request->isn)->delete();
+            foreach ($response->ROWSET->row as $row) {
+                $dicti = new Dicti;
+                $dicti->isn = (string)$row->ISN;
+                $dicti->fullname = (string)$row->FULLNAME;
+                $dicti->code = (string)$row->CODE;
+                $dicti->numcode = (string)$row->NUMCODE;
+                $dicti->n_kids = (string)$row->N_KIDS;
+                $dicti->parent_isn = $request->isn;
+                $dicti->save();
             }
-//        } else {
-//            $isns = [2103,2032,12200,12200,2034,848541];
-//            foreach($isn as $isns){
-//                $response = $kias->getDictiList($request->isn);
-//                if (isset($response->ROWSET->row)) {
-//                    $oldDicti = Dicti::where('parent_isn', $request->isn)->delete();
-//                    $childIsns = [];
-//                    DB::table('dicti')->where('parent_isn', $request->isn)->delete();
-//                    foreach ($response->ROWSET->row as $row) {
-//                        $dicti = new Dicti;
-//                        $dicti->isn = (string)$row->ISN;
-//                        $dicti->fullname = (string)$row->FULLNAME;
-//                        $dicti->code = (string)$row->CODE;
-//                        $dicti->numcode = (string)$row->NUMCODE;
-//                        $dicti->n_kids = (string)$row->N_KIDS;
-//                        $dicti->parent_isn = $request->isn;
-//                        $dicti->save();
-//                    }
-//                }
-//            }
-//
-//            return response()->json([
-//                'success' => true
-//            ]);
-//        }
+
+            if ($request->type == 'attributes') {
+                $this->updateNkids($request->isn);
+            }
+
+            return response()->json([
+                'success' => true
+            ]);
+        }
     }
 
     public function updateNkids($parent){
@@ -1111,38 +1051,102 @@ class ProductsController extends Controller
         }
     }
 
+    /*public function getVehicle(Request $request){
+        $success = false;
+        $error = '';
+        $kias = new Kias();
+        $kias->initSystem();
+        $vin = $request->VIN ?? null;
+        $tfNumber = $request->REGNO ?? null;
+        $result = $kias->getVehicle($vin, null, $tfNumber, null);
+        if(!isset($result->VIN)){
+            $result = $kias->getVehicle($vin, null, $tfNumber, null,1);
+        }
+
+        if(isset($result->VIN)){
+            $releaseDate = isset($result->REALESE_DATE) ? '01.12.'.(string)$result->REALESE_DATE : (string)$result->DATERELEASE;
+            $territory_isn = isset($result->REG_TERRITORY) ? (string)$result->REG_TERRITORY : 17;
+            $territory_name = isset($result->REG_TERRITORY_NAME) ? (string)$result->REG_TERRITORY_NAME : 'Временный въезд';
+            $success = true;
+            $result = array(
+                'ModelISN' => (string)$result->MODELISN,
+                'Model' => (string)$result->MODELNAME,
+                'MarkaISN' => (string)$result->MARKISN,
+                'Mark' => (string)$result->MARKNAME,
+                'ClassISN' => $request->ClassISN,
+                'ReleaseDate' => $releaseDate,
+                'VIN' => (string)$result->VIN,
+                'REGNO' => (string)$result->REG_NUM,
+                'OwnerJuridical' => 'N',
+                'TerritoryISN' => $territory_isn,
+                'TerritoryName' => $territory_name,
+                'PROBEG' => '',
+                'REALPRICE' => ''
+            );
+        } else {
+            $error = 'not_found';
+        }
+        return response()->json([
+            'success' => $success,
+            'error' => $error,
+            'result' => $result
+        ]);
+    }
+
     public function saveVehicle(Request $request){
         $kias = new Kias();
         $kias->initSystem();
-//        $plate = null;
-//        $vin = $request->data['VIN'];
-//        $srts = null;
-//
-//        $check = VehicleController::getVehicle($vin, $plate, $srts, $kias);
-//
-//        if(isset($check[1]) && !$check[1]->error){
-//            // Проверяем есть ли в гос базе данных ТС с таким VIN номером
-//            return response()->json([
-//                'success' => false,
-//                'vehicle' => [],
-//                'error' =>  'ТС с таким VIN номером уже есть в базе данных',
-//            ]);
-//        } else {
-//            $checkKias = VehicleController::searchTFESBD($vin, $plate, $srts, $kias);
-//            if(isset($checkKias[1]) && !$checkKias[1]->error){
-//                // Проверяем есть ли в киасе ТС с таким VIN номером
-//                return response()->json([
-//                    'success' => false,
-//                    'vehicle' => [],
-//                    'error' =>  'ТС с таким VIN номером уже есть в базе данных',
-//                ]);
-//            } else {
-                try {
-                    $setVehicle = $kias->saveVehicle($request->data);
-                } catch (KiasRequestException $e) {
-                    return $e->getMessage();
+
+        $vin = $request->data['VIN'] ?? null;
+        $tfNumber = $request->data['REGNO'] ?? null;
+        $error = null;
+        $result = null;
+
+        $checkByVin = $kias->getVehicle($vin, null, null, null);    // Сначало проверяем по VIN номеру
+        if(!isset($checkByVin->VIN)){
+            $checkByVin = $kias->getVehicle($vin, null, null, null,1);
+            if(!isset($checkByVin->VIN)){
+                $checkByNumber = $kias->getVehicle(null, null, $tfNumber, null);    // Потом проверяем по гос номеру
+                if(!isset($checkByNumber->VIN)){
+                    $checkByNumber = $kias->getVehicle(null, null, $tfNumber, null,1);
+                    if(isset($checkByNumber->VIN)){
+                        $error = 'В базе данных уже есть автотранспорт с таким гос номером - '.$tfNumber;
+                    }
+                } else {
+                    $error = 'В базе данных уже есть автотранспорт с таким гос номером - '.$tfNumber;
                 }
-            //}
-        //}
-    }
+            } else {
+                $error = 'В базе данных уже есть автотранспорт с таким VIN номером - '.$vin;
+            }
+        } else {
+            $error = 'В базе данных уже есть автотранспорт с таким VIN номером - '.$vin;
+        }
+
+        if($error != null){
+            return response()->json([
+                'success' => false,
+                'error' => $error
+            ]);
+        }
+
+        try {
+            $saveVehicle = $kias->saveVehicle($request->data);
+            if(isset($saveVehicle->error)){
+                $success = false;
+                $error = (string)$saveVehicle->error->fulltext;
+            } else {
+                $success = true;
+                $result = $request->data;
+            }
+        } catch (KiasRequestException $e) {
+            $success = false;
+            $error = $e->getMessage();
+        }
+
+        return response()->json([
+            'success' => $success,
+            'error' => $error,
+            'result' => $result
+        ]);
+    }*/
 }

@@ -36,35 +36,43 @@
 
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Фамилия : </label>
-                        <input type="text" v-model="participant.lastName" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-model="participant.lastName" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Имя : </label>
-                        <input type="text" v-model="participant.firstName" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-model="participant.firstName" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Отчество : </label>
-                        <input type="text" v-model="participant.patronymic" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-model="participant.patronymic" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <label class="bold">Дата рождения : </label>
+                        <input type="text" v-mask="'##.##.####'" v-model="participant.birthDay" class="attr-input-text col-12 bg-white">
+                    </div>
+
+                    <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Тип документа : </label>
-                        <input type="text" v-model="participant.docType" class="attr-input-text col-12 bg-white" disabled="true">
+                        <!--input type="text" v-model="participant.docType" class="attr-input-text col-12 bg-white"-->
+                        <select class="custom-select" v-if="Object.keys(participantDocs.types).length > 0" v-model="participant.docType">
+                            <option v-for="doc in participantDocs.types" :value="doc.Value[0]">{{doc.Label[0]}}</option>
+                        </select>
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Номер документа : </label>
-                        <input type="text" v-model="participant.docNumber" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-model="participant.docNumber" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Дата документа : </label>
-                        <input type="text" v-model="participant.docDate" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-model="participant.docDate" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Email : </label>
-                        <input type="text" v-model="participant.email" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-model="participant.email" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Номер телефона : </label>
-                        <input type="text" v-model="participant.phone" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text" v-mask="'+###########'" v-model="participant.phone" class="attr-input-text col-12 bg-white">
                     </div>
 
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-7 col-xl-7 col-md-6 col-sm-6 col-12">
@@ -158,6 +166,7 @@
 </template>
 
 <script>
+    import {mask} from 'vue-the-mask'
     export default {
         name: "participant",
         data() {
@@ -173,6 +182,7 @@
                 }
             }
         },
+        directives: {mask},
         props: {
             productId: String,
             participant: Object,
@@ -183,7 +193,8 @@
             calcChanged: Function,
             attributes: Array,
             insurantIs: Object,
-            participantIs: Object
+            participantIs: Object,
+            participantDocs: Object
         },
         created(){
             this.width = window.innerWidth;
@@ -195,6 +206,19 @@
             },
             openParticipantForm(pIndex){
                 this.$modal.show('participant-form-'+pIndex);
+                this.axios.post('/getDictiList', {
+                    parent : 43                 // docClassISN
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            this.participantDocs.types = response.data.result;
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
             },
             closeParticipantForm(pIndex){
                 this.$modal.hide('participant-form-'+pIndex);
@@ -241,12 +265,14 @@
                         this.participant.patronymic = response.participant.Patronymic;
                         this.participant.orgName = response.participant.OrgName;
                         this.participant.docType = response.participant.docType;
+                        //this.participant.docClassISN = response.participant.docClassISN;
                         this.participant.docNumber = response.participant.docNumber;
                         this.participant.docDate = response.participant.docDate;
                         this.participant.email = response.participant.email;
                         this.participant.phone = response.participant.phone;
                         this.participant.juridical = response.participant.Juridical;
                         this.participant.birthDay = response.participant.birthDay;
+                        this.participant.sex = response.participant.sex;
                         this.participant.okvdName = response.participant.okvdName;
                         this.participant.economicName = response.participant.economicName;
 
@@ -268,29 +294,55 @@
             save(ind = null){
                 let index = ind == null ? this.pIndex : ind;
                 let partName = this.participants[index].Label ? this.participants[index].Label : 'Страхователь';
-                if(ind == null) {
+                if(ind == null) {   // Здесь если не поставили галочку страхователь это застрахованный или выгодоприобретатель
                     if (this.isn != null && this.isn != '') {
+
                         this.participant.subjISN = this.isn;
                         this.participant.Value = this.isn;
+
+                        // Записываем данные в киас по контргенту
+                        this.preloader(true);
+                        this.axios.post('/setSubject', {
+                            participant : this.participant,
+                        })
+                            .then(response => {
+                                if(response.data.success){
+                                    alert(partName + ' успешно добавлен!');
+                                    this.preloader(false);
+                                } else {
+                                    this.participant.subjISN = null;
+                                    this.participant.Value = null;
+                                    this.preloader(false);
+                                }
+                            })
+                            .catch(error => {
+                                alert(error);
+                                this.participant.subjISN = null;
+                                this.participant.Value = null;
+                                this.preloader(false);
+                            });
+                        // End Записываем данные в киас по контргенту
+
                         this.subjISN = this.isn;
                         //this.closeParticipantForm(this.pIndex);
                         if(this.participant.ISN == this.formular.insurant.isn || this.participant.ISN == '2082'){
+                            // Если это страхователь или застрахованный
                             for(index in this.participants) {
                                 if(this.participant.ISN == this.formular.insurant.isn) {
-                                    if (this.insurantIs.participant) {
+                                    if (this.insurantIs.participant) {  // Если страхователь это застрахованный (очищаем)
                                         if (this.participants[index].ISN == '2082') {
                                             this.clearParticipant(index);
                                             this.insurantIs.participant = false;
                                         }
                                     }
                                     if (this.insurantIs.receiver) {
-                                        if (this.participants[index].ISN == '2081') {
+                                        if (this.participants[index].ISN == '2081') { // Если страхователь это выгодоприобретатель  (очищаем)
                                             this.clearParticipant(index);
                                             this.insurantIs.receiver = false;
                                         }
                                     }
                                 }
-                                if(this.participant.ISN == '2082' && this.participantIs.receiver) {
+                                if(this.participant.ISN == '2082' && this.participantIs.receiver) { // Если застрахованный это выгодо.  (очищаем)
                                     if(this.participants[index].ISN == '2081') {
                                         this.clearParticipant(index);
                                         this.participantIs.receiver = false;
@@ -298,7 +350,6 @@
                                 }
                             }
                         }
-                        alert(partName + ' успешно добавлен!');
                     } else {
                         alert('Не выбран ' + partName);
                     }
@@ -330,12 +381,14 @@
                     patronymic: '',
                     orgName: '',
                     docType: '',
+                    //docClassISN: '',
                     docNumber: '',
                     docDate: '',
                     email: '',
                     phone: '',
                     juridical: '',
                     birthDay: '',
+                    sex: '',
                     okvdName: '',
                     economicName: '',
                 });
@@ -350,12 +403,14 @@
                 this.participants[index].Value = '';
                 this.participants[index].subjISN = '';
                 this.participants[index].docType = null;
+                //this.participants[index].docClassISN = null;
                 this.participants[index].docNumber = null;
                 this.participants[index].docDate = null;
                 this.participants[index].email = null;
                 this.participants[index].phone = null;
                 this.participants[index].juridical = null;
                 this.participants[index].birthDay = null;
+                this.participants[index].birthDay = sex;
                 this.participants[index].okvdName = null;
                 this.participants[index].economicName = null;
             },
@@ -394,18 +449,19 @@
                             this.participants[index].data = this.participant.data;
                             this.participants[index].iin = this.participant.iin;
                             this.participants[index].subjISN = this.participant.subjISN;
-                            this.participants[index].Value = this.participant.Value;
                             this.participants[index].lastName = this.participant.lastName;
                             this.participants[index].firstName = this.participant.firstName;
                             this.participants[index].patronymic = this.participant.patronymic;
                             this.participants[index].orgName = this.participant.orgName;
                             this.participants[index].docType = this.participant.docType;
+                            //this.participants[index].docClassISN = this.participant.docClassISN;
                             this.participants[index].docNumber = this.participant.docNumber;
                             this.participants[index].docDate = this.participant.docDate;
                             this.participants[index].email = this.participant.email;
                             this.participants[index].phone = this.participant.phone;
                             this.participants[index].juridical = this.participant.juridical;
                             this.participants[index].birthDay = this.participant.birthDay;
+                            this.participants[index].sex = this.participant.sex;
                             this.participants[index].okvdName = this.participant.okvdName;
                             this.participants[index].economicName = this.participant.economicName;
                             this.save(index);
@@ -423,11 +479,11 @@
                 return 'participant-form-'+this.pIndex;
             },
             computedPhysical(){
-                let result = !this.moreParticipant && this.participant.juridical == 'N' ? true : false;
+                let result = !this.moreParticipant && this.participant.juridical && this.participant.juridical == 'N' ? true : false;
                 return result;
             },
             computedJuridical(){
-                let result = !this.moreParticipant && this.participant.juridical == 'Y' ? true : false;
+                let result = !this.moreParticipant && this.participant.juridical && this.participant.juridical == 'Y' ? true : false;
                 return result;
             }
         },

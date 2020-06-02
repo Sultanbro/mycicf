@@ -337,6 +337,14 @@ class Kias implements KiasServiceInterface
         );
     }
 
+    public function setSubject($participant){
+        return $this->request('User_CicSetSubject', array_merge($participant,[
+                'RESIDENT' => "Y",
+                'COUNTRYISN' => "9515"
+            ])
+        );
+    }
+
     public function expressCalculator($ISN, $SubjISN, $addAttr)
     {
         return $this->request('User_CicExpressCalculator', [
@@ -411,7 +419,7 @@ class Kias implements KiasServiceInterface
 
     public function saveVehicle($data)
     {
-        $data['DATERELEASE'] = '01.01.'.$data['DATERELEASE'];
+        $data['DATERELEASE'] = '01.12.'.$data['DATERELEASE'];
 
         return $this->request('User_CicSaveTFESBD', [
             'TF_ID' => $data['TF_ID'],

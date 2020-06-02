@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\FullConstructor;
 use App\Region;
+use App\City;
 use DB;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SiteController;
@@ -45,9 +46,9 @@ class UpdateRegions extends Command
     public function handle(){
         try{
             $regions = $this->updateRegions(0);
-            if(count($regions) > 0){
-                $this->updateChilds($regions);
-            }
+//            if(count($regions) > 0){
+//                //$cities = $this->updateCities($regions);
+//            }
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
@@ -59,66 +60,70 @@ class UpdateRegions extends Command
             $kias->initSystem();
             $response = $kias->getRegions($isn);
 
-            $parent_isns = [];
+            $isns = [];
             if(isset($response->rowset->row)) {
-                DB::table('regions')->where('parent_isn', $isn)->delete();
+                DB::table('regions')->delete();
                 foreach ($response->rowset->row as $row) {
                     $region = new Region;
                     $region->isn = (string)$row->isn;
-                    $region->fullname = (string)$row->name;
-                    $region->code = (string)$row->CODE;
-                    $region->numcode = (string)$row->NUMCODE;
-                    $region->n_kids = (string)$row->N_KIDS;
-                    $region->parent_isn = $isn;
+                    $region->name = (string)$row->name;
+                    $region->parentisn = (string)$row->parentisn;
+                    $region->parentname = '';
+                    $region->regionisn = (string)$row->parentisn;
                     if($region->save()){
-                        array_push($parent_isns,(string)$row->ISN);
-                        echo 'Данные по '.(string)$row->FULLNAME.' успешно записаны. ';
-                    } else {
-                        echo 'Ошибка записи '.(string)$row->FULLNAME.' ';
+                        if((string)$row->parentisn != 0){
+                            array_push($isns,
+                                [
+                                    'isn' => (string)$row->isn,
+                                    'name' => (string)$row->name
+                                ]);
+                        }
+                        echo "Данные по ".$row->name." успешно записаны. \n";
                     }
                 }
             }
-            return $parent_isns;
+            return $isns;
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
     }
 
-    public function updateChilds($parents){
+    public function updateCities($parents){
         try{
             $kias = new Kias();
             $kias->initSystem();
-            $parent_isns = [];
+            $isns = [];
             foreach($parents as $parent) {
-                $oldDicti = Region::where('parent_isn',$parent)->delete();
+                $oldDicti = City::where('parentisn', $parent['isn'])->delete();
                 try {
-                    $child_response = $kias->getRegions($parent);
+                    $child_response = $kias->getRegions($parent['isn']);
                 } catch (Exception $e) {
                     return response()->json([
                         'success' => false,
                         'error' => $e->getMessage()
                     ]);
                 }
-                if (isset($child_response->ROWSET->row)) {
-                    foreach ($child_response->ROWSET->row as $child_row) {
-                        $dictiCH = new Region;
-                        $dictiCH->isn = (string)$child_row->ISN;
-                        $dictiCH->fullname = (string)$child_row->FULLNAME;
-                        $dictiCH->code = (string)$child_row->CODE;
-                        $dictiCH->numcode = (string)$child_row->NUMCODE;
-                        $dictiCH->n_kids = (string)$child_row->N_KIDS;
-                        $dictiCH->parent_isn = $parent->isn;
-                        $dictiCH->parent_name = $parent->fullname . " " . (string)$child_row->FULLNAME;
+                if (isset($child_response->rowset->row)) {
+                    foreach ($child_response->rowset->row as $child_row) {
+                        $dictiCH = new City;
+                        $dictiCH->isn = (string)$child_row->isn;
+                        $dictiCH->name = (string)$child_row->name;
+                        $dictiCH->parentisn = (string)$child_row->parentisn;
+                        $dictiCH->parentname = $parent['name'];
+                        $dictiCH->regionisn = (string)$child_row->parentisn;
                         if($dictiCH->save()){
-                            array_push($parent_isns,(string)$child_row->ISN);
-                            echo 'Данные по '.(string)$child_row->FULLNAME.' успешно записаны. ';
+                            array_push($isns,[
+                                'isn' => (string)$child_row->isn,
+                                'name' => (string)$child_row->name
+                            ]);
+                            echo "Данные по ".$child_row->name." успешно записаны. \n";
                         } else {
-                            echo 'Ошибка записи '.(string)$child_row->FULLNAME.' ';
+                            echo "Ошибка записи ".$child_row->name." \n";
                         }
                     }
                 }
             }
-            return $parent_isns;
+            return $isns;
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }

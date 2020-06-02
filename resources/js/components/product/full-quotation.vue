@@ -19,6 +19,7 @@
                                  :attributes="attributes"
                                  :insurant-is="insurantIs"
                                  :participant-is="participantIs"
+                                 :participant-docs="participantDocs"
                                  :product-id="id">
                     </participant>
                 </div>
@@ -145,6 +146,9 @@
                     end : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                     period : 12,
                     sig: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
+                },
+                participantDocs: {
+                    types: []
                 },
             }
         },

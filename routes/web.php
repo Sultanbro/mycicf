@@ -256,7 +256,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full/create', 'ProductsController@fullCreate');
         Route::post('/full/getFullObjects', 'ProductsController@getFullObjects');
         Route::post('/full/getFullData', 'ProductsController@getFullData');
-        Route::post('/full/get-vehicle', 'ProductsController@getVehicle');
         Route::post('/full/send-docs', 'ProductsController@sendDocs');
         Route::post('/full/create-agr', 'ProductsController@createAgr');
         Route::post('/full/getPrintableFormList','ProductsController@getPrintableFormList');
@@ -264,11 +263,15 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full/getFullBranch','SiteController@getFullBranch');
 
         Route::post('/getDictiList', 'SiteController@getDicti');
+        Route::post('/getDictiListFromBase', 'SiteController@getDictiFromBase');
         Route::post('/searchSubject', 'SiteController@searchSubject');
+        Route::post('/setSubject', 'SiteController@setSubject');
         Route::post('/calc/saveSubject', 'SiteController@saveSubject');
         Route::post('/express/calculate', 'ProductsController@expressCalc');
         Route::post('/full/calculate', 'ProductsController@fullCalc');
-        Route::post('/saveVehicle','ProductsController@saveVehicle');
+
+        Route::post('/getVehicle', 'VehicleController@getVehicle');
+        Route::post('/saveVehicle','VehicleController@saveVehicle');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){

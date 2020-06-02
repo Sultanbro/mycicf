@@ -11,6 +11,9 @@ use App\Library\Services\KiasServiceInterface;
 use App\Permissions;
 use App\Providers\KiasServiceProvider;
 use App\User;
+use App\Dicti;
+use App\Region;
+use App\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -626,6 +629,28 @@ class SiteController extends Controller
         return $result;
     }
 
+    public function getDictiFromBase(Request $request){
+        $parent = $request->parent;
+        if($request->dictiType == 'regions' || $request->dictiType == 'cities'){
+            $response = $request->dictiType == 'regions' ? Region::where('parentisn', $parent)->get() : City::where('parentisn', $parent)->get();
+        } else {
+            $response = Dicti::where('parent_isn', $parent)->get();
+        }
+        $result = [];
+        if(count($response) > 0){
+            foreach ($response as $row){
+                array_push($result, [
+                    'Value' => $row->isn,
+                    'Label' => isset($row->fullname) ? $row->fullname : $row->name,
+                ]);
+            }
+        }
+        return response()->json([
+            'result' => $result,
+            'success' => true,
+        ]);
+    }
+
     public function searchSubject(Request $request, KiasServiceInterface $kias){
         $firstName = $request->firstName ?? '';
         $lastName = $request->lastName ?? '';
@@ -672,12 +697,14 @@ class SiteController extends Controller
                     'Patronymic' => (string)$response->ROWSET->row->PARENTNAME,
                     'OrgName' => (string)$response->ROWSET->row->ORGNAME,
                     'Juridical' => (string)$response->ROWSET->row->JURIDICAL,
-                    'docType' => (string)$response->ROWSET->row->DOCCLASSNAME,
+                    'docType' => (string)$response->ROWSET->row->DOCCLASSISN,   //DOCCLASSNAME,
+                    //'docClassISN' => (string)$response->ROWSET->row->DOCCLASSISN,
                     'docNumber' => $this->hideMiddle((string)$response->ROWSET->row->DOCNO),
                     'docDate' => (string)$response->ROWSET->row->DOCDATE,
                     'email' => $this->obfuscate_email((string)$response->ROWSET->row->EMAIL),
-                    'phone' => $this->hidePhone((string)$response->ROWSET->row->PHONE_M),
+                    'phone' => $this->hidePhone((string)$response->ROWSET->row->PHONE_M != '' ?(string)$response->ROWSET->row->PHONE_M : (string)$response->ROWSET->row->PHONE),
                     'birthDay' => (string)$response->ROWSET->row->BIRTHDAY,
+                    'sex' => (string)$response->ROWSET->row->SEXID,
                     'okvdName' => (string)$response->ROWSET->row->OKVDNAME,
                     'economicName' => (string)$response->ROWSET->row->ECONOMICNAME
                 ]
@@ -747,7 +774,60 @@ class SiteController extends Controller
             'success' => $success,
             'result' => $result
         ]);
+    }
 
+    public function setSubject(Request $request, KiasServiceInterface $kias){
+        $success = false;
+        $participant = $request->participant;
+        $participantData = [];
+        $participantArray = $this->participantArray();
+        if($participant['juridical'] == 'N'){
+            foreach($participant as $key => $part){
+                if(isset($participantArray[$key])) {
+                    $participantData[$participantArray[$key]] = $part;
+                }
+            }
+        }
+
+        $participantData['SHORTNAME'] = $participantData['LASTNAME'];
+        $participantData['PHONE'] = $participantData['PHONE_M'];
+        $participantData['JURIDICAL'] = $participant['juridical'];
+
+        $response = $kias->saveSubject($participantData);
+        if(isset($response->error)){
+            $success = false;
+            $result = $response->error->text;
+        } else {
+            $result = 'Данные успешно добавлены';
+            $success = true;
+        }
+
+        return response()->json([
+            'success' => true,
+            'result' => ''
+        ]);
+    }
+
+    public function participantArray(){
+        return array(
+            'subjISN' => 'ISN',
+            'iin' => 'IIN',
+            'firstName' => 'FIRSTNAME',
+            'lastName' => 'LASTNAME',
+            'patronymic' => 'PARENTNAME',
+            'birthDay' => 'BIRTHDAY',
+            'docType' => 'DOCCLASSISN',
+            'docNumber' => 'DOCNO',
+            'docDate' => 'DOCDATE',
+            'email' => 'EMAIL',
+            'phone' => 'PHONE_M',
+            'juridical' => 'JURIDICAL',
+            'sex' => 'SEXID',
+            //'docClassISN' => 'DOCCLASSISN',
+            //'economicName' => 'ECONOMICNAME',
+            //'okvdName' => 'OKVD',
+            //'orgName' => 'ORGNAME',
+        );
     }
 
     public function parseAuth(){

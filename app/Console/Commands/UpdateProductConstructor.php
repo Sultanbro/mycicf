@@ -119,6 +119,7 @@ class UpdateProductConstructor extends Command
 
                     if($isn == 2118) {
                         $objects['objekt'][$isn]['AGROBJCAR'][0] = [
+                            'ExtSystemKey' => '',
                             'ModelISN' => '',
                             'MarkaISN' => '',
                             'ClassISN' => '',
@@ -126,6 +127,9 @@ class UpdateProductConstructor extends Command
                             'VIN' => '',
                             'REGNO' => '',
                             'OwnerJuridical' => 'N',
+                            'GRNZ' => '',
+                            'SRTSNUM' =>  '',
+                            'SRTSDATE' => '',
                             'TerritoryISN' => '',
                             'PROBEG' => '',
                             'REALPRICE' => ''

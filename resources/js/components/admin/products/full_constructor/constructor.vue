@@ -99,10 +99,12 @@
                     this.items[index].subjISN = '';
                     this.items[index].orgName = '';
                     this.items[index].docType = '';
+                    this.items[index].docClassISN = '';
                     this.items[index].docNumber = '';
                     this.items[index].docDate = '';
                     this.items[index].email = '';
                     this.items[index].phone = '';
+                    this.items[index].sex = '';
                     this.items[index].juridical = '';
                     this.items[index].birthDay = '';
                     this.items[index].okvdName = '';

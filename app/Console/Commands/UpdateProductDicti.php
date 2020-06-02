@@ -60,8 +60,6 @@ class UpdateProductDicti extends Command
 
             if(isset($response->ROWSET->row)) {
                 $oldDicti = Dicti::where('parent_isn',$isn)->delete();
-                $childIsns = [];
-                DB::table('products_dicti')->where('parent_isn', $isn)->delete();
                 foreach ($response->ROWSET->row as $row) {
                     $dicti = new Dicti;
                     $dicti->isn = (string)$row->ISN;
@@ -77,7 +75,7 @@ class UpdateProductDicti extends Command
                     $this->updateNkids($isn);
                 }
             }
-            echo 'Данные по '.$type.' успешно записаны. ';
+            echo "Данные по ".$type." успешно записаны. \n";
             return true;
         }catch (\Exception $ex){
             echo $ex->getMessage();

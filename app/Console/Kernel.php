@@ -38,6 +38,8 @@ class Kernel extends ConsoleKernel
 //            $schedule->command('products:dicti')
 //                ->dailyAt('03:00')
 //                ->timezone('Asia/Almaty');
+//            $schedule->command('update:regions')
+//                ->weekly();
         }catch (\Exception $e){
             Log::error($e->getMessage());
         }
