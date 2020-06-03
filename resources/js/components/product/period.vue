@@ -6,7 +6,7 @@
                 <label>Дата начала : </label>
                 <input  type="date"
                         id="dateBeg"
-                        class="date-products w-50"
+                        class="date-products "
                         dateFormat="dd.mm.YYYY"
                         v-model="period.begin"
                         required
@@ -14,7 +14,7 @@
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 ">
                 <label>Период : </label>
-                <select class="custom-select w-70" v-model="period.period" :disabled="computedDisable" @change="calcChanged">
+                <select class="custom-select width-70" v-model="period.period" :disabled="computedDisable" @change="calcChanged">
                     <option value="12">12 месяцев</option>
                     <option value="11">11 месяц</option>
                     <option value="10">10 месяц</option>
@@ -38,7 +38,7 @@
                 <input
                         type="date"
                         id="dateEnd"
-                        class="date-products w-50"
+                        class="date-products "
                         dateFormat="dd.mm.YYYY"
                         v-model="period.end"
                         :disabled="computedDisable == false && period.period !== '0' || computedDisable == true"
@@ -47,7 +47,7 @@
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 ">
                 <label>Дата подписания : </label>
-                <input type="date" id="dateSig" class="date-products w-50" dateFormat="dd.mm.YYYY" v-model="period.sig" required disabled="true">
+                <input type="date" id="dateSig" class="date-products " dateFormat="dd.mm.YYYY" v-model="period.sig" required disabled="true">
             </div>
         </div>
     </div>

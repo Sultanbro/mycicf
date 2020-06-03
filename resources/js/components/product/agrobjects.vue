@@ -5,14 +5,14 @@
         <div class="row ">
             <div class="col-lg-3 col-xl-3 col-md-6 ">
                 <label class="font-shif">Класс объекта : </label>
-                <select class="custom-select w-50" v-model="agrobject.ClassISN" @change="calcChanged">
+                <select class="custom-select width-70" v-model="agrobject.ClassISN" @change="calcChanged">
                     <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
 
             <div v-if="agrobject.ClassISN != ''" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Тип объекта : </label>
-                <select class="custom-select" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
+                <select class="custom-select width-50" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
                     <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj"
                             :data-option="dicti.ObjName"
                             :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
@@ -21,12 +21,12 @@
 
             <div class="col-lg-3 col-xl-3 col-md-6 ">
                 <label class="font-shif">Сумма страхования : </label>
-                <input type="number" class="attr-input-text w-50"  v-model="agrobject.insureSum" @keyup="calcChanged">
+                <input type="number" class="attr-input-text width-70 "  v-model="agrobject.insureSum" @keyup="calcChanged">
             </div>
 
             <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Сумма премии : </label>
-                <input type="number" class="attr-input-text col-12"  v-model="agrobject.DAsum" @keyup="calcChanged">
+                <input type="number" class="attr-input-text col-12 width-50"  v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
 

@@ -28,7 +28,7 @@
 
         <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
-            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
+            <input type="checkbox" class="mt-2 ml-2 " id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
         </div>
 
         <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
@@ -36,39 +36,47 @@
             <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
         </div>
 
-        <div class="mb-4 agreement-block ">
-            <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
+        <div class="flex-center">
+            <div class="mb-4 agreement-block div-width">
+                <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
+            </div>
         </div>
-
-        <div >
-            <div class=" marg-bottom agreement-block">
+        <div  class="flex-center">
+            <div class=" marg-bottom agreement-block div-width">
                 <div v-for="attribute in attributes" class=" col-md-12  ">
                     <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
                 </div>
             </div>
-
-            <div class=" agreement-block d-flex">
+        </div>
+        <div  class="flex-center">
+            <div class=" agreement-block d-flex div-width">
                 <div v-for="agrclause in agrclauses">
                     <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
                 </div>
             </div>
         </div>
-
-
-
-
-        <div v-for="(agrobject,index) in agrobjects"class="mb-4  md-8 agreement-block">
-            <agr-object :agrobject="agrobject"
-                        :aIndex="index"
-                        :preloader="preloader"
-                        :express-attr="expressAttr"
-                        :calc-changed="calcChanged"
-                        :DA="DA">
-            </agr-object>
+        <div  class="flex-center">
+            <div v-for="(agrobject,index) in agrobjects"class="mb-4  md-8 agreement-block div-width">
+                <agr-object :agrobject="agrobject"
+                            :aIndex="index"
+                            :preloader="preloader"
+                            :express-attr="expressAttr"
+                            :calc-changed="calcChanged"
+                            :DA="DA">
+                </agr-object>
+            </div>
         </div>
-        <div class="agreement-block ">
-            <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+        <div  class="flex-center">
+            <div class="agreement-block div-width">
+                <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+            </div>
         </div>
+
+
+
+
+
+
 
 
 

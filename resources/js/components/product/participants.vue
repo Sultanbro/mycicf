@@ -6,7 +6,7 @@
                 <span v-else>{{ participant.orgName }}</span>
             </div>
 
-            <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
+            <button type="button" class="add-button width100 mt-2 " @click="openParticipantForm(pIndex)">
                 Изменить
                 <span v-if="!moreParticipant">
                     <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -14,13 +14,16 @@
                 </span>
             </button>
         </div>
-        <button v-show="participant.subjISN == null || participant.subjISN == ''"
-                type="button" class="btn btn-outline-info marg-left"
-                @click="openParticipantForm(pIndex)">
-            Указать
-            <span v-if="participant.Label">({{ participant.Label }})</span>
-            <span v-else>(Страхователь)</span>
-        </button>
+        <div class=" flex-center">
+            <button v-show="participant.subjISN == null || participant.subjISN == ''"
+                    type="button" class="btn btn-outline-info md-7 width100 "
+                    @click="openParticipantForm(pIndex)">
+                Указать
+                <span v-if="participant.Label">({{ participant.Label }})</span>
+                <span v-else>(Страхователь)</span>
+            </button>
+        </div>
+
         <modal :name="modalName"
                :width="width"
                :minHeight="height">
@@ -61,13 +64,13 @@
                         <button class="width100 btn btn-outline-info" @click="addParticipantToKias(pIndex)">Добавить {{ participant.Label }}</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="closeParticipantForm(pIndex)">Закрыть</button>
+                        <button class="width100 btn btn-outline-info marg-btn" @click="closeParticipantForm(pIndex)">Закрыть</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="searchParticipant">Поиск</button>
+                        <button class="width100 btn btn-outline-info marg-btn" @click="searchParticipant">Поиск</button>
                     </div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="save">Сохранить</button>
+                        <button class="width100 btn btn-outline-info marg-btn" @click="save">Сохранить</button>
                     </div>
                     <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще {{ participant.data }}</button>

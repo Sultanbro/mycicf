@@ -290,8 +290,7 @@ class ProductsController extends Controller
         $attributes = [];
         if(isset($response->ROWSET->row)){
             foreach ($response->ROWSET->row as $row){
-                //array_push($attributes, [
-                $attributes[(string)$row->AttrISN] = array(
+                array_push($attributes, [
                     'AttrISN' => (string)$row->AttrISN,
                     'Type' => (string)$row->TypeValue,
                     'Label' => (string)$row->AttrName,
@@ -299,8 +298,7 @@ class ProductsController extends Controller
                     'Value' => null,
                     'Remark' => null,
                     'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
-                );
-                //]);
+                ]);
             }
         }
         return response()->json([

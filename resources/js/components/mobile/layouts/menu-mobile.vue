@@ -37,11 +37,27 @@
                     <div class="mb-3">
                         <ul class="flex-column mt-3 mr-5 ml-5">
                             <a href="/dossier" class="pt-2 pb-2 color-darkgray font-size-1_2">
+
+                                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
+                                    <li class="leftsidebar-icons">
+                                        <i class="fas fa-book-reader"></i>
+                                        <span>Экспресс котировка</span>
+                                    </li>
+                                </a>
+                                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/full">
+                                    <li class="leftsidebar-icons">
+                                        <i class="fas fa-book-reader"></i>
+                                        <span>Полная котировка</span>
+                                    </li>
+                                </a>
+                            </a>
+                            <a href="/dossier" class="pt-2 pb-2 color-darkgray font-size-1_2">
                                 <li>
                                     <i class="far fa-clipboard"></i>
                                     <span>Досье</span>
                                 </li>
                             </a>
+
                             <a href="/coordination" class="pt-2 pb-2 color-darkgray font-size-1_2">
                                 <li>
                                     <i class="far fa-thumbs-up"></i>
