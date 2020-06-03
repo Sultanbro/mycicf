@@ -694,17 +694,27 @@ class ProductsController extends Controller
         if(count($order['agrobjects']) > 0) {
             $agr_object = [];
             $subjISN = '';
+            $cObj = 0;
+            $selectedParticipant = [];
+            foreach($order['participants'] as $part) {
+                if ($part['ISN'] == 2082) {
+                    array_push($selectedParticipant,['subjISN' => $part['Value']]);
+                }
+            }
+
             foreach($order['agrobjects'] as $obj) {
                 $agrobjectAddatr = $this->attributesToKiasAddAttrs($obj['objekt'][$obj['ClassISN']]['AGROBJECT_ADDATTR']);
                 $agrobjCar = $obj['ClassISN'] == 2118 ? $this->objcarToKiasAdd($obj['objekt'][$obj['ClassISN']]['AGROBJCAR'][0]) : [];
 
                 if($obj['ClassISN'] == 2135) {  // Человек
-                    foreach($order['participants'] as $part) {
-                        if($part['ISN'] == 2082) {
-                            $subjISN = $part['Value'];
+                    //foreach($order['participants'] as $part) {
+                    //    if($part['ISN'] == 2082) {
+                        //    $subjISN = $part['Value'];
+                    $subjISN = isset($selectedParticipant[$cObj]['subjISN']) ? $selectedParticipant[$cObj]['subjISN'] : $selectedParticipant[0]['subjISN'];
                             array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN));
-                        }
-                    }
+                      //  }
+                    //}
+                    $cObj++;
                 } else {
                     array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN));
                 }

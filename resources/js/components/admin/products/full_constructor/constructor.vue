@@ -93,6 +93,7 @@
                 this.currentIndex = index;
                 this.items[index].Value = null;
                 if(this.iIndex == 'participants'){
+                    this.items[index].extSystemKey = '';
                     this.items[index].firstName = '';
                     this.items[index].lastName = '';
                     this.items[index].patronymic = '';

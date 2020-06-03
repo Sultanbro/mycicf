@@ -77,7 +77,8 @@
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
                 <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA.orderNumber }}</div>
-                <div class="fs-2" v-if="calc_id != null">Номер заявки {{ calc_id }}</div>
+                <div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div>
+                <div class="fs-2" v-if="calc_id != null">Номер котировки {{ calc_id }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
@@ -244,6 +245,30 @@
                     }
                     if(checkDA == 1){
                         alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
+                        return false;
+                    }
+                }
+
+
+                // Проверка количества объектов Человек и количества застрахованных (они должны быть равными, а то расчет неверный будет)
+                let countParticipants = 0;
+                for(let index in this.participants){
+                    if(this.participants[index].ISN == 2082){
+                        countParticipants++;
+                    }
+                }
+
+                let countAgrobjects = 0;
+                for(let index in this.agrobjects){
+                    if(this.agrobjects[index].ClassISN == 2135){
+                        countAgrobjects++;
+                    }
+                }
+
+                if(countAgrobjects != 0){
+                    if(countParticipants != countAgrobjects){
+                        let info = "Количество страхуемых: "+countParticipants+"\nКоличество объектов: "+countAgrobjects;
+                        alert("Количество объектов c классом объекта 'Человек' и количество застрахованных не совпадают\n"+info);
                         return false;
                     }
                 }

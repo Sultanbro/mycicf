@@ -690,6 +690,7 @@ class SiteController extends Controller
                 'success' => true,
                 'count' => 1,
                 'participant' => [
+                    'extSystemKey' => (string)$response->ROWSET->row->EXTSYSTEMKEY,
                     'ISN' => (string)$response->ROWSET->row->ISN,
                     'IIN' => (string)$response->ROWSET->row->IIN,
                     'FirstName' => (string)$response->ROWSET->row->FIRSTNAME,
@@ -778,56 +779,66 @@ class SiteController extends Controller
 
     public function setSubject(Request $request, KiasServiceInterface $kias){
         $success = false;
+        $error = null;
         $participant = $request->participant;
         $participantData = [];
         $participantArray = $this->participantArray();
         if($participant['juridical'] == 'N'){
-            foreach($participant as $key => $part){
-                if(isset($participantArray[$key])) {
-                    $participantData[$participantArray[$key]] = $part;
-                }
+            $type = 'physical';
+        } else {
+            $type = 'juridical';
+        }
+
+        foreach($participant as $key => $part) {
+            if (isset($participantArray[$type][$key])) {
+                $participantData[$participantArray[$type][$key]] = $part;
             }
         }
 
         $participantData['SHORTNAME'] = $participantData['LASTNAME'];
-        $participantData['PHONE'] = $participantData['PHONE_M'];
+        //$participantData['PHONE'] = $participantData['PHONE_M'];
         $participantData['JURIDICAL'] = $participant['juridical'];
 
-        $response = $kias->saveSubject($participantData);
+        $response = $kias->saveSubject($participantData);   //$request->participant['extSystemKey'] == '' ? $kias->setSubject($participantData)
         if(isset($response->error)){
             $success = false;
-            $result = $response->error->text;
+            $error = (string)$response->error->fulltext;
         } else {
-            $result = 'Данные успешно добавлены';
             $success = true;
         }
 
         return response()->json([
-            'success' => true,
-            'result' => ''
+            'success' => $success,
+            'error' => $error
         ]);
     }
 
     public function participantArray(){
         return array(
-            'subjISN' => 'ISN',
-            'iin' => 'IIN',
-            'firstName' => 'FIRSTNAME',
-            'lastName' => 'LASTNAME',
-            'patronymic' => 'PARENTNAME',
-            'birthDay' => 'BIRTHDAY',
-            'docType' => 'DOCCLASSISN',
-            'docNumber' => 'DOCNO',
-            'docDate' => 'DOCDATE',
-            'email' => 'EMAIL',
-            'phone' => 'PHONE_M',
-            'juridical' => 'JURIDICAL',
-            'sex' => 'SEXID',
-            //'docClassISN' => 'DOCCLASSISN',
-            //'economicName' => 'ECONOMICNAME',
-            //'okvdName' => 'OKVD',
-            //'orgName' => 'ORGNAME',
-        );
+            'physical' => [
+                'extSystemKey' => 'EXTSYSTEMKEY',
+                'subjISN' => 'ISN',
+                'iin' => 'IIN',
+                'firstName' => 'FIRSTNAME',
+                'lastName' => 'LASTNAME',
+                'patronymic' => 'PARENTNAME',
+                'birthDay' => 'BIRTHDAY',
+                'docType' => 'DOCCLASSISN',
+                'docNumber' => 'DOCNO',
+                'docDate' => 'DOCDATE',
+                'email' => 'EMAIL',
+                'phone' => 'PHONE_M',
+                'juridical' => 'JURIDICAL',
+                'sex' => 'SEXID',
+                //'docClassISN' => 'DOCCLASSISN'
+            ],
+            'juridical' => [
+                'extSystemKey' => 'EXTSYSTEMKEY',
+                'subjISN' => 'ISN',
+                'iin' => 'IIN',
+                'juridical' => 'JURIDICAL',
+                'orgName' => 'ORGNAME',
+        ]);
     }
 
     public function parseAuth(){

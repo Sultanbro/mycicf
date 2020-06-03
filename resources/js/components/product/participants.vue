@@ -36,56 +36,85 @@
 
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Фамилия : </label>
-                        <input type="text" v-model="participant.lastName" class="attr-input-text col-12 bg-white">
+                        <input type="text" v-model="participant.lastName" @keyup="participantEdited = true" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Имя : </label>
-                        <input type="text" v-model="participant.firstName" class="attr-input-text col-12 bg-white">
+                        <input type="text" v-model="participant.firstName" @keyup="participantEdited = true" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Отчество : </label>
-                        <input type="text" v-model="participant.patronymic" class="attr-input-text col-12 bg-white">
+                        <input type="text" v-model="participant.patronymic" @keyup="participantEdited = true" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Дата рождения : </label>
-                        <input type="text" v-mask="'##.##.####'" v-model="participant.birthDay" class="attr-input-text col-12 bg-white">
+                        <input type="text"
+                               v-mask="'##.##.####'"
+                               v-model="participant.birthDay"
+                               @keyup="participantEdited = true"
+                               class="attr-input-text col-12 bg-white">
                     </div>
 
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Тип документа : </label>
                         <!--input type="text" v-model="participant.docType" class="attr-input-text col-12 bg-white"-->
-                        <select class="custom-select" v-if="Object.keys(participantDocs.types).length > 0" v-model="participant.docType">
+                        <select class="custom-select"
+                                v-if="Object.keys(participantDocs.types).length > 0"
+                                @change="participantEdited = true"
+                                v-model="participant.docType">
                             <option v-for="doc in participantDocs.types" :value="doc.Value[0]">{{doc.Label[0]}}</option>
                         </select>
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Номер документа : </label>
-                        <input type="text" v-model="participant.docNumber" class="attr-input-text col-12 bg-white">
+                        <input type="text"
+                               v-model="participant.docNumber"
+                               @keyup="participantEdited = true"
+                               class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Дата документа : </label>
-                        <input type="text" v-model="participant.docDate" class="attr-input-text col-12 bg-white">
+                        <input type="text"
+                               v-model="participant.docDate"
+                               @keyup="participantEdited = true"
+                               class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Email : </label>
-                        <input type="text" v-model="participant.email" class="attr-input-text col-12 bg-white">
+                        <input type="text"
+                               v-model="participant.email"
+                               @keyup="participantEdited = true"
+                               class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <label class="bold">Номер телефона : </label>
-                        <input type="text" v-mask="'+###########'" v-model="participant.phone" class="attr-input-text col-12 bg-white">
+                        <input type="text"
+                               v-mask="'+###########'"
+                               @keyup="participantEdited = true"
+                               v-model="participant.phone"
+                               class="attr-input-text col-12 bg-white">
                     </div>
 
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-7 col-xl-7 col-md-6 col-sm-6 col-12">
                         <label class="bold">Наименование организации : </label>
-                        <input type="text" v-model="participant.orgName" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text"
+                               v-model="participant.orgName"
+                               class="attr-input-text col-12 bg-white"
+                               @keyup="participantEdited = true">
                     </div>
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
                         <label class="bold">Вид деятельности : </label>
-                        <input type="text" v-model="participant.okvdName" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text"
+                               v-model="participant.okvdName"
+                               class="attr-input-text col-12 bg-white"
+                               disabled="true">
                     </div>
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
                         <label class="bold">Сектор экономики : </label>
-                        <input type="text" v-model="participant.economicName" class="attr-input-text col-12 bg-white" disabled="true">
+                        <input type="text"
+                               v-model="participant.economicName"
+                               class="attr-input-text col-12 bg-white"
+                               disabled="true">
                     </div>
 
                     <div v-if="moreParticipant" class="col-lg-12 mt-3">
@@ -179,7 +208,8 @@
                 aFewParticipants: [],
                 search: {
                     not_found: false
-                }
+                },
+                participantEdited: false,
             }
         },
         directives: {mask},
@@ -238,6 +268,7 @@
             },
             fetchParticipantSearch(response){
                 if(response.success){
+                    this.participantEdited = false; // Ранее сделанное редактирование не активное
                     this.moreParticipant = false;
                     if(response.count === 1){
                         if(Object.keys(this.formular).length > 0) {
@@ -265,6 +296,7 @@
                         this.participant.patronymic = response.participant.Patronymic;
                         this.participant.orgName = response.participant.OrgName;
                         this.participant.docType = response.participant.docType;
+                        this.participant.extSystemKey = response.participant.extSystemKey;
                         //this.participant.docClassISN = response.participant.docClassISN;
                         this.participant.docNumber = response.participant.docNumber;
                         this.participant.docDate = response.participant.docDate;
@@ -300,28 +332,33 @@
                         this.participant.subjISN = this.isn;
                         this.participant.Value = this.isn;
 
-                        // Записываем данные в киас по контргенту
-                        this.preloader(true);
-                        this.axios.post('/setSubject', {
-                            participant : this.participant,
-                        })
-                            .then(response => {
-                                if(response.data.success){
-                                    alert(partName + ' успешно добавлен!');
-                                    this.preloader(false);
-                                } else {
+                        if(this.participantEdited) {
+                            // Если было изменение то записываем данные в киас (если есть extSystemKey то setSubject, если нету то saveSubject)
+                            this.preloader(true);
+                            this.axios.post('/setSubject', {
+                                participant: this.participant,
+                            })
+                                .then(response => {
+                                    if (response.data.success) {
+                                        alert(partName + ' успешно добавлен!');
+                                        this.preloader(false);
+                                    } else {
+                                        this.participant.subjISN = null;
+                                        this.participant.Value = null;
+                                        alert(response.data.error);
+                                        this.preloader(false);
+                                    }
+                                })
+                                .catch(error => {
+                                    alert(error);
                                     this.participant.subjISN = null;
                                     this.participant.Value = null;
                                     this.preloader(false);
-                                }
-                            })
-                            .catch(error => {
-                                alert(error);
-                                this.participant.subjISN = null;
-                                this.participant.Value = null;
-                                this.preloader(false);
-                            });
-                        // End Записываем данные в киас по контргенту
+                                });
+                            // End Записываем данные в киас по контргенту
+                        } else {
+                            alert(partName + ' успешно добавлен!');
+                        }
 
                         this.subjISN = this.isn;
                         //this.closeParticipantForm(this.pIndex);
@@ -381,6 +418,7 @@
                     patronymic: '',
                     orgName: '',
                     docType: '',
+                    extSystemKey: '',
                     //docClassISN: '',
                     docNumber: '',
                     docDate: '',
@@ -403,6 +441,7 @@
                 this.participants[index].Value = '';
                 this.participants[index].subjISN = '';
                 this.participants[index].docType = null;
+                this.participants[index].extSystemKey = null;
                 //this.participants[index].docClassISN = null;
                 this.participants[index].docNumber = null;
                 this.participants[index].docDate = null;
@@ -454,6 +493,7 @@
                             this.participants[index].patronymic = this.participant.patronymic;
                             this.participants[index].orgName = this.participant.orgName;
                             this.participants[index].docType = this.participant.docType;
+                            this.participants[index].extSystemKey = this.participant.extSystemKey;
                             //this.participants[index].docClassISN = this.participant.docClassISN;
                             this.participants[index].docNumber = this.participant.docNumber;
                             this.participants[index].docDate = this.participant.docDate;
