@@ -7,6 +7,11 @@ use App\Library\Services\KiasServiceInterface;
 use App\Notification;
 use App\Providers\KiasServiceProvider;
 use Illuminate\Http\Request;
+use App\Comment;
+use App\Events\NewPost;
+use App\Like;
+use App\Post;
+use Illuminate\Support\Facades\Auth;
 
 class CoordinationController extends Controller
 {
@@ -401,6 +406,55 @@ class CoordinationController extends Controller
             }
         }
         return true;
+    }
+
+    public function closeDecade(Request $request){
+        $content = $request->postText;
+
+        try {
+            $new_post = new Post();
+            $new_post->user_isn = 1445722;  //Кулназаров Гани Жасаганбергенович
+            $new_post->post_text = $content;
+            $new_post->pinned = 0;
+            $new_post->save();
+        }catch(\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        $response = [
+            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited' => false,
+            'fullname' => 'Кулназаров Гани Жасаганбергенович',
+            'isLiked' => 0,
+            'isn' => $new_post->user_isn,
+            'userISN' => $new_post->user_isn,
+            'likes' => 0,
+            'pinned' => 0,
+            'postText' => $new_post->getText(),
+            'postId' => $new_post->id,
+            'image' => [],  //$new_post->getImage(),
+            'documents' => [],  //$new_post->getDocuments(),
+            'youtube' => null,    //$new_post->getVideo(),
+            'videos' => [], //$new_post->getVideoUrl(),
+            'comments' => [],
+        ];
+
+        try {
+            broadcast(new NewPost([
+                'post' => $response,
+                'type' => Post::NEW_POST
+            ]));
+        }catch(\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return [ 'success' => true ];
     }
 
     public function checkNotificationSended($isn, $no, $type){

@@ -13,7 +13,7 @@
                 @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
                     <a class="header-navigation" href="{{route('parse')}}">
                         <li>
-                            Parse
+                            parse
                         </li>
                     </a>
                 @endif
