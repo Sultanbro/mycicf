@@ -11,16 +11,31 @@
                      :product-id="id">
         </participant>
         <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
-        <div v-for="attribute in attributes">
-            <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes>
+        <div class="flex-center">
+            <div class="col-md-12 agreement-block mg-11 ">
+                <div class="row">
+                    <!--v-if="Object.keys(attributes).length != 0 && attributes[value] != undefined && attributes[value] != null"-->
+                    <agr-attributes
+                        v-for="value,key in attributes"
+                        :key="key"
+                        :attribute="value"
+                        :express-attr="{}"
+                        :calc-changed="calcChanged"></agr-attributes>
+
+                    <!--agr-attributes :key="key" v-for="attribute,key in attributes" :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes-->
+
+                </div>
+            </div>
         </div>
+
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
-            <div class="col-12 text-center p-0">
-                <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
+            <div class="col-12 text-center p-0 ">
+                <button class="btn btn-outline-info mg-11" @click="calculate">Рассчитать стоимость</button>
                 <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
         </div>
+
         <!--modal name="participant-form"
             :width="width"
             :minHeight="height">
@@ -70,7 +85,7 @@
         data() {
             return {
                 attributes: [],
-                moreParticipant : false,
+                moreParticipant: false,
                 participants: [],
                 participant: {
                     Value : null,
@@ -100,10 +115,110 @@
                 firstName: '',
                 lastName: '',
                 patronymic: '',
-                width : 0,
-                height : 0,
-                calculated : false,
-                price : 0,
+                width: 0,
+                height: 0,
+                calculated: false,
+                price: 0,
+                ISNS: {
+                            1 //нс выбор
+                        :
+                            [1289051, //Пакет рисков
+                                708061, //Виды спорта ( НС Спорт)
+                                1289111,//Территория страхования
+                                860231, //Тип продаж
+                                708881, //Время действия страховки (НС Стандарт, НС Grand)
+                                709261, //Возраст застрахованного от 6 до 10 лет, или старше 55 лет (НС Спорт)
+                                501441, //Количество Застрахованных
+                                514581, //"% "АВ" к согласованию (гросс)
+                                708071, //Профессии и виды деятельности (НС Стандарт, НС Grand)
+                                857211, //Страховая сумма
+                                857901, //Срок страхования
+
+                            ],
+                            9 //авто в залоге
+                        :
+                            [
+                                857201, //Тип ТС
+                                860231,// Тип продаж
+                                857691, //Размер франшизы при повреждении
+                                857711, //Размер КВ % гросс
+                                857901, // Срок страхования
+                                857211,//Страховая сумма
+                            ]
+                    ,
+                            5//Дс авто транспорт
+                        :
+                            [
+
+                                863251,//Тип ТС
+                                513491, //Вызов ДП
+                                857901, //Срок страхования
+                                857211, //Страховая сумма
+                                513411,  //Количество страхуемых ТС
+                                513541, //Порядок и форма страхового возмещения
+                                860231, //Тип продаж
+                                863171, //Размер франшизы при повреждении
+                                861091, //Пакет рисков
+                                513581, //Территория страхования
+                                861101, //Возрастная категория лиц допущенных к управлению
+                                866111, // Дата выпуска ТС
+                                856691, //Пакеты
+                            ]
+                    ,
+                            8  //ДСИ авто в залоге
+                            :
+                            [
+                                861691, //Тип имущества
+                                857211, //Страховая сумма
+                                860231, //Тип продаж
+                                514581, //% "АВ" к согласованию (гросс)
+                                861651, //Наименование имущества/Класс объекта
+                                857901, //Срок страхования
+
+
+                            ]
+                    ,
+                            7 //ДСИ
+                            :
+                            [
+                                861691, //Тип имущества
+                                857901, //Срок страхования
+                                861321, //Наличие противопожарной сигнализации
+                                861711, //Свободные подъездные пути
+                                861391, //Отрицательная статистика убытков по страхуемым рискам
+                                861311, //Наличие охранной сигнализации
+                                861651, //Наименование имущества
+                                860231, //Тип продаж
+                                861331, //Круглосуточная невооруженная охрана
+                                861361, //Отсутствие убытков по страхуемым рискам за последние 5 лет
+                                861411, //Отсутствие охраны
+                                861451, //Страхование по одному риску
+                                857211, //Страховая сумма
+                                514581, //% "АВ" к согласованию (гросс)
+
+
+                                858441, //Франшиза
+                                861441, //Наличие окружающих опасностей (АЗС, развлекательные центры и т.п.)
+
+
+
+
+                                861341, //Круглосуточная вооруженная охрана
+
+                                861371, //Наличие любого действующего договора/полиса страхования АО "СК "Сентрас Иншуранс
+                                861421, //Хранение взрыво-, пожароопасных веществ
+                                861461, //Страхование по двум-четырем рискам
+
+                                861311, //Наличие охранной сигнализации
+                                861351, //Территория не подвержена стихийным бедствиям
+                                861381, //Страховая сумма свыше 2 млн. долл. США
+                                861431, //Оплата в рассрочку
+                                861471, //Страхование по пяти-шести рискам
+
+
+
+                            ]
+                    }
             }
         },
         props: {
@@ -121,17 +236,36 @@
                 this.axios.post('/getExpressAttributes', {
                     id: this.id
                 })
-                .then(response => {
-                    if(response.data.success){
-                        this.attributes = response.data.attributes;
-                    }else{
-                        alert(response.data.error);
-                    }
-                })
-                .catch(error => {
-                    alert(error);
-                });
+                    .then(response => {
+                        if(response.data.success){
+                            this.attributes = response.data.attributes;
+                        }else{
+                            alert(response.data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                    });
             },
+            // getVal(){
+            //     let ISN=[
+            //         501441, //Количество Застрахованных
+            //         514581, //"% "АВ" к согласованию (гросс)
+            //         708061, //Виды спорта ( НС Спорт)
+            //         708071, //Профессии и виды деятельности (НС Стандарт, НС Grand)
+            //         708881, //Время действия страховки (НС Стандарт, НС Grand)
+            //         709261,
+            //         857211, //Страховая сумма
+            //         857901, //Срок страхования
+            //         860231, //Тип продаж
+            //         1289051, //Пакет рисков
+            //         1289111 //Территория страхования
+            //     ];
+            //     let back=[];
+            //     for (this.ISN == 1289051 &&  ){
+            //
+            //     }
+            // },
             // openParticipantForm(){
             //     this.$modal.show('participant-form');
             // },
@@ -181,22 +315,23 @@
                     id : this.id,
                     attributes : this.attributes
                 })
-                .then(response => {
-                    if(response.data.success){
-                        this.price = response.data.premium;
-                        this.calculated = true;
-                    }else{
-                        alert(response.data.error)
-                    }
-                })
-                .catch(error => {
-                    alert(error)
-                });
+                    .then(response => {
+                        if(response.data.success){
+                            this.price = response.data.premium;
+                            this.calculated = true;
+                        }else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    });
             },
             calcChanged(){
                 this.calculated = false;
                 this.price = 0;
             },
+
             createFullQuotation(){
                 var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
                 if(full) {
@@ -204,9 +339,9 @@
                     let i = 1;
                     for(let index in this.attributes){
                         if(this.attributes[index].Value == null) {
-                            attr = attr + '"' + this.attributes[index].AttrISN + '":' + this.attributes[index].Value;
+                            attr = attr + '"' + index + '":' + this.attributes[index].Value;
                         } else {
-                            attr = attr + '"' + this.attributes[index].AttrISN + '":"' + this.attributes[index].Value + '"';
+                            attr = attr + '"' + index + '":"' + this.attributes[index].Value + '"';
                         }
                         if(i != Object.keys(this.attributes).length){
                             attr = attr+',';

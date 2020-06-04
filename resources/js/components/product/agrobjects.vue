@@ -1,33 +1,34 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
-        <h4>Объект</h4>
+
+    <div class="ml-0 mb-2 ">  <!--class="col-12 row mt-2 mb-2 ml-0  h-auto"-->
+        <h5 class="font-shif">Объект</h5>
         <button v-if="quotationId == 0" @click="addObject()" class="btn btn-outline-info ml-3">Добавить еще</button>
         <button v-if="quotationId == 0 && agrobjects.length > 1" @click="deleteObject()" class="btn btn-outline-info ml-3">Удалить</button>
-        <div class="row col-12">
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
-                <label class="bold">Класс объекта : </label>
-                <select class="custom-select" v-model="agrobject.ClassISN" @change="calcChanged">
+        <div class="row ">
+            <div class="col-lg-3 col-xl-3 col-md-6 ">
+                <label class="font-shif">Класс объекта : </label>
+                <select class="custom-select width-70" v-model="agrobject.ClassISN" @change="calcChanged">
                     <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
 
             <div v-if="agrobject.ClassISN != ''" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Тип объекта : </label>
-                <select class="custom-select" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
+                <select class="custom-select width-50" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
                     <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj"
                             :data-option="dicti.ObjName"
                             :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
                 </select>
             </div>
 
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="bold">Сумма страхования : </label>
-                <input type="number" class="attr-input-text col-12"  v-model="agrobject.insureSum" @keyup="calcChanged">
+            <div class="col-lg-3 col-xl-3 col-md-6 ">
+                <label class="font-shif">Сумма страхования : </label>
+                <input type="number" class="attr-input-text width-70 "  v-model="agrobject.insureSum" @keyup="calcChanged">
             </div>
 
             <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Сумма премии : </label>
-                <input type="number" class="attr-input-text col-12" v-model="agrobject.DAsum" @keyup="calcChanged">
+                <input type="number" class="attr-input-text col-12 width-50"  v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
 

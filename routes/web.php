@@ -136,6 +136,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
     });
 });
 
+
 /**
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
@@ -339,4 +340,4 @@ Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
 Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
 Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
-*/
+ */

@@ -1,10 +1,11 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
-        <h4>Прикрепление файлов</h4>
+    <div class="ml-0  mb-2">
+
+        <h5>Прикрепление файлов</h5>
         <label for="file-driving-input" class="form-row mb-1 col-12">
             <div class="col-12" v-html="files_count"></div>
 
-            <div v-if="quotationId == 0" class="btn btn-primary mt-3">
+            <div v-if="quotationId == 0" class="btn btnprimary mt-3">
                 Выбрать файл
             </div>
             <input v-if="quotationId == 0" type="file"
