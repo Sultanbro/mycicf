@@ -22,10 +22,53 @@
                 <label class="bold">Модель</label>
                 <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.Model" disabled="true" @keyup="calcChanged">
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+
+
+            <div v-if="!chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Территория регистрации</label>
-                <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.TerritoryName" disabled="true" @keyup="calcChanged">
+                <input type="text"
+                       class="attr-input-text col-12 bg-white"
+                       v-model="agrobjcar.TerritoryName"
+                       disabled="true"
+                       @keyup="calcChanged">
+                <!--div class="text-center">
+                    <button class="btn btn-outline-info" @click="getDictiFromBase('regions');chooseRegion = true">
+                        Сменить регион
+                    </button>
+                </div-->
             </div>
+
+
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="bold">Регион</label>
+                    <select class="attr-input-text col-12 bg-white"
+                            v-model="regionIsn"
+                            @change="calcChanged();getDictiFromBase('regions')">
+                        <option v-if="regions.length > 0"
+                                v-for="item in regions"
+                                :value="item.Value">
+                            {{ item.Label }}
+                        </option>
+                    </select>
+                </div>
+                <div v-if="regionChilds.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="bold">Район</label>
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged();getDictiFromBase('cities')"
+                            v-model="regionChild">
+                        <option v-if="regionChilds.length > 0" v-for="item in regionChilds" :value="item.Value">{{ item.Label }}</option>
+                    </select>
+                </div>
+                <div v-if="cities.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                    <label class="bold">Город/Село</label>
+                    <select class="attr-input-text col-12 bg-white"
+                            @change="calcChanged"
+                            v-model="cityIsn">
+                        <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value">{{ item.Label }}</option>
+                    </select>
+                </div>
+
+
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">СРТС номер</label>
                 <input type="text" class="attr-input-text col-12" v-model="agrobjcar.SRTSNUM" @keyup="calcChanged">
@@ -79,6 +122,13 @@
             return {
                 searchType: 'tNumber',
                 notFound: false,
+                regions: [],
+                regionChilds: [],
+                cities: [],
+                regionIsn: null,
+                regionChild: null,
+                cityIsn: null,
+                chooseRegion: false
             }
         },
         directives: {mask},
@@ -127,6 +177,65 @@
                             alert(error);
                             this.preloader(false);
                         });
+                }
+            },
+            getDictiFromBase:async function(dicti = null){
+                let parent = null;
+                switch(dicti){
+                    case 'regions':
+                        if(this.regionIsn == null) {
+                            parent = 0;
+                        } else {
+                            parent = this.regionIsn;
+                        }
+                        this.regionChild = [];
+                        this.cities = [];
+                        break;
+                    case 'cities':
+                        parent = this.regionChild;
+                        break;
+                }
+                this.preloader(true);
+                this.axios.post('/getDictiListFromBase', {
+                    parent: parent,
+                    dictiType: dicti
+                })
+                    .then(response => {
+                        this.fetchDictiFromBase(response,dicti);
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
+            fetchDictiFromBase(response,dicti){
+                if (response.data.success) {
+                    switch (dicti) {
+                        case 'regions':
+                            if(this.regionIsn == null) {
+                                this.regions = response.data.result;
+                                this.preloader(false);
+                            } else {
+                                this.regionChilds = response.data.result;
+                                this.preloader(false);
+                            }
+                            break;
+                        case 'cities':
+                            this.cities = response.data.result;
+                            this.preloader(false);
+                            break;
+                    }
+                } else {
+                    switch (dicti) {
+                        case 'regions':
+                            alert('К сожалению, данные по регионам не найдены в базе данных');
+                            this.preloader(false);
+                            break;
+                        case 'cities':
+                            alert('К сожалению, данные по городам/селам не найдены в базе данных');
+                            this.preloader(false);
+                            break;
+                    }
                 }
             },
             chooseSearch(searchType){

@@ -340,7 +340,7 @@
                             })
                                 .then(response => {
                                     if (response.data.success) {
-                                        alert(partName + ' успешно добавлен!');
+                                        alert("Данные в киасе успешно обновлены\n"+partName + " успешно добавлен!");
                                         this.preloader(false);
                                     } else {
                                         this.participant.subjISN = null;
