@@ -328,8 +328,9 @@
             },
             save(ind = null){
                 let index = ind == null ? this.pIndex : ind;
-                let partName = this.participants[index].Label ? this.participants[index].Label : 'Страхователь';
+                let partName = this.participants.length > 0 && this.participants[index].Label ? this.participants[index].Label : 'Страхователь';
                 if(ind == null) {   // Здесь если не поставили галочку страхователь это застрахованный или выгодоприобретатель
+                    this.participants[index] = this.participant;
                     if (this.isn != null && this.isn != '') {
 
                         this.participant.subjISN = this.isn;
@@ -538,7 +539,7 @@
                     }
                 }
                 this.calcChanged();
-                if (this.formular.insurant.isn == this.participant.ISN) {
+                if (this.formular.insurant.isn == this.participant.ISN && this.attributes.length > 0) {
                     for(let i = 0;i < this.attributes.length;i++){
                         if (this.attributes[i].AttrISN == 720671) {
                             this.attributes[i].Value = this.participant.email;

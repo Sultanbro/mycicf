@@ -81,14 +81,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
