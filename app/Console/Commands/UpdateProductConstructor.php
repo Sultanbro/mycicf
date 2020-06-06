@@ -16,7 +16,7 @@ class UpdateProductConstructor extends Command
      *
      * @var string
      */
-    protected $signature = 'full:constructor';
+    protected $signature = 'update:fullConstructor';
 
     /**
      * The console command description.

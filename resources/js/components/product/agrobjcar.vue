@@ -23,7 +23,6 @@
                 <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.Model" disabled="true" @keyup="calcChanged">
             </div>
 
-
             <div v-if="!chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Территория регистрации</label>
                 <input type="text"
@@ -39,34 +38,34 @@
             </div>
 
 
-            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
-                    <label class="bold">Регион</label>
-                    <select class="attr-input-text col-12 bg-white"
-                            v-model="regionIsn"
-                            @change="calcChanged();getDictiFromBase('regions')">
-                        <option v-if="regions.length > 0"
-                                v-for="item in regions"
-                                :value="item.Value">
-                            {{ item.Label }}
-                        </option>
-                    </select>
-                </div>
-                <div v-if="regionChilds.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
-                    <label class="bold">Район</label>
-                    <select class="attr-input-text col-12 bg-white"
-                            @change="calcChanged();getDictiFromBase('cities')"
-                            v-model="regionChild">
-                        <option v-if="regionChilds.length > 0" v-for="item in regionChilds" :value="item.Value">{{ item.Label }}</option>
-                    </select>
-                </div>
-                <div v-if="cities.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
-                    <label class="bold">Город/Село</label>
-                    <select class="attr-input-text col-12 bg-white"
-                            @change="calcChanged"
-                            v-model="cityIsn">
-                        <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value">{{ item.Label }}</option>
-                    </select>
-                </div>
+            <!--div v-if="chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Регион</label>
+                <select class="attr-input-text col-12 bg-white"
+                        v-model="regionIsn"
+                        @change="calcChanged();getDictiFromBase('regions')">
+                    <option v-if="regions.length > 0"
+                            v-for="item in regions"
+                            :value="item.Value">
+                        {{ item.Label }}
+                    </option>
+                </select>
+            </div>
+            <div v-if="regionChilds.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Район</label>
+                <select class="attr-input-text col-12 bg-white"
+                        @change="calcChanged();getDictiFromBase('cities')"
+                        v-model="regionChild">
+                    <option v-if="regionChilds.length > 0" v-for="item in regionChilds" :value="item.Value">{{ item.Label }}</option>
+                </select>
+            </div>
+            <div v-if="cities.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Город/Село</label>
+                <select class="attr-input-text col-12 bg-white"
+                        v-model="cityIsn"
+                        @change="calcChanged();agrobjcar.TerritoryISN = cityIsn">
+                    <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value">{{ item.Label }}</option>
+                </select>
+            </div-->
 
 
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
@@ -217,11 +216,13 @@
                                 this.preloader(false);
                             } else {
                                 this.regionChilds = response.data.result;
+                                this.agrobjcar.TerritoryISN = this.regionChilds.length == 0 ? this.regionIsn : "";
                                 this.preloader(false);
                             }
                             break;
                         case 'cities':
                             this.cities = response.data.result;
+                            this.agrobjcar.TerritoryISN = "";
                             this.preloader(false);
                             break;
                     }

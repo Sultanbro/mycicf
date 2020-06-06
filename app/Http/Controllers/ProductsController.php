@@ -312,6 +312,26 @@ class ProductsController extends Controller
                 if(isset($row->DefValD) && (string)$row->DefValD != null){
                     $value = (string)$row->DefValD;
                 }
+
+                $dictiRes = [];
+                if((string)$row->NumCode != '') {
+                    $getDicti = Dicti::where('parent_isn', (string)$row->NumCode)->get();
+                    if (count($getDicti) > 0) {
+                        array_push($dictiRes, [
+                            'Value' => null,
+                            'Label' => 'Не выбрано',
+                        ]);
+                        foreach ($getDicti as $dictiRow) {
+                            array_push($dictiRes, [
+                                'Value' => $dictiRow->isn,
+                                'Label' => isset($dictiRow->fullname) ? $dictiRow->fullname : $dictiRow->name,
+                            ]);
+                        }
+                    } else {
+                        //$dictiRes = (new SiteController())->getDictiList((string)$row->NumCode);
+                    }
+                }
+
                 array_push($attributes, [
                 //$attributes[(string)$row->AttrISN] = array(
                     'AttrISN' => (string)$row->AttrISN,
@@ -320,7 +340,7 @@ class ProductsController extends Controller
                     'ParentISN' => (string)$row->NumCode,
                     'Value' => $value,
                     'Remark' => null,
-                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode),
+                    'Childs' => $dictiRes,  //(new SiteController())->getDictiList((string)$row->NumCode),
                 //);
                 ]);
             }

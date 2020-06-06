@@ -72,6 +72,7 @@
                             :expressAttr="expressAttr"
                             :attribute="agrobj"
                             :calc-changed="calcChanged"
+                            :preloader="preloader"
                             :key="index">
                     </agr-attributes>
                 </div>

@@ -47,7 +47,10 @@
 
         <div class="agr-block mb-4">
             <div v-for="attribute in attributes">
-                <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
+                <agr-attributes :attribute="attribute"
+                                :express-attr="expressAttr"
+                                :calc-changed="calcChanged"
+                                :preloader="preloader"></agr-attributes>
             </div>
 
             <div v-for="agrclause in agrclauses">
@@ -86,7 +89,7 @@
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Отправить в ДА
                 </button>
-                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA || calculated && contract_number === null && calc_isn != null && DA.calcDA && status == 223370" class="btn btn-outline-info" @click="createAgr">
+                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA && status == '223370' || calculated && contract_number === null && calc_isn != null && DA.calcDA && status == '223370'" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
                 </button>
                 <button v-if="docs.sendedFail" class="btn btn-outline-info" @click="sendDocs">

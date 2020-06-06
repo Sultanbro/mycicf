@@ -18,7 +18,7 @@ class UpdateProductDicti extends Command
      *
      * @var string
      */
-    protected $signature = 'products:dicti';
+    protected $signature = 'update:productsDicti';
 
     /**
      * The console command description.
