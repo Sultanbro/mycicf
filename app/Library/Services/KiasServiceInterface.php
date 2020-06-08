@@ -173,32 +173,36 @@ interface KiasServiceInterface
      * @param $agrisn
      * @param $agrcalcisn
      * @param $isn
+     * @param $docIsn
      *
      * @return mixed
      */
-    public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn);
+    public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $docIsn);
 
     /**
      * Отправить данные для сохранения в КИАС
      * @param $docIsn
+     * @param $dremark
      * @param $data
      *
      * @return mixed
      */
-    public function setInsuranceInspectionInfo($docIsn, $data);
+    public function setInsuranceInspectionInfo($docIsn, $dremark, $data);
 
     /**
      * Назначить оператора
-     *
      * @param $emplIsn
      * @param $docIsn
+     * @param $statusIsn
+     * @param $remark
      *
      * @return mixed
      */
-    public function setAppointmentOperator($emplIsn, $docIsn);
+    public function setAppointmentOperator($emplIsn, $docIsn, $statusIsn, $remark);
 
     /**
      * Получить список Справочников
+     *
      * @param $dictiISN
      * @param $mode
      *
@@ -215,4 +219,11 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function saveAttachment($refisn, $name, $file, $type);
+
+    /**
+     * @param $deptIsn
+     *
+     * @return mixed
+     */
+    public function getAvarkomByDept($deptIsn);
 }

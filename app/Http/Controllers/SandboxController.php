@@ -12,7 +12,7 @@ class SandboxController extends Controller
     public function index(KiasServiceInterface $kiasService)
     {
         try {
-            $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo('', 1921509, 238704);
+            $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo('', 1955224, 241039, 26635834);
             $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
             $result = [
@@ -27,21 +27,20 @@ class SandboxController extends Controller
             $this->success = false;
             $this->error   = (string) $getInspectionsInfo->text;
         }
-        dd($inspectionsInfo);
         foreach ($inspectionsInfo['row'] as $inspection) {
-            foreach ($inspection['Details']['row'] as $detail) {
-                $data = Dicti::where('isn', $detail['Detailisn'])->first();
+            foreach ($inspection['details']['row'] as $detail) {
+                $data = Dicti::where('isn', $detail['detailisn'])->first();
                 if (empty($data)) {
                     $dicti           = new Dicti();
-                    $dicti->isn      = $detail['Detailisn'];
-                    $dicti->fullname = $detail['Detail'];
+                    $dicti->isn      = $detail['detailisn'];
+                    $dicti->fullname = $detail['detail'];
                     $dicti->code     = '';
                     $dicti->numcode  = '';
-                    $dicti->n_kids   = !empty($detail['Dicti']) ? 1 : 0;
+                    $dicti->n_kids   = !empty($detail['dicti']) ? 1 : 0;
                     $dicti->save();
                 }
-                if (!empty($detail['Dicti'])) {
-                    $getDicts = $kiasService->getDictList($detail['Dicti'], 0);
+                if (!empty($detail['dicti'])) {
+                    $getDicts = $kiasService->getDictList($detail['dicti'], 0);
                     $dicts    = Helper::simpleXmlToArray($getDicts->ROWSET);
                     foreach ($dicts['row'] as $dict) {
                         $getData = Dicti::where('isn', $dict['ISN'])->first();
@@ -49,7 +48,7 @@ class SandboxController extends Controller
                             $model              = new Dicti();
                             $model->isn         = $dict['ISN'];
                             $model->fullname    = $dict['FULLNAME'];
-                            $model->parent_isn  = $detail['Detailisn'];
+                            $model->parent_isn  = $detail['detailisn'];
                             $model->parent_name = $dict['FULLNAME'];
                             $model->code        = '';
                             $model->numcode     = '';
@@ -61,6 +60,15 @@ class SandboxController extends Controller
         }
         dd('OK');
     }
+
+
+    public function avarkom(KiasServiceInterface $kias)
+    {
+        $avarkom = $kias->getAvarkomByDept(1000);
+        $getArray = Helper::simpleXmlToArray($avarkom);
+        dd($getArray);
+    }
+
 
     private function test($inspectionsInfo)
     {

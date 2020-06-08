@@ -1,125 +1,3 @@
-<!--<template>-->
-<!--    <div id="upload-image">-->
-<!--        <vue-upload-multiple-image-->
-<!--            @upload-success="uploadImageSuccess"-->
-<!--            @before-remove="beforeRemove"-->
-<!--            @limit-exceeded="limitExceeded"-->
-<!--            :data-images="images"-->
-<!--            idUpload="myIdUpload"-->
-<!--            editUpload="myIdEdit"-->
-<!--            :drag-text="drag"-->
-<!--            :browse-text="browse"-->
-<!--            :primary-text="primary"-->
-<!--            :mark-is-primary-text="markPrimary"-->
-<!--            :popup-text="popup"-->
-<!--            :drop-text="drop"-->
-<!--            :max-image="max"-->
-<!--        ></vue-upload-multiple-image>-->
-<!--    </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--    import VueUploadMultipleImage from 'vue-upload-multiple-image'-->
-
-<!--    export default {-->
-<!--        name: 'upload-image',-->
-<!--        props: {-->
-<!--            dragText: {-->
-<!--                type: String,-->
-<!--                default: 'Выберите файл'-->
-<!--            },-->
-<!--            browseText: {-->
-<!--                type: String,-->
-<!--                default: ''-->
-<!--            },-->
-<!--            primaryText: {-->
-<!--                type: String,-->
-<!--                default: ''-->
-<!--            },-->
-<!--            markIsPrimaryText: {-->
-<!--                type: String,-->
-<!--                default: ''-->
-<!--            },-->
-<!--            popupText: {-->
-<!--                type: String,-->
-<!--                default: ''-->
-<!--            },-->
-<!--            dropText: {-->
-<!--                type: String,-->
-<!--                default: 'Перетащите'-->
-<!--            },-->
-<!--            maxImage: {-->
-<!--                type: Number,-->
-<!--                default: 2-->
-<!--            },-->
-<!--        },-->
-<!--        data() {-->
-<!--            return {-->
-<!--                images: [],-->
-<!--                drag: this.dragText,-->
-<!--                browse: this.browseText,-->
-<!--                primary: this.primaryText,-->
-<!--                markPrimary: this.markIsPrimaryText,-->
-<!--                popup: this.popupText,-->
-<!--                drop: this.dropText,-->
-<!--                max: this.maxImage-->
-<!--            }-->
-<!--        },-->
-<!--        components: {-->
-<!--            VueUploadMultipleImage-->
-<!--        },-->
-<!--        methods: {-->
-<!--            limitExceeded (e) {-->
-<!--                console.log('q1')-->
-<!--            },-->
-<!--            uploadImageSuccess(formData, index, fileList) {-->
-<!--                // console.log('data', formData, index, fileList)-->
-<!--                // Upload image api-->
-<!--                axios.post('/setInspection', formData).then(response => {-->
-<!--                    console.log(response)-->
-<!--                })-->
-<!--            },-->
-<!--            beforeRemove(index, done, fileList) {-->
-<!--                console.log('index', index, fileList)-->
-<!--                var r = confirm("remove image")-->
-<!--                if (r == true) {-->
-<!--                    done()-->
-<!--                } else {-->
-<!--                }-->
-<!--            },-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-<!--<style>-->
-<!--    #my-strictly-unique-vue-upload-multiple-image {-->
-<!--        font-family: 'Avenir', Helvetica, Arial, sans-serif;-->
-<!--        -webkit-font-smoothing: antialiased;-->
-<!--        -moz-osx-font-smoothing: grayscale;-->
-<!--        text-align: center;-->
-<!--        color: #2c3e50;-->
-<!--        margin-top: 60px;-->
-<!--    }-->
-
-<!--    h1, h2 {-->
-<!--        font-weight: normal;-->
-<!--    }-->
-
-<!--    ul {-->
-<!--        list-style-type: none;-->
-<!--        padding: 0;-->
-<!--    }-->
-
-<!--    li {-->
-<!--        display: inline-block;-->
-<!--        margin: 0 10px;-->
-<!--    }-->
-
-<!--    a {-->
-<!--        color: #42b983;-->
-<!--    }-->
-<!--</style>-->
-
 <template>
     <div class="uploader"
          @dragenter="OnDragEnter"
@@ -128,25 +6,30 @@
          @drop="onDrop"
          :class="{ dragging: isDragging }">
 
-        <div class="upload-control" v-show="images.length">
+        <div class="upload-control" v-show="images.length || showData()">
             <label for="file">Выбрать файл</label>
             <button @click="upload">Загрузить</button>
         </div>
 
 
-        <div v-show="!images.length">
+        <div v-show="!images.length && !showData()">
             <div>Перетащите свои изображения сюда</div>
             <div>или</div>
             <div class="file-input">
                 <label for="file">Выберите файл</label>
                 <input type="file" id="file" @change="onInputChange" multiple>
-                <input type="hidden" name="refIsn" :value="info.ISN">
+                <input type="hidden" name="docId" :value="info.DocID">
             </div>
         </div>
-
+        <div class="images-preview" v-show="info.AttachLink" v-for="attachLink in info.AttachLink">
+            <div class="img-wrapper" v-for="(link, key) in attachLink">
+                <img width="100" height="65" :src="'/storage/'+ link.substring(7)" :alt="`Image Uplaoder ${key}`">
+            </div>
+        </div>
         <div class="images-preview" v-show="images.length">
             <div class="img-wrapper" v-for="(image, index) in images" :key="index">
                 <svg @click="deleteImage(index)" aria-hidden="true" focusable="false" data-prefix="fas"
+                     id="removeImage"
                      data-icon="times-circle"
                      role="img"
                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -229,7 +112,7 @@
             },
             upload() {
                 const formData = new FormData();
-                let values = $("input[name='refIsn']").map(function () {
+                let values = $("input[name='docId']").map(function () {
                     return $(this).val();
                 }).get();
                 if (this.files.length > this.maxCount) {
@@ -238,15 +121,19 @@
                 }
                 this.files.forEach(file => {
                     formData.append('images[]', file, file.name);
-                    formData.append('refIsn', values)
+                    formData.append('docId', values)
                 });
                 axios.post('/upload', formData)
                     .then(response => {
                         this.$toastr.s(response.data.message);
-                        this.images = [];
-                        this.files = [];
+                        document.getElementById('removeImage').style.display = 'none';
+                        document.getElementById("urlStorage").setAttribute('value', response.data.result)
+                        document.getElementById("saveDocument").removeAttribute('disabled')
                     })
-            }
+            },
+            showData() {
+                return Object.values(this.info.AttachLink).length > 0
+            },
         }
     }
 </script>

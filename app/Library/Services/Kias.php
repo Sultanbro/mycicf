@@ -326,30 +326,35 @@ class Kias implements KiasServiceInterface
      * @param $agrisn
      * @param $agrcalcisn
      * @param $isn
+     * @param $docIsn
      *
      * @return mixed|SimpleXMLElement
      */
-    public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn)
+    public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $docIsn)
     {
         return $this->request('User_CicGetOsmotrDocs', [
             'Agrisn'     => $agrisn,
             'Agrcalcisn' => $agrcalcisn,
             'Request'    => $isn,
+            'Docisn'     => $docIsn,
         ]);
     }
 
     /**
      * Отправить данные для сохранения в КИАС
+     *
      * @param $docIsn
+     * @param $dremark
      * @param $data
      *
      * @return mixed|SimpleXMLElement
      */
-    public function setInsuranceInspectionInfo($docIsn, $data)
+    public function setInsuranceInspectionInfo($docIsn, $dremark, $data)
     {
         return $this->request('User_CicSetOsmotrDocs', [
-            'docisn'     => $docIsn,
-            'Details' => $data,
+            'docisn'  => $docIsn,
+            'dremark' => $dremark,
+            'details' => $data,
         ]);
     }
 
@@ -358,14 +363,18 @@ class Kias implements KiasServiceInterface
      *
      * @param $emplIsn
      * @param $docIsn
+     * @param $statusIsn
+     * @param $remark
      *
-     * @return SimpleXMLElement
+     * @return mixed|SimpleXMLElement
      */
-    public function setAppointmentOperator($emplIsn, $docIsn)
+    public function setAppointmentOperator($emplIsn, $docIsn, $statusIsn, $remark)
     {
         return $this->request('User_CicSetOsmotrRequest', [
             'OperatorISN' => $emplIsn,
             'RequestISN'  => $docIsn,
+            'StatusISN'   => $statusIsn,
+            'Remark'      => $remark,
         ]);
     }
 
@@ -387,6 +396,7 @@ class Kias implements KiasServiceInterface
 
     /**
      * Загрузка файлов
+     *
      * @param        $refisn
      * @param        $name
      * @param        $file
@@ -403,6 +413,18 @@ class Kias implements KiasServiceInterface
             'FILENAME'   => $name,
             'ACTIVE '    => self::ACTIVE,
             'OLEOBJECT'  => $file,
+        ]);
+    }
+
+    /**
+     * @param $deptIsn
+     *
+     * @return mixed|SimpleXMLElement
+     */
+    public function getAvarkomByDept($deptIsn)
+    {
+        return $this->request('User_CicGetAvarkomByDept', [
+            'DeptISN' => $deptIsn,
         ]);
     }
 }

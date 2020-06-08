@@ -28,18 +28,18 @@
                         <tr v-for="(info, index) in inspections" :key="info.ISN">
                             <td class="pointer" scope="col">
                                 <a v-if="info.agrcalcisn.length == 0"
-                                   :href="'/insurance/inspection/' + info.ISN + '?argcalcisn=0&agrisn=' +
+                                   :href="'/insurance/inspection/' + info.ISN + '?docisn='+info.DocISN+'&argcalcisn=0&agrisn=' +
                                     Math.abs(info.agrisn)">
                                     {{info.ID}}
                                 </a>
                                 <a v-else-if="info.agrisn.length == 0"
-                                   :href="'/insurance/inspection/' + info.ISN + '?argcalcisn=' +
+                                   :href="'/insurance/inspection/' + info.ISN + '?docisn='+info.DocISN+'&argcalcisn=' +
                                    Math.abs(info.agrcalcisn) +
                                    '&agrisn=0'">
                                     {{info.ID}}
                                 </a>
                                 <a v-else
-                                   :href="'/insurance/inspection/' + info.ISN + '?argcalcisn=' +
+                                   :href="'/insurance/inspection/' + info.ISN + '?docisn='+info.DocISN+'&argcalcisn=' +
                                     Math.abs(info.agrcalcisn) + '&agrisn=' +  Math.abs(info.agrisn)">
                                     {{info.ID}}
                                 </a>
@@ -48,15 +48,48 @@
                             <td scope="col" class="thead-border">{{info.Type}}</td>
                             <td scope="col" class="thead-border">{{info.EmplName}}</td>
                             <td scope="col">{{info.status}}</td>
-                            <td scope="col">{{info.Operator}}</td>
+                            <td scope="col" v-if="info.Operator == ''">
+                                <button class="btn btn-dark"
+                                        data-toggle="modal" data-target="#addOperator"
+                                        @click="getOperator(info.DeptISN)">
+                                    Назначить
+                                </button>
+                            </td>
+                            <td scope="col" v-else>{{info.Operator}}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
 
+        <!-- MODAL -->
+        <div class="modal fade" id="addOperator" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addOperatorLabel">Назначить исполнителя</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <select name="listOperator" id="listOperator">
+                            <option v-for="operator in operators.row"
+                                    :value="operator.ISN">
+                                {{operator.Fullname}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button @click="assignOperator" type="button" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- MODAL -->
+    </div>
 </template>
 
 
@@ -67,7 +100,8 @@
             return {
                 inspections_data: {},
                 none: false,
-                inspection: {}
+                inspection: {},
+                operators: {},
             }
         },
         mounted() {
@@ -97,6 +131,23 @@
                     this.none = true;
                 }
                 this.preloader(false);
+            },
+            getOperator(depsIsn) {
+                this.axios.post("/getOperator", {deptIsn: depsIsn}).then((response) => {
+                    console.log(response.data)
+                    let isEmpty = $.isEmptyObject(response.data.result);
+                    if (response.data.success) {
+                        if (!isEmpty) {
+                            this.operators = response.data.result;
+                        }
+                    } else {
+                        alert(response.data.error)
+                    }
+
+                })
+            },
+            assignOperator() {
+
             },
             preloader(show) {
                 if (show) {

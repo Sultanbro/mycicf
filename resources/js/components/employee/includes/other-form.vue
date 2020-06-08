@@ -2,6 +2,7 @@
     <div class="other-form">
         <form id="other-form" @submit.prevent="saveToDraft">
             <input type="hidden" name="typeObject" value="other">
+            <input type="text" name="urlStorage" :value="details.AttachLink" id="urlStorage">
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -323,24 +324,28 @@
         name: "other-form",
         data() {
             return {
-                count: 0,
+                countR: 0,
+                isJoin: false,
             }
         },
         props: {
             details: Object,
+            countArray: Number
         },
         methods: {
             saveToDraft: function (e) {
                 var form = document.getElementById('other-form');
                 var formData = new FormData(form);
-                if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                if (!this.isJoin) {
                     axios.post('/setInspection', formData)
                         .then((response) => {
                             if (!response.data.success) {
                                 alert(response.data.error);
                             } else {
-                                if (this.count == 0) {
-                                    this.count += 1;
+                                this.isJoin = true
+                                this.countR++;
+                                if (this.countR == this.countArray) {
+                                    document.getElementById("inspection-execute").removeAttribute('disabled');
                                 }
                             }
                         })

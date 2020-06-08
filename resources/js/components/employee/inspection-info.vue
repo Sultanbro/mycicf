@@ -5,7 +5,7 @@
                 Нет заявок
             </div>
         </div>
-        <div class="ml-2 mr-2" v-show="inspections_data !== null">
+        <div class="ml-2 mr-2" v-show="countData()">
             <div class="border-radius15 bg-white mt-2">
                 <div>
                     <table class="dosier-table table text-align-center">
@@ -17,7 +17,7 @@
                         </tr>
                         </thead>
                         <tbody class="date-color">
-                        <tr v-if="inspections_data.length > 0">
+                        <tr v-if="countData()">
                             <td class="pointer" scope="col">{{inspections_data.Contact.FIO}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Contact}}</td>
@@ -30,7 +30,7 @@
                 <strong>Акт предстрахового осмотра</strong>
                 <div class="row">
                     <div class="dis-block w-100" v-for="info in inspections_data.row">
-                        <input type="hidden" name="doc_ids[]" :value="info.DocID">
+                        <input type="hidden" :name="'doc_ids[]'" :value="info.ISN">
                         <span class="ml-3 pointer" data-key="info.DocID" @click="toggleShowDescription(info.DocID)">{{info.DocID}}</span>
                         <div class="col-md-12" :class="showDescription?'show':'hide'"
                              v-if="songsDisplayingDescription.indexOf(info.DocID) !== -1">
@@ -76,9 +76,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <CarForm v-if="info.ClassType==1" :details="info"></CarForm>
-                                    <SpecialCarForm v-if="info.ClassType==2" :details="info"></SpecialCarForm>
-                                    <OtherForm v-if="info.ClassType==3" :details="info"></OtherForm>
+                                    <CarForm
+                                        v-if="info.ClassType==1"
+                                        :details="info"
+                                        :countArray="inspections_data.row.length">
+                                    </CarForm>
+                                    <SpecialCarForm
+                                        v-if="info.ClassType==2"
+                                        :details="info"
+                                        :countArray="inspections_data.row.length">
+                                    </SpecialCarForm>
+                                    <OtherForm
+                                        v-if="info.ClassType==3"
+                                        :details="info"
+                                        :countArray="inspections_data.row.length">
+                                    </OtherForm>
                                     <ImageUploader :info="info"></ImageUploader>
                                 </div>
                             </div>
@@ -86,24 +98,51 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 mt-2">
                         <div class="pull-right mb-3">
-                            <button class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">Отказано
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">Отказано
                             </button>
                         </div>
                         <div class="pull-right">
-                            <input type="hidden" name="" :value="this.countForDisabled">
-                            <button @click="updateToCompleted" class="btn btn-success mr-2">Исполнено</button>
+                            <button data-toggle="modal" data-target="#executeModal"
+                                    id="inspection-execute"
+                                    v-if="countData()"
+                                    class="btn btn-success mr-2"
+                                    :disabled="inspections_data.isDisabled == 'on' ? true : false">
+                                Исполнено
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="executeModal" tabindex="-1" role="dialog" aria-labelledby="executeModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Причина отказа</h5>
+                        <h5 class="modal-title" id="executeModalLabel">Примечание</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="w-100" id="executed" v-model="reason" rows="4"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button @click="updateStatus(1270)" type="button" class="btn btn-primary">Отправить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CANCEL -->
+        <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelModalLabel">Причина отказа</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -112,7 +151,8 @@
                         <textarea class="w-100" id="cancelInspection" v-model="reason" rows="4"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button @click="updateToCancel" type="button" class="btn btn-primary">Отправить</button>
+                        <button @click="updateStatus(1272)" type="button" class="btn btn-primary">Отправить
+                        </button>
                     </div>
                 </div>
             </div>
@@ -143,7 +183,7 @@
                 showDescription: false,
                 songsDisplayingDescription: [],
                 reason: this.$slots.default ? this.$slots.default[0].text : '',
-                countForDisabled: 0,
+                isJoin: false,
             }
         },
         mounted() {
@@ -153,6 +193,7 @@
             isn: Number,
             argcalcisn: Number,
             agrisn: Number,
+            docisn: Number,
         },
         methods: {
             toggleShowDescription(song) {
@@ -172,47 +213,41 @@
                     isn: this.isn,
                     argcalcisn: this.argcalcisn,
                     agrisn: this.agrisn,
+                    docisn: this.docisn,
                 }).then((response) => {
                     this.fetchResponse(response.data)
                 })
             },
             fetchResponse: function (response) {
-                let isEmpty = $.isEmptyObject(response.result);
                 if (response.success) {
-                    if (!isEmpty) {
-                        this.inspections_data = response.result;
-                    }
+                    this.inspections_data = response.result;
                 } else {
                     alert(response.error)
                 }
-                if (isEmpty) {
+                if ($.isEmptyObject(response.result)) {
                     this.none = true;
                 }
                 this.preloader(false);
             },
-            updateToCompleted() {
-                let values = $("input[name='doc_ids[]']").map(function () {
+            updateStatus(statusIsn) {
+                let docIsn = $("input[name='doc_ids[]']").map(function () {
                     return $(this).val();
                 }).get();
-                this.axios.post("/updateStatus", {ids: values})
-                    .then((response) => {
+                if (!this.isJoin) {
+                    this.axios.post("/updateStatus", {
+                            docIsn: docIsn,
+                            statusIsn: statusIsn,
+                            reason: this.reason
+                        }
+                    ).then((response) => {
+                        if (response.data.success) {
+                            this.isJoin = true
+                        }
                         this.$toastr.s(response.data.message);
-                    })
-                    .catch(function (error) {
+                    }).catch(function (error) {
                         alert(error.response);
                     });
-            },
-            updateToCancel() {
-                let values = $("input[name='doc_ids[]']").map(function () {
-                    return $(this).val();
-                }).get();
-                this.axios.post("/updateStatus", {ids: values, reason: this.reason})
-                    .then((response) => {
-                        this.$toastr.s(response.data.message);
-                    })
-                    .catch(function (error) {
-                        alert(error.response);
-                    });
+                }
             },
             preloader(show) {
                 if (show) {
@@ -221,9 +256,9 @@
                     document.getElementById('preloader').style.display = 'none';
                 }
             },
-            onClickChild(value) {
-                console.log(value) // someValue
-            }
+            countData() {
+                return Object.keys(this.inspections_data).length > 0;
+            },
         },
     }
 </script>

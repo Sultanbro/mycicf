@@ -15,6 +15,7 @@
             :isn="{{ $isn }}"
             :argcalcisn="{{ $argcalcIsn }}"
             :agrisn="{{ $agrIsn }}"
+            :docisn="{{ $docIsn }}"
         >
         </inspection-info>
     </div>

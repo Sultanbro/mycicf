@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Dicti;
@@ -12,13 +13,16 @@ use App\Dicti;
 
 class PreInsuranceInspectionController extends Controller
 {
-    const STATUS_ALL        = 3;
-    const STATUS_CONSIDERED = 0;
-    const STATUS_INPROGRESS = 1;
-    const CAR               = 'car';
-    const SPECIAL_CAR       = 'specialCar';
-    const OTHER             = 'other';
-    const ASSIGNED          = 2518;
+    public const               STATUS_ALL        = 3;
+    public const               STATUS_CONSIDERED = 0;
+    public const               STATUS_INPROGRESS = 1;
+    public const               CAR               = 'car';
+    public const               SPECIAL_CAR       = 'specialCar';
+    public const               OTHER             = 'other';
+    public const               ASSIGNED          = 2518;
+    public const               EXECUTE           = 1270;
+    public const               CANCEL            = 1272;
+    public const               DIRECTORY         = 'online_inspections';
 
     /**
      * @var bool
@@ -39,9 +43,10 @@ class PreInsuranceInspectionController extends Controller
     {
         $argcalcIsn = $request['argcalcisn'];
         $agrIsn     = $request['agrisn'];
+        $docIsn     = $request['docisn'];
         $isn        = $request->isn;
 
-        return view('inspection_info', compact('isn', 'argcalcIsn', 'agrIsn'));
+        return view('inspection_info', compact('isn', 'argcalcIsn', 'agrIsn', 'docIsn'));
     }
 
     /**
@@ -54,9 +59,9 @@ class PreInsuranceInspectionController extends Controller
      */
     public function getInsuranceInspectionList(Request $request, KiasServiceInterface $kias)
     {
-        $isn     = $request->isn; //4110211;
+        $isn     = 4334911; //$request->isn; //4110211;
         $DateBeg = '01.05.2020';
-        $DateEnd = '27.05.2020';
+        $DateEnd = '27.06.2020';
         try {
             $getInspections = $kias->getInsuranceInspectionList($isn, self::STATUS_ALL, $DateBeg, $DateEnd);
             $inspections    = Helper::simpleXmlToArray($getInspections->Request);
@@ -98,8 +103,10 @@ class PreInsuranceInspectionController extends Controller
         $isn        = $request->isn;
         $agrCalcIsn = $request->argcalcisn != 0 ? $request->argcalcisn : '';
         $agrIsn     = $request->agrisn != 0 ? $request->agrisn : '';
+        $docIsn     = $request->docisn;
+
         try {
-            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1921023, 239551);
+            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1955224, 241039, 26635834);
             $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
             return response()->json([
@@ -112,6 +119,7 @@ class PreInsuranceInspectionController extends Controller
             $this->success = false;
             $this->error   = (string) $getInspectionsInfo->text;
         }
+        //dd($this->getDataWithChild($inspectionsInfo));
         $result = [
             'success' => $this->success,
             'error'   => $this->error,
@@ -126,30 +134,48 @@ class PreInsuranceInspectionController extends Controller
         $getDataWithDicts = [];
         $index            = 0;
         $count            = 0;
-        foreach ($inspectionsInfo['row'] as $info) {
-            if ($info['DocStatus'] == self::ASSIGNED) {
-                $count++;
-            }
-            foreach ($info['details']['row'] as $key => $detail) {
-                $getDicts           = Dicti::select('id', 'isn', 'fullname')
-                    ->where('parent_isn', $detail['Detailisn'])
-                    ->get();
-                $getDataWithDicts[] = $detail;
-                foreach ($getDicts as $dict) {
-                    $getDataWithDicts[$key]['child'][] = [
-                        'child_isn'  => $dict->isn,
-                        'child_name' => $dict->fullname,
-                    ];
+        $getUrl           = Session::get('url_for_image');
+        if (!empty($inspectionsInfo['row'])) {
+            foreach ($inspectionsInfo['row'] as $info) {
+                $path      = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
+                if ($info['DocStatus'] == self::ASSIGNED) {
+                    $count++;
                 }
+                foreach ($info['details']['row'] as $key => $detail) {
+                    $getDicts           = Dicti::select('id', 'isn', 'fullname')
+                        ->where('parent_isn', $detail['detailisn'])
+                        ->get();
+                    $getDataWithDicts[] = $detail;
+                    foreach ($getDicts as $dict) {
+                        $getDataWithDicts[$key]['child'][] = [
+                            'child_isn'  => $dict->isn,
+                            'child_name' => $dict->fullname,
+                        ];
+                    }
+                }
+                $inspectionsInfo['row'][$index]['details']['row'] = $getDataWithDicts;
+                if (empty($inspectionsInfo['row'][$index]['AttachLink'])) {
+                    if (!empty($getUrl) && in_array($info['DocID'], array_keys($getUrl))) {
+                        $inspectionsInfo['row'][$index]['AttachLink'][$path] = Storage::files($getUrl[$info['DocID']]);
+                    }
+                } else {
+                    $inspectionsInfo['row'][$index]['AttachLink'][$path] =
+                        Storage::files($inspectionsInfo['row'][$index]['AttachLink']);
+                }
+                $index++;
             }
-            $inspectionsInfo['row'][$index++]['details']['row'] = $getDataWithDicts;
+
+            if ($count == count($inspectionsInfo['row'])) {
+                $inspectionsInfo['isDisabled'] = 'off';
+
+                return $inspectionsInfo;
+            }
+            $inspectionsInfo['isDisabled'] = 'on';
+
+            return $inspectionsInfo;
         }
 
-        if ($count == count($inspectionsInfo['row'])) {
-            $inspectionsInfo['row']['disabled'] = 'ON';
-        }
-
-        return $inspectionsInfo;
+        return [];
     }
 
     /**
@@ -163,20 +189,23 @@ class PreInsuranceInspectionController extends Controller
     {
         $data        = [];
         $formRequest = $request->all();
-        //dd($formRequest);
         foreach ($formRequest['detail'] as $value) {
-            $options       = explode(',', $value['damage']);
+            $options = !empty($value['damage']) ? explode(',', $value['damage']) : '';
+            if ($value['type'] == 3) {
+                $value['remark'] = $formRequest['urlStorage'];
+            }
             $data['row'][] = [
-                'ISN'       => $value['isn'],
-                "Detailisn" => $value['detailIsn'],
-                'Damageisn' => !empty($value['damage']) ? $options[0] : '',
-                "Damage"    => !empty($value['damage']) ? $options[1] : '',
-                "Remark"    => '',
+                'isn'       => $value['isn'] ?? '',
+                "detailisn" => $value['detailIsn'] ?? '',
+                'damageisn' => !empty($value['damage']) ? $options[0] : '',
+                "damage"    => !empty($value['damage']) ? $options[1] : '',
+                "remark"    => !empty($value['remark']) ? $value['remark'] : '',
+                "type"      => $value['type'],
             ];
         }
-        //dd($data);
         try {
-            $inspections = $kias->setInsuranceInspectionInfo($formRequest['docIsn'], $data);
+            $inspections = $kias->setInsuranceInspectionInfo($formRequest['docIsn'], $formRequest['dremark'], $data);
+            $response    = Helper::simpleXmlToArray($inspections);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -185,30 +214,37 @@ class PreInsuranceInspectionController extends Controller
         }
 
         $result = [
-            'success' => $this->success,
-            'error'   => $this->error,
-            'result'  => !empty($inspections) ? $inspections : $data,
+            'success' => !isset($response['error']) ? $this->success : false,
+            'error'   => !isset($response['error']) ?  $this->error : $response['error']['text'],
+            'result'  => $inspections
         ];
 
-        return response()->json($result)->withCallback($request->input('callback'));
+        Session::forget('url_for_image');
 
-        $inspections = [];
-        $data        = Session::get('inspection');
-        if (Session::has('inspection')) {
-            $data[$request['typeObject']] = $request->all();
-            Session::put('inspection', $data);
-        } else {
-            $inspections[$request['typeObject']] = $request->all();
-            Session::put('inspection', $inspections);
-        }
+        return response()->json($result);
     }
 
-    public function updateStatus(Request $request)
+    public function updateStatus(Request $request, KiasServiceInterface $kias)
     {
-        $ids = $request->all();
-        dd($ids);
-        foreach ($ids as $id) {
-
+        $emplIsn    = Auth::user()->ISN;
+        $requestAll = $request->all();
+        if (!empty($requestAll)) {
+            $reason = '';
+            if ($requestAll['statusIsn'] == self::EXECUTE && empty($requestAll['reason'])) {
+                $reason = 'Исполнено';
+            } elseif ($requestAll['statusIsn'] == self::CANCEL && empty($requestAll['reason'])) {
+                $reason = 'Отказано';
+            }
+            foreach ($requestAll['docIsn'] as $dosId) {
+                try {
+                    $kias->setAppointmentOperator($emplIsn, $dosId, $requestAll['statusIsn'], $reason);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $e->getMessage(),
+                    ]);
+                }
+            }
         }
 
         $result = [
@@ -233,74 +269,55 @@ class PreInsuranceInspectionController extends Controller
                 $contents = $image->get();
                 $name     = $image->getClientOriginalName();
                 $filename = mt_rand(10, 9999).str_replace('-', '_', $name);
-                $filePath = "online_inspections/{$filename}";
-                Storage::disk('local')->put("/public/{$filePath}", $contents);
-                $file = Storage::get('/public/online_inspections/'.$filename);
-                try {
-                    $kias->saveAttachment(
-                        $request->refIsn,
-                        basename($filename),
-                        base64_encode($file),
-                        'D'
-                    );
-                } catch (Exception $e) {
-                    return response()->json([
-                        'success' => false,
-                        'result'  => $e->getMessage(),
-                    ]);
-                }
+                $filePath = '/public/'.self::DIRECTORY.'/'.$request->docId.'/'.$filename;
+                Storage::disk('local')->put($filePath, $contents);
             }
         }
+
+        $urlImage  = [];
+        $directory = Session::get('url_for_image');
+        $path      = 'public/'.self::DIRECTORY.'/'.$request->docId;
+        if (Session::has('url_for_image')) {
+            $directory[$request->docId] = $path;
+            Session::put('url_for_image', $directory);
+        } else {
+            $urlImage[$request->docId] = $path;
+            Session::put('url_for_image', $urlImage);
+        }
+
         $result = [
             'success' => $this->success,
             'message' => 'Все изображения успешно загружены',
+            'result'  => $path,
         ];
 
         return response()->json($result);
     }
 
-    public function sendDocs(Request $request, KiasServiceInterface $kias)
+    public function getOperator(Request $request, KiasServiceInterface $kias)
     {
-        if (count($request->file('files')) > 0) {
-            $product   = ExpressProduct::find($request->id);
-            $uploaded  = [];
-            $quotation = FullQuotation::where('calc_isn', $request->calc_isn)->first();
-            $sendType  = $quotation->calc_da == 1 ? 'Q' : 'C';
-            foreach ($request->file('files') as $file) {
-                $contents  = $file->get();
-                $extension = $file->extension();
-                $filename  = str_replace(' ', '_', $product->name).mt_rand(1000000, 9999999).'.'.$extension;
-                $filePath  = "products/{$filename}";
-                if (Storage::disk('local')->put("/public/{$filePath}", $contents)) {
-                    array_push($uploaded, [
-                        'file'         => '/public/products/'.$filename,
-                        'originalName' => $file->getClientOriginalName(),
-                    ]);
-                }
-
-                $calc_isn = str_replace('-', '', $request->calc_isn);
-                $file     = Storage::get('/public/products/'.$filename);
-                try {
-                    $results = $kias->saveAttachment(
-                        $calc_isn,
-                        basename($filename),
-                        base64_encode($file),
-                        $sendType
-                    );
-                } catch (Exception $e) {
-                    return response()->json([
-                        'success' => false,
-                        'result'  => $e->getMessage(),
-                    ]);
-                }
-            }
-            $quotation->docs = json_encode($uploaded);
-            $quotation->save();
+        $deptIsn = $request->deptIsn;
+        try {
+            $getAvarkom = $kias->getAvarkomByDept($deptIsn);
+            $avarkom    = Helper::simpleXmlToArray($getAvarkom->Avarcoms);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error'   => $e->getMessage(),
+            ]);
         }
 
-        return response()->json([
-            'success' => true,
-            'error'   => '',
-        ]);
+        if ($getAvarkom->error) {
+            $this->success = false;
+            $this->error   = (string) $getAvarkom->text;
+        }
+
+        $result = [
+            'success' => $this->success,
+            'error'   => $this->error,
+            'result'  => $avarkom,
+        ];
+
+        return response()->json($result);
     }
 }
