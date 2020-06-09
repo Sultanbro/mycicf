@@ -25,7 +25,7 @@
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить НШБ
                 </button>
-                <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate">
+                <button v-if="quotationId == 0" class="btn btn-outline-info" :disabled="nshb" @click="calculate">
                     Рассчитать стоимость
                 </button>
                 <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>

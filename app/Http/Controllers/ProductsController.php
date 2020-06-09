@@ -291,7 +291,7 @@ class ProductsController extends Controller
         $products = [];
         foreach (ExpressProduct::all() as $product){
             array_push($products, [
-                'url' => "/express/calc/{$product->id}",
+                'url' => "/express/calc/{$product->id}/0",
                 'name' => $product->name,
             ]);
         }
@@ -388,7 +388,7 @@ class ProductsController extends Controller
             ]);
         }
 
-        if($request->nshb){
+        /*if($request->nshb){
             $quotation = $request->quotationId != 0 ? ExpressQuotation::find($request->quotationId) : new ExpressQuotation;
             $quotation->product_isn = $model->product_isn;
             $quotation->user_isn = Auth::user()->ISN;
@@ -408,7 +408,7 @@ class ProductsController extends Controller
 //                }
 //            }
             $quotation->save();
-        }
+        }*/
 
         return response()->json([
             'success' => true,
