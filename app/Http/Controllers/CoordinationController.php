@@ -409,14 +409,14 @@ class CoordinationController extends Controller
     }
 
     public function closeDecade(Request $request){
-        $content = $request->postText;
-        $isn = isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
-        $username = isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
+        $contentT = $request->postText;
+        $isn = 1445722; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
+        $username = 'Кулназаров Гани Жасаганбергенович';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
 
         //try {
             $new_post = new Post();
             $new_post->user_isn = $isn;  //Кулназаров Гани Жасаганбергенович
-            $new_post->post_text = $content;
+            $new_post->post_text = $contentT;
             $new_post->pinned = 0;
             $new_post->save();
 //        }catch(\Exception $e) {
@@ -450,7 +450,7 @@ class CoordinationController extends Controller
 //            return false;
 //        }
 
-        return true;
+        return 'пост успешно добавлен';
     }
 
     public function checkNotificationSended($isn, $no, $type){
