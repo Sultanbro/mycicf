@@ -42,6 +42,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('parse/add', 'ParseController@index')->name('parse.upload');
             Route::post('parse/upload', 'ParseController@upload');
             Route::post('parse/getDocTypes', 'ParseController@getDocTypes');
+            Route::post('parse/get/companies', 'ParseController@getCompaniesList');
 
             Route::get('parse/add/company', 'ParseController@getAddCompany')->name('parse.add.company');
             Route::post('parse/add/company', 'ParseController@postAddCompany');
