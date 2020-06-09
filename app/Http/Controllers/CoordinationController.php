@@ -409,25 +409,24 @@ class CoordinationController extends Controller
     }
 
     public function closeDecade(Request $request){
-        $content = $request->postText;
+        $contentT = $request->postText;
+        $isn = 1445722; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
+        $username = 'Кулназаров Гани Жасаганбергенович';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
 
-        try {
+        //try {
             $new_post = new Post();
-            $new_post->user_isn = 1445722;  //Кулназаров Гани Жасаганбергенович
-            $new_post->post_text = $content;
+            $new_post->user_isn = $isn;  //Кулназаров Гани Жасаганбергенович
+            $new_post->post_text = $contentT;
             $new_post->pinned = 0;
             $new_post->save();
-        }catch(\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
-            ];
-        }
+//        }catch(\Exception $e) {
+//            return false;
+//        }
 
         $response = [
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
             'edited' => false,
-            'fullname' => 'Кулназаров Гани Жасаганбергенович',
+            'fullname' => $username,
             'isLiked' => 0,
             'isn' => $new_post->user_isn,
             'userISN' => $new_post->user_isn,
@@ -435,26 +434,23 @@ class CoordinationController extends Controller
             'pinned' => 0,
             'postText' => $new_post->getText(),
             'postId' => $new_post->id,
-            'image' => [],  //$new_post->getImage(),
-            'documents' => [],  //$new_post->getDocuments(),
-            'youtube' => null,    //$new_post->getVideo(),
-            'videos' => [], //$new_post->getVideoUrl(),
+            'image' => $new_post->getImage(),
+            'documents' => $new_post->getDocuments(),
+            'youtube' => $new_post->getVideo(),
+            'videos' => $new_post->getVideoUrl(),
             'comments' => [],
         ];
 
-        try {
+        //try {
             broadcast(new NewPost([
                 'post' => $response,
                 'type' => Post::NEW_POST
             ]));
-        }catch(\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
-            ];
-        }
+//        }catch(\Exception $e) {
+//            return false;
+//        }
 
-        return [ 'success' => true ];
+        return 'пост успешно добавлен';
     }
 
     public function checkNotificationSended($isn, $no, $type){
