@@ -248,7 +248,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/setToken', 'NotificationController@setToken');
 
         Route::get('/express', 'ProductsController@expressList');
-        Route::get('/express/calc/{ID}', 'ProductsController@express');
+        //Route::get('/express/calc/{ID}', 'ProductsController@express');
+        Route::get('/express/calc/{ID}/{quotationId}', 'ProductsController@express')->name('express_front');
         Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
         Route::get('/full', 'ProductsController@fullList');
         Route::get('/full/quotations/{productISN}', 'ProductsController@fullQuotationList')->name('full_quotations_list');

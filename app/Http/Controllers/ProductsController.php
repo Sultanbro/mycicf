@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dicti;
 use App\ExpressProduct;
+use App\ExpressQuotation;
 use App\FullProduct;
 use App\FullQuotation;
 use App\FullConstructor;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ProductsController extends Controller
 {
@@ -28,11 +30,12 @@ class ProductsController extends Controller
         return view('product', compact('data'), compact('consturction'));
     }
 
-    public function express($ID){
+    public function express($ID,$quotationId){
         if(($data = ExpressProduct::find($ID)) === null){
             abort(404, 'Такой продукт не найден');
         }
-        return view('express.create', compact('ID'));
+
+        return view('express.create', compact('ID'),compact('quotationId'));
     }
 
     // Admin routes
@@ -298,56 +301,64 @@ class ProductsController extends Controller
     public function getExpressAttributes(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
         $ProductISN = ExpressProduct::find($ID)->product_isn;
-        $response = $kias->getExpressAttributes($ProductISN);
-        $attributes = [];
-        if(isset($response->ROWSET->row)){
-            foreach ($response->ROWSET->row as $row){
-                $value = null;
-                if(isset($row->DefValN) && (string)$row->DefValN != null){
-                    $value = (string)$row->DefValN;
-                }
-                if(isset($row->DefValC) && (string)$row->DefValC != null){
-                    $value = (string)$row->DefValC;
-                }
-                if(isset($row->DefValD) && (string)$row->DefValD != null){
-                    $value = (string)$row->DefValD;
-                }
-
-                $dictiRes = [];
-                if((string)$row->NumCode != '') {
-                    $getDicti = Dicti::where('parent_isn', (string)$row->NumCode)->get();
-                    if (count($getDicti) > 0) {
-                        array_push($dictiRes, [
-                            'Value' => null,
-                            'Label' => 'Не выбрано',
-                        ]);
-                        foreach ($getDicti as $dictiRow) {
-                            array_push($dictiRes, [
-                                'Value' => $dictiRow->isn,
-                                'Label' => isset($dictiRow->fullname) ? $dictiRow->fullname : $dictiRow->name,
-                            ]);
-                        }
-                    } else {
-                        //$dictiRes = (new SiteController())->getDictiList((string)$row->NumCode);
+        if($request->quotationId != 0) {
+            $quotation = ExpressQuotation::find($request->quotationId)->data;
+            $attributes = json_decode($quotation)->attributes;
+            $participants = json_decode($quotation)->participants;
+        } else {
+            $response = $kias->getExpressAttributes($ProductISN);
+            $attributes = [];
+            $participants = [];
+            if (isset($response->ROWSET->row)) {
+                foreach ($response->ROWSET->row as $row) {
+                    $value = null;
+                    if (isset($row->DefValN) && (string)$row->DefValN != null) {
+                        $value = (string)$row->DefValN;
                     }
-                }
+                    if (isset($row->DefValC) && (string)$row->DefValC != null) {
+                        $value = (string)$row->DefValC;
+                    }
+                    if (isset($row->DefValD) && (string)$row->DefValD != null) {
+                        $value = (string)$row->DefValD;
+                    }
 
-                array_push($attributes, [
-                //$attributes[(string)$row->AttrISN] = array(
-                    'AttrISN' => (string)$row->AttrISN,
-                    'Type' => (string)$row->TypeValue,
-                    'Label' => (string)$row->AttrName,
-                    'ParentISN' => (string)$row->NumCode,
-                    'Value' => $value,
-                    'Remark' => null,
-                    'Childs' => $dictiRes,  //(new SiteController())->getDictiList((string)$row->NumCode),
-                //);
-                ]);
+                    $dictiRes = [];
+                    if ((string)$row->NumCode != '') {
+                        $getDicti = Dicti::where('parent_isn', (string)$row->NumCode)->get();
+                        if (count($getDicti) > 0) {
+                            array_push($dictiRes, [
+                                'Value' => null,
+                                'Label' => 'Не выбрано',
+                            ]);
+                            foreach ($getDicti as $dictiRow) {
+                                array_push($dictiRes, [
+                                    'Value' => $dictiRow->isn,
+                                    'Label' => isset($dictiRow->fullname) ? $dictiRow->fullname : $dictiRow->name,
+                                ]);
+                            }
+                        } else {
+                            //$dictiRes = (new SiteController())->getDictiList((string)$row->NumCode);
+                        }
+                    }
+
+                    array_push($attributes, [
+                        //$attributes[(string)$row->AttrISN] = array(
+                        'AttrISN' => (string)$row->AttrISN,
+                        'Type' => (string)$row->TypeValue,
+                        'Label' => (string)$row->AttrName,
+                        'ParentISN' => (string)$row->NumCode,
+                        'Value' => $value,
+                        'Remark' => null,
+                        'Childs' => $dictiRes,  //(new SiteController())->getDictiList((string)$row->NumCode),
+                        //);
+                    ]);
+                }
             }
         }
         return response()->json([
             'success' => true,
-            'attributes' => $attributes
+            'attributes' => $attributes,
+            'participants' => $participants,
         ]);
     }
 
@@ -364,12 +375,39 @@ class ProductsController extends Controller
         $subjISN = $request->subjISN;
         $attributes = $this->attributesToKiasAddAttr($request->all()['attributes']);
 
-        $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
-        if(isset($response->error)){
+//        if($request->nshb){
+            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
+//        } else {
+//            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
+//        }
+//
+        if (isset($response->error)) {
             return response()->json([
                 'success' => false,
                 'error' => (string)$response->error->text
             ]);
+        }
+
+        if($request->nshb){
+            $quotation = $request->quotationId != 0 ? ExpressQuotation::find($request->quotationId) : new ExpressQuotation;
+            $quotation->product_isn = $model->product_isn;
+            $quotation->user_isn = Auth::user()->ISN;
+            $quotation->calc_isn = 1;   //(int)$response->AgrCalcISN;
+            $quotation->calc_id = 1;    //(string)$response->CalcID;
+            $quotation->premiumSum = 0; //(int)$response->PremiumSum;    // Если отправл
+            $quotation->data = json_encode($request->all());
+            $quotation->nshb = $request->nshb ? 1 : 0;
+
+//            $getStatus = $kias->getAgrStatus($response->AgrCalcISN);    // Берем статус из киаса
+//            if(isset($getStatus->error)){   // Если вернулась ошибка, записываем первоначальный статус
+//                //$quotation->status = $order['formular']['status']['Value'];
+//            } else {
+//                if(isset($getStatus->Product) && $getStatus->Product == $model->product_isn){
+//                    $quotation->status = (int)$getStatus->StatusISN;
+//                    $quotation->status_name = (string)$getStatus->Status;
+//                }
+//            }
+            $quotation->save();
         }
 
         return response()->json([
@@ -447,6 +485,14 @@ class ProductsController extends Controller
 
     public function getFullData(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
+
+//        if(Cache::has('full_constructor')){
+//            $constructor = Cache::get('full_constructor');
+//        } else {
+            //$constructor = FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first();
+            //Cache::put('full_constructor',FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first());
+//        }
+
         $constructor = FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first();
         $status = 0;
         if($request->quotationId != 0) {
@@ -937,8 +983,13 @@ class ProductsController extends Controller
         if(count($request->file('files')) > 0){
             $product = ExpressProduct::find($request->id);
             $uploaded = [];
-            $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
-            $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';
+            if(isset($request->quotationType) && $request->quotationType == 'express'){
+                $quotation = ExpressQuotation::find(8);  //where('calc_isn', $request->calc_isn)->first();
+                $sendType = 'Q';
+            } else {
+                $quotation = FullQuotation::where('calc_isn', $request->calc_isn)->first();
+                $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';
+            }
             foreach($request->file('files') as $file) {
                 $contents = $file->get();
                 $extension = $file->extension();
@@ -953,19 +1004,19 @@ class ProductsController extends Controller
 
                 $calc_isn  = str_replace('-','',$request->calc_isn);
                 $file = Storage::get('/public/products/'.$filename);
-                try {
-                    $results = $kias->saveAttachment(
-                        $calc_isn,
-                        basename($filename),
-                        base64_encode($file),
-                        $sendType
-                    );
-                } catch (Exception $e) {
-                    return response()->json([
-                        'success' => false,
-                        'result' => $e->getMessage()
-                    ]);
-                }
+//                try {
+//                    $results = $kias->saveAttachment(
+//                        $calc_isn,
+//                        basename($filename),
+//                        base64_encode($file),
+//                        $sendType
+//                    );
+//                } catch (Exception $e) {
+//                    return response()->json([
+//                        'success' => false,
+//                        'result' => $e->getMessage()
+//                    ]);
+//                }
             }
             $quotation->docs = json_encode($uploaded);
             $quotation->save();

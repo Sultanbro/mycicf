@@ -1,9 +1,10 @@
 <template>
     <div>
-        <participant :key="0"
-                     :p-index="0"
+        <participant v-for="(participant,index) in participants"
+                     :key="index"
+                     :p-index="index"
                      :participant="participant"
-                     :participants="[]"
+                     :participants="participants"
                      :formular="{insurant : { isn:2103,jur:true,phys:true}}"
                      :preloader="preloader"
                      :calc-changed="calcChanged"
@@ -12,13 +13,21 @@
                      :participant-docs="participantDocs"
                      :product-id="id">
         </participant>
-        <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
+
         <div v-for="attribute in attributes">
             <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged" :preloader="preloader"></agr-attributes>
         </div>
+
+        <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>
+
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
-                <button class="btn btn-outline-info" @click="calculate">Рассчитать стоимость</button>
+                <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
+                    Отправить НШБ
+                </button>
+                <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate">
+                    Рассчитать стоимость
+                </button>
                 <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
@@ -32,47 +41,52 @@
         data() {
             return {
                 attributes: [],
-                moreParticipant : false,
-                participants: [],
-                participant: {
-                    Value : null,
-                    firstName : null,
-                    iin : null,
-                    lastName : null,
-                    orgName : null,
-                    patronymic : null,
-                    subjISN : null,
-                    ISN:2103,
-                    data:null,
-                    Label: 'Страхователь',
-                    new: true,
-                    docType: '',
-                    docNumber: '',
-                    docDate: '',
-                    email: '',
-                    phone: '',
-                    juridical: '',
-                    birthDay: '',
-                    okvdName: '',
-                    economicName: ''
+                calculated : false,
+                calc_isn: null,
+                docs: {
+                    files: [],
+                    sendedFail: false,
+                    express: true
                 },
+                moreParticipant : false,
                 isn: '',
                 subjISN : '',
-                iin: '',
-                firstName: '',
-                lastName: '',
-                patronymic: '',
                 width : 0,
                 height : 0,
-                calculated : false,
                 price : 0,
+                nshb: false,
                 participantDocs: {
                     types: []
                 },
+                participants: [
+                    {
+                        Value : null,
+                        firstName : null,
+                        iin : null,
+                        lastName : null,
+                        orgName : null,
+                        patronymic : null,
+                        subjISN : null,
+                        ISN:2103,
+                        data:null,
+                        Label: 'Страхователь',
+                        new: true,
+                        docType: '',
+                        docNumber: '',
+                        docDate: '',
+                        email: '',
+                        phone: '',
+                        juridical: '',
+                        birthDay: '',
+                        okvdName: '',
+                        economicName: ''
+                    }
+                ]
             }
         },
         props: {
-            id: String
+            id: String,
+            quotationId: String
         },
         created(){
             this.width = window.innerWidth;
@@ -85,11 +99,15 @@
             getExpressAttributes() {
                 this.preloader(true);
                 this.axios.post('/getExpressAttributes', {
-                    id: this.id
+                    id: this.id,
+                    quotationId: this.quotationId
                 })
                 .then(response => {
                     if(response.data.success){
                         this.attributes = response.data.attributes;
+                        if(this.quotationId !=0) {
+                            this.participants = response.data.participants;
+                        }
                         this.preloader(false);
                     }else{
                         alert(response.data.error);
@@ -101,68 +119,24 @@
                     this.preloader(false);
                 });
             },
-            preloader(show) {
-                if(show){
-                    document.getElementById("preloader").style.display = "flex";
-                } else {
-                    document.getElementById("preloader").style.display = "none";
-                }
-            },
-            // openParticipantForm(){
-            //     this.$modal.show('participant-form');
-            // },
-            // closeParticipantForm(){
-            //     this.$modal.hide('participant-form');
-            // },
-            // search(){
-            //     this.axios.post('/searchSubject', {
-            //         firstName : this.firstName,
-            //         lastName : this.lastName,
-            //         patronymic : this.patronymic,
-            //         iin : this.iin,
-            //     })
-            //     .then(response => {
-            //         this.fetchParticipantSearch(response.data);
-            //     })
-            //     .catch(error => {
-            //         alert(error);
-            //     });
-            // },
-            // fetchParticipantSearch(response){
-            //     if(response.success){
-            //         if(response.count === 1){
-            //             this.moreParticipant = false;
-            //             this.firstName = response.participant.FirstName;
-            //             this.lastName = response.participant.LastName;
-            //             this.patronymic = response.participant.Patronymic;
-            //             this.iin = response.participant.IIN;
-            //             this.isn = response.participant.ISN;
-            //         }else{
-            //             this.moreParticipant = true;
-            //             this.participants = response.participant;
-            //         }
-            //     }else{
-            //         alert(response.error);
-            //     }
-            // },
-            // save(){
-            //     this.subjISN = this.isn;
-            //     this.closeParticipantForm();
-            //     this.calcChanged();
-            //     alert('Страхователь успешно добавлен!');
-            // },
             calculate(){
                 this.preloader(true);
                 this.axios.post('/express/calculate', {
                     subjISN : this.subjISN,
                     id : this.id,
-                    attributes : this.attributes
+                    attributes : this.attributes,
+                    nshb: this.nshb,
+                    participants: this.participants
                 })
                 .then(response => {
                     if(response.data.success){
                         this.price = response.data.premium;
                         this.calculated = true;
+                        this.calc_isn = '';
                         this.preloader(false);
+                        if(this.nshb){
+                            this.sendDocs();
+                        }
                     }else{
                         alert(response.data.error)
                         this.preloader(false);
@@ -173,9 +147,51 @@
                     this.preloader(false);
                 });
             },
+            sendDocs(){
+                let formData = new FormData();
+                formData.append('id', this.id);
+                formData.append('quotationId', this.quotationId);
+                formData.append('calc_isn', this.calc_isn);
+                formData.append('quotationType', 'express');
+                if(Object.keys(this.docs.files).length > 0) {
+                    this.preloader(true);
+                    for (let i in this.docs.files) {
+                        formData.append('files[' + i + ']', this.docs.files[i]);
+                    }
+                    this.axios.post('/full/send-docs', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                        .then(response => {
+                            if (response.data.success) {
+                                console.log('Files sended successfull');
+                                this.docs.sendedFail = false;
+                                this.preloader(false);
+                            } else {
+                                alert(response.data.error)
+                                this.docs.sendedFail = true;
+                                this.preloader(false);
+                            }
+                        })
+                        .catch(error => {
+                            alert(error)
+                            this.preloader(false);
+                        });
+                }
+            },
             calcChanged(){
                 this.calculated = false;
                 this.price = 0;
+                for(let index in this.attributes){
+                    if(this.attributes[index].AttrISN == 499591 || this.attributes[index].AttrISN == '499591'){
+                        if(this.attributes[index].Value == 499571 || this.attributes[index].Value == '499571') { //499581 - net  //499571 - da
+                            this.nshb = true;
+                        } else {
+                            this.nshb = false;
+                        }
+                    }
+                }
             },
             createFullQuotation(){
                 var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
@@ -194,21 +210,6 @@
                         i++;
                     }
                     window.location.href = "/full/calc/" + this.id + "/0?attributes={"+attr+"}";
-                    // this.axios.post('/full/create', {
-                    //     subjISN : this.subjISN,
-                    //     id : this.id,
-                    //     attributes : this.attributes
-                    // })
-                    //     .then(response => {
-                    //         if(response.data.success){
-                    //             window.location.href="/full/calc/"+this.id+"/0"+response.data.id;
-                    //         }else{
-                    //             alert(response.data.error)
-                    //         }
-                    //     })
-                    //     .catch(error => {
-                    //         alert(error)
-                    //     });
                 }
             },
             preloader(show) {
@@ -217,7 +218,7 @@
                 } else {
                     document.getElementById("preloader").style.display = "none";
                 }
-            },
+            }
         },
         watch : {
             attributes(){
