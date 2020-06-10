@@ -185,7 +185,7 @@
                 this.price = 0;
                 for(let index in this.attributes){
                     if(this.attributes[index].AttrISN == 499591 || this.attributes[index].AttrISN == '499591'){
-                        if(this.attributes[index].Value == 499571 || this.attributes[index].Value == '499571') { //499581 - net  //499571 - da
+                        if(this.attributes[index].Value == 499581 || this.attributes[index].Value == '499581') { //499581 - net  //499571 - da
                             this.nshb = true;
                         } else {
                             this.nshb = false;
