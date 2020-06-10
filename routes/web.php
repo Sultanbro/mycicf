@@ -123,6 +123,22 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('rclub/post/new', 'Admin\ReadingClubController@newPost')->name('reading.post.new');
             Route::post('rclub/new/post', 'Admin\ReadingClubController@savePostData');
         });
+
+        Route::group(['middleware' => 'productsAdmin'], function(){
+            Route::get('calc/express/create', 'ProductsController@createExpress')->name('create.express');
+            Route::post('calc/express/create', 'ProductsController@setExpressData');
+            Route::get('calc/express/list', 'ProductsController@listExpress')->name('list.express');
+            Route::post('calc/express/list', 'ProductsController@getExpressList');
+
+            Route::get('calc/full/create', 'ProductsController@createFullQuotation')->name('create.full');
+            Route::post('calc/full/create', 'ProductsController@createFullProduct');
+            Route::get('calc/full/list', 'ProductsController@listFullQuotation')->name('list.full');
+            Route::post('calc/full/list', 'ProductsController@getFullQuotationList');
+            Route::get('calc/full-constructor/{id}', 'ProductsController@getFullConstructor')->name('constructor.full');
+            Route::post('calc/full-constructor', 'ProductsController@setFullConstructor');
+            Route::post('calc/getDicti', 'ProductsController@getDicti');
+            Route::post('/updateProductsDicti','ProductsController@updateProductsDicti');
+        });
     });
 });
 
@@ -139,7 +155,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
-        Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
+            Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
         Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
         //DOSSIER
@@ -246,6 +262,33 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+
+        Route::get('/express', 'ProductsController@expressList');
+        //Route::get('/express/calc/{ID}', 'ProductsController@express');
+        Route::get('/express/calc/{ID}/{quotationId}', 'ProductsController@express')->name('express_front');
+        Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
+        Route::get('/full', 'ProductsController@fullList');
+        Route::get('/full/quotations/{productISN}', 'ProductsController@fullQuotationList')->name('full_quotations_list');
+        Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@fullCreateEdit')->name('full_front');
+        Route::post('/full/create', 'ProductsController@fullCreate');
+        Route::post('/full/getFullObjects', 'ProductsController@getFullObjects');
+        Route::post('/full/getFullData', 'ProductsController@getFullData');
+        Route::post('/full/send-docs', 'ProductsController@sendDocs');
+        Route::post('/full/create-agr', 'ProductsController@createAgr');
+        Route::post('/full/getPrintableFormList','ProductsController@getPrintableFormList');
+        Route::get('/full/getPrintableForm','ProductsController@getPrintableForm');
+        Route::post('/full/getFullBranch','SiteController@getFullBranch');
+
+        Route::post('/getDictiList', 'SiteController@getDicti');
+        Route::post('/getDictiListFromBase', 'SiteController@getDictiFromBase');
+        Route::post('/searchSubject', 'SiteController@searchSubject');
+        Route::post('/setSubject', 'SiteController@setSubject');
+        Route::post('/calc/saveSubject', 'SiteController@saveSubject');
+        Route::post('/express/calculate', 'ProductsController@expressCalc');
+        Route::post('/full/calculate', 'ProductsController@fullCalc');
+
+        Route::post('/getVehicle', 'VehicleController@getVehicle');
+        Route::post('/saveVehicle','VehicleController@saveVehicle');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
@@ -266,6 +309,7 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
@@ -275,3 +319,44 @@ Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 Route::get('test', function () {
     return view('test');
 });
+Route::get('kolesa/parseMarks', function (){
+    $url = 'https://kolesa.kz/a/get-search-form/?category=cars';
+
+    $request_headers = [
+        'Accept: application/json, text/javascript, */*; q=0.01',
+        'Accept-Encoding: gzip, deflate, br',
+        'Accept-Language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Connection: keep-alive',
+        'Sec-Fetch-Mode: cors',
+        'Sec-Fetch-Site: same-origin',
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+        'X-Requested-With: XMLHttpRequest',
+
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    $response = curl_exec($ch);
+    dd(curl_error($ch));
+    curl_close($ch);
+    dd($response);
+
+    return view('kolesamarks');
+});
+Route::get('products/test', 'ProductsController@index');
+/**
+ * TEST
+ */
+/**
+Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+Route::get('parse/table-fees', 'ParseController@getFees')->name('parse/table-fees');
+Route::get('parse/table-indicators', 'ParseController@getIndicators')->name('parse/table-indicators');
+Route::get('parse/table-competitors', 'ParseController@getCompetitors')->name('parse/table-competitors');
+*/
