@@ -14,13 +14,18 @@
  * ADMIN PANEL
  * add local url to .env BACKEND_DOMAIN
  */
+
+// Роуты для Песочницы
+Route::get('/sandbox/index', 'SandboxController@index');
+Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
+
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
-    Route::get('/','Admin\SiteController@showLoginForm');
-    Route::post('/login','Admin\SiteController@checkLogin');
-    Route::group(['middleware' => ['checkAuth','checkSession','checkAdminAuth']], function (){
+    Route::get('/', 'Admin\SiteController@showLoginForm');
+    Route::post('/login', 'Admin\SiteController@checkLogin');
+    Route::group(['middleware' => ['checkAuth', 'checkSession', 'checkAdminAuth']], function () {
         Route::get('index', 'Admin\SiteController@index');
         Route::get('/logout', 'SiteController@logout');
         Route::post('/getFullBranch', 'SiteController@getFullBranch');
@@ -59,9 +64,10 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/parse/add/info', 'ParseController@postAddInfo');
         });
 
-        Route::group(['middleware' => 'okAdmin'], function (){
+        Route::group(['middleware' => 'okAdmin'], function () {
             Route::get('/centcoins/list', 'Admin\CentcoinsController@getListView')->name('centcoins.list');
-            Route::get('/centcoins/replenish', 'Admin\CentcoinsController@getReplenishView')->name('centcoins.replenish');
+            Route::get('/centcoins/replenish', 'Admin\CentcoinsController@getReplenishView')
+                ->name('centcoins.replenish');
             Route::get('/centcoins/spend', 'Admin\CentcoinsController@getSpendView')->name('centcoins.spend');
             Route::get('/centcoins/history', 'Admin\CentcoinsController@getHistoryView')->name('centcoins.history');
             Route::get('/centcoins/items', 'Admin\CentcoinsController@getItemsView')->name('centcoins.items');
@@ -108,12 +114,12 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('wnd/save_pdf', 'Admin\DocumentationController@savePdf');
         });
 
-        Route::group(['middleware' => 'senateAdmin'], function (){
+        Route::group(['middleware' => 'senateAdmin'], function () {
             Route::get('senate/post/new', 'Admin\SenateController@newPost')->name('senate.post.new');
             Route::post('senate/new/post', 'Admin\SenateController@savePostData');
         });
 
-        Route::group(['middleware' => 'readingClubAdmin'], function (){
+        Route::group(['middleware' => 'readingClubAdmin'], function () {
             Route::get('rclub/post/new', 'Admin\ReadingClubController@newPost')->name('reading.post.new');
             Route::post('rclub/new/post', 'Admin\ReadingClubController@savePostData');
         });
@@ -246,6 +252,16 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
 
         Route::post('/setToken', 'NotificationController@setToken');
+        //PreInsuranceInspection
+        Route::get('insurance/inspection', 'PreInsuranceInspectionController@index')->name('insurance/inspection');
+        Route::get('insurance/inspection/{isn}', 'PreInsuranceInspectionController@show')
+            ->name('insurance/inspection/show');
+        Route::post('getInsuranceInspectionList', 'PreInsuranceInspectionController@getInsuranceInspectionList');
+        Route::post('getInsuranceInspectionInfo', 'PreInsuranceInspectionController@getInsuranceInspectionInfo');
+        Route::post('setInspection', 'PreInsuranceInspectionController@setInspection');
+        Route::post('upload', 'PreInsuranceInspectionController@upload');
+        Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
+        Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
 
         Route::get('/express', 'ProductsController@expressList');
         //Route::get('/express/calc/{ID}', 'ProductsController@express');
@@ -275,11 +291,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/saveVehicle','VehicleController@saveVehicle');
     });
 });
-Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){
-        Route::get('/', 'SiteController@parseAuth');
-        Route::post('/login', 'SiteController@parseLogin');
+Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
+    Route::get('/', 'SiteController@parseAuth');
+    Route::post('/login', 'SiteController@parseLogin');
 
-        Route::group(['middleware' => 'parseDomainAuth'], function (){
+    Route::group(['middleware' => 'parseDomainAuth'], function () {
         Route::get('parse/company', 'ParseController@getCompanyTopSum');
         Route::get('parse/product', 'ParseController@getClassTopSum');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators');
@@ -300,6 +316,9 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
+Route::get('test', function () {
+    return view('test');
+});
 Route::get('kolesa/parseMarks', function (){
     $url = 'https://kolesa.kz/a/get-search-form/?category=cars';
 
