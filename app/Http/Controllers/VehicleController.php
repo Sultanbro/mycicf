@@ -25,20 +25,41 @@ class VehicleController extends Controller
         $vin = $request->VIN ?? null;
         $tfNumber = $request->REGNO ?? null;
         $result = $kias->getVehicle($vin, null, $tfNumber, null);
+
+        if (isset($result->error)) {
+            return response()->json([
+                'success' => false,
+                'error' => (string)$result->error->text
+            ]);
+        }
+
         if(!isset($result->VIN)){
             $result = $kias->getVehicle($vin, null, $tfNumber, null,1);
+        }
+
+        if (isset($result->error)) {
+            return response()->json([
+                'success' => false,
+                'error' => (string)$result->error->text
+            ]);
         }
 
         if(isset($result->VIN)){
             $releaseDate = isset($result->REALESE_DATE) ? '01.12.'.(string)$result->REALESE_DATE : (string)$result->DATERELEASE;
             $territory_isn = isset($result->REG_TERRITORY) ? (string)$result->REG_TERRITORY : 17;
             $territory_name = isset($result->REG_TERRITORY_NAME) ? (string)$result->REG_TERRITORY_NAME : 'Временный въезд';
+
+            $modelISN = (string)$result->MODELISN != null ? (string)$result->MODELISN : (string)$result->MODEL_ID;
+            $markISN = (string)$result->MARKISN != null ? (string)$result->MARKISN : (string)$result->VOITUREMARKID;
+            $model = (string)$result->MODELNAME != null ? (string)$result->MODELNAME : (string)$result->VOITUREMODEL;
+            $mark = (string)$result->MARKNAME != null ? (string)$result->MARKNAME : (string)$result->VOITUREMARK;
+
             $success = true;
             $result = array(
-                'ModelISN' => (string)$result->MODELISN,
-                'Model' => (string)$result->MODELNAME,
-                'MarkaISN' => (string)$result->MARKISN,
-                'Mark' => (string)$result->MARKNAME,
+                'ModelISN' => $modelISN,
+                'Model' => $model,
+                'MarkaISN' => $markISN,
+                'Mark' => $mark,
                 'ClassISN' => $request->ClassISN,
                 'ReleaseDate' => $releaseDate,
                 'VIN' => (string)$result->VIN,

@@ -3,7 +3,9 @@
         <div v-show="participant.subjISN != null && participant.subjISN != ''">
             <div class="col-md-12 text-center">
                 <span v-if="participant.lastName != null" >
-                    {{ participant.lastName+' '+participant.firstName+' '+participant.patronymic }}
+                    {{ participant.lastName != null ? participant.lastName : ''}}
+                    {{ participant.firstName != null ? participant.firstName : ''}}
+                    {{ participant.patronymic != null ? participant.patronymic : ''}}
                 </span>
                 <span v-else>{{ participant.orgName }}</span>
             </div>
@@ -26,7 +28,30 @@
         <modal :name="modalName"
                :width="width"
                :height="height">
-            <div class="participant-form">
+            <div v-if="participant.ISN == 221507" class="participant-form"> <!-- Если это подписант от страховщика -->
+                <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
+                    <div class="col-12"><label v-if="participant.Label" class="bold">{{ participant.Label }}</label></div>
+                    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
+                        <label class="bold">Выберите из списка</label>
+                        <treeselect class="attr-input-text pl-0 col-12"
+                                    v-if="userList.length > 0"
+                                    :options="userList"
+                                    v-model="participant.Value"
+                                    @select="calcChanged();selectSignatory($event)" />
+                    </div>
+                    <div class="col-12 row mt-3">
+                        <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                            <button class="width100 btn btn-outline-info" @click="closeParticipantForm(pIndex)">Закрыть</button>
+                        </div>
+                        <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                            <button v-if="participant.ISN != 2103"
+                                    class="width100 btn btn-outline-info"
+                                    @click="deleteParticipant">Удалить этот раздел</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="participant-form">
                 <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
                     <div class="col-12"><label v-if="participant.Label" class="bold">{{ participant.Label }}</label></div>
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
@@ -124,7 +149,7 @@
                         </select>
                     </div>
 
-                    <div class="pl-0 mt-3 mb-3 col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
+                    <div class="pl-0 mt-3 mb-3 col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12"> <!-- Застрахованный, выгодоприобретатель-->
                         <div v-for="part,index in participants"
                              class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
                             <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082'"
@@ -209,6 +234,7 @@
                 search: {
                     not_found: false
                 },
+                signatory: false,
                 participantEdited: false,
             }
         },
@@ -224,7 +250,8 @@
             attributes: Array,
             insurantIs: Object,
             participantIs: Object,
-            participantDocs: Object
+            participantDocs: Object,
+            userList: Array
         },
         created(){
             this.width = window.innerWidth;
@@ -310,6 +337,8 @@
 
                         this.participant.iin = response.participant.IIN;
                         this.isn = response.participant.ISN;
+
+                        this.save();
                     }else{
                         this.moreParticipant = true;
                         this.aFewParticipants = response.participant;
@@ -326,7 +355,7 @@
             save(ind = null){
                 let index = ind == null ? this.pIndex : ind;
                 let partName = this.participants.length > 0 && this.participants[index].Label ? this.participants[index].Label : 'Страхователь';
-                if(ind == null) {   // Здесь если не поставили галочку страхователь это застрахованный или выгодоприобретатель
+                if(ind == null) {   // Если не поставили галочку страхователь это застрахованный или выгодоприобретатель
                     this.participants[this.pIndex] = this.participant;
                     if (this.isn != null && this.isn != '') {
 
@@ -341,7 +370,7 @@
                             })
                                 .then(response => {
                                     if (response.data.success) {
-                                        alert("Данные в киасе успешно обновлены\n"+partName + " успешно добавлен!");
+                                        //alert("Данные в киасе успешно обновлены\n"+partName + " успешно добавлен!");
                                         this.preloader(false);
                                     } else {
                                         this.participant.subjISN = null;
@@ -358,7 +387,7 @@
                                 });
                             // End Записываем данные в киас по контргенту
                         } else {
-                            alert(partName + ' успешно добавлен!');
+                            //alert(partName + ' успешно добавлен!');
                         }
 
                         this.subjISN = this.isn;
@@ -394,7 +423,7 @@
                 } else {
                     this.participants[index].subjISN = this.participant.subjISN;
                     this.participants[index].Value = this.participant.subjISN;
-                    alert(partName + ' успешно добавлен!');
+                    //alert(partName + ' успешно добавлен!');
 
                     if(this.participant.ISN == this.formular.insurant.isn && this.participants[index].ISN === '2081' && this.participantIs.receiver){
                         this.participantIs.receiver = false;
@@ -434,25 +463,11 @@
             },
             clearParticipant(ind = null){
                 let index = ind == null ? this.pIndex : ind;
-                this.participants[index].firstName = null;
-                this.participants[index].lastName = null;
-                this.participants[index].patronymic = null;
-                this.participants[index].orgName = null;
-                this.participants[index].iin = null;
-                this.participants[index].Value = '';
-                this.participants[index].subjISN = '';
-                this.participants[index].docType = null;
-                this.participants[index].extSystemKey = null;
-                //this.participants[index].docClassISN = null;
-                this.participants[index].docNumber = null;
-                this.participants[index].docDate = null;
-                this.participants[index].email = null;
-                this.participants[index].phone = null;
-                this.participants[index].juridical = null;
-                this.participants[index].birthDay = null;
-                this.participants[index].birthDay = sex;
-                this.participants[index].okvdName = null;
-                this.participants[index].economicName = null;
+                for(let key in this.participants[index]){
+                    if(key != 'ISN' && key != 'Label'){
+                        this.participants[index][key] = key == 'Value' || key == 'subjISN' ? '' : null;
+                    }
+                }
             },
             deleteParticipant(){
                 if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
@@ -464,7 +479,7 @@
             insPartIs(part,index,e){
                 if(e.srcElement.checked == true || e.srcElement.checked == 'true') {
                     if (this.participant.Value == null || this.participant.Value == '') {
-                        alert('Сначало сохраните пожалуйста участника ' + this.participant.Label);
+                        alert('Сначало укажите пожалуйста участника ' + this.participant.Label.toLowerCase());
                         if(this.participant.ISN == this.formular.insurant.isn) {
                             if(part.ISN == '2082'){
                                 if (this.insurantIs.participant == true) {
@@ -485,26 +500,11 @@
                         }
                     } else {
                         //if (part.ISN === '2082' && this.insurantIs.participant || part.ISN === '2081' && this.insurantIs.receiver || part.ISN === '2081' && this.participantIs.receiver) {
-                            this.participants[index].Value = this.participant.Value;
-                            this.participants[index].data = this.participant.data;
-                            this.participants[index].iin = this.participant.iin;
-                            this.participants[index].subjISN = this.participant.subjISN;
-                            this.participants[index].lastName = this.participant.lastName;
-                            this.participants[index].firstName = this.participant.firstName;
-                            this.participants[index].patronymic = this.participant.patronymic;
-                            this.participants[index].orgName = this.participant.orgName;
-                            this.participants[index].docType = this.participant.docType;
-                            this.participants[index].extSystemKey = this.participant.extSystemKey;
-                            //this.participants[index].docClassISN = this.participant.docClassISN;
-                            this.participants[index].docNumber = this.participant.docNumber;
-                            this.participants[index].docDate = this.participant.docDate;
-                            this.participants[index].email = this.participant.email;
-                            this.participants[index].phone = this.participant.phone;
-                            this.participants[index].juridical = this.participant.juridical;
-                            this.participants[index].birthDay = this.participant.birthDay;
-                            this.participants[index].sex = this.participant.sex;
-                            this.participants[index].okvdName = this.participant.okvdName;
-                            this.participants[index].economicName = this.participant.economicName;
+                            for(let key in this.participant){
+                                if(key != 'ISN' && key != 'Label') {
+                                    this.participants[index][key] = this.participant[key];
+                                }
+                            }
                             this.save(index);
                         // } else {
                         //     this.clearParticipant(index);
@@ -513,6 +513,9 @@
                 }else {
                     this.clearParticipant(index);
                 }
+            },
+            selectSignatory(e){
+                this.participant.lastName = e.label;
             }
         },
         computed: {
@@ -535,8 +538,12 @@
                         this.$parent.subjISN = val;
                     }
                 }
+                if(this.participant.ISN == 221507){
+                    this.participant.subjISN = val;
+                }
                 this.calcChanged();
                 if (this.formular.insurant.isn == this.participant.ISN && this.attributes.length > 0) {
+                    // Выбрать тел и мэйл страхователя для аттрибутов
                     for(let i = 0;i < this.attributes.length;i++){
                         if (this.attributes[i].AttrISN == 720671) {
                             this.attributes[i].Value = this.participant.email;

@@ -401,17 +401,17 @@ class Kias implements KiasServiceInterface
             ['AgrCalcISN' => $agrCalcIsn ]);
     }
 
-    public function getVehicle($vin = null, $engine = null, $tfNumber = null, $srts = null,$secondSearch = null)
+    public function getVehicle($vin = null, $engine = null, $tfNumber = null, $srts = null,$searchTFESBD = null)
     {
-        $kiasMethod = $secondSearch == null ? 'User_CicSearchVehiclesESBD' : 'User_CicSearchTFESBD';
+        $kiasMethod = $searchTFESBD == null ? 'User_CicSearchVehiclesESBD' : 'User_CicSearchTFESBD';
         $result = $this->request($kiasMethod, [
             'MODELISN'  => null,
             'VIN'       => $vin,
-            'ENGINEID'  => $vin,
+            'ENGINEID'  => $engine,
             'TF_NUMBER' => $tfNumber,
             'SRTS'      => $srts,
         ]);
-        $result = $secondSearch == null ? $result : $result->ROWSET->row[0];
+        $result = $searchTFESBD == null ? $result : $result->ROWSET->row[0];
 
         if ($result)
             return $result;

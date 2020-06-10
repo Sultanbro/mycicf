@@ -20,25 +20,18 @@
                                  :insurant-is="insurantIs"
                                  :participant-is="participantIs"
                                  :participant-docs="participantDocs"
+                                 :userList="userList"
                                  :product-id="id">
                     </participant>
                 </div>
 
-                <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1" class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
+                <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1"
+                     class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
                     <label>Выберите куратора</label>
-                    <treeselect v-model="formular.curator.subjISN" :options="userList" @change="calcChanged" />
+                    <treeselect v-if="userList.length > 0" v-model="formular.curator.subjISN" :options="userList" @change="calcChanged" />
                 </div>
+
             </div>
-        </div>
-
-        <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
-            <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
-            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
-        </div>
-
-        <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
-            <label class="bold">Текст заявки </label>
-            <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
         </div>
 
         <div class="mb-4">
@@ -74,6 +67,16 @@
         </agr-object>
 
         <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+
+        <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+            <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
+            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
+        </div>
+
+        <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
+            <label class="bold">Текст заявки </label>
+            <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
+        </div>
 
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
@@ -116,7 +119,7 @@
                 participantIs: {
                     receiver: false,
                 },
-                userList: null,
+                userList: [],
                 calc_isn: null,
                 calc_id: null,
                 status_name: 'Оформление',
@@ -219,8 +222,8 @@
                                 //this.newAgrobject = response.data.objects;
                             }
                             this.preloader(false);
-                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) {
-                                this.getUserList();
+                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) { // Если нужно указать куратора
+                                this.getUserList(); // Берем сотрудников
                             }
                         }else{
                             alert(response.data.error);
@@ -232,7 +235,7 @@
                         this.preloader(false);
                     });
             },
-            getUserList() {
+            getUserList() { // Берем сотрудников
                 this.axios.post('/full/getFullBranch', {}).then((response) => {
                     this.userList = response.data.result;
                 });
