@@ -26,12 +26,12 @@ class VehicleController extends Controller
         $tfNumber = $request->REGNO ?? null;
         $result = $kias->getVehicle($vin, null, $tfNumber, null);
 
-        if (isset($result->error)) {
-            return response()->json([
-                'success' => false,
-                'error' => (string)$result->error->text
-            ]);
-        }
+//        if (isset($result->error)) {
+//            return response()->json([
+//                'success' => false,
+//                'error' => (string)$result->error->text
+//            ]);
+//        }
 
         if(!isset($result->VIN)){
             $result = $kias->getVehicle($vin, null, $tfNumber, null,1);

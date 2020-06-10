@@ -21,7 +21,14 @@
                         class="mt-1"
                         :options="items[index].Childs"
                         @select="onSelectChilds($event,index)" />
-            <a @click="deleteItem(index)">Удалить</a>
+            <div class="col-lg-12 row mt-3">
+                <a @click="deleteItem(index)" class="col-lg-6 pl-0 pr-0">Удалить</a>
+                <div class="col-lg-6 pl-0 pr-0">
+                    <label :for="'required-'+iIndex+'-'+index" class="bold">Обязательное</label> <!--title[iIndex]-->
+                    <input v-model="item.required" type="checkbox" :id="'required-'+iIndex+'-'+index">
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
@@ -55,7 +62,8 @@
                 this.items.push({
                     Label : '',
                     ISN : 0,
-                    Childs : null
+                    Childs : null,
+                    required: false
                 });
             },
             deleteItem(id){
@@ -90,6 +98,7 @@
             },
             onChangeSelect: function(e,index){      // Создаем массив для вывода на фронте
                 this.items[index].Childs = null;
+                this.items[index].required = false;
                 this.currentIndex = index;
                 this.items[index].Value = null;
                 if(this.iIndex == 'participants'){

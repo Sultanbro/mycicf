@@ -149,7 +149,7 @@
                         </select>
                     </div>
 
-                    <div class="pl-0 mt-3 mb-3 col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12"> <!-- Застрахованный, выгодоприобретатель-->
+                    <div v-if="participant.ISN == formular.insurant.isn || participant.ISN == '2082'" class="pl-0 mt-3 mb-3 col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12"> <!-- Застрахованный, выгодоприобретатель-->
                         <div v-for="part,index in participants"
                              class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
                             <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082'"
@@ -362,8 +362,7 @@
                         this.participant.subjISN = this.isn;
                         this.participant.Value = this.isn;
 
-                        if(this.participantEdited) {
-                            // Если было изменение то записываем данные в киас (если есть extSystemKey то setSubject, если нету то saveSubject)
+                        if(this.participantEdited) {    // Если было изменение то записываем данные в киас (saveSubject)
                             this.preloader(true);
                             this.axios.post('/setSubject', {
                                 participant: this.participant,
@@ -373,8 +372,8 @@
                                         //alert("Данные в киасе успешно обновлены\n"+partName + " успешно добавлен!");
                                         this.preloader(false);
                                     } else {
-                                        this.participant.subjISN = null;
-                                        this.participant.Value = null;
+                                        //this.participant.subjISN = null;
+                                        //this.participant.Value = null;
                                         alert(response.data.error);
                                         this.preloader(false);
                                     }
@@ -392,35 +391,60 @@
 
                         this.subjISN = this.isn;
                         //this.closeParticipantForm(this.pIndex);
-                        if(this.participant.ISN == this.formular.insurant.isn || this.participant.ISN == '2082'){
+                        if(this.participant.ISN == this.formular.insurant.isn || this.participant.ISN == '2082'){   // Если текущий страхователь или 2082 - застрахованный
                             // Если это страхователь или застрахованный
                             for(index in this.participants) {
+                                // if(this.participant.ISN == this.formular.insurant.isn) {
+                                //     if (this.insurantIs.participant) {  // Если страхователь это застрахованный (очищаем)
+                                //         if (this.participants[index].ISN == '2082') {
+                                //             this.clearParticipant(index);
+                                //             this.insurantIs.participant = false;
+                                //         }
+                                //     }
+                                //     if (this.insurantIs.receiver) {
+                                //         if (this.participants[index].ISN == '2081') { // Если страхователь это выгодоприобретатель  (очищаем)
+                                //             this.clearParticipant(index);
+                                //             this.insurantIs.receiver = false;
+                                //         }
+                                //     }
+                                // }
+                                // if(this.participant.ISN == '2082' && this.participantIs.receiver) { // Если застрахованный это выгодо.  (очищаем)
+                                //     if(this.participants[index].ISN == '2081') {
+                                //         this.clearParticipant(index);
+                                //         this.participantIs.receiver = false;
+                                //     }
+                                // }
+
                                 if(this.participant.ISN == this.formular.insurant.isn) {
-                                    if (this.insurantIs.participant) {  // Если страхователь это застрахованный (очищаем)
+                                    if (this.insurantIs.participant) {  // Если страхователь это застрахованный
                                         if (this.participants[index].ISN == '2082') {
-                                            this.clearParticipant(index);
-                                            this.insurantIs.participant = false;
+                                            this.rewriteParticipant(index);
                                         }
                                     }
                                     if (this.insurantIs.receiver) {
                                         if (this.participants[index].ISN == '2081') { // Если страхователь это выгодоприобретатель  (очищаем)
-                                            this.clearParticipant(index);
-                                            this.insurantIs.receiver = false;
+                                            this.rewriteParticipant(index);
                                         }
                                     }
                                 }
                                 if(this.participant.ISN == '2082' && this.participantIs.receiver) { // Если застрахованный это выгодо.  (очищаем)
                                     if(this.participants[index].ISN == '2081') {
-                                        this.clearParticipant(index);
-                                        this.participantIs.receiver = false;
+                                        this.rewriteParticipant(index);
                                     }
                                 }
                             }
                         }
+
+                        if(this.participant.ISN == '2081'){     // Если выгодоприобретателя нашли по ИИН
+                            this.insurantIs.receiver = false;
+                        }
+                        if(this.participant.ISN == '2082'){      // Если застрахованного нашли по ИИН
+                            this.insurantIs.participant = false;
+                        }
                     } else {
                         alert('Не выбран ' + partName);
                     }
-                } else {
+                } else {    // если поставили галочку
                     this.participants[index].subjISN = this.participant.subjISN;
                     this.participants[index].Value = this.participant.subjISN;
                     //alert(partName + ' успешно добавлен!');
@@ -433,6 +457,14 @@
                         this.insurantIs.receiver = false;
                     }
                 }
+            },
+            rewriteParticipant(index){
+                for(let key in this.participant){
+                    if(key != 'ISN' && key != 'Label') {
+                        this.participants[index][key] = this.participant[key];
+                    }
+                }
+                this.save(index);
             },
             addParticipant(){
                 this.participants.push({
@@ -478,34 +510,29 @@
             },
             insPartIs(part,index,e){
                 if(e.srcElement.checked == true || e.srcElement.checked == 'true') {
-                    if (this.participant.Value == null || this.participant.Value == '') {
-                        alert('Сначало укажите пожалуйста участника ' + this.participant.Label.toLowerCase());
-                        if(this.participant.ISN == this.formular.insurant.isn) {
-                            if(part.ISN == '2082'){
-                                if (this.insurantIs.participant == true) {
-                                    this.insurantIs.participant = false;
-                                    e.target.checked = false;
-                                }
-                            } else {
-                                if (this.insurantIs.receiver == true) {
-                                    this.insurantIs.receiver = false;
-                                    e.target.checked = false;
-                                }
-                            }
-                        } else {
-                            if (this.participantIs.receiver == true) {
-                                this.participantIs.receiver = false;
-                                e.target.checked = false;
-                            }
-                        }
+                    if (this.participant.Value == null || this.participant.Value == '') {   // Если parent еще не выбран
+                        // alert('Сначало укажите пожалуйста участника ' + this.participant.Label.toLowerCase());
+                        // if(this.participant.ISN == this.formular.insurant.isn) {
+                        //     if(part.ISN == '2082'){
+                        //         if (this.insurantIs.participant == true) {
+                        //             this.insurantIs.participant = false;
+                        //             e.target.checked = false;
+                        //         }
+                        //     } else {
+                        //         if (this.insurantIs.receiver == true) {
+                        //             this.insurantIs.receiver = false;
+                        //             e.target.checked = false;
+                        //         }
+                        //     }
+                        // } else {
+                        //     if (this.participantIs.receiver == true) {
+                        //         this.participantIs.receiver = false;
+                        //         e.target.checked = false;
+                        //     }
+                        // }
                     } else {
                         //if (part.ISN === '2082' && this.insurantIs.participant || part.ISN === '2081' && this.insurantIs.receiver || part.ISN === '2081' && this.participantIs.receiver) {
-                            for(let key in this.participant){
-                                if(key != 'ISN' && key != 'Label') {
-                                    this.participants[index][key] = this.participant[key];
-                                }
-                            }
-                            this.save(index);
+                            this.rewriteParticipant(index);
                         // } else {
                         //     this.clearParticipant(index);
                         // }
