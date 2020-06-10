@@ -59,7 +59,7 @@ class PreInsuranceInspectionController extends Controller
      */
     public function getInsuranceInspectionList(Request $request, KiasServiceInterface $kias)
     {
-        $isn     = 4334911; //$request->isn; //4110211;
+        $isn     = $request->isn;
         $DateBeg = '01.05.2020';
         $DateEnd = '27.06.2020';
         try {
@@ -106,7 +106,7 @@ class PreInsuranceInspectionController extends Controller
         $docIsn     = $request->docisn;
 
         try {
-            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1918047, 241676, 26652095);
+            $getInspectionsInfo = $kias->getInsuranceInspectionInfo($agrIsn, $agrCalcIsn, $isn, $docIsn);
             $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
             return response()->json([
@@ -119,7 +119,7 @@ class PreInsuranceInspectionController extends Controller
             $this->success = false;
             $this->error   = (string) $getInspectionsInfo->text;
         }
-        //dd($this->getDataWithChild($inspectionsInfo));
+
         $result = [
             'success' => $this->success,
             'error'   => $this->error,
@@ -129,6 +129,11 @@ class PreInsuranceInspectionController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    /**
+     * @param $inspectionsInfo
+     *
+     * @return array
+     */
     private function getDataWithChild($inspectionsInfo)
     {
         $getDataWithDicts = [];
