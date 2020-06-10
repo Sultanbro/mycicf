@@ -397,28 +397,6 @@ class Kias implements KiasServiceInterface
     }
 
     /**
-     * Загрузка файлов
-     *
-     * @param        $refisn
-     * @param        $name
-     * @param        $file
-     * @param string $type
-     *
-     * @return SimpleXMLElement
-     */
-    public function saveAttachment($refisn, $name, $file, $type = 'J')
-    {
-        return $this->request('SAVEATTACHMENT', [
-            'REFISN'     => $refisn,
-            'PICTTYPE'   => $type,
-            'FILEREMARK' => '',
-            'FILENAME'   => $name,
-            'ACTIVE '    => self::ACTIVE,
-            'OLEOBJECT'  => $file,
-        ]);
-    }
-
-    /**
      * @param $deptIsn
      *
      * @return mixed|SimpleXMLElement
