@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block">
+    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block childs-not-bold">
         <h4>{{agrclause.Label}}</h4>
         <div class="w-100">
             <div v-if="agrclause.Type === 'TEXT'" class="d-flex align-items-center mb-2">

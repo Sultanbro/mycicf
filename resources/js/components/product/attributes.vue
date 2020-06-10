@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-2 mb-2 ml-0 agreement-block">
+    <div class="mt-2 mb-2 ml-0 agreement-block childs-not-bold">
         <h4>{{attribute.Label}}</h4>
         <div>
             <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2">

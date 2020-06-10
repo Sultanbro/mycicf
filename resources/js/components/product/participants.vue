@@ -10,7 +10,7 @@
                 <span v-else>{{ participant.orgName }}</span>
             </div>
 
-            <button type="button" class="add-button width100 mt-2" @click="openParticipantForm(pIndex)">
+            <button type="button" class="add-button width100 mt-2" :class="isBold" @click="openParticipantForm(pIndex)">
                 Изменить
                 <span v-if="!moreParticipant">
                     <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -20,6 +20,7 @@
         </div>
         <button v-show="participant.subjISN == null || participant.subjISN == ''"
                 type="button" class="add-button width100 mt-2"
+                :class="isBold"
                 @click="openParticipantForm(pIndex)">
             Указать
             <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -236,6 +237,7 @@
                 },
                 signatory: false,
                 participantEdited: false,
+                isBold: null
             }
         },
         directives: {mask},
@@ -256,6 +258,7 @@
         created(){
             this.width = window.innerWidth;
             this.height = 500;  //window.innerHeight;
+            this.isBold = this.participant.required ? 'bold' : '';
         },
         methods: {
             addParticipantToKias(pIndex){
