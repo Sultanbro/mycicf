@@ -211,16 +211,6 @@ interface KiasServiceInterface
     public function getDictList($dictiISN, $mode);
 
     /**
-     * @param        $refisn
-     * @param        $name
-     * @param        $file
-     * @param string $type
-     *
-     * @return mixed
-     */
-    public function saveAttachment($refisn, $name, $file, $type);
-
-    /**
      * @param $deptIsn
      *
      * @return mixed
