@@ -3,7 +3,7 @@
         <form id="car-form" @submit.prevent="saveToDraft">
             <input type="hidden" name="typeObject" value="car">
             <input type="hidden" name="docIsn" :value="details.ISN">
-            <input type="text"
+            <input type="hidden"
                    name="urlStorage"
                    v-for="(attachLink, key) in details.AttachLink"
                    :value="key"

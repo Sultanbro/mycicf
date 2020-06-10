@@ -2,7 +2,7 @@
     <div class="other-form">
         <form id="other-form" @submit.prevent="saveToDraft">
             <input type="hidden" name="typeObject" value="other">
-            <input type="text" name="urlStorage" :value="details.AttachLink" id="urlStorage">
+            <input type="hidden" name="urlStorage" :value="details.AttachLink" id="urlStorage">
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">

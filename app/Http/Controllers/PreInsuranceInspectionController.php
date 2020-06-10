@@ -106,7 +106,7 @@ class PreInsuranceInspectionController extends Controller
         $docIsn     = $request->docisn;
 
         try {
-            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1955224, 241039, 26635834);
+            $getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1918047, 241676, 26652095);
             $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
             return response()->json([
@@ -137,7 +137,7 @@ class PreInsuranceInspectionController extends Controller
         $getUrl           = Session::get('url_for_image');
         if (!empty($inspectionsInfo['row'])) {
             foreach ($inspectionsInfo['row'] as $info) {
-                $path      = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
+                $path = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
                 if ($info['DocStatus'] == self::ASSIGNED) {
                     $count++;
                 }
@@ -215,8 +215,8 @@ class PreInsuranceInspectionController extends Controller
 
         $result = [
             'success' => !isset($response['error']) ? $this->success : false,
-            'error'   => !isset($response['error']) ?  $this->error : $response['error']['text'],
-            'result'  => $inspections
+            'error'   => !isset($response['error']) ? $this->error : $response['error']['text'],
+            'result'  => $inspections,
         ];
 
         Session::forget('url_for_image');
@@ -229,15 +229,26 @@ class PreInsuranceInspectionController extends Controller
         $emplIsn    = Auth::user()->ISN;
         $requestAll = $request->all();
         if (!empty($requestAll)) {
-            $reason = '';
-            if ($requestAll['statusIsn'] == self::EXECUTE && empty($requestAll['reason'])) {
-                $reason = 'Исполнено';
-            } elseif ($requestAll['statusIsn'] == self::CANCEL && empty($requestAll['reason'])) {
-                $reason = 'Отказано';
-            }
-            foreach ($requestAll['docIsn'] as $dosId) {
+            if (isset($requestAll['docIsn'])) {
+                $reason = '';
+                if ($requestAll['statusIsn'] == self::EXECUTE && empty($requestAll['reason'])) {
+                    $reason = 'Исполнено';
+                } elseif ($requestAll['statusIsn'] == self::CANCEL && empty($requestAll['reason'])) {
+                    $reason = 'Отказано';
+                }
+                foreach ($requestAll['docIsn'] as $dosId) {
+                    try {
+                        $kias->setAppointmentOperator($emplIsn, $dosId, $requestAll['statusIsn'], $reason);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => $e->getMessage(),
+                        ]);
+                    }
+                }
+            } else {
                 try {
-                    $kias->setAppointmentOperator($emplIsn, $dosId, $requestAll['statusIsn'], $reason);
+                    $kias->setAppointmentOperator($requestAll['listOperator'], $requestAll['requestIsn'], '', '');
                 } catch (\Exception $e) {
                     return response()->json([
                         'success' => false,
@@ -296,7 +307,8 @@ class PreInsuranceInspectionController extends Controller
 
     public function getOperator(Request $request, KiasServiceInterface $kias)
     {
-        $deptIsn = $request->deptIsn;
+        $deptIsn    = $request->deptIsn;
+        $requestIsn = $request->requestIsn;
         try {
             $getAvarkom = $kias->getAvarkomByDept($deptIsn);
             $avarkom    = Helper::simpleXmlToArray($getAvarkom->Avarcoms);
@@ -313,9 +325,10 @@ class PreInsuranceInspectionController extends Controller
         }
 
         $result = [
-            'success' => $this->success,
-            'error'   => $this->error,
-            'result'  => $avarkom,
+            'success'    => $this->success,
+            'error'      => $this->error,
+            'result'     => $avarkom,
+            'requestIsn' => $requestIsn,
         ];
 
         return response()->json($result);

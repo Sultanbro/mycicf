@@ -51,7 +51,7 @@
                             <td scope="col" v-if="info.Operator == ''">
                                 <button class="btn btn-dark"
                                         data-toggle="modal" data-target="#addOperator"
-                                        @click="getOperator(info.DeptISN)">
+                                        @click="getOperator(info.DeptISN, info.ISN)">
                                     Назначить
                                 </button>
                             </td>
@@ -74,17 +74,20 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <select name="listOperator" id="listOperator">
-                            <option v-for="operator in operators.row"
-                                    :value="operator.ISN">
-                                {{operator.Fullname}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button @click="assignOperator" type="button" class="btn btn-primary">Сохранить</button>
-                    </div>
+                    <form id="assign-operator" @submit.prevent="assignOperator">
+                        <div class="modal-body">
+                            <select name="listOperator" id="listOperator">
+                                <option v-for="operator in operators.row"
+                                        :value="operator.ISN"
+                                        name="operatorIsn">
+                                    {{operator.Fullname}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -102,6 +105,7 @@
                 none: false,
                 inspection: {},
                 operators: {},
+                requestIsn: null,
             }
         },
         mounted() {
@@ -132,8 +136,28 @@
                 }
                 this.preloader(false);
             },
-            getOperator(depsIsn) {
-                this.axios.post("/getOperator", {deptIsn: depsIsn}).then((response) => {
+            getOperator(depsIsn, requestIsn) {
+                this.axios.post("/getOperator", {
+                    deptIsn: depsIsn,
+                    requestIsn: requestIsn
+                }).then((response) => {
+                    let isEmpty = $.isEmptyObject(response.data.result);
+                    if (response.data.success) {
+                        if (!isEmpty) {
+                            this.operators = response.data.result;
+                            this.requestIsn = response.data.requestIsn;
+                        }
+                    } else {
+                        alert(response.data.error)
+                    }
+
+                })
+            },
+            assignOperator: function (e) {
+                var form = document.getElementById('assign-operator');
+                var formData = new FormData(form);
+                formData.append('requestIsn', this.requestIsn);
+                this.axios.post("/updateStatus", formData).then((response) => {
                     console.log(response.data)
                     let isEmpty = $.isEmptyObject(response.data.result);
                     if (response.data.success) {
@@ -143,11 +167,7 @@
                     } else {
                         alert(response.data.error)
                     }
-
                 })
-            },
-            assignOperator() {
-
             },
             preloader(show) {
                 if (show) {
