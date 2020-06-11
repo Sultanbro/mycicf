@@ -43,7 +43,7 @@ class PreInsuranceInspectionController extends Controller
     {
         $argcalcIsn = $request['argcalcisn'];
         $agrIsn     = $request['agrisn'];
-        $docIsn     = $request['docisn'];
+        $docIsn     = !empty($request['docisn']) ? $request['docisn'] : 0;
         $isn        = $request->isn;
 
         return view('inspection_info', compact('isn', 'argcalcIsn', 'agrIsn', 'docIsn'));
@@ -103,7 +103,7 @@ class PreInsuranceInspectionController extends Controller
         $isn        = $request->isn;
         $agrCalcIsn = $request->argcalcisn != 0 ? $request->argcalcisn : '';
         $agrIsn     = $request->agrisn != 0 ? $request->agrisn : '';
-        $docIsn     = $request->docisn;
+        $docIsn     = !empty($request->docisn) ? $request->docisn : 0;
 
         try {
             //$getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1918047, 241676, 26652095);
