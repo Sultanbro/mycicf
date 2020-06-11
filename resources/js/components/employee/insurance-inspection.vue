@@ -158,11 +158,11 @@
                 var formData = new FormData(form);
                 formData.append('requestIsn', this.requestIsn);
                 this.axios.post("/updateStatus", formData).then((response) => {
-                    console.log(response.data)
                     let isEmpty = $.isEmptyObject(response.data.result);
                     if (response.data.success) {
                         if (!isEmpty) {
                             this.operators = response.data.result;
+                            document.getElementById('addOperator').click();
                         }
                     } else {
                         alert(response.data.error)
