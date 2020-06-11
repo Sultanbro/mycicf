@@ -63,6 +63,7 @@
                     :agrobjects="agrobjects"
                     :quotationId="quotationId"
                     :product-id="id"
+                    :participants="participants"
                     :DA="DA">
         </agr-object>
 
