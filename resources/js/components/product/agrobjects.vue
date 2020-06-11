@@ -101,7 +101,8 @@
             newAgrobject: Object,
             agrobjects: Array,
             quotationId: String,
-            productId: String
+            productId: String,
+            participants: Array
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){

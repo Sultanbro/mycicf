@@ -1004,19 +1004,19 @@ class ProductsController extends Controller
 
                 $calc_isn  = str_replace('-','',$request->calc_isn);
                 $file = Storage::get('/public/products/'.$filename);
-//                try {
-//                    $results = $kias->saveAttachment(
-//                        $calc_isn,
-//                        basename($filename),
-//                        base64_encode($file),
-//                        $sendType
-//                    );
-//                } catch (Exception $e) {
-//                    return response()->json([
-//                        'success' => false,
-//                        'result' => $e->getMessage()
-//                    ]);
-//                }
+                try {
+                    $results = $kias->saveAttachment(
+                        $calc_isn,
+                        basename($filename),
+                        base64_encode($file),
+                        $sendType
+                    );
+                } catch (Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'result' => $e->getMessage()
+                    ]);
+                }
             }
             $quotation->docs = json_encode($uploaded);
             $quotation->save();
