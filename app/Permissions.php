@@ -29,6 +29,7 @@ class Permissions extends Model
     const ROLE_MODERATOR = 5;
     const ROLE_SENATE = 6;
     const ROLE_READING_CLUB = 7;
+    const ROLE_PRODUCTS = 7;
 
     public function __construct(array $attributes = [])
     {
@@ -55,6 +56,7 @@ class Permissions extends Model
     }
 
     public function checkUser($roles){
+        array_push($roles, Permissions::ROLE_SUPERADMIN);
         $data = Permissions::whereIn('permission_id', $roles)
             ->where('user_isn',Auth::user()->ISN)
             ->first();

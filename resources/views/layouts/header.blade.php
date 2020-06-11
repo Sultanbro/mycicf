@@ -13,7 +13,7 @@
                 @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
                     <a class="header-navigation" href="{{route('parse')}}">
                         <li>
-                            Parse
+                            parse
                         </li>
                     </a>
                 @endif
@@ -32,11 +32,19 @@
                         Библиотека
                     </li>
                 </a>
-                <a class="header-navigation" href="javascript:void(0)">
-                    <li>
-                        Продукты
-                    </li>
-                </a>
+                <li class="products-link" style="display:inline-flex">
+                    <ul id="products-nav">
+                        <li>
+                            <a class="products-item" href="javascript:void(0);" tabindex="1" >
+                                Продукты <span class="ml-2"><i class="fas fa-caret-down"></i></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li id="express"><a href="/express" class="item">Экспресс котировка</a></li>
+                                <li id="full"><a href="/full" class="item">Полная котировка</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
                 <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         Обучение
