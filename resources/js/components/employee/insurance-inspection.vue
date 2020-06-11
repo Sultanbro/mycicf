@@ -159,10 +159,10 @@
                 formData.append('requestIsn', this.requestIsn);
                 this.axios.post("/updateStatus", formData).then((response) => {
                     let isEmpty = $.isEmptyObject(response.data.result);
+                    document.getElementById('addOperator').click();
                     if (response.data.success) {
                         if (!isEmpty) {
                             this.operators = response.data.result;
-                            document.getElementById('addOperator').click();
                         }
                     } else {
                         alert(response.data.error)
