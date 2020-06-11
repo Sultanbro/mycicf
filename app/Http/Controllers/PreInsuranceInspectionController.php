@@ -103,9 +103,10 @@ class PreInsuranceInspectionController extends Controller
         $isn        = $request->isn;
         $agrCalcIsn = $request->argcalcisn != 0 ? $request->argcalcisn : '';
         $agrIsn     = $request->agrisn != 0 ? $request->agrisn : '';
-        $docIsn     =!empty($request->docisn) ? $request->docisn : 0;
+        $docIsn     = !empty($request->docisn) ? $request->docisn : 0;
 
         try {
+            //$getInspectionsInfo = $kias->getInsuranceInspectionInfo('', 1918047, 241676, 26652095);
             $getInspectionsInfo = $kias->getInsuranceInspectionInfo($agrIsn, $agrCalcIsn, $isn, $docIsn);
             $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
