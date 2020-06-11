@@ -242,6 +242,8 @@
                     ).then((response) => {
                         if (response.data.success) {
                             this.isJoin = true
+                            document.getElementById('executeModal').click();
+                            document.getElementById('cancelModal').click();
                         }
                         this.$toastr.s(response.data.message);
                     }).catch(function (error) {

@@ -165,6 +165,7 @@
                     if (response.data.success) {
                         if (!isEmpty) {
                             this.operators = response.data.result;
+                            document.getElementById('addOperator').click();
                         }
                     } else {
                         alert(response.data.error)
