@@ -11,7 +11,7 @@
                 </select>
             </div>
 
-            <div v-if="agrobject.ClassISN != ''" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
+            <div v-if="agrobject.ClassISN != '' && Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length > 0" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Тип объекта : </label>
                 <select class="custom-select" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
                     <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj"
@@ -34,7 +34,7 @@
             <div class="col-12" v-if="agrobject.ClassISN != ''">
                 <div class="col-12 row mt-2 mb-2 ml-0 agreement-block"
                      v-for="(agrcond,index) in agrobject.objekt[agrobject.ClassISN].AGRCOND"
-                     v-if="index == agrobject.ClassISN+agrobject.SubClassISN">
+                     > <!--v-if="index == agrobject.ClassISN+agrobject.SubClassISN"-->
                     <h4>Риски</h4>
                     <div class="row col-12">
                         <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12">

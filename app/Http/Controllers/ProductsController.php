@@ -155,8 +155,25 @@ class ProductsController extends Controller
                         $objects['objekt'][$isn]['classobjname'] = (string)$object->classobjname;
                         $objects['objekt'][$isn]['Value'] = '';
                         $objects['objekt'][$isn]['SubjISN'] = '';
-                        $objects['objekt'][$isn]['obj'][$i]['SubClassISN'] = $subIsn;
-                        $objects['objekt'][$isn]['obj'][$i]['ObjName'] = (string)$object->subclassobjname;
+
+                        if($subIsn != null && $subIsn != '') {      // Если тип объекта передается
+                            $objects['objekt'][$isn]['obj'][$i]['SubClassISN'] = $subIsn;
+                            $objects['objekt'][$isn]['obj'][$i]['ObjName'] = (string)$object->subclassobjname;
+                        } else {
+//                            if($isn == 2118){       // Если класс автотранспорт
+//                                $dicti = $kias->getDictiList($isn);
+//                                if(isset($dicti->ROWSET->row)){
+//                                    foreach ($dicti->ROWSET->row as $dictiRow){
+//                                        $objects['objekt'][$isn]['obj'][$i]['SubClassISN'] = (string)$dictiRow->ISN;
+//                                        $objects['objekt'][$isn]['obj'][$i]['ObjName'] = (string)$dictiRow->FULLNAME;
+//                                    }
+//                                }
+//                            } else {
+                                $objects['objekt'][$isn]['obj'] = [];
+                                $objects['objekt'][$isn]['obj'] = [];
+                           // }
+                        }
+
                         $objects['objekt'][$isn]['AGROBJECT_ADDATTR'] = [];
                         $objects['objekt'][$isn]['AGROBJCAR'] = [];
                         $objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn] = [];
