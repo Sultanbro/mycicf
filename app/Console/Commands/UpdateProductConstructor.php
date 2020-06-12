@@ -115,6 +115,7 @@ class UpdateProductConstructor extends Command
                         $objects['objekt'][$isn]['obj'] = [];
                         //}
                     }
+
                     $objects['objekt'][$isn]['AGROBJECT_ADDATTR'] = [];
                     $objects['objekt'][$isn]['AGROBJCAR'] = [];
                     $objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn] = [];
