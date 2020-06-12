@@ -9,10 +9,14 @@ use Illuminate\Http\Request;
 
 class SandboxController extends Controller
 {
-    public function index(KiasServiceInterface $kiasService)
+    public function index(Request $request, KiasServiceInterface $kiasService)
     {
+        $isn        = $request['isn'];
+        $doscisn    = $request['doscisn'] != 0 ? $request['doscisn'] : '';
+        $agrcalcisn = $request['agrcalcisn'] != 0 ? $request['agrcalcisn'] : '';
+        $agrisn     = $request['agrisn'] != 0 ? $request['agrisn'] : '';
         try {
-            $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo('', 1955224, 241039, 26635834);
+            $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $doscisn);
             $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
             $result = [
@@ -64,7 +68,7 @@ class SandboxController extends Controller
 
     public function avarkom(KiasServiceInterface $kias)
     {
-        $avarkom = $kias->getAvarkomByDept(1000);
+        $avarkom  = $kias->getAvarkomByDept(1000);
         $getArray = Helper::simpleXmlToArray($avarkom);
         dd($getArray);
     }
@@ -73,8 +77,8 @@ class SandboxController extends Controller
     private function test($inspectionsInfo)
     {
         $getDataWithDicts = [];
-        foreach ($inspectionsInfo['row'][0]['Details']['row'] as $key=>$detail) {
-            $getDicts = Dicti::select('id', 'isn', 'fullname')
+        foreach ($inspectionsInfo['row'][0]['Details']['row'] as $key => $detail) {
+            $getDicts           = Dicti::select('id', 'isn', 'fullname')
                 ->where('parent_isn', $detail['Detailisn'])
                 ->get();
             $getDataWithDicts[] = $detail;
@@ -86,6 +90,7 @@ class SandboxController extends Controller
             }
         }
         $inspectionsInfo['row'][0]['Details']['row'] = $getDataWithDicts;
+
         return $inspectionsInfo;
     }
 }
