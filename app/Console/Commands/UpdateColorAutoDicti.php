@@ -11,14 +11,14 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Console\Command;
 
-class UpdateColorDicti extends Command
+class UpdateColorAutoDicti extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'color:dicti';
+    protected $signature = 'colorAuto:dicti';
 
     /**
      * The console command description.
@@ -45,7 +45,7 @@ class UpdateColorDicti extends Command
     public function handle(){
         try{
             if($this->updateColorDicti(2028)){
-                $this->updateColorDicti(2118);
+                $this->updateColorDicti(2118);  // Берем из киаса тип объекта
             }
         }catch (\Exception $ex){
             echo $ex->getMessage();
