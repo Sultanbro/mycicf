@@ -70,7 +70,7 @@
                     ISN : 0,
                     Childs : null,
                     required: false,
-                    notPartIns: false,
+                    notPartIns: false
                 });
             },
             deleteItem(id){
