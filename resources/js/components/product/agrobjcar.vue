@@ -30,13 +30,13 @@
                        v-model="agrobjcar.TerritoryName"
                        disabled="true"
                        @keyup="calcChanged">
-                <!--div class="text-center">
-                    <button class="btn btn-outline-info" @click="getDictiFromBase('regions');chooseRegion = true">
+                <div class="text-center">
+                    <button class="btn btn-outline-info mt-2" @click="getDictiFromBase('regions');chooseRegion = true">
                         Сменить регион
                     </button>
-                </div-->
+                </div>
             </div>
-            <!--div v-if="chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+            <div v-if="chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Регион</label>
                 <select class="attr-input-text col-12 bg-white"
                         v-model="regionIsn"
@@ -63,7 +63,7 @@
                         @change="calcChanged();agrobjcar.TerritoryISN = cityIsn">
                     <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value">{{ item.Label }}</option>
                 </select>
-            </div-->
+            </div>
 
 
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
