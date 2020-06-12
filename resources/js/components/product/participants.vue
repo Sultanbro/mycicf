@@ -153,30 +153,30 @@
                     <div v-if="participant.ISN == formular.insurant.isn || participant.ISN == '2082'" class="pl-0 mt-3 mb-3 col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12"> <!-- Застрахованный, выгодоприобретатель-->
                         <div v-for="part,index in participants"
                              class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12">
-                            <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082'"
+                            <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082' && !part.notPartIns"
                                    for="yes" class="bold">{{ part.Label }}</label>
                             <input type="checkbox"
                                    @change="calcChanged();insPartIs(part,index,$event)"
-                                   v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082'"
+                                   v-if="participant.ISN == formular.insurant.isn && part.ISN == '2082' && !part.notPartIns"
                                    class="mt-2 ml-2"
                                    id="yes"
                                    v-model="insurantIs.participant">
 
-                            <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2081'"
+                            <label v-if="participant.ISN == formular.insurant.isn && part.ISN == '2081' && !part.notPartIns"
                                    for="yesp" class="bold">{{ part.Label }}</label>
                             <input type="checkbox"
                                    @change="calcChanged();insPartIs(part,index,$event)"
-                                   v-if="participant.ISN == formular.insurant.isn && part.ISN == '2081'"
+                                   v-if="participant.ISN == formular.insurant.isn && part.ISN == '2081' && !part.notPartIns"
                                    class="mt-2 ml-2"
                                    id="yesp"
                                    v-model="insurantIs.receiver"
                                    value="true">
 
-                            <label v-if="participant.ISN == '2082' && part.ISN == '2081'"
+                            <label v-if="participant.ISN == '2082' && part.ISN == '2081' && !part.notPartIns"
                                    for="yesr" class="bold">{{ part.Label }}</label>
                             <input type="checkbox"
                                    @change="calcChanged();insPartIs(part,index,$event)"
-                                   v-if="participant.ISN == '2082' && part.ISN == '2081'"
+                                   v-if="participant.ISN == '2082' && part.ISN == '2081' && !part.notPartIns"
                                    class="mt-2 ml-2"
                                    id="yesr"
                                    v-model="participantIs.receiver"

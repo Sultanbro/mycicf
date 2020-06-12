@@ -28,6 +28,12 @@
                     <input v-model="item.required" type="checkbox" :id="'required-'+iIndex+'-'+index">
                 </div>
             </div>
+            <div class="col-lg-12" v-if="iIndex == 'participants' && item.ISN == 2081 || iIndex == 'participants' && item.ISN == 2082">
+                <label :for="'notPartIns-'+iIndex+'-'+index" class="bold">
+                    Не является страх<span v-if="item.ISN == 2081">/застр</span>
+                </label> <!--title[iIndex]-->
+                <input v-model="item.notPartIns" type="checkbox" :id="'notPartIns-'+iIndex+'-'+index" class="mt-2 ml-1">
+            </div>
 
         </div>
     </div>
@@ -63,7 +69,8 @@
                     Label : '',
                     ISN : 0,
                     Childs : null,
-                    required: false
+                    required: false,
+                    notPartIns: false,
                 });
             },
             deleteItem(id){
