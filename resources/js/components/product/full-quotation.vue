@@ -21,6 +21,7 @@
                                  :participant-is="participantIs"
                                  :participant-docs="participantDocs"
                                  :userList="userList"
+                                 :get-user-list="getUserList"
                                  :product-id="id">
                     </participant>
                 </div>

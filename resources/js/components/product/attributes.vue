@@ -52,7 +52,7 @@
             if(this.expressAttr[this.attribute.AttrISN] && this.expressAttr[this.attribute.AttrISN] != null){
                 this.attribute.Value = this.expressAttr[this.attribute.AttrISN];
             }
-            if(this.attribute.Type == 'DOCS'){
+            if(this.attribute.Type == 'DOCS' || this.attribute.Type == 'AGREEMENTCALC'){
                 this.attribute.Type = 'NUMBER';
             }
             this.isBold = this.attribute.required ? 'bold' : '';

@@ -44,7 +44,9 @@ class UpdateColorDicti extends Command
      */
     public function handle(){
         try{
-            $this->updateColorDicti(2028);
+            if($this->updateColorDicti(2028)){
+                $this->updateColorDicti(2118);
+            }
         }catch (\Exception $ex){
             echo $ex->getMessage();
         }
