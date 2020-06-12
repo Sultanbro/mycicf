@@ -156,7 +156,7 @@ class ProductsController extends Controller
                         $objects['objekt'][$isn]['Value'] = '';
                         $objects['objekt'][$isn]['SubjISN'] = '';
 
-                        if($subIsn != null && $subIsn != '') {      // Если тип объекта передается
+                        if($subIsn != null && $subIsn != '') {      // Если тип объекта есть
                             $objects['objekt'][$isn]['obj'][$i]['SubClassISN'] = $subIsn;
                             $objects['objekt'][$isn]['obj'][$i]['ObjName'] = (string)$object->subclassobjname;
                         } else {
@@ -171,7 +171,7 @@ class ProductsController extends Controller
 //                            } else {
                                 $objects['objekt'][$isn]['obj'] = [];
                                 $objects['objekt'][$isn]['obj'] = [];
-                           // }
+                           //}
                         }
 
                         $objects['objekt'][$isn]['AGROBJECT_ADDATTR'] = [];

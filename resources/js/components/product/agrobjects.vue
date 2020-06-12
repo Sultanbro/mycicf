@@ -6,7 +6,7 @@
         <div class="row col-12">
             <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
                 <label class="bold">Класс объекта : </label>
-                <select class="custom-select" v-model="agrobject.ClassISN" @change="calcChanged">
+                <select class="custom-select" v-model="agrobject.ClassISN" @change="calcChanged();objectClassChanged()">
                     <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
@@ -34,7 +34,8 @@
             <div class="col-12" v-if="agrobject.ClassISN != ''">
                 <div class="col-12 row mt-2 mb-2 ml-0 agreement-block"
                      v-for="(agrcond,index) in agrobject.objekt[agrobject.ClassISN].AGRCOND"
-                     > <!--v-if="index == agrobject.ClassISN+agrobject.SubClassISN"-->
+                     v-if="index == agrobject.ClassISN+agrobject.SubClassISN || Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length == 0 && index == agrobject.ClassISN || agrobject.ClassISN == 2118 && index == agrobject.ClassISN"
+                     >
                     <h4>Риски</h4>
                     <div class="row col-12">
                         <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12">
@@ -145,7 +146,42 @@
             },
             deleteObject(){
                 this.agrobjects.splice(this.aIndex,1);
-            }
+            },
+            objectClassChanged(){
+                if(this.agrobject.ClassISN == 2118 && Object.keys(this.agrobject.objekt[this.agrobject.ClassISN].obj).length == 0){
+                    this.getDictiFromBase(this.agrobject.ClassISN);
+                }
+            },
+            getDictiFromBase:async function(parent){
+                this.preloader(true);
+                this.axios.post('/getDictiListFromBase', {
+                    parent: parent,
+                    dictiType: ''
+                })
+                    .then(response => {
+                        if (response.data.success) {
+
+                            if(response.data.result.length > 0){
+                                for(let key in response.data.result){
+                                    this.agrobject.objekt[this.agrobject.ClassISN].obj.push({
+                                        SubClassISN : response.data.result[key].Value,
+                                        ObjName : response.data.result[key].Label
+                                    });
+                                }
+                            }
+
+                            //this.agrobject.objekt[this.agrobject.ClassISN].obj = response.data.result;
+                            this.preloader(false);
+                        } else {
+                            alert('Произошла ошибка, попробуйте позже')
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
         },
         created(){
             if(this.expressAttr[857211]){

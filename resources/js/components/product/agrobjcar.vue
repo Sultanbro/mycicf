@@ -36,8 +36,6 @@
                     </button>
                 </div-->
             </div>
-
-
             <!--div v-if="chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Регион</label>
                 <select class="attr-input-text col-12 bg-white"
