@@ -253,12 +253,17 @@
             insurantIs: Object,
             participantIs: Object,
             participantDocs: Object,
-            userList: Array
+            userList: Array,
+            getUserList: Function
         },
         created(){
             this.width = window.innerWidth;
             this.height = 500;  //window.innerHeight;
             this.isBold = this.participant.required ? 'bold' : '';
+
+            if(this.participant.ISN == 221507 && this.userList.length == 0) {
+                this.getUserList();
+            }
         },
         methods: {
             addParticipantToKias(pIndex){
