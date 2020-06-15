@@ -30,12 +30,20 @@
                 <input type="number" class="attr-input-text col-12" v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
+            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
+                <label class="bold">Сумма франшизы</label>
+                <select class="custom-select"
+                        v-model="agrobject.franch">
+                    <option v-for="index in franch"
+                            :value="index">{{ index }}</option>
+                </select>
+            </div>
 
             <div class="col-12" v-if="agrobject.ClassISN != ''">
                 <div class="col-12 row mt-2 mb-2 ml-0 agreement-block"
                      v-for="(agrcond,index) in agrobject.objekt[agrobject.ClassISN].AGRCOND"
                      v-if="index == agrobject.ClassISN+agrobject.SubClassISN || Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length == 0 && index == agrobject.ClassISN || agrobject.ClassISN == 2118 && index == agrobject.ClassISN"
-                     >
+                >
                     <h4>Риски</h4>
                     <div class="row col-12">
                         <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12">
@@ -90,6 +98,7 @@
             return {
                 selectedObject: '',
                 selectedSubObject: '',
+                franch: [1,2,3,5,0.5]
             }
         },
         props: {

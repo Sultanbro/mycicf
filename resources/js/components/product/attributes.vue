@@ -21,6 +21,10 @@
                 <label class="mb-0 mr-2" :class="isBold">Значение: </label>
                 <input type="date" class="attr-input-text w-100"  v-model="attribute.Value" @change="calcChanged">
             </div>
+            <div v-else-if="attribute.Type === 'SUBJECT'" class="d-flex align-items-center mb-2">
+                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
+                <input type="number" class="attr-input-text w-100"  v-model="attribute.Value" @change="calcChanged">
+            </div>
             <div v-else class="d-flex align-items-center mb-2">
                 <label class="mb-0 mr-2" :class="isBold">Значение: </label>
                 <input type="text" class="attr-input-text w-100"  v-model="attribute.Value" @keyup="calcChanged">
