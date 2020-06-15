@@ -830,6 +830,7 @@ class ProductsController extends Controller
                     'CurrSumISN' => self::DICT_CURRENCY_TENGE,
                     'LimitSum' => $obj['insureSum'],
                     'LimitSumType' => 'А',
+                    'FranchTariff' => isset($obj['franch']) && $obj['franch'] != null ? $obj['franch'] : 0,
                     'PremiumSum' => $obj['DAsum'],
                     'PremiumSumTariff' => $obj['DAsum'],
                     'FranchType' => 'Б',

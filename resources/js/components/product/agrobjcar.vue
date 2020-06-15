@@ -153,6 +153,7 @@
                     this.axios.post('/getVehicle', this.agrobjcar)
                         .then(response => {
                             if (response.data.success) {
+                                this.chooseRegion = false;
                                 this.clearVehicle();
                                 for (var prop in response.data.result) {
                                     this.agrobjcar[prop] = response.data.result[prop];
