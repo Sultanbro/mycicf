@@ -160,10 +160,14 @@ class PreInsuranceInspectionController extends Controller
                 }
                 $inspectionsInfo['row'][$index]['details']['row'] = $getDataWithDicts;
                 if (empty($inspectionsInfo['row'][$index]['AttachLink'])) {
+                    $inspectionsInfo['row'][$index]['storageLink']       = $inspectionsInfo['row'][$index]['AttachLink'];
                     if (!empty($getUrl) && in_array($info['DocID'], array_keys($getUrl))) {
+                        $inspectionsInfo['row'][$index]['storageLink']       = $getUrl[$info['DocID']];
                         $inspectionsInfo['row'][$index]['AttachLink'][$path] = Storage::files($getUrl[$info['DocID']]);
                     }
                 } else {
+                    $inspectionsInfo['row'][$index]['storageLink']       =
+                        $inspectionsInfo['row'][$index]['AttachLink'];
                     $inspectionsInfo['row'][$index]['AttachLink'][$path] =
                         Storage::files($inspectionsInfo['row'][$index]['AttachLink']);
                 }

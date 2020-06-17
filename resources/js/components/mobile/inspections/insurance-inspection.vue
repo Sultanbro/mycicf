@@ -56,7 +56,13 @@
                                     Назначить
                                 </button>
                             </td>
-                            <td scope="col" v-else>{{info.Operator}}</td>
+                            <td scope="col" v-else>
+                                {{info.Operator}}
+                                <a href="#" data-toggle="modal" data-target="#addOperator"
+                                   @click="getOperator(info.DeptISN, info.ISN)">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -163,6 +169,7 @@
                     let isEmpty = $.isEmptyObject(response.data.result);
                     document.getElementById('addOperator').click();
                     if (response.data.success) {
+                        window.location.reload();
                         if (!isEmpty) {
                             this.operators = response.data.result;
                         }

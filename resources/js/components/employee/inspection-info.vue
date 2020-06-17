@@ -76,21 +76,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <CarForm
-                                        v-if="info.ClassType==1"
+                                    <ObjectForm
                                         :details="info"
                                         :countArray="inspections_data.row.length">
-                                    </CarForm>
-                                    <SpecialCarForm
-                                        v-if="info.ClassType==2"
-                                        :details="info"
-                                        :countArray="inspections_data.row.length">
-                                    </SpecialCarForm>
-                                    <OtherForm
-                                        v-if="info.ClassType==3"
-                                        :details="info"
-                                        :countArray="inspections_data.row.length">
-                                    </OtherForm>
+                                    </ObjectForm>
                                     <ImageUploader :info="info"></ImageUploader>
                                 </div>
                             </div>
@@ -162,17 +151,13 @@
 </template>
 
 <script>
-    import CarForm from './includes/car-form'
-    import SpecialCarForm from './includes/specialCar-form'
-    import OtherForm from './includes/other-form'
+    import ObjectForm from './includes/object-form'
     import ImageUploader from '../common/upload-image'
 
     export default {
         name: "inspection-info",
         components: {
-            CarForm,
-            SpecialCarForm,
-            OtherForm,
+            ObjectForm,
             ImageUploader,
         },
         data() {
