@@ -2091,3 +2091,7 @@ textarea::-webkit-scrollbar-thumb {
 .input7-size{
 	min-width: 176px;
 }
+
+.white-space {
+    white-space: unset !important;
+}

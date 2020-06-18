@@ -38,7 +38,7 @@
                              v-if="songsDisplayingDescription.indexOf(info.DocID) !== -1">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="row">
+                                    <div class="row" v-if="info.ClassType != '3'">
                                         <div class="col-md-4">
                                             <label>Марка и Модель ТС</label>
                                             <div class="input-group mb-3">
@@ -58,7 +58,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row align-items-center">
+                                    <div class="row align-items-center" v-if="info.ClassType != '3'">
                                         <div class="col-md-4">
                                             <label>Объем двигателя</label>
                                             <div class="input-group mb-3">
@@ -75,6 +75,40 @@
                                             <label>Свид. о регистрации ТС: №, дата выдачи (при наличии)</label>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text">{{info.SRTS}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" v-if="info.ClassType == '3'">
+                                        <div class="col-md-4">
+                                            <label>Вид имущества</label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text white-space">{{info.Object}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Год постройки</label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">{{info.ReleaseDate}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Число этажей</label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">{{info.Floors}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center" v-if="info.ClassType == '3'">
+                                        <div class="col-md-4">
+                                            <label>Число помещений</label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">{{info.Rooms}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Общая площадь</label>
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text">{{info.Area}}</span>
                                             </div>
                                         </div>
                                     </div>
