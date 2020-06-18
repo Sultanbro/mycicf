@@ -81,20 +81,31 @@
                             </select>&nbsp;
                             <div class="form-check" v-if="detail.checkbox == '1'">
                                 <label class="form-check-label">
+                                    <input type="hidden" class="form-check-input"
+                                           :name="'detail[' + detail.detailisn + '][working]'" value="0">
                                     <input type="checkbox" class="form-check-input"
-                                           :name="'detail[' + detail.detailisn + '][working]'" value="0">Не рабочее
+                                           :name="'detail[' + detail.detailisn + '][working]'"
+                                           value="1" :checked="detail.remarkisn=='1' ? true : false">Не рабочее
                                 </label>
                             </div>
                             <div class="form-check" v-if="detail.checkbox == '2'">
                                 <label class="form-check-label">
+                                    <input type="hidden" class="form-check-input"
+                                           :name="'detail[' + detail.detailisn + '][missing]'" value="0">
                                     <input type="checkbox" class="form-check-input"
-                                           :name="'detail[' + detail.detailisn + '][missing]'" value="0">Отсутствует
+                                           :name="'detail[' + detail.detailisn + '][missing]'"
+                                           value="1" :checked="detail.remarkisn=='1' ? true : false">Отсутствует
                                 </label>
                             </div>
-                            <select v-if="detail.checkbox == '3'" class="form-control" id="state"
-                                    name="state">
-                                <option>1</option>
-                                <option>2</option>
+                            <select v-if="detail.checkbox >= '3' && detail.checkbox <= '7'"
+                                    class="form-control"
+                                    :name="'detail[' + detail.detailisn + '][property]'">
+                                <option value="">Не указано</option>
+                                <option v-for="child in detail.property_child"
+                                        :value="child.child_isn +','+ child.child_name"
+                                        :selected="detail.remarkisn == child.child_isn ? true : false">
+                                    {{ child.child_name }}
+                                </option>
                             </select>
                         </div>
                         <input v-if="detail.dicti == ''"
@@ -116,7 +127,7 @@
                 </div>
                 <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
                     <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument"
-                            :disabled="details.storageLink == '' ? true : false">
+                            :disabled="details.AttachLink == '' ? true : false">
                         Сохранить
                     </button>
                 </div>
@@ -149,7 +160,6 @@
                             if (!response.data.success) {
                                 alert(response.data.error);
                             } else {
-                                this.isJoin = true
                                 this.countR++;
                                 if (this.countR == this.countArray) {
                                     document.getElementById("inspection-execute").removeAttribute('disabled');
