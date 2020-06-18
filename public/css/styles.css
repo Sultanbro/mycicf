@@ -1130,7 +1130,7 @@ ul{
 	height: 70px;
 }
 .height100vh{
-	height: 100vh;
+    height: auto;
 }
 .small-avatar-circle{
 	border-radius: 50%;
@@ -1425,6 +1425,10 @@ body {
 }
 /*Конец стилей Алихана*/
 /*Mobile*/
+.mobile-main-container {
+    width: 100%;
+}
+
 .mobile-bg-position{
 	background-position-x: -315px;
 	/*background-position-y: -148px;*/
@@ -2086,4 +2090,95 @@ textarea::-webkit-scrollbar-thumb {
 }
 .input7-size{
 	min-width: 176px;
+}
+.date-products{
+	border-bottom: 1px solid #dee2e6;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	height: 35px;
+	background: white;
+}
+.custom-select{
+	height: 35px !important;
+	border: 1.75px solid #dee2e6 !important;
+}
+.attr-text{
+	border-bottom: 1.75px solid #dee2e6;
+	height: 35px;
+	background: white;
+	color: black;
+}
+.attr-input-text{
+	outline: 0;
+	border-width: 0 0 2px;
+	border-color: #dee2e6;
+	height: 35px;
+}
+.add-button{
+	cursor : pointer;
+	background-color : white;
+	color : black;
+	border : 1px solid #dee2e6;
+	padding: 10px;
+    transition: 0.4s ease;
+}
+.add-button:hover {
+    border-color: cornflowerblue;
+    color: cornflowerblue;
+}
+
+.participant-form{
+    width: 100vw;
+	min-height: 100vh;
+	height: auto;
+	background-color : white;
+}
+.agreement-block{
+	box-shadow: 0 0 5px .5px #888888;
+	padding: 30px;
+	border-radius: 10px;
+}
+
+.product-list a{
+    color: cornflowerblue;
+    transition: 0.4s ease;
+}
+
+.product-list a:hover {
+    box-shadow: 0px 0px 10px 0 rgba(100,149,237 , .5);
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.agr-block {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .agr-block {
+        display: grid;
+        grid-template-columns: 2fr;
+        grid-gap: 20px;
+    }
+}
+
+.quotation-list .pagination {
+	display:inline-flex;
+}
+
+/* Анимации появления и исчезновения могут иметь */
+/* различные продолжительности и динамику.       */
+.slide-fade-enter-active {
+	transition: all .3s ease;
+}
+.slide-fade-leave-active {
+	transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+	/* .slide-fade-leave-active до версии 2.1.8 */ {
+	transform: translateX(10px);
+	opacity: 0;
 }

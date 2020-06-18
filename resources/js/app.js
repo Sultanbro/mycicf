@@ -18,6 +18,18 @@ import {EmojiPickerPlugin} from 'vue-emoji-picker'
 
 import VTooltip from 'v-tooltip'
 
+import Toastr from 'vue-toastr'
+
+import vmodal from 'vue-js-modal'
+
+import VueTheMask from 'vue-the-mask'
+
+const moment = require('vue-moment');
+
+Vue.use(moment);
+
+Vue.use(vmodal);
+
 Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
@@ -31,6 +43,12 @@ Vue.use(VueAxios, axios);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
+
+window.addEventListener('load', () => {
+    Vue.use(Toastr);
+});
+
+Vue.use(VueTheMask);
 
 Vue.directive('linkified', linkify);
 
@@ -105,6 +123,41 @@ Vue.component('parse-indicators', require('./components/parse/parse-indicators.v
 
 Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
+Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
+
+Vue.component('inspection-info', require('./components/employee/inspection-info').default);
+
+Vue.component('upload-image', require('./components/common/upload-image').default);
+
+
+Vue.component('express-calc', require('./components/product/express.vue').default);
+
+Vue.component('full-quotation-calc', require('./components/product/full-quotation.vue').default);
+
+Vue.component('participant', require('./components/product/participants.vue').default);
+
+Vue.component('participant-create', require('./components/product/participantCreate.vue').default);
+
+Vue.component('period', require('./components/product/period.vue').default);
+
+Vue.component('participant-form', require('./components/product/participantForm.vue').default);
+
+Vue.component('agr-attributes', require('./components/product/attributes.vue').default);
+
+Vue.component('agr-clause', require('./components/product/agrclause.vue').default);
+
+Vue.component('agr-object', require('./components/product/agrobjects.vue').default);
+
+Vue.component('agrobjcar', require('./components/product/agrobjcar.vue').default);
+
+Vue.component('new-vehicle', require('./components/product/newVehicle.vue').default);
+
+Vue.component('upload-docs', require('./components/product/uploadDocs.vue').default);
+
+Vue.component('printable-form', require('./components/product/printableForm.vue').default);
+
+Vue.component('quotation-list', require('./components/product/quotation-list.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
@@ -137,7 +190,8 @@ window.onload = function(){
             },
         },
         component: {
-            'd-player': VueDPlayer
+            'd-player': VueDPlayer,
+            //'compa' : compa
         }
     });
 

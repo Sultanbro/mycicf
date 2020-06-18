@@ -65,6 +65,19 @@
                     </li>
                 </a>
             @endif
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-car" aria-hidden="true"></i>
+                    <span>Предстраховой осмотр</span>
+                </li>
+            </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
+                <li class="leftsidebar-icons">
+                    <i class="fas fa-book-reader"></i>
+                    <span>Экспресс котировка</span>
+                </li>
+            </a>
+
         </ul>
     </div>
 </div>
