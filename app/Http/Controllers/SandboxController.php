@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dicti;
+use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class SandboxController extends Controller
     {
         $isn        = $request['isn'];
         $doscisn    = $request['doscisn'] != 0 ? $request['doscisn'] : '';
-        $agrcalcisn = $request['agrcalcisn'] != 0 ? $request['agrcalcisn'] : '';
+        $agrcalcisn = $request['argcalcisn'] != 0 ? $request['argcalcisn'] : '';
         $agrisn     = $request['agrisn'] != 0 ? $request['agrisn'] : '';
         try {
             $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $doscisn);
@@ -42,23 +43,20 @@ class SandboxController extends Controller
                     $dicti->numcode  = '';
                     $dicti->n_kids   = !empty($detail['dicti']) ? 1 : 0;
                     $dicti->save();
+                } else {
+                    $data->isn      = $detail['detailisn'];
+                    $data->fullname = $detail['detail'];
+                    $data->code     = '';
+                    $data->numcode  = '';
+                    $data->n_kids   = !empty($detail['dicti']) ? 1 : 0;
+                    $data->save();
                 }
                 if (!empty($detail['dicti'])) {
-                    $getDicts = $kiasService->getDictList($detail['dicti'], 0);
-                    $dicts    = Helper::simpleXmlToArray($getDicts->ROWSET);
-                    foreach ($dicts['row'] as $dict) {
-                        $getData = Dicti::where('isn', $dict['ISN'])->first();
-                        if (empty($getData)) {
-                            $model              = new Dicti();
-                            $model->isn         = $dict['ISN'];
-                            $model->fullname    = $dict['FULLNAME'];
-                            $model->parent_isn  = $detail['detailisn'];
-                            $model->parent_name = $dict['FULLNAME'];
-                            $model->code        = '';
-                            $model->numcode     = '';
-                            $model->save();
-                        }
-                    }
+                    $this->getDataWithDicti($kiasService, $detail, $detail['dicti'], Enum::NO);
+                }
+
+                if (!empty($detail['dicti2'])) {
+                    $this->getDataWithDicti($kiasService, $detail, $detail['dicti2'], Enum::YES);
                 }
             }
         }
@@ -73,6 +71,41 @@ class SandboxController extends Controller
         dd($getArray);
     }
 
+    /**
+     * @param KiasServiceInterface $kiasService
+     * @param                      $detail
+     * @param                      $detail_dicti
+     *
+     * @throws \Exception
+     */
+    private function getDataWithDicti(KiasServiceInterface $kiasService, $detail, $detail_dicti, $enum)
+    {
+        $getDicts = $kiasService->getDictList($detail_dicti, 0);
+        $dicts    = Helper::simpleXmlToArray($getDicts->ROWSET);
+        foreach ($dicts['row'] as $dict) {
+            $getData = Dicti::where('isn', $dict['ISN'])->where('parent_isn',$detail['detailisn'])->first();
+            if (empty($getData)) {
+                $model                         = new Dicti();
+                $model->isn                    = $dict['ISN'];
+                $model->fullname               = $dict['FULLNAME'];
+                $model->parent_isn             = $detail['detailisn'];
+                $model->parent_name            = $dict['FULLNAME'];
+                $model->condition_for_property = $enum;
+                $model->code                   = '';
+                $model->numcode                = '';
+                $model->save();
+            } else {
+                $getData->isn                    = $dict['ISN'];
+                $getData->fullname               = $dict['FULLNAME'];
+                $getData->parent_isn             = $detail['detailisn'];
+                $getData->parent_name            = $dict['FULLNAME'];
+                $getData->condition_for_property = $enum;
+                $getData->code                   = '';
+                $getData->numcode                = '';
+                $getData->save();
+            }
+        }
+    }
 
     private function test($inspectionsInfo)
     {

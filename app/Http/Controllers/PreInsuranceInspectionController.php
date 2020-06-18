@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
@@ -142,34 +143,44 @@ class PreInsuranceInspectionController extends Controller
         $getUrl           = Session::get('url_for_image');
         if (!empty($inspectionsInfo['row'])) {
             foreach ($inspectionsInfo['row'] as $info) {
-                $path = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
+                $path          = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
                 if ($info['DocStatus'] == self::ASSIGNED) {
                     $count++;
                 }
                 foreach ($info['details']['row'] as $key => $detail) {
-                    $getDicts           = Dicti::select('id', 'isn', 'fullname')
+                    $getDicts           = Dicti::select('id', 'isn', 'fullname', 'condition_for_property')
                         ->where('parent_isn', $detail['detailisn'])
                         ->get();
                     $getDataWithDicts[] = $detail;
                     foreach ($getDicts as $dict) {
-                        $getDataWithDicts[$key]['child'][] = [
-                            'child_isn'  => $dict->isn,
-                            'child_name' => $dict->fullname,
-                        ];
+                        if ($dict->condition_for_property == Enum::NO) {
+                            $getDataWithDicts[$key]['child'][] = [
+                                'child_isn'  => $dict->isn,
+                                'child_name' => $dict->fullname,
+                            ];
+                        } else {
+                            $getDataWithDicts[$key]['property_child'][] = [
+                                'child_isn'  => $dict->isn,
+                                'child_name' => $dict->fullname,
+                            ];
+                        }
                     }
                 }
                 $inspectionsInfo['row'][$index]['details']['row'] = $getDataWithDicts;
                 if (empty($inspectionsInfo['row'][$index]['AttachLink'])) {
-                    $inspectionsInfo['row'][$index]['storageLink']       = $inspectionsInfo['row'][$index]['AttachLink'];
+                    $inspectionsInfo['row'][$index]['storageLink'] = $inspectionsInfo['row'][$index]['AttachLink'];
                     if (!empty($getUrl) && in_array($info['DocID'], array_keys($getUrl))) {
-                        $inspectionsInfo['row'][$index]['storageLink']       = $getUrl[$info['DocID']];
-                        $inspectionsInfo['row'][$index]['AttachLink'][$path] = Storage::files($getUrl[$info['DocID']]);
+                        $inspectionsInfo['row'][$index]['storageLink'] = $getUrl[$info['DocID']];
+                        $inspectionsInfo['row'][$index]['AttachLink']  = [
+                            $path => Storage::files($getUrl[$info['DocID']]),
+                        ];
                     }
                 } else {
-                    $inspectionsInfo['row'][$index]['storageLink']       =
+                    $inspectionsInfo['row'][$index]['storageLink'] =
                         $inspectionsInfo['row'][$index]['AttachLink'];
-                    $inspectionsInfo['row'][$index]['AttachLink'][$path] =
-                        Storage::files($inspectionsInfo['row'][$index]['AttachLink']);
+                    $inspectionsInfo['row'][$index]['AttachLink']  = [
+                        $path => Storage::files($inspectionsInfo['row'][$index]['AttachLink']),
+                    ];
                 }
                 $index++;
             }
@@ -198,20 +209,43 @@ class PreInsuranceInspectionController extends Controller
     {
         $data        = [];
         $formRequest = $request->all();
+        $remarkisn   = '';
+        $remark      = '';
         foreach ($formRequest['detail'] as $value) {
             $options = !empty($value['damage']) ? explode(',', $value['damage']) : '';
+            if ($formRequest['typeObject'] == self::OTHER) {
+                if (isset($value['working']) || isset($value['missing'])) {
+                    if (isset($value['working'])) {
+                        $remarkisn = $value['working'];
+                        $remark    = 'Не рабочее';
+                    } else {
+                        $remarkisn = $value['missing'];
+                        $remark    = 'Отсутствует';
+                    }
+                } else {
+                    if (!empty($value['property'])) {
+                        $property  = explode(',', $value['property']);
+                        $remarkisn = $property[0];
+                        $remark    = $property[1];
+                    }
+                }
+            } else {
+                $remark = !empty($value['remark']) ? $value['remark'] : '';
+            }
             if ($value['type'] == 3) {
-                $value['remark'] = $formRequest['urlStorage'];
+                $remark = $formRequest['urlStorage'];
             }
             $data['row'][] = [
                 'isn'       => $value['isn'] ?? '',
                 "detailisn" => $value['detailIsn'] ?? '',
                 'damageisn' => !empty($value['damage']) ? $options[0] : '',
                 "damage"    => !empty($value['damage']) ? $options[1] : '',
-                "remark"    => !empty($value['remark']) ? $value['remark'] : '',
+                'remarkisn' => $remarkisn,
+                "remark"    => $remark,
                 "type"      => $value['type'],
             ];
         }
+
         try {
             $inspections = $kias->setInsuranceInspectionInfo($formRequest['docIsn'], $formRequest['dremark'], $data);
             $response    = Helper::simpleXmlToArray($inspections);
@@ -245,15 +279,13 @@ class PreInsuranceInspectionController extends Controller
                 } elseif ($requestAll['statusIsn'] == self::CANCEL && empty($requestAll['reason'])) {
                     $reason = 'Отказано';
                 }
-                foreach ($requestAll['docIsn'] as $dosId) {
-                    try {
-                        $kias->setAppointmentOperator($emplIsn, $dosId, $requestAll['statusIsn'], $reason);
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => $e->getMessage(),
-                        ]);
-                    }
+                try {
+                    $kias->setAppointmentOperator($emplIsn, $requestAll['docIsn'], $requestAll['statusIsn'], $reason);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $e->getMessage(),
+                    ]);
                 }
             } else {
                 try {

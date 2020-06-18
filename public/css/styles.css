@@ -2182,3 +2182,7 @@ textarea::-webkit-scrollbar-thumb {
 	transform: translateX(10px);
 	opacity: 0;
 }
+
+.white-space {
+    white-space: unset !important;
+}
