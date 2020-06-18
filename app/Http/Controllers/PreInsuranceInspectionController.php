@@ -245,15 +245,13 @@ class PreInsuranceInspectionController extends Controller
                 } elseif ($requestAll['statusIsn'] == self::CANCEL && empty($requestAll['reason'])) {
                     $reason = 'Отказано';
                 }
-                foreach ($requestAll['docIsn'] as $dosId) {
-                    try {
-                        $kias->setAppointmentOperator($emplIsn, $dosId, $requestAll['statusIsn'], $reason);
-                    } catch (\Exception $e) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => $e->getMessage(),
-                        ]);
-                    }
+                try {
+                    $kias->setAppointmentOperator($emplIsn, $requestAll['docIsn'], $requestAll['statusIsn'], $reason);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $e->getMessage(),
+                    ]);
                 }
             } else {
                 try {

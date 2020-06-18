@@ -14,13 +14,15 @@
                             <th scope="col">Собственник (Страхователь)</th>
                             <th scope="col" class="thead-border">Контактное лицо</th>
                             <th scope="col" class="thead-border">Контактные данные</th>
+                            <th scope="col" class="thead-border">Адрес объекта</th>
                         </tr>
                         </thead>
                         <tbody class="date-color">
                         <tr v-if="countData()">
-                            <td class="pointer" scope="col">{{inspections_data.Contact.FIO}}</td>
-                            <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
+                            <td class="pointer" scope="col">{{inspections_data.Contact.Client}}</td>
+                            <td scope="col" class="thead-border">{{inspections_data.Contact.FIO}}</td>
                             <td scope="col" class="thead-border">{{inspections_data.Contact.Contact}}</td>
+                            <td scope="col" class="thead-border">{{inspections_data.Contact.Adress}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -52,7 +54,7 @@
                                         <div class="col-md-4">
                                             <label>Год выпуска ТС</label>
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text">{{info.marka}}</span>
+                                                <span class="input-group-text">{{info.ReleaseDate}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -215,12 +217,9 @@
                 this.preloader(false);
             },
             updateStatus(statusIsn) {
-                let docIsn = $("input[name='doc_ids[]']").map(function () {
-                    return $(this).val();
-                }).get();
                 if (!this.isJoin) {
                     this.axios.post("/updateStatus", {
-                            docIsn: docIsn,
+                            docIsn: this.isn,
                             statusIsn: statusIsn,
                             reason: this.reason
                         }

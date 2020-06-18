@@ -13,7 +13,7 @@ class SandboxController extends Controller
     {
         $isn        = $request['isn'];
         $doscisn    = $request['doscisn'] != 0 ? $request['doscisn'] : '';
-        $agrcalcisn = $request['agrcalcisn'] != 0 ? $request['agrcalcisn'] : '';
+        $agrcalcisn = $request['argcalcisn'] != 0 ? $request['argcalcisn'] : '';
         $agrisn     = $request['agrisn'] != 0 ? $request['agrisn'] : '';
         try {
             $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $doscisn);
@@ -42,6 +42,13 @@ class SandboxController extends Controller
                     $dicti->numcode  = '';
                     $dicti->n_kids   = !empty($detail['dicti']) ? 1 : 0;
                     $dicti->save();
+                } else {
+                    $data->isn      = $detail['detailisn'];
+                    $data->fullname = $detail['detail'];
+                    $data->code     = '';
+                    $data->numcode  = '';
+                    $data->n_kids   = !empty($detail['dicti']) ? 1 : 0;
+                    $data->save();
                 }
                 if (!empty($detail['dicti'])) {
                     $getDicts = $kiasService->getDictList($detail['dicti'], 0);
@@ -57,6 +64,14 @@ class SandboxController extends Controller
                             $model->code        = '';
                             $model->numcode     = '';
                             $model->save();
+                        } else {
+                            $getData->isn         = $dict['ISN'];
+                            $getData->fullname    = $dict['FULLNAME'];
+                            $getData->parent_isn  = $detail['detailisn'];
+                            $getData->parent_name = $dict['FULLNAME'];
+                            $getData->code        = '';
+                            $getData->numcode     = '';
+                            $getData->save();
                         }
                     }
                 }

@@ -116,7 +116,7 @@
                 </div>
                 <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
                     <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument"
-                            :disabled="details.storageLink == '' ? true : false">
+                            :disabled="details.AttachLink == '' ? true : false">
                         Сохранить
                     </button>
                 </div>
