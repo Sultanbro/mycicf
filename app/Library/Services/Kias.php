@@ -357,6 +357,20 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function CreateAgrByAgrcalc($isn){
+        return $this->request('CreateAgrByAgrcalc', [
+            'CalcISN' => $isn,
+            'MODE' => 0
+        ]);
+    }
+
+    public function getAgreementCalc($isn,$product_id){
+        return $this->request('GETAGREEMENTCALC', [
+            'AgreementCalcIsn' => $isn,
+            'PRODUCTISN' => $product_id
+        ]);
+    }
+
     public function calcFull($order)
     {
 

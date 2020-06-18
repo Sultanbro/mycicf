@@ -28,6 +28,9 @@
                 <button v-if="quotationId == 0" class="btn btn-outline-info" :disabled="nshb" @click="calculate">
                     Рассчитать стоимость
                 </button>
+                <button v-if="quotationId == 0 && calc_isn != null" class="btn btn-outline-info" @click="createFullQ()">
+                    Перевод в полную котировку
+                </button>
                 <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>
                 <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
             </div>
@@ -43,6 +46,7 @@
                 attributes: [],
                 calculated : false,
                 calc_isn: null,
+                full_isn: null,
                 docs: {
                     files: [],
                     sendedFail: false,
@@ -132,7 +136,7 @@
                     if(response.data.success){
                         this.price = response.data.premium;
                         this.calculated = true;
-                        this.calc_isn = '';
+                        this.calc_isn = response.data.calc_isn;
                         this.preloader(false);
                         if(this.nshb){
                             this.sendDocs();
@@ -146,6 +150,27 @@
                     alert(error)
                     this.preloader(false);
                 });
+            },
+            createFullQ(){
+                this.preloader(true);
+                this.axios.post('/express/createAgrByAgrcalc', {
+                    calc_isn: this.calc_isn,
+                    id : this.id
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            console.log(response.data.result);
+                            this.full_isn = response.data.full_isn;
+                            this.preloader(false);
+                        }else{
+                            alert(response.data.error);
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                        this.preloader(false);
+                    });
             },
             sendDocs(){
                 let formData = new FormData();

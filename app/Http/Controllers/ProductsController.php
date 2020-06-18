@@ -235,6 +235,36 @@ class ProductsController extends Controller
                     }
 
                 }
+
+                if (isset($response->AgrClause->row)) {
+                    $delete = Dicti::where('numcode',$request->product_isn)->delete();
+                    $dict = 0;
+                    $save = false;
+                    foreach ($response->AgrClause->row as $agrRow) {
+                        if($dict != (string)$agrRow->clauseisn) {
+                            $dictionary = new Dicti;
+                            $dictionary->isn = $request->product_isn . (string)$agrRow->clauseisn;
+                            $dictionary->fullname = (string)$agrRow->clausename;
+                            $dictionary->parent_isn = $request->product_isn;
+                            //$dictionary->parent_name = (string)$agrRow->clausename;
+                            $dictionary->code = '';
+                            $dictionary->numcode = $request->product_isn;
+                            $save = $dictionary->save();
+                            $dict = (string)$agrRow->clauseisn;
+                        }
+                        if((string)$agrRow->classisn != '' && (string)$agrRow->classisn != null) {
+                            //$delete = Dicti::where('parent_isn',$request->product_isn.(string)$agrRow->clauseisn)->delete();
+                            $dictionary = new Dicti;
+                            $dictionary->isn = (string)$agrRow->clauseisn.(string)$agrRow->classisn;
+                            $dictionary->fullname = (string)$agrRow->classname;
+                            $dictionary->parent_isn = $request->product_isn.(string)$agrRow->clauseisn;
+                            $dictionary->parent_name = (string)$agrRow->clausename;
+                            $dictionary->code = '';
+                            $dictionary->numcode = $request->product_isn;
+                            $dictionary->save();
+                        }
+                    }
+                }
             }
 
             $agrclauses = $request->agrclauses;
@@ -310,6 +340,7 @@ class ProductsController extends Controller
             array_push($products, [
                 'url' => "/express/calc/{$product->id}/0",
                 'name' => $product->name,
+                'isn' => $product->product_isn
             ]);
         }
         return view('express.list', compact('products'));
@@ -392,12 +423,12 @@ class ProductsController extends Controller
         $subjISN = $request->subjISN;
         $attributes = $this->attributesToKiasAddAttr($request->all()['attributes']);
 
-//        if($request->nshb){
+        if($request->nshb){
             $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
-//        } else {
-//            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
-//        }
-//
+        } else {
+            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
+        }
+
         if (isset($response->error)) {
             return response()->json([
                 'success' => false,
@@ -405,12 +436,12 @@ class ProductsController extends Controller
             ]);
         }
 
-        /*if($request->nshb){
+//        if($request->nshb == 1){
             $quotation = $request->quotationId != 0 ? ExpressQuotation::find($request->quotationId) : new ExpressQuotation;
             $quotation->product_isn = $model->product_isn;
             $quotation->user_isn = Auth::user()->ISN;
-            $quotation->calc_isn = 1;   //(int)$response->AgrCalcISN;
-            $quotation->calc_id = 1;    //(string)$response->CalcID;
+            $quotation->calc_isn = (int)$response->ISN;   //(int)$response->AgrCalcISN;
+            $quotation->calc_id = (int)$response->ISN;    //(string)$response->CalcID;
             $quotation->premiumSum = 0; //(int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->nshb = $request->nshb ? 1 : 0;
@@ -425,11 +456,85 @@ class ProductsController extends Controller
 //                }
 //            }
             $quotation->save();
-        }*/
+//        }
 
         return response()->json([
             'success' => true,
-            'premium' => (int)$response->ROWSET->row->Premiumsum
+            'premium' => (int)$response->ROWSET->row->Premiumsum,
+            'calc_isn' => (int)$response->ISN
+        ]);
+    }
+
+    public function CreateAgrByAgrcalc(Request $request, KiasServiceInterface $kias){
+        $product_id = $request->id;
+        if(($model = ExpressProduct::find($product_id)) === null){
+            return response()->json([
+                'success' => false,
+                'error' => 'Продукт не найден'
+            ]);
+        }
+
+        $response = $kias->CreateAgrByAgrcalc($request->calc_isn);
+
+        if (isset($response->error)) {
+            return response()->json([
+                'success' => false,
+                'error' => (string)$response->error->text
+            ]);
+        }
+
+        $express_quotation = ExpressQuotation::where('calc_isn',$request->calc_isn)->first();
+        $express_quotation->full_isn = (string)$response->AgrISN;
+        $express_quotation->save();
+
+        $agreement = $kias->getAgreementCalc((string)$response->AgrISN,$model->product_isn);
+
+//      $full_quotation = new FullQuotation;
+
+        $constructor = FullConstructor::where('product_isn',$model->product_isn)->first();
+        $data = isset($constructor->data) ? json_decode($constructor->data) : [];
+        $participants = isset($data->participants) ? $data->participants : [];
+        $agrclauses = isset($data->agrclauses) ? $data->agrclauses : [];
+        $attributes = isset($data->attributes) ? $data->attributes : [];
+        $objects = $constructor && isset(json_decode($constructor->data)->agrobjects) ? json_decode($constructor->data)->agrobjects : (object)[];
+
+
+
+        if (isset($agreement->AgreementCalc->row)) {
+            print '1<br>';
+            foreach($agreement->AgreementCalc->row as $row){
+                print '2<br>';
+                if (isset($row->AGREEMENT_ADDATTR->row)){
+                    print '3<br>';
+                    foreach($row->AGREEMENT_ADDATTR->row as $attrRow){
+                        print '4<br>';
+                        //print '<pre>';print_r($attrRow);print '</pre>';
+                        print $attrRow->ATTRISN[0];
+                    }
+                }
+            }
+
+        }
+
+
+
+
+        //print '<pre>';print_r($agreement);print '</pre>';
+        exit();
+
+
+        if (isset($agreement->error)) {
+            return response()->json([
+                'success' => false,
+                'error' => (string)$agreement->error->text
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'result' => '',
+            'full_isn' => (string)$response->AgrISN,
+            'agreement' => $agreement->AgreementCalc
         ]);
     }
 
@@ -465,6 +570,32 @@ class ProductsController extends Controller
         $product = ExpressProduct::where('product_isn',$productISN)->first();
         $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
         return view('full.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
+    }
+
+    public function expressQuotationList($productISN, Request $request){
+        $quotations = ExpressQuotation::where('product_isn',$productISN)->where('user_isn',Auth::user()->ISN);
+
+        if(!isset($request->nshb)) {
+            $quotations = $quotations->where('nshb',1);
+        } else {
+            $quotations = $quotations->where('nshb',$request->nshb);
+        }
+
+
+        if($request->status != ''){
+            $quotations = $quotations->where('status',$request->status);
+        }
+
+//        if ($request->type == 1) {
+//            $quotations = $quotations->whereNotNull('contract_number')->where('contract_number', '!=', '');
+//        } else {
+//            $quotations = $quotations->where('contract_number','');
+//        }
+
+        $quotations = $quotations->paginate(15);
+        $product = ExpressProduct::where('product_isn',$productISN)->first();
+        $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
+        return view('express.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
     }
 
     public function fullCreate(Request $request){

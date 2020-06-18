@@ -6,7 +6,8 @@
                 sendDA: 0,
                 quotationStatus: '',
                 type: 0,
-                contractSelected: false
+                contractSelected: false,
+                nshb: 1,
             }
         },
         props:{
@@ -15,7 +16,7 @@
         },
         methods:{
             filter(){
-                window.location.href = this.pageUrl+'?DA='+this.sendDA+'&status='+this.quotationStatus+'&type='+this.type;
+                window.location.href = this.pageUrl+'?DA='+this.sendDA+'&status='+this.quotationStatus+'&type='+this.type+'&nshb='+this.nshb;
             }
         },
         created(){
@@ -24,6 +25,7 @@
                 this.sendDA = param.DA == null ? 0 : param.DA;
                 this.quotationStatus = param.status == null ? '' : param.status;
                 this.type = param.type == null ? 0 : param.type;
+                this.nshb = param.nshb == null ? 0 : param.nshb;
             }
         },
         watch: {

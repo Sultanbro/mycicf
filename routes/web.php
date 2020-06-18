@@ -251,6 +251,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //Route::get('/express/calc/{ID}', 'ProductsController@express');
         Route::get('/express/calc/{ID}/{quotationId}', 'ProductsController@express')->name('express_front');
         Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
+        Route::get('/express/quotations/{productISN}', 'ProductsController@expressQuotationList')->name('express_quotations_list');
         Route::get('/full', 'ProductsController@fullList');
         Route::get('/full/quotations/{productISN}', 'ProductsController@fullQuotationList')->name('full_quotations_list');
         Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@fullCreateEdit')->name('full_front');
@@ -269,6 +270,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/setSubject', 'SiteController@setSubject');
         Route::post('/calc/saveSubject', 'SiteController@saveSubject');
         Route::post('/express/calculate', 'ProductsController@expressCalc');
+        Route::post('/express/createAgrByAgrcalc', 'ProductsController@CreateAgrByAgrcalc');
         Route::post('/full/calculate', 'ProductsController@fullCalc');
 
         Route::post('/getVehicle', 'VehicleController@getVehicle');
