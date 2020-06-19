@@ -18,6 +18,7 @@
 // Роуты для Песочницы
 Route::get('/sandbox/index', 'SandboxController@index');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
+Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
