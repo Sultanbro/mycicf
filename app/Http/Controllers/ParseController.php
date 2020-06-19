@@ -2660,13 +2660,21 @@ class ParseController extends Controller
         $list = $this->getProductListWithId();
         return view('parse.editProduct', compact('list'));
     }
-    public function postEditProductp(Request $request){
+    public function postEditProduct(Request $request){
+        $success = false;
+        $error = '';
         if($request->product == ''){
-            return  'Выберите продукт';
+            return response()->json([
+                'success' => false,
+                'error' => 'Выберите продукт'
+            ]);
         }
         $id = $request->product;
         if($request->fullname == '' && $request->shortname == ''){
-            return  'как миннимум одно из двух текстовых  полей должна быть заполнена';
+            return response()->json([
+                'success' => false,
+                'error' => 'как миннимум одно из двух текстовых  полей должна быть заполнена'
+            ]);
         }
         $result = '';
         if($request->fullname != ''){
@@ -2674,6 +2682,7 @@ class ParseController extends Controller
             $previousName->product_id = $id;
             $previousName->name = $request->fullname;
             $previousName->save();
+            $success = true;
             $result .= 'Добавлена полное наименование<br>';
         }
 
@@ -2681,9 +2690,13 @@ class ParseController extends Controller
             $model = InsuranceProduct::findOrFail($id);
             $model->short_name = $request->shortname;
             $model->save();
+            $success = true;
             $result .= 'Добавлена наименование для вывода';
         }
-        return $result;
+        return response()->json([
+            'success' => $success,
+            'error' => $error
+        ]);
     }
     public function getLoadedData(Request $request){
         $result = [];
