@@ -230,6 +230,7 @@
                             this.isJoin = true
                             document.getElementById('executeModal').click();
                             document.getElementById('cancelModal').click();
+                            window.location.href = '/insurance/inspection';
                         }
                         this.$toastr.s(response.data.message);
                     }).catch(function (error) {
