@@ -126,4 +126,16 @@ class SandboxController extends Controller
 
         return $inspectionsInfo;
     }
+
+    public function removeDicti(Request $request)
+    {
+        $isn       = $request->isn;
+        $parentIsn = $request->parentIsn;
+        $enum      = $request->enum;
+        if (empty($isn) || empty($parentIsn) || empty($enum)) {
+            //dd('Не хватает параметры');
+        }
+        Dicti::where('isn', $isn)->where('parent_isn', $parentIsn)->where('condition_for_property', $enum)->delete();
+        dd('OKk');
+    }
 }
