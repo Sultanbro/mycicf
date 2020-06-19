@@ -161,6 +161,9 @@
                         if(response.data.success){
                             console.log(response.data.result);
                             this.full_isn = response.data.full_isn;
+
+                            window.location.href = "/full/calc/" + this.id + "/"+response.data.full_isn;
+
                             this.preloader(false);
                         }else{
                             alert(response.data.error);
