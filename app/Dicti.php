@@ -14,6 +14,7 @@ class Dicti extends Model
         'parent_isn',
         'parent_name',
         'condition_for_property',
+        'type',
         'code',
         'numcode',
         'n_kids',

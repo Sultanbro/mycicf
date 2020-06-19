@@ -39,6 +39,7 @@ class SandboxController extends Controller
                     $dicti           = new Dicti();
                     $dicti->isn      = $detail['detailisn'];
                     $dicti->fullname = $detail['detail'];
+                    $dicti->type     = 'online_inspection';
                     $dicti->code     = '';
                     $dicti->numcode  = '';
                     $dicti->n_kids   = !empty($detail['dicti']) ? 1 : 0;
@@ -46,6 +47,7 @@ class SandboxController extends Controller
                 } else {
                     $data->isn      = $detail['detailisn'];
                     $data->fullname = $detail['detail'];
+                    $data->type     = 'online_inspection';
                     $data->code     = '';
                     $data->numcode  = '';
                     $data->n_kids   = !empty($detail['dicti']) ? 1 : 0;
@@ -83,7 +85,7 @@ class SandboxController extends Controller
         $getDicts = $kiasService->getDictList($detail_dicti, 0);
         $dicts    = Helper::simpleXmlToArray($getDicts->ROWSET);
         foreach ($dicts['row'] as $dict) {
-            $getData = Dicti::where('isn', $dict['ISN'])->where('parent_isn',$detail['detailisn'])->first();
+            $getData = Dicti::where('isn', $dict['ISN'])->where('parent_isn', $detail['detailisn'])->first();
             if (empty($getData)) {
                 $model                         = new Dicti();
                 $model->isn                    = $dict['ISN'];
@@ -91,6 +93,7 @@ class SandboxController extends Controller
                 $model->parent_isn             = $detail['detailisn'];
                 $model->parent_name            = $dict['FULLNAME'];
                 $model->condition_for_property = $enum;
+                $model->type                   = 'online_inspection';
                 $model->code                   = '';
                 $model->numcode                = '';
                 $model->save();
@@ -100,6 +103,7 @@ class SandboxController extends Controller
                 $getData->parent_isn             = $detail['detailisn'];
                 $getData->parent_name            = $dict['FULLNAME'];
                 $getData->condition_for_property = $enum;
+                $getData->type                   = 'online_inspection';
                 $getData->code                   = '';
                 $getData->numcode                = '';
                 $getData->save();
@@ -125,5 +129,17 @@ class SandboxController extends Controller
         $inspectionsInfo['row'][0]['Details']['row'] = $getDataWithDicts;
 
         return $inspectionsInfo;
+    }
+
+    public function removeDicti(Request $request)
+    {
+        $isn       = $request->isn;
+        $parentIsn = $request->parentIsn;
+        $enum      = $request->enum;
+        if (empty($isn) || empty($parentIsn) || empty($enum)) {
+            //dd('Не хватает параметры');
+        }
+        Dicti::where('isn', $isn)->where('parent_isn', $parentIsn)->where('condition_for_property', $enum)->delete();
+        dd('OKk');
     }
 }
