@@ -85,16 +85,7 @@
                                            :name="'detail[' + detail.detailisn + '][working]'" value="0">
                                     <input type="checkbox" class="form-check-input"
                                            :name="'detail[' + detail.detailisn + '][working]'"
-                                           value="1" :checked="detail.remarkisn=='1' ? true : false">Не рабочее
-                                </label>
-                            </div>
-                            <div class="form-check" v-if="detail.checkbox == '2'">
-                                <label class="form-check-label">
-                                    <input type="hidden" class="form-check-input"
-                                           :name="'detail[' + detail.detailisn + '][missing]'" value="0">
-                                    <input type="checkbox" class="form-check-input"
-                                           :name="'detail[' + detail.detailisn + '][missing]'"
-                                           value="1" :checked="detail.remarkisn=='1' ? true : false">Отсутствует
+                                           value="1" :checked="detail.remarkisn=='1441871' ? true : false">Не рабочее
                                 </label>
                             </div>
                             <select v-if="detail.checkbox >= '3' && detail.checkbox <= '7'"
@@ -108,10 +99,6 @@
                                 </option>
                             </select>
                         </div>
-                        <input v-if="detail.dicti == ''"
-                               type="text"
-                               class="form-control"
-                               :name="'detail[' + detail.detailisn + '][remark]'" :value="detail.remark">
                     </div>
                 </div>
             </div>
