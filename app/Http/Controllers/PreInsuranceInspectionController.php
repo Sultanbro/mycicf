@@ -7,6 +7,7 @@ use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Dicti;
@@ -271,7 +272,7 @@ class PreInsuranceInspectionController extends Controller
         $requestAll = $request->all();
         if (!empty($requestAll)) {
             if (isset($requestAll['docIsn'])) {
-                $reason = '';
+                $reason = $requestAll['reason'];
                 if ($requestAll['statusIsn'] == self::EXECUTE && empty($requestAll['reason'])) {
                     $reason = 'Исполнено';
                 } elseif ($requestAll['statusIsn'] == self::CANCEL && empty($requestAll['reason'])) {
@@ -371,5 +372,27 @@ class PreInsuranceInspectionController extends Controller
         ];
 
         return response()->json($result);
+    }
+
+    public function storage(Request $request)
+    {
+        $lists = [];
+        $name  = $request->name;
+        if (!empty($name)) {
+            $files = Storage::files('public/'.self::DIRECTORY.'/'.$name);
+            foreach ($files as $file) {
+
+            }
+            $lists[] = $files;
+        } else {
+            $directories = File::directories(public_path().'/storage/'.self::DIRECTORY.'/');
+            foreach ($directories as $directory) {
+                $toArray    = explode('/', $directory);
+                $nameFolder = end($toArray);
+                $lists[]    = $nameFolder;
+            }
+        }
+        dd($lists);
+        return view('online_inspections.storage', compact('lists'));
     }
 }
