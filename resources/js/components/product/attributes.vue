@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-3  ">
         <h6 class="font-shif">{{attribute.Label+ ':'}}</h6>
-        <div>
+        <div >
             <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2">
                 <input v-if="attribute.AttrISN != 831381" type="text" class="attr-input-text w-70" v-model="attribute.Value" @keyup="calcChanged">
                 <input v-if="attribute.AttrISN == 831381" type="tel" v-model="attribute.Value" v-mask="'+###########'"  @keyup="calcChanged" class="attr-input-text w-70">
