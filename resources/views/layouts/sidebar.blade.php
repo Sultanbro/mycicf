@@ -65,12 +65,14 @@
                     </li>
                 </a>
             @endif
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
-                <li class="leftsidebar-icons">
-                    <i class="fa fa-car" aria-hidden="true"></i>
-                    <span>Предстраховой осмотр</span>
-                </li>
-            </a>
+            @if(in_array(Auth::user()->ISN, [5012, 3321420, 1445752, 3418677]))
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
+                    <li class="leftsidebar-icons">
+                        <i class="fa fa-car" aria-hidden="true"></i>
+                        <span>Предстраховой осмотр</span>
+                    </li>
+                </a>
+            @endif
         </ul>
     </div>
 </div>
