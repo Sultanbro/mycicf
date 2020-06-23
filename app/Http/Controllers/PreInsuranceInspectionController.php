@@ -213,7 +213,13 @@ class PreInsuranceInspectionController extends Controller
         foreach ($formRequest['detail'] as $value) {
             $remarkisn = '';
             $remark    = '';
-            $options   = !empty($value['damage']) ? explode(',', $value['damage']) : '';
+            $damageisn = '';
+            $damage    = '';
+            if (!empty($value['damage'])) {
+                $options   = explode(',', $value['damage']);
+                $damageisn = $options[0];
+                $damage    = $options[1];
+            }
             if ($formRequest['typeObject'] == self::OTHER) {
                 if (isset($value['working'])) {
                     if ($value['working'] == 1) {
@@ -232,13 +238,16 @@ class PreInsuranceInspectionController extends Controller
                 $remark = !empty($value['remark']) ? $value['remark'] : '';
             }
             if ($value['type'] == 3) {
-                $remark = $formRequest['urlStorage'];
+                $remark     = $formRequest['urlStorage'];
+                $urlStorage = explode('/', $formRequest['urlStorage']);
+                $docID      = end($urlStorage);
+                $damage     = env('APP_URL').'/inspection/storage?name='.$docID;
             }
             $data['row'][] = [
                 'isn'       => $value['isn'] ?? '',
                 "detailisn" => $value['detailIsn'] ?? '',
-                'damageisn' => !empty($value['damage']) ? $options[0] : '',
-                "damage"    => !empty($value['damage']) ? $options[1] : '',
+                'damageisn' => $damageisn,
+                "damage"    => $damage,
                 'remarkisn' => $remarkisn,
                 "remark"    => $remark,
                 "type"      => $value['type'],
@@ -382,8 +391,8 @@ class PreInsuranceInspectionController extends Controller
         if (!empty($name)) {
             $files = Storage::files('public/'.self::DIRECTORY.'/'.$name);
             foreach ($files as $file) {
-                $url  = '/storage/'.substr($file, 7);
-                $name = File::basename($file);
+                $url     = '/storage/'.substr($file, 7);
+                $name    = File::basename($file);
                 $lists[] = [
                     'url'  => $url,
                     'name' => $name,
