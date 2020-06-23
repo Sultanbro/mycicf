@@ -209,10 +209,10 @@ class PreInsuranceInspectionController extends Controller
     {
         $data        = [];
         $formRequest = $request->all();
-        $remarkisn   = '';
-        $remark      = '';
         foreach ($formRequest['detail'] as $value) {
-            $options = !empty($value['damage']) ? explode(',', $value['damage']) : '';
+            $remarkisn = '';
+            $remark    = '';
+            $options   = !empty($value['damage']) ? explode(',', $value['damage']) : '';
             if ($formRequest['typeObject'] == self::OTHER) {
                 if (isset($value['working'])) {
                     if ($value['working'] == 1) {
@@ -222,12 +222,10 @@ class PreInsuranceInspectionController extends Controller
                         $remarkisn = 1368331;
                         $remark    = 'Рабочее';
                     }
-                } else {
-                    if (!empty($value['property'])) {
-                        $property  = explode(',', $value['property']);
-                        $remarkisn = $property[0];
-                        $remark    = $property[1];
-                    }
+                } elseif (isset($value['property'])) {
+                    $property  = explode(',', $value['property']);
+                    $remarkisn = $property[0];
+                    $remark    = $property[1];
                 }
             } else {
                 $remark = !empty($value['remark']) ? $value['remark'] : '';
