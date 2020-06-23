@@ -143,7 +143,7 @@ class PreInsuranceInspectionController extends Controller
         $getUrl           = Session::get('url_for_image');
         if (!empty($inspectionsInfo['row'])) {
             foreach ($inspectionsInfo['row'] as $info) {
-                $path          = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
+                $path = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
                 if ($info['DocStatus'] == self::ASSIGNED) {
                     $count++;
                 }
@@ -214,13 +214,13 @@ class PreInsuranceInspectionController extends Controller
         foreach ($formRequest['detail'] as $value) {
             $options = !empty($value['damage']) ? explode(',', $value['damage']) : '';
             if ($formRequest['typeObject'] == self::OTHER) {
-                if (isset($value['working']) || isset($value['missing'])) {
-                    if (isset($value['working'])) {
-                        $remarkisn = $value['working'];
+                if (isset($value['working'])) {
+                    if ($value['working'] == 1) {
+                        $remarkisn = 1441871;
                         $remark    = 'Не рабочее';
                     } else {
-                        $remarkisn = $value['missing'];
-                        $remark    = 'Отсутствует';
+                        $remarkisn = 1368331;
+                        $remark    = 'Рабочее';
                     }
                 } else {
                     if (!empty($value['property'])) {
