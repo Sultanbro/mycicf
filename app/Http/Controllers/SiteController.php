@@ -246,7 +246,8 @@ class SiteController extends Controller
             5012 => 5012,
             266263 => 266263,
             3560197 => 3560197,
-            3130949 => 3130949
+            3130949 => 3130949,
+            1445721 => 1445721,
         );
     }
 
@@ -558,13 +559,30 @@ class SiteController extends Controller
             ->limit(10)
             ->get();
         $result = [];
-        foreach ($birthdays as $birthday){
-            array_push($result, [
-                "fullname"=> $birthday->fullname,
-                "ISN"=>$birthday->kias_id,
-                "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
-                "fakeImage"=> !Branch::checkImageExists($birthday->kias_id)
-            ]);
+        $lbDate[0] = $lbDate[1] = null;
+        $similarKey = null;
+        foreach ($birthdays as $key => $birthday){
+            $bDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
+
+            if($lbDate[0] == $bDate[0] && $lbDate[1] == $bDate[1]){
+                array_push($result[$similarKey]['similar'], [
+                    "fullname" => $birthday->fullname,
+                    "ISN" => $birthday->kias_id,
+                    "birthday" => date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage" => !Branch::checkImageExists($birthday->kias_id),
+                    'similar' => []
+                ]);
+            } else {
+                $similarKey = count($result);
+                array_push($result, [
+                    "fullname"=> $birthday->fullname,
+                    "ISN"=>$birthday->kias_id,
+                    "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
+                    'similar' => []
+                ]);
+                $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
+            }
         }
         return response()->json(['birthdays' => $result]);
     }
