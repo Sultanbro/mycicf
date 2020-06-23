@@ -19,6 +19,7 @@
 Route::get('/sandbox/index', 'SandboxController@index');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
 Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
+Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
