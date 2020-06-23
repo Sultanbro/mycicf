@@ -48,11 +48,7 @@
                     })
                     .then(response => {
                         if (response.data.success) {
-                            if(response.data.printableForms['row'].ClassID){
-                                this.printableForms = response.data.printableForms;
-                            } else {
-                                this.printableForms = response.data.printableForms['row'];
-                            }
+                            this.printableForms = response.data.printableForms['row'];
                         } else {
                             alert(response.data.error)
                         }

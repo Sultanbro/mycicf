@@ -1549,7 +1549,12 @@ body {
 	display: flex;
 	flex-flow: column;
 	align-items: center;
-}
+}.div-margin{
+    margin-top: 20px !important;
+ }
+ .div-marg{
+     margin-top: 15px;
+ }
 
 .coordination-none-text{
 	font-weight: bold;
@@ -1866,6 +1871,13 @@ textarea::-webkit-scrollbar-thumb {
 }
 .w-95 {
 	width: 95%;
+}
+.flex-center{
+    display:flex;
+    justify-content: center;
+}
+.div-downmar{
+    margin-bottom: 20px;
 }
 
 

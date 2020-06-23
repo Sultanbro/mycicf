@@ -4,7 +4,6 @@
             <h5>Котировка {{ calc_isn }}
                 <span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span>
             </h5>
-            <h5 v-if="calc_id != null">Номер котировки {{ calc_id }}</h5>
         </div>
         <div class="col-md-12 mb-4 mt-4">
             <div class="row">
@@ -16,63 +15,20 @@
                                  :formular="formular"
                                  :preloader="preloader"
                                  :calc-changed="calcChanged"
-                                 :attributes="attributes"
-                                 :insurant-is="insurantIs"
-                                 :participant-is="participantIs"
-                                 :participant-docs="participantDocs"
-                                 :userList="userList"
-                                 :get-user-list="getUserList"
                                  :product-id="id">
                     </participant>
                 </div>
 
-                <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1"
-                     class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
+                <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1" class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
                     <label>Выберите куратора</label>
-                    <treeselect v-if="userList.length > 0" v-model="formular.curator.subjISN" :options="userList" @change="calcChanged" />
+                    <treeselect v-model="formular.curator.subjISN" :options="userList" @change="calcChanged" />
                 </div>
-
             </div>
         </div>
-
-        <div class="mb-4">
-            <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
-        </div>
-
-        <div class="agr-block mb-4">
-            <div v-for="attribute in attributes">
-                <agr-attributes :attribute="attribute"
-                                :express-attr="expressAttr"
-                                :calc-changed="calcChanged"
-                                :preloader="preloader"></agr-attributes>
-            </div>
-
-            <div v-for="agrclause in agrclauses">
-                <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
-            </div>
-        </div>
-
-        <agr-object v-if="agrobjects"
-                    v-for="(agrobject,index) in agrobjects"
-                    :key="index"
-                    :agrobject="agrobject"
-                    :aIndex="index"
-                    :preloader="preloader"
-                    :express-attr="expressAttr"
-                    :calc-changed="calcChanged"
-                    :new-agrobject="newAgrobject"
-                    :agrobjects="agrobjects"
-                    :quotationId="quotationId"
-                    :product-id="id"
-                    :participants="participants"
-                    :DA="DA">
-        </agr-object>
-
-        <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
 
         <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
-            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
+            <input type="checkbox" class="mt-2 ml-2 " id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
         </div>
 
         <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
@@ -80,13 +36,56 @@
             <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
         </div>
 
+        <div class="">
+            <div class="mb-3 agreement-block div-width">
+                <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
+            </div>
+        </div>
+        <div  class="">
+            <div v-for="(agrobject,index) in agrobjects"class="mb-3  agreement-block div-width">
+                <agr-object :agrobject="agrobject"
+                            :aIndex="index"
+                            :preloader="preloader"
+                            :express-attr="expressAttr"
+                            :calc-changed="calcChanged"
+                            :DA="DA">
+                </agr-object>
+            </div>
+        </div>
+        <div  class="div-marg">
+            <div class="  agreement-block ">
+                <div v-for="attribute in attributes" class=" col-md-12  ">
+                    <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
+                </div>
+            </div>
+        </div>
+        <div  class="div-marg">
+            <div class=" agreement-block d-flex div-width">
+                <div v-for="agrclause in agrclauses">
+                    <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
+                </div>
+            </div>
+        </div>
+
+        <div  class="div-marg">
+            <div class="agreement-block div-width">
+                <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
-                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA.orderNumber }}</div>
-                <div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div>
-                <div class="fs-2" v-if="calc_id != null">Номер котировки {{ calc_id }}</div>
+                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Номер заявки {{ DA.orderNumber }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
@@ -94,7 +93,7 @@
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Отправить в ДА
                 </button>
-                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA && status == '223370' || calculated && contract_number === null && calc_isn != null && DA.calcDA && status == '223370'" class="btn btn-outline-info" @click="createAgr">
+                <button v-if="calculated && contract_number === null && calc_isn != null && !DA.calcDA" class="btn btn-outline-info" @click="createAgr">
                     Выпустить договор
                 </button>
                 <button v-if="docs.sendedFail" class="btn btn-outline-info" @click="sendDocs">
@@ -114,18 +113,9 @@
         name: "full-quotation",
         data() {
             return {
-                insurantIs: {
-                    participant: false,
-                    receiver: false,
-                },
-                participantIs: {
-                    receiver: false,
-                },
-                userList: [],
+                userList: null,
                 calc_isn: null,
-                calc_id: null,
                 status_name: 'Оформление',
-                status: null,
                 contract_number: null,
                 docs: {
                     files: [],
@@ -136,7 +126,6 @@
                 agrclauses: [],
                 formular: [],
                 agrobjects: [],
-                newAgrobject:{},
                 moreParticipant : false,
                 subjISN : '',
                 DA: {               // Департамент андеррайтинга
@@ -155,9 +144,6 @@
                     end : new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
                     period : 12,
                     sig: new Date(new Date().getFullYear(), new Date().getMonth(),  new Date().getDate(), 6).toJSON().slice(0, 10),
-                },
-                participantDocs: {
-                    types: []
                 },
             }
         },
@@ -188,9 +174,7 @@
                             this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
                             this.calc_isn = response.data.calc_isn;
-                            this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
-                            this.status = response.data.status;
                             this.contract_number = response.data.contract_number;
                             this.price = parseInt(response.data.price);
                             this.docs.files = response.data.docs;
@@ -221,11 +205,10 @@
                                 this.agrobjects = response.data.objects;
                             } else {
                                 this.agrobjects.push(response.data.objects);
-                                //this.newAgrobject = response.data.objects;
                             }
                             this.preloader(false);
-                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) { // Если нужно указать куратора
-                                this.getUserList(); // Берем сотрудников
+                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) {
+                                this.getUserList();
                             }
                         }else{
                             alert(response.data.error);
@@ -237,7 +220,7 @@
                         this.preloader(false);
                     });
             },
-            getUserList() { // Берем сотрудников
+            getUserList() {
                 this.axios.post('/full/getFullBranch', {}).then((response) => {
                     this.userList = response.data.result;
                 });
@@ -253,30 +236,6 @@
                     }
                     if(checkDA == 1){
                         alert('Заполните пожалуйста текст заявки и сумму премии в разделе Объект');
-                        return false;
-                    }
-                }
-
-
-                // Проверка количества объектов Человек и количества застрахованных (они должны быть равными, а то расчет неверный будет)
-                let countParticipants = 0;
-                for(let index in this.participants){
-                    if(this.participants[index].ISN == 2082){
-                        countParticipants++;
-                    }
-                }
-
-                let countAgrobjects = 0;
-                for(let index in this.agrobjects){
-                    if(this.agrobjects[index].ClassISN == 2135){
-                        countAgrobjects++;
-                    }
-                }
-
-                if(countAgrobjects != 0){
-                    if(countParticipants != countAgrobjects){
-                        let info = "Количество страхуемых: "+countParticipants+"\nКоличество объектов: "+countAgrobjects;
-                        alert("Количество объектов c классом объекта 'Человек' и количество застрахованных не совпадают\n"+info);
                         return false;
                     }
                 }
@@ -307,7 +266,6 @@
                                 this.calculated = true;
                             }
                             this.calc_isn = response.data.calc_isn;
-                            this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name;
                             if(response.data.calc_isn != '') {
                                 this.preloader(false);
@@ -397,8 +355,6 @@
             calcChanged(){
                 if(this.quotationId == 0) {
                     this.calculated = false;
-                    this.calc_id = null;
-                    this.calc_isn = null;
                     this.price = 0;
                 }
             }
@@ -409,7 +365,10 @@
                     this.calculated = false;
                     this.price = 0;
                 }
-            }
+            },
+            // calcDA(){
+            //     this.DAsum
+            // }
         }
     }
 </script>
