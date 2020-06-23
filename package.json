@@ -32,6 +32,8 @@
     "vue-emoji-picker": "^1.0.1",
     "vue-google-charts": "^0.3.2",
     "vue-linkify": "^1.0.1",
-    "vue-textarea-autosize": "^1.1.1"
+    "vue-textarea-autosize": "^1.1.1",
+    "vue-toastr": "^2.1.2",
+    "vue-upload-multiple-image": "^1.1.4"
   }
 }
