@@ -25,7 +25,7 @@
                         </tr>
                         </thead>
                         <tbody class="date-color">
-                        <tr v-for="(info, index) in inspections" :key="info.ISN">
+                        <tr v-for="(info, key) in inspections" :key="info.ISN">
                             <td class="pointer" scope="col">
                                 <a v-if="info.agrcalcisn.length == 0"
                                    :href="'/insurance/inspection/' + info.ISN + '?docisn='+info.DocISN+'&argcalcisn=0&agrisn=' +
@@ -58,7 +58,8 @@
                             <td scope="col" v-else>
                                 {{info.Operator}}
                                 <a href="#" data-toggle="modal" data-target="#addOperator"
-                                   @click="getOperator(info.DeptISN, info.ISN)">
+                                   @click="getOperator(info.DeptISN, info.ISN)"
+                                   v-if="index=='considered_or_inprogress'">
                                     <i class="far fa-edit"></i>
                                 </a>
                             </td>
