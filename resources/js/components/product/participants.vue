@@ -14,9 +14,9 @@
                 </span>
             </button>
         </div>
-        <div class=" flex-center">
+        <div class=" flex-center " >
             <button v-show="participant.subjISN == null || participant.subjISN == ''"
-                    type="button" class="btn btn-outline-info md-7 btn-size  "
+                    type="button" class="btn btn-outline-info md-7  "
                     @click="openParticipantForm(pIndex)">
                 Указать
                 <span v-if="participant.Label">({{ participant.Label }})</span>

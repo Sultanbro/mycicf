@@ -11,7 +11,7 @@
         </participant>
         <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
         <div class="flex-center">
-            <div class="col-md-12 agreement-block div-margin div-downmar ">
+            <div class="col-md-12 agreement-block div-margin div-downmar " style="width:95%;" >
                 <div class="row">
                     <!--v-if="Object.keys(attributes).length != 0 && attributes[value] != undefined && attributes[value] != null"-->
                     <agr-attributes

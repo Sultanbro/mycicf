@@ -1,6 +1,6 @@
 <template>
-    <div class="col-md-12 d-flex mb-4 mt-4 "><!--class="col-12 row mt-2 mb-2 ml-0 agreement-block"-->
-        <h6 class="font-shif ">{{agrclause.Label + ':'}}</h6>
+    <div class="col-md-12 d-flex mb-4 mt-4 text-flex  "><!--class="col-12 row mt-2 mb-2 ml-0 agreement-block"-->
+        <h6 class="font-shif text-hw">{{agrclause.Label + ':'}}</h6>
 
         <div v-if="agrclause.Type === 'TEXT'" class="d-flex align-items-center mb-2">
 
