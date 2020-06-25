@@ -14,8 +14,24 @@
                      :product-id="id">
         </participant>
 
-        <div v-for="attribute in attributes">
+        <!--<div v-for="attribute in attributes">
             <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged" :preloader="preloader"></agr-attributes>
+        </div>-->
+        <div class="flex-center">
+            <div class="col-md-12 agreement-block div-margin div-downmar " style="width:95%;" >
+                <div class="row">
+                    <!--v-if="Object.keys(attributes).length != 0 && attributes[value] != undefined && attributes[value] != null"-->
+                    <agr-attributes
+                        v-for="value, key in attributes"
+                        :key="key"
+                        :attribute="value"
+                        :express-attr="{}"
+                        :calc-changed="calcChanged"></agr-attributes>
+
+                    <!--agr-attributes :key="key" v-for="attribute,key in attributes" :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes-->
+
+                </div>
+            </div>
         </div>
 
         <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>

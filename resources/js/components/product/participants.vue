@@ -10,7 +10,7 @@
                 <span v-else>{{ participant.orgName }}</span>
             </div>
 
-            <button type="button" class="add-button width100 mt-2" :class="isBold" @click="openParticipantForm(pIndex)">
+            <!--<button type="button" class="add-button width100 mt-2" :class="isBold" @click="openParticipantForm(pIndex)">
                 Изменить
                 <span v-if="!moreParticipant">
                     <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -25,7 +25,24 @@
             Указать
             <span v-if="participant.Label">({{ participant.Label }})</span>
             <span v-else>(Страхователь)</span>
-        </button>
+        </button>-->
+            <button type="button" class="add-button width100 mt-2 " @click="openParticipantForm(pIndex)">
+                Изменить
+                <span v-if="!moreParticipant">
+                    <span v-if="participant.Label">({{ participant.Label }})</span>
+                    <span v-else>(Страхователь)</span>
+                </span>
+            </button>
+        </div>
+        <div class=" flex-center " >
+            <button v-show="participant.subjISN == null || participant.subjISN == ''"
+                    type="button" class="btn btn-outline-info md-7  "
+                    @click="openParticipantForm(pIndex)">
+                Указать
+                <span v-if="participant.Label">({{ participant.Label }})</span>
+                <span v-else>(Страхователь)</span>
+            </button>
+        </div>
         <modal :name="modalName"
                :width="width"
                :height="height">
