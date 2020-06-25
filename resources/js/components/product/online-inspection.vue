@@ -1,6 +1,6 @@
 <template>
     <div class="mt-2 mb-2 ml-0">
-        <div  v-if="quotationId == 0 && contract_number == null" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+        <div  v-if="quotationId == 0 && contract_number == null || quotationId != 0" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="inspection" class="bold">Пердстраховой осмотр </label>
             <input type="checkbox" class="mt-2 ml-2" id="inspection" v-model="inspection.active" value="true" @change="calcChanged">
         </div>

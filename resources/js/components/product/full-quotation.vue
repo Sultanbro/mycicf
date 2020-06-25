@@ -65,6 +65,7 @@
                     :quotationId="quotationId"
                     :product-id="id"
                     :participants="participants"
+                    :express_isn="express_isn"
                     :DA="DA">
         </agr-object>
 
@@ -96,6 +97,9 @@
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
+                </button>
+                <button v-if="contract_number === null && quotationId != 0 && !DA.calcDA && express_isn != null" class="btn btn-outline-info" @click="calculate()">
+                    Сохранить
                 </button>
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Отправить в ДА
@@ -214,6 +218,13 @@
                             this.DA.orderCreated = response.data.calc_da == 1 ? true : false;
                             this.DA.orderNumber = response.data.calc_isn;
                             this.DA.remark = response.data.DAremark;
+
+                            if(response.data.inspection != null){
+                                for(let key in response.data.inspection){
+                                    this.inspection[key] = response.data.inspection[key];
+                                }
+                            }
+
                             this.getFullObjects();
                         }else{
                             alert(response.data.error);
@@ -316,6 +327,7 @@
                         contractDate: this.period,
                         calcDA: this.DA.calcDA == true ? 1 : 0,
                         DAremark: this.DA.remark,
+                        express_isn: this.express_isn
                     })
                     .then(response => {
                         if (response.data.success) {
@@ -444,7 +456,7 @@
                 }
             },
             calcChanged(){
-                if(this.quotationId == 0) {
+                if(this.quotationId == 0 || this.quotationId != 0 && this.express_isn != null) {
                     this.calculated = false;
                     this.calc_id = null;
                     this.calc_isn = null;
@@ -454,7 +466,7 @@
         },
         watch : {
             subjISN(){
-                if(this.quotationId == 0) {
+                if(this.quotationId == 0 || this.quotationId != 0 && this.express_isn != null) {
                     this.calculated = false;
                     this.price = 0;
                 }

@@ -604,7 +604,7 @@ class ProductsController extends Controller
                 'participants' => $participants,
                 'attributes' => $attributes,    //$request->all()['attributes'],
                 'agrclauses' => $agrclauses,    //$request->agrclauses,
-                'formular' => $constructor->formular,
+                'formular' => $data->formular[0],
                 'DAremark' => null,
                 'calcDA' => 0
             ));
@@ -751,10 +751,7 @@ class ProductsController extends Controller
         $constructor = FullConstructor::where('product_id',$ID)->first();
         $status = 0;
         if($request->quotationId != 0) {
-            $cons = FullQuotation::where('id', $request->quotationId)
-                ->where('product_isn', $constructor->product_isn)
-                ->where('user_isn', Auth::user()->ISN)
-                ->first();
+            $constructor = $cons = FullQuotation::find($request->quotationId);
 
             $calc_isn = $constructor->calc_isn;
             $calc_id = $constructor->calc_id;
@@ -774,10 +771,17 @@ class ProductsController extends Controller
                     }
                 }
             //}
+
+            $inspection = array(
+                'active' => $cons->inspection_date != '' || $cons->inspection_time != '' || $cons->inspection_address != '' ? true : false,
+                'date' => $cons->inspection_date,
+                'time' => $cons->inspection_time,
+                'address' => $cons->inspection_address
+            );
         }
 
         $data = isset($constructor->data) ? json_decode($constructor->data) : [];
-        $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular[0] : $data->formular[0] : [];
+        $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular : $data->formular[0] : [];
         $participants = isset($data->participants) ? $data->participants : [];
         $DAremark = isset($data->DAremark) ? $data->DAremark : null;
 
@@ -823,7 +827,8 @@ class ProductsController extends Controller
             'calc_da' => isset($constructor->calc_da) ? intval($constructor->calc_da) : 0,
             'status_name' => isset($constructor->status_name) ? $constructor->status_name : 'Оформление',
             'DAremark' => $DAremark,
-            'status' => $status
+            'status' => $status,
+            'inspection'  => isset($inspection) ? $inspection : null
         ]);
     }
 
@@ -831,13 +836,13 @@ class ProductsController extends Controller
         $ID = $request->id;
         $product = ExpressProduct::find($ID);
         if($request->quotationId != 0) {        // Если котировка уже есть в нашей базе
-            $quotation = FullQuotation::where('product_isn', $product->product_isn)->where('id', $request->quotationId)->first();
-            $objects = isset(json_decode($quotation->data)->agrobjects) ? json_decode($quotation->data)->agrobjects : [];
-
-            return response()->json([
-                'success' => true,
-                'objects' => $objects
-            ]);
+            if(isset($request->express_isn) && $request->express_isn != null){
+                $constructor = FullConstructor::where('product_isn',$product->product_isn)->first();
+                $objects = $constructor && isset(json_decode($constructor->data)->agrobjects) ? json_decode($constructor->data)->agrobjects : (object)[];
+            } else {
+                $quotation = FullQuotation::find($request->quotationId);    //where('product_isn', $product->product_isn)->where('id', $request->quotationId)->first();
+                $objects = isset(json_decode($quotation->data)->agrobjects) ? json_decode($quotation->data)->agrobjects : [];
+            }
         } else {
             $constructor = FullConstructor::where('product_isn',$product->product_isn)->first();
             $objects = $constructor && isset(json_decode($constructor->data)->agrobjects) ? json_decode($constructor->data)->agrobjects : (object)[];
@@ -857,7 +862,7 @@ class ProductsController extends Controller
                 'error' => 'Продукт который вы хотите рассчитать не найден'
             ]);
         }
-        $quotation = $request->quotationId != 0 ? FullQuotation::find($request->quotationId) : new FullQuotation;
+        $quotation = $request->quotationId != 0 && $request->express_isn != null ? FullQuotation::find($request->quotationId) : new FullQuotation;
 
         $order['prodIsn'] = $model->product_isn;
         $order['subjISN'] = $request->subjISN;

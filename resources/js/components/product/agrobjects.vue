@@ -1,8 +1,8 @@
 <template>
     <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
         <h4>Объект</h4>
-        <button v-if="quotationId == 0" @click="addObject()" class="btn btn-outline-info ml-3">Добавить еще</button>
-        <button v-if="quotationId == 0 && agrobjects.length > 1" @click="deleteObject()" class="btn btn-outline-info ml-3">Удалить</button>
+        <button v-if="quotationId == 0 || quotationId != 0 && express_isn != null" @click="addObject()" class="btn btn-outline-info ml-3">Добавить еще</button>
+        <button v-if="quotationId == 0 && agrobjects.length > 1  || quotationId != 0 && express_isn != null && agrobjects.length > 1" @click="deleteObject()" class="btn btn-outline-info ml-3">Удалить</button>
         <div class="row col-12">
             <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
                 <label class="bold">Класс объекта : </label>
@@ -111,6 +111,7 @@
             newAgrobject: Object,
             agrobjects: Array,
             quotationId: String,
+            express_isn: String,
             productId: String,
             participants: Array
         },
@@ -137,7 +138,8 @@
                 this.preloader(true);
                 this.axios.post('/full/getFullObjects', {
                     id: this.productId,
-                    quotationId: this.quotationId
+                    quotationId: this.quotationId,
+                    express_isn: this.express_isn
                 })
                 .then(response => {
                     if(response.data.success){
