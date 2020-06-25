@@ -26,7 +26,7 @@
             <span v-if="participant.Label">({{ participant.Label }})</span>
             <span v-else>(Страхователь)</span>
         </button>-->
-            <button type="button" class="add-button width100 mt-2 " @click="openParticipantForm(pIndex)">
+            <button type="button" class="btn btn-outline-info md-7  " @click="openParticipantForm(pIndex)">
                 Изменить
                 <span v-if="!moreParticipant">
                     <span v-if="participant.Label">({{ participant.Label }})</span>
