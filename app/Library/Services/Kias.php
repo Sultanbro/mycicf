@@ -345,9 +345,10 @@ class Kias implements KiasServiceInterface
         );
     }
 
-    public function expressCalculator($ISN, $SubjISN, $addAttr)
+    public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb)
     {
         return $this->request('User_CicExpressCalculator', [
+            'CustomTemplate' => $nshb,
             'ProductISN' => $ISN,
             'SubjISN' => $SubjISN,
             'DeptISN' => '1445791',
@@ -375,8 +376,8 @@ class Kias implements KiasServiceInterface
     {
 
         $result = $this->request('User_CicSaveAgrCalc', [
-            'ISN' => '',
-            'ID' => "TEMP_515431_" . $order['prodIsn'] . "_" . time(),
+            'ISN' => $order['calc_isn'],
+            'ID' => '', //"TEMP_515431_" . $order['prodIsn'] . "_" . time(),
             'CalcDA'       => $order['calcDA'],
             'ReqText' => $order['DAremark'],
             'CLIENTISN' => $order['subjISN'],
@@ -408,6 +409,15 @@ class Kias implements KiasServiceInterface
         ]);
 
         return $result;
+    }
+
+    public function sendtoExpertSakta($isn,$dateTime,$address)
+    {
+        return $this->request('User_CicSendtoExpertSakta', [
+            'AGRISN' => $isn,
+            'DATE' => $dateTime,
+            'ADDRESS' => $address
+        ]);
     }
 
     public function createAgrFromAgrCalc($agrCalcIsn){
@@ -482,6 +492,14 @@ class Kias implements KiasServiceInterface
     public function getAgrStatus($ISN){
         return $this->request('User_CicGetAgrCalcStatus',[
             'AgrID' => $ISN
+        ]);
+    }
+
+    public function getOrSetDocs($doc_isn, $type, $status){
+        return $this->request('User_CicGetOrSetDocs',[
+            'DocISN' => $doc_isn,
+            'Type' => $type, // 1 сменить статус, 2 посмотреть статус
+            'Status' => $status, //2522 на подписи, 2518 подписан
         ]);
     }
 }

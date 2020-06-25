@@ -17,7 +17,33 @@
         methods:{
             filter(){
                 window.location.href = this.pageUrl+'?DA='+this.sendDA+'&status='+this.quotationStatus+'&type='+this.type+'&nshb='+this.nshb;
-            }
+            },
+            checkStatus(id,isn){
+                this.preloader(true);
+                this.axios.post('/express/updateDocumentStatus', {
+                    id: id,
+                    isn: isn
+                })
+                .then(response => {
+                    if(response.data.success){
+                        window.location.reload();
+                    }else{
+                        alert(response.data.error);
+                        this.preloader(false);
+                    }
+                })
+                .catch(error => {
+                    alert(error);
+                    this.preloader(false);
+                });
+            },
+            preloader(show) {
+                if(show){
+                    document.getElementById("preloader").style.display = "flex";
+                } else {
+                    document.getElementById("preloader").style.display = "none";
+                }
+            },
         },
         created(){
             let param = JSON.parse(this.parametres);

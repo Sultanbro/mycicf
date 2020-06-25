@@ -80,6 +80,12 @@
             <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
         </div>
 
+        <online-inspection :inspection="inspection"
+                           :quotationId="quotationId"
+                           :calcChanged="calcChanged"
+                           :contract_number="contract_number">
+        </online-inspection>
+
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
@@ -124,6 +130,7 @@
                 userList: [],
                 calc_isn: null,
                 calc_id: null,
+                express_isn: null,
                 status_name: 'Оформление',
                 status: null,
                 contract_number: null,
@@ -159,6 +166,13 @@
                 participantDocs: {
                     types: []
                 },
+                inspection: {
+                    active: false,
+                    isn: null,
+                    date: '',
+                    time: '',
+                    address: ''
+                }
             }
         },
         props: {
@@ -189,6 +203,7 @@
                             this.attributes = response.data.attributes;
                             this.calc_isn = response.data.calc_isn;
                             this.calc_id = response.data.calc_id;
+                            this.express_isn = response.data.express_isn;
                             this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
                             this.status = response.data.status;
                             this.contract_number = response.data.contract_number;
@@ -244,6 +259,13 @@
             },
 
             calculate(){
+                if(this.inspection.active){
+                    if(this.inspection.date == '' || this.inspection.time == '' || this.inspection.address == ''){
+                        alert('Заполните пожалуйста все данные по онлайн осмотру');
+                        return false;
+                    }
+                }
+
                 if(this.DA.calcDA){
                     let checkDA = this.DA.remark == '' || this.DA.remark == null ? 1 : 0;
                     for(let index in this.agrobjects){
@@ -256,7 +278,6 @@
                         return false;
                     }
                 }
-
 
                 // Проверка количества объектов Человек и количества застрахованных (они должны быть равными, а то расчет неверный будет)
                 let countParticipants = 0;
@@ -309,9 +330,10 @@
                             this.calc_isn = response.data.calc_isn;
                             this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name;
+
                             if(response.data.calc_isn != '') {
                                 this.preloader(false);
-                                this.sendDocs();
+                                this.sendDocs();            // Загрузка документов
                             } else {
                                 this.preloader(false);
                             }
@@ -347,6 +369,9 @@
                                 console.log('Files sended successfull');
                                 this.docs.sendedFail = false;
                                 this.preloader(false);
+                                if(this.inspection.active){     // Онлайн осмотр
+                                    this.sendInspection();
+                                }
                             } else {
                                 alert(response.data.error)
                                 this.docs.sendedFail = true;
@@ -357,7 +382,31 @@
                             alert(error)
                             this.preloader(false);
                         });
+                } else {
+                    if(this.inspection.active){     // Онлайн осмотр
+                        this.sendInspection();
+                    }
                 }
+            },
+            sendInspection(){
+                this.preloader(true);
+                this.axios.post('/full/sendToInspection',
+                    {
+                        calc_isn: this.calc_isn,
+                        inspection: this.inspection
+                    })
+                    .then(response => {
+                        if (response.data.success) {
+                            this.preloader(false);
+                        } else {
+                            alert(response.data.error)
+                            this.preloader(false);
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                        this.preloader(false);
+                    });
             },
             createAgr(){        // Выпустить договор
                 this.preloader(true);

@@ -146,6 +146,8 @@ Vue.component('printable-form', require('./components/product/printableForm.vue'
 
 Vue.component('quotation-list', require('./components/product/quotation-list.vue').default);
 
+Vue.component('online-inspection', require('./components/product/online-inspection.vue').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

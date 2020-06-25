@@ -349,10 +349,19 @@ class ProductsController extends Controller
     public function getExpressAttributes(Request $request, KiasServiceInterface $kias){
         $ID = $request->id;
         $ProductISN = ExpressProduct::find($ID)->product_isn;
+        $status = null;
         if($request->quotationId != 0) {
-            $quotation = ExpressQuotation::find($request->quotationId)->data;
-            $attributes = json_decode($quotation)->attributes;
-            $participants = json_decode($quotation)->participants;
+            $quotation = ExpressQuotation::find($request->quotationId);
+            $attributes = json_decode($quotation->data)->attributes;
+            $participants = json_decode($quotation->data)->participants;
+
+            if($quotation->nshb == 1 && $quotation->nshb_doc != 2518){      // Получаем статус из киаса если статус не подписан
+                $nshb_status = $kias->getOrSetDocs($quotation->nshb_doc, 2, null);
+                if(isset($nshb_status->Status)){
+                    $quotation->nshb_status = $status = (int)$nshb_status->Status;
+                    $quotation->save();
+                }
+            }
         } else {
             $response = $kias->getExpressAttributes($ProductISN);
             $attributes = [];
@@ -407,10 +416,13 @@ class ProductsController extends Controller
             'success' => true,
             'attributes' => $attributes,
             'participants' => $participants,
+            'status' => $status,
+            'premiumSum' => isset($quotation->premiumSum) ? $quotation->premiumSum : 0
         ]);
     }
 
-    public function expressCalc(Request $request, KiasServiceInterface $kias){
+    public function expressCalc(Request $request, KiasServiceInterface $kias){  // Расчет и запись в базу ЭК
+
         $product_id = $request->id;
         if(($model = ExpressProduct::find($product_id)) === null){
             return response()->json([
@@ -424,9 +436,9 @@ class ProductsController extends Controller
         $attributes = $this->attributesToKiasAddAttr($request->all()['attributes']);
 
         if($request->nshb){
-            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
+            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes, 1);   // Нестандартный шаблон договора
         } else {
-            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes);
+            $response = $kias->expressCalculator($prodIsn, $subjISN, $attributes, null);    // Обычная ЭК
         }
 
         if (isset($response->error)) {
@@ -443,7 +455,7 @@ class ProductsController extends Controller
             $quotation->sabj_isn = $subjISN;
             $quotation->calc_isn = (int)$response->ISN;   //(int)$response->AgrCalcISN;
             $quotation->calc_id = (int)$response->ISN;    //(string)$response->CalcID;
-            $quotation->premiumSum = 0; //(int)$response->PremiumSum;    // Если отправл
+            $quotation->premiumSum = (int)$response->ROWSET->row->Premiumsum; //(int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->nshb = $request->nshb ? 1 : 0;
 
@@ -456,17 +468,32 @@ class ProductsController extends Controller
 //                    $quotation->status_name = (string)$getStatus->Status;
 //                }
 //            }
+
+        if(isset($response->CustomDoc)){
+            if((string)$response->CustomDoc != null) {
+                $quotation->nshb_doc = (string)$response->CustomDoc;    // Документ исн
+                $quotation->nshb_request = (string)$response->Request;
+//                $setDocStatus = $kias->getOrSetDocs($quotation->nshb_doc, 1, 2522);
+//                if(isset($setDocStatus->Status)){
+//                    $quotation->nshb_status = (int)$setDocStatus->Status;
+//                    $quotation->save();
+//                }
+            }
+        }
+
             $quotation->save();
 //        }
 
         return response()->json([
             'success' => true,
             'premium' => (int)$response->ROWSET->row->Premiumsum,
-            'calc_isn' => (int)$response->ISN
+            'calc_isn' => (int)$response->ISN,
+            'nshb_doc' => $quotation->nshb_doc,
+            'nshb_request' => $quotation->nshb_request
         ]);
     }
 
-    public function CreateAgrByAgrcalc(Request $request, KiasServiceInterface $kias){
+    public function CreateAgrByAgrcalc(Request $request, KiasServiceInterface $kias){       // Создание ПК из ЭК
         $product_id = $request->id;
         if(($model = ExpressProduct::find($product_id)) === null){
             return response()->json([
@@ -496,25 +523,24 @@ class ProductsController extends Controller
             ]);
         }
 
-        $from_express = [];                             // Временно аписываем данные полной котировки
+        $from_express = [];                             // Временно записываем данные полной котировки, которые пришли из киаса
         if (isset($agreement->AgreementCalc->row)) {
             foreach($agreement->AgreementCalc->row as $row){
                 if (isset($row->AGREEMENT_ADDATTR->row)){
-                    print 'AGREEMENT_ADDATTR<br>';
                     foreach($row->AGREEMENT_ADDATTR->row as $attrRow){
-                        $from_express['AGREEMENT_ADDATTR'][$attrRow->ATTRISN[0]] = $attrRow->VALUE[0];
+                       $from_express['AGREEMENT_ADDATTR'][(int)$attrRow->ATTRISN] = (string)$attrRow->VALUE;
                     }
                 }
                 if (isset($row->AGROBJECT->row)){
                     foreach($row->AGROBJECT->row as $attrRow){
                         if(isset($attrRow->AGROBJECT_ADDATTR->row)){
                             foreach($attrRow->AGROBJECT_ADDATTR->row as $objectRow){
-                                $from_express['AGROBJECT_ADDATTR'][$objectRow->ATTRISN[0]] = $objectRow->VALUE[0];
+                                $from_express['AGROBJECT_ADDATTR'][(int)$objectRow->ATTRISN] = (string)$objectRow->VALUE;
                             }
                         }
                         if(isset($attrRow->AGRCOND->row)){
                             foreach($attrRow->AGRCOND->row as $agrcondRow){
-                                $from_express['AGRCOND'][$agrcondRow->RiskISN[0]] = $agrcondRow->InsClassISN[0];
+                                $from_express['AGRCOND'][(int)$agrcondRow->RiskISN] = (string)$agrcondRow->InsClassISN;
                             }
                         }
 
@@ -522,24 +548,56 @@ class ProductsController extends Controller
                 }
                 if (isset($row->AGRCLAUSE->row)){
                     foreach($row->AGRCLAUSE->row as $agrclauseRow){
-                        $from_express['AGRCLAUSE'][$agrclauseRow->ClauseISN[0]] = $agrclauseRow->ClassISN[0];
+                        $from_express['AGRCLAUSE'][(int)$agrclauseRow->ClauseISN] = (string)$agrclauseRow->ClassISN;
                     }
                 }
             }
         }
 
-
-
-        $constructor = FullConstructor::where('product_isn',$model->product_isn)->first();
-        if(count($constructor) > 0) {
+        $constructor = FullConstructor::where('product_isn',$model->product_isn)->first();  // Достаем конструктор полной котировки
+        if($constructor) {
             $data = isset($constructor->data) ? json_decode($constructor->data) : [];
+            $express_data = isset($express_quotation->data) ?json_decode($express_quotation->data) : [];
             $participants = isset($data->participants) ? $data->participants : [];
             $agrclauses = isset($data->agrclauses) ? $data->agrclauses : [];
             $attributes = isset($data->attributes) ? $data->attributes : [];
             $objects = $constructor && isset(json_decode($constructor->data)->agrobjects) ? json_decode($constructor->data)->agrobjects : (object)[];
 
+            // Записываем данные полной котировки из киаса в полную котировку конструктора
+
+//            if(count($participants)){
+//
+//            }
+
+            if(count($attributes) > 0){
+                foreach($attributes as $key => $attribute){
+                    if(isset($from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN]) && $from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN] != ''){
+                        $attributes[$key]->Value = $from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN];
+                    }
+                }
+            }
+
+            $objects = (array)$objects;
+            if($objects){
+                //$objects->insureSum = '';
+                foreach($objects['objekt'] as $key => $object){
+                    if(isset($from_express['AGROBJECT_ADDATTR'][$object->ClassISN]) && $from_express['AGROBJECT_ADDATTR'][$object->ClassISN] != ''){
+                        $objects['objekt'][$key]['Value'] = $from_express['AGROBJECT_ADDATTR'][$object->ClassISN];
+                    }
+                }
+                $objects = [$objects];
+            }
+
+            if(count($agrclauses) > 0){
+                foreach($agrclauses as $key => $agrclause){
+                    if(isset($from_express['AGRCLAUSE'][$agrclause->ISN]) && $from_express['AGRCLAUSE'][$agrclause->ISN] != ''){
+                        $agrclauses[$key]->Value = $from_express['AGRCLAUSE'][$agrclause->ISN];
+                    }
+                }
+            }
+
             $changed_data = json_encode(array(
-                'subjISN' => $data->subjISN,
+                'subjISN' => $express_data->subjISN,
                 'id' => $model->id,
                 'quotationId' => 0,
                 'agrobjects' => $objects,
@@ -556,8 +614,9 @@ class ProductsController extends Controller
             $full_quotation->product_isn = $model->product_isn;
             $full_quotation->user_isn = Auth::user()->ISN;
             $full_quotation->calc_isn = (string)$response->AgrISN;
+            $full_quotation->express_isn = $express_quotation->calc_isn;
             $full_quotation->calc_id = 0; //(string)$response->CalcID;
-            $full_quotation->premiumSum = $express_quotation->premiumSum;    // Если отправл
+            $full_quotation->premiumSum = $express_quotation->premiumSum;
             $full_quotation->data = $changed_data;
             $full_quotation->calc_da = 0;
 
@@ -614,7 +673,7 @@ class ProductsController extends Controller
             $quotations = $quotations->where('contract_number','');
         }
 
-        $quotations = $quotations->paginate(15);
+        $quotations = $quotations->orderBy('created_at','desc')->paginate(15);
         $product = ExpressProduct::where('product_isn',$productISN)->first();
         $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
         return view('full.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
@@ -640,7 +699,7 @@ class ProductsController extends Controller
 //            $quotations = $quotations->where('contract_number','');
 //        }
 
-        $quotations = $quotations->paginate(15);
+        $quotations = $quotations->orderBy('created_at','desc')->paginate(15);
         $product = ExpressProduct::where('product_isn',$productISN)->first();
         $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
         return view('express.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
@@ -679,7 +738,7 @@ class ProductsController extends Controller
         return view('full.create', compact(['ID','quotationId','productName','expressAttr']));
     }
 
-    public function getFullData(Request $request, KiasServiceInterface $kias){
+    public function getFullData(Request $request, KiasServiceInterface $kias){      // Получить доп.аттрибуты, оговорки и ограничения, участники
         $ID = $request->id;
 
 //        if(Cache::has('full_constructor')){
@@ -689,12 +748,17 @@ class ProductsController extends Controller
             //Cache::put('full_constructor',FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first());
 //        }
 
-        $constructor = FullConstructor::select(['data','product_isn'])->where('product_id',$ID)->first();
+        $constructor = FullConstructor::where('product_id',$ID)->first();
         $status = 0;
         if($request->quotationId != 0) {
-            $constructor = FullQuotation::where('product_isn', $constructor->product_isn)->where('id', $request->quotationId)->first();
+            $cons = FullQuotation::where('id', $request->quotationId)
+                ->where('product_isn', $constructor->product_isn)
+                ->where('user_isn', Auth::user()->ISN)
+                ->first();
+
             $calc_isn = $constructor->calc_isn;
             $calc_id = $constructor->calc_id;
+            $express_isn = $constructor->express_isn;
             $contract_number = $constructor->contract_number;
             $premiumSum = $constructor->premiumSum;
             $docs = json_decode($constructor->docs);
@@ -713,7 +777,7 @@ class ProductsController extends Controller
         }
 
         $data = isset($constructor->data) ? json_decode($constructor->data) : [];
-        $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular : $data->formular[0] : [];
+        $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular[0] : $data->formular[0] : [];
         $participants = isset($data->participants) ? $data->participants : [];
         $DAremark = isset($data->DAremark) ? $data->DAremark : null;
 
@@ -752,6 +816,7 @@ class ProductsController extends Controller
             'formular' => $formular,
             'calc_isn' => isset($calc_isn) && $calc_isn != '' ? $calc_isn : null,
             'calc_id' => isset($calc_id) && $calc_id != '' ? $calc_id : null,
+            'express_isn' => isset($express_isn) && $express_isn != '' ? $express_isn : null,
             'contract_number' => isset($contract_number) && $contract_number != '' ? $contract_number : null,
             'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
             'docs' => isset($docs) && $docs != '' ? $docs : [],
@@ -762,7 +827,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function getFullObjects(Request $request, KiasServiceInterface $kias){
+    public function getFullObjects(Request $request, KiasServiceInterface $kias){       // Получить объекты
         $ID = $request->id;
         $product = ExpressProduct::find($ID);
         if($request->quotationId != 0) {        // Если котировка уже есть в нашей базе
@@ -784,7 +849,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function fullCalc(Request $request, KiasServiceInterface $kias){
+    public function fullCalc(Request $request, KiasServiceInterface $kias){     // Расчет ПК
         $product_id = $request->id;
         if(($model = ExpressProduct::find($product_id)) === null){
             return response()->json([
@@ -792,9 +857,11 @@ class ProductsController extends Controller
                 'error' => 'Продукт который вы хотите рассчитать не найден'
             ]);
         }
+        $quotation = $request->quotationId != 0 ? FullQuotation::find($request->quotationId) : new FullQuotation;
 
         $order['prodIsn'] = $model->product_isn;
         $order['subjISN'] = $request->subjISN;
+        $order['calc_isn'] = isset($quotation->calc_isn) ? $quotation->calc_isn : '';
         $order['participants'] = $this->participantsToKiasAddAttr($request->all());
         $order['attributes'] = $this->attributesToKiasAddAttrs($request->all()['attributes']);
         $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
@@ -815,7 +882,6 @@ class ProductsController extends Controller
         }
 
         if(isset($response->PremiumSum)) {
-            $quotation = $request->quotationId != 0 ? FullQuotation::find($request->quotationId) : new FullQuotation;
             $quotation->product_isn = $order['prodIsn'];
             $quotation->user_isn = Auth::user()->ISN;
             $quotation->calc_isn = (int)$response->AgrCalcISN;
@@ -846,7 +912,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function createAgr(Request $request, KiasServiceInterface $kias){
+    public function createAgr(Request $request, KiasServiceInterface $kias){    // создание договора
         if($request->calc_isn != '' && $request->calc_isn != null) {
             $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
             $success = false;
@@ -1181,8 +1247,8 @@ class ProductsController extends Controller
             $product = ExpressProduct::find($request->id);
             $uploaded = [];
             if(isset($request->quotationType) && $request->quotationType == 'express'){
-                $quotation = ExpressQuotation::find(8);  //where('calc_isn', $request->calc_isn)->first();
-                $sendType = 'Q';
+                $quotation = ExpressQuotation::where('calc_isn', $request->calc_isn)->first();
+                $sendType = 'D';
             } else {
                 $quotation = FullQuotation::where('calc_isn', $request->calc_isn)->first();
                 $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';
@@ -1200,6 +1266,9 @@ class ProductsController extends Controller
                 }
 
                 $calc_isn  = str_replace('-','',$request->calc_isn);
+                if(isset($request->quotationType) && $request->quotationType == 'express'){
+                    $calc_isn  = $quotation->nshb_doc != null ? $quotation->nshb_doc : null;
+                }
                 $file = Storage::get('/public/products/'.$filename);
                 try {
                     $results = $kias->saveAttachment(
@@ -1217,6 +1286,16 @@ class ProductsController extends Controller
             }
             $quotation->docs = json_encode($uploaded);
             $quotation->save();
+
+            if(isset($request->quotationType) && $request->quotationType == 'express'){
+                if($quotation->nshb_doc != null) {
+                    $setDocStatus = $kias->getOrSetDocs($quotation->nshb_doc, 1, 2522);
+                    if(isset($setDocStatus->Status)){
+                        $quotation->nshb_status = (int)$setDocStatus->Status;
+                        $quotation->save();
+                    }
+                }
+            }
         }
         return response()->json([
             'success' => true,
@@ -1325,6 +1404,52 @@ class ProductsController extends Controller
                     $dictiCH->parent_name = $parent->fullname . " " . (string)$child_row->FULLNAME;
                     $dictiCH->save();
                 }
+            }
+        }
+    }
+
+    public function updateDocumentStatus(Request $request,KiasServiceInterface $kias){
+        $nshb_status = $kias->getOrSetDocs($request->isn, 2, null);
+        if(isset($nshb_status->error)){
+            return response()->json([
+                'success' => false,
+                'error' => $nshb_status->error->text
+            ]);
+        }
+        if(isset($nshb_status->Status)){
+            $quotation = ExpressQuotation::find($request->id);
+            $quotation->nshb_status = $status = (int)$nshb_status->Status;
+            if($quotation->save()){
+                return response()->json([
+                    'success' => true,
+                    'status' => $status
+                ]);
+            }
+        }
+    }
+
+    public function sendToInspection(Request $request,KiasServiceInterface $kias){
+        $inspection = $request->inspection;
+        $dateTime = date('d.m.Y',strtotime($inspection['date'])).' '.$inspection['time'];
+        $expert = $kias->sendtoExpertSakta($request->calc_isn,$dateTime,$inspection['address']);
+        if(isset($expert->error)){
+            return response()->json([
+                'success' => false,
+                'error' => (string)$expert->error[0]->text
+            ]);
+        }
+        if(isset($expert[0]) && $expert[0] == 'OK'){
+            $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
+            //$quotation->inspection_isn = $isn = (int)$expert->ISN;
+            $quotation->inspection_date = date('d.m.Y',strtotime($inspection['date']));
+            $quotation->inspection_time = $inspection['time'];
+            $quotation->inspection_address = $inspection['address'];
+
+            if($quotation->save()){
+                return response()->json([
+                    'success' => true,
+                    'inspection' => (string)$expert[0]
+                ]);
             }
         }
     }

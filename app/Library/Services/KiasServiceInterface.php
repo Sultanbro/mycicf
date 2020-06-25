@@ -168,5 +168,5 @@ interface KiasServiceInterface
 
     public function getSubject($firstName, $lastName, $patronymic, $iin);
 
-    public function expressCalculator($ISN, $SubjISN, $addAttr);
+    public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
 }

@@ -28,11 +28,14 @@
                 <button v-if="quotationId == 0" class="btn btn-outline-info" :disabled="nshb" @click="calculate">
                     Рассчитать стоимость
                 </button>
-                <button v-if="quotationId == 0 && calc_isn != null" class="btn btn-outline-info" @click="createFullQ()">
+                <button v-if="quotationId == 0 && calc_isn != null && !nshb || nshb && status == 2518" class="btn btn-outline-info" @click="createFullQ()">
                     Перевод в полную котировку
                 </button>
-                <div class="fs-2 col-12" v-if="calculated">Сумма премий {{price}} Тенге</div>
-                <button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button>
+                <div class="fs-2 col-12" v-if="calculated || quotationId != 0 && price != 0">Сумма премий {{price}} Тенге</div>
+                <div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
+                <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div>
+                <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
+                <!--button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button-->
             </div>
         </div>
     </div>
@@ -59,6 +62,8 @@
                 height : 0,
                 price : 0,
                 nshb: false,
+                nshb_doc: null,
+                nshb_request: null,
                 participantDocs: {
                     types: []
                 },
@@ -85,7 +90,8 @@
                         okvdName: '',
                         economicName: ''
                     }
-                ]
+                ],
+                status: null,
             }
         },
         props: {
@@ -111,6 +117,8 @@
                         this.attributes = response.data.attributes;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
+                            this.status = response.data.status;
+                            this.price = parseInt(response.data.premiumSum);
                         }
                         this.preloader(false);
                     }else{
@@ -139,7 +147,12 @@
                         this.calc_isn = response.data.calc_isn;
                         this.preloader(false);
                         if(this.nshb){
+                            this.nshb_doc = response.data.nshb_doc;
+                            this.nshb_request = response.data.nshb_request;
                             this.sendDocs();
+                        } else {
+                            this.nshb_doc = null;
+                            this.nshb_request = null;
                         }
                     }else{
                         alert(response.data.error)
@@ -161,9 +174,7 @@
                         if(response.data.success){
                             console.log(response.data.result);
                             this.full_isn = response.data.full_isn;
-
-                            window.location.href = "/full/calc/" + this.id + "/"+response.data.full_isn;
-
+                            window.location.href = "/full/calc/" + this.id + "/"+response.data.quotation_id;
                             this.preloader(false);
                         }else{
                             alert(response.data.error);
@@ -181,6 +192,7 @@
                 formData.append('quotationId', this.quotationId);
                 formData.append('calc_isn', this.calc_isn);
                 formData.append('quotationType', 'express');
+                formData.append('nshb_doc', this.nshb_doc);
                 if(Object.keys(this.docs.files).length > 0) {
                     this.preloader(true);
                     for (let i in this.docs.files) {
@@ -210,7 +222,7 @@
             },
             calcChanged(){
                 this.calculated = false;
-                this.price = 0;
+                this.price = this.quotationId == 0 ? 0 : this.price;
                 for(let index in this.attributes){
                     if(this.attributes[index].AttrISN == 499591 || this.attributes[index].AttrISN == '499591'){
                         if(this.attributes[index].Value == 499581 || this.attributes[index].Value == '499581') { //499581 - net  //499571 - da
@@ -221,25 +233,25 @@
                     }
                 }
             },
-            createFullQuotation(){
-                var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
-                if(full) {
-                    let attr = '"premium":"'+this.price+'",';
-                    let i = 1;
-                    for(let index in this.attributes){
-                        if(this.attributes[index].Value == null) {
-                            attr = attr + '"' + this.attributes[index].AttrISN + '":' + this.attributes[index].Value;
-                        } else {
-                            attr = attr + '"' + this.attributes[index].AttrISN + '":"' + this.attributes[index].Value + '"';
-                        }
-                        if(i != Object.keys(this.attributes).length){
-                            attr = attr+',';
-                        }
-                        i++;
-                    }
-                    window.location.href = "/full/calc/" + this.id + "/0?attributes={"+attr+"}";
-                }
-            },
+            // createFullQuotation(){
+            //     var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
+            //     if(full) {
+            //         let attr = '"premium":"'+this.price+'",';
+            //         let i = 1;
+            //         for(let index in this.attributes){
+            //             if(this.attributes[index].Value == null) {
+            //                 attr = attr + '"' + this.attributes[index].AttrISN + '":' + this.attributes[index].Value;
+            //             } else {
+            //                 attr = attr + '"' + this.attributes[index].AttrISN + '":"' + this.attributes[index].Value + '"';
+            //             }
+            //             if(i != Object.keys(this.attributes).length){
+            //                 attr = attr+',';
+            //             }
+            //             i++;
+            //         }
+            //         window.location.href = "/full/calc/" + this.id + "/0?attributes={"+attr+"}";
+            //     }
+            // },
             preloader(show) {
                 if(show){
                     document.getElementById("preloader").style.display = "flex";
@@ -251,11 +263,11 @@
         watch : {
             attributes(){
                 this.calculated = false;
-                this.price = 0;
+                //this.price = 0;
             },
             SubjISN(){
                 this.calculated = false;
-                this.price = 0;
+                //this.price = 0;
             },
             'participant.Value': function(val){
                 this.subjISN = val;

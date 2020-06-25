@@ -106,9 +106,9 @@
                                         <thead >
                                         <tr class="bg-grayblue color-light-gray">
                                             <td class="text-left">#</td>
-                                            <td class="">Котировка</td>
+                                            <td class="">ИСН котировки</td>
                                             <td class="">НШБ</td>
-                                            <!--td class="">Статус</td-->
+                                            <td class="">Статус НШБ</td>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -121,17 +121,27 @@
                                                     </a>
                                                 </td>
                                                 <td><span >{{ $quotation->nshb == 1 ? 'да' : 'нет' }}</span></td>
-                                                <!--td>
-                                                    @if($quotation->status == 0)
+                                                <td>
+                                                    @if($quotation->nshb_status == 0)
                                                         не указан
                                                     @else
-                                                        @foreach($statuses as $status)
-                                                            @if($quotation->status == $status['Value'])
-                                                                {{ $status['Label'] }}
-                                                            @endif
-                                                        @endforeach
+                                                        @if($quotation->nshb_status == 2518)
+                                                           Подписан
+                                                        @elseif($quotation->nshb_status == 2522)
+                                                            На подписании
+                                                        @elseif($quotation->nshb_status == 2516)
+                                                            В работе
+                                                        @endif
                                                     @endif
-                                                </td-->
+                                                    @if($quotation->nshb == 1)
+                                                        <div class="col-md-12">
+                                                            <div class="custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer m-auto text-center"
+                                                                 @click="checkStatus({{ $quotation->id }},{{ $quotation->nshb_doc }})">
+                                                                Обновить статус
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                         </tbody>
