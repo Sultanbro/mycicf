@@ -34,8 +34,8 @@ class ProductsController extends Controller
         if(($data = ExpressProduct::find($ID)) === null){
             abort(404, 'Такой продукт не найден');
         }
-
-        return view('express.create', compact('ID'),compact('quotationId'));
+        $productName = $data->name;
+        return view('express.create', compact('ID','quotationId','productName'));
     }
 
     // Admin routes
@@ -361,6 +361,12 @@ class ProductsController extends Controller
                     $quotation->nshb_status = $status = (int)$nshb_status->Status;
                     $quotation->save();
                 }
+                $nshb = array(
+                    'nshb' => 1,
+                    'nshb_doc' => $quotation->nshb_doc,
+                    'nshb_request' => $quotation->nshb_request,
+                    'nshb_status' => $quotation->nshb_status
+                );
             }
         } else {
             $response = $kias->getExpressAttributes($ProductISN);
@@ -417,7 +423,9 @@ class ProductsController extends Controller
             'attributes' => $attributes,
             'participants' => $participants,
             'status' => $status,
-            'premiumSum' => isset($quotation->premiumSum) ? $quotation->premiumSum : 0
+            'premiumSum' => isset($quotation->premiumSum) ? $quotation->premiumSum : 0,
+            'nshb' => isset($nshb) ? $nshb : null,
+            'calc_isn' => isset($quotation->calc_isn) ? $quotation->calc_isn : null,
         ]);
     }
 
@@ -473,11 +481,18 @@ class ProductsController extends Controller
             if((string)$response->CustomDoc != null) {
                 $quotation->nshb_doc = (string)$response->CustomDoc;    // Документ исн
                 $quotation->nshb_request = (string)$response->Request;
-//                $setDocStatus = $kias->getOrSetDocs($quotation->nshb_doc, 1, 2522);
-//                if(isset($setDocStatus->Status)){
-//                    $quotation->nshb_status = (int)$setDocStatus->Status;
-//                    $quotation->save();
-//                }
+                $setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
+
+                if(isset($setDocStatus->error)){
+                    return response()->json([
+                        'success' => false,
+                        'error' => (string)$setDocStatus->error->fulltext
+                    ]);
+                }
+
+                if(isset($setDocStatus->Status)){
+                    $quotation->nshb_status = (int)$setDocStatus->Status;
+                }
             }
         }
 

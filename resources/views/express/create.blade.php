@@ -40,7 +40,7 @@
 @include('layouts.header')
 <main class="flex-row"  id="app">
     <div class="main_margin width100" id="order">
-        <h4 class="text-center mt-2">Экспресс котировка {{ $quotationId }}</h4>
+        <h4 class="text-center mt-2">Экспресс котировка по продукту {{ $productName }}</h4>
         <express-calc :id="{{json_encode($ID)}}" :quotation-id="{{json_encode($quotationId)}}">
         </express-calc>
     </div>

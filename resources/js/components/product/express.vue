@@ -1,17 +1,20 @@
 <template>
     <div>
+        <div class="text-center" v-if="calc_isn != null">
+            <h5>Котировка исн - {{ calc_isn }}</h5>
+        </div>
         <participant v-for="(participant,index) in participants"
-                     :key="index"
-                     :p-index="index"
-                     :participant="participant"
-                     :participants="participants"
-                     :formular="{insurant : { isn:2103,jur:true,phys:true}}"
-                     :preloader="preloader"
-                     :calc-changed="calcChanged"
-                     :attributes="[]"
-                     :insurant-is="{participant:false,receiver:false}"
-                     :participant-docs="participantDocs"
-                     :product-id="id">
+                           :key="index"
+                           :p-index="index"
+                           :participant="participant"
+                           :participants="participants"
+                           :formular="{insurant : { isn:2103,jur:true,phys:true}}"
+                           :preloader="preloader"
+                           :calc-changed="calcChanged"
+                           :attributes="[]"
+                           :insurant-is="{participant:false,receiver:false}"
+                           :participant-docs="participantDocs"
+                           :product-id="id">
         </participant>
 
         <div v-for="attribute in attributes">
@@ -22,19 +25,19 @@
 
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
+                <div class="fs-2 col-12" v-if="calculated || quotationId != 0 && price != 0">Сумма премий {{price}} Тенге</div>
+                <div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
+                <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div>
+                <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить НШБ
                 </button>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" :disabled="nshb" @click="calculate">
                     Рассчитать стоимость
                 </button>
-                <button v-if="quotationId == 0 && calc_isn != null && !nshb || nshb && status == 2518" class="btn btn-outline-info" @click="createFullQ()">
+                <button v-if="quotationId == 0 && calc_isn != null && !nshb && nshb_doc == null || nshb && nshb_status == 2518" class="btn btn-outline-info" @click="createFullQ()">
                     Перевод в полную котировку
                 </button>
-                <div class="fs-2 col-12" v-if="calculated || quotationId != 0 && price != 0">Сумма премий {{price}} Тенге</div>
-                <div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
-                <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div>
-                <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <!--button class="btn btn-outline-info" v-if="calculated" @click="createFullQuotation">Создать полную котировку</button-->
             </div>
         </div>
@@ -64,6 +67,7 @@
                 nshb: false,
                 nshb_doc: null,
                 nshb_request: null,
+                nshb_status: null,
                 participantDocs: {
                     types: []
                 },
@@ -114,11 +118,18 @@
                 })
                 .then(response => {
                     if(response.data.success){
+                        this.calc_isn = response.data.calc_isn;
                         this.attributes = response.data.attributes;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
-                            this.status = response.data.status;
+                            //this.nshb_status = response.data.status;
                             this.price = parseInt(response.data.premiumSum);
+                            if(response.data.nshb != null){
+                                this.nshb = response.data.nshb['nshb'];
+                                this.nshb_doc = response.data.nshb['nshb_doc'];
+                                this.nshb_request = response.data.nshb['nshb_request'];
+                                this.nshb_status = response.data.nshb['nshb_status'];
+                            }
                         }
                         this.preloader(false);
                     }else{
