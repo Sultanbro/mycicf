@@ -1,20 +1,14 @@
 <template>
-    <div class="col-12 row ml-0 mt-2 mb-2 agreement-block">
-        <h4>Дата начала / окончания договора</h4>
+    <div class="  mt-2 mb-2 marg-l "><!-- class="col-12 row ml-0 mt-2 mb-2 agreement-block"-->
+        <h5  >Дата начала / окончания договора</h5>
         <div class="row col-12">
-            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                <label>Дата начала : </label>
-                <input  type="date"
-                        id="dateBeg"
-                        class="date-products col-12"
-                        dateFormat="dd.mm.YYYY"
-                        v-model="period.begin"
-                        required
-                        :disabled="computedDisable">
+            <div class="<!--col-lg-3 col-xl-3 col-md-6 col-sm-6 mt-3 -->">
+                <label class="text-hw">Дата подписания : </label>
+                <input type="date" id="dateSig" class="date-products "  dateFormat="DD/MM/YYYY" v-model="period.sig" required disabled="true">
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-12">
-                <label>Период : </label>
-                <select class="custom-select" v-model="period.period" :disabled="computedDisable" @change="calcChanged">
+            <div class=" col-lg-3 col-xl-3 col-md-6 col-sm-6 mt-3" style="flex-direction: row; ">
+                <label class="text-hw">Период : </label>
+                <select class="cus-select " v-model="period.period" :disabled="computedDisable" @change="calcChanged">
                     <option value="12">12 месяцев</option>
                     <option value="11">11 месяц</option>
                     <option value="10">10 месяц</option>
@@ -33,22 +27,30 @@
                     <option value="0">Произвольная</option>
                 </select>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                <label>Дата окончания : </label>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6  mt-3">
+                <label class="text-hw">Дата начала : </label>
+                <input  type="date"
+                        id="dateBeg"
+                        class="date-products "
+                        dateFormat="DD/MM/YYYY"
+                        v-model="period.begin"
+                        required
+                        :disabled="computedDisable">
+            </div>
+
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 mt-3 ">
+                <label class="text-hw">Дата окончания : </label>
                 <input
-                        type="date"
-                        id="dateEnd"
-                        class="date-products col-12"
-                        dateFormat="dd.mm.YYYY"
-                        v-model="period.end"
-                        :disabled="computedDisable == false && period.period !== '0' || computedDisable == true"
-                        @change="calcChanged"
-                        required>
+                    type="date"
+                    id="dateEnd"
+                    class="date-products "
+                    dateFormat="DD/MM/YYYY"
+                    v-model="period.end"
+                    :disabled="computedDisable == false && period.period !== '0' || computedDisable == true"
+                    @change="calcChanged"
+                    required>
             </div>
-            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                <label>Дата подписания : </label>
-                <input type="date" id="dateSig" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.sig" required disabled="true">
-            </div>
+
         </div>
     </div>
 </template>

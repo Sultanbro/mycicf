@@ -13,9 +13,22 @@
                      :participant-docs="participantDocs"
                      :product-id="id">
         </participant>
+        <!--button type="button" class="add-button width100 mt-2" @click="openParticipantForm">Добавить страхователя</button-->
+        <div class="flex-center">
+            <div class="col-md-12 agreement-block div-margin div-downmar " style="width:95%;" >
+                <div class="row">
+                    <!--v-if="Object.keys(attributes).length != 0 && attributes[value] != undefined && attributes[value] != null"-->
+                    <agr-attributes
+                        v-for="value, key in attributes"
+                        :key="key"
+                        :attribute="value"
+                        :express-attr="{}"
+                        :calc-changed="calcChanged"></agr-attributes>
 
-        <div v-for="attribute in attributes">
-            <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged" :preloader="preloader"></agr-attributes>
+                    <!--agr-attributes :key="key" v-for="attribute,key in attributes" :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged"></agr-attributes-->
+
+                </div>
+            </div>
         </div>
 
         <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>
@@ -25,7 +38,7 @@
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить НШБ
                 </button>
-                <button v-if="quotationId == 0" class="btn btn-outline-info" :disabled="nshb" @click="calculate">
+                <button v-if="quotationId == 0" class="btn btn-outline-info  mg-11" :disabled="nshb" @click="calculate">
                     Рассчитать стоимость
                 </button>
                 <button v-if="quotationId == 0 && calc_isn != null && !nshb || nshb && status == 2518" class="btn btn-outline-info" @click="createFullQ()">

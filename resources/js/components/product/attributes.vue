@@ -1,33 +1,24 @@
 <template>
-    <div class="mt-2 mb-2 ml-0 agreement-block childs-not-bold">
-        <h4 :class="isBold">{{attribute.Label}}</h4>
-        <div>
-            <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2">
-                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <input v-if="attribute.AttrISN != 831381" type="text" class="attr-input-text w-100" v-model="attribute.Value" @keyup="calcChanged">
-                <input v-if="attribute.AttrISN == 831381" type="tel" v-model="attribute.Value" v-mask="'+###########'"  @keyup="calcChanged" class="attr-input-text w-100">
+    <div class="col-md-6 mt-4  ">
+        <h6 class="font-shif <!--text-hw--> " >{{attribute.Label+ ':'}}</h6>
+        <div >
+            <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2 " style="heidth: 50px;" >
+                <input v-if="attribute.AttrISN != 831381" type="text" class="attr-input-text w-70" v-model="attribute.Value" @keyup="calcChanged">
+                <input v-if="attribute.AttrISN == 831381" type="tel" v-model="attribute.Value" v-mask="'+###########'"  @keyup="calcChanged" class="attr-input-text w-70">
             </div>
             <div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
-                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <input type="checkbox" class="attr-input-text w-100"  v-model="attribute.Value"  @change="calcChanged">
+                <input type="checkbox" class="attr-input-text width-checkbox"  v-model="attribute.Value"  @change="calcChanged">
             </div>
-            <div v-else-if="attribute.Type === 'DICTI'" class="d-flex align-items-center mb-2">
-                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <select class="custom-select" v-model="attribute.Value" @change="calcChanged">
+            <div v-else-if="attribute.Type === 'DICTI'" class="d-flex align-items-center mb-2" >
+                <select class="custom-select select-size" v-model="attribute.Value" @change="calcChanged">
                     <option v-for="dicti in attribute.Childs" :value="dicti.Value">{{dicti.Label}}</option>
                 </select>
             </div>
             <div v-else-if="attribute.Type === 'DATE'" class="d-flex align-items-center mb-2">
-                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <input type="date" class="attr-input-text w-100"  v-model="attribute.Value" @change="calcChanged">
-            </div>
-            <div v-else-if="attribute.Type === 'SUBJECT'" class="d-flex align-items-center mb-2">
-                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <input type="number" class="attr-input-text w-100"  v-model="attribute.Value" @change="calcChanged">
+                <input type="date" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged">
             </div>
             <div v-else class="d-flex align-items-center mb-2">
-                <label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <input type="text" class="attr-input-text w-100"  v-model="attribute.Value" @keyup="calcChanged">
+                <input type="text" class="attr-input-text w-70"  v-model="attribute.Value" @keyup="calcChanged">
             </div>
             <!--div class="d-flex align-items-center mb-2">
                 <label class="bold mb-0 mr-2">Примечание: </label>
@@ -43,7 +34,7 @@
         name: "attributes",
         data() {
             return {
-                isBold: null
+
             }
         },
         directives: {mask},
@@ -56,10 +47,6 @@
             if(this.expressAttr[this.attribute.AttrISN] && this.expressAttr[this.attribute.AttrISN] != null){
                 this.attribute.Value = this.expressAttr[this.attribute.AttrISN];
             }
-            if(this.attribute.Type == 'DOCS' || this.attribute.Type == 'AGREEMENTCALC'){
-                this.attribute.Type = 'NUMBER';
-            }
-            this.isBold = this.attribute.required ? 'bold' : '';
         }
     }
 </script>

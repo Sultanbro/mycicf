@@ -8,7 +8,7 @@
         </div>
         <div class="col-md-12 mb-4 mt-4">
             <div class="row">
-                <div class="col-md-4" v-for="(participant,index) in participants">
+                <div class="col-md" v-for="(participant,index) in participants">
                     <participant :key="index"
                                  :p-index="index"
                                  :participant="participant"
@@ -35,49 +35,60 @@
             </div>
         </div>
 
-        <div class="mb-4">
-            <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
-        </div>
-
-        <div class="agr-block mb-4">
-            <div v-for="attribute in attributes">
-                <agr-attributes :attribute="attribute"
-                                :express-attr="expressAttr"
-                                :calc-changed="calcChanged"
-                                :preloader="preloader"></agr-attributes>
-            </div>
-
-            <div v-for="agrclause in agrclauses">
-                <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
-            </div>
-        </div>
-
-        <agr-object v-if="agrobjects"
-                    v-for="(agrobject,index) in agrobjects"
-                    :key="index"
-                    :agrobject="agrobject"
-                    :aIndex="index"
-                    :preloader="preloader"
-                    :express-attr="expressAttr"
-                    :calc-changed="calcChanged"
-                    :new-agrobject="newAgrobject"
-                    :agrobjects="agrobjects"
-                    :quotationId="quotationId"
-                    :product-id="id"
-                    :participants="participants"
-                    :DA="DA">
-        </agr-object>
-
-        <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
-
-        <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
-            <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
-            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
-        </div>
-
         <div v-if="DA.calcDA" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 mb-4">
             <label class="bold">Текст заявки </label>
             <input type="text" class="attr-input-text col-12"  v-model="DA.remark" @keyup="calcChanged">
+        </div>
+
+        <div class="div-ml">
+            <div class="mb-3 agreement-block " style="width:95%;">
+                <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
+            </div>
+        </div>
+
+        <div  class="div-ml">
+            <div v-if="agrobjects" v-for="(agrobject,index) in agrobjects"class="mb-3  agreement-block "style="width:95%;">
+                <agr-object
+                        :key="index"
+                        :agrobject="agrobject"
+                        :aIndex="index"
+                        :preloader="preloader"
+                        :express-attr="expressAttr"
+                        :calc-changed="calcChanged"
+                        :new-agrobject="newAgrobject"
+                        :agrobjects="agrobjects"
+                        :quotationId="quotationId"
+                        :product-id="id"
+                        :participants="participants"
+                        :DA="DA">
+                </agr-object>
+            </div>
+        </div>
+
+        <div  class=" div-ml div-marg div-mr">
+            <div class="  agreement-block " >
+                <div v-for="attribute in attributes" class=" col-md-8  " style="width:95%;">
+                    <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged" :preloader="preloader"></agr-attributes>
+                </div>
+            </div>
+        </div>
+
+        <div  class="div-marg div-ml div-mr">
+            <div class=" agreement-block d-flex flex-col-str  ">
+                <div v-for="agrclause in agrclauses" style="width:95%;">
+                    <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
+                </div>
+            </div>
+        </div>
+
+        <div  class="div-marg div-ml">
+            <div class="agreement-block "style="width:95%;">
+                <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
+            </div>
+        </div>
+        <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+            <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
+            <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
         </div>
 
         <online-inspection :inspection="inspection"

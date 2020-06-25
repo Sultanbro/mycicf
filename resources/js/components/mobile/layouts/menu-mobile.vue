@@ -36,12 +36,26 @@
                 <div class="flex-column">
                     <div class="mb-3">
                         <ul class="flex-column mt-3 mr-5 ml-5">
+
+                            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
+                                <li class="leftsidebar-icons">
+                                    <i class="fas fa-book-reader"></i>
+                                    <span>Экспресс котировка</span>
+                                </li>
+                            </a>
+                            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/full">
+                                <li class="leftsidebar-icons">
+                                    <i class="fas fa-book-reader"></i>
+                                    <span>Полная котировка</span>
+                                </li>
+                            </a>
                             <a href="/dossier" class="pt-2 pb-2 color-darkgray font-size-1_2">
                                 <li>
                                     <i class="far fa-clipboard"></i>
                                     <span>Досье</span>
                                 </li>
                             </a>
+
                             <a href="/coordination" class="pt-2 pb-2 color-darkgray font-size-1_2">
                                 <li>
                                     <i class="far fa-thumbs-up"></i>
@@ -62,26 +76,26 @@
                                 </li>
                             </a>
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2">-->
-                                <!--<li>-->
-                                    <!--<i class="far fa-star"></i>-->
-                                    <!--<span>Мотивация</span>-->
-                                <!--</li>-->
+                            <!--<li>-->
+                            <!--<i class="far fa-star"></i>-->
+                            <!--<span>Мотивация</span>-->
+                            <!--</li>-->
                             <!--</a>-->
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2">-->
-                                <!--<li>-->
-                                    <!--<i class="fas fa-book-reader"></i>-->
-                                    <!--<span>Обучение</span>-->
-                                <!--</li>-->
+                            <!--<li>-->
+                            <!--<i class="fas fa-book-reader"></i>-->
+                            <!--<span>Обучение</span>-->
+                            <!--</li>-->
                             <!--</a>-->
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2">-->
-                                <!--<li>-->
-                                    <!--<img src="/images/centcoin-fa.png" style="width: 20px;">-->
-                                    <!--<span>Сенткоины</span></li></a>-->
+                            <!--<li>-->
+                            <!--<img src="/images/centcoin-fa.png" style="width: 20px;">-->
+                            <!--<span>Сенткоины</span></li></a>-->
                             <!--<a href="javascript:void(0)" class="pt-2 pb-2 color-darkgray font-size-1_2">-->
-                                <!--<li>-->
-                                    <!--<i class="fas fa-chart-pie"></i>-->
-                                    <!--<span>Рейтинг</span>-->
-                                <!--</li>-->
+                            <!--<li>-->
+                            <!--<i class="fas fa-chart-pie"></i>-->
+                            <!--<span>Рейтинг</span>-->
+                            <!--</li>-->
                             <!--</a>-->
                         </ul>
                     </div>
@@ -96,34 +110,34 @@
                     </div>
                 </div>
             </div>
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--PARSE-->
-                        <!--</a>-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--РЕЙТИНГ-->
-                        <!--</a>-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--О КОМПАНИИ-->
-                        <!--</a>-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--БИБЛИОТЕКА-->
-                        <!--</a>-->
-                    <!--</div>-->
-                    <!--<div class="flex-column">-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--ПРОДУКТЫ-->
-                        <!--</a>-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--ЭЛЕМЕНТ 1-->
-                        <!--</a>-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--ЭЛЕМЕНТ 2-->
-                        <!--</a>-->
-                        <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
-                            <!--ЭЛЕМЕНТ 3-->
-                        <!--</a>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--PARSE-->
+            <!--</a>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--РЕЙТИНГ-->
+            <!--</a>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--О КОМПАНИИ-->
+            <!--</a>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--БИБЛИОТЕКА-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--<div class="flex-column">-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--ПРОДУКТЫ-->
+            <!--</a>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--ЭЛЕМЕНТ 1-->
+            <!--</a>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--ЭЛЕМЕНТ 2-->
+            <!--</a>-->
+            <!--<a href="javascript: void(0)" class="color-white mobile-navbar-border-bot fs-0_8">-->
+            <!--ЭЛЕМЕНТ 3-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
         </div>
     </div>
@@ -152,9 +166,9 @@
         },
         methods: {
             changeHead: function(){
-                    console.log(window.location.pathname);
-                    console.log(this.show);
-                    this.show = this.show ? false : true;
+                console.log(window.location.pathname);
+                console.log(this.show);
+                this.show = this.show ? false : true;
             }
         },
     }
