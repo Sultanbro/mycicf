@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12 row ml-0 mt-2 mb-2 agreement-block">
+   <!-- <div class="col-12 row ml-0 mt-2 mb-2 agreement-block">
         <h4>Дата начала / окончания договора</h4>
         <div class="row col-12">
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
@@ -49,6 +49,60 @@
                 <label>Дата подписания : </label>
                 <input type="date" id="dateSig" class="date-products col-12" dateFormat="dd.mm.YYYY" v-model="period.sig" required disabled="true">
             </div>
+        </div>
+    </div>-->
+    <div class="  mt-2 mb-2 marg-l "><!-- class="col-12 row ml-0 mt-2 mb-2 agreement-block"-->
+        <h5  >Дата начала / окончания договора</h5>
+        <div class="row col-12">
+            <div class="<!--col-lg-3 col-xl-3 col-md-6 col-sm-6 mt-3 -->">
+                <label class="text-hw">Дата подписания : </label>
+                <input type="date" id="dateSig" class="date-products "  dateFormat="DD/MM/YYYY" v-model="period.sig" required disabled="true">
+            </div>
+            <div class=" col-lg-3 col-xl-3 col-md-6 col-sm-6 mt-3" style="flex-direction: row; ">
+                <label class="text-hw">Период : </label>
+                <select class="cus-select " v-model="period.period" :disabled="computedDisable" @change="calcChanged">
+                    <option value="12">12 месяцев</option>
+                    <option value="11">11 месяц</option>
+                    <option value="10">10 месяц</option>
+                    <option value="9">9 месяц</option>
+                    <option value="8">8 месяц</option>
+                    <option value="7">7 месяц</option>
+                    <option value="6">6 месяц</option>
+                    <option value="5">5 месяц</option>
+                    <option value="4">4 месяц</option>
+                    <option value="3">3 месяц</option>
+                    <option value="2">2 месяц</option>
+                    <option value="1">1 месяц</option>
+                    <option value="150">15 дней</option>
+                    <option value="100">10 дней</option>
+                    <option value="50">5 дней</option>
+                    <option value="0">Произвольная</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6  mt-3">
+                <label class="text-hw">Дата начала : </label>
+                <input  type="date"
+                        id="dateBeg"
+                        class="date-products "
+                        dateFormat="DD/MM/YYYY"
+                        v-model="period.begin"
+                        required
+                        :disabled="computedDisable">
+            </div>
+
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 mt-3 ">
+                <label class="text-hw">Дата окончания : </label>
+                <input
+                    type="date"
+                    id="dateEnd"
+                    class="date-products "
+                    dateFormat="DD/MM/YYYY"
+                    v-model="period.end"
+                    :disabled="computedDisable == false && period.period !== '0' || computedDisable == true"
+                    @change="calcChanged"
+                    required>
+            </div>
+
         </div>
     </div>
 </template>

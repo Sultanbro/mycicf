@@ -1,37 +1,37 @@
 <template>
-    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
-        <h4>Объект</h4>
+    <div class=" marg-l  text-hw">  <!--class="col-12 row mt-2 mb-2 ml-0  h-auto"-->
+        <h5 class="font-shif">Объект</h5>
         <button v-if="quotationId == 0 || quotationId != 0 && express_isn != null" @click="addObject()" class="btn btn-outline-info ml-3">Добавить еще</button>
         <button v-if="quotationId == 0 && agrobjects.length > 1  || quotationId != 0 && express_isn != null && agrobjects.length > 1" @click="deleteObject()" class="btn btn-outline-info ml-3">Удалить</button>
-        <div class="row col-12">
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mb-3">
-                <label class="bold">Класс объекта : </label>
-                <select class="custom-select" v-model="agrobject.ClassISN" @change="calcChanged();objectClassChanged()">
+        <div class="row">
+            <div class="col-lg-3 col-xl-3 col-md-3 ">
+                <label class="font-shif">Класс объекта : </label>
+                <select class="custom-select w-50" v-model="agrobject.ClassISN" @change="calcChanged();objectClassChanged()">
                     <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
 
-            <div v-if="agrobject.ClassISN != '' && Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length > 0" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="bold">Тип объекта : </label>
-                <select class="custom-select" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
+            <div v-if="agrobject.ClassISN != '' && Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length > 0" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mt-0">
+                <label class=" font-shif">Тип объекта : </label>
+                <select class="custom-select w-50" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
                     <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj"
                             :data-option="dicti.ObjName"
                             :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
                 </select>
             </div>
 
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="bold">Сумма страхования : </label>
-                <input type="number" class="attr-input-text col-12"  v-model="agrobject.insureSum" @keyup="calcChanged">
+            <div class=" <!--col-lg-3 col-xl-3 col-md-6-->  ">
+                <label class="font-shif text-hw">Сумма страхования : </label>
+                <input type="number" class="attr-input-text w-20 "  v-model="agrobject.insureSum" @keyup="calcChanged">
             </div>
 
             <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
                 <label class="bold">Сумма премии : </label>
-                <input type="number" class="attr-input-text col-12" v-model="agrobject.DAsum" @keyup="calcChanged">
+                <input type="number" class="attr-input-text col-12 width-50" v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
             <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="bold">Сумма франшизы</label>
+                <label class="font-shif ml-l2">Сумма франшизы</label>
                 <select class="custom-select"
                         v-model="agrobject.franch">
                     <option v-for="index in franch"
@@ -39,16 +39,16 @@
                 </select>
             </div>
 
-            <div class="col-12" v-if="agrobject.ClassISN != ''">
-                <div class="col-12 row mt-2 mb-2 ml-0 agreement-block"
+            <div class="" v-if="agrobject.ClassISN != ''">
+                <div class="col-12 row mt-2 mb-2 ml-0"
                      v-for="(agrcond,index) in agrobject.objekt[agrobject.ClassISN].AGRCOND"
                      v-if="index == agrobject.ClassISN+agrobject.SubClassISN || Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length == 0 && index == agrobject.ClassISN || agrobject.ClassISN == 2118 && index == agrobject.ClassISN"
                 >
-                    <h4>Риски</h4>
+                    <h5 class="font-shif ml-l2">Риски</h5>
                     <div class="row col-12">
-                        <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12">
-                            <label class="bold">Значение : </label>
-                            <select class="custom-select"
+                        <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12 ml-3">
+                            <label class="font-shif ">Значение : </label>
+                            <select class="cus-select"
                                     v-model="agrobject.RiskISN" @change="changeSelect($event,'InsClassISN'),calcChanged()">
                                 <option v-for="(dicti,index) in agrcond"
                                         :value="dicti.RiskPackisn"
