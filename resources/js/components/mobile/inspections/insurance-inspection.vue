@@ -27,7 +27,6 @@
                         <tbody class="date-color">
                         <tr class="font-size-0_8" v-for="(info, key) in inspections" :key="info.ISN">
                             <td class="pointer" scope="col">
-                            <td class="pointer" scope="col">
                                 <a v-if="info.agrcalcisn.length == 0"
                                    :href="'/insurance/inspection/' + info.ISN + '?docisn='+info.DocISN+'&argcalcisn=0&agrisn=' +
                                     Math.abs(info.agrisn)">
