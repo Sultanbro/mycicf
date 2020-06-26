@@ -108,7 +108,7 @@
                     Выпустить договор
                 </button>
                 <button v-if="docs.sendedFail" class="btn btn-outline-info" @click="sendDocs">
-                    Отправить документы
+                    Загрузить файлы
                 </button>
                 <printable-form v-if="contract_number != null && contract_number != ''"
                                 :preloader="preloader"
