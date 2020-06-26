@@ -413,6 +413,8 @@ class ProductsController extends Controller
                         'Value' => $value,
                         'Remark' => null,
                         'Childs' => $dictiRes,  //(new SiteController())->getDictiList((string)$row->NumCode),
+                        'Required' => (string)$row->Required,
+                        'ReadOnly' => (string)$row->ReadOnly
                         //);
                     ]);
                 }
@@ -481,18 +483,18 @@ class ProductsController extends Controller
             if((string)$response->CustomDoc != null) {
                 $quotation->nshb_doc = (string)$response->CustomDoc;    // Документ исн
                 $quotation->nshb_request = (string)$response->Request;
-                $setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
+                //$setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
 
-                if(isset($setDocStatus->error)){
-                    return response()->json([
-                        'success' => false,
-                        'error' => (string)$setDocStatus->error->fulltext
-                    ]);
-                }
-
-                if(isset($setDocStatus->Status)){
-                    $quotation->nshb_status = (int)$setDocStatus->Status;
-                }
+//                if(isset($setDocStatus->error)){
+//                    return response()->json([
+//                        'success' => false,
+//                        'error' => (string)$setDocStatus->error->fulltext
+//                    ]);
+//                }
+//
+//                if(isset($setDocStatus->Status)){
+//                    $quotation->nshb_status = (int)$setDocStatus->Status;
+//                }
             }
         }
 
@@ -1310,6 +1312,14 @@ class ProductsController extends Controller
             if(isset($request->quotationType) && $request->quotationType == 'express'){
                 if($quotation->nshb_doc != null) {
                     $setDocStatus = $kias->getOrSetDocs($quotation->nshb_doc, 1, 2522);
+
+                    if(isset($setDocStatus->error)){
+                        return response()->json([
+                            'success' => false,
+                            'error' => (string)$setDocStatus->error->fulltext
+                        ]);
+                    }
+
                     if(isset($setDocStatus->Status)){
                         $quotation->nshb_status = (int)$setDocStatus->Status;
                         $quotation->save();

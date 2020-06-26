@@ -50,7 +50,7 @@
                     <h4 class="text-center mt-2 col-12">Экспресс котировка - {{ $product->name }}</h4>
                     <div class="col-md-12 mt-4 bg-white pt-3 pb-3 rounded box-shadow text-center">
                         <div class="row">
-                            <div  class="col-md-4">
+                            <!--div  class="col-md-4">
                                 <label>НШБ</label>
                                 <select v-model="nshb"
                                         class="date-color pl-2 pr-2 pt-1 pb-1 ml-2"
@@ -58,7 +58,7 @@
                                     <option  value="1">Да</option>
                                     <option  value="0">Нет</option>
                                 </select>
-                            </div>
+                            </div-->
                             <!--div class="col-md-4" v-if="!contractSelected">
                                 <label>Статус</label>
                                 <select  v-model="quotationStatus"
@@ -78,21 +78,21 @@
                                     <option  value="1">Договор</option>
                                 </select>
                             </div-->
-                            <div class="col-md-4">
+                            <!--div class="col-md-4">
                                 <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer m-auto" style="width:145px;">
                                     <div @click="filter">
                                         <i class="fa fa-filter"></i>
                                         <span class="pl-2">Показать</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div-->
                         </div>
 
                         <div class="d-inline-flex">
                             <a href="{{ route('express_front',['ID' => $product->id,'quotationId' => 0]) }}" target="_blank">
                                 <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 ml-2 pt-1 pb-1 mt-3 color-white button-accept pointer">
                                     <div>
-                                        <span class="pl-2">Создать</span>
+                                        <span class="pl-2">Создать ЭК</span>
                                     </div>
                                 </div>
                             </a>
