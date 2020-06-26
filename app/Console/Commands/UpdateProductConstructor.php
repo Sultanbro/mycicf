@@ -128,7 +128,9 @@ class UpdateProductConstructor extends Command
                                 'ParentISN' => (string)$row->NumCode,
                                 'Value' => null,
                                 'Remark' => null,
-                                'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
+                                'Childs' => (new SiteController())->getDictiList((string)$row->NumCode),
+                                'Required' => (string)$row->Required,
+                                'ReadOnly' => (string)$row->ReadOnly,
                             );
                         }
                     }

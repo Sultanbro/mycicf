@@ -186,7 +186,9 @@ class ProductsController extends Controller
                                     'ParentISN' => (string)$row->NumCode,
                                     'Value' => null,
                                     'Remark' => null,
-                                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode)
+                                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode),
+                                    'Required' => (string)$row->Required,
+                                    'ReadOnly' => (string)$row->ReadOnly,
                                 );
                             }
                         }
@@ -771,7 +773,9 @@ class ProductsController extends Controller
             $constructor = $cons = FullQuotation::find($request->quotationId);
 
             $calc_isn = $constructor->calc_isn;
+            $DA_isn = $constructor->DA_isn;
             $calc_id = $constructor->calc_id;
+            $DA_nomer = $constructor->DA_nomer;
             $express_isn = $constructor->express_isn;
             $contract_number = $constructor->contract_number;
             $premiumSum = $constructor->premiumSum;
@@ -836,7 +840,9 @@ class ProductsController extends Controller
             'attributes' => $attributes,
             'formular' => $formular,
             'calc_isn' => isset($calc_isn) && $calc_isn != '' ? $calc_isn : null,
+            'DA_isn' => isset($DA_isn) && $DA_isn != '' ? $DA_isn : null,
             'calc_id' => isset($calc_id) && $calc_id != '' ? $calc_id : null,
+            'DA_nomer' => isset($DA_nomer) && $DA_nomer != '' ? $DA_nomer : null,
             'express_isn' => isset($express_isn) && $express_isn != '' ? $express_isn : null,
             'contract_number' => isset($contract_number) && $contract_number != '' ? $contract_number : null,
             'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
@@ -914,12 +920,17 @@ class ProductsController extends Controller
 
             $getStatus = $kias->getAgrStatus($response->AgrCalcISN);    // Берем статус из киаса
             if(isset($getStatus->error)){   // Если вернулась ошибка, записываем первоначальный статус
-                $quotation->status = $order['formular']['status']['Value'];
+                $quotation->status = $status = $order['formular']['status']['Value'];
             } else {
                 if(isset($getStatus->Product) && $getStatus->Product == $order['prodIsn']){
-                    $quotation->status = (int)$getStatus->StatusISN;
+                    $quotation->status = $status = (int)$getStatus->StatusISN;
                     $quotation->status_name = (string)$getStatus->Status;
                 }
+            }
+
+            if(isset($request->calcDA) && $request->calcDA == 1){
+                $quotation->DA_isn = $DA_isn = (int)$response->RequestISN;
+                //$quotation->DA_nomer = $DA_nomer =  (int)$response->RequestID;
             }
 
             $quotation->save();
@@ -929,6 +940,9 @@ class ProductsController extends Controller
                 'premium' => (int)$response->PremiumSum,
                 'calc_isn' => (int)$response->AgrCalcISN,
                 'calc_id' => (string)$response->CalcID,
+                'DA_isn' => isset($DA_isn) && $DA_isn != '' ? $DA_isn : null,
+                'DA_nomer' => isset($DA_nomer) && $DA_nomer != '' ? $DA_nomer : null,
+                'status' => isset($status) ? $status : null,
                 'status_name' => (string)$getStatus->Status
             ]);
         }
@@ -1299,6 +1313,14 @@ class ProductsController extends Controller
                         base64_encode($file),
                         $sendType
                     );
+
+                    if(isset($results->error)){
+                        return response()->json([
+                            'success' => false,
+                            'error' => 'Ошибка загрузки файла, обратитесь к системному администратору',  //(string)$results->error->text
+                        ]);
+                    }
+
                 } catch (Exception $e) {
                     return response()->json([
                         'success' => false,

@@ -71,7 +71,7 @@
 
         <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
 
-        <div v-if="quotationId == 0 && contract_number == null && !DA.orderCreated" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+        <div v-if="quotationId == 0 && contract_number == null" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
             <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
         </div>
@@ -91,7 +91,7 @@
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
-                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA.orderNumber }}</div>
+                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA_isn }}</div>
                 <div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div>
                 <div class="fs-2" v-if="calc_id != null">Номер котировки {{ calc_id }}</div>
 
@@ -134,6 +134,8 @@
                 userList: [],
                 calc_isn: null,
                 calc_id: null,
+                DA_isn: null,
+                DA_nomer: null,
                 express_isn: null,
                 status_name: 'Оформление',
                 status: null,
@@ -216,7 +218,9 @@
 
                             this.DA.calcDA = response.data.calc_da == 1 ? true : false;
                             this.DA.orderCreated = response.data.calc_da == 1 ? true : false;
-                            this.DA.orderNumber = response.data.calc_isn;
+                            //this.DA.orderNumber = response.data.calc_isn;
+                            this.DA_isn = response.data.DA_isn;
+                            this.DA.DA_nomer = response.data.DA_nomer;
                             this.DA.remark = response.data.DAremark;
 
                             if(response.data.inspection != null){
@@ -332,10 +336,13 @@
                     .then(response => {
                         if (response.data.success) {
                             if(this.DA.calcDA) {
-                                alert('Заявка успешно создана.Номер заявки '+response.data.calc_isn);
-                                this.DA.orderNumber = response.data.calc_isn;
+                                alert('Заявка успешно создана.ИСН заявки '+response.data.DA_isn);
+                                //this.DA.orderNumber = response.data.calc_isn;
+                                this.DA_isn = response.data.DA_isn;
+                                this.DA.DA_nomer = response.data.DA_nomer;
                                 this.DA.orderCreated = true;
                             } else {
+                                this.status = response.data.status;
                                 this.price = response.data.premium;
                                 this.calculated = true;
                             }
