@@ -1,36 +1,36 @@
 <template>
     <div class=" marg-l  text-hw">  <!--class="col-12 row mt-2 mb-2 ml-0  h-auto"-->
-        <h5 class="font-shif">Объект</h5>
-        <div class="row ">
+        <h5 class="font-shif ml-l2">Объект</h5>
+        <div class="col-12 ">
 
-            <div class="col-lg-3 col-xl-3 col-md-3 ">
-                <label class="font-shif">Класс объекта : </label>
-                <select class="custom-select w-50" v-model="agrobject.ClassISN" @change="calcChanged">
+            <div class=" ml-l2 mt-3 col-3 ">
+                <label class="font-shif text-w">Класс объекта : </label>
+                <select class="custom-select " v-model="agrobject.ClassISN" @change="calcChanged">
                     <option v-for="dicti in agrobject.objekt" :value="dicti.ClassISN">{{dicti.classobjname}}</option>
                 </select>
             </div>
 
-            <div v-if="agrobject.ClassISN != ''" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12 mt-0">
-                <label class=" font-shif">Тип объекта : </label>
-                <select class="custom-select w-50" v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
+            <div v-if="agrobject.ClassISN != ''" class=" ml-l2 mt-3 col-3">
+                <label class=" font-shif text-w">Тип объекта : </label>
+                <select class="custom-select " v-model="agrobject.SubClassISN" @change="changeSelect($event,'ObjName'),calcChanged()">
                     <option v-for="dicti in agrobject.objekt[agrobject.ClassISN].obj"
                             :data-option="dicti.ObjName"
                             :value="dicti.SubClassISN">{{dicti.ObjName}}</option>
                 </select>
             </div>
 
-            <div class=" <!--col-lg-3 col-xl-3 col-md-6-->  ">
-                <label class="font-shif text-hw">Сумма страхования : </label>
-                <input type="number" class="attr-input-text w-20 "  v-model="agrobject.insureSum" @keyup="calcChanged">
+            <div class="  ml-l2 mt-3 col-3">
+                <label class="font-shif text-w ">Сумма страхования : </label>
+                <input type="number" class="attr-input-text  "  v-model="agrobject.insureSum" @keyup="calcChanged">
             </div>
 
-            <div v-if="DA.calcDA" class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="bold">Сумма премии : </label>
+            <div v-if="DA.calcDA" class="mt-3 col-3">
+                <label class="font-shif text-w ">Сумма премии : </label>
                 <input type="number" class="attr-input-text col-12 width-50"  v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
-            <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-12">
-                <label class="font-shif ml-l2">Сумма франшизы</label>
+            <div class=" ml-l2 mt-2 mt-3 col-3">
+                <label class="font-shif text-w">Сумма франшизы</label>
                 <select class="custom-select"
                         v-model="agrobject.franch">
                     <option v-for="index in franch"
@@ -38,15 +38,15 @@
                 </select>
             </div>
 
-            <div class="" v-if="agrobject.ClassISN != ''">
-                <div class="col-12 row mt-2 mb-2 ml-0 "
+            <div class="ml-l2" v-if="agrobject.ClassISN != ''">
+                <div class=""
                      v-for="(agrcond,index) in agrobject.objekt[agrobject.ClassISN].AGRCOND"
                      v-if="index == agrobject.ClassISN+agrobject.SubClassISN || Object.keys(agrobject.objekt[agrobject.ClassISN].obj).length == 0 && index == agrobject.ClassISN || agrobject.ClassISN == 2118 && index == agrobject.ClassISN"
                 >
-                    <h5 class="font-shif ml-l2">Риски</h5>
+                    <h5 class="font-shif ml-l2 ">Риски</h5>
                     <div class="row col-12">
-                        <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-12 ml-3">
-                            <label class="font-shif ">Значение : </label>
+                        <div class="col-3  ml-3">
+                            <label class="font-shif text-w ">Значение : </label>
                             <select class="cus-select"
                                     v-model="agrobject.RiskISN" @change="changeSelect($event,'InsClassISN'),calcChanged()">
                                 <option v-for="(dicti,index) in agrcond"

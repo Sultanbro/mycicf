@@ -75,7 +75,7 @@
                 <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
             </div>
         </div>
-        <div  class="div-ml">
+        <div  class="div-ml ">
             <div v-for="(agrobject,index) in agrobjects"class="mb-3  agreement-block "style="width:95%;">
                 <agr-object :agrobject="agrobject"
                             :aIndex="index"
@@ -88,7 +88,7 @@
         </div>
         <div  class=" div-ml div-marg div-mr">
             <div class="  agreement-block " >
-                <div v-for="attribute in attributes" class=" col-md-8  " style="width:95%;">
+                <div v-for="attribute in attributes" class=" col-md-12   " style="width:95%;">
                     <agr-attributes :attribute="attribute" :express-attr="expressAttr" :calc-changed="calcChanged"></agr-attributes>
                 </div>
             </div>
