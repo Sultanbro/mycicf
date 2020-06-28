@@ -243,6 +243,13 @@
                         }
                     }
                 }
+
+                this.calc_isn = null;
+                this.nshb_doc = null;
+                this.nshb_doc = null;
+                this.nshb_doc = null;
+                this.nshb_request = null;
+                this.nshb_status = null;
             },
             // createFullQuotation(){
             //     var full = confirm("Вы точно хотите перейти на страницу полной котировки?");

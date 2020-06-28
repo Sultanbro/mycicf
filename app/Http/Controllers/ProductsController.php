@@ -547,14 +547,14 @@ class ProductsController extends Controller
             foreach($agreement->AgreementCalc->row as $row){
                 if (isset($row->AGREEMENT_ADDATTR->row)){
                     foreach($row->AGREEMENT_ADDATTR->row as $attrRow){
-                       $from_express['AGREEMENT_ADDATTR'][(int)$attrRow->ATTRISN] = (string)$attrRow->VALUE;
+                       $from_express['AGREEMENT_ADDATTR'][(int)$attrRow->ATTRISN] = (string)$attrRow->VAL;
                     }
                 }
                 if (isset($row->AGROBJECT->row)){
                     foreach($row->AGROBJECT->row as $attrRow){
                         if(isset($attrRow->AGROBJECT_ADDATTR->row)){
                             foreach($attrRow->AGROBJECT_ADDATTR->row as $objectRow){
-                                $from_express['AGROBJECT_ADDATTR'][(int)$objectRow->ATTRISN] = (string)$objectRow->VALUE;
+                                $from_express['AGROBJECT_ADDATTR'][(int)$objectRow->ATTRISN] = (string)$objectRow->VAL;
                             }
                         }
                         if(isset($attrRow->AGRCOND->row)){
@@ -930,7 +930,7 @@ class ProductsController extends Controller
 
             if(isset($request->calcDA) && $request->calcDA == 1){
                 $quotation->DA_isn = $DA_isn = (int)$response->RequestISN;
-                //$quotation->DA_nomer = $DA_nomer =  (int)$response->RequestID;
+                $quotation->DA_nomer = $DA_nomer =  (int)$response->RequestID;
             }
 
             $quotation->save();
