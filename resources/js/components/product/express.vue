@@ -234,6 +234,9 @@
                             if (response.data.success) {
                                 console.log('Files sended successfull');
                                 this.docs.sendedFail = false;
+                                if(this.nshb){
+                                    alert('НШБ заявка успешно отправлена');
+                                }
                                 this.preloader(false);
                             } else {
                                 alert(response.data.error)
@@ -245,7 +248,12 @@
                             alert(error)
                             this.preloader(false);
                         });
+                } else {
+                    if(this.nshb){
+                        alert('НШБ заявка успешно отправлена');
+                    }
                 }
+
             },
             calcChanged(){
                 this.calculated = false;

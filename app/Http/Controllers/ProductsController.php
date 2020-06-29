@@ -545,6 +545,7 @@ class ProductsController extends Controller
         $from_express = [];                             // Временно записываем данные полной котировки, которые пришли из киаса
         if (isset($agreement->AgreementCalc->row)) {
             foreach($agreement->AgreementCalc->row as $row){
+                $from_express['agreementID'] = (string)$row->ID;
                 if (isset($row->AGREEMENT_ADDATTR->row)){
                     foreach($row->AGREEMENT_ADDATTR->row as $attrRow){
                        $from_express['AGREEMENT_ADDATTR'][(int)$attrRow->ATTRISN] = (string)$attrRow->VAL;
@@ -552,6 +553,9 @@ class ProductsController extends Controller
                 }
                 if (isset($row->AGROBJECT->row)){
                     foreach($row->AGROBJECT->row as $attrRow){
+                        $from_express['AGROBJECT']['ClassISN'] = (string)$attrRow->ClassISN;
+                        $from_express['AGROBJECT']['SubClassISN'] = (string)$attrRow->SubClassISN;
+                        $from_express['AGROBJECT']['ObjName'] = (string)$attrRow->SubClassName;
                         if(isset($attrRow->AGROBJECT_ADDATTR->row)){
                             foreach($attrRow->AGROBJECT_ADDATTR->row as $objectRow){
                                 $from_express['AGROBJECT_ADDATTR'][(int)$objectRow->ATTRISN] = (string)$objectRow->VAL;
@@ -559,7 +563,14 @@ class ProductsController extends Controller
                         }
                         if(isset($attrRow->AGRCOND->row)){
                             foreach($attrRow->AGRCOND->row as $agrcondRow){
-                                $from_express['AGRCOND'][(int)$agrcondRow->RiskISN] = (string)$agrcondRow->InsClassISN;
+                                //$from_express['AGRCOND'][(int)$agrcondRow->RiskISN] = (string)$agrcondRow->InsClassISN;
+                                $from_express['AGRCOND']['RiskISN'] = (string)$agrcondRow->RiskISN;
+                                $from_express['AGRCOND']['InsClassISN'] = (string)$agrcondRow->InsClassISN;
+                                $from_express['AGRCOND']['LimitSum'] = (string)$agrcondRow->LimitSum;
+                                $from_express['AGRCOND']['PremiumSum'] = (string)$agrcondRow->PremiumSum;
+//                                <DateSign>29.06.2020 00:00:00</DateSign>
+//                                <DateBeg>30.06.2020 00:00:00</DateBeg>
+//                                <DateEnd>29.06.2021 00:00:00</DateEnd>
                             }
                         }
 
@@ -584,9 +595,13 @@ class ProductsController extends Controller
 
             // Записываем данные полной котировки из киаса в полную котировку конструктора
 
-//            if(count($participants)){
-//
-//            }
+            if(count($participants) > 0){
+                foreach($participants as $key => $participant){
+                    if(isset($express_data->participants[0]->ISN) && $participant->ISN == $express_data->participants[0]->ISN){
+                        $participants[$key] = $express_data->participants[0];
+                    }
+                }
+            }
 
             if(count($attributes) > 0){
                 foreach($attributes as $key => $attribute){
@@ -598,10 +613,25 @@ class ProductsController extends Controller
 
             $objects = (array)$objects;
             if($objects){
-                //$objects->insureSum = '';
+                $objects['ClassISN'] = isset($from_express['AGROBJECT']['ClassISN']) ? $from_express['AGROBJECT']['ClassISN'] : '';
+                $objects['SubClassISN'] = isset($from_express['AGROBJECT']['SubClassISN']) ? $from_express['AGROBJECT']['SubClassISN'] : '';
+                $objects['ObjName'] = isset($from_express['AGROBJECT']['ObjName']) ? $from_express['AGROBJECT']['ObjName'] : '';
+                $objects['InsClassISN'] = isset($from_express['AGRCOND']['InsClassISN']) ? $from_express['AGRCOND']['InsClassISN'] : '';
+                $objects['RiskISN'] = isset($from_express['AGRCOND']['RiskISN']) ? $from_express['AGRCOND']['RiskISN'] : '';
+                $objects['insureSum'] = isset($from_express['AGRCOND']['LimitSum']) ? $from_express['AGRCOND']['LimitSum'] : '';
+
                 foreach($objects['objekt'] as $key => $object){
-                    if(isset($from_express['AGROBJECT_ADDATTR'][$object->ClassISN]) && $from_express['AGROBJECT_ADDATTR'][$object->ClassISN] != ''){
-                        $objects['objekt'][$key]['Value'] = $from_express['AGROBJECT_ADDATTR'][$object->ClassISN];
+//                    if(isset($from_express['AGROBJECT_ADDATTR'][$object->ClassISN]) && $from_express['AGROBJECT_ADDATTR'][$object->ClassISN] != ''){
+//                        //$objects['objekt'][$key]['Value'] = $from_express['AGROBJECT_ADDATTR'][$object->ClassISN];
+//                    }
+
+                    //print '<pre>';print_r($object);print '</pre>'; exit();
+                    if($object){
+                        foreach($object->AGROBJECT_ADDATTR as $index => $agrobject_addatr){
+                            if(isset($from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN]) && $from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN] != ''){
+                                $objects['objekt']->{$key}->AGROBJECT_ADDATTR->{$index}->Value = $from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN];
+                            }
+                        }
                     }
                 }
                 $objects = [$objects];
@@ -633,8 +663,8 @@ class ProductsController extends Controller
             $full_quotation->product_isn = $model->product_isn;
             $full_quotation->user_isn = Auth::user()->ISN;
             $full_quotation->calc_isn = (string)$response->AgrISN;
+            $full_quotation->calc_id = isset($from_express['agreementID']) ? $from_express['agreementID'] : 1;
             $full_quotation->express_isn = $express_quotation->calc_isn;
-            $full_quotation->calc_id = 0; //(string)$response->CalcID;
             $full_quotation->premiumSum = $express_quotation->premiumSum;
             $full_quotation->data = $changed_data;
             $full_quotation->calc_da = 0;
