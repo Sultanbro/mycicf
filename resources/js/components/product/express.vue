@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div class="text-center" v-if="calc_isn != null">
+        <div class="text-center" v-if="calc_isn != null && calc_id != null">
             <h5>Котировка исн - {{ calc_isn }}</h5>
+            <h5>Номер котировки - {{ calc_id }}</h5>
         </div>
         <participant v-for="(participant,index) in participants"
                            :key="index"
@@ -27,8 +28,11 @@
             <div class="col-12 text-center p-0">
                 <div class="fs-2 col-12" v-if="calculated || quotationId != 0 && price != 0">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
+                <div class="fs-2 col-12" v-if="calc_id != null">номер котировки {{calc_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div>
+                <div class="fs-2 col-12" v-if="nshb_id != null && nshb">номер НШБ {{nshb_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
+                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">номер заявки {{nshb_request}}</div>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить НШБ
                 </button>
@@ -52,6 +56,7 @@
                 attributes: [],
                 calculated : false,
                 calc_isn: null,
+                calc_id: null,
                 full_isn: null,
                 docs: {
                     files: [],
@@ -67,7 +72,10 @@
                 nshb: false,
                 nshb_doc: null,
                 nshb_request: null,
+                nshb_id: null,
+                nshb_request_id: null,
                 nshb_status: null,
+                redirect_link: null,
                 participantDocs: {
                     types: []
                 },
@@ -119,6 +127,7 @@
                 .then(response => {
                     if(response.data.success){
                         this.calc_isn = response.data.calc_isn;
+                        this.calc_id = response.data.calc_id;
                         this.attributes = response.data.attributes;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
@@ -128,6 +137,8 @@
                                 this.nshb = response.data.nshb['nshb'];
                                 this.nshb_doc = response.data.nshb['nshb_doc'];
                                 this.nshb_request = response.data.nshb['nshb_request'];
+                                this.nshb_id = response.data.nshb['nshb_id'];
+                                this.nshb_request_id = response.data.nshb['nshb_request_id'];
                                 this.nshb_status = response.data.nshb['nshb_status'];
                             }
                         }
@@ -143,6 +154,12 @@
                 });
             },
             calculate(){
+                if(this.nshb){
+                    if(Object.keys(this.docs.files).length == 0){
+                        alert('Загрузите пожалуйста файл НШБ');
+                        return false;
+                    }
+                }
                 this.preloader(true);
                 this.axios.post('/express/calculate', {
                     subjISN : this.subjISN,
@@ -156,14 +173,20 @@
                         this.price = response.data.premium;
                         this.calculated = true;
                         this.calc_isn = response.data.calc_isn;
+                        this.calc_id = response.data.calc_id;
                         this.preloader(false);
                         if(this.nshb){
                             this.nshb_doc = response.data.nshb_doc;
                             this.nshb_request = response.data.nshb_request;
+                            this.nshb_id = response.data.nshb_id;
+                            this.nshb_request_id = response.data.nshb_request_id;
+                            this.redirect_link = response.data.redirect_link;
                             this.sendDocs();
                         } else {
                             this.nshb_doc = null;
                             this.nshb_request = null;
+                            this.nshb_id = null;
+                            this.nshb_request_id = null;
                         }
                     }else{
                         alert(response.data.error)
@@ -220,6 +243,7 @@
                                 this.docs.sendedFail = false;
                                 if(this.nshb){
                                     alert('НШБ заявка успешно отправлена');
+                                    window.location.href = this.redirect_link;
                                 }
                                 this.preloader(false);
                             } else {
@@ -233,9 +257,10 @@
                             this.preloader(false);
                         });
                 } else {
-                    if(this.nshb){
-                        alert('НШБ заявка успешно отправлена');
-                    }
+                    // if(this.nshb){
+                    //     alert('НШБ заявка успешно отправлена');
+                    //     window.location.href = this.redirect_link;
+                    // }
                 }
 
             },
@@ -252,12 +277,15 @@
                     }
                 }
 
-                this.calc_isn = null;
-                this.nshb_doc = null;
-                this.nshb_doc = null;
-                this.nshb_doc = null;
-                this.nshb_request = null;
-                this.nshb_status = null;
+                if(this.quotationId == 0) {
+                    this.calc_isn = null;
+                    this.calc_id = null;
+                    this.nshb_doc = null;
+                    this.nshb_doc = null;
+                    this.nshb_doc = null;
+                    this.nshb_request = null;
+                    this.nshb_status = null;
+                }
             },
             // createFullQuotation(){
             //     var full = confirm("Вы точно хотите перейти на страницу полной котировки?");

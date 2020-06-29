@@ -367,6 +367,8 @@ class ProductsController extends Controller
                     'nshb' => 1,
                     'nshb_doc' => $quotation->nshb_doc,
                     'nshb_request' => $quotation->nshb_request,
+                    'nshb_id' => $quotation->nshb_id,
+                    'nshb_request_id' => $quotation->nshb_request_id,
                     'nshb_status' => $quotation->nshb_status
                 );
             }
@@ -430,6 +432,7 @@ class ProductsController extends Controller
             'premiumSum' => isset($quotation->premiumSum) ? $quotation->premiumSum : 0,
             'nshb' => isset($nshb) ? $nshb : null,
             'calc_isn' => isset($quotation->calc_isn) ? $quotation->calc_isn : null,
+            'calc_id' => isset($quotation->calc_id) ? $quotation->calc_id : null,
         ]);
     }
 
@@ -466,7 +469,7 @@ class ProductsController extends Controller
             $quotation->user_isn = Auth::user()->ISN;
             $quotation->sabj_isn = $subjISN;
             $quotation->calc_isn = (int)$response->ISN;   //(int)$response->AgrCalcISN;
-            $quotation->calc_id = (int)$response->ISN;    //(string)$response->CalcID;
+            $quotation->calc_id = (int)$response->CalcID;    //(string)$response->CalcID;
             $quotation->premiumSum = (int)$response->ROWSET->row->Premiumsum; //(int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->nshb = $request->nshb ? 1 : 0;
@@ -481,10 +484,13 @@ class ProductsController extends Controller
 //                }
 //            }
 
-        if(isset($response->CustomDoc)){
-            if((string)$response->CustomDoc != null) {
+//        if(isset($response->CustomDoc)){
+//            if((string)$response->CustomDoc != null) {
                 $quotation->nshb_doc = (string)$response->CustomDoc;    // Документ исн
                 $quotation->nshb_request = (string)$response->Request;
+                $quotation->nshb_id = (string)$response->DocID;    // номер документа
+                $quotation->nshb_request_id = (string)$response->RequestID;    // номер заявки НШБ
+
                 //$setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
 
 //                if(isset($setDocStatus->error)){
@@ -497,8 +503,8 @@ class ProductsController extends Controller
 //                if(isset($setDocStatus->Status)){
 //                    $quotation->nshb_status = (int)$setDocStatus->Status;
 //                }
-            }
-        }
+//            }
+//        }
 
             $quotation->save();
 //        }
@@ -507,8 +513,12 @@ class ProductsController extends Controller
             'success' => true,
             'premium' => (int)$response->ROWSET->row->Premiumsum,
             'calc_isn' => (int)$response->ISN,
+            'calc_id' => (int)$response->calc_id,
             'nshb_doc' => $quotation->nshb_doc,
-            'nshb_request' => $quotation->nshb_request
+            'nshb_request' => $quotation->nshb_request,
+            'nshb_id' => $quotation->nshb_id,
+            'redirect_link' => route('express_quotations_list',['productISN' => $quotation->product_isn]),
+            'nshb_request_id' => $quotation->nshb_request_id
         ]);
     }
 
