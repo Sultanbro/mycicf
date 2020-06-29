@@ -54,9 +54,11 @@ class UpdateAttributeDicti extends Command
                     foreach ($response->ROWSET->row as $row) {
                         if ((string)$row->NumCode != '') {
                             $childs = (new SiteController())->getDictiList((string)$row->NumCode);
-                            $deleteOldDicti = Dicti::where('parent_isn', (string)$row->NumCode)
-                                //->whereDate('created_at','!=', date('Y-m-d'))
-                                ->delete();
+                            if(count($childs) > 0) {
+                                $deleteOldDicti = Dicti::where('parent_isn', (string)$row->NumCode)
+                                    //->whereDate('created_at','!=', date('Y-m-d'))
+                                    ->delete();
+                            }
 
                             foreach ($childs as $child) {
                                 if ($child['Value'] != '' && $child['Value'] != null) {

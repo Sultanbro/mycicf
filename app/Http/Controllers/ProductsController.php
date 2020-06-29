@@ -186,7 +186,7 @@ class ProductsController extends Controller
                                     'ParentISN' => (string)$row->NumCode,
                                     'Value' => null,
                                     'Remark' => null,
-                                    'Childs' => (new SiteController())->getDictiList((string)$row->NumCode),
+                                    'Childs' => (string)$row->NumCode != '' && (string)$row->NumCode != null ? (new SiteController())->getDictiList((string)$row->NumCode) : [],
                                     'Required' => (string)$row->Required,
                                     'ReadOnly' => (string)$row->ReadOnly,
                                 );
@@ -404,7 +404,7 @@ class ProductsController extends Controller
                                 ]);
                             }
                         } else {
-                            //$dictiRes = (new SiteController())->getDictiList((string)$row->NumCode);
+                            $dictiRes = (new SiteController())->getDictiList((string)$row->NumCode);
                         }
                     }
 
