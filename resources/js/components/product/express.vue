@@ -22,6 +22,15 @@
             <agr-attributes :attribute="attribute" :express-attr="{}"  :calc-changed="calcChanged" :preloader="preloader"></agr-attributes>
         </div>
 
+        <!--div v-if="nshb" class="mt-2 mb-2 ml-0 agreement-block childs-not-bold">
+            <h4>Текст заявки</h4>
+            <div>
+                <div class="d-flex align-items-center mb-2">
+                    <input type="text" class="attr-input-text w-100" v-model="nshb_text" @keyup="calcChanged">
+                </div>
+            </div>
+        </div-->
+
         <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>
 
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
@@ -75,6 +84,7 @@
                 nshb_id: null,
                 nshb_request_id: null,
                 nshb_status: null,
+                //nshb_text: null,
                 redirect_link: null,
                 participantDocs: {
                     types: []
@@ -166,6 +176,7 @@
                     id : this.id,
                     attributes : this.attributes,
                     nshb: this.nshb,
+                    //nshb_text: this.nshb_text,
                     participants: this.participants
                 })
                 .then(response => {
