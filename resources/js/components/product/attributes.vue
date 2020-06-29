@@ -12,7 +12,7 @@
             </div>-->
             <div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
-                <input type="checkbox" class="attr-input-text width-checkbox"  v-model="attribute.Value"  @change="calcChanged" :readonly="readOnly">
+                <input type="checkbox" class=""  v-model="attribute.Value"  @change="calcChanged" :readonly="readOnly">
             </div>
             <div v-else-if="attribute.Type === 'DICTI'" class="d-flex align-items-center mb-2" >
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
