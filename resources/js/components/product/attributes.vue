@@ -7,6 +7,9 @@
                 <input v-if="attribute.AttrISN != 831381" type="text" class="attr-input-text w-70" v-model="attribute.Value" @keyup="calcChanged" :readonly="readOnly">
                 <input v-if="attribute.AttrISN == 831381" type="tel" v-model="attribute.Value" v-mask="'+###########'"  @keyup="calcChanged" class="attr-input-text w-70">
             </div>
+            <!--<div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
+                <input type="checkbox" class="attr-input-text width-checkbox"  v-model="attribute.Value"  @change="calcChanged">
+            </div>-->
             <div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
                 <input type="checkbox" class="attr-input-text width-checkbox"  v-model="attribute.Value"  @change="calcChanged" :readonly="readOnly">
