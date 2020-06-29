@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-6 mt-4  childs-not-bold">
-        <h6 class="font-shif <!--text-hw--> " >{{attribute.Label+ ':'}}</h6>
+        <h6 class="font-shif <!--text-hw--> " :class="isBold" >{{attribute.Label+ ':'}}</h6>
         <div >
             <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2 " style="heidth: 50px;" >
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
