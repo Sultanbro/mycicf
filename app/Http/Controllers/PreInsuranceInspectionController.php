@@ -7,6 +7,7 @@ use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -62,10 +63,10 @@ class PreInsuranceInspectionController extends Controller
     public function getInsuranceInspectionList(Request $request, KiasServiceInterface $kias)
     {
         $isn     = $request->isn;
-        $DateBeg = '01.05.2020';
-        $DateEnd = '27.06.2020';
+        $dateBeg = Date::createFromDate($request->dateBeg)->format('d.m.Y');
+        $dateEnd = Date::createFromDate($request->dateEnd)->format('d.m.Y');
         try {
-            $getInspections = $kias->getInsuranceInspectionList($isn, self::STATUS_ALL, $DateBeg, $DateEnd);
+            $getInspections = $kias->getInsuranceInspectionList($isn, self::STATUS_ALL, $dateBeg, $dateEnd);
             $inspections    = Helper::simpleXmlToArray($getInspections->Request);
         } catch (\Exception $e) {
             return response()->json([

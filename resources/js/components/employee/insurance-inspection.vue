@@ -1,11 +1,39 @@
 <template>
     <div class="news-tape-bg radius-4px mt-3 pb-2">
+        <div class="pt-4">
+            <div
+                class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
+                <div class="flex-row jc-sb">
+                    <div>
+                        <input type="date"
+                               class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1"
+                               :value="dateBeg && dateBeg.toISOString().split('T')[0]"
+                               @input="dateBeg = $event.target.valueAsDate">
+                    </div>
+                    <div>
+                        <input type="date"
+                               class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1"
+                               :value="dateEnd && dateEnd.toISOString().split('T')[0]"
+                               @input="dateEnd = $event.target.valueAsDate">
+                    </div>
+                    <div>
+                        <div class="flex-row date-color pl-2 pr-2">
+                            <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 pointer"
+                                 @click="getTables()">
+                                <div><i class="far fa-eye"></i></div>
+                                <div class="ml-2">Показать</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="ml-2 mr-2" v-if="none">
             <div class="coordination-none-text">
                 Нет заявок
             </div>
         </div>
-        <div class="ml-2 mr-2" v-show="inspections_data !== null" v-for="(inspections, index) in inspections_data"
+        <div v-else class="ml-2 mr-2" v-show="inspections_data !== null" v-for="(inspections, index) in inspections_data"
              :key="index">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2">
@@ -107,16 +135,19 @@
     export default {
         name: "insurance-inspection",
         data() {
+            let date = new Date();
             return {
                 inspections_data: {},
                 none: false,
                 inspection: {},
                 operators: {},
                 requestIsn: null,
+                dateBeg: new Date(date.setDate(date.getDate() - 7)),
+                dateEnd: new Date(),
             }
         },
         mounted() {
-            this.getTables()
+            this.getTables();
         },
         props: {
             isn: Number,
@@ -124,7 +155,11 @@
         methods: {
             getTables: function () {
                 this.preloader(true);
-                this.axios.post("/getInsuranceInspectionList", {isn: this.isn}).then((response) => {
+                this.axios.post("/getInsuranceInspectionList", {
+                    isn: this.isn,
+                    dateBeg: this.dateBeg,
+                    dateEnd: this.dateEnd,
+                }).then((response) => {
                     this.fetchResponse(response.data)
                 })
             },
@@ -133,12 +168,10 @@
                 if (response.success) {
                     if (!isEmpty) {
                         this.inspections_data = response.result;
+                        this.none = false;
                     }
                 } else {
-                    alert(response.error)
-                }
-
-                if (isEmpty) {
+                    console.log(response.error)
                     this.none = true;
                 }
                 this.preloader(false);
