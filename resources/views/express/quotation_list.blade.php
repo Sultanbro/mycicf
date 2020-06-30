@@ -106,7 +106,7 @@
                                         <thead >
                                         <tr class="bg-grayblue color-light-gray">
                                             <td class="text-left">#</td>
-                                            <td class="">ИСН котировки</td>
+                                            <td class="">Номер котировки</td>
                                             <td class="">НШБ</td>
                                             <td class="">Статус НШБ</td>
                                         </tr>
@@ -117,7 +117,7 @@
                                                 <td class="text-left">{{ $quotation->id }}</td>
                                                 <td>
                                                     <a href="{{ route('express_front', ['ID' => $quotation->product->id,'quotationId' => $quotation->id]) }}" target="_blank">
-                                                        {{ $quotation->calc_isn }}
+                                                        {{ $quotation->calc_id }}
                                                     </a>
                                                 </td>
                                                 <td><span >{{ $quotation->nshb == 1 ? 'да' : 'нет' }}</span></td>
@@ -136,7 +136,7 @@
                                                     @if($quotation->nshb == 1)
                                                         <div class="col-md-12">
                                                             <div class="custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer m-auto text-center"
-                                                                 @click="checkStatus({{ $quotation->id }},{{ $quotation->nshb_doc }})">
+                                                                 @click="checkStatus({{ $quotation->id }},{{ $quotation->nshb_doc }},'express')">
                                                                 Обновить статус
                                                             </div>
                                                         </div>
