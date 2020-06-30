@@ -253,6 +253,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/express/updateDocumentStatus', 'ProductsController@updateDocumentStatus');
         Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
         Route::get('/express/quotations/{productISN}', 'ProductsController@expressQuotationList')->name('express_quotations_list');
+        Route::post('/full/updateFullStatus', 'ProductsController@updateFullStatus');
         Route::get('/full', 'ProductsController@fullList');
         Route::get('/full/quotations/{productISN}', 'ProductsController@fullQuotationList')->name('full_quotations_list');
         Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@fullCreateEdit')->name('full_front');

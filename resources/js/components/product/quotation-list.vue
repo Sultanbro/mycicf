@@ -18,9 +18,10 @@
             filter(){
                 window.location.href = this.pageUrl+'?DA='+this.sendDA+'&status='+this.quotationStatus+'&type='+this.type+'&nshb='+this.nshb;
             },
-            checkStatus(id,isn){
+            checkStatus(id,isn,quotation_type){
+                let url = quotation_type == 'express' ? '/express/updateDocumentStatus' : '/full/updateFullStatus';
                 this.preloader(true);
-                this.axios.post('/express/updateDocumentStatus', {
+                this.axios.post(url, {
                     id: id,
                     isn: isn
                 })

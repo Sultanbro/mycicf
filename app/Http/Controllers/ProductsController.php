@@ -514,7 +514,7 @@ class ProductsController extends Controller
             'success' => true,
             'premium' => (int)$response->ROWSET->row->Premiumsum,
             'calc_isn' => (int)$response->ISN,
-            'calc_id' => (int)$response->calc_id,
+            'calc_id' => $quotation->calc_id,
             'nshb_doc' => $quotation->nshb_doc,
             'nshb_request' => $quotation->nshb_request,
             'nshb_id' => $quotation->nshb_id,
@@ -1517,6 +1517,28 @@ class ProductsController extends Controller
                     'success' => true,
                     'status' => $status
                 ]);
+            }
+        }
+    }
+
+    public function updateFullStatus(Request $request,KiasServiceInterface $kias){
+        $quotation = FullQuotation::find($request->id);
+        $getStatus = $kias->getAgrStatus($quotation->calc_isn);     // Берем статус из киаса
+        if(isset($getStatus->error)){                               // Если вернулась ошибка, записываем первоначальный статус
+            return response()->json([
+                'success' => false,
+                'error' => (string)$getStatus->error->text
+            ]);
+        } else {
+            if(isset($getStatus->Product) && $getStatus->Product == $quotation->product_isn){
+                $quotation->status = $status = (int)$getStatus->StatusISN;
+                $quotation->status_name = (string)$getStatus->Status;
+                if($quotation->save()){
+                    return response()->json([
+                        'success' => true,
+                        'status' => $status
+                    ]);
+                }
             }
         }
     }

@@ -136,7 +136,7 @@
                                                     @if($quotation->nshb == 1)
                                                         <div class="col-md-12">
                                                             <div class="custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer m-auto text-center"
-                                                                 @click="checkStatus({{ $quotation->id }},{{ $quotation->nshb_doc }})">
+                                                                 @click="checkStatus({{ $quotation->id }},{{ $quotation->nshb_doc }},'express')">
                                                                 Обновить статус
                                                             </div>
                                                         </div>
