@@ -26,7 +26,7 @@
             <span v-if="participant.Label">({{ participant.Label }})</span>
             <span v-else>(Страхователь)</span>
         </button>-->
-            <button type="button" class="btn btn-outline-info md-7  " @click="openParticipantForm(pIndex)">
+            <button type="button" class="btn btn-outline-info md-7  "  style="width:100%" @click="openParticipantForm(pIndex)">
                 Изменить
                 <span v-if="!moreParticipant">
                     <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -37,8 +37,9 @@
         <div class=" flex-center " >
             <button v-show="participant.subjISN == null || participant.subjISN == ''"
                     type="button" class="btn btn-outline-info md-7  "
+                    style="width:100%"
                     @click="openParticipantForm(pIndex)">
-                Указать
+                Указать<br>
                 <span v-if="participant.Label">({{ participant.Label }})</span>
                 <span v-else>(Страхователь)</span>
             </button>

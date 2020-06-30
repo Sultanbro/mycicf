@@ -1632,7 +1632,7 @@ body {
 
 /*MEDIA*/
 
-@media (max-width: 800px){
+@media (max-width: 1060px){
     .ad-flex-column-800{
         display: flex;
         flex-flow: column !important;
@@ -1893,6 +1893,7 @@ textarea::-webkit-scrollbar-thumb {
     margin-top: 10px;
 }
 
+
 /*Colleagues page*/
 .colleagues-section {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -2103,7 +2104,7 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 .custom-select{
-    height: 35px !important;
+    height: 40px !important;
     border: 1.75px solid #82a9f8 !important;
 
 }
@@ -2153,12 +2154,18 @@ textarea::-webkit-scrollbar-thumb {
     background: white;
     color: black;
 }
-.attr-input-text{
+/*.attr-input-text{
     outline: 0;
     border-width: 0 0 2px;
     border-color: #82a9f8;
     height: 30%;
 
+}*/
+.attr-input-text{
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: #82a9f8;
+    height: 35px;
 }
 .add-button{
     cursor : pointer;
@@ -2308,7 +2315,7 @@ textarea::-webkit-scrollbar-thumb {
         width:100%!important;
     }
     .width-checkbox{
-        width:5% !important;
+        width:10px !important;
     }
     .col-md-12{
         width: 90%!important;
@@ -2354,6 +2361,28 @@ textarea::-webkit-scrollbar-thumb {
 
 
 }
+@media (max-width: 992px) {
+    .agr-block {
+        display: grid;
+        grid-template-columns: 2fr;
+        grid-gap: 20px;
+    }
+    .flex-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .text-hw{
+        font-size:12px;
+    }
+    .flex-col-str {
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+
+    }
+
+}
 @media (max-width: 1062px) {
     .text-hw{
         height: 50%;
@@ -2381,28 +2410,7 @@ textarea::-webkit-scrollbar-thumb {
     }
 
 }
-@media (max-width: 992px) {
-    .agr-block {
-        display: grid;
-        grid-template-columns: 2fr;
-        grid-gap: 20px;
-    }
-    .flex-center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .text-hw{
-        font-size:12px;
-    }
-    .flex-col-str {
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
 
-    }
-
-}
 
 
 
