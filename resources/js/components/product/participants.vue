@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-show="participant.subjISN != null && participant.subjISN != ''">
-            <div class="col-md-12 pl-0">
+            <div class="col-md-12 pl-0 text-center">
                 <span v-if="participant.lastName != null" >
                     {{ participant.lastName != null ? participant.lastName : ''}}
                     {{ participant.firstName != null ? participant.firstName : ''}}
