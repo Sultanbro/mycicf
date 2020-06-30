@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null">
-            <h5>Котировка {{ calc_isn }}
-                <span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span>
+            <h5>Котировка
+                <!--span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span-->
             </h5>
-            <h5 v-if="calc_id != null">Номер котировки {{ calc_id }}</h5>
+            <h5 v-if="calc_id != null">№ котировки {{ calc_id }}</h5>
         </div>
         <div class="col-md-12 mb-4 mt-4">
             <div class="row">
@@ -92,11 +92,11 @@
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
                 <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
-                <div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA_isn }}</div>
-                <div class="fs-2" v-if="DA_nomer != null">Номер заявки {{ DA_nomer }}</div>
-                <div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div>
-                <div class="fs-2" v-if="calc_id != null">Номер котировки {{ calc_id }}</div>
-                <div class="fs-2" v-if="express_isn != null">Номер экспресс котировки {{ express_isn }}</div>
+                <!--div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA_isn }}</div-->
+                <div class="fs-2" v-if="DA.orderCreated && DA_nomer != null">Заявка отправлена в ДА. № заявки {{ DA_nomer }}</div>
+                <!--div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div-->
+                <div class="fs-2" v-if="calc_id != null">№ котировки {{ calc_id }}</div>
+                <div class="fs-2" v-if="express_isn != null">№ экспресс котировки {{ express_isn }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
@@ -339,7 +339,7 @@
                     .then(response => {
                         if (response.data.success) {
                             if(this.DA.calcDA) {
-                                alert('Заявка успешно создана.ИСН заявки '+response.data.DA_isn);
+                                alert('Заявка успешно создана.№ заявки '+response.data.DA_nomer);
                                 //this.DA.orderNumber = response.data.calc_isn;
                                 this.DA_isn = response.data.DA_isn;
                                 this.DA.DA_nomer = response.data.DA_nomer;
