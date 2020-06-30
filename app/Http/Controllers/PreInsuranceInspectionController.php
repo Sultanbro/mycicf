@@ -139,7 +139,6 @@ class PreInsuranceInspectionController extends Controller
      */
     private function getDataWithChild($inspectionsInfo)
     {
-        $getDataWithDicts = [];
         $index            = 0;
         $count            = 0;
         $getUrl           = Session::get('url_for_image');
@@ -149,6 +148,7 @@ class PreInsuranceInspectionController extends Controller
                 if ($info['DocStatus'] == self::ASSIGNED) {
                     $count++;
                 }
+                $getDataWithDicts = [];
                 foreach ($info['details']['row'] as $key => $detail) {
                     $getDicts           = Dicti::select('id', 'isn', 'fullname', 'condition_for_property')
                         ->where('parent_isn', $detail['detailisn'])
