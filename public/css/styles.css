@@ -2153,12 +2153,18 @@ textarea::-webkit-scrollbar-thumb {
     background: white;
     color: black;
 }
-.attr-input-text{
+/*.attr-input-text{
     outline: 0;
     border-width: 0 0 2px;
     border-color: #82a9f8;
     height: 30%;
 
+}*/
+.attr-input-text{
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: #82a9f8;
+    height: 35px;
 }
 .add-button{
     cursor : pointer;
@@ -2308,7 +2314,7 @@ textarea::-webkit-scrollbar-thumb {
         width:100%!important;
     }
     .width-checkbox{
-        width:5% !important;
+        width:10px !important;
     }
     .col-md-12{
         width: 90%!important;
