@@ -358,11 +358,13 @@ class ProductsController extends Controller
             $attributes = json_decode($quotation->data)->attributes;
             $participants = json_decode($quotation->data)->participants;
 
-            if($quotation->nshb == 1 && $quotation->nshb_doc != 2518){      // Получаем статус из киаса если статус не подписан
-                $nshb_status = $kias->getOrSetDocs($quotation->nshb_doc, 2, null);
-                if(isset($nshb_status->Status)){
-                    $quotation->nshb_status = $status = (int)$nshb_status->Status;
-                    $quotation->save();
+            if($quotation->nshb == 1){
+                if($quotation->nshb_status != 2518) { // Получаем статус из киаса если статус не подписан
+                    $nshb_status = $kias->getOrSetDocs($quotation->nshb_doc, 2, null);
+                    if (isset($nshb_status->Status)) {
+                        $quotation->nshb_status = $status = (int)$nshb_status->Status;
+                        $quotation->save();
+                    }
                 }
                 $nshb = array(
                     'nshb' => 1,
@@ -487,10 +489,10 @@ class ProductsController extends Controller
 
 //        if(isset($response->CustomDoc)){
 //            if((string)$response->CustomDoc != null) {
-                $quotation->nshb_doc = (string)$response->CustomDoc;    // Документ исн
-                $quotation->nshb_request = (string)$response->Request;
-                $quotation->nshb_id = (string)$response->DocID;    // номер документа
-                $quotation->nshb_request_id = (string)$response->RequestID;    // номер заявки НШБ
+                $quotation->nshb_doc = (string)$response->CustomDoc != '' ? (string)$response->CustomDoc : null;    // Документ исн
+                $quotation->nshb_request = (string)$response->Request != '' ? (string)$response->Request : null;
+                $quotation->nshb_id = (string)$response->DocID != '' ? (string)$response->DocID : null;    // номер документа
+                $quotation->nshb_request_id = (string)$response->RequestID != '' && (string)$response->RequestID != null ? (string)$response->RequestID : null;    // номер заявки НШБ
 
                 //$setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
 
@@ -676,6 +678,7 @@ class ProductsController extends Controller
             $full_quotation->calc_isn = (string)$response->AgrISN;
             $full_quotation->calc_id = isset($from_express['agreementID']) ? $from_express['agreementID'] : 1;
             $full_quotation->express_isn = $express_quotation->calc_isn;
+            $full_quotation->express_id = $express_quotation->calc_id;
             $full_quotation->premiumSum = $express_quotation->premiumSum;
             $full_quotation->data = $changed_data;
             $full_quotation->calc_da = 0;
@@ -690,6 +693,9 @@ class ProductsController extends Controller
                 }
             }
             $full_quotation->save();
+
+            $express_quotation->full_id = $full_quotation->calc_id;
+            $express_quotation->save();
 
             return response()->json([
                 'success' => true,
@@ -980,7 +986,7 @@ class ProductsController extends Controller
                 'success' => true,
                 'premium' => (int)$response->PremiumSum,
                 'calc_isn' => (int)$response->AgrCalcISN,
-                'calc_id' => (string)$response->CalcID,
+                'calc_id' => $quotation->calc_id,
                 'DA_isn' => isset($DA_isn) && $DA_isn != '' ? $DA_isn : null,
                 'DA_nomer' => isset($DA_nomer) && $DA_nomer != '' ? $DA_nomer : null,
                 'status' => isset($status) ? $status : null,

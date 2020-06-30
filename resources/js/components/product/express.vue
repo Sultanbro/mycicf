@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null && calc_id != null">
-            <h5>Котировка исн - {{ calc_isn }}</h5>
-            <h5>Номер котировки - {{ calc_id }}</h5>
+            <h5>Котировка №{{ calc_id }}</h5>
+            <!--h5>Номер котировки - {{ calc_id }}</h5-->
         </div>
         <participant v-for="(participant,index) in participants"
                            :key="index"
@@ -51,13 +51,13 @@
 
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
-                <div class="fs-2 col-12" v-if="calculated || quotationId != 0 && price != 0">Сумма премий {{price}} Тенге</div>
-                <div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
-                <div class="fs-2 col-12" v-if="calc_id != null">номер котировки {{calc_id}}</div>
-                <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div>
-                <div class="fs-2 col-12" v-if="nshb_id != null && nshb">номер НШБ {{nshb_id}}</div>
+                <div class="fs-2 col-12" v-if="calculated && !nshb|| quotationId != 0 && price != 0 && !nshb || nshb && nshb_status == 2518 || nshb && nshb_status == '2518'">Сумма премий {{price}} Тенге</div>
+                <!--div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
-                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">номер заявки {{nshb_request}}</div>
+                <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
+                <div class="fs-2 col-12" v-if="calc_id != null">№ котировки {{calc_id}}</div>
+                <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
+                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки {{nshb_request}}</div>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить НШБ
                 </button>
@@ -166,6 +166,12 @@
                                 this.nshb_id = response.data.nshb['nshb_id'];
                                 this.nshb_request_id = response.data.nshb['nshb_request_id'];
                                 this.nshb_status = response.data.nshb['nshb_status'];
+
+                                for(let key in this.attributes){
+                                    if(this.attributes[key].AttrISN == 1422011){    // если есть НШБ номер то присваиваем аттрибуту НШБ
+                                        this.attributes[key].Value = this.nshb_id;
+                                    }
+                                }
                             }
                         }
                         this.preloader(false);
