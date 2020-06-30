@@ -40,16 +40,15 @@ class UpdateProductConstructor extends Command
      *
      * @return mixed
      */
-    public function handle(KiasServiceInterface $kias){
-        $kias->initSystem();
+    public function handle(){
         try{
             $constructors = FullConstructor::get();
             foreach($constructors as $constructor){
                 $data = json_decode($constructor->data);
                 $dataobjects = isset($data->agrobjects) ? $data->agrobjects : [];
-                $agrobjects = $this->updateAgrobject($constructor,$dataobjects,$kias);
-                $agrclauses = $this->updateAgrclause($data);
-                $attributes = $this->updateAgrattribute($data);
+                $agrobjects = $this->updateAgrobject($constructor,$dataobjects,$constructor->product->name);
+                $agrclauses = $this->updateAgrclause($data,$constructor->product->name);
+                $attributes = $this->updateAgrattribute($data,$constructor->product->name);
 
                 if(count($agrobjects) > 0 && count($agrclauses) > 0 && count($attributes) > 0) {
                     $newconstructor = FullConstructor::where('product_isn',$constructor->product_isn)->first();
@@ -62,13 +61,13 @@ class UpdateProductConstructor extends Command
                     ));
                     try{
                         if($newconstructor->update()){
-                            echo 'Конструктор продукта '.$constructor->product->name.' успешно обновлен';
+                            echo "Конструктор продукта ".$constructor->product->name." успешно обновлен\n";
                         }
                     }catch (\Exception $ex){
                         throw new \Exception($ex->getMessage());
                     }
                 } else {
-                    echo 'Ошибка обновления конструктора продукта - '.$constructor->product->name;
+                    echo "Ошибка обновления конструктора продукта - ".$constructor->product->name."\n";
                 }
             }
         }catch (\Exception $ex){
@@ -76,7 +75,9 @@ class UpdateProductConstructor extends Command
         }
     }
 
-    public function updateAgrobject($constructor,$objects,$kias){
+    public function updateAgrobject($constructor,$objects,$product_name){
+        $kias = new Kias();
+        $kias->initSystem();
         $response = $kias->getFullObject($constructor->product_isn);
         $objects = $objects;
         $checkResponse = 0;
@@ -181,12 +182,12 @@ class UpdateProductConstructor extends Command
             }
         }
         if($checkResponse == 1){
-            echo 'Данные объекта получены ';
+            echo "Данные объекта получены (".$product_name.")\n";
         }
         return $objects;
     }
 
-    public function updateAgrclause($data){
+    public function updateAgrclause($data,$product_name){
         if(isset($data->agrclauses)){
             $agrclauses = $data->agrclauses;
             $checkResponse = 0;
@@ -200,13 +201,13 @@ class UpdateProductConstructor extends Command
                 }
             }
             if($checkResponse == 1){
-                echo 'Данные оговорок и ограничений получены ';
+                echo "Данные оговорок и ограничений получены (".$product_name.")\n";
             }
             return $agrclauses;
         }
     }
 
-    public function updateAgrattribute($data){
+    public function updateAgrattribute($data,$product_name){
         if(isset($data->attributes)){
             $attributes = $data->attributes;
             $checkResponse = 0;
@@ -220,7 +221,7 @@ class UpdateProductConstructor extends Command
                 }
             }
             if($checkResponse == 1){
-                echo 'Данные атрибутов получены ';
+                echo "Данные атрибутов получены (".$product_name.")\n";
             }
             return $attributes;
         }

@@ -79,8 +79,14 @@ class UpdateRegions extends Command
                                 ]);
                         //}
                         echo "Данные по ".$row->name." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".$row->name." \n";
+                        return false;
                     }
                 }
+                //echo "Данные по регионам успешно записаны. \n";
+            } else {
+                return 'Ошибка.'.(string)$response->error->text;
             }
             return $isns;
         }catch (\Exception $ex){
@@ -119,8 +125,12 @@ class UpdateRegions extends Command
                             //echo "Данные по ".$child_row->name." успешно записаны. \n";
                         } else {
                             echo "Ошибка записи ".$child_row->name." \n";
+                            return false;
                         }
                     }
+                    echo "Города по региону ".$parent['name']." успешно записаны\n";
+                } else {
+                    return 'Ошибка.'.(string)$child_response->error->text;
                 }
             }
             return $isns;
