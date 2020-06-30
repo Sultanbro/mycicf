@@ -471,8 +471,8 @@ class ProductsController extends Controller
             $quotation->product_isn = $model->product_isn;
             $quotation->user_isn = Auth::user()->ISN;
             $quotation->sabj_isn = $subjISN;
-            $quotation->calc_isn = (int)$response->ISN;   //(int)$response->AgrCalcISN;
-            $quotation->calc_id = (int)$response->CalcID;    //(string)$response->CalcID;
+            $quotation->calc_isn = (string)$response->ISN;   //(int)$response->AgrCalcISN;
+            $quotation->calc_id = (string)$response->CalcID;    //(string)$response->CalcID;
             $quotation->premiumSum = (int)$response->ROWSET->row->Premiumsum; //(int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->nshb = $request->nshb ? 1 : 0;
@@ -515,7 +515,7 @@ class ProductsController extends Controller
         return response()->json([
             'success' => true,
             'premium' => (int)$response->ROWSET->row->Premiumsum,
-            'calc_isn' => (int)$response->ISN,
+            'calc_isn' => (string)$response->ISN,
             'calc_id' => $quotation->calc_id,
             'nshb_doc' => $quotation->nshb_doc,
             'nshb_request' => $quotation->nshb_request,
@@ -961,7 +961,7 @@ class ProductsController extends Controller
         if(isset($response->PremiumSum)) {
             $quotation->product_isn = $order['prodIsn'];
             $quotation->user_isn = Auth::user()->ISN;
-            $quotation->calc_isn = (int)$response->AgrCalcISN;
+            $quotation->calc_isn = (string)$response->AgrCalcISN;
             $quotation->calc_id = (string)$response->CalcID;
             $quotation->premiumSum = $request->calcDA == 1 ? 0 : (int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
@@ -978,8 +978,8 @@ class ProductsController extends Controller
             }
 
             if(isset($request->calcDA) && $request->calcDA == 1){
-                $quotation->DA_isn = $DA_isn = (int)$response->RequestISN;
-                $quotation->DA_nomer = $DA_nomer =  (int)$response->RequestID;
+                $quotation->DA_isn = $DA_isn = (string)$response->RequestISN;
+                $quotation->DA_nomer = $DA_nomer =  (string)$response->RequestID;
             }
 
             $quotation->save();
@@ -987,7 +987,7 @@ class ProductsController extends Controller
             return response()->json([
                 'success' => true,
                 'premium' => (int)$response->PremiumSum,
-                'calc_isn' => (int)$response->AgrCalcISN,
+                'calc_isn' => (string)$response->AgrCalcISN,
                 'calc_id' => $quotation->calc_id,
                 'DA_isn' => isset($DA_isn) && $DA_isn != '' ? $DA_isn : null,
                 'DA_nomer' => isset($DA_nomer) && $DA_nomer != '' ? $DA_nomer : null,
@@ -1056,14 +1056,16 @@ class ProductsController extends Controller
     public function participantsToKiasAddAttr($data){
         $result = [];
         foreach ($data['participants'] as $participant){
-            array_push($result,
-                [
-                    'ClassISN' => $participant['ISN'],
-                    'SubjISN'  => $participant['subjISN'],
-                    'DateBeg'  => date('d.m.Y',strtotime($data['contractDate']['begin'])),
-                    'DateEnd'  => date('d.m.Y',strtotime($data['contractDate']['end'])),
-                ]
-            );
+            //if($participant['ISN'] != 2103) {
+                array_push($result,
+                    [
+                        'ClassISN' => $participant['ISN'],
+                        'SubjISN' => $participant['subjISN'],
+                        'DateBeg' => date('d.m.Y', strtotime($data['contractDate']['begin'])),
+                        'DateEnd' => date('d.m.Y', strtotime($data['contractDate']['end'])),
+                    ]
+                );
+            //}
         }
         return $result;
     }

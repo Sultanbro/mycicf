@@ -46,8 +46,9 @@
                 </div>
             </div>
         </div-->
-
-        <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>
+        <div class="agreement-block ">
+            <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>
+        </div>
 
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
@@ -57,7 +58,7 @@
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
                 <div class="fs-2 col-12" v-if="calc_id != null">№ котировки {{calc_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
-                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки {{nshb_request}}</div>
+                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки {{nshb_request_id}}</div>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить НШБ
                 </button>
