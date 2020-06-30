@@ -106,7 +106,7 @@
                                         <thead >
                                         <tr class="bg-grayblue color-light-gray">
                                             <td class="text-left">#</td>
-                                            <td class="">Котировка</td>
+                                            <td class="">Номер котировки</td>
                                             <td class="">Договор</td>
                                             <td class="">Отправлен в ДА</td>
                                             <!--td class="">Статус</td-->
@@ -118,7 +118,7 @@
                                                 <td class="text-left">{{ $quotation->id }}</td>
                                                 <td>
                                                     <a href="{{ route('full_front', ['ID' => $quotation->product->id,'quotationId' => $quotation->id]) }}" target="_blank">
-                                                        {{ $quotation->calc_isn }}
+                                                        {{ $quotation->calc_id }}
                                                     </a>
                                                 </td>
                                                 <td>{{ $quotation->contract_number == '' ? '-' : $quotation->contract_number }}</td>
