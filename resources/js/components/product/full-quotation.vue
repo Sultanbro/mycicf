@@ -137,12 +137,12 @@
         <div class="d-flex justify-content-center w-100 mt-3 mb-3">
             <div class="text-center">
                 <div class="fs-2" v-if="calculated && !DA.calcDA">Сумма премий {{price}} Тенге</div>
-                <div class="fs-2" v-if="contract_number != null && !DA.calcDA">Номер договора {{contract_number}}</div>
+                <div class="fs-2" v-if="contract_number != null && !DA.calcDA">№ договора {{contract_number}}</div>
                 <!--div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA_isn }}</div-->
                 <div class="fs-2" v-if="DA.orderCreated && DA_nomer != null">Заявка отправлена в ДА. № заявки {{ DA_nomer }}</div>
                 <!--div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div-->
                 <div class="fs-2" v-if="calc_id != null">№ котировки {{ calc_id }}</div>
-                <div class="fs-2" v-if="express_isn != null">№ экспресс котировки {{ express_isn }}</div>
+                <div class="fs-2" v-if="express_id != null">№ экспресс котировки {{ express_id }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
@@ -186,6 +186,7 @@
                 DA_isn: null,
                 DA_nomer: null,
                 express_isn: null,
+                express_id: null,
                 status_name: 'Оформление',
                 status: null,
                 contract_number: null,
@@ -259,6 +260,7 @@
                             this.calc_isn = response.data.calc_isn;
                             this.calc_id = response.data.calc_id;
                             this.express_isn = response.data.express_isn;
+                            this.express_id = response.data.express_id;
                             this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
                             this.status = response.data.status;
                             this.contract_number = response.data.contract_number;
@@ -380,7 +382,8 @@
                         contractDate: this.period,
                         calcDA: this.DA.calcDA == true ? 1 : 0,
                         DAremark: this.DA.remark,
-                        express_isn: this.express_isn
+                        express_isn: this.express_isn,
+                        express_id: this.express_id
                     })
                     .then(response => {
                         if (response.data.success) {
@@ -512,7 +515,7 @@
                 }
             },
             calcChanged(){
-                if(this.quotationId == 0 || this.quotationId != 0 && this.express_isn != null) {
+                if(this.quotationId == 0) {
                     this.calculated = false;
                     this.calc_id = null;
                     this.calc_isn = null;

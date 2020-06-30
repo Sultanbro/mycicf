@@ -824,6 +824,7 @@ class ProductsController extends Controller
             $calc_id = $constructor->calc_id;
             $DA_nomer = $constructor->DA_nomer;
             $express_isn = $constructor->express_isn;
+            $express_id = $constructor->express_id;
             $contract_number = $constructor->contract_number;
             $premiumSum = $constructor->premiumSum;
             $docs = json_decode($constructor->docs);
@@ -891,6 +892,7 @@ class ProductsController extends Controller
             'calc_id' => isset($calc_id) && $calc_id != '' ? $calc_id : null,
             'DA_nomer' => isset($DA_nomer) && $DA_nomer != '' ? $DA_nomer : null,
             'express_isn' => isset($express_isn) && $express_isn != '' ? $express_isn : null,
+            'express_id' => isset($express_id) && $express_id != '' ? $express_id : null,
             'contract_number' => isset($contract_number) && $contract_number != '' ? $contract_number : null,
             'price' => isset($premiumSum) && $premiumSum != '' ? $premiumSum : 0,
             'docs' => isset($docs) && $docs != '' ? $docs : [],
