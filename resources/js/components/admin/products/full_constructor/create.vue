@@ -97,7 +97,8 @@
                 this.axios.post('/calc/full-constructor', this.sections)
                     .then(response => {
                         if(response.data.success){
-                            alert('Данные успешно записаны');
+                            //alert('Данные успешно записаны');
+                            window.location.href = response.data.redirect_link;
                             this.preloader(false);
                         }else{
                             alert(response.data.error);

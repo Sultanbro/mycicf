@@ -84,6 +84,7 @@
         <online-inspection :inspection="inspection"
                            :quotationId="quotationId"
                            :calcChanged="calcChanged"
+                           v-if="formular.inspection"
                            :contract_number="contract_number">
         </online-inspection>
 

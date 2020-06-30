@@ -311,7 +311,8 @@ class ProductsController extends Controller
             ]);
         }
         return response()->json([
-            'success' => true
+            'success' => true,
+            'redirect_link' => route('list.full')
         ]);
     }
 

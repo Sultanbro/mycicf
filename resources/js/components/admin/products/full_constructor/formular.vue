@@ -41,7 +41,10 @@
             <treeselect v-model="formular[0].curator.Value" :options="curatorOptions" />
         </div>
 
-
+        <div class="form-group col-md-4 col-lg-4 col-6 text-center">
+            <label for="inspection">Осмотр</label>
+            <input id="inspection" type="checkbox" class="attr-input-text col-12" v-model="formular[0].inspection">
+        </div>
     </div>
 </template>
 
