@@ -61,8 +61,7 @@
                                     <span>Отчет</span>
                                 </li>
                             </a>
-                            <a href="/insurance/inspection" class="pt-2 pb-2 color-darkgray font-size-1_2"
-                               v-if="[5012, 3321420, 1445752, 3418677].includes(this.isn)">
+                            <a href="/insurance/inspection" class="pt-2 pb-2 color-darkgray font-size-1_2">
                                 <li>
                                     <i class="fa fa-car" aria-hidden="true"></i>
                                     <span>Предстраховой осмотр</span>

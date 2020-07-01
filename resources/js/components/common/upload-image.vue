@@ -55,7 +55,7 @@
             dragCount: 0,
             files: [],
             images: [],
-            maxCount: 2
+            maxCount: 15
         }),
         props: {
             info: Object,
