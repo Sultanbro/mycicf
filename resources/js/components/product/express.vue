@@ -193,6 +193,19 @@
                         return false;
                     }
                 }
+
+                if(this.subjISN == '' || this.subjISN == null){
+                    alert('Укажите пожалуйста страхователя');
+                    return false;
+                }
+
+                for(let index in this.attributes){
+                    if(this.attributes[index].Required == 'Y' && this.attributes[index].Value == '' || this.attributes[index].Required == 'Y' && this.attributes[index].Value == null){
+                        alert('Укажите пожалуйста атрибут '+this.attributes[index].Label);
+                        return false;
+                    }
+                }
+
                 this.preloader(true);
                 this.axios.post('/express/calculate', {
                     subjISN : this.subjISN,
