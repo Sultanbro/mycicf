@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div-->
-        <div class="agreement-block ">
+        <div class="agreement-block mb-2" v-if="nshb" >
             <upload-docs v-if="nshb" :docs="docs" quotationId="0" :calc-changed="calcChanged"></upload-docs>
         </div>
 

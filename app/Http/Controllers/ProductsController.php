@@ -146,6 +146,7 @@ class ProductsController extends Controller
                     $objects['RiskISN'] = '';
                     $objects['InsClassISN'] = '';
                     $objects['insureSum'] = '';
+                    $objects['franch'] = '';
                     $objects['DAsum'] = null;
                     $i = 0;
                     foreach($response->Object->row as $object) {
@@ -357,6 +358,13 @@ class ProductsController extends Controller
             $quotation = ExpressQuotation::find($request->quotationId);
             $attributes = json_decode($quotation->data)->attributes;
             $participants = json_decode($quotation->data)->participants;
+
+            if($quotation->user_isn != Auth::user()->ISN){
+                return response()->json([
+                    'success' => false,
+                    'error' => 'У вас нет доступа к этой записи'
+                ]);
+            }
 
             if($quotation->nshb == 1){
                 if($quotation->nshb_status != 2518) { // Получаем статус из киаса если статус не подписан
@@ -819,6 +827,13 @@ class ProductsController extends Controller
         if($request->quotationId != 0) {
             $constructor = $cons = FullQuotation::find($request->quotationId);
 
+            if($constructor->user_isn != Auth::user()->ISN){
+                return response()->json([
+                    'success' => false,
+                    'error' => 'У вас нет доступа к этой записи'
+                ]);
+            }
+
             $calc_isn = $constructor->calc_isn;
             $DA_isn = $constructor->DA_isn;
             $calc_id = $constructor->calc_id;
@@ -939,7 +954,8 @@ class ProductsController extends Controller
         $order['prodIsn'] = $model->product_isn;
         $order['subjISN'] = $request->subjISN;
         $order['calc_isn'] = isset($quotation->calc_isn) ? $quotation->calc_isn : '';
-        $order['participants'] = $this->participantsToKiasAddAttr($request->all());
+        $order['calc_id'] = isset($quotation->calc_id) ? $quotation->calc_id : '';
+        $order['participants'] = $this->participantsToKiasAddAttr($request->all());         // Формируем
         $order['attributes'] = $this->attributesToKiasAddAttrs($request->all()['attributes']);
         $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
         $order['contractDate'] = $request->all()['contractDate'];
