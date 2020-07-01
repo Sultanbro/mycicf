@@ -351,12 +351,30 @@
                     if(this.participants[index].ISN == 2082){
                         countParticipants++;
                     }
+                    if(this.participants[index].required && this.participants[index].subjISN == '' || this.participants[index].required && this.participants[index].subjISN == null){  // проверяем, если в конструкторе указали как обязательное
+                        alert('Укажите пожалуйста участника "'+this.participants[index].Label+'"');
+                        return false;
+                    }
                 }
 
                 let countAgrobjects = 0;
                 for(let index in this.agrobjects){
                     if(this.agrobjects[index].ClassISN == 2135){
                         countAgrobjects++;
+                    }
+                }
+
+                for(let index in this.agrclauses){
+                    if(this.agrclauses[index].required && this.agrclauses[index].Value == '' || this.agrclauses[index].required && this.agrclauses[index].Value == null){  // проверяем, если в конструкторе указали как обязательное
+                        alert('Укажите пожалуйста обязательное поле "'+this.agrclauses[index].Label+'"');
+                        return false;
+                    }
+                }
+
+                for(let index in this.attributes){
+                    if(this.attributes[index].required && this.attributes[index].Value == '' || this.attributes[index].required && this.attributes[index].Value == null){  // проверяем, если в конструкторе указали как обязательное
+                        alert('Укажите пожалуйста обязательное поле "'+this.attributes[index].Label+'"');
+                        return false;
                     }
                 }
 
