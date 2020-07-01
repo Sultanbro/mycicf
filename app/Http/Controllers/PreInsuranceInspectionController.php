@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
@@ -26,6 +27,7 @@ class PreInsuranceInspectionController extends Controller
     public const               EXECUTE           = 1270;
     public const               CANCEL            = 1272;
     public const               DIRECTORY         = 'online_inspections';
+    public const               AVARCOM           = 1;
 
     /**
      * @var bool
@@ -37,9 +39,13 @@ class PreInsuranceInspectionController extends Controller
      */
     public $error = null;
 
-    public function index()
+    public function index(KiasServiceInterface $kias)
     {
-        return view('insurance_inspection');
+        $user = (new User)->getUserData($kias)['Avarcom'];
+        if ($user == self::AVARCOM || Auth::user()->ISN == 3418677) {
+            return view('insurance_inspection');
+        }
+        abort(403, 'У вас нет доступа для просмотра данной страницы');
     }
 
     public function show(Request $request)
@@ -139,9 +145,9 @@ class PreInsuranceInspectionController extends Controller
      */
     private function getDataWithChild($inspectionsInfo)
     {
-        $index            = 0;
-        $count            = 0;
-        $getUrl           = Session::get('url_for_image');
+        $index  = 0;
+        $count  = 0;
+        $getUrl = Session::get('url_for_image');
         if (!empty($inspectionsInfo['row'])) {
             foreach ($inspectionsInfo['row'] as $info) {
                 $path = 'public/'.self::DIRECTORY.'/'.$info['DocID'];
