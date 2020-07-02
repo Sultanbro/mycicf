@@ -1,6 +1,6 @@
 <template>
     <div class="col-12 row mt-2 mb-2 ml-0 ">
-        <h4 v-if="docs.express">Прикрепление файлов НШБ</h4>
+        <h4 v-if="docs.express">Прикрепление файлов нестандартного шаблона договора</h4>
         <h4 v-else>Прикрепление файлов</h4>
         <label for="file-driving-input" class="form-row mb-1 col-12">
             <div class="col-12" v-html="files_count"></div>

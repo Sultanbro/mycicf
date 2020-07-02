@@ -56,11 +56,11 @@
                 <!--div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
-                <div class="fs-2 col-12" v-if="calc_id != null">№ котировки {{calc_id}}</div>
+                <div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
-                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки {{nshb_request_id}}</div>
+                <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки  {{nshb_request_id}}</div>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
-                    Отправить НШБ
+                    Отправить нестандартный шаблон договора
                 </button>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" :disabled="nshb" @click="calculate">
                     Рассчитать стоимость

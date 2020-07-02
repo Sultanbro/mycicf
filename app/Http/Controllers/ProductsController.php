@@ -41,7 +41,15 @@ class ProductsController extends Controller
     // Admin routes
 
     public function createExpress(){
-        return view('products.create.express');
+        $data = (object)[];
+        return view('products.create.express',compact('data'));
+    }
+
+    public function createEdit($id){
+        if(($data = ExpressProduct::find($id)) === null){
+            abort(404, 'Такой продукт не найден');
+        }
+        return view('products.create.express',compact('data'));
     }
 
     public function listExpress(){
@@ -54,7 +62,8 @@ class ProductsController extends Controller
             array_push($result, [
                 'id' => $data->id,
                 'name' => $data->name,
-                'isn' => $data->products_isn,
+                'isn' => $data->product_isn,
+                'ordinal' => $data->ordinal,
             ]);
         }
         return response()
@@ -70,9 +79,10 @@ class ProductsController extends Controller
 
     public function setExpressData(Request $request){
         try{
-            $model = new ExpressProduct();
+            $model = $request->id != 0 ? ExpressProduct::find($request->id) : new ExpressProduct();
             $model->name = $request->name;
             $model->product_isn = $request->product_isn;
+            $model->ordinal = $request->ordinal;
             $model->save();
         }catch (\Exception $ex){
             return response()->json([
@@ -340,7 +350,7 @@ class ProductsController extends Controller
 
     public function expressList(){
         $products = [];
-        foreach (ExpressProduct::all() as $product){
+        foreach (ExpressProduct::orderBy('ordinal','asc')->get() as $product){
             array_push($products, [
                 'url' => "/express/calc/{$product->id}/0",
                 'name' => $product->name,
@@ -721,7 +731,7 @@ class ProductsController extends Controller
 
     public function fullList(){
         $products = [];
-        foreach (ExpressProduct::all() as $product){
+        foreach (ExpressProduct::orderBy('ordinal','asc')->get() as $product){
             array_push($products, [
                 'url' => "/full/calc/{$product->id}/0",
                 'name' => $product->name,

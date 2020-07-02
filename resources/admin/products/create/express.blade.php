@@ -20,7 +20,7 @@
 <div class="container" id="app">
     @include('layouts.header')
     <main role="main">
-        <express-create>
+        <express-create :express="{{ json_encode($data) }}">
         </express-create>
     </main>
 </div>
@@ -31,8 +31,8 @@
 <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.3/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
 </html>
 <script>
-    import ExpressCreate from "../../../js/components/admin/products/express/create";
-    export default {
-        components: {ExpressCreate}
-    }
+    // import ExpressCreate from "../../../js/components/admin/products/express/create";
+    // export default {
+    //     components: {ExpressCreate}
+    // }
 </script>

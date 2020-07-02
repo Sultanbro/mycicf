@@ -120,6 +120,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
 
         Route::group(['middleware' => 'productsAdmin'], function(){
             Route::get('calc/express/create', 'ProductsController@createExpress')->name('create.express');
+            Route::get('calc/express/edit/{id}', 'ProductsController@createEdit')->name('edit.express');
             Route::post('calc/express/create', 'ProductsController@setExpressData');
             Route::get('calc/express/list', 'ProductsController@listExpress')->name('list.express');
             Route::post('calc/express/list', 'ProductsController@getExpressList');

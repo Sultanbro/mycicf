@@ -57,6 +57,10 @@
             calcChanged: Function
         },
         created(){
+            if(this.attribute.AttrISN == 1422011){  // НШБ
+                this.attribute.Label = 'Нестандартный шаблон Договора';
+            }
+
             if(this.expressAttr[this.attribute.AttrISN] && this.expressAttr[this.attribute.AttrISN] != null){
                 this.attribute.Value = this.expressAttr[this.attribute.AttrISN];
             }

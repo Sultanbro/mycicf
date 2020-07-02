@@ -6,6 +6,8 @@
                 <th>ID</th>
                 <th>Продукт</th>
                 <th>ISN</th>
+                <th>Порядок</th>
+                <th>Действие</th>
             </tr>
             </thead>
             <tbody>
@@ -13,6 +15,14 @@
                 <td>{{item.id}}</td>
                 <td>{{item.name}}</td>
                 <td>{{item.isn}}</td>
+                <td>{{item.ordinal}}</td>
+                <td>
+                    <div>
+                        <a :href="openProduct(item.id)">
+                            <button class="btn btn-success">Редактировать</button>
+                        </a>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -47,6 +57,9 @@
                             alert(error);
                         }
                     )
+            },
+            openProduct(id){
+                return '/calc/express/edit/'+id;
             }
         }
     }
