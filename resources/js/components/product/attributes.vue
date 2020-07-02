@@ -60,6 +60,9 @@
             if(this.attribute.AttrISN == 1422011){  // НШБ
                 this.attribute.Label = 'Нестандартный шаблон Договора';
             }
+            if(this.attribute.AttrISN == 822261){  // Полная котировка
+                this.attribute.Label = 'Номер полной котировки';
+            }
 
             if(this.expressAttr[this.attribute.AttrISN] && this.expressAttr[this.attribute.AttrISN] != null){
                 this.attribute.Value = this.expressAttr[this.attribute.AttrISN];

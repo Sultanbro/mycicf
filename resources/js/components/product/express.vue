@@ -57,6 +57,7 @@
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
                 <div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div>
+                <div class="fs-2 col-12" v-if="full_id != null">№ полной котировки {{full_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки  {{nshb_request_id}}</div>
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
@@ -84,6 +85,7 @@
                 calc_isn: null,
                 calc_id: null,
                 full_isn: null,
+                full_id: null,
                 docs: {
                     files: [],
                     sendedFail: false,
@@ -155,6 +157,7 @@
                     if(response.data.success){
                         this.calc_isn = response.data.calc_isn;
                         this.calc_id = response.data.calc_id;
+                        this.full_id = response.data.full_id;
                         this.attributes = response.data.attributes;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
@@ -167,11 +170,14 @@
                                 this.nshb_id = response.data.nshb['nshb_id'];
                                 this.nshb_request_id = response.data.nshb['nshb_request_id'];
                                 this.nshb_status = response.data.nshb['nshb_status'];
+                            }
 
-                                for(let key in this.attributes){
-                                    if(this.attributes[key].AttrISN == 1422011){    // если есть НШБ номер то присваиваем аттрибуту НШБ
-                                        this.attributes[key].Value = this.nshb_id;
-                                    }
+                            for(let key in this.attributes){
+                                if(this.attributes[key].AttrISN == 1422011){    // если есть НШБ номер то присваиваем аттрибуту НШБ
+                                    this.attributes[key].Value = response.data.nshb != null ? this.nshb_id : '';
+                                }
+                                if(this.attributes[key].AttrISN == 822261){    // если есть полная котировка номер то присваиваем аттрибуту полная котировка
+                                    this.attributes[key].Value = this.full_id != null ? this.full_id : '';
                                 }
                             }
                         }
@@ -235,6 +241,12 @@
                             this.nshb_id = null;
                             this.nshb_request_id = null;
                         }
+
+                        for(let key in this.attributes){
+                            if(this.attributes[key].AttrISN == 1422011){    // если есть НШБ номер то присваиваем аттрибуту НШБ
+                                this.attributes[key].Value = this.nshb ? this.nshb_id : '';
+                            }
+                        }
                     }else{
                         alert(response.data.error)
                         this.preloader(false);
@@ -253,10 +265,10 @@
                 })
                     .then(response => {
                         if(response.data.success){
-                            console.log(response.data.result);
                             this.full_isn = response.data.full_isn;
+                            this.full_id = response.data.full_id;
                             window.location.href = "/full/calc/" + this.id + "/"+response.data.quotation_id;
-                            this.preloader(false);
+                            //this.preloader(false);
                         }else{
                             alert(response.data.error);
                             this.preloader(false);
@@ -286,7 +298,6 @@
                     })
                         .then(response => {
                             if (response.data.success) {
-                                console.log('Files sended successfull');
                                 this.docs.sendedFail = false;
                                 if(this.nshb){
                                     alert('НШБ заявка успешно отправлена');

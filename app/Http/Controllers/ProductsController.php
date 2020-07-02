@@ -454,6 +454,7 @@ class ProductsController extends Controller
             'nshb' => isset($nshb) ? $nshb : null,
             'calc_isn' => isset($quotation->calc_isn) ? $quotation->calc_isn : null,
             'calc_id' => isset($quotation->calc_id) ? $quotation->calc_id : null,
+            'full_id' => isset($quotation->full_id) ? $quotation->full_id : null,
         ]);
     }
 
@@ -719,6 +720,7 @@ class ProductsController extends Controller
                 'success' => true,
                 'result' => '',
                 'full_isn' => (string)$response->AgrISN,
+                'full_id' => $express_quotation->full_id,
                 'quotation_id' => $full_quotation->id
             ]);
         } else {
