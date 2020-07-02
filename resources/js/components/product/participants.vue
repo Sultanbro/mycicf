@@ -213,9 +213,9 @@
                     <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="searchParticipant">Поиск</button>
                     </div>
-                    <!--div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <button class="width100 btn btn-outline-info" @click="save()">Сохранить</button>
-                    </div-->
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <button class="width100 btn btn-outline-info" @click="closeParticipantForm(pIndex)">Сохранить</button>
+                    </div>
                     <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще</button>
                     </div>
