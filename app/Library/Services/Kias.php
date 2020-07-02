@@ -287,12 +287,6 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getCoordinationCount($ISN){
-        return $this->request('User_CicCountEmplCoordination', [
-            'EmplISN' => $ISN,
-        ]);
-    }
-
     public function getExpressAttributes($product){
         return $this->request('User_CicGetAttrExpress', [
             'Product' => $product,
@@ -501,6 +495,12 @@ class Kias implements KiasServiceInterface
             'DocISN' => $doc_isn,
             'Type' => $type, // 1 сменить статус, 2 посмотреть статус
             'Status' => $status, //2522 на подписи, 2518 подписан
+        ]);
+    }
+
+    public function getCoordinationCount($ISN){
+        return $this->request('User_CicCountEmplCoordination', [
+            'EmplISN' => $ISN,
         ]);
     }
 }

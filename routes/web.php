@@ -246,8 +246,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/motivation', 'MotivationController@motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
 
-        Route::post('/setToken', 'NotificationController@setToken');
-
         Route::get('/express', 'ProductsController@expressList');
         //Route::get('/express/calc/{ID}', 'ProductsController@express');
         Route::get('/express/calc/{ID}/{quotationId}', 'ProductsController@express')->name('express_front');
@@ -279,6 +277,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::post('/getVehicle', 'VehicleController@getVehicle');
         Route::post('/saveVehicle','VehicleController@saveVehicle');
+
+        Route::post('/setToken', 'NotificationController@setToken');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function (){

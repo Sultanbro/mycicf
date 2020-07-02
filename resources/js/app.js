@@ -38,11 +38,11 @@ Vue.use(VueGoogleCharts);
 
 Vue.use(VueAxios, axios);
 
+Vue.use(VueTheMask);
+
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
-
-Vue.use(VueTheMask);
 
 Vue.directive('linkified', linkify);
 
@@ -108,16 +108,6 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 
 Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
 
-Vue.component('test', require('./components/test.vue').default);
-Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
-
-Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
-
-Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
-
-Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
-
-
 Vue.component('express-calc', require('./components/product/express.vue').default);
 
 Vue.component('full-quotation-calc', require('./components/product/full-quotation.vue').default);
@@ -147,6 +137,16 @@ Vue.component('printable-form', require('./components/product/printableForm.vue'
 Vue.component('quotation-list', require('./components/product/quotation-list.vue').default);
 
 Vue.component('online-inspection', require('./components/product/online-inspection.vue').default);
+
+Vue.component('test', require('./components/test.vue').default);
+Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
+
+Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
+
+Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
+
+Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
+
 
 window.onload = function(){
     var app = new Vue({

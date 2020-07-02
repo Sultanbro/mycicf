@@ -2091,9 +2091,7 @@ textarea::-webkit-scrollbar-thumb {
     height: 30px;
     align-items: end;
 }
-.input7-size{
-    min-width: 176px;
-}
+
 .date-products{
     border-bottom: 1px solid #82a9f8;
     border-top: 0;
@@ -2431,3 +2429,8 @@ textarea::-webkit-scrollbar-thumb {
     transform: translateX(10px);
     opacity: 0;
 }
+
+.input7-size{
+    min-width: 176px;
+}
+
