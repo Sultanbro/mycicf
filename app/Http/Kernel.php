@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'readingClubAdmin' => \App\Http\Middleware\ReadingClubAdmin::class,
         'superAdmin' => \App\Http\Middleware\checkSuperAdmin::class,
         'centcoinExcepts' => \App\Http\Middleware\centcoinExcepts::class,
+        'cors' => \App\Http\Middleware\cors::class,
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
     ];
 

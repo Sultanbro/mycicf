@@ -185,6 +185,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
             Route::post('/buyItem', 'CentcoinsController@buyItem');
         });
+
+        Route::get('test/eds', 'Controller@testEds');
+        Route::group(['middleware' => 'cors'], function() {
+            Route::get('/getEDS', 'Controller@getEds');
+            Route::get('/getVersion', 'Controller@getVersion');
+        });
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');

@@ -117,6 +117,8 @@ Vue.component('inspection-info', require('./components/employee/inspection-info'
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
 
+Vue.component('edslogin', require('./components/eds/edslogin').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
