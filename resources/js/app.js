@@ -28,6 +28,8 @@ Vue.use(moment);
 
 Vue.use(vmodal);
 
+import Toastr from 'vue-toastr'
+
 Vue.use(FlashMessage);
 
 Vue.use(EmojiPickerPlugin);
@@ -43,6 +45,10 @@ Vue.use(VueTheMask);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
+
+window.addEventListener('load', () => {
+    Vue.use(Toastr);
+});
 
 Vue.directive('linkified', linkify);
 
@@ -147,6 +153,11 @@ Vue.component('parse-indicators', require('./components/parse/parse-indicators.v
 
 Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
+Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
+
+Vue.component('inspection-info', require('./components/employee/inspection-info').default);
+
+Vue.component('upload-image', require('./components/common/upload-image').default);
 
 window.onload = function(){
     var app = new Vue({
@@ -180,8 +191,7 @@ window.onload = function(){
             },
         },
         component: {
-            'd-player': VueDPlayer,
-            //'compa' : compa
+            'd-player': VueDPlayer
         }
     });
 

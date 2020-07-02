@@ -31,7 +31,7 @@
                     @endif
                 </li>
             </a>
-            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197)
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721)
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('rating')}}">
                     <li class="leftsidebar-icons">
                         <i class="far fa-star"></i>
@@ -72,7 +72,12 @@
                     </li>
                 </a>
             @endif
-
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-car" aria-hidden="true"></i>
+                    <span>Предстраховой осмотр</span>
+                </li>
+            </a>
         </ul>
     </div>
 </div>

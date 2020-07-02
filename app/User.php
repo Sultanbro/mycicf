@@ -122,6 +122,7 @@ class User extends Authenticatable
             'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
+            'Avarcom' => (string)$response->Avarcom,
         ];
         return $users_data;
     }
