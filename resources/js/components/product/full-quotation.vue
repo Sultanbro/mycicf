@@ -130,7 +130,7 @@
         <online-inspection :inspection="inspection"
                            :quotationId="quotationId"
                            :calcChanged="calcChanged"
-                           v-if="formular.inspection"
+                           v-if="formular.inspection_auto || formular.inspection_advantage"
                            :contract_number="contract_number">
         </online-inspection>
 
@@ -224,6 +224,7 @@
                 },
                 inspection: {
                     active: false,
+                    type: null,
                     isn: null,
                     date: '',
                     time: '',
@@ -279,6 +280,8 @@
                                     this.inspection[key] = response.data.inspection[key];
                                 }
                             }
+
+                            this.inspection.type = this.formular.inspection_auto ? 'auto' : this.formular.inspection_advantage ? 'advantage' : null;
 
                             this.getFullObjects();
                         }else{

@@ -421,6 +421,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function sendtoExpert($isn,$dateTime,$address){
+        return $this->request('User_CicSendtoExpert', [
+            'AGRISN'    => $isn,
+            'DATE'  => $dateTime,
+            'ADDRESS' => $address
+        ]);
+    }
+
     public function createAgrFromAgrCalc($agrCalcIsn){
         return $this->request('User_CicCreateAgrFromAgrCalc',
             ['AgrCalcISN' => $agrCalcIsn ]);
