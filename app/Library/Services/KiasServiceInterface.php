@@ -232,6 +232,7 @@ interface KiasServiceInterface
      * @param $product ISN продукта
      * @return mixed
      */
+
     public function getExpressAttributes($product);
 
     /**

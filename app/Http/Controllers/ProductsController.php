@@ -870,6 +870,7 @@ class ProductsController extends Controller
 
             $inspection = array(
                 'active' => $cons->inspection_date != '' || $cons->inspection_time != '' || $cons->inspection_address != '' ? true : false,
+                'type' => $cons->inspection_type,
                 'date' => $cons->inspection_date,
                 'time' => $cons->inspection_time,
                 'address' => $cons->inspection_address
@@ -1583,8 +1584,14 @@ class ProductsController extends Controller
 
     public function sendToInspection(Request $request,KiasServiceInterface $kias){
         $inspection = $request->inspection;
+
         $dateTime = date('d.m.Y',strtotime($inspection['date'])).' '.$inspection['time'];
-        $expert = $kias->sendtoExpertSakta($request->calc_isn,$dateTime,$inspection['address']);
+        if($inspection['type'] == 'advantage'){
+            $expert = $kias->sendtoExpert($request->calc_isn,$dateTime,$inspection['address']);
+        } else {
+            $expert = $kias->sendtoExpertSakta($request->calc_isn,$dateTime,$inspection['address']);
+        }
+
         if(isset($expert->error)){
             return response()->json([
                 'success' => false,
@@ -1594,6 +1601,7 @@ class ProductsController extends Controller
         if(isset($expert[0]) && $expert[0] == 'OK'){
             $quotation = FullQuotation::where('calc_isn',$request->calc_isn)->first();
             //$quotation->inspection_isn = $isn = (int)$expert->ISN;
+            $quotation->inspection_type = $inspection['type'];
             $quotation->inspection_date = date('d.m.Y',strtotime($inspection['date']));
             $quotation->inspection_time = $inspection['time'];
             $quotation->inspection_address = $inspection['address'];

@@ -42,9 +42,20 @@
         </div>
 
         <div class="form-group col-md-4 col-lg-4 col-6 text-center">
-            <label for="inspection">Осмотр</label>
-            <input id="inspection" type="checkbox" class="attr-input-text col-12" v-model="formular[0].inspection">
+            <label>Осмотры</label>
+            <div class="row">
+                <div class="form-group col-md-6 col-lg-6 col-6">
+                    <label for="inspection-auto">Осмотр авто</label>
+                    <input id="inspection-auto" type="checkbox" class="attr-input-text col-12" v-model="formular[0].inspection_auto">
+                </div>
+                <div class="form-group col-md-6 col-lg-6 col-6">
+                    <label for="inspection-advantage">Осмотр имущество</label>
+                    <input id="inspection-advantage" type="checkbox" class="attr-input-text col-12" v-model="formular[0].inspection_advantage">
+                </div>
+            </div>
         </div>
+
+
     </div>
 </template>
 

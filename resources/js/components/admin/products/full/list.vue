@@ -16,7 +16,7 @@
                 <td>{{item.isn}}</td>
                 <td>
                     <div class="d-flex justify-content-end">
-                        <a :href="constructor(item.id)" target="_blank">
+                        <a :href="constructor(item.id)">
                             <button class="btn btn-success">Открыть конструктор</button>
                         </a>
                     </div>
