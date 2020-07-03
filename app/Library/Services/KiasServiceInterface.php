@@ -248,15 +248,15 @@ interface KiasServiceInterface
      */
     public function calcFull($order);
 
-    /**
-     * Сохранение прикрплений в киас
-     * @param $refisn int исн документа
-     * @param $type
-     * @param $name string название файла
-     * @param $data
-     * @return SimpleXMLElement
-     */
-    public function saveAttachment($refisn, $name, $file, $type = 'J');
+//    /**
+//     * Сохранение прикрплений в киас
+//     * @param $refisn int исн документа
+//     * @param $type
+//     * @param $name string название файла
+//     * @param $data
+//     * @return SimpleXMLElement
+//     */
+//    public function saveAttachment($refisn, $name, $file, $type = 'J');
 
     /**
      * Получить чайлды из справочника

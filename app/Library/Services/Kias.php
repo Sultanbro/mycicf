@@ -474,25 +474,25 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    /**
-     * Сохранение прикрплений в киас
-     * @param $refisn int исн документа
-     * @param $type
-     * @param $name string название файла
-     * @param $data
-     * @return SimpleXMLElement
-     */
-
-    public function saveAttachment($refisn, $name, $file, $type = 'J'){
-        return $this->request('SAVEATTACHMENT', [
-            'REFISN' => $refisn,
-            'PICTTYPE' => $type,
-            'FILEREMARK' => '',
-            'FILENAME' => $name,
-            'ACTIVE ' => 'Y',
-            'OLEOBJECT' => $file
-        ]);
-    }
+//    /**
+//     * Сохранение прикрплений в киас
+//     * @param $refisn int исн документа
+//     * @param $type
+//     * @param $name string название файла
+//     * @param $data
+//     * @return SimpleXMLElement
+//     */
+//
+//    public function saveAttachment($refisn, $name, $file, $type = 'J'){
+//        return $this->request('SAVEATTACHMENT', [
+//            'REFISN' => $refisn,
+//            'PICTTYPE' => $type,
+//            'FILEREMARK' => '',
+//            'FILENAME' => $name,
+//            'ACTIVE ' => 'Y',
+//            'OLEOBJECT' => $file
+//        ]);
+//    }
 
     public function getPrintableDocumentList($contract_number){
         return $this->request('User_CicGetPrintableDocumentList', [
