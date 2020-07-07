@@ -59,7 +59,10 @@ class Controller extends BaseController
         $response = curl_exec($curl);
         curl_close($curl);
         $response = json_decode($response);
+//        echo $response->token;
 
+        //$response = (object)['token' => '90aff245-c06c-11ea-8948-000c296105aa'];
+        //$response = json_decode((string)$response);
         if(isset($response->token)){
             $success = true;
         }
