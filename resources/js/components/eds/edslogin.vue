@@ -1,32 +1,46 @@
 <template>
     <div>
         <div class="inner-wrap t-0 text-center">
-            <!--div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="login">Подключиться</button>
-                <button class="btn btn-primary mt-2" v-on:click="getVersion" >Версия</button>
-            </div>
+            <div class="mt-1 mb-1">Какое действие желаете выполнить?</div>
+            <button class="btn btn-primary mt-2" v-on:click="showView = 'sign',clearData()">Подписать</button>
+            <button class="btn btn-primary mt-2" v-on:click="showView = 'check',clearData()">Проверить</button>
+        </div>
 
+        <div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
             <div class="form-group mt-1">
-                <input type="text" v-model="sign.password">
-                <button class="btn btn-primary mt-2" v-on:click="signing" >Подписать</button>
-
-                <button class="btn btn-primary mt-2" v-on:click="getEcp" >getEcp</button>
-                <button class="btn btn-primary mt-2" v-on:click="getToken" >getToken</button>
-            </div-->
-
-            <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="getVersion" >Выбрать файл для подписания</button>
+                <button class="btn btn-primary mt-2" v-on:click="connectSocket" >Выбрать файл для подписания</button>
                 <div class="mt-1 mb-1" v-if="selectedFile != ''">Выбранный файл {{ selectedFile }}</div>
                 <div class="mt-1" v-if="selectedFileDir != ''">Выбранный файл сохранится сюда {{ selectedFileDir }}</div>
             </div>
             <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="getEcp" >Выбрать ключ для подписания</button>
+                <button class="btn btn-primary mt-2" v-on:click="getKey" >Выбрать ключ для подписания</button>
                 <div class="mt-2 mb-1" v-if="selectedECPFile != ''">Выбранный ключ {{ selectedECPFile }}</div>
                 <div class="mt-1 mb-1">
                     <label class="mt-1 mb-1 col-md-12">Пароль для ключа</label>
                     <input class="mt-1 mb-1" placeholder="Введите пароль" type="text" v-model="sign.password">
                 </div>
                 <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
+                <div class="mt-2 mb-1" v-if="signedFile != ''">Подписанный файл находится здесь: {{ signedFile }}</div>
+            </div>
+        </div>
+
+        <div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
+            <div class="form-group mt-1">
+                <button class="btn btn-primary mt-2" v-on:click="connectSocket">Выберите файл для проверки</button>
+                <div class="mt-2 mb-1" v-if="selectedFile != ''">Выбранный для проверки файл {{ selectedFile }}</div>
+                <div>
+                    <button class="btn btn-primary mt-2" v-on:click="checkSignedFile">Показать информацию о подписях</button>
+                </div>
+
+                <div class="mt-2 mb-1" v-if="signedFileInfo.length > 0">
+                    <div class="info" v-for="info in signedFileInfo">
+                        <div>Подписант №{{ info.number+1 }}</div>
+                        <div>ИИН: {{ info.iin }}</div>
+                        <div>ФИО: {{ info.name }}</div>
+                        <div>Дата подписания: {{ info.tspDate }}</div>
+                        <div>Период действия ключа: {{ info.certificateValidityPeriod }}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -52,35 +66,17 @@
                 },
                 selectedFile: '',
                 selectedFileDir: '',
-                selectedECPFile: ''
+                selectedECPFile: '',
+                signedFile:'',
+                showView: '',
+                signedFileInfo: []
             }
         },
         methods: {
-            login: function () {
-                axios.get('/getEDS').then((response) => {
-                    console.log(response.data);
-                })
-                // var settings = {
-                //     "url": "http://ncalayer.uchet.kz:8080/getSignToken",
-                //     "method": "GET",
-                //     "timeout": 0,
-                //     "headers": {
-                //         "Content-Type": "application/json"
-                //     },
-                //     "data": JSON.stringify({"company_token":"7006cebf-82b9-4dbf-9cca-7d35d2eaf763"}),
-                // };
-                //
-                // $.ajax(settings).done(function (response) {
-                //     token = JSON.parse(response).token // Получаем токен для подписания
-                // });
-            },
-            getVersion: function () {
-                this.checkModule();
-            },
-            checkModule(){
+            connectSocket(){
                 var vm = this;
+                this.signedFile = '';
                 var webSocket = new WebSocket('wss://127.0.0.1:13579');
-
                 webSocket.onopen = function () {
                     webSocket.send('{\n' +
                         '    module: "kz.uchet.signUtil.commonUtils", \n' +
@@ -140,8 +136,8 @@
                     var result = JSON.parse(msg.data);
                     console.log(result)
                     if(result.code == '200' || result.code == 200) {
-                        self.selectedFile = result.responseObject.path;
-                        self.selectedFileDir = result.responseObject.filedir;
+                        self.selectedFile = result.responseObject.path != undefined ? result.responseObject.path : '';
+                        self.selectedFileDir = result.responseObject.filedir != undefined ? result.responseObject.filedir : '';
                         webSocket.close();
                     }
                 }
@@ -151,7 +147,8 @@
                     console.log(msg);
                 }
             },
-            getEcp(){
+            getKey(){
+                this.signedFile = '';
                 let self = this;
                 var webSocket = new WebSocket('wss://127.0.0.1:13579');
                 webSocket.onopen = function () {
@@ -165,7 +162,7 @@
                     var result = JSON.parse(msg.data);
                     //console.log(result)
                     if(result.code == '200' || result.code == 200) {
-                        self.selectedECPFile = result.responseObject.path;
+                        self.selectedECPFile = result.responseObject.path != undefined ? result.responseObject.path : '';
                         webSocket.close();
                     }
                 }
@@ -181,22 +178,33 @@
                 if(self.sign.token != '') {
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
                     webSocket.onopen = function () {
-                        webSocket.send('{\n' +
-                            '                    "module":"kz.uchet.signUtil.commonUtils",\n' +
-                            '                    "lang":"en",\n' +
-                            '                    "method":"signFileFromDiskAndSaveToDiskApi",\n' +
-                            '                    "args":["'+self.sign.token+'","' + self.selectedFile + '","' + self.selectedFileDir + '","' + self.selectedECPFile + '","' + self.sign.password + '","PKCS12"]\n' +
-                            '                }');
+
+                        var responseObj = {
+                            module: 'kz.uchet.signUtil.commonUtils',
+                            lang: 'en',
+                            method: 'signFileFromDiskAndSaveToDiskApi',
+                            args: [
+                                self.sign.token,
+                                self.selectedFile,
+                                self.selectedFileDir,
+                                self.selectedECPFile,
+                                self.sign.password,
+                                'PKCS12'
+                            ]
+                        };
+
+                        webSocket.send(JSON.stringify(responseObj));
                     };
 
                     webSocket.onmessage = function (msg) {
                         var result = JSON.parse(msg.data);
                         if(result.code) {
-                            if (result.code != 200) {
+                            if (result.code == 200) {
+                                self.signedFile = result.responseObject;
                                 alert(result.message);
                                 webSocket.close();
                             } else {
-                                console.log(result.message);
+                                alert(result.message);
                                 webSocket.close();
                             }
                         }
@@ -209,14 +217,62 @@
                 }
             },
             getToken(){
+                this.signedFile = '';
                 axios.get('/getEDS').then((response) => {
                     if(response.data.success){
                         this.sign.token = response.data.result.token;
-                        this.signing();
+                        this.signing();     // подписываем
                     } else {
                         alert('Ошибка получения токена. Попробуйте чуть позже');
                     }
                 });
+            },
+            checkSignedFile(){
+                this.signedFileInfo = [];
+                let self = this;
+                if(self.selectedFile != '') {
+                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                    webSocket.onopen = function () {
+                        var responseObj = {
+                            module: 'kz.uchet.signUtil.commonUtils',
+                            lang: 'en',
+                            method: 'checkCMS',
+                            args: [self.selectedFile]
+                        };
+                        webSocket.send(JSON.stringify(responseObj));
+                    };
+
+                    webSocket.onmessage = function (msg) {
+                        var result = JSON.parse(msg.data);
+                        if(result.code) {
+                            if (result.code == 200) {
+                                if(result.responseObjects.length > 0) {
+                                    self.signedFileInfo = result.responseObjects;
+                                    webSocket.close();
+                                }
+                            } else {
+                                alert(result.message);
+                                webSocket.close();
+                            }
+                        }
+                    }
+                    webSocket.onerror = function (msg) {
+                        // TODO PUSH ERROR
+                        webSocket.close();
+                        console.log(msg);
+                    }
+                } else {
+                    alert('Выберите пожалуйста файл');
+                }
+            },
+            clearData(){
+                this.sign.token = '';
+                this.selectedFile = '';
+                this.selectedFileDir = '';
+                this.selectedECPFile = '';
+                this.sign.password = '';
+                this.signedFile = '';
+                this.signedFileInfo = [];
             }
         },
 
@@ -245,70 +301,6 @@
         //     }
         // },
     }
-
-    function getTok(){
-        // var settings = {
-        //     "url": "http://ncalayer.uchet.kz:8080/getSignToken",
-        //     "method": "GET",
-        //     "timeout": 0,
-        //     "headers": {
-        //         "Content-Type": "application/jsonp"
-        //     },
-        //     "dataType": "json",
-        //     //"jsonp": "jsonpcallback",
-        //     "data": JSON.stringify({"company_token":"7006cebf-82b9-4dbf-9cca-7d35d2eaf763"}),
-        // };
-        //
-        // $.ajax(settings).done(function (response) {
-        //     console.log(response);
-        //     console.log(JSON.parse(response));
-        //     //var token = JSON.parse(response).token // Получаем токен для подписания
-        // });
-
-        var settings = {
-            "url": "http://ncalayer.uchet.kz:8080/getSignToken",
-            "method": "POST",
-            "timeout": 0,
-            // "headers": {
-            //     "Access-Control-Allow-Origin": "*"
-            // },
-            // "async": false,
-            // "crossDomain": true,
-            //"dataType": 'jsonp',
-            "headers": {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            "data": JSON.stringify({"company_token":"7006cebf-82b9-4dbf-9cca-7d35d2eaf763"}),
-            //"processData": true
-            //data: {company_token: '7006cebf-82b9-4dbf-9cca-7d35d2eaf763'}
-            //"type": 'dataType',
-            //crossDomain: true,
-            dataType: 'jsonp',
-        };
-
-        $.ajax(settings).done(function (response) {
-            console.log(JSON.parse(response));
-            token = JSON.parse(response).token // Получаем токен для подписания
-        });
-
-        // $.ajax({
-        //     url: 'http://ncalayer.uchet.kz:8080/getSignToken',
-        //     type: 'GET',
-        //     dataType: 'jsonp',
-        //     //jsonp: 'jsonpcallback',
-        //     data: {
-        //         company_token: '7006cebf-82b9-4dbf-9cca-7d35d2eaf763'
-        //     },
-        //     success: function (response) {
-        //         //console.log(response);
-        //     },
-        //     error: function (data){
-        //         console.log(data);
-        //     }
-        // });
-    }
-
-
 </script>
 
 <style scoped>

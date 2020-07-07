@@ -1,11 +1,4 @@
-<?php
-/**
- * My.cic.kz
- * User: Altynbek
- */
-
-?>
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
