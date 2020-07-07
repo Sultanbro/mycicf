@@ -30,14 +30,14 @@
                 <input type="number" class="attr-input-text col-12 width-50" v-model="agrobject.DAsum" @keyup="calcChanged">
             </div>
 
-            <div class=" ml-l2 mt-2 mt-3 col-3">
+            <!--div class=" ml-l2 mt-2 mt-3 col-3">
                 <label class="font-shif text-w">Сумма франшизы</label>
                 <select class="custom-select"
                         v-model="agrobject.franch">
                     <option v-for="index in franch"
                             :value="index">{{ index }}</option>
                 </select>
-            </div>
+            </div-->
 
             <div class="ml-l2" v-if="agrobject.ClassISN != ''">
                 <div class="col-12 row mt-2 mb-2 ml-0"
@@ -57,6 +57,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class=" ml-l2 mt-2 mt-3 col-3" v-if="agrobject.RiskISN != '' && agrobject.objekt[agrobject.ClassISN].FRANCH">
+                <label class="font-shif text-w">Сумма франшизы</label>
+                <select class="custom-select"
+                        v-model="agrobject.franch">
+                    <option v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
+                            v-for="(franchSum,index) in agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
+                            :value="franchSum.KZT">{{ franchSum.KZT }} тг.</option>
+                    <option v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchProc']"
+                            v-for="(franchProc,index) in agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchProc']"
+                            :value="franchProc.uFranchProc">{{ franchProc.uFranchProc }}%</option>
+                </select>
             </div>
 
             <div v-if="agrobject.ClassISN != ''" class="col-12">
@@ -132,6 +145,9 @@
             changeSelect(e,index) {
                 if(e.target.options.selectedIndex > -1) {
                     this.agrobject[index] = e.target.options[e.target.options.selectedIndex].dataset.option;
+                }
+                if(index == 'InsClassISN'){
+                    this.agrobject.franch = '';
                 }
             },
             addObject(){

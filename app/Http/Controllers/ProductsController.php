@@ -225,6 +225,34 @@ class ProductsController extends Controller
 
                         if (isset($response->RiskPack->row)) {
                             foreach ($response->RiskPack->row as $row) {
+                                if(isset($row->FranchSum->row)){
+                                    $objects['objekt'][$isn]['FRANCH'][(string)$row->RiskPackisn]['franchSum'] = [];
+                                    foreach ($row->FranchSum->row as $franch) {
+                                        if((string)$franch->Franch != '' && (string)$franch->Franch != null) {
+                                            array_push($objects['objekt'][$isn]['FRANCH'][(string)$row->RiskPackisn]['franchSum'], [
+                                                'Franch' => (string)$franch->Franch,
+                                                'KZT' => (string)$franch->KZT,
+                                                'USD' => (string)$franch->USD,
+                                                'EUR' => (string)$franch->EUR,
+                                                'OTHER' => (string)$franch->OTHER
+                                            ]);
+                                        }
+                                    }
+                                }
+                                if(isset($row->FranchProc->row)){
+                                    $objects['objekt'][$isn]['FRANCH'][(string)$row->RiskPackisn]['franchProc'] = [];
+                                    $check = '';
+                                    foreach ($row->FranchProc->row as $franchP) {
+                                        if((string)$franchP->uFranchProc != '' && (string)$franchP->uFranchProc != null || (string)$franchP->cFranchProc != '' && (string)$franchP->cFranchProc != null) {
+                                                array_push($objects['objekt'][$isn]['FRANCH'][(string)$row->RiskPackisn]['franchProc'], [
+                                                    'uFranchProc' => (string)$franchP->uFranchProc,
+                                                    'cFranchProc ' => (string)$franchP->cFranchProc
+                                                ]);
+                                        }
+                                    }
+                                }
+
+
                                 if($row->ClassObjISN == '' || $row->ClassObjISN == null){
                                     array_push($objects['objekt'][$isn]['AGRCOND'][$isn.$subIsn], [
                                         'InsClassisn' => (string)$row->InsClassisn,
