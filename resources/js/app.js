@@ -114,6 +114,8 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 
 Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
 
+Vue.component('edslogin', require('./components/eds/edslogin.vue').default);
+
 Vue.component('express-calc', require('./components/product/express.vue').default);
 
 Vue.component('full-quotation-calc', require('./components/product/full-quotation.vue').default);
