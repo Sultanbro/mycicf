@@ -33,8 +33,8 @@
                 </div>
 
                 <div class="mt-2 mb-1" v-if="signedFileInfo.length > 0">
-                    <div class="info" v-for="info in signedFileInfo">
-                        <div>Подписант №{{ info.number+1 }}</div>
+                    <div class="info" v-for="info,index in signedFileInfo">
+                        <div>Подписант №{{ index+1 }}</div>
                         <div>ИИН: {{ info.iin }}</div>
                         <div>ФИО: {{ info.name }}</div>
                         <div>Дата подписания: {{ info.tspDate }}</div>
@@ -86,18 +86,17 @@
                 };
                 webSocket.onmessage = function(msg) {
                     var result = JSON.parse(msg.data);
-                    console.log(result);
                     if(!result.success && result.errorCode === 'MODULE_NOT_FOUND'){
-                        webSocket.close();
                         vm.installModule()
                     }else{
-                        webSocket.close();
-                        vm.openWindow();
+                        if(result.code == 200) {
+                            vm.openWindow();
+                        }
                     }
                 }
                 webSocket.onerror = function(msg) {
                     // TODO PUSH ERROR
-                    webSocket.close();
+                    //webSocket.close();
                     console.log(msg);
                     if(msg.type == 'error') {
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
@@ -138,13 +137,13 @@
                     console.log(result)
                     if(result.code == '200' || result.code == 200) {
                         self.selectedFile = result.responseObject.path != undefined ? result.responseObject.path : '';
-                        self.selectedFileDir = result.responseObject.filedir != undefined ? result.responseObject.filedir : '';
-                        webSocket.close();
+                        self.selectedFileDir = result.responseObject.filedir != undefined ? result.responseObject.filedir+'\\' : '';
+                        //webSocket.close();
                     }
                 }
                 webSocket.onerror = function(msg) {
                     // TODO PUSH ERROR
-                    webSocket.close();
+                    //webSocket.close();
                     console.log(msg);
                 }
             },
@@ -164,13 +163,13 @@
                     //console.log(result)
                     if(result.code == '200' || result.code == 200) {
                         self.selectedECPFile = result.responseObject.path != undefined ? result.responseObject.path : '';
-                        webSocket.close();
+                        //webSocket.close();
                     }
                 }
                 webSocket.onerror = function(msg) {
                     // TODO PUSH ERROR
                     console.log(msg);
-                    webSocket.close();
+                    //webSocket.close();
                 }
             },
 
@@ -203,10 +202,10 @@
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
                                 alert(result.message);
-                                webSocket.close();
+                                //webSocket.close();
                             } else {
                                 alert(result.message);
-                                webSocket.close();
+                                //webSocket.close();
                             }
                         }
                     }
@@ -249,17 +248,17 @@
                             if (result.code == 200) {
                                 if(result.responseObjects.length > 0) {
                                     self.signedFileInfo = result.responseObjects;
-                                    webSocket.close();
+                                    //webSocket.close();
                                 }
                             } else {
                                 alert(result.message);
-                                webSocket.close();
+                                //webSocket.close();
                             }
                         }
                     }
                     webSocket.onerror = function (msg) {
                         // TODO PUSH ERROR
-                        webSocket.close();
+                        //webSocket.close();
                         console.log(msg);
                     }
                 } else {

@@ -52,12 +52,12 @@
                 </a>
             @endif
 
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
+            <!--a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-book-reader"></i>
                     <span>Экспресс котировка</span>
                 </li>
-            </a>
+            </a-->
 {{--            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">--}}
 {{--                <li class="leftsidebar-icons">--}}
 {{--                    <i class="fas fa-book-reader"></i>--}}
