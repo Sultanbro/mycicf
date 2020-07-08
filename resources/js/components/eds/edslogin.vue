@@ -86,13 +86,12 @@
                 };
                 webSocket.onmessage = function(msg) {
                     var result = JSON.parse(msg.data);
-                    console.log(result);
                     if(!result.success && result.errorCode === 'MODULE_NOT_FOUND'){
-                        webSocket.close();
                         vm.installModule()
                     }else{
-                        webSocket.close();
-                        vm.openWindow();
+                        if(result.code == 200) {
+                            vm.openWindow();
+                        }
                     }
                 }
                 webSocket.onerror = function(msg) {
@@ -137,7 +136,7 @@
                     console.log(result)
                     if(result.code == '200' || result.code == 200) {
                         self.selectedFile = result.responseObject.path != undefined ? result.responseObject.path : '';
-                        self.selectedFileDir = result.responseObject.filedir != undefined ? result.responseObject.filedir : '';
+                        self.selectedFileDir = result.responseObject.filedir != undefined ? result.responseObject.filedir+'\\' : '';
                         webSocket.close();
                     }
                 }
