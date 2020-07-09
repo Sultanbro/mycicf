@@ -57,6 +57,7 @@
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
                 <div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div>
+                <div class="fs-2 col-12" v-if="tariff != null">Тариф {{tariff}}</div>
                 <div class="fs-2 col-12" v-if="full_id != null">№ полной котировки {{full_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки  {{nshb_request_id}}</div>
@@ -86,6 +87,7 @@
                 calc_id: null,
                 full_isn: null,
                 full_id: null,
+                tariff: null,
                 docs: {
                     files: [],
                     sendedFail: false,
@@ -158,6 +160,7 @@
                         this.calc_isn = response.data.calc_isn;
                         this.calc_id = response.data.calc_id;
                         this.full_id = response.data.full_id;
+                        this.tariff = response.data.tariff;
                         this.attributes = response.data.attributes;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
@@ -227,6 +230,7 @@
                         this.calculated = true;
                         this.calc_isn = response.data.calc_isn;
                         this.calc_id = response.data.calc_id;
+                        this.tariff = response.data.tariff,
                         this.preloader(false);
                         if(this.nshb){
                             this.nshb_doc = response.data.nshb_doc;
@@ -338,6 +342,7 @@
                 if(this.quotationId == 0) {
                     this.calc_isn = null;
                     this.calc_id = null;
+                    this.tariff = null;
                     this.nshb_doc = null;
                     this.nshb_doc = null;
                     this.nshb_doc = null;

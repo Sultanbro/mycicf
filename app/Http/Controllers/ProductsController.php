@@ -423,6 +423,14 @@ class ProductsController extends Controller
             }
         } else {
             $response = $kias->getExpressAttributes($ProductISN);
+//            if(Cache::has('expressAttr')){
+//                $response = Cache::get('expressAttr')[0];
+//            } else {
+//                $response = $kias->getExpressAttributes($ProductISN);
+//                Cache::put('expressAttr',[$response]);
+//            }
+
+
             $attributes = [];
             $participants = [];
             if (isset($response->ROWSET->row)) {
@@ -483,6 +491,7 @@ class ProductsController extends Controller
             'calc_isn' => isset($quotation->calc_isn) ? $quotation->calc_isn : null,
             'calc_id' => isset($quotation->calc_id) ? $quotation->calc_id : null,
             'full_id' => isset($quotation->full_id) ? $quotation->full_id : null,
+            'tariff' => isset($quotation->tariff) ? $quotation->tariff : null,
         ]);
     }
 
@@ -520,6 +529,7 @@ class ProductsController extends Controller
             $quotation->sabj_isn = $subjISN;
             $quotation->calc_isn = (string)$response->ISN;   //(int)$response->AgrCalcISN;
             $quotation->calc_id = (string)$response->CalcID;    //(string)$response->CalcID;
+            $quotation->tariff = isset($response->Tariff) ? (string)$response->Tariff : '';   //(int)$response->AgrCalcISN;
             $quotation->premiumSum = (int)$response->ROWSET->row->Premiumsum; //(int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->nshb = $request->nshb ? 1 : 0;
@@ -564,6 +574,7 @@ class ProductsController extends Controller
             'premium' => (int)$response->ROWSET->row->Premiumsum,
             'calc_isn' => (string)$response->ISN,
             'calc_id' => $quotation->calc_id,
+            'tariff' => $quotation->tariff,
             'nshb_doc' => $quotation->nshb_doc,
             'nshb_request' => $quotation->nshb_request,
             'nshb_id' => $quotation->nshb_id,
@@ -797,14 +808,14 @@ class ProductsController extends Controller
         $quotations = ExpressQuotation::where('product_isn',$productISN)->where('user_isn',Auth::user()->ISN);
 
         if(!isset($request->nshb)) {
-            $quotations = $quotations->where('nshb',1);
+            //$quotations = $quotations->where('nshb',1);
         } else {
-            $quotations = $quotations->where('nshb',$request->nshb);
+            //$quotations = $quotations->where('nshb',$request->nshb);
         }
 
 
         if($request->status != ''){
-            $quotations = $quotations->where('status',$request->status);
+            //$quotations = $quotations->where('status',$request->status);
         }
 
 //        if ($request->type == 1) {

@@ -7,7 +7,7 @@
 
             <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5 mb-5">
                 <button class="btn btn-outline-info" @click="block.phys = true; block.jur = false;">
-                    Фил. лицо {{ participant.Label }}
+                    Физ. лицо
                 </button>
                 <button class="btn btn-outline-info ml-2" @click="block.jur = true; block.phys = false;">
                     Юр. лицо
