@@ -126,7 +126,8 @@
             quotationId: String,
             express_isn: String,
             productId: String,
-            participants: Array
+            participants: Array,
+            express_premium: Number
         },
         watch: {
             'agrobject.ClassISN': function(val,oldVal){
@@ -138,7 +139,8 @@
             'DA.calcDA': function(val){
                 this.agrobject.DAsum = null;
                 this.DA.remark = null;
-                this.agrobject.DAsum = val && this.expressAttr.premium ? this.expressAttr.premium : null;
+                //this.agrobject.DAsum = val && this.expressAttr.premium ? this.expressAttr.premium : null;
+                this.agrobject.DAsum = val && this.express_premium != null ? this.express_premium : null;
             }
         },
         methods: {

@@ -829,7 +829,8 @@ class ProductsController extends Controller
     }
 
     public function expressQuotationList($productISN, Request $request){
-        $quotations = ExpressQuotation::where('product_isn',$productISN)->where('user_isn',Auth::user()->ISN);
+        $user_isn = Auth::user()->ISN;
+        $quotations = ExpressQuotation::where(['user_isn' => $user_isn,'product_isn' => $productISN]);
 
         if(!isset($request->nshb)) {
             //$quotations = $quotations->where('nshb',1);
@@ -1039,8 +1040,8 @@ class ProductsController extends Controller
         $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
         $order['contractDate'] = $request->all()['contractDate'];
         $order['formular'] = $request->all()['formular'];
-        $order['agrobject'] = $this->agrobjectToKiasAdd($request->all());
-        $order['calcDA'] = $request->calcDA;
+        $order['agrobject'] = $this->agrobjectToKiasAdd($request->all(),$quotation);
+        $order['calcDA'] = $request->calcDA != 1 ? $request->quotationId != 0 && $quotation->express_id != '' && $quotation->express_id != null ? 2 : 0 : $request->calcDA;
         $order['DAremark'] = $request->DAremark;
         $curator = $request->all()['formular']['curator'];
         $order['curator'] = $curator['Value'] != 0 && isset($curator['subjISN']) && $curator['subjISN'] != null ? $curator['subjISN'] : null;
@@ -1217,7 +1218,7 @@ class ProductsController extends Controller
         return $result;
     }
 
-    public function agrobjectToKiasAdd($order){
+    public function agrobjectToKiasAdd($order,$quotation = null){
         if(count($order['agrobjects']) > 0) {
             $agr_object = [];
             $subjISN = '';
@@ -1238,12 +1239,12 @@ class ProductsController extends Controller
                     //    if($part['ISN'] == 2082) {
                         //    $subjISN = $part['Value'];
                     $subjISN = isset($selectedParticipant[$cObj]['subjISN']) ? $selectedParticipant[$cObj]['subjISN'] : $selectedParticipant[0]['subjISN'];
-                            array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN));
+                            array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN,$quotation));
                       //  }
                     //}
                     $cObj++;
                 } else {
-                    array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN));
+                    array_push($agr_object, $this->objectToKiasAdd($obj, $agrobjectAddatr, $agrobjCar, $order, $subjISN,$quotation));
                 }
             }
             return $agr_object;
@@ -1252,7 +1253,15 @@ class ProductsController extends Controller
         }
     }
 
-    public function objectToKiasAdd($obj,$agrobjectAddatr,$agrobjCar,$order,$subjISN){
+    public function objectToKiasAdd($obj,$agrobjectAddatr,$agrobjCar,$order,$subjISN,$quotation = null){
+        if($obj['DAsum'] != null && $obj['DAsum'] != ''){
+            $premSum = $obj['DAsum'];
+            $tariff = 0;
+        } else {
+            $premSum = isset($quotation->express_id) && $quotation->express_id != '' && $quotation->express_id != null ? $quotation->premiumSum : '';
+            $tariff = isset($quotation->express->tariff) && $quotation->express->tariff != 0 ? intval($quotation->express->tariff) : 0;
+        }
+
         return [
             'ClassISN' => $obj['ClassISN'],
             'SubClassISN' => $obj['SubClassISN'],
@@ -1275,10 +1284,11 @@ class ProductsController extends Controller
                     'LimitSum' => $obj['insureSum'],
                     'LimitSumType' => 'А',
                     'FranchTariff' => isset($obj['franch']) && $obj['franch'] != null ? $obj['franch'] : 0,
-                    'PremiumSum' => $obj['DAsum'],
-                    'PremiumSumTariff' => $obj['DAsum'],
+                    'PremiumSum' => intval($premSum),
+                    'PremiumSumTariff' => intval($premSum),
+                    'Tariff' => $tariff,
                     'FranchType' => 'Б',
-                    //'FranchSum' => $order['franch'],
+                    //'FranchSum' => $obj['franch'],
                 ]
             ],
         ];

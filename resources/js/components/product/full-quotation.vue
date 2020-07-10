@@ -90,6 +90,7 @@
                             :product-id="id"
                             :participants="participants"
                             :express_isn="express_isn"
+                            :express_premium="express_premium"
                             :DA="DA">
                 </agr-object>
             </div>
@@ -121,7 +122,7 @@
                 <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
             </div>
         </div>
-        <div v-if="quotationId == 0 && contract_number == null" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
+        <div v-if="quotationId == 0 && contract_number == null || quotationId != 0 && contract_number == null && express_id != '' && express_id != null" class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-12 text-center mb-4">
             <label for="yes" class="bold">Отправить в Департамент андеррайтинга </label>
             <input type="checkbox" class="mt-2 ml-2" id="yes" v-model="DA.calcDA" value="true" @change="calcChanged">
         </div>
@@ -151,7 +152,7 @@
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
                 </button>
-                <button v-if="contract_number === null && quotationId != 0 && !DA.calcDA && express_isn != null" class="btn btn-outline-info" @click="calculate()">
+                <button v-if="contract_number === null && quotationId != 0 && express_isn != null && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Сохранить полную котировку
                 </button>
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
@@ -191,6 +192,7 @@
                 DA_nomer: null,
                 express_isn: null,
                 express_id: null,
+                express_premium: null,
                 status_name: 'Оформление',
                 status: null,
                 contract_number: null,
@@ -273,6 +275,7 @@
                             this.calc_id = response.data.calc_id;
                             this.express_isn = response.data.express_isn;
                             this.express_id = response.data.express_id;
+                            this.express_premium = parseInt(response.data.price);
                             this.status_name = response.data.status_name != 0 ? response.data.status_name : this.status_name;
                             this.status = response.data.status;
                             this.contract_number = response.data.contract_number;
@@ -554,6 +557,12 @@
                     this.price = 0;
                     this.DA_isn = null;
                     this.DA_nomer = null;
+                } else {
+                    // if(this.DA.calcDA == true){
+                    //     if(this.DAsum == null || this.DAsum == ''){
+                    //         this.DAsum = this.express_premium != null ? this.express_premium : null;
+                    //     }
+                    // }
                 }
             }
         },

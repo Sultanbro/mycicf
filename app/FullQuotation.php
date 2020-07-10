@@ -13,4 +13,8 @@ class FullQuotation extends Model
     public function product(){
         return $this->hasOne('App\ExpressProduct','product_isn','product_isn');
     }
+
+    public function express(){
+        return $this->hasOne('App\ExpressQuotation','calc_isn','express_isn');
+    }
 }
