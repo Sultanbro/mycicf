@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use DateTime;
 
 class ProductsController extends Controller
 {
@@ -492,6 +493,7 @@ class ProductsController extends Controller
             'calc_id' => isset($quotation->calc_id) ? $quotation->calc_id : null,
             'full_id' => isset($quotation->full_id) ? $quotation->full_id : null,
             'tariff' => isset($quotation->tariff) ? $quotation->tariff : null,
+            'remark' => isset($quotation->remark) ? $quotation->remark : null,
         ]);
     }
 
@@ -530,6 +532,7 @@ class ProductsController extends Controller
             $quotation->calc_isn = (string)$response->ISN;   //(int)$response->AgrCalcISN;
             $quotation->calc_id = (string)$response->CalcID;    //(string)$response->CalcID;
             $quotation->tariff = isset($response->Tariff) ? (string)$response->Tariff : '';   //(int)$response->AgrCalcISN;
+            $quotation->remark = isset($response->Remark) ? (string)$response->Remark : '';
             $quotation->premiumSum = (int)$response->ROWSET->row->Premiumsum; //(int)$response->PremiumSum;    // Если отправл
             $quotation->data = json_encode($request->all());
             $quotation->nshb = $request->nshb ? 1 : 0;
@@ -575,6 +578,7 @@ class ProductsController extends Controller
             'calc_isn' => (string)$response->ISN,
             'calc_id' => $quotation->calc_id,
             'tariff' => $quotation->tariff,
+            'remark' => $quotation->remark,
             'nshb_doc' => $quotation->nshb_doc,
             'nshb_request' => $quotation->nshb_request,
             'nshb_id' => $quotation->nshb_id,
@@ -613,13 +617,14 @@ class ProductsController extends Controller
             ]);
         }
 
-        $from_express = [];                             // Временно записываем данные полной котировки, которые пришли из киаса
+        $from_express = [];                             // Временно записываем данные полной котировки, которые пришли из киаса, которые мигрировались из экспресс котировки
         if (isset($agreement->AgreementCalc->row)) {
             foreach($agreement->AgreementCalc->row as $row){
                 $from_express['agreementID'] = (string)$row->ID;
                 if (isset($row->AGREEMENT_ADDATTR->row)){
                     foreach($row->AGREEMENT_ADDATTR->row as $attrRow){
-                       $from_express['AGREEMENT_ADDATTR'][(int)$attrRow->ATTRISN] = (string)$attrRow->VAL;
+                       $from_express['AGREEMENT_ADDATTR'][(int)$attrRow->ATTRISN] = (string)$attrRow->TYPEVALUE == 'CHECKBOX' ? (string)$attrRow->VAL == 1 ? true : false : (string)$attrRow->VAL;
+                        //$from_express['ADDATTR_TYPE'][(int)$attrRow->ATTRISN] = (string)$attrRow->TYPEVALUE;
                     }
                 }
                 if (isset($row->AGROBJECT->row)){
@@ -629,7 +634,8 @@ class ProductsController extends Controller
                         $from_express['AGROBJECT']['ObjName'] = (string)$attrRow->SubClassName;
                         if(isset($attrRow->AGROBJECT_ADDATTR->row)){
                             foreach($attrRow->AGROBJECT_ADDATTR->row as $objectRow){
-                                $from_express['AGROBJECT_ADDATTR'][(int)$objectRow->ATTRISN] = (string)$objectRow->VAL;
+                                $from_express['AGROBJECT_ADDATTR'][(int)$objectRow->ATTRISN] = (string)$objectRow->TYPEVALUE == 'CHECKBOX' ? (string)$objectRow->VAL == 1 ? true : false : (string)$objectRow->VAL;
+                                //$from_express['ADDATTR_TYPE'][(int)$objectRow->ATTRISN] = (string)$objectRow->TYPEVALUE;
                             }
                         }
                         if(isset($attrRow->AGRCOND->row)){
@@ -639,9 +645,10 @@ class ProductsController extends Controller
                                 $from_express['AGRCOND']['InsClassISN'] = (string)$agrcondRow->InsClassISN;
                                 $from_express['AGRCOND']['LimitSum'] = (string)$agrcondRow->LimitSum;
                                 $from_express['AGRCOND']['PremiumSum'] = (string)$agrcondRow->PremiumSum;
-//                                <DateSign>29.06.2020 00:00:00</DateSign>
-//                                <DateBeg>30.06.2020 00:00:00</DateBeg>
-//                                <DateEnd>29.06.2021 00:00:00</DateEnd>
+
+                                $from_express['AGRCOND']['date']['begin'] = date('Y-m-d',strtotime((string)$agrcondRow->DateBeg));
+                                $from_express['AGRCOND']['date']['end'] = date('Y-m-d',strtotime((string)$agrcondRow->DateEnd));
+                                $from_express['AGRCOND']['date']['sig'] = date('Y-m-d',strtotime((string)$agrcondRow->DateSign));
                             }
                         }
 
@@ -674,13 +681,15 @@ class ProductsController extends Controller
                 }
             }
 
-            if(count($attributes) > 0){
-                foreach($attributes as $key => $attribute){
-                    if(isset($from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN]) && $from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN] != ''){
-                        $attributes[$key]->Value = $from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN];
-                    }
-                }
-            }
+//            foreach($express_data->attributes as $exp_atr){
+//                if($exp_atr->AttrISN == 857901){
+//                    $interval = date_diff(new DateTime($from_express['AGRCOND']['date']['period']['end']), new DateTime($from_express['AGRCOND']['date']['period']['begin']));
+//                    //$intervalS = $interval->m + ($interval->y * 12);
+//                    //$interval->format('%m');
+//                    $from_express['AGRCOND']['date']['period'] = $interval->format('%m');
+//                }
+//            }
+
 
             $objects = (array)$objects;
             if($objects){
@@ -692,15 +701,13 @@ class ProductsController extends Controller
                 $objects['insureSum'] = isset($from_express['AGRCOND']['LimitSum']) ? $from_express['AGRCOND']['LimitSum'] : '';
 
                 foreach($objects['objekt'] as $key => $object){
-//                    if(isset($from_express['AGROBJECT_ADDATTR'][$object->ClassISN]) && $from_express['AGROBJECT_ADDATTR'][$object->ClassISN] != ''){
-//                        //$objects['objekt'][$key]['Value'] = $from_express['AGROBJECT_ADDATTR'][$object->ClassISN];
-//                    }
-
-                    //print '<pre>';print_r($object);print '</pre>'; exit();
                     if($object){
                         foreach($object->AGROBJECT_ADDATTR as $index => $agrobject_addatr){
-                            if(isset($from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN]) && $from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN] != ''){
-                                $objects['objekt']->{$key}->AGROBJECT_ADDATTR->{$index}->Value = $from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN];
+                            if(isset($from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN])) {
+                                $expressAgrObjectAddatr = $from_express['AGROBJECT_ADDATTR'][$agrobject_addatr->AttrISN];
+                                if ($expressAgrObjectAddatr != '' && $expressAgrObjectAddatr != null && $expressAgrObjectAddatr != 0) {
+                                    $objects['objekt']->{$key}->AGROBJECT_ADDATTR->{$index}->Value = $expressAgrObjectAddatr;
+                                }
                             }
                         }
                     }
@@ -708,13 +715,29 @@ class ProductsController extends Controller
                 $objects = [$objects];
             }
 
+            if(count($attributes) > 0){
+                foreach($attributes as $key => $attribute){
+                    if(isset($from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN])) {
+                        $agreementAddatr = $from_express['AGREEMENT_ADDATTR'][$attribute->AttrISN];
+                        if (isset($agreementAddatr) && $agreementAddatr != '' && $agreementAddatr != null && $agreementAddatr != 0) {
+                            $attributes[$key]->Value = $agreementAddatr;
+                        }
+                    }
+                }
+            }
+
             if(count($agrclauses) > 0){
                 foreach($agrclauses as $key => $agrclause){
-                    if(isset($from_express['AGRCLAUSE'][$agrclause->ISN]) && $from_express['AGRCLAUSE'][$agrclause->ISN] != ''){
+                    if(isset($from_express['AGRCLAUSE'][$agrclause->ISN]) && $from_express['AGRCLAUSE'][$agrclause->ISN] != ''  && $from_express['AGRCLAUSE'][$agrclause->ISN] != null){
                         $agrclauses[$key]->Value = $from_express['AGRCLAUSE'][$agrclause->ISN];
                     }
                 }
             }
+
+            $interval = date_diff(new DateTime($from_express['AGRCOND']['date']['end']), new DateTime($from_express['AGRCOND']['date']['begin']));
+            //$intervalS = $interval->m + ($interval->y * 12);
+            //$interval->format('%m');
+            $from_express['AGRCOND']['date']['period'] = intval($interval->format('%m'))+1;
 
             $changed_data = json_encode(array(
                 'subjISN' => $express_data->subjISN,
@@ -725,6 +748,7 @@ class ProductsController extends Controller
                 'attributes' => $attributes,    //$request->all()['attributes'],
                 'agrclauses' => $agrclauses,    //$request->agrclauses,
                 'formular' => $data->formular[0],
+                'contractDate' => $from_express['AGRCOND']['date'],
                 'DAremark' => null,
                 'calcDA' => 0
             ));
@@ -792,11 +816,11 @@ class ProductsController extends Controller
             $quotations = $quotations->where('status',$request->status);
         }
 
-        if ($request->type == 1) {
-            $quotations = $quotations->whereNotNull('contract_number')->where('contract_number', '!=', '');
-        } else {
-            $quotations = $quotations->where('contract_number','');
-        }
+//        if ($request->type == 1) {
+//            $quotations = $quotations->whereNotNull('contract_number')->where('contract_number', '!=', '');
+//        } else {
+//            $quotations = $quotations->where('contract_number','');
+//        }
 
         $quotations = $quotations->orderBy('created_at','desc')->paginate(15);
         $product = ExpressProduct::where('product_isn',$productISN)->first();
@@ -947,12 +971,14 @@ class ProductsController extends Controller
 
         $agrclauses = isset($data->agrclauses) ? $data->agrclauses : [];
         $attributes = isset($data->attributes) ? $data->attributes : [];
+        $contractDate = isset($data->contractDate) ? $data->contractDate : [];
 
         return response()->json([
             'success' => true,
             'participants' => $participants,
             'agrclauses' => $agrclauses,
             'attributes' => $attributes,
+            'contractDate' => (object)$contractDate,
             'formular' => $formular,
             'calc_isn' => isset($calc_isn) && $calc_isn != '' ? $calc_isn : null,
             'DA_isn' => isset($DA_isn) && $DA_isn != '' ? $DA_isn : null,
@@ -1009,6 +1035,7 @@ class ProductsController extends Controller
         $order['calc_id'] = isset($quotation->calc_id) ? $quotation->calc_id : '';
         $order['participants'] = $this->participantsToKiasAddAttr($request->all());         // Формируем
         $order['attributes'] = $this->attributesToKiasAddAttrs($request->all()['attributes']);
+        $order['und_attributes'] = $this->undAttributesToKiasAddAttrs($request->all()['attributes']);   // Underwriters attrs
         $order['agrclauses'] = $this->agrclausesToKiasAddAttr($request->all()['agrclauses']);
         $order['contractDate'] = $request->all()['contractDate'];
         $order['formular'] = $request->all()['formular'];
@@ -1111,12 +1138,29 @@ class ProductsController extends Controller
     public function attributesToKiasAddAttrs($attributes){
         $result = [];
         foreach ($attributes as $attribute){
-            array_push($result, [
-                'ATTRISN' => $attribute['AttrISN'],
-                'TYPEVALUE' => $attribute['Type'],//$this->getAttrType($attribute['Type']),
-                'ATRVALUE' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
-                'VAL' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
-            ]);
+            if($attribute['AttrISN'] != 709171) {       // 709171 - Итоговый тариф % для андеров
+                array_push($result, [
+                    'ATTRISN' => $attribute['AttrISN'],
+                    'TYPEVALUE' => $attribute['Type'],//$this->getAttrType($attribute['Type']),
+                    'ATRVALUE' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
+                    'VAL' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
+                ]);
+            }
+        }
+        return $result;
+    }
+
+    public function undAttributesToKiasAddAttrs($attributes){
+        $result = [];
+        foreach ($attributes as $attribute){
+            if($attribute['AttrISN'] == 709171) {       // 709171 - Итоговый тариф % для андеров
+                array_push($result, [
+                    'ATTRISN' => $attribute['AttrISN'],
+                    'TYPEVALUE' => $attribute['Type'],//$this->getAttrType($attribute['Type']),
+                    'ATRVALUE' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
+                    'VAL' => $this->getAttrValue($attribute['Value'], $attribute['Type']),
+                ]);
+            }
         }
         return $result;
     }

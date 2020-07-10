@@ -282,6 +282,9 @@
             if(this.participant.ISN == 221507 && this.userList.length == 0) {
                 this.getUserList();
             }
+            if(this.participant.ISN == 2103){
+                this.$parent.subjISN = this.participant.Value;
+            }
         },
         methods: {
             addParticipantToKias(pIndex){

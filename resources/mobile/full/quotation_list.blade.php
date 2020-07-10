@@ -40,7 +40,7 @@
 @include('layouts.header')
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
-        @include('layouts.sidebar')
+
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
 
             <quotation-list inline-template
@@ -106,10 +106,10 @@
                                         <thead >
                                         <tr class="bg-grayblue color-light-gray">
                                             <td class="text-left">#</td>
-                                            <td class="">Номер котировки</td>
+                                            <td class="">Котировка</td>
                                             <td class="">Договор</td>
                                             <td class="">Отправлен в ДА</td>
-                                            <td class="">Статус котировки</td>
+                                            <!--td class="">Статус</td-->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -118,13 +118,12 @@
                                                 <td class="text-left">{{ $quotation->id }}</td>
                                                 <td>
                                                     <a href="{{ route('full_front', ['ID' => $quotation->product->id,'quotationId' => $quotation->id]) }}" target="_blank">
-                                                        {{ $quotation->calc_id }}
+                                                        {{ $quotation->calc_isn }}
                                                     </a>
                                                 </td>
                                                 <td>{{ $quotation->contract_number == '' ? '-' : $quotation->contract_number }}</td>
                                                 <td><span >{{ $quotation->calc_da == 1 ? 'да' : 'нет' }}</span></td>
-                                                <td>
-
+                                                <!--td>
                                                     @if($quotation->status == 0)
                                                         не указан
                                                     @else
@@ -134,13 +133,7 @@
                                                             @endif
                                                         @endforeach
                                                     @endif
-                                                    <div class="col-md-12">
-                                                        <div class="custom-primary-button-inverse border-0 pl-4 pr-4 pt-1 pb-1 color-white button-accept pointer m-auto text-center"
-                                                             @click="checkStatus({{ $quotation->id }},null,'full')">
-                                                            Обновить статус
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                </td-->
                                             </tr>
                                         @endforeach
                                         </tbody>

@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null">
-            <h5>Котировка
+            <!--h5>Котировка
                 <!--span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span-->
-            </h5>
-            <h5 v-if="calc_id != null">№ котировки {{ calc_id }}</h5>
+            <!--/h5-->
+            <h5 v-if="calc_id != null">Полная котировка №{{ calc_id }}</h5>
         </div>
         <div class="col-md-12 mb-4 mt-4">
             <div class="row">
@@ -73,7 +73,7 @@
 -->
         <div class="div-ml">
             <div class="mb-3 agreement-block " style="width:95%;">
-                <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
+                <period :period="period" :quotationId="quotationId" :express_id="express_id" :calcChanged="calcChanged"></period>
             </div>
         </div>
         <div  class="div-ml ">
@@ -95,7 +95,8 @@
             </div>
         </div>
         <div  class=" div-ml div-marg div-mr">
-            <div class="  agreement-block " >
+            <div class="  agreement-block ">
+                <h5 class=" col-md-12">Дополнительные атрибуты</h5>
                 <div v-for="attribute in attributes" class=" col-md-12   " style="width:95%;">
                     <agr-attributes :attribute="attribute"
                                     :express-attr="expressAttr"
@@ -105,9 +106,12 @@
             </div>
         </div>
         <div  class="div-marg div-ml div-mr">
-            <div class=" agreement-block d-flex flex-col-str  ">
-                <div v-for="agrclause in agrclauses" style="width:95%;">
-                    <agr-clause  :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
+            <div class=" agreement-block">
+                <h5 class=" col-md-12">Оговорки и ограничения</h5>
+                <div class="d-flex">
+                    <div v-for="agrclause in agrclauses" style="width:95%;">
+                        <agr-clause  :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,14 +145,14 @@
                 <!--div class="fs-2" v-if="DA.orderCreated">Заявка отправлена в ДА. Исн заявки {{ DA_isn }}</div-->
                 <div class="fs-2" v-if="DA.orderCreated && DA_nomer != null">Заявка отправлена в ДА. № заявки {{ DA_nomer }}</div>
                 <!--div class="fs-2" v-if="calc_isn != null">Исн котировки {{ calc_isn }}</div-->
-                <div class="fs-2" v-if="calc_id != null">№ котировки {{ calc_id }}</div>
+                <div class="fs-2" v-if="calc_id != null">№ полной котировки {{ calc_id }}</div>
                 <div class="fs-2" v-if="express_id != null">№ экспресс котировки {{ express_id }}</div>
 
                 <button v-if="contract_number === null && quotationId == 0 && !DA.calcDA" class="btn btn-outline-info" @click="calculate()">
                     Рассчитать стоимость
                 </button>
                 <button v-if="contract_number === null && quotationId != 0 && !DA.calcDA && express_isn != null" class="btn btn-outline-info" @click="calculate()">
-                    Сохранить
+                    Сохранить полную котировку
                 </button>
                 <button v-if="contract_number === null && quotationId == 0 && DA.calcDA && !DA.orderCreated" class="btn btn-outline-info" @click="calculate()">
                     Отправить в ДА
@@ -240,7 +244,7 @@
         created(){
             this.width = window.innerWidth;
             this.height = window.innerHeight;
-            this.quotationId == 0 ? this.calculated = false : this.calculated = true;
+            this.calculated = this.quotationId == 0 ? false : true;
         },
         mounted() {
             this.getFullData();
@@ -258,6 +262,13 @@
                             this.participants = response.data.participants;
                             this.agrclauses = response.data.agrclauses;
                             this.attributes = response.data.attributes;
+                            if(Object.keys(response.data.contractDate).length > 0){
+                                for(let index in response.data.contractDate){
+                                    if(response.data.contractDate[index] != '' && response.data.contractDate[index] != null){
+                                        this.period[index] = response.data.contractDate[index];
+                                    }
+                                }
+                            }
                             this.calc_isn = response.data.calc_isn;
                             this.calc_id = response.data.calc_id;
                             this.express_isn = response.data.express_isn;

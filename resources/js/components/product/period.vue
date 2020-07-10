@@ -118,7 +118,8 @@
         props: {
             period: Object,
             quotationId: String,
-            calcChanged: Function
+            calcChanged: Function,
+            express_id: String,
         },
         mounted(){
             this.period.end = this.$moment(this.period.begin, 'YYYY-MM-DD')
@@ -128,7 +129,7 @@
         },
         computed: {
             computedDisable(){
-                return parseInt(this.quotationId) != 0 ? true : false;
+                return parseInt(this.quotationId) != 0 && this.express_id == '' || parseInt(this.quotationId) != 0 && this.express_id == null ? true : false;
             }
         },
         watch: {

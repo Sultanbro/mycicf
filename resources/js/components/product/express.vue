@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null && calc_id != null">
-            <h5>Котировка №{{ calc_id }}</h5>
+            <h5>Экспресс котировка №{{ calc_id }}</h5>
             <!--h5>Номер котировки - {{ calc_id }}</h5-->
         </div>
         <participant v-for="(participant,index) in participants"
@@ -56,8 +56,9 @@
                 <!--div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
-                <div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div>
                 <div class="fs-2 col-12" v-if="tariff != null">Тариф {{tariff}}</div>
+                <div class="fs-2 col-12" v-if="remark != null && remark != ''">Комментарии: {{remark}}</div>
+                <!--div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div-->
                 <div class="fs-2 col-12" v-if="full_id != null">№ полной котировки {{full_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки  {{nshb_request_id}}</div>
@@ -88,6 +89,7 @@
                 full_isn: null,
                 full_id: null,
                 tariff: null,
+                remark: '',
                 docs: {
                     files: [],
                     sendedFail: false,
@@ -161,6 +163,7 @@
                         this.calc_id = response.data.calc_id;
                         this.full_id = response.data.full_id;
                         this.tariff = response.data.tariff;
+                        this.remark = response.data.remark;
                         this.attributes = response.data.attributes;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
@@ -216,6 +219,7 @@
                 }
 
                 this.preloader(true);
+                this.clearData();
                 this.axios.post('/express/calculate', {
                     subjISN : this.subjISN,
                     id : this.id,
@@ -231,6 +235,7 @@
                         this.calc_isn = response.data.calc_isn;
                         this.calc_id = response.data.calc_id;
                         this.tariff = response.data.tariff,
+                        this.remark = response.data.remark,
                         this.preloader(false);
                         if(this.nshb){
                             this.nshb_doc = response.data.nshb_doc;
@@ -272,7 +277,7 @@
                             this.full_isn = response.data.full_isn;
                             this.full_id = response.data.full_id;
                             window.location.href = "/full/calc/" + this.id + "/"+response.data.quotation_id;
-                            //this.preloader(false);
+                            this.preloader(false);
                         }else{
                             alert(response.data.error);
                             this.preloader(false);
@@ -340,15 +345,18 @@
                 }
 
                 if(this.quotationId == 0) {
-                    this.calc_isn = null;
-                    this.calc_id = null;
-                    this.tariff = null;
-                    this.nshb_doc = null;
-                    this.nshb_doc = null;
-                    this.nshb_doc = null;
-                    this.nshb_request = null;
-                    this.nshb_status = null;
+                    this.clearData();
                 }
+            },
+            clearData(){
+                this.calc_isn = null;
+                this.calc_id = null;
+                this.full_id = null;
+                this.tariff = null;
+                this.remark = '';
+                this.nshb_doc = null;
+                this.nshb_request = null;
+                this.nshb_status = null;
             },
             // createFullQuotation(){
             //     var full = confirm("Вы точно хотите перейти на страницу полной котировки?");
