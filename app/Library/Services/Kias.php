@@ -32,6 +32,10 @@ class Kias implements KiasServiceInterface
     public $_sId;
     public $tries = 0;
 
+    const DICT_CURRENCY_USD = 9716;
+    const DICT_CURRENCY_RUB = 9788;
+    const DICT_CURRENCY_EURO = 9721;
+    const DICT_CURRENCY_TENGE = 9813;
 
     /**
      * @var string Ссылка на сервис
@@ -297,6 +301,229 @@ class Kias implements KiasServiceInterface
             'ISN'         => $isn,
             'TemplateISN' => $template,
             'ClassID'     => $classId,
+        ]);
+    }
+
+    public function getExpressAttributes($product){
+        return $this->request('User_CicGetAttrExpress', [
+            'Product' => $product,
+        ]);
+    }
+
+    public function getFullObject($product){
+        return $this->request('User_CicGetProductInform', [
+            'ProductISN' => $product
+        ]);
+    }
+
+    public function getDictiList($parent)
+    {
+        return $this->request('GETDICTILIST', [
+            'DictiISN' => $parent,
+            'Mode' => 0
+        ]);
+    }
+
+    public function getRegions($parent){
+        return $this->request('User_CicGetRegionsAndCity', [
+            'region' => $parent
+        ]);
+    }
+
+    public function getSubject($firstName, $lastName, $patronymic, $iin)
+    {
+        return $this->request('User_CicSearchSubject', [
+            'IIN'          => $iin,
+            'FIRSTNAME'    => $firstName,
+            'LASTNAME'     => $lastName,
+            'PARENTNAME'   => $patronymic,
+        ]);
+    }
+
+    public function saveSubject($participant){
+        return $this->request('User_CicSaveSubject', array_merge($participant,[
+                'RESIDENT' => "Y",
+                'COUNTRYISN' => "9515"
+            ])
+        );
+    }
+
+    public function setSubject($participant){
+        return $this->request('User_CicSetSubject', array_merge($participant,[
+                'RESIDENT' => "Y",
+                'COUNTRYISN' => "9515"
+            ])
+        );
+    }
+
+    public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb)
+    {
+        return $this->request('User_CicExpressCalculator', [
+            'CustomTemplate' => $nshb,
+            'ReqText' => $nshb == 1 ? 'ТЕСТ!!!' : '',
+            'ProductISN' => $ISN,
+            'SubjISN' => $SubjISN,
+            'DeptISN' => '1445791',
+            'ADDATTR' => [
+                'row' => $addAttr
+            ]
+        ]);
+    }
+
+    public function CreateAgrByAgrcalc($isn){
+        return $this->request('CreateAgrByAgrcalc', [
+            'CalcISN' => $isn,
+            'MODE' => 0
+        ]);
+    }
+
+    public function getAgreementCalc($isn,$product_id){
+        return $this->request('GETAGREEMENTCALC', [
+            'AGREEMENTCALCISN' => $isn,
+            'PRODUCTISN' => $product_id
+        ]);
+    }
+
+    public function calcFull($order)
+    {
+
+        $result = $this->request('User_CicSaveAgrCalc', [
+            'ISN' => $order['calc_isn'],
+            'ID' => $order['calc_id'], //"TEMP_515431_" . $order['prodIsn'] . "_" . time(),
+            'CalcDA' => $order['calcDA'],
+            'ReqText' => $order['DAremark'],
+            'CLIENTISN' => $order['subjISN'],
+            'EMPLISN' => $order['curator'],
+            'PRODUCTISN' => $order['prodIsn'],
+            'CLASSISN' => 220603,
+            'STATUSISN'    => $order['formular']['status']['Value'],            //223368
+            'CURRISN' => self::DICT_CURRENCY_TENGE,
+            'DATESIGN' => date('d.m.Y', strtotime($order['contractDate']['sig'])),
+            'DATEBEG' => date('d.m.Y', strtotime($order['contractDate']['begin'])),
+            'DATEEND' => date('d.m.Y', strtotime($order['contractDate']['end'])),
+            'CURRCODE' => 'KZT',
+
+            'AGREEMENT_ADDATTR' => [
+                'row' => $order['attributes']
+            ],
+
+            'AGREEMENT_ADDATTR_UND' => [
+                'row' => $order['und_attributes']
+            ],
+
+            'AGROBJECT' => [
+                'row' => $order['agrobject']
+            ],
+
+            'AGRROLE' => [
+                'row' => $order['participants'],
+            ],
+
+            'AGRCLAUSE' => [
+                'row' => $order['agrclauses']
+            ]
+        ]);
+
+        return $result;
+    }
+
+    public function sendtoExpertSakta($isn,$dateTime,$address)
+    {
+        return $this->request('User_CicSendtoExpertSakta', [
+            'AGRISN' => $isn,
+            'DATE' => $dateTime,
+            'ADDRESS' => $address
+        ]);
+    }
+
+    public function sendtoExpert($isn,$dateTime,$address){
+        return $this->request('User_CicSendtoExpert', [
+            'AGRISN'    => $isn,
+            'DATE'  => $dateTime,
+            'ADDRESS' => $address
+        ]);
+    }
+
+    public function createAgrFromAgrCalc($agrCalcIsn){
+        return $this->request('User_CicCreateAgrFromAgrCalc',
+            ['AgrCalcISN' => $agrCalcIsn ]);
+    }
+
+    public function getVehicle($vin = null, $engine = null, $tfNumber = null, $srts = null,$searchTFESBD = null)
+    {
+        $kiasMethod = $searchTFESBD == null ? 'User_CicSearchVehiclesESBD' : 'User_CicSearchTFESBD';
+        $result = $this->request($kiasMethod, [
+            'MODELISN'  => null,
+            'VIN'       => $vin,
+            'ENGINEID'  => $engine,
+            'TF_NUMBER' => $tfNumber,
+            'SRTS'      => $srts,
+        ]);
+        $result = $searchTFESBD == null ? $result : $result->ROWSET->row[0];
+
+        if ($result)
+            return $result;
+    }
+
+    public function saveVehicle($data)
+    {
+        $data['DATERELEASE'] = '01.12.'.$data['DATERELEASE'];
+
+        return $this->request('User_CicSaveTFESBD', [
+            'TF_ID' => $data['TF_ID'],
+            'MARKISN' => $data['MARKISN'],
+            'PLATE' => $data['PLATE'],
+            'MODELISN' => $data['MODELISN'],
+            'CLASSISN' => $data['CLASSISN'],
+            'VIN' => $data['VIN'],
+            'DATERELEASE' => $data['DATERELEASE'],
+            'ENGINE_NUMBER' => isset($data['ENGINE_NUMBER']) ? 0 : $data['ENGINE_NUMBER'],
+            'ENGINE_POWER' => $data['ENGINE_POWER'],
+            'ENGINE_VOLUME' => $data['ENGINE_VOLUME'],
+            'RIGHT_HAND_DRIVE_BOOL' => $data['RIGHT_HAND_DRIVE_BOOL'] == 1 ? 'Y' : 'N',
+            'COLORISN' => $data['COLORISN'],
+            'COLOR' => $data['COLORISN'],
+        ]);
+    }
+
+//    /**
+//     * Сохранение прикрплений в киас
+//     * @param $refisn int исн документа
+//     * @param $type
+//     * @param $name string название файла
+//     * @param $data
+//     * @return SimpleXMLElement
+//     */
+//
+//    public function saveAttachment($refisn, $name, $file, $type = 'J'){
+//        return $this->request('SAVEATTACHMENT', [
+//            'REFISN' => $refisn,
+//            'PICTTYPE' => $type,
+//            'FILEREMARK' => '',
+//            'FILENAME' => $name,
+//            'ACTIVE ' => 'Y',
+//            'OLEOBJECT' => $file
+//        ]);
+//    }
+
+    public function getPrintableDocumentList($contract_number){
+        return $this->request('User_CicGetPrintableDocumentList', [
+            'AgrISN' => $contract_number,
+            'TemplateISN' => ''
+        ]);
+    }
+
+    public function getAgrStatus($ISN){
+        return $this->request('User_CicGetAgrCalcStatus',[
+            'AgrID' => $ISN
+        ]);
+    }
+
+    public function getOrSetDocs($doc_isn, $type, $status){
+        return $this->request('User_CicGetOrSetDocs',[
+            'DocISN' => $doc_isn,
+            'Type' => $type, // 1 сменить статус, 2 посмотреть статус
+            'Status' => $status, //2522 на подписи, 2518 подписан
         ]);
     }
 

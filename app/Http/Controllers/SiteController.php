@@ -11,6 +11,9 @@ use App\Library\Services\KiasServiceInterface;
 use App\Permissions;
 use App\Providers\KiasServiceProvider;
 use App\User;
+use App\Dicti;
+use App\Region;
+use App\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -585,6 +588,275 @@ class SiteController extends Controller
             }
         }
         return response()->json(['birthdays' => $result]);
+    }
+
+    public function getDicti(Request $request){
+        $kias = new Kias();
+        $kias->initSystem();
+        $parent = $request->parent;
+        $response = $kias->getDictiList($parent);
+        $result = [];
+        if(isset($response->ROWSET->row)){
+            foreach ($response->ROWSET->row as $row){
+                array_push($result, [
+                    'Value' => $row->ISN,
+                    'Label' => $row->FULLNAME
+                ]);
+            }
+        }
+        return response()->json([
+            'result' => $result,
+            'success' => true,
+        ]);
+    }
+
+    public function getDictiList($parent){
+        $kias = new Kias();
+        $kias->initSystem();
+        $response = $kias->getDictiList($parent);
+        $result = [];
+        array_push($result, [
+            'Value' => null,
+            'Label' => 'Не выбрано'
+        ]);
+        if(isset($response->ROWSET->row)){
+            foreach ($response->ROWSET->row as $row){
+                if($row->N_KIDS == '1'){
+                    $child_response = $kias->getDictiList((string)$row->ISN);
+                    if(isset($child_response->ROWSET->row)){
+                        foreach ($child_response->ROWSET->row as $child_row){
+                            array_push($result, [
+                                'Value' => (string)$child_row->ISN,
+                                'Label' => (string)$row->FULLNAME." ".(string)$child_row->FULLNAME
+                            ]);
+                        }
+                    }else{
+                        array_push($result, [
+                            'Value' => (string)$row->ISN,
+                            'Label' => (string)$row->FULLNAME
+                        ]);
+                    }
+                }else{
+                    array_push($result, [
+                        'Value' => (string)$row->ISN,
+                        'Label' => (string)$row->FULLNAME
+                    ]);
+                }
+            }
+        }
+        return $result;
+    }
+
+    public function getDictiFromBase(Request $request){
+        $parent = $request->parent;
+        if($request->dictiType == 'regions' || $request->dictiType == 'cities'){
+            $response = $request->dictiType == 'regions' ? Region::where('parentisn', $parent)->get() : City::where('parentisn', $parent)->get();
+        } else {
+            $response = Dicti::where('parent_isn', $parent)->get();
+        }
+        $result = [];
+        if(count($response) > 0){
+            foreach ($response as $row){
+                array_push($result, [
+                    'Value' => $row->isn,
+                    'Label' => isset($row->fullname) ? $row->fullname : $row->name,
+                ]);
+            }
+        }
+        return response()->json([
+            'result' => $result,
+            'success' => true,
+        ]);
+    }
+
+    public function searchSubject(Request $request, KiasServiceInterface $kias){
+        $firstName = $request->firstName ?? '';
+        $lastName = $request->lastName ?? '';
+        $patronymic = $request->patronymic ?? '';
+        $iin = $request->iin ?? '';
+        $response = $kias->getSubject($firstName, $lastName, $patronymic, $iin);
+        if($response->error){
+            return response()->json([
+                'success' => false,
+                'error' => $response->error->errorText ? (string)$response->error->errorText : (string)$response->error->text,
+                'not_found' => false
+            ]);
+        }
+        if(!isset($response->ROWSET->row)){
+            return response()->json([
+                'success' => false,
+                'error' => "Контрагент не найден",
+                'not_found' => true
+            ]);
+        }
+
+        if(count($response->ROWSET->row) > 1){
+            $participants = [];
+            foreach ($response->ROWSET->row as $row){
+                array_push($participants, [
+                    'ISN' => (string)$row->ISN,
+                    'Data' =>   (string)$row->ORGNAME != null ? (string)$row->ORGNAME.' ('.(string)$row->ECONOMICNAME.') '.(string)$row->COUNTRYNAME : (string)$row->FIRSTNAME.' '.(string)$row->LASTNAME.' '.(string)$row->PARENTNAME.' '.(string)$row->BIRTHDAY.' '.(string)$row->COUNTRYNAME
+                ]);
+            }
+            $result = [
+                'success' => true,
+                'count' => count($participants),
+                'participant' => $participants,
+            ];
+        }else{
+            $result = [
+                'success' => true,
+                'count' => 1,
+                'participant' => [
+                    'extSystemKey' => (string)$response->ROWSET->row->EXTSYSTEMKEY,
+                    'ISN' => (string)$response->ROWSET->row->ISN,
+                    'IIN' => (string)$response->ROWSET->row->IIN,
+                    'FirstName' => (string)$response->ROWSET->row->FIRSTNAME,
+                    'LastName' => (string)$response->ROWSET->row->LASTNAME,
+                    'Patronymic' => (string)$response->ROWSET->row->PARENTNAME,
+                    'OrgName' => (string)$response->ROWSET->row->ORGNAME,
+                    'Juridical' => (string)$response->ROWSET->row->JURIDICAL,
+                    'docType' => (string)$response->ROWSET->row->DOCCLASSISN,   //DOCCLASSNAME,
+                    //'docClassISN' => (string)$response->ROWSET->row->DOCCLASSISN,
+                    'docNumber' => $this->hideMiddle((string)$response->ROWSET->row->DOCNO),
+                    'docDate' => (string)$response->ROWSET->row->DOCDATE,
+                    'email' => $this->obfuscate_email((string)$response->ROWSET->row->EMAIL),
+                    'phone' => $this->hidePhone((string)$response->ROWSET->row->PHONE_M != '' ?(string)$response->ROWSET->row->PHONE_M : (string)$response->ROWSET->row->PHONE),
+                    'birthDay' => (string)$response->ROWSET->row->BIRTHDAY,
+                    'sex' => (string)$response->ROWSET->row->SEXID,
+                    'okvdName' => (string)$response->ROWSET->row->OKVDNAME,
+                    'economicName' => (string)$response->ROWSET->row->ECONOMICNAME
+                ]
+            ];
+        }
+        return response()->json($result);
+    }
+
+    /**
+     * функция для частичного скрытия email адреса
+     * @param $email
+     * @return string
+     */
+    public static function obfuscate_email($email)
+    {
+        return $email;
+        // todo проверить где ожидает null а не ''
+        if (strlen($email) == 0) return '';
+        $em   = explode("@",$email);
+        $name = implode(array_slice($em, 0, count($em)-1), '@');
+        $len  = floor(strlen($name)/2);
+
+        return substr($name,0, $len) . str_repeat('*', $len) . "@" . end($em);
+    }
+
+    /**
+     * ф-я дял частичного скрытия номера телефона
+     * @param $phone
+     * @return string
+     */
+    public static function hidePhone($phone){
+        return $phone;
+        if (strlen($phone) == 0) return '';
+        if($phone[0] !== '+'){
+            $phone = '+' . $phone;
+            $phone[1] = '7';
+        }
+        $phone[5] = '*';
+        $phone[6] = '*';
+        $phone[7] = '*';
+        return $phone;
+    }
+
+    public static function hideMiddle($value){
+        return $value;
+        if (strlen($value) < 3 || $value == 'НЕ УКАЗАН') return null;
+        $textLength = strlen($value);
+        return substr_replace($value, '***', ($textLength/2)-1, ($textLength/2)-1);
+    }
+
+    public function saveSubject(Request $request, KiasServiceInterface $kias){
+        $success = false;
+        $new_participant = $request->participant;
+        $new_participant['SHORTNAME'] = $new_participant['LASTNAME'];
+        $new_participant['JURIDICAL'] = $request->juridical;
+
+        $response = $kias->saveSubject($new_participant);
+        if(isset($response->error)){
+            $success = false;
+            $result = $response->error->text;
+        } else {
+            $result = 'Данные успешно добавлены';
+            $success = true;
+        }
+
+        return response()->json([
+            'success' => $success,
+            'result' => $result
+        ]);
+    }
+
+    public function setSubject(Request $request, KiasServiceInterface $kias){
+        $success = false;
+        $error = null;
+        $participant = $request->participant;
+        $participantData = [];
+        $participantArray = $this->participantArray();
+        if($participant['juridical'] == 'N'){
+            $type = 'physical';
+        } else {
+            $type = 'juridical';
+        }
+
+        foreach($participant as $key => $part) {
+            if (isset($participantArray[$type][$key])) {
+                $participantData[$participantArray[$type][$key]] = $part;
+            }
+        }
+
+        $participantData['SHORTNAME'] = $participantData['LASTNAME'];
+        //$participantData['PHONE'] = $participantData['PHONE_M'];
+        $participantData['JURIDICAL'] = $participant['juridical'];
+
+        $response = $kias->saveSubject($participantData);   //$request->participant['extSystemKey'] == '' ? $kias->setSubject($participantData)
+        if(isset($response->error)){
+            $success = false;
+            $error = (string)$response->error->fulltext;
+        } else {
+            $success = true;
+        }
+
+        return response()->json([
+            'success' => $success,
+            'error' => $error
+        ]);
+    }
+
+    public function participantArray(){
+        return array(
+            'physical' => [
+                'extSystemKey' => 'EXTSYSTEMKEY',
+                'subjISN' => 'ISN',
+                'iin' => 'IIN',
+                'firstName' => 'FIRSTNAME',
+                'lastName' => 'LASTNAME',
+                'patronymic' => 'PARENTNAME',
+                'birthDay' => 'BIRTHDAY',
+                'docType' => 'DOCCLASSISN',
+                'docNumber' => 'DOCNO',
+                'docDate' => 'DOCDATE',
+                'email' => 'EMAIL',
+                'phone' => 'PHONE_M',
+                'juridical' => 'JURIDICAL',
+                'sex' => 'SEXID',
+                //'docClassISN' => 'DOCCLASSISN'
+            ],
+            'juridical' => [
+                'extSystemKey' => 'EXTSYSTEMKEY',
+                'subjISN' => 'ISN',
+                'iin' => 'IIN',
+                'juridical' => 'JURIDICAL',
+                'orgName' => 'ORGNAME',
+        ]);
     }
 
     public function parseAuth(){
