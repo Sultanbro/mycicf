@@ -60,12 +60,13 @@
             </div>
 
             <div class=" ml-l2 mt-2 mt-3 col-3" v-if="agrobject.RiskISN != '' && agrobject.objekt[agrobject.ClassISN].FRANCH">
-                <label class="font-shif text-w">Сумма франшизы</label>
-                <select class="custom-select"
-                        v-model="agrobject.franch">
-                    <option v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
-                            v-for="(franchSum,index) in agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
+                <label class="font-shif text-w">Франшиза</label>
+                <select class="custom-select" v-model="agrobject.franchSum" v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']">
+                    <option v-for="(franchSum,index) in agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
                             :value="franchSum.KZT">{{ franchSum.KZT }} тг.</option>
+                </select>
+
+                <select class="custom-select" v-model="agrobject.franchTariff" v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchProc']">
                     <option v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchProc']"
                             v-for="(franchProc,index) in agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchProc']"
                             :value="franchProc.uFranchProc">{{ franchProc.uFranchProc }}%</option>
@@ -149,7 +150,8 @@
                     this.agrobject[index] = e.target.options[e.target.options.selectedIndex].dataset.option;
                 }
                 if(index == 'InsClassISN'){
-                    this.agrobject.franch = '';
+                    this.agrobject.franchSum = '';
+                    this.agrobject.franchTariff = '';
                 }
             },
             addObject(){

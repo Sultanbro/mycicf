@@ -146,6 +146,14 @@ class ProductsController extends Controller
             $constructor->user_isn = Auth::user()->ISN;
 
             $response = $kias->getFullObject($constructor->product_isn);
+
+            if (isset($response->error)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => (string)$response->error->fulltext
+                ]);
+            }
+
             $objects = [];
             $risks = [];    //RiskPack
             if(isset($response)){
@@ -219,6 +227,7 @@ class ProductsController extends Controller
                                 'SRTSNUM' =>  '',
                                 'SRTSDATE' => '',
                                 'TerritoryISN' => '',
+                                'CountryISN' => '',
                                 'PROBEG' => '',
                                 'REALPRICE' => ''
                             ];
@@ -246,8 +255,8 @@ class ProductsController extends Controller
                                     foreach ($row->FranchProc->row as $franchP) {
                                         if((string)$franchP->uFranchProc != '' && (string)$franchP->uFranchProc != null || (string)$franchP->cFranchProc != '' && (string)$franchP->cFranchProc != null) {
                                                 array_push($objects['objekt'][$isn]['FRANCH'][(string)$row->RiskPackisn]['franchProc'], [
-                                                    'uFranchProc' => (string)$franchP->uFranchProc,
-                                                    'cFranchProc ' => (string)$franchP->cFranchProc
+                                                    'uFranchProc' => (string)$franchP->uFranchProc == ',5' ? '0,5' : (string)$franchP->uFranchProc,
+                                                    'cFranchProc ' => (string)$franchP->cFranchProc == ',5' ? '0,5' : (string)$franchP->cFranchProc
                                                 ]);
                                         }
                                     }
@@ -646,6 +655,10 @@ class ProductsController extends Controller
                                 $from_express['AGRCOND']['LimitSum'] = (string)$agrcondRow->LimitSum;
                                 $from_express['AGRCOND']['PremiumSum'] = (string)$agrcondRow->PremiumSum;
 
+                                $from_express['AGRCOND']['FranchType'] = (string)$agrcondRow->FranchType;
+                                $from_express['AGRCOND']['FranchTariff'] = (string)$agrcondRow->FranchTariff;
+                                $from_express['AGRCOND']['FranchSum'] = (string)$agrcondRow->FranchSum;
+
                                 $from_express['AGRCOND']['date']['begin'] = date('Y-m-d',strtotime((string)$agrcondRow->DateBeg));
                                 $from_express['AGRCOND']['date']['end'] = date('Y-m-d',strtotime((string)$agrcondRow->DateEnd));
                                 $from_express['AGRCOND']['date']['sig'] = date('Y-m-d',strtotime((string)$agrcondRow->DateSign));
@@ -682,12 +695,16 @@ class ProductsController extends Controller
             }
 
 //            foreach($express_data->attributes as $exp_atr){
-//                if($exp_atr->AttrISN == 857901){
-//                    $interval = date_diff(new DateTime($from_express['AGRCOND']['date']['period']['end']), new DateTime($from_express['AGRCOND']['date']['period']['begin']));
+//                //if($exp_atr->AttrISN == 858441){    // Франшиза     857691
+//                    if(isset($exp_atr->franch) && $exp_atr->franch != '') {
+//                        $from_express['AGRCOND']['FranchSum'] = $exp_atr->franch;
+//                    }
+//                    //$interval = date_diff(new DateTime($from_express['AGRCOND']['date']['period']['end']), new DateTime($from_express['AGRCOND']['date']['period']['begin']));
 //                    //$intervalS = $interval->m + ($interval->y * 12);
 //                    //$interval->format('%m');
-//                    $from_express['AGRCOND']['date']['period'] = $interval->format('%m');
-//                }
+//                    //$from_express['AGRCOND']['date']['period'] = $interval->format('%m');
+//
+//                //}
 //            }
 
 
@@ -699,6 +716,8 @@ class ProductsController extends Controller
                 $objects['InsClassISN'] = isset($from_express['AGRCOND']['InsClassISN']) ? $from_express['AGRCOND']['InsClassISN'] : '';
                 $objects['RiskISN'] = isset($from_express['AGRCOND']['RiskISN']) ? $from_express['AGRCOND']['RiskISN'] : '';
                 $objects['insureSum'] = isset($from_express['AGRCOND']['LimitSum']) ? $from_express['AGRCOND']['LimitSum'] : '';
+                $objects['franchSum'] = isset($from_express['AGRCOND']['FranchSum']) ? $from_express['AGRCOND']['FranchSum'] : '';
+                $objects['franchTariff'] = isset($from_express['AGRCOND']['FranchTariff']) ? $from_express['AGRCOND']['FranchTariff'] : '';
 
                 foreach($objects['objekt'] as $key => $object){
                     if($object){
@@ -1206,10 +1225,11 @@ class ProductsController extends Controller
                     'REGNO' => $car['REGNO'],
                     'OwnerJuridical' => 'N',
                     'TerritoryISN' => $car['TerritoryISN'],
+                    'CountryISN' => intval($car['TerritoryISN']) != 172834 && intval($car['TerritoryISN']) != 172835 ? 9515 : '',
                     'ExtSystemKey' => '',
                     'GRNZ' => $car['REGNO'],
-                    'SRTSNUM' =>  '',
-                    'SRTSDATE' => '',
+                    'SRTSNUM' =>  $car['SRTSNUM'],
+                    'SRTSDATE' => $car['SRTSDATE'],
                     'PROBEG' => intval($car['PROBEG']),
                     'REALPRICE' => intval($car['REALPRICE'])
 
@@ -1259,7 +1279,7 @@ class ProductsController extends Controller
             $tariff = 0;
         } else {
             $premSum = isset($quotation->express_id) && $quotation->express_id != '' && $quotation->express_id != null ? $quotation->premiumSum : '';
-            $tariff = isset($quotation->express->tariff) && $quotation->express->tariff != 0 ? intval($quotation->express->tariff) : 0;
+            $tariff = isset($quotation->express->tariff) && $quotation->express->tariff != 0 ? str_replace('.',',',$quotation->express->tariff) : 0;
         }
 
         return [
@@ -1283,12 +1303,12 @@ class ProductsController extends Controller
                     'CurrSumISN' => self::DICT_CURRENCY_TENGE,
                     'LimitSum' => $obj['insureSum'],
                     'LimitSumType' => 'А',
-                    'FranchTariff' => isset($obj['franch']) && $obj['franch'] != null ? $obj['franch'] : 0,
                     'PremiumSum' => intval($premSum),
-                    'PremiumSumTariff' => intval($premSum),
-                    'Tariff' => $tariff,
+                    'PremiumSumTariff' => strval($premSum),
+                    'Tariff' => strval($tariff),
+                    'FranchTariff' => isset($obj['franchTariff']) && $obj['franchTariff'] != null ? $obj['franchTariff'] : 0,   // если передается процент франшизы
                     'FranchType' => 'Б',
-                    //'FranchSum' => $obj['franch'],
+                    'FranchSum' => isset($obj['franchSum']) && $obj['franchSum'] != null ? $obj['franchSum'] : 0,    // если передается сумма франшизы
                 ]
             ],
         ];
