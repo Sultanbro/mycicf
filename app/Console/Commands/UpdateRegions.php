@@ -64,9 +64,10 @@ class UpdateRegions extends Command
             if(isset($response->rowset->row)) {
                 DB::table('regions')->delete();
                 foreach ($response->rowset->row as $row) {
-                    $region = new Region;
+                    $name = (string)$row->isn == '1973' ? 'Временный въезд' : (string)$row->isn == '1974' ? 'Временная регистрация' : '';
+                        $region = new Region;
                     $region->isn = (string)$row->isn;
-                    $region->name = (string)$row->name;
+                    $region->name = (string)$row->name == '' ? $name : (string)$row->name;
                     $region->parentisn = (string)$row->parentisn;
                     $region->parentname = '';
                     $region->regionisn = (string)$row->parentisn;

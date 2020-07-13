@@ -165,17 +165,17 @@
         },
         methods:{
             addToKias: async function(e){
-                let error = false;
+                var hasError = false;
                 for(let index in this.newVehicle){
-                    //if(index != 'regionIsn' && index != 'regionChild' && index != 'cityIsn' && index != 'TF_ID') {
+                    if(index != 'regionIsn' && index != 'regionChild' && index != 'cityIsn' && index != 'TF_ID') {
                         if (this.newVehicle[index] == null || this.newVehicle[index] == '') {
-                            console.log(index+'='+this.newVehicle[index]);
-                            error = true;
+                            //console.log(index+'='+this.newVehicle[index]);
+                            hasError = true;
                         }
-                    //}
+                    }
                 }
 
-                if(error) {
+                if(hasError) {
                     alert('Укажите пожалуйста все данные');
                 } else {
                     this.preloader(true);

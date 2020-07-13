@@ -23,7 +23,7 @@
                 <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.Model" disabled="true" @keyup="calcChanged">
             </div>
 
-            <div v-if="!chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+            <!--div v-if="!chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Территория регистрации</label>
                 <input type="text"
                        class="attr-input-text col-12 bg-white"
@@ -35,7 +35,8 @@
                         Сменить регион
                     </button>
                 </div>
-            </div>
+            </div-->
+
             <div v-if="chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Регион</label>
                 <select class="attr-input-text col-12 bg-white"
@@ -60,7 +61,7 @@
                 <label class="bold">Город/Село</label>
                 <select class="attr-input-text col-12 bg-white"
                         v-model="cityIsn"
-                        @change="calcChanged();agrobjcar.TerritoryISN = cityIsn">
+                        @change="calcChanged();">
                     <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value">{{ item.Label }}</option>
                 </select>
             </div>
@@ -125,7 +126,7 @@
                 regionIsn: null,
                 regionChild: null,
                 cityIsn: null,
-                chooseRegion: false
+                chooseRegion: true
             }
         },
         directives: {mask},
@@ -153,7 +154,7 @@
                     this.axios.post('/getVehicle', this.agrobjcar)
                         .then(response => {
                             if (response.data.success) {
-                                this.chooseRegion = false;
+                                //this.chooseRegion = false;
                                 this.clearVehicle();
                                 for (var prop in response.data.result) {
                                     this.agrobjcar[prop] = response.data.result[prop];
@@ -177,20 +178,19 @@
                         });
                 }
             },
-            getDictiFromBase:async function(dicti = null){
+            getDictiFromBase:async function(dicti,bigCity){
                 let parent = null;
                 switch(dicti){
                     case 'regions':
-                        if(this.regionIsn == null) {
-                            parent = 0;
-                        } else {
-                            parent = this.regionIsn;
-                        }
-                        this.regionChild = [];
+                        parent = this.regionIsn == null ? 0 : this.regionIsn;
+                        this.regionChilds = [];
                         this.cities = [];
+                        this.agrobjcar.TerritoryISN = '';
+                        this.regionChild = null;
+                        this.cityIsn = '';
                         break;
                     case 'cities':
-                        parent = this.regionChild;
+                        parent = this.regionChild != null ? this.regionChild : this.regionIsn;
                         break;
                 }
                 this.preloader(true);
@@ -199,14 +199,14 @@
                     dictiType: dicti
                 })
                     .then(response => {
-                        this.fetchDictiFromBase(response,dicti);
+                        this.fetchDictiFromBase(response,dicti,bigCity);
                     })
                     .catch(error => {
                         alert(error);
                         this.preloader(false);
                     });
             },
-            fetchDictiFromBase(response,dicti){
+            fetchDictiFromBase(response,dicti,bigCity){
                 if (response.data.success) {
                     switch (dicti) {
                         case 'regions':
@@ -214,15 +214,32 @@
                                 this.regions = response.data.result;
                                 this.preloader(false);
                             } else {
-                                this.regionChilds = response.data.result;
-                                this.agrobjcar.TerritoryISN = this.regionChilds.length == 0 ? this.regionIsn : "";
-                                this.preloader(false);
+                                if(response.data.result.length > 0) {
+                                    this.regionChilds = response.data.result;
+                                    //this.agrobjcar.TerritoryISN = this.regionChilds.length == 0 ? this.regionIsn : "";
+                                    this.preloader(false);
+                                } else {
+                                    this.getDictiFromBase('cities',1);  // 1 это если районы не найдены, то смотрим в cities
+                                }
                             }
                             break;
                         case 'cities':
-                            this.cities = response.data.result;
-                            this.agrobjcar.TerritoryISN = "";
-                            this.preloader(false);
+                            if(bigCity == 1){
+                                if(response.data.result.length == 1) {
+                                    this.cityIsn = response.data.result[0].Value;
+                                } else {
+                                    if(response.data.result.length > 1) {
+                                        this.cities = response.data.result;
+                                    } else {
+                                        this.cityIsn = this.regionIsn;
+                                    }
+                                }
+                                this.preloader(false);
+                            } else {
+                                this.cities = response.data.result;
+                                this.cityIsn = "";
+                                this.preloader(false);
+                            }
                             break;
                     }
                 } else {
@@ -274,11 +291,15 @@
                     this.agrobjcar.ReleaseDate = null;
                     this.agrobjcar.TerritoryName = null;
                 }
+            },
+            'cityIsn': function(val,oldVal) {
+                this.agrobjcar.TerritoryISN = val == undefined ? '' : val;
             }
         },
         created(){
             this.width = window.innerWidth;
             this.height = 500;  //window.innerHeight;
+            this.getDictiFromBase('regions');
         },
     }
 </script>

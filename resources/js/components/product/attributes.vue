@@ -76,11 +76,11 @@
         },
         methods: {
             changeSelect(e) {
-                if(this.attribute.AttrISN == 858441) {
-                    if (e.target.options.selectedIndex > -1) {
-                        this.attribute.franch = e.target.options[e.target.options.selectedIndex].dataset.option;
-                    }
-                }
+                // if(this.attribute.AttrISN == 858441 || this.attribute.AttrISN == 861211) {            stremnyi - 863171,857691
+                //     if (e.target.options.selectedIndex > -1) {
+                //         this.attribute.franch = e.target.options[e.target.options.selectedIndex].dataset.option;
+                //     }
+                // }
             },
         }
     }

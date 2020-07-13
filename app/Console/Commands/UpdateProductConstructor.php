@@ -79,6 +79,14 @@ class UpdateProductConstructor extends Command
         $kias = new Kias();
         $kias->initSystem();
         $response = $kias->getFullObject($constructor->product_isn);
+
+        if (isset($response->error)) {
+            return response()->json([
+                'success' => false,
+                'error' => (string)$response->error->fulltext
+            ]);
+        }
+
         $objects = $objects;
         $checkResponse = 0;
         if(isset($response)){
@@ -149,6 +157,7 @@ class UpdateProductConstructor extends Command
                             'GRNZ' => '',
                             'SRTSNUM' =>  '',
                             'SRTSDATE' => '',
+                            'CountryISN' => '',
                             'TerritoryISN' => '',
                             'PROBEG' => '',
                             'REALPRICE' => ''
@@ -177,8 +186,8 @@ class UpdateProductConstructor extends Command
                                 foreach ($row->FranchProc->row as $franchP) {
                                     if((string)$franchP->uFranchProc != '' && (string)$franchP->uFranchProc != null || (string)$franchP->cFranchProc != '' && (string)$franchP->cFranchProc != null) {
                                         array_push($objects['objekt'][$isn]['FRANCH'][(string)$row->RiskPackisn]['franchProc'], [
-                                            'uFranchProc' => (string)$franchP->uFranchProc,
-                                            'cFranchProc ' => (string)$franchP->cFranchProc
+                                            'uFranchProc' => (string)$franchP->uFranchProc == ',5' ? '0,5' : (string)$franchP->uFranchProc,
+                                            'cFranchProc ' => (string)$franchP->cFranchProc == ',5' ? '0,5' : (string)$franchP->cFranchProc
                                         ]);
                                     }
                                 }
