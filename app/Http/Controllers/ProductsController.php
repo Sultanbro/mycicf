@@ -646,6 +646,10 @@ class ProductsController extends Controller
                                 $from_express['AGRCOND']['LimitSum'] = (string)$agrcondRow->LimitSum;
                                 $from_express['AGRCOND']['PremiumSum'] = (string)$agrcondRow->PremiumSum;
 
+//                                $from_express['AGRCOND']['FranchType'] = (string)$agrcondRow->FranchType;
+//                                $from_express['AGRCOND']['FranchTariff'] = (string)$agrcondRow->FranchTariff;
+//                                $from_express['AGRCOND']['FranchSum'] = (string)$agrcondRow->FranchSum;
+
                                 $from_express['AGRCOND']['date']['begin'] = date('Y-m-d',strtotime((string)$agrcondRow->DateBeg));
                                 $from_express['AGRCOND']['date']['end'] = date('Y-m-d',strtotime((string)$agrcondRow->DateEnd));
                                 $from_express['AGRCOND']['date']['sig'] = date('Y-m-d',strtotime((string)$agrcondRow->DateSign));
@@ -681,14 +685,18 @@ class ProductsController extends Controller
                 }
             }
 
-//            foreach($express_data->attributes as $exp_atr){
-//                if($exp_atr->AttrISN == 857901){
-//                    $interval = date_diff(new DateTime($from_express['AGRCOND']['date']['period']['end']), new DateTime($from_express['AGRCOND']['date']['period']['begin']));
-//                    //$intervalS = $interval->m + ($interval->y * 12);
-//                    //$interval->format('%m');
-//                    $from_express['AGRCOND']['date']['period'] = $interval->format('%m');
-//                }
-//            }
+            foreach($express_data->attributes as $exp_atr){
+                if($exp_atr->AttrISN == 858441){    // Франшиза
+                    if(isset($exp_atr->franch) && $exp_atr->franch != '') {
+                        $from_express['AGRCOND']['FranchSum'] = $exp_atr->franch;
+                    }
+                    //$interval = date_diff(new DateTime($from_express['AGRCOND']['date']['period']['end']), new DateTime($from_express['AGRCOND']['date']['period']['begin']));
+                    //$intervalS = $interval->m + ($interval->y * 12);
+                    //$interval->format('%m');
+                    //$from_express['AGRCOND']['date']['period'] = $interval->format('%m');
+
+                }
+            }
 
 
             $objects = (array)$objects;
@@ -699,6 +707,7 @@ class ProductsController extends Controller
                 $objects['InsClassISN'] = isset($from_express['AGRCOND']['InsClassISN']) ? $from_express['AGRCOND']['InsClassISN'] : '';
                 $objects['RiskISN'] = isset($from_express['AGRCOND']['RiskISN']) ? $from_express['AGRCOND']['RiskISN'] : '';
                 $objects['insureSum'] = isset($from_express['AGRCOND']['LimitSum']) ? $from_express['AGRCOND']['LimitSum'] : '';
+                $objects['franch'] = isset($from_express['AGRCOND']['FranchSum']) ? $from_express['AGRCOND']['FranchSum'] : '';
 
                 foreach($objects['objekt'] as $key => $object){
                     if($object){

@@ -16,8 +16,8 @@
             </div>
             <div v-else-if="attribute.Type === 'DICTI'" class="d-flex align-items-center mb-2" >
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
-                <select class="custom-select select-size" v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
-                    <option v-for="dicti in attribute.Childs" :value="dicti.Value">{{dicti.Label}}</option>
+                <select class="custom-select select-size" v-model="attribute.Value" @change="calcChanged();changeSelect($event)" :readonly="readOnly">
+                    <option v-for="dicti in attribute.Childs" :value="dicti.Value" :data-option="dicti.Label">{{dicti.Label}}</option>
                 </select>
             </div>
             <div v-else-if="attribute.Type === 'DATE'" class="d-flex align-items-center mb-2">
@@ -26,7 +26,7 @@
             </div>
             <div v-else-if="attribute.Type === 'SUBJECT'" class="d-flex align-items-center mb-2">
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
-                <input type="number" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
+                <input type="text" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
             </div>
             <div v-else class="d-flex align-items-center mb-2">
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
@@ -73,6 +73,15 @@
               // Это то что в конструкторе ставится                     это возвращается из метода
             this.isBold = this.attribute.required ? 'bold' : this.attribute.Required && this.attribute.Required == 'Y' ? 'bold' : '';
             this.readOnly = this.attribute.ReadOnly && this.attribute.ReadOnly == 'Y' ? true : false;
+        },
+        methods: {
+            changeSelect(e) {
+                if(this.attribute.AttrISN == 858441) {
+                    if (e.target.options.selectedIndex > -1) {
+                        this.attribute.franch = e.target.options[e.target.options.selectedIndex].dataset.option;
+                    }
+                }
+            },
         }
     }
 </script>

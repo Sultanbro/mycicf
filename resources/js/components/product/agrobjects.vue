@@ -61,8 +61,7 @@
 
             <div class=" ml-l2 mt-2 mt-3 col-3" v-if="agrobject.RiskISN != '' && agrobject.objekt[agrobject.ClassISN].FRANCH">
                 <label class="font-shif text-w">Сумма франшизы</label>
-                <select class="custom-select"
-                        v-model="agrobject.franch">
+                <select class="custom-select" v-model="agrobject.franch">
                     <option v-if="agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
                             v-for="(franchSum,index) in agrobject.objekt[agrobject.ClassISN].FRANCH[agrobject.RiskISN]['franchSum']"
                             :value="franchSum.KZT">{{ franchSum.KZT }} тг.</option>
