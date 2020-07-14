@@ -272,7 +272,8 @@
             participantIs: Object,
             participantDocs: Object,
             userList: Array,
-            getUserList: Function
+            getUserList: Function,
+            attribute: Object
         },
         created(){
             this.width = window.innerWidth;
@@ -533,6 +534,9 @@
             deleteParticipant(){
                 if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
                     this.participants.splice(this.pIndex, 1);
+                    if(this.attribute != undefined){
+                        this.attribute.Value = this.attribute.AttrISN == 752071 ? null : this.attribute.Value;  // Перевозчик
+                    }
                     this.closeParticipantForm(this.pIndex);
                     this.calcChanged();
                 }
@@ -608,6 +612,9 @@
                             this.attributes[i].Value = this.participant.phone;
                         }
                     }
+                }
+                if(this.attribute != undefined){
+                    this.attribute.Value = this.attribute.AttrISN == 752071 ? val : null;    // Перевозчик
                 }
             }
         }

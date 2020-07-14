@@ -25,8 +25,25 @@
                 <input type="date" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
             </div>
             <div v-else-if="attribute.Type === 'SUBJECT'" class="d-flex align-items-center mb-2">
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
-                <input type="text" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
+                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label>
+                <input type="text" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly"-->
+                <input v-if='attribute.AttrISN != "752071"' type="text" class="attr-input-text w-70"  v-model="attribute.Value" @keyup="calcChanged" :readonly="readOnly">
+                <div v-else>
+                    <participant v-for="(participant,index) in participants"
+                                 :key="index"
+                                 :p-index="index"
+                                 :participant="participant"
+                                 :participants="participants"
+                                 :formular="{insurant : { isn:752071,jur:true,phys:true,carrierISN:'',carrierName:''}}"
+                                 :preloader="preloader"
+                                 :calc-changed="calcChanged"
+                                 :attributes="[]"
+                                 :insurant-is="{participant:false,receiver:false}"
+                                 :participant-docs="participantDocs"
+                                 :attribute="attribute"
+                                 :product-id="null">
+                    </participant>
+                </div>
             </div>
             <div v-else class="d-flex align-items-center mb-2">
                 <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
@@ -47,14 +64,44 @@
         data() {
             return {
                 isBold: null,
-                readOnly: false
+                readOnly: false,
+                carrierISN: '',
+                carrierName: '',
+                participants: [
+                    {
+                        Value : null,
+                        firstName : null,
+                        iin : null,
+                        lastName : null,
+                        orgName : null,
+                        patronymic : null,
+                        subjISN : null,
+                        ISN:752071,
+                        data:null,
+                        Label: 'Перевозчик',
+                        new: true,
+                        docType: '',
+                        docNumber: '',
+                        docDate: '',
+                        email: '',
+                        phone: '',
+                        juridical: '',
+                        birthDay: '',
+                        okvdName: '',
+                        economicName: ''
+                    }
+                ],
+                participantDocs: {
+                    types: []
+                },
             }
         },
         directives: {mask},
         props: {
             attribute : Object,
             expressAttr: Object,
-            calcChanged: Function
+            calcChanged: Function,
+            preloader: Function
         },
         created(){
             if(this.attribute.AttrISN == 1422011){  // НШБ
@@ -82,7 +129,17 @@
                 //     }
                 // }
             },
-        }
+        },
+        // watch: {
+        //     'participants.Value': function (val, oldVal) {
+        //         this.attribute.Value = val;
+        //         alert(val);
+        //     },
+        //     'participant.Value': function (val, oldVal) {
+        //         this.attribute.Value = val;
+        //         alert(val);
+        //     }
+        // }
     }
 </script>
 
