@@ -656,7 +656,7 @@ class ProductsController extends Controller
                                 $from_express['AGRCOND']['PremiumSum'] = (string)$agrcondRow->PremiumSum;
 
                                 $from_express['AGRCOND']['FranchType'] = (string)$agrcondRow->FranchType;
-                                $from_express['AGRCOND']['FranchTariff'] = (string)$agrcondRow->FranchTariff;
+                                $from_express['AGRCOND']['FranchTariff'] = (string)$agrcondRow->FranchTariff == ',5' ? '0,5' : (string)$agrcondRow->FranchTariff;
                                 $from_express['AGRCOND']['FranchSum'] = (string)$agrcondRow->FranchSum;
 
                                 $from_express['AGRCOND']['date']['begin'] = date('Y-m-d',strtotime((string)$agrcondRow->DateBeg));
