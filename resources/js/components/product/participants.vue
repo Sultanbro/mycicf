@@ -2,7 +2,7 @@
     <div>
         <div v-show="participant.subjISN != null && participant.subjISN != ''">
             <div class="col-md-12 pl-0 text-center">
-                <span v-if="participant.lastName != null" >
+                <span v-if="participant.lastName != null && participant.lastName != ''" >
                     {{ participant.lastName != null ? participant.lastName : ''}}
                     {{ participant.firstName != null ? participant.firstName : ''}}
                     {{ participant.patronymic != null ? participant.patronymic : ''}}
@@ -106,7 +106,7 @@
                                 v-if="Object.keys(participantDocs.types).length > 0"
                                 @change="participantEdited = true"
                                 v-model="participant.docType">
-                            <option v-for="doc in participantDocs.types" :value="doc.Value[0]">{{doc.Label[0]}}</option>
+                            <option v-for="doc in participantDocs.types" :value="doc.Value">{{doc.Label}}</option>
                         </select>
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
@@ -293,7 +293,7 @@
             },
             openParticipantForm(pIndex){
                 this.$modal.show('participant-form-'+pIndex);
-                this.axios.post('/getDictiList', {
+                this.axios.post('/getDictiListFromBase', {      //getDictiList
                     parent : 43                 // docClassISN
                 })
                     .then(response => {
@@ -347,6 +347,7 @@
                             }
                         }
 
+                        this.search.not_found = false;
                         this.moreParticipant = false;
                         this.participant.firstName = response.participant.FirstName;
                         this.participant.lastName = response.participant.LastName;

@@ -3,30 +3,21 @@
         <h6 class="font-shif <!--text-hw--> "><label :for="attribute.AttrISN" :class="isBold">{{attribute.Label+ ':'}}</label></h6>
         <div >
             <div v-if="attribute.Type === 'TEXT'" class="d-flex align-items-center mb-2 " style="heidth: 50px;" >
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
                 <input v-if="attribute.AttrISN != 831381" type="text" class="attr-input-text w-70" v-model="attribute.Value" @keyup="calcChanged" :readonly="readOnly">
                 <input v-if="attribute.AttrISN == 831381" type="tel" v-model="attribute.Value" v-mask="'+###########'"  @keyup="calcChanged" class="attr-input-text w-70">
             </div>
-            <!--<div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
-                <input type="checkbox" class="attr-input-text width-checkbox"  v-model="attribute.Value"  @change="calcChanged">
-            </div>-->
             <div v-else-if="attribute.Type === 'CHECKBOX'" class="d-flex align-items-center mb-2">
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
                 <input type="checkbox" class=""  v-model="attribute.Value"  @change="calcChanged" :readonly="readOnly" :id="attribute.AttrISN">
             </div>
             <div v-else-if="attribute.Type === 'DICTI'" class="d-flex align-items-center mb-2" >
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
                 <select class="custom-select select-size" v-model="attribute.Value" @change="calcChanged();changeSelect($event)" :readonly="readOnly">
                     <option v-for="dicti in attribute.Childs" :value="dicti.Value" :data-option="dicti.Label">{{dicti.Label}}</option>
                 </select>
             </div>
             <div v-else-if="attribute.Type === 'DATE'" class="d-flex align-items-center mb-2">
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
                 <input type="date" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
             </div>
             <div v-else-if="attribute.Type === 'SUBJECT'" class="d-flex align-items-center mb-2">
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label>
-                <input type="text" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly"-->
                 <input v-if='attribute.AttrISN != "752071"' type="text" class="attr-input-text w-70"  v-model="attribute.Value" @keyup="calcChanged" :readonly="readOnly">
                 <div v-else>
                     <participant v-for="(participant,index) in participants"
@@ -46,13 +37,8 @@
                 </div>
             </div>
             <div v-else class="d-flex align-items-center mb-2">
-                <!--label class="mb-0 mr-2" :class="isBold">Значение: </label-->
                 <input type="text" class="attr-input-text w-70"  v-model="attribute.Value" @keyup="calcChanged" :readonly="readOnly">
             </div>
-            <!--div class="d-flex align-items-center mb-2">
-                <label class="bold mb-0 mr-2">Примечание: </label>
-                <input type="text" class="attr-input-text w-100"  v-model="attribute.Remark">
-            </div-->
         </div>
     </div>
 </template>
