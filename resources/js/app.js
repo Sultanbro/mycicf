@@ -126,7 +126,7 @@ Vue.component('participant-create', require('./components/product/participantCre
 
 Vue.component('period', require('./components/product/period.vue').default);
 
-Vue.component('participant-form', require('./components/product/participantForm.vue').default);
+//Vue.component('participant-form', require('./components/product/participantForm.vue').default);
 
 Vue.component('agr-attributes', require('./components/product/attributes.vue').default);
 

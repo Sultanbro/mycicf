@@ -44,6 +44,8 @@ class Kernel extends ConsoleKernel
 //                ->weekly();
 //            $schedule->command('colorAuto:dicti')
 //                ->weekly();
+//            $schedule->command('updateDocTypes:dicti')
+//                ->weekly();
         }catch (\Exception $e){
             Log::error($e->getMessage());
         }

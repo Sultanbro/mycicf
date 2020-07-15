@@ -467,7 +467,7 @@ class Kias implements KiasServiceInterface
 
     public function saveVehicle($data)
     {
-        $data['DATERELEASE'] = '01.12.'.$data['DATERELEASE'];
+        $data['DATERELEASE'] = '01.01.'.$data['DATERELEASE'];
 
         return $this->request('User_CicSaveTFESBD', [
             'TF_ID' => $data['TF_ID'],

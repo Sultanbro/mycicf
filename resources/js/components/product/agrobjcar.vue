@@ -12,7 +12,7 @@
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Дата выпуска авто </label>
-                <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.ReleaseDate" disabled="true" @keyup="calcChanged">
+                <input type="date" class="attr-input-text col-12 bg-white" v-model="agrobjcar.ReleaseDate" @keyup="calcChanged">
             </div>
             <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
                 <label class="bold">Марка</label>
@@ -161,6 +161,7 @@
                                 }
                                 this.preloader(false);
                                 this.notFound = false;
+                                this.agrobjcar.ReleaseDate = this.agrobject.expressTsRelease;
                             } else {
                                 this.clearVehicle();
                                 let error = response.data.error;

@@ -647,6 +647,11 @@ class ProductsController extends Controller
                                 //$from_express['ADDATTR_TYPE'][(int)$objectRow->ATTRISN] = (string)$objectRow->TYPEVALUE;
                             }
                         }
+
+                        if(isset($attrRow->AGROBJCAR->ReleaseDate)){
+                            $from_express['AGROBJCAR']['ReleaseDate'] = date('d.m.Y',strtotime($attrRow->AGROBJCAR->ReleaseDate));
+                        }
+
                         if(isset($attrRow->AGRCOND->row)){
                             foreach($attrRow->AGRCOND->row as $agrcondRow){
                                 //$from_express['AGRCOND'][(int)$agrcondRow->RiskISN] = (string)$agrcondRow->InsClassISN;
@@ -718,6 +723,7 @@ class ProductsController extends Controller
                 $objects['insureSum'] = isset($from_express['AGRCOND']['LimitSum']) ? $from_express['AGRCOND']['LimitSum'] : '';
                 $objects['franchSum'] = isset($from_express['AGRCOND']['FranchSum']) ? $from_express['AGRCOND']['FranchSum'] : '';
                 $objects['franchTariff'] = isset($from_express['AGRCOND']['FranchTariff']) ? $from_express['AGRCOND']['FranchTariff'] : '';
+                $objects['expressTsRelease'] = isset($from_express['AGROBJCAR']['ReleaseDate']) ? $from_express['AGROBJCAR']['ReleaseDate'] : '';
 
                 foreach($objects['objekt'] as $key => $object){
                     if($object){
@@ -964,30 +970,6 @@ class ProductsController extends Controller
         $formular = isset($data->formular) ? $request->quotationId != 0 ? $data->formular : $data->formular[0] : [];
         $participants = isset($data->participants) ? $data->participants : [];
         $DAremark = isset($data->DAremark) ? $data->DAremark : null;
-
-//        if(isset($data->agrclauses)){
-//            $agrclauses = $data->agrclauses;
-//            foreach($agrclauses as $agrclause){
-//                if($agrclause->Type == 'DICTI' || $agrclause->N_Kids == 1){
-//                    $isn = $agrclause->NumCode != '' ? $agrclause->NumCode : $agrclause->ISN;
-//                    $agrclause->Childs = $this->getDictis($isn,'');
-//                }
-//            }
-//        } else {
-//            $agrclauses = [];
-//        }
-//
-//        if(isset($data->attributes)){
-//            $attributes = $data->attributes;
-//            foreach($attributes as $attribute){
-//                    if($attribute->Type == 'DICTI' || isset($attribute->N_Kids) && $attribute->N_Kids == 1){
-//                            $isn = isset($attribute->NumCode) && $attribute->NumCode != '' ? $attribute->NumCode : $attribute->ISN;
-//                            $attribute->Childs = $this->getDictis($isn,'attributes');
-//                        }
-//            }
-//        } else {
-//            $attributes = [];
-//        }
 
         $agrclauses = isset($data->agrclauses) ? $data->agrclauses : [];
         $attributes = isset($data->attributes) ? $data->attributes : [];
