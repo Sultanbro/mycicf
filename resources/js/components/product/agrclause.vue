@@ -11,8 +11,10 @@
             <input type="checkbox" class="attr-input-text w-100" v-model="agrclause.Value" @change="calcChanged">
         </div>
         <div v-else-if="agrclause.Type === 'DICTI'" class="d-flex align-items-center mb-2 ">
-
-            <select class="custom-select w-100  " v-model="agrclause.Value" @change="calcChanged">
+            <select v-if="agrclause.selected && Object.keys(agrclause.selected).length > 0" class="custom-select w-100  " v-model="agrclause.Value" @change="calcChanged">
+                <option v-for="dicti in agrclause.selected" :value="dicti.Value">{{dicti.Label}}</option>
+            </select>
+            <select v-else class="custom-select w-100  " v-model="agrclause.Value" @change="calcChanged">
                 <option v-for="dicti in agrclause.Childs" :value="dicti.Value">{{dicti.Label}}</option>
             </select>
         </div>

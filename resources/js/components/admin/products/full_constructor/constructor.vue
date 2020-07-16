@@ -16,11 +16,21 @@
         </div>
         <div v-for="(item,index) in items" class="form-group col-md-4 col-lg-4 col-6 text-center">
             <treeselect v-model="item.ISN" :options="dictiOptions" @select="onChangeSelect($event,index)" />
+            <label v-if="iIndex == 'attributes' && items[index].Childs != null || iIndex == 'agrclauses' && items[index].Childs != null">Поумолчанию</label>
             <treeselect v-if="iIndex == 'attributes' && items[index].Childs != null || iIndex == 'agrclauses' && items[index].Childs != null"
                         v-model="item.Value"
                         class="mt-1"
                         :options="items[index].Childs"
                         @select="onSelectChilds($event,index)" />
+            <label v-if="iIndex == 'attributes' && items[index].Childs != null || iIndex == 'agrclauses' && items[index].Childs != null">Показать значения</label>
+            <treeselect v-if="iIndex == 'attributes' && items[index].Childs != null || iIndex == 'agrclauses' && items[index].Childs != null"
+                        v-model="item.selectedOptions"
+                        class="mt-1"
+                        :multiple="true"
+                        :options="items[index].Childs"
+                        :clearable="false"
+                        @deselect="shownChilds(index,$event,'delete')"
+                        @select="shownChilds(index,$event)"/>
             <div class="col-lg-12 row mt-3">
                 <a @click="deleteItem(index)" class="col-lg-6 pl-0 pr-0">Удалить</a>
                 <div class="col-lg-6 pl-0 pr-0">
@@ -31,7 +41,7 @@
             <div class="col-lg-12" v-if="iIndex == 'participants' && item.ISN == 2081 || iIndex == 'participants' && item.ISN == 2082">
                 <label :for="'notPartIns-'+iIndex+'-'+index" class="bold">
                     Не является страх<span v-if="item.ISN == 2081">/застр</span>
-                </label> <!--title[iIndex]-->
+                </label>
                 <input v-model="item.notPartIns" type="checkbox" :id="'notPartIns-'+iIndex+'-'+index" class="mt-2 ml-1">
             </div>
 
@@ -53,7 +63,7 @@
                     attributes : 'Дополнительные атрибуты договора',
                     agrclauses : 'Оговорки и ограничения',
                     objects : 'Объекты',
-                },
+                }
             }
         },
         props: {
@@ -154,6 +164,15 @@
             },
             onSelectChilds(e,index){
                 this.items[index].Value = e.id == 0 ? null : e.id;
+            },
+            shownChilds(itemIndex, e, remove){
+                this.items[itemIndex].selected = this.items[itemIndex].selected ? this.items[itemIndex].selected : {};
+
+                if(remove == undefined){
+                    this.items[itemIndex].selected[e.id] = e;
+                } else {
+                    delete this.items[itemIndex].selected[e.id];
+                }
             }
         },
         mounted(){
