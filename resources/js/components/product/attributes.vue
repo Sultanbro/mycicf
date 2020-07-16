@@ -10,9 +10,14 @@
                 <input type="checkbox" class=""  v-model="attribute.Value"  @change="calcChanged" :readonly="readOnly" :id="attribute.AttrISN">
             </div>
             <div v-else-if="attribute.Type === 'DICTI'" class="d-flex align-items-center mb-2" >
-                <select class="custom-select select-size" v-model="attribute.Value" @change="calcChanged();changeSelect($event)" :readonly="readOnly">
+
+                <select v-if="attribute.selected && Object.keys(attribute.selected).length > 0" class="custom-select select-size" v-model="attribute.Value" @change="calcChanged();changeSelect($event)" :readonly="readOnly">
+                    <option v-for="dicti in attribute.selected" :value="dicti.Value" :data-option="dicti.Label">{{dicti.Label}}</option>
+                </select>
+                <select v-else class="custom-select select-size" v-model="attribute.Value" @change="calcChanged();changeSelect($event)" :readonly="readOnly">
                     <option v-for="dicti in attribute.Childs" :value="dicti.Value" :data-option="dicti.Label">{{dicti.Label}}</option>
                 </select>
+
             </div>
             <div v-else-if="attribute.Type === 'DATE'" class="d-flex align-items-center mb-2">
                 <input type="date" class="attr-input-text w-70"  v-model="attribute.Value" @change="calcChanged" :readonly="readOnly">
