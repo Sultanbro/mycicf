@@ -155,6 +155,10 @@ class User extends Authenticatable
         return (new Permissions())->checkUser([Permissions::ROLE_PRODUCTS]);
     }
 
+    public static function isClaimsAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_CLAIMS]);
+    }
+
     public static function getMotivationDepartments(){
         return [
             "1445780", "1445781", "1445783", "1445783", "4100260",

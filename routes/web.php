@@ -142,6 +142,9 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('calc/getDicti', 'ProductsController@getDicti');
             Route::post('/updateProductsDicti','ProductsController@updateProductsDicti');
         });
+        Route::group(['middleware' => 'claimsAdmin'], function(){
+            Route::get('claims/development', 'ClaimsController@listDevelopment')->name('claims.development');
+        });
     });
 });
 
@@ -205,6 +208,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
             Route::post('/buyItem', 'CentcoinsController@buyItem');
         });
+        // DEVELOPMENT CLAIMS
+        Route::get('/dev-claims', 'ClaimsController@getDevelopment')->name('development');
+        Route::post('/save-dev-claims', 'ClaimsController@saveDevelopment');
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');

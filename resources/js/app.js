@@ -74,6 +74,8 @@ Vue.component('news-comment', require('./components/news/news-comment.vue').defa
 
 Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
 
+Vue.component('development-claims', require('./components/claims/development-claims.vue').default);
+
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
 Vue.component('coordination', require('./components/employee/coordination.vue').default);

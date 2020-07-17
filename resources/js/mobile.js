@@ -48,6 +48,8 @@ Vue.component('news-post', require('./components/mobile/news/news-post.vue').def
 
 Vue.component('news-comment', require('./components/mobile/news/news-comment.vue').default);
 
+Vue.component('development-claims', require('./components/claims/development-claims.vue').default);
+
 Vue.component('colleagues', require('./components/mobile/colleagues/colleagues.vue').default);
 
 Vue.component('colleagues-info', require('./components/mobile/colleagues/colleagues-info.vue').default);
