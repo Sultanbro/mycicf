@@ -233,6 +233,7 @@
                 :participant="participant"
                 :search="search"
                 :searchParticipant="searchParticipant"
+                :formular="formular"
                 :preloader="preloader">
         </participant-create>
     </div>

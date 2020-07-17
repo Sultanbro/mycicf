@@ -2,11 +2,11 @@
     <div class="row">
         <div class="form-group col-md-12 col-lg-12 col-12 text-center font-weight-bold">
             Конструктор продукта - {{ product.name }} (ISN - {{ product.product_isn }})
-            <button type="button"
+            <!--button type="button"
                     @click="updateProductsDicti('attributes',true)"
                     class="btn-info btn-lg btn float-right">
                     Обновить справочник
-            </button>
+            </button-->
         </div>
 
         <formular :checkOptions="checkOptions"
@@ -110,25 +110,25 @@
                         this.preloader(false);
                     });
             },
-            updateProductsDicti(dicti,send){
-                this.preloader(true);
-                this.axios.post('/updateProductsDicti', {isn: this.parentisns[dicti],type : dicti})
-                    .then(response => {
-                        if (response.data.success) {
-                            this.preloader(false);
-                            if(send == true) {
-                                this.updateProductsDicti('agrclauses', false);
-                            }
-                        } else {
-                            alert(response.data.error);
-                            this.preloader(false);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error);
-                        this.preloader(false);
-                    });
-            },
+            // updateProductsDicti(dicti,send){
+            //     this.preloader(true);
+            //     this.axios.post('/updateProductsDicti', {isn: this.parentisns[dicti],type : dicti})
+            //         .then(response => {
+            //             if (response.data.success) {
+            //                 this.preloader(false);
+            //                 if(send == true) {
+            //                     this.updateProductsDicti('agrclauses', false);
+            //                 }
+            //             } else {
+            //                 alert(response.data.error);
+            //                 this.preloader(false);
+            //             }
+            //         })
+            //         .catch(error => {
+            //             alert(error);
+            //             this.preloader(false);
+            //         });
+            // },
             preloader(show){
                 if(show) {
                     document.getElementById('preloader').style.display = 'flex';

@@ -104,7 +104,7 @@
                     this.formular[0].insurant.phys == false ? this.formular[0].insurant.jur = true : '';
                 }
             },
-            getDicti(){         // Берем справочник из Киаса
+            getDicti(){         // Берем справочник статуса из Киаса
                 this.preloader(true);
                 this.parentChanged.status = false;
                 return this.axios.post('/calc/getDicti', {
