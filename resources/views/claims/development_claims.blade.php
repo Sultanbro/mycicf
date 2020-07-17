@@ -42,7 +42,8 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <development-claims :isn="{{Auth::user()->ISN}}"></development-claims>
+            <development-claims :isn="{{Auth::user()->ISN}}" :sel="1"></development-claims>
+            <development-claims :isn="{{Auth::user()->ISN}}" :sel="2"></development-claims>
         </div>
         <div class="col-md-2-sm-3-lg mt-3">
             <news-birthday></news-birthday>

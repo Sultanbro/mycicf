@@ -4,11 +4,11 @@
 
             <div class="d-flex justify-content-between bg-top pl-4 pt-2 pb-2 pr-4">
                 <div>
-                    <span class="bold">Подайте заявку на разработку</span>
+                    <span class="bold">Подать заявку на разработку</span>
                 </div>
             </div>
 
-            <div class="d-flex">
+            <div class="d-flex" v-if="sel == 1">
                 <div class="d-flex ml-4 w-100">
                     <div class="pt-2 pb-2 hide-medium-small">
                         <img src="/images/avatar.png" class="image-circle-add-post" v-if="fakeImage">
@@ -22,10 +22,34 @@
                 </div>
             </div>
 
-            <div class="d-flex w-100 horizontal-line"></div>
+            <div  class="m-auto col-md-12 c-0f9 text-center" v-if="claimSended && sel == 1">Заявка успешно отправлена</div>
+            <div class="flex-row" v-if="sel == 1">
+                <div class="flex-row ml-4 mr-4 pb-2 pt-2 w-100 mt-2 mb-2">
+                    <transition name="transition-opacity">
+                        <div class="icons-bg m-auto">
+                            <button class="pt-1 pb-1 pr-2 pl-2 common-btn" @click="sendClaim()">Отправить заявку</button>
+                        </div>
+                    </transition>
+                </div>
+            </div>
 
-            <div class="m-auto col-md-12 c-0f9 pt-3 text-center" v-if="claimSended">Заявка успешно отправлена</div>
-            <div class="flex-row">
+
+            <div class=" mb-4" v-if="sel == 2">
+                <div class="w-100 text-center mb-4">
+                    <div class="w-100 h-100 wrapper mt-4">
+                        Я как <input v-model="claims.role" type="text" class="claims-input-text pl-2 text-center" placeholder="укажите роль">
+                    </div>
+                    <div class="w-100 h-100 wrapper mt-4">
+                        хочу <input v-model="claims.want" type="text" class="claims-input-text pl-2 text-center" placeholder="укажите что">
+                    </div>
+                    <div class="w-100 h-100 wrapper mt-4">
+                        для того, чтобы <input v-model="claims.what_for" type="text" class="claims-input-text pl-2 text-center" placeholder="укажите зачем">
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-auto col-md-12 c-0f9 text-center" v-if="claimSended  && sel == 2">Заявка успешно отправлена</div>
+            <div class="flex-row" v-if="sel == 2">
                 <div class="flex-row ml-4 mr-4 pb-2 pt-2 w-100 mt-2 mb-2">
                     <transition name="transition-opacity">
                         <div class="icons-bg m-auto">
@@ -57,6 +81,7 @@
 
         props: {
             isn: Number,
+            sel: Number
         },
 
         mounted: function() {
@@ -225,6 +250,22 @@
     @media only screen and (max-width: 1620px) {
         .hide-medium-small {
             display:none;
+        }
+    }
+
+    .claims-input-text {
+        outline: 0;
+        border-width: 0 0 2px;
+        border-color: #82a9f8;
+        height: 35px;
+        min-width: 300px !important;
+        max-width: 500px !important;
+    }
+
+    @media only screen and (max-width: 750px) {
+        .claims-input-text {
+            min-width: 200px !important;
+            max-width: 500px !important;
         }
     }
 </style>

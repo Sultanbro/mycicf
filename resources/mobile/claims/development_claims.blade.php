@@ -39,7 +39,8 @@
     @include('layouts.header')
     <main class="news-tape-bg">
         <div class="">
-            <development-claims :isn="{{Auth::user()->ISN}}" :fullname="{{json_encode(Auth::user()->full_name)}}"></development-claims>
+            <development-claims :isn="{{Auth::user()->ISN}}" :fullname="{{json_encode(Auth::user()->full_name)}}" :sel="1"></development-claims>
+            <development-claims :isn="{{Auth::user()->ISN}}" :fullname="{{json_encode(Auth::user()->full_name)}}" :sel="2"></development-claims>
         </div>
     </main>
 </div>
