@@ -360,7 +360,7 @@ class Kias implements KiasServiceInterface
     {
         return $this->request('User_CicExpressCalculator', [
             'CustomTemplate' => $nshb,
-            'ReqText' => $nshb == 1 ? 'ТЕСТ!!!' : '',
+            'ReqText' => $nshb == 1 ? 'Прошу рассмотреть заявку' : '',
             'ProductISN' => $ISN,
             'SubjISN' => $SubjISN,
             'DeptISN' => '1445791',
