@@ -64,6 +64,8 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
+Vue.component('edslogin', require('./components/eds/edslogin').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);
@@ -116,8 +118,6 @@ Vue.component('insurance-inspection', require('./components/employee/insurance-i
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
-
-Vue.component('edslogin', require('./components/eds/edslogin').default);
 
 window.onload = function(){
     var app = new Vue({

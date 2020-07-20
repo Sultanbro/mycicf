@@ -177,6 +177,9 @@
                                         <textarea rows="4" v-model="Remark"
                                                   class="resize modal-note width100"></textarea>
                                     </div>
+
+                                    <edslogin ref="eds"></edslogin>
+
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
                                             <div title="Согласовать"
@@ -264,21 +267,29 @@
             attachments: Array || Object,
         },
         methods: {
+            childCom(){
+                 this.$refs.eds.getToken()
+            },
             sendSolution: function (Solution) {
-                if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
-                    this.axios.post("/setCoordination", {
-                        DocISN: this.coordination.ISN,
-                        ISN: this.isn,
-                        Solution: Solution,
-                        Remark: this.Remark,
-                        Resolution : this.resolution
-                    }).then((response) => {
-                        if (!response.data.success) {
-                            alert(response.data.error);
-                        } else {
-                            location.reload();
-                        }
-                    });
+                if(this.$refs.eds.signedFile != '') {
+                    if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                        this.axios.post("/setCoordination", {
+                            DocISN: this.coordination.ISN,
+                            ISN: this.isn,
+                            Solution: Solution,
+                            Remark: this.Remark,
+                            Resolution: this.resolution
+                        }).then((response) => {
+                            if (!response.data.success) {
+                                alert(response.data.error);
+                            } else {
+                                //location.reload();
+
+                            }
+                        });
+                    }
+                } else {
+                    alert('Действие возможно только после подписания ЭЦП.\nПожалуйста подпишите указав ЭЦП ключ и пароль');
                 }
             },
             close() {
