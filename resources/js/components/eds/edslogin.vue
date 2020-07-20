@@ -188,7 +188,7 @@
                 }
             },
 
-            signing(){
+            signing(type, solution){
                 let self = this;
 
                 if(this.selectedECPFile == '' || this.sign.password == ''){
@@ -237,9 +237,12 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
-                                alert('ЭЦП успешно подписан.Можно продолжать');
+                                //alert('ЭЦП успешно подписан.Можно продолжать');
                                 //alert(result.message);
                                 //webSocket.close();
+                                if(type == 'coordination' && solution != undefined){
+                                    self.$parent.sendSolution(solution);
+                                }
                             } else {
                                 alert(result.message);
                                 //webSocket.close();
@@ -253,12 +256,12 @@
                     }
                 }
             },
-            getToken(){
+            getToken(type,solution){
                 this.signedFile = '';
                 axios.get('/getEDS').then((response) => {
                     if(response.data.success){
                         this.sign.token = response.data.result.token;
-                        this.signing();     // подписываем
+                        this.signing(type,solution);     // подписываем
                     } else {
                         alert('Ошибка получения токена. Попробуйте чуть позже');
                     }

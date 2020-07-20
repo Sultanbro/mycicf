@@ -184,14 +184,14 @@
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
                                             <div title="Согласовать"
                                                  class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="sendSolution(1)">
+                                                 @click="beforeSendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4 pointer">
                                             <div title="Отказать"
                                                  class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="sendSolution(0)">
+                                                 @click="beforeSendSolution(0)">
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
@@ -199,7 +199,7 @@
                                              v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401"'>
                                             <div title="Воздержаться"
                                                  class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="sendSolution(2)">
+                                                 @click="beforeSendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
                                         </div>
@@ -267,30 +267,31 @@
             attachments: Array || Object,
         },
         methods: {
-            childCom(){
-                 this.$refs.eds.getToken()
+            beforeSendSolution(solution){
+                 this.$refs.eds.getToken('coordination',solution)
             },
             sendSolution: function (Solution) {
-                if(this.$refs.eds.signedFile != '') {
-                    if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
-                        this.axios.post("/setCoordination", {
-                            DocISN: this.coordination.ISN,
-                            ISN: this.isn,
-                            Solution: Solution,
-                            Remark: this.Remark,
-                            Resolution: this.resolution
-                        }).then((response) => {
-                            if (!response.data.success) {
-                                alert(response.data.error);
-                            } else {
-                                //location.reload();
-
-                            }
-                        });
-                    }
-                } else {
-                    alert('Действие возможно только после подписания ЭЦП.\nПожалуйста подпишите указав ЭЦП ключ и пароль');
-                }
+                console.log('its work');
+                //if(this.$refs.eds.signedFile != '') {
+                //     if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                //         this.axios.post("/setCoordination", {
+                //             DocISN: this.coordination.ISN,
+                //             ISN: this.isn,
+                //             Solution: Solution,
+                //             Remark: this.Remark,
+                //             Resolution: this.resolution
+                //         }).then((response) => {
+                //             if (!response.data.success) {
+                //                 alert(response.data.error);
+                //             } else {
+                //                 //location.reload();
+                //
+                //             }
+                //         });
+                //     }
+                // } else {
+                //     alert('Действие возможно только после подписания ЭЦП.\nПожалуйста подпишите указав ЭЦП ключ и пароль');
+                // }
             },
             close() {
                 this.$parent.$refs.modalButton.click()
