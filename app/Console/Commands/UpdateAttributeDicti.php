@@ -26,7 +26,7 @@ class UpdateAttributeDicti extends Command
      *
      * @var string
      */
-    protected $description = 'Обновить аттрибуты';
+    protected $description = 'Обновить значения доп аттрибутов';
 
     /**
      * Create a new command instance.

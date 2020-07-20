@@ -32,7 +32,7 @@
                         Библиотека
                     </li>
                 </a>
-                <!--li class="products-link" style="display:inline-flex">
+                <li class="products-link" style="display:inline-flex">
                     <ul id="products-nav">
                         <li>
                             <a class="products-item" href="javascript:void(0);" tabindex="1" >
@@ -44,7 +44,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li-->
+                </li>
                 <a class="header-navigation" href="javascript:void(0)">
                     <li>
                         Обучение

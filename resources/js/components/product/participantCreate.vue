@@ -5,11 +5,11 @@
            :minHeight="minHeight">
         <div class="participant-create">
 
-            <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5 mb-5">
+            <div v-if="formular.insurant.phys" class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5 mb-5">
                 <button class="btn btn-outline-info" @click="block.phys = true; block.jur = false;">
                     Физ. лицо
                 </button>
-                <button class="btn btn-outline-info ml-2" @click="block.jur = true; block.phys = false;">
+                <button v-if="formular.insurant.jur" class="btn btn-outline-info ml-2" @click="block.jur = true; block.phys = false;">
                     Юр. лицо
                 </button>
             </div>
@@ -46,7 +46,7 @@
                         <option
                                 v-if="doc_types.length > 0"
                                 v-for="type in doc_types"
-                                :value="type.Value[0]">{{ type.Label[0] }}</option>
+                                :value="type.Value">{{ type.Label }}</option>
                     </select>
                 </div>
 
@@ -181,7 +181,8 @@
             pIndex: Number,
             preloader: Function,
             searchParticipant: Function,
-            search: Object
+            search: Object,
+            formular: Object
         },
         created(){
             this.width = window.innerWidth;
@@ -192,12 +193,14 @@
         },
         mounted(){
             this.getDicti(43,'docs');
-            this.getDicti(225301,'okvd');
-            this.getDicti(28,'economic');
+            if(this.formular.insurant.jur) {    // Если в продукте используется юр.лицо
+                this.getDicti(225301, 'okvd');
+            }
         },
         methods: {
             getDicti(isn,type){
-                this.axios.post('/getDictiList', {
+                var url = isn == 43 ? '/getDictiListFromBase' : '/getDictiList';
+                this.axios.post(url, {
                     parent : isn
                 })
                 .then(response => {
@@ -206,6 +209,7 @@
                             this.doc_types = response.data.result;
                         } else if(type == 'okvd') {
                             this.okvd = response.data.result;
+                            this.getDicti(28,'economic');
                         } else if(type == 'economic') {
                             this.economicisn = response.data.result;
                         }

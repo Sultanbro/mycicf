@@ -322,7 +322,7 @@
                                 //this.newAgrobject = response.data.objects;
                             }
                             this.preloader(false);
-                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) { // Если нужно указать куратора
+                            if(Object.keys(this.formular).length > 0 && this.formular.curator.Value == 1) { // Если нужно указать куратора, берем справочник сотрудников из киаса
                                 this.getUserList(); // Берем сотрудников
                             }
                         }else{
