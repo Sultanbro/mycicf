@@ -18,6 +18,16 @@ import {EmojiPickerPlugin} from 'vue-emoji-picker'
 
 import VTooltip from 'v-tooltip'
 
+import vmodal from 'vue-js-modal'
+
+import VueTheMask from 'vue-the-mask'
+
+const moment = require('vue-moment');
+
+Vue.use(moment);
+
+Vue.use(vmodal);
+
 import Toastr from 'vue-toastr'
 
 Vue.use(FlashMessage);
@@ -29,6 +39,8 @@ Vue.use(FlashMessage);
 Vue.use(VueGoogleCharts);
 
 Vue.use(VueAxios, axios);
+
+Vue.use(VueTheMask);
 
 Vue.use(TextareaAutosize);
 
@@ -103,6 +115,38 @@ Vue.component('image-viewer', require('./components/common/image-viewer.vue').de
 Vue.component('news-birthday', require('./components/news/news-birthday.vue').default);
 
 Vue.component('simple-birthday', require('./components/news/simpleBirthday.vue').default);
+
+Vue.component('edslogin', require('./components/eds/edslogin.vue').default);
+
+Vue.component('express-calc', require('./components/product/express.vue').default);
+
+Vue.component('full-quotation-calc', require('./components/product/full-quotation.vue').default);
+
+Vue.component('participant', require('./components/product/participants.vue').default);
+
+Vue.component('participant-create', require('./components/product/participantCreate.vue').default);
+
+Vue.component('period', require('./components/product/period.vue').default);
+
+//Vue.component('participant-form', require('./components/product/participantForm.vue').default);
+
+Vue.component('agr-attributes', require('./components/product/attributes.vue').default);
+
+Vue.component('agr-clause', require('./components/product/agrclause.vue').default);
+
+Vue.component('agr-object', require('./components/product/agrobjects.vue').default);
+
+Vue.component('agrobjcar', require('./components/product/agrobjcar.vue').default);
+
+Vue.component('new-vehicle', require('./components/product/newVehicle.vue').default);
+
+Vue.component('upload-docs', require('./components/product/uploadDocs.vue').default);
+
+Vue.component('printable-form', require('./components/product/printableForm.vue').default);
+
+Vue.component('quotation-list', require('./components/product/quotation-list.vue').default);
+
+Vue.component('online-inspection', require('./components/product/online-inspection.vue').default);
 
 Vue.component('test', require('./components/test.vue').default);
 Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);

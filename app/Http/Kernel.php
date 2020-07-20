@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'readingClubAdmin' => \App\Http\Middleware\ReadingClubAdmin::class,
         'superAdmin' => \App\Http\Middleware\checkSuperAdmin::class,
         'centcoinExcepts' => \App\Http\Middleware\centcoinExcepts::class,
+        'productsAdmin' => \App\Http\Middleware\ProductsAdmin::class,
         'cors' => \App\Http\Middleware\cors::class,
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
     ];
@@ -95,6 +96,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\checkWndAdmin::class,
         \App\Http\Middleware\CheckAdminAuth::class,
         \App\Http\Middleware\ReadingClubAdmin::class,
+        \App\Http\Middleware\ProductsAdmin::class,
         \App\Http\Middleware\parseDomainAuth::class,
     ];
 }

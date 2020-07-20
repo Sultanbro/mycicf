@@ -138,6 +138,7 @@
                 }
             },
             openWindow(){
+                this.signedFileInfo = [];
                 let self = this;
                 var webSocket = new WebSocket('wss://127.0.0.1:13579');
                 webSocket.onopen = function () {

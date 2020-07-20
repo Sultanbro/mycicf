@@ -381,7 +381,7 @@ class CoordinationController extends Controller
         $doc_no = $request->doc_no;
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
-        $url = 'https://bots.n9.kz/notification';
+        $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
         (new NotificationController())->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
