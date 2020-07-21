@@ -46,7 +46,7 @@
 
         <div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
             <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="getKey" >Выбрать ключ для подписания</button>
+                <button class="btn btn-primary mt-2" v-on:click="connectSocket" >Выбрать ключ для подписания</button>
                 <div class="mt-2 mb-1" v-if="selectedECPFile != ''">Выбранный ключ {{ selectedECPFile }}</div>
                 <div class="mt-1 mb-1">
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
@@ -105,7 +105,8 @@
                         vm.installModule()
                     }else{
                         if(result.code == 200) {
-                            vm.openWindow();
+                            //vm.openWindow();
+                            vm.getKey();
                         }
                     }
                 }
