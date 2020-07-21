@@ -55,6 +55,7 @@
                 <!--button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button-->
             </div>
         </div>
+        <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
     </div>
 </template>
 
@@ -194,9 +195,9 @@
 
             signing(type, solution){
                 let self = this;
-
                 if(this.selectedECPFile == '' || this.sign.password == ''){
                     alert('Укажите пожалуйста данные ЭЦП ключа');
+                    self.loader(false);
                     return false;
                 }
 
@@ -244,11 +245,13 @@
                                 //alert('ЭЦП успешно подписан.Можно продолжать');
                                 //alert(result.message);
                                 //webSocket.close();
+                                self.loader(false);
                                 if(type == 'coordination' && solution != undefined){
                                     self.$parent.sendSolution(solution);
                                 }
                             } else {
                                 alert(result.message);
+                                self.loader(false);
                                 //webSocket.close();
                             }
                         }
@@ -256,11 +259,13 @@
                     webSocket.onerror = function (msg) {
                         // TODO PUSH ERROR
                         //webSocket.close();
+                        self.loader(false);
                         console.log(msg);
                     }
                 }
             },
             getToken(type,solution){
+                this.loader(true);
                 this.signedFile = '';
                 axios.get('/getEDS').then((response) => {
                     if(response.data.success){
@@ -268,6 +273,7 @@
                         this.signing(type,solution);     // подписываем
                     } else {
                         alert('Ошибка получения токена. Попробуйте чуть позже');
+                        this.loader(false);
                     }
                 });
             },
@@ -276,6 +282,7 @@
                 let self = this;
                 if(self.selectedFile != '') {
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                    self.loader(true);
                     webSocket.onopen = function () {
                         var responseObj = {
                             module: 'kz.uchet.signUtil.commonUtils',
@@ -293,9 +300,11 @@
                                 if(result.responseObjects.length > 0) {
                                     self.signedFileInfo = result.responseObjects;
                                     //webSocket.close();
+                                    self.loader(false);
                                 }
                             } else {
                                 alert(result.message);
+                                self.loader(false);
                                 //webSocket.close();
                             }
                         }
@@ -303,6 +312,7 @@
                     webSocket.onerror = function (msg) {
                         // TODO PUSH ERROR
                         //webSocket.close();
+                        this.loader(false);
                         console.log(msg);
                     }
                 } else {
@@ -317,6 +327,9 @@
                 this.sign.password = '';
                 this.signedFile = '';
                 this.signedFileInfo = [];
+            },
+            loader(show){
+                this.loading = show;
             }
         },
 
