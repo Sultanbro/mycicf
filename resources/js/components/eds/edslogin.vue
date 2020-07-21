@@ -26,7 +26,7 @@
 
         <div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
             <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="connectSocket">Выберите файл для проверки</button>
+                <button class="btn btn-primary mt-2" v-on:click="connectSocket('check')">Выберите файл для проверки</button>
                 <div class="mt-2 mb-1" v-if="selectedFile != ''">Выбранный для проверки файл {{ selectedFile }}</div>
                 <div>
                     <button class="btn btn-primary mt-2" v-on:click="checkSignedFile">Показать информацию о подписях</button>
@@ -46,7 +46,7 @@
 
         <div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
             <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="connectSocket" >Выбрать ключ для подписания</button>
+                <button class="btn btn-primary mt-2" v-on:click="connectSocket()" >Выбрать ключ для подписания</button>
                 <div class="mt-2 mb-1" v-if="selectedECPFile != ''">Выбранный ключ {{ selectedECPFile }}</div>
                 <div class="mt-1 mb-1">
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
@@ -88,7 +88,7 @@
             showView: String,
         },
         methods: {
-            connectSocket(){
+            connectSocket(check){
                 var vm = this;
                 this.signedFile = '';
                 var webSocket = new WebSocket('wss://127.0.0.1:13579');
@@ -105,8 +105,11 @@
                         vm.installModule()
                     }else{
                         if(result.code == 200) {
-                            //vm.openWindow();
-                            vm.getKey();
+                            if(check != undefined) {
+                                vm.openWindow();
+                            } else {
+                                vm.getKey();
+                            }
                         }
                     }
                 }

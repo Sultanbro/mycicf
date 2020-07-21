@@ -287,7 +287,8 @@
                                 id: this.coordination.ID,
                                 requestType: 'D',
                                 fileType: 'base64',
-                                file: this.$refs.eds.signedFile
+                                file: this.$refs.eds.signedFile,
+                                fileExt: 'cms',
                             }).then((response) => {
                                 if (!response.data.success) {
                                     alert(response.data.error);

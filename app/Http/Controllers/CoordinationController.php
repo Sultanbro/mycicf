@@ -381,7 +381,8 @@ class CoordinationController extends Controller
             $success = true;
             if($request->fileType == 'base64'){
                 $file = $request->file;
-                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name;  //.mt_rand(1000000, 9999999);
+                $extension = isset($request->fileExt) ? $request->fileExt : '';
+                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
             } else {
 //                $file = $request->base64_encode($request->file);
 //                $contents = $file->get();
