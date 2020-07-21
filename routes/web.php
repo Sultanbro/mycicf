@@ -155,10 +155,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
-    Route::get('test/eds', 'Controller@testEds');
-    Route::get('/getEDS', 'Controller@getEds');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
+        Route::get('test/eds', 'SiteController@testEds');
+        Route::get('/getEDS', 'SiteController@getEds');
+        Route::post('/coordinationSaveAttachment','CoordinationController@saveAttachment');
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
@@ -206,11 +207,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/buyItem', 'CentcoinsController@buyItem');
         });
 
-        Route::get('test/eds', 'Controller@testEds');
 //        Route::group(['middleware' => 'cors'], function() {
 //            Route::get('/getVersion', 'Controller@getVersion');
 //        });
-        Route::get('/getEDS', 'Controller@getEds');
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::post('/addPost', 'NewsController@addPost');

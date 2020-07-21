@@ -376,6 +376,42 @@ class CoordinationController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    public function saveAttachment(Request $request, KiasServiceInterface $kias){
+        try{
+            $success = true;
+            if($request->fileType == 'base64'){
+                $file = $request->file;
+                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name;  //.mt_rand(1000000, 9999999);
+            } else {
+//                $file = $request->base64_encode($request->file);
+//                $contents = $file->get();
+//                $extension = $file->extension();
+//                $filename = mt_rand(1000000, 9999999).'.'.$extension;
+            }
+
+            $results = $kias->saveAttachment(
+                $request->isn,
+                $filename,
+                $file,
+                $request->requestType
+            );
+            if(isset($results->error)){
+                $success = false;
+                $error = 'Ошибка загрузки файла, обратитесь к системному администратору';  //(string)$results->error->text
+            }
+
+            return response()->json([
+                'success' => $success,
+                'error' => isset($error) ? $error : ''
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'result' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function sendNotify(Request $request){
         $users = explode(',', $request->users);
         $doc_no = $request->doc_no;

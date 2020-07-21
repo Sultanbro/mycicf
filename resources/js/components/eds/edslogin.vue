@@ -22,9 +22,9 @@
                 <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
                 <div class="mt-2 mb-1" v-if="signedFile != ''">Подписанный файл находится здесь: {{ signedFile }}</div>
             </div>
-        </div>
+        </div-->
 
-        <!--div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
+        <div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket">Выберите файл для проверки</button>
                 <div class="mt-2 mb-1" v-if="selectedFile != ''">Выбранный для проверки файл {{ selectedFile }}</div>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-        </div-->
+        </div>
 
         <div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
             <div class="form-group mt-1">
@@ -52,12 +52,9 @@
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
                     <input class="form-control mt-1 mb-1" placeholder="Введите пароль" type="text" v-model="sign.password" style="width: 150px;margin: 0 auto;">
                 </div>
-                <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
+                <!--button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button-->
             </div>
         </div>
-
-
-
     </div>
 </template>
 
@@ -84,9 +81,11 @@
                 base64String: 'dGVzdA==',
                 selectedECPFile: '',
                 signedFile:'',
-                showView: 'sign',
                 signedFileInfo: []
             }
+        },
+        props: {
+            showView: String,
         },
         methods: {
             connectSocket(){

@@ -178,20 +178,20 @@
                                                   class="resize modal-note width100"></textarea>
                                     </div>
 
-                                    <edslogin ref="eds"></edslogin>
+                                    <edslogin ref="eds" show-view="sign"></edslogin>
 
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
                                             <div title="Согласовать"
                                                  class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="beforeSendSolution(1)">
+                                                 @click="$refs.eds.getToken('coordination',1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4 pointer">
                                             <div title="Отказать"
                                                  class="vertical-middle button-cancel color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="beforeSendSolution(0)">
+                                                 @click="sendSolution(0)">
                                                 <i class="far fa-times-circle"></i>
                                             </div>
                                         </div>
@@ -199,7 +199,7 @@
                                              v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401"'>
                                             <div title="Воздержаться"
                                                  class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="beforeSendSolution(2)">
+                                                 @click="sendSolution(2)">
                                                 <i class="far fa-dot-circle"></i>
                                             </div>
                                         </div>
@@ -271,7 +271,35 @@
                  this.$refs.eds.getToken('coordination',solution)
             },
             sendSolution: function (Solution) {
-                console.log('its work');
+                this.axios.post("/setCoordination", {
+                    DocISN: this.coordination.ISN,
+                    ISN: this.isn,
+                    Solution: Solution,
+                    Remark: this.Remark,
+                    Resolution: this.resolution
+                }).then((response) => {
+                    if (!response.data.success) {
+                        alert(response.data.error);
+                    } else {
+                        if(Solution == 1) {
+                            this.axios.post("/coordinationSaveAttachment", {
+                                isn: this.coordination.ISN,
+                                id: this.coordination.ID,
+                                requestType: 'D',
+                                fileType: 'base64',
+                                file: this.$refs.eds.signedFile
+                            }).then((response) => {
+                                if (!response.data.success) {
+                                    alert(response.data.error);
+                                } else {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            location.reload();
+                        }
+                    }
+                });
                 //if(this.$refs.eds.signedFile != '') {
                 //     if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
                 //         this.axios.post("/setCoordination", {
