@@ -26,18 +26,21 @@
             <span v-if="participant.Label">({{ participant.Label }})</span>
             <span v-else>(Страхователь)</span>
         </button>-->
-            <button type="button" class="btn btn-outline-info md-7  "  style="width:100%" @click="openParticipantForm(pIndex)">
-                Изменить
-                <span v-if="!moreParticipant">
+            <div class="flex-center">
+                <button type="button" class="btn btn-outline-info md-7 w-70 "  @click="openParticipantForm(pIndex)">
+                    Изменить
+                    <span v-if="!moreParticipant">
                     <span v-if="participant.Label">({{ participant.Label }})</span>
                     <span v-else>(Страхователь)</span>
                 </span>
-            </button>
+                </button>
+            </div>
+
         </div>
         <div class=" flex-center " >
             <button v-show="participant.subjISN == null || participant.subjISN == ''"
-                    type="button" class="btn btn-outline-info md-7  "
-                    style="width:100%"
+                    type="button" class="btn btn-outline-info md-7 w-30"
+
                     @click="openParticipantForm(pIndex)">
                 Указать<br>
                 <span v-if="participant.Label">({{ participant.Label }})</span>
@@ -60,9 +63,9 @@
                     </div>
                     <div class="col-12 row mt-3">
                         <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                            <button class="width100 btn btn-outline-info" @click="closeParticipantForm(pIndex)">Закрыть</button>
+                            <button class="width100 btn btn-outline-info mb" @click="closeParticipantForm(pIndex)">Закрыть</button>
                         </div>
-                        <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                        <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12" >
                             <button v-if="participant.ISN != 2103"
                                     class="width100 btn btn-outline-info"
                                     @click="deleteParticipant">Удалить этот раздел</button>
@@ -70,28 +73,28 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="participant-form">
-                <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5">
+            <div v-else class="participant-form  " style="margin-top: 5%" >
+                <div class="col-12 offset-md-1 col-md-10 offset-lg-1 col-lg-10 offset-xl-1 col-xl-10 row mt-5 siz">
                     <div class="col-12"><label v-if="participant.Label" class="bold">{{ participant.Label }}</label></div>
-                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">ИИН/БИН : {{ participant.data }}</label>
-                        <input type="text" v-model="participant.iin" class="attr-input-text col-12" maxlength="12">
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 ">
+                        <label class="ml-15 ">ИИН/БИН : {{ participant.data }}</label>
+                        <input type="text mb" v-model="participant.iin" class="attr-input-text col-12" maxlength="12">
                     </div>
 
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Фамилия : </label>
+                        <label class="">Фамилия : </label>
                         <input type="text" v-model="participant.lastName" @keyup="participantEdited = true" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Имя : </label>
+                        <label class="">Имя : </label>
                         <input type="text" v-model="participant.firstName" @keyup="participantEdited = true" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Отчество : </label>
+                        <label class="">Отчество : </label>
                         <input type="text" v-model="participant.patronymic" @keyup="participantEdited = true" class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Дата рождения : </label>
+                        <label class="">Дата рождения : </label>
                         <input type="text"
                                v-mask="'##.##.####'"
                                v-model="participant.birthDay"
@@ -100,7 +103,7 @@
                     </div>
 
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Тип документа : </label>
+                        <label class="">Тип документа : </label>
                         <!--input type="text" v-model="participant.docType" class="attr-input-text col-12 bg-white"-->
                         <select class="custom-select"
                                 v-if="Object.keys(participantDocs.types).length > 0"
@@ -110,28 +113,28 @@
                         </select>
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Номер документа : </label>
+                        <label class="">Номер документа : </label>
                         <input type="text"
                                v-model="participant.docNumber"
                                @keyup="participantEdited = true"
                                class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Дата документа : </label>
+                        <label class="">Дата документа : </label>
                         <input type="text"
                                v-model="participant.docDate"
                                @keyup="participantEdited = true"
                                class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Email : </label>
+                        <label class="">Email : </label>
                         <input type="text"
                                v-model="participant.email"
                                @keyup="participantEdited = true"
                                class="attr-input-text col-12 bg-white">
                     </div>
                     <div v-if="computedPhysical && !moreParticipant" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Номер телефона : </label>
+                        <label class="">Номер телефона : </label>
                         <input type="text"
                                v-mask="'+###########'"
                                @keyup="participantEdited = true"
@@ -140,21 +143,21 @@
                     </div>
 
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-7 col-xl-7 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Наименование организации : </label>
+                        <label class="">Наименование организации : </label>
                         <input type="text"
                                v-model="participant.orgName"
                                class="attr-input-text col-12 bg-white"
                                @keyup="participantEdited = true">
                     </div>
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Вид деятельности : </label>
+                        <label class="">Вид деятельности : </label>
                         <input type="text"
                                v-model="participant.okvdName"
                                class="attr-input-text col-12 bg-white"
                                disabled="true">
                     </div>
                     <div v-if="computedJuridical && !moreParticipant" class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-12">
-                        <label class="bold">Сектор экономики : </label>
+                        <label class="">Сектор экономики : </label>
                         <input type="text"
                                v-model="participant.economicName"
                                class="attr-input-text col-12 bg-white"
@@ -162,7 +165,7 @@
                     </div>
 
                     <div v-if="moreParticipant" class="col-lg-12 mt-3">
-                        <label class="bold">Выберите из списка</label>
+                        <label class="">Выберите из списка</label>
                         <select class="custom-select" v-model="isn">
                             <option v-for="participant in aFewParticipants" :value="participant.ISN">{{participant.Data}}</option>
                         </select>
@@ -207,19 +210,19 @@
                     <div v-if="search.not_found" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
                         <button class="width100 btn btn-outline-info" @click="addParticipantToKias(pIndex)">Добавить {{ participant.Label }}</button>
                     </div>
-                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mb">
                         <button class="width100 btn btn-outline-info" @click="closeParticipantForm(pIndex)">Закрыть</button>
                     </div>
-                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mb">
                         <button class="width100 btn btn-outline-info" @click="searchParticipant">Поиск</button>
                     </div>
-                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mb">
                         <button class="width100 btn btn-outline-info" @click="save()">Сохранить</button>
                     </div>
-                    <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div v-if="participant.ISN == 2082" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mb">
                         <button class="width100 btn btn-outline-info" @click="addParticipant">Добавить еще</button>
                     </div>
-                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+                    <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mb">
                         <button v-if="participant.ISN != 2103"
                                 class="width100 btn btn-outline-info"
                                 @click="deleteParticipant">Удалить этот раздел</button>
@@ -276,7 +279,7 @@
         },
         created(){
             this.width = window.innerWidth;
-            this.height = 500;  //window.innerHeight;
+            this.height = 750;  //window.innerHeight;
             this.isBold = this.participant.required ? 'bold' : '';
 
             if(this.participant.ISN == 221507 && this.userList.length == 0) {

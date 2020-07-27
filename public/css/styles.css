@@ -105,6 +105,9 @@ ul{
 .width-40{
     width: 40%;
 }
+.w-30{
+    width: 30%;
+}
 .color-blue-name{
     color: #4c70b6;
 }
@@ -753,9 +756,16 @@ ul{
 .ml-10{
     margin-left: 5.5rem;
 }
+.ml-15{
+    margin-left: 10px;
+}
 .mr-10{
     margin-right: 5.5rem;
 }
+.mb{
+    margin-bottom: 5px;
+}
+
 .mobile-cancel-image{
     position: absolute;
     z-index: 2;
@@ -1879,6 +1889,14 @@ textarea::-webkit-scrollbar-thumb {
     display:flex;
     justify-content: center;
 }
+.flex-c{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.siz{
+    height: 100%!important;
+}
 .div-ml{
     margin-left: 5%;
 }
@@ -2221,6 +2239,9 @@ textarea::-webkit-scrollbar-thumb {
     height: 40%;
 
 
+}
+.width-d{
+    width: 75%;
 }
 
 .text-w{
