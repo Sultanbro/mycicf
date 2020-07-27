@@ -288,7 +288,7 @@
                                 requestType: 'D',
                                 fileType: 'base64',
                                 file: this.$refs.eds.signedFile,
-                                fileExt: 'cms',
+                                fileExt: 'sig',
                             }).then((response) => {
                                 if (!response.data.success) {
                                     alert(response.data.error);
