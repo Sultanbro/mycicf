@@ -17,6 +17,12 @@
                 <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{date}}</span>
                 </div>
+                <div class="Birthday-line_height mt-1 mb-1">
+                    <span class="fs-0_9">{{dept}}</span>
+                </div>
+                <div class="Birthday-line_height mt-1 mb-1">
+                    <span class="fs-0_9">{{duty}}</span>
+                </div>
             </div>
         </div>
 
@@ -33,6 +39,12 @@
                 </div>
                 <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{birthday.birthday}}</span>
+                </div>
+                <div class="Birthday-line_height mt-1 mb-1">
+                    <span class="fs-0_9">{{birthday.dept}}</span>
+                </div>
+                <div class="Birthday-line_height mt-1 mb-1">
+                    <span class="fs-0_9">{{birthday.duty}}</span>
                 </div>
             </div>
         </div>
@@ -53,6 +65,8 @@
             fullName: String,
             date: String,
             ISN : Number,
+            dept: String,
+            duty: String,
             fakeImage : Boolean,
             similar: Array
         },
