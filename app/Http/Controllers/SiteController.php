@@ -573,6 +573,8 @@ class SiteController extends Controller
                     "ISN" => $birthday->kias_id,
                     "birthday" => date('d.m.Y', strtotime($birthday->birthday)),
                     "fakeImage" => !Branch::checkImageExists($birthday->kias_id),
+                    "duty" => $birthday->duty,
+                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
                     'similar' => []
                 ]);
             } else {
@@ -582,6 +584,8 @@ class SiteController extends Controller
                     "ISN"=>$birthday->kias_id,
                     "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
                     "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
+                    "duty" => $birthday->duty,
+                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
                     'similar' => []
                 ]);
                 $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
