@@ -244,8 +244,20 @@ use App\Http\Controllers\ParseController;
                             <td class="text-left"><span class="bold"><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
                             <td>{{number_format($key, 0, '.', ' ')}}</td>
                             <td>{{number_format($premium_second[$id],0,  '.', ' ')}}</td>
-                            <td>{{$controller->getPercentOfMarker($key, array_sum($premium_first))}}</td>
-                            <td>{{$controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))}}</td>
+                            <td>
+                                @if(strstr(strval($controller->getPercentOfMarker($key, array_sum($premium_first))),'-'))
+                                    0%
+                                @else
+                                    {{$controller->getPercentOfMarker($key, array_sum($premium_first))}}
+                                @endif
+                            </td>
+                            <td>
+                                @if(strstr(strval($controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))),'-'))
+                                    0%
+                                @else
+                                    {{$controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))}}
+                                @endif
+                            </td>
                             <td>{{$controller->getChangedVal($key, $premium_second[$id])}}</td>
                             <td>{{number_format($key - $premium_second[$id], 0, '.', ' ') }}</td>
                             <td></td>
