@@ -161,7 +161,9 @@
                                 }
                                 this.preloader(false);
                                 this.notFound = false;
-                                this.agrobjcar.ReleaseDate = this.agrobject.expressTsRelease;
+                                if(this.agrobject.expressTsRelease && this.agrobject.expressTsRelease != undefined) {
+                                    this.agrobjcar.ReleaseDate = this.agrobject.expressTsRelease;
+                                }
                             } else {
                                 this.clearVehicle();
                                 let error = response.data.error;
