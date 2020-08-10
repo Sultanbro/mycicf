@@ -410,12 +410,12 @@ class CoordinationController extends Controller
 
     public function closeDecade(Request $request){
         $contentT = $request->postText;
-        $isn = 1445722; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
-        $username = 'Кулназаров Гани Жасаганбергенович';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
+        $isn = 1445725; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
+        $username = 'Даурен Рамазанов';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
 
         //try {
             $new_post = new Post();
-            $new_post->user_isn = $isn;  //Кулназаров Гани Жасаганбергенович
+            $new_post->user_isn = $isn;  //Даурен Рамазанов
             $new_post->post_text = $contentT;
             $new_post->pinned = 0;
             $new_post->save();

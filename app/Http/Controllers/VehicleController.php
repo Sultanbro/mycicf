@@ -45,7 +45,7 @@ class VehicleController extends Controller
         }
 
         if(isset($result->VIN)){
-            $releaseDate = isset($result->REALESE_DATE) ? '01.12.'.(string)$result->REALESE_DATE : (string)$result->DATERELEASE;
+            $releaseDate = isset($result->REALESE_DATE) ? (string)$result->REALESE_DATE.'-01-01' : (string)$result->DATERELEASE;
             $territory_isn = isset($result->REG_TERRITORY) ? (string)$result->REG_TERRITORY : 17;
             $territory_name = isset($result->REG_TERRITORY_NAME) ? (string)$result->REG_TERRITORY_NAME : 'Временный въезд';
 
