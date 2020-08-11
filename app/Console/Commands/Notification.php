@@ -51,7 +51,7 @@ class Notification extends Command
         $comments = Comment::where('email_send', 0)
             ->where('created_at','>', new Carbon(strtotime('11.08.2020')))
             ->get();
-        echo '#Found '.count($comments).' notification';
+        echo '#Found '.count($comments).' notification \n';
         foreach ($comments as $comment){
             $post = Post::findOrFail($comment->post_id);
             $emails = ($kias->getEmplInfo($post->user_isn, date('d.m.Y', time()), date('d.m.Y', time()+60*60))->Mail);
@@ -65,7 +65,7 @@ class Notification extends Command
                     'background_image' => asset('images/background.png'),
                     'htmlTitle' => 'Ваш запись прокомментировали',
                     'greeting' => "Уважаемый(-ая)". $user->short_name,
-                    'wish' => "К вашей новости на <a href='my.cic.kz'>my.cic.kz</a> ".$commented_user->short_name.' оставил комментарий',
+                    'wish' => $commented_user->short_name.' оставил комментарий',
                     'commentary' => $comment->text,
                     ]
                 ));
