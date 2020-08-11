@@ -9,8 +9,8 @@ use App\Mail\Email;
 use App\Post;
 use App\Relog;
 use App\RelogUrl;
+use App\User;
 use Carbon\Carbon;
-use http\Client\Curl\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -55,8 +55,8 @@ class Notification extends Command
         foreach ($comments as $comment){
             $post = Post::findOrFail($comment->post_id);
             $emails = ($kias->getEmplInfo($post->user_isn, date('d.m.Y', time()), date('d.m.Y', time()+60*60))->Mail);
-            $user = User::where('user_isn', $post->user_isn)->first();
-            $commented_user = User::where('user_idn', $comment->user_isn)->first();
+            $user = User::where('ISN', $post->user_isn)->first();
+            $commented_user = User::where('ISN', $comment->user_isn)->first();
             $email = explode (' ', $emails)[0];
             $email = str_replace(',', '', $email);
             if ($post->user_isn != $comment->user_isn){
@@ -65,8 +65,8 @@ class Notification extends Command
                     'background_image' => asset('images/background.png'),
                     'htmlTitle' => 'Ваш запись прокомментировали',
                     'greeting' => "Уважаемый(-ая)". $user->short_name,
-                    'wish' => 'К вашей новости на <a href="my.cic.kz">my.cic.kz</a> '.$commented_user->short_name.' оставил комментарий',
-                    'commentary' => $post->text,
+                    'wish' => "К вашей новости на <a href='my.cic.kz'>my.cic.kz</a> ".$commented_user->short_name.' оставил комментарий',
+                    'commentary' => $comment->text,
                     ]
                 ));
             }
