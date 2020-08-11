@@ -1462,7 +1462,7 @@ class ProductsController extends Controller
                 $sendType = 'D';
             } else {
                 $quotation = FullQuotation::where('calc_isn', $request->calc_isn)->first();
-                $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';
+                $sendType = 'C';        //$quotation->calc_da == 1 ? 'Q' :
             }
             foreach($request->file('files') as $file) {
                 $contents = $file->get();
