@@ -64,7 +64,7 @@ class Notification extends Command
                     'title' => 'Ваш запись прокомментировали',
                     'background_image' => asset('images/background.png'),
                     'htmlTitle' => 'Ваш запись прокомментировали',
-                    'greeting' => "Уважаемый(-ая)". $user->short_name,
+                    'greeting' => "Уважаемый(-ая) ". $user->short_name,
                     'wish' => $commented_user->short_name.' оставил комментарий',
                     'commentary' => $comment->text,
                     ]
