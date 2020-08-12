@@ -475,28 +475,28 @@ class CoordinationController extends Controller
            'success' => true,
         ]);
 
-//        foreach ($users_isn as $isn){
-//            $res = $client->request('POST', $url, [
-//                'form_params' => [
-//                    'isn'           => $isn,
-//                    'serviceCenter' => $data['serviceCenter'],
-//                    'customer'      => $data['customer'],
-//                    'customerDept'  => $data['customerDept'],
-//                    'requestNo'     => $data['requestNo'],
-//                    'status'        => $data['status'],
-//                    'subject'       => $data['subject'],
-//                    'type'          => $data['type']
-//                ],
-//                'verify' => false
-//            ]);
-//            if($res->getStatusCode() !== 200){
-//                return response()->json([
-//                    'success' => false
-//                ]);
-//            }
-//        }
-//        return response()->json([
-//            'success' => true,
-//        ]);
+        foreach ($users_isn as $isn){
+            $res = $client->request('POST', $url, [
+                'form_params' => [
+                    'isn'           => $isn,
+                    'serviceCenter' => $data['serviceCenter'],
+                    'customer'      => $data['customer'],
+                    'customerDept'  => $data['customerDept'],
+                    'requestNo'     => $data['requestNo'],
+                    'status'        => $data['status'],
+                    'subject'       => $data['subject'],
+                    'type'          => $data['type']
+                ],
+                'verify' => false
+            ]);
+            if($res->getStatusCode() !== 200){
+                return response()->json([
+                    'success' => false
+                ]);
+            }
+        }
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }
