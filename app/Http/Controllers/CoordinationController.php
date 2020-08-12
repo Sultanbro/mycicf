@@ -461,4 +461,37 @@ class CoordinationController extends Controller
             ->get();
         return sizeof($data) > 0;
     }
+
+
+    public function serviceCenterNotify(Request $request) {
+        $data = $request->all();
+
+        $users_isn = explode(',', $data['isn']);
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://botan.kupipolis.kz/serviceCenterNotify';
+
+        foreach ($users_isn as $isn){
+            $res = $client->request('POST', $url, [
+                'form_params' => [
+                    'isn'           => $isn,
+                    'serviceCenter' => $data['serviceCenter'],
+                    'customer'      => $data['customer'],
+                    'customerDept'  => $data['customerDept'],
+                    'requestNo'     => $data['requestNo'],
+                    'status'        => $data['status'],
+                    'subject'       => $data['subject'],
+                    'type'          => $data['type']
+                ],
+                'verify' => false
+            ]);
+            if($res->getStatusCode() !== 200){
+                return response()->json([
+                    'success' => false
+                ]);
+            }
+        }
+        return response()->json([
+            'success' => true,
+        ]);
+    }
 }
