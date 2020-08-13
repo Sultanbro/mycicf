@@ -462,7 +462,6 @@ class CoordinationController extends Controller
         return sizeof($data) > 0;
     }
 
-
     public function serviceCenterNotify(Request $request) {
         $data = $request->all();
 
@@ -470,12 +469,7 @@ class CoordinationController extends Controller
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/serviceCenterNotify';
 
-        return response()->json([
-           $data,
-           'success' => true,
-        ]);
-
-        foreach ($users_isn as $isn){
+        foreach ($users_isn as $isn) {
             $res = $client->request('POST', $url, [
                 'form_params' => [
                     'isn'           => $isn,
