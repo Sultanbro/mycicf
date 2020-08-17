@@ -39,6 +39,7 @@ class NewsController extends Controller
         }
 
         try {
+            ini_set("upload_max_filesize","50M");
             $new_post = new Post();
             $new_post->user_isn = $request->isn;
             $new_post->post_text = $request->postText;
