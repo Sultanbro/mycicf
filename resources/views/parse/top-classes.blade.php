@@ -271,7 +271,7 @@ use App\Http\Controllers\ParseController;
                     <tr>
                         <td class="bold text-left fs-0_9">Итого</td>
                         <td>{{number_format($controller->getSumByCompany($premium_first), 0, '.', ' ')}}</td>
-                        <td>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</td>
+                        <td>{{number_format($controller->getSumByCompany($premium_second), 0, '.', ' ')}}</td>  <!--array_sum-->
                         <td></td>
                         <td></td>
                         <td>{{$controller->getChangedVal(array_sum($premium_first), array_sum($premium_second))}}</td>
