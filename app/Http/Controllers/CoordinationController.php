@@ -409,7 +409,7 @@ class CoordinationController extends Controller
     }
 
     public function closeDecade(Request $request){
-        $contentT = '<div class="text-center"><img src="/images/closed.jpg" /></div>';
+        $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
         $contentT .= $request->postText;
         $isn = 1445725; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
         $username = 'Даурен Рамазанов';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
