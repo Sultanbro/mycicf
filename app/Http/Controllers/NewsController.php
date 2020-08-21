@@ -6,11 +6,14 @@ use App\Centcoin;
 use App\CentcoinHistory;
 use App\Comment;
 use App\Events\NewPost;
+use App\Library\Services\KiasServiceInterface;
 use App\Like;
+use App\Mail\Email;
 use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
