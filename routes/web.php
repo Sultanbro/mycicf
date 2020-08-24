@@ -180,6 +180,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //DOCUMENTATION
         Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
         Route::post('/documentation/search', 'DocumentationController@search');
+        //PRODUCTS-INFO
+        Route::get('/productsinfo', 'ProductsInfoController@index')->name('productsinfo');
         //PARSE
         Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
