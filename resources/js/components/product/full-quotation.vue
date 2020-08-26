@@ -22,55 +22,23 @@
                                  :participant-docs="participantDocs"
                                  :userList="userList"
                                  :get-user-list="getUserList"
+                                 @deletedPart="deletedPart"
                                  :product-id="id">
                     </participant>
                 </div>
-
+                <div class="col-md-4" v-if="deletedParticipants.length > 0" v-for="(participant,index) in deletedParticipants">
+                    <button type="button" class="btn btn-outline-info md-7  "  style="width:100%" @click="returnDeletedParticipant(index,showTest);">
+                        Вернуть удаленного участника
+                        <div>({{ participant.Label }})</div>
+                    </button>
+                </div>
                 <div v-if="Object.keys(formular).length > 0 && formular.curator.Value == 1"
                      class="form-group offset-0 col-md-12 col-lg-12 col-12 mt-3">
                     <label>Выберите куратора</label>
                     <treeselect v-if="userList.length > 0" v-model="formular.curator.subjISN" :options="userList" @change="calcChanged" />
                 </div>
-
             </div>
         </div>
-
-        <!--<div class="mb-4">
-            <period :period="period" :quotationId="quotationId" :calcChanged="calcChanged"></period>
-        </div>
-
-        <div class="agr-block mb-4">
-            <div v-for="attribute in attributes">
-                <agr-attributes :attribute="attribute"
-                                :express-attr="expressAttr"
-                                :calc-changed="calcChanged"
-                                :preloader="preloader"></agr-attributes>
-            </div>
-
-            <div v-for="agrclause in agrclauses">
-                <agr-clause :agrclause="agrclause" :calc-changed="calcChanged" :express-attr="expressAttr"></agr-clause>
-            </div>
-        </div>
-
-        <agr-object v-if="agrobjects"
-                    v-for="(agrobject,index) in agrobjects"
-                    :key="index"
-                    :agrobject="agrobject"
-                    :aIndex="index"
-                    :preloader="preloader"
-                    :express-attr="expressAttr"
-                    :calc-changed="calcChanged"
-                    :new-agrobject="newAgrobject"
-                    :agrobjects="agrobjects"
-                    :quotationId="quotationId"
-                    :product-id="id"
-                    :participants="participants"
-                    :express_isn="express_isn"
-                    :DA="DA">
-        </agr-object>
-
-        <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
--->
         <div class="div-ml">
             <div class="mb-3 agreement-block " style="width:95%;">
                 <period :period="period" :quotationId="quotationId" :express_id="express_id" :calcChanged="calcChanged"></period>
@@ -201,6 +169,7 @@
                     sendedFail: false
                 },
                 participants: [],
+                deletedParticipants: [],
                 attributes: [],
                 agrclauses: [],
                 formular: [],
@@ -564,6 +533,23 @@
                     //     }
                     // }
                 }
+            },
+            deletedPart(data,index){
+                let participant = data;
+                participant.partIndex = index;
+                //console.log(participant);
+                this.deletedParticipants.push(participant);
+            },
+            returnDeletedParticipant(index,callback){
+                let self = this;
+                var previousCount = this.participants.length;
+                this.participants[this.participants.length] = this.deletedParticipants[index];
+                this.deletedParticipants.splice(index,1);
+                //this.$modal.show('participant-form-' + (this.participants.length - 1));
+                callback();
+            },
+            showTest(){
+                this.$modal.show('participant-form-'+(this.participants.length-1));
             }
         },
         watch : {
