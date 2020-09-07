@@ -22,6 +22,8 @@ import vmodal from 'vue-js-modal'
 
 import VueTheMask from 'vue-the-mask'
 
+import Vue from "vue";
+
 const moment = require('vue-moment');
 
 Vue.use(moment);
@@ -160,6 +162,8 @@ Vue.component('insurance-inspection', require('./components/employee/insurance-i
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
+
+Vue.component('booking', require('./components/common/booking').default);
 
 window.onload = function(){
     var app = new Vue({

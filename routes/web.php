@@ -207,6 +207,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         });
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
+        Route::get('/booking', 'BookingController@index')->name('booking');
         Route::post('/addPost', 'NewsController@addPost');
         Route::post('/news-birthday', 'NewsController@birthday');
         Route::post('/getPosts', 'NewsController@getPosts');
