@@ -7,7 +7,6 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
 
-    @include('layouts.treeselect')
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/navbars/">
     <link rel="stylesheet" href="{{asset('css/admin_head.css')}}">
     <title>Navbar Template · Bootstrap</title>

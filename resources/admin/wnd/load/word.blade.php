@@ -41,7 +41,8 @@
                     <input id="file" type="file" onchange="changeLabel()" name="word" class="custom-file-input">
                     <label class="custom-file-label" for="file" id="fileName">Не выбрано</label>
                 </div>
-            </div>            <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label for="title">Документ</label>
                 <textarea class="form-control" name="area3" style="width: 100%; height : 500px;"></textarea>
             </div>

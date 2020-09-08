@@ -9,9 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "ext-curl": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "ext-curl": "*",
         "ext-soap": "*",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
@@ -19,8 +19,10 @@
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "^3.1",
-        "pusher/pusher-php-server": "^4.0"
+        "pusher/pusher-php-server": "^4.0",
+        "yajra/laravel-oci8": "6.0.0"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
@@ -29,6 +31,7 @@
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^8.0",
         "lorisleiva/laravel-deployer": "^0.2.12"
+
     },
     "config": {
         "optimize-autoloader": true,
