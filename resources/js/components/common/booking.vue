@@ -1,6 +1,16 @@
 <template>
     <div>
-        <button @click="addManually()">addManually</button>
+        <div class="row">
+            <div class="col-md-12">
+                <select name="" id="" v-model="office" @change="officeChange">
+                    <option value="conf">Конференц зал (6-этаж)</option>
+                    <option value="reception">Конференц зал Приемная (2-этаж)</option>
+                    <option value="drr">Комната переговоров 2-этаж (западное крыло ДРР)</option>
+                    <option value="dsv">Комната переговоров 1-этаж (западное крыло ДСВ)</option>
+                    <option value="dps">Комната переговоров 1этаж -(восточное крыло ДПС)</option>
+                </select>
+            </div>
+        </div>
         <kalendar :configuration="calendar_settings" :events.sync="events">
             <!-- CREATED CARD SLOT -->
             <div
@@ -41,7 +51,7 @@
             <!-- CREATING CARD SLOT -->
             <div slot="creating-card" slot-scope="{ event_information }">
                 <h4 class="appointment-title" style="text-align: left;">
-                    New Appointment
+                    Новое бронирование
                 </h4>
                 <span class="time">
 					{{ event_information.start_time | formatToHours }}
@@ -56,27 +66,27 @@
                     style="display: flex; flex-direction: column;"
             >
                 <h4 style="margin-bottom: 10px">
-                    New Appointment
+                    Новое бронирование
                 </h4>
                 <input
                         v-model="new_appointment['title']"
                         type="text"
                         name="title"
-                        placeholder="Title"
+                        placeholder="Департамент"
                 />
                 <textarea
                         v-model="new_appointment['description']"
                         type="text"
                         name="description"
-                        placeholder="Description"
+                        placeholder="Описание"
                         rows="2"
                 ></textarea>
                 <div class="buttons">
                     <button class="cancel" @click="closePopups()">
-                        Cancel
+                        Отмена
                     </button>
                     <button @click="addAppointment(popup_information)">
-                        Save
+                        Сохранить
                     </button>
                 </div>
             </div>
@@ -146,14 +156,42 @@
                 let dt = DateTime.fromISO(value);
                 return dt.toLocaleString(DateTime.TIME_24_SIMPLE);
             });
+
+            for (const key in this.booking){
+                let parsed = JSON.parse(this.booking[key].data)
+                if(parsed.data.office === 'conf') {
+                    this.conf.push(parsed)
+                } else if (parsed.data.office === 'reception') {
+                    this.reception.push(parsed)
+                } else if (parsed.data.office === 'drr') {
+                    this.drr.push(parsed)
+                } else if (parsed.data.office === 'dsv') {
+                    this.dsv.push(parsed)
+                } else if (parsed.data.office === 'dps') {
+                    this.dps.push(parsed)
+                }
+            }
+            if(this.office === 'conf') {
+                this.events = this.conf
+            }
+
         },
         components: {
             Kalendar,
         },
+        props: {
+            booking: Array,
+            isn: Number
+        },
         data() {
             return {
-                events: [
-                ],
+                office: 'conf',
+                conf: [],
+                reception: [],
+                drr: [],
+                dsv: [],
+                dps: [],
+                events: [],
                 calendar_settings: {
                     view_type: 'week',
                     cell_height: 10,
@@ -177,10 +215,17 @@
                     data: {
                         title: this.new_appointment.title,
                         description: this.new_appointment.description,
+                        office: this.office,
                     },
+                    author: this.isn,
                     from: popup_info.start_time,
                     to: popup_info.end_time,
                 };
+                this.axios.post('/booking/set', {payload}).then(response => {
+                    if(response.data.success){
+
+                    }
+                });
                 this.$kalendar.addNewEvent(payload);
                 this.$kalendar.closePopups();
                 this.clearFormData();
@@ -215,7 +260,24 @@
                     id: kalendarEvent.kalendar_id,
                 });
             },
+            officeChange() {
+
+                if(this.office === 'conf') {
+                    this.events = this.conf
+                } else if (this.office === 'reception') {
+                    this.events = this.reception
+                } else if (this.office === 'drr') {
+                    this.events = this.drr
+                } else if (this.office === 'dsv') {
+                    this.events = this.dsv
+                } else if (this.office === 'dps') {
+                    this.events = this.dps
+                }
+                this.$forceUpdate();
+            }
         },
+        computed: {
+        }
     };
 </script>
 <style lang="scss">

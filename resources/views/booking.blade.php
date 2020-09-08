@@ -43,7 +43,7 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <booking :isn="{{Auth::user()->ISN}}"/>
+            <booking :isn="{{Auth::user()->ISN}}" :booking="{{$booking}}"/>
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>

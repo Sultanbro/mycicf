@@ -273,9 +273,26 @@ var script = {
         formatWeekNavigator: function formatWeekNavigator(isoDate) {
           var startDate = startOfWeek(isoDate);
           var endDate = endOfWeek(isoDate);
-          var startString = startDate.toUTCString().slice(5, 11);
-          var endString = endDate.toUTCString().slice(5, 11);
-          return "".concat(startString, " - ").concat(endString);
+            var month = new Array();
+            month['Jan'] = 'Январь';
+            month['Feb'] = 'Февраль';
+            month['Mar'] = 'Март';
+            month['Apr'] = 'Апрель';
+            month['May'] = 'Май';
+            month['Jun'] = 'Июнь';
+            month['Jul'] = 'Июль';
+            month['Aug'] = 'Август';
+            month['Sep'] = 'Сентябрь';
+            month['Oct'] = 'Октябрь';
+            month['Nov'] = 'Ноябрь';
+            month['Dec'] = 'Декабрь';
+          // var startString = startDate.toUTCString().slice(5, 11);
+          // var endString = endDate.toUTCString().slice(5, 11);
+            var startMonthDay = month[startDate.toUTCString().slice(8, 11)]
+            var endMonthDay = month[endDate.toUTCString().slice(8, 11)]
+            var startDay = startDate.toUTCString().slice(5, 7)
+            var endDay = endDate.toUTCString().slice(5, 7)
+          return "" + startDay + " " + startMonthDay + " - " + endDay + " " + endMonthDay;
         },
         formatDayNavigator: function formatDayNavigator(isoDate) {
           var day = new Date(isoDate);

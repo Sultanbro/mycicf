@@ -47,7 +47,7 @@ Vue.use(VueTheMask);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
-
+Vue.forceUpdate();
 window.addEventListener('load', () => {
     Vue.use(Toastr);
 });
