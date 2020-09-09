@@ -47,7 +47,7 @@ Vue.use(VueTheMask);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
-Vue.forceUpdate();
+
 window.addEventListener('load', () => {
     Vue.use(Toastr);
 });
@@ -164,6 +164,18 @@ Vue.component('inspection-info', require('./components/employee/inspection-info'
 Vue.component('upload-image', require('./components/common/upload-image').default);
 
 Vue.component('booking', require('./components/common/booking').default);
+
+Vue.component('reception', require('./components/booking/reception').default);
+
+Vue.component('reception', require('./components/booking/reception').default);
+
+Vue.component('conf', require('./components/booking/conf').default);
+
+Vue.component('dps', require('./components/booking/dps').default);
+
+Vue.component('drr', require('./components/booking/drr').default);
+
+Vue.component('dsv', require('./components/booking/dsv').default);
 
 window.onload = function(){
     var app = new Vue({

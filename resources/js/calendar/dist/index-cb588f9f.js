@@ -444,8 +444,17 @@ var script = {
     },
     closePopups: function closePopups() {
       this.$kalendar.closePopups();
+    },
+    rerender: function rerender() {
+        this.renderDay();
     }
+  },
+  mounted() {
+      this.$watch('events', events => {
+          events = this.events;
+      })
   }
+
 };
 
 function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
