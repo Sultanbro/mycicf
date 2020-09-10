@@ -148,7 +148,7 @@ var __vue_render__ = function __vue_render__() {
     staticClass: "kalendar-cell",
     class: {
       selected: _vm.selected,
-      'is-an-hour': (_vm.index + 1) % (60 / 10) === 0,
+      'is-an-hour': (_vm.index + 1) % (30 / 10) === 0,
       'has-events': _vm.cell_events && _vm.cell_events.length > 0,
       'being-created': !!_vm.being_created || _vm.hasPopups
     },

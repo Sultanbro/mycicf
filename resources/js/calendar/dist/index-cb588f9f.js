@@ -206,7 +206,7 @@ import moment from 'moment';
 var formatAMPM = function formatAMPM(date) {
   // var hours = date.getUTCHours();
   // var result = "".concat(hours % 12 === 0 ? 12 : hours % 12, " ").concat(hours >= 12 ? "PM" : "AM");
-  return moment(date).format('hh:mm');
+  return getTime(date)
 };
 
 var script = {

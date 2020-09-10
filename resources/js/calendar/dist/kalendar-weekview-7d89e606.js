@@ -593,6 +593,8 @@ var script$1 = {
   },
   computed: {
     hoursVisible: function hoursVisible() {
+        console.log('work wv')
+        console.log(this.hours)
       if (!this.hours) return [];
       return this.hours.filter(function (x) {
         return !!x.visible;
@@ -602,7 +604,7 @@ var script$1 = {
       return this.kalendar_options.style === "flat_design" ? "5px" : "0px";
     },
     hourHeight: function hourHeight() {
-      return 6 * this.kalendar_options.cell_height; //this.kalendar_options.cell_height * (60 / this.kalendar_options.split_value);
+      return 3 * this.kalendar_options.cell_height; //this.kalendar_options.cell_height * (60 / this.kalendar_options.split_value);
       // * this.kalendar_options.hour_parts;
     },
     passedTime: function passedTime() {
@@ -671,7 +673,105 @@ var script$1 = {
         }
       }).then(function (reply) {
         // Handle the reply
-        _this2.hours = reply;
+          const arr = [
+              {
+                  index: 0,
+                  value: "09:00",
+                  visible: true
+              },
+              {
+                  index: 1,
+                  value: "09:30",
+                  visible: true
+              },
+              {
+                  index: 2,
+                  value: "10:00",
+                  visible: true
+              },
+              {
+                  index: 3,
+                  value: "10:30",
+                  visible: true
+              },
+              {
+                  index: 4,
+                  value: "11:00",
+                  visible: true
+              },
+              {
+                  index: 5,
+                  value: "11:30",
+                  visible: true
+              },
+              {
+                  index: 6,
+                  value: "12:00",
+                  visible: true
+              },
+              {
+                  index: 7,
+                  value: "12:30",
+                  visible: true
+              },
+              {
+                  index: 8,
+                  value: "13:00",
+                  visible: true
+              },
+              {
+                  index: 9,
+                  value: "13:30",
+                  visible: true
+              },
+              {
+                  index: 10,
+                  value: "14:00",
+                  visible: true
+              },
+              {
+                  index: 11,
+                  value: "14:30",
+                  visible: true
+              },
+              {
+                  index: 12,
+                  value: "15:00",
+                  visible: true
+              },
+              {
+                  index: 13,
+                  value: "15:30",
+                  visible: true
+              },
+              {
+                  index: 14,
+                  value: "16:00",
+                  visible: true
+              },
+              {
+                  index: 15,
+                  value: "16:30",
+                  visible: true
+              },
+              {
+                  index: 16,
+                  value: "17:00",
+                  visible: true
+              },
+              {
+                  index: 17,
+                  value: "17:30",
+                  visible: true
+              },
+              {
+                  index: 18,
+                  value: "18:00",
+                  visible: true
+              }
+          ]
+        _this2.hours = arr;
+
       })]);
     },
     addHelperMethods: function addHelperMethods() {
@@ -788,7 +888,7 @@ var __vue_render__$1 = function __vue_render__() {
       key: index,
       staticClass: "hour-row-identifier",
       style: "height:" + _vm.hourHeight + "px"
-    }, [_c('span', [_vm._v(_vm._s(_vm.kalendar_options.formatLeftHours(hour.value)))])]);
+    }, [_c('span', [_vm._v(_vm._s(hour.value))])]);
   }), 0), _vm._v(" "), _c('div', {
     directives: [{
       name: "show",
