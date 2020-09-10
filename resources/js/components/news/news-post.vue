@@ -349,7 +349,7 @@
                 }
                 if(this.post.isn === 3600338 && this.post.isLiked === 1){
                     this.isErlanShown = true;
-                    setTimeout(() => {this.isErlanShown = false;}, 3100);
+                    setTimeout(() => {this.isErlanShown = false;}, 4700);
                 }
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
