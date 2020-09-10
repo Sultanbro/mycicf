@@ -593,7 +593,6 @@ var script$1 = {
   },
   computed: {
     hoursVisible: function hoursVisible() {
-        console.log(this.hours)
       if (!this.hours) return [];
       return this.hours.filter(function (x) {
         return !!x.visible;

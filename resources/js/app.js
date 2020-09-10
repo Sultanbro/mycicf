@@ -184,6 +184,7 @@ window.onload = function(){
             value: null,
             // define options
             options: null,
+            office: 'conf',
             image: {
                 encoded: 0,
             },

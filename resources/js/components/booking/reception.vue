@@ -1,13 +1,13 @@
 <template>
-    <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events">
+    <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
         <!-- CREATED CARD SLOT -->
         <div
-            slot="created-card"
-            slot-scope="{ event_information }"
-            class="details-card"
+                slot="created-card"
+                slot-scope="{ event_information }"
+                class="details-card"
         >
             <h4 class="appointment-title">
-                {{ event_information.data.title }}
+                {{ event_information.data.title }} <i v-if="loading" class="fas fa-spinner fa-spin"></i>
             </h4>
             <small>
                 {{ event_information.data.description }}
@@ -16,7 +16,7 @@
             >{{ event_information.start_time | formatToHours }} -
                 {{ event_information.end_time | formatToHours }}</span
             >
-            <button @click="removeEvent(event_information)" class="remove">
+            <button :disabled="loading" @click="removeEvent(event_information)" class="remove">
                 <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -49,9 +49,9 @@
         </div>
         <!-- POPUP CARD SLOT -->
         <div
-            slot="popup-form"
-            slot-scope="{ popup_information }"
-            style="display: flex; flex-direction: column;"
+                slot="popup-form"
+                slot-scope="{ popup_information }"
+                style="display: flex; flex-direction: column;"
         >
             <h4 style="margin-bottom: 10px">
                 Новое бронирование
@@ -70,10 +70,11 @@
                     rows="2"
             ></textarea>
             <div class="buttons">
-                <button class="cancel" @click="closePopups()">
+                <button :disabled="loading" class="cancel" @click="closePopups()">
                     Отмена
                 </button>
-                <button @click="addAppointment(popup_information)">
+                <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+                <button :disabled="loading" @click="addAppointment(popup_information)">
                     Сохранить
                 </button>
             </div>
@@ -155,6 +156,7 @@
         },
         data() {
             return {
+                loading: false,
                 reception: [],
                 calendar_settings: {
                     view_type: 'week',
@@ -180,19 +182,23 @@
                         title: this.new_appointment.title,
                         description: this.new_appointment.description,
                         office: 'reception',
+                        id: null,
+                        author: null,
                     },
                     author: this.isn,
                     from: popup_info.start_time,
                     to: popup_info.end_time,
                 };
                 this.axios.post('/booking/set', {payload}).then(response => {
-                    if(response.data.success){
 
+                    if(response.data.success){
+                        payload = JSON.parse(response.data.data.data)
+                        this.$kalendar.addNewEvent(payload);
+                        this.$kalendar.closePopups();
+                        this.clearFormData();
+                        this.loading = false
                     }
                 });
-                this.$kalendar.addNewEvent(payload);
-                this.$kalendar.closePopups();
-                this.clearFormData();
             },
             closePopups() {
                 this.$kalendar.closePopups();
@@ -216,13 +222,21 @@
                 this.$kalendar.addNewEvent(payload);
             },
             removeEvent(kalendarEvent) {
-                console.log('KalendarEvent', kalendarEvent);
+                this.loading = true
                 let day = kalendarEvent.start_time.slice(0, 10);
-                this.$kalendar.removeEvent({
-                    day,
-                    key: kalendarEvent.key,
-                    id: kalendarEvent.kalendar_id,
-                });
+                this.axios.post('booking/remove', kalendarEvent).then((response)=>{
+                    if(response.data.success) {
+                        this.loading = false
+                        this.$kalendar.removeEvent({
+                            day,
+                            key: kalendarEvent.key,
+                            id: kalendarEvent.kalendar_id,
+                        });
+                    }
+                    else {
+                        alert('Невозможно удалить!')
+                    }
+                })
             },
         },
         computed: {

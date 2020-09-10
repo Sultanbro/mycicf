@@ -15,9 +15,10 @@ class Booking extends Migration
     {
         Schema::create('booking', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('author');
-            $table->json('data');
+            $table->integer('author')->nullable();
+            $table->json('data')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

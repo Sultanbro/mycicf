@@ -20,11 +20,19 @@ class BookingController extends Controller
     }
     public function set(Request $request) {
         $booking = new Booking();
-        $booking->data = json_encode($request['payload']);
-        $booking->author = Auth::user()->ISN;
+        $req = $request['payload'];
+        $booking->data = json_encode($req);
         if(!$booking->save()){
             response()->json(['success'=>false]);
         }
-        return response()->json(['success'=>true]);
+        $req['data']['id'] = $booking->id;
+        $req['data']['author'] = Auth::user()->ISN;
+        $booking->data = json_encode($req);
+        $booking->save();
+        return response()->json(['success'=>true, 'data' => $booking]);
+    }
+    public function delete(Request $request) {
+        $booking = Booking::where('id', ($request['data']['id']))->delete();
+        return response()->json(['success'=>true ]);
     }
 }

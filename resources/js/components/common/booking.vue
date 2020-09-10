@@ -11,7 +11,7 @@
                 </select>
             </div>
         </div>
-        <reception v-if="office==='reception'" :events.sync="booking" :isn="isn"/>
+        <reception v-if="office==='reception'" :events.sync="reception" :isn="isn"/>
         <conf v-if="office==='conf'" :events.sync="conf" :isn="isn"/>
         <dps v-if="office==='dps'" :events.sync="dps" :isn="isn"/>
         <drr v-if="office==='drr'" :events.sync="drr" :isn="isn"/>
@@ -24,15 +24,15 @@
             for (const key in this.booking){
                 let parsed = JSON.parse(this.booking[key].data)
                 if(parsed.data.office === 'conf') {
-                    this.conf.push(parsed)
+                    this.conf[0].push(parsed)
                 } else if (parsed.data.office === 'reception') {
-                    this.reception.push(parsed)
+                    this.reception[0].push(parsed)
                 } else if (parsed.data.office === 'drr') {
-                    this.drr.push(parsed)
+                    this.drr[0].push(parsed)
                 } else if (parsed.data.office === 'dsv') {
-                    this.dsv.push(parsed)
+                    this.dsv[0].push(parsed)
                 } else if (parsed.data.office === 'dps') {
-                    this.dps.push(parsed)
+                    this.dps[0].push(parsed)
                 }
             }
             if(this.office === 'conf') {
@@ -46,12 +46,12 @@
         data() {
             return {
                 office: 'conf',
-                conf: [],
-                reception: [],
-                drr: [],
-                dsv: [],
-                dps: [],
-                events: [],
+                conf: [[]],
+                reception: [[]],
+                drr: [[]],
+                dsv: [[]],
+                dps: [[]],
+                events: [[]],
             };
         },
         methods: {
