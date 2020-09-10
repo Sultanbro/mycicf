@@ -78,6 +78,12 @@
                     <span>Предстраховой осмотр</span>
                 </li>
             </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('booking')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <span>Бронирование конференц зала</span>
+                </li>
+            </a>
         </ul>
     </div>
 </div>
