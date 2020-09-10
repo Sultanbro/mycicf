@@ -113,7 +113,7 @@
 
         <hr class="mb-0 mt-0">
 
-        <div class="news-contains-bottom">
+        <div class="news-contains-bottom custom-voting-block">
             <div>
                 <div class="flex-row pl-4 pr-4 align-items-center justify-content-between">
                     <div class="flex-row">
@@ -148,6 +148,10 @@
                                         class="common-btn pt-1 pb-1 pl-3 pr-3">Отмена</button>
                             </div>
                         </transition>
+                    </div>
+
+                    <div class="custom-image-voting" v-if="post.isn === 3600338 && isErlanShown">
+                        <img src="/images/Erlan.GIF" alt="" style="width: 30%;">
                     </div>
                 </div>
 
@@ -213,6 +217,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </template>
 
@@ -249,6 +255,7 @@
                 NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
                 EDIT_POST_TEXTAREA: 'EDIT_POST',
                 imageViewerOpened: false,
+                isErlanShown: false,
             }
         },
 
@@ -340,12 +347,17 @@
                     this.post.isLiked = 1;
                     this.post.likes++;
                 }
+                if(this.post.isn === 3600338 && this.post.isLiked === 1){
+                    this.isErlanShown = true;
+                    setTimeout(() => {this.isErlanShown = false;}, 3100);
+                }
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
                 });
             },
+
 
             fetchLiked(response) {
                 if(response.success === true) {
@@ -611,5 +623,14 @@
         width: 25px;
         border: 2px solid #D9D9D9;
         border-radius: 5px;
+    }
+
+    .custom-voting-block {
+        position: relative;
+    }
+
+    .custom-image-voting {
+        position: absolute;
+        right: -180px;
     }
 </style>
