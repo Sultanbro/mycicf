@@ -63,7 +63,7 @@
                                                     <div class="border-white pl-1 pr-1">
                                                         <i class="far fa-user"></i>
                                                     </div>
-                                                    <span class="ml-2">Инициатор</span>
+                                                    <span class="ml-2">Работник</span>
                                                 </div>
                                                 <div class="pt-2 pb-2" v-if="coordination.DocClass === '1010031'">
                                                     <span>{{coordination.SubjDept}} {{coordination.SubjName}}</span>

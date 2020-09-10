@@ -93,24 +93,26 @@
         <div class="ml-2 mr-2" v-show="AD !== null">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2">
-                    <strong>Согласование административных дней</strong>
+                    <strong>Согласование кадровых документов</strong>
                 </div>
                 <div>
                     <table class="dosier-table table text-align-center">
                         <thead>
                             <tr class="header color-white">
-                            <th scope="col">Номер документа</th>
-                            <th scope="col" class="thead-border">ФИО сотрудника</th>
-                            <th scope="col" class="thead-border">Период</th>
-                            <th scope="col">Кол-во дней</th>
-                        </tr>
+                                <th scope="col">Номер документа</th>
+                                <th scope="col">Тип документа</th>
+                                <th scope="col" class="thead-border">ФИО Работника</th>
+                                <th scope="col" class="thead-border">Подразделиние</th>
+                                <th scope="col">Дата</th>
+                            </tr>
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AD" :key="info.ISN">
                             <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.empl}}</td>
-                            <td scope="col" class="thead-border">{{info.docdate}}</td>
-                            <td scope="col">{{info.days}}</td>
+                            <td scope="col" class="thead-border">{{info.deptname}}</td>
+                            <td scope="col">{{info.docdate}}</td>
                         </tr>
                         </tbody>
                     </table>
