@@ -233,6 +233,8 @@
                             key: kalendarEvent.key,
                             id: kalendarEvent.kalendar_id,
                         });
+                    } else {
+                        alert('Невозможно удалить!')
                     }
                 })
             },
