@@ -53,26 +53,22 @@ class Notification extends Command
             ->get();
         echo '#Found '.count($comments).' notification \n';
         foreach ($comments as $comment){
-            if ($comment->answered_user_isn!=null){
-                $commented_user = Comment::where('email_send', 0)->get();
-            } else {
-                $post = Post::findOrFail($comment->post_id);
-                $emails = ($kias->getEmplInfo($post->user_isn, date('d.m.Y', time()), date('d.m.Y', time() + 60 * 60))->Mail);
-                $user = User::where('ISN', $post->user_isn)->first();
-                $commented_user = User::where('ISN', $comment->user_isn)->first();
-                $email = explode(' ', $emails)[0];
-                $email = str_replace(',', '', $email);
-                if ($post->user_isn != $comment->user_isn) {
-                    $result = Mail::to($email)->send(new Email([
-                            'title' => 'Ваш запись прокомментировали',
-                            'background_image' => asset('images/background.png'),
-                            'htmlTitle' => 'Ваш запись прокомментировали',
-                            'greeting' => "Уважаемый(-ая) " . $user->short_name,
-                            'wish' => $commented_user->short_name . ' оставил комментарий',
-                            'commentary' => $comment->text,
-                        ]
-                    ));
-                }
+            $post = Post::findOrFail($comment->post_id);
+            $emails = ($kias->getEmplInfo($post->user_isn, date('d.m.Y', time()), date('d.m.Y', time() + 60 * 60))->Mail);
+            $user = User::where('ISN', $post->user_isn)->first();
+            $commented_user = User::where('ISN', $comment->user_isn)->first();
+            $email = explode(' ', $emails)[0];
+            $email = str_replace(',', '', $email);
+            if ($post->user_isn != $comment->user_isn) {
+                $result = Mail::to($email)->send(new Email([
+                        'title' => 'Ваш запись прокомментировали',
+                        'background_image' => asset('images/background.png'),
+                        'htmlTitle' => 'Ваш запись прокомментировали',
+                        'greeting' => "Уважаемый(-ая) " . $user->short_name,
+                        'wish' => $commented_user->short_name . ' оставил комментарий',
+                        'commentary' => $comment->text,
+                    ]
+                ));
             }
             $comment->email_send = 1;
             $comment->save();
