@@ -39,29 +39,29 @@
             @endif
             @if(App\User::isWNDAdmin())
                 <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">ВНД</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown09">
-                <a class="dropdown-item" href="{{route('wnd.org')}}">Орг. структура</a>
-                <a class="dropdown-item" href="{{route('wnd.svg')}}">Загрузка SVG</a>
-                <a class="dropdown-item" href="{{route('wnd.word')}}">Загрузка WORD</a>
-                <a class="dropdown-item" href="{{route('wnd.pdf')}}">Загрузка PDF</a>
-                <a class="dropdown-item" href="{{route('wnd.image')}}">Загрузка Фотографии</a>
-                <a class="dropdown-item" href="{{route('wnd.menu')}}">Структура меню</a>
-                <a class="dropdown-item" href="{{route('wnd.svg.list')}}">Список SVG</a>
-                <a class="dropdown-item" href="{{route('wnd.word.list')}}">Список WORD</a>
-                <a class="dropdown-item" href="{{route('wnd.menu.list')}}">Список меню</a>
-            </div>
-        </li>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">ВНД</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="{{route('wnd.org')}}">Орг. структура</a>
+                        <a class="dropdown-item" href="{{route('wnd.svg')}}">Загрузка SVG</a>
+                        <a class="dropdown-item" href="{{route('wnd.word')}}">Загрузка WORD</a>
+                        <a class="dropdown-item" href="{{route('wnd.pdf')}}">Загрузка PDF</a>
+                        <a class="dropdown-item" href="{{route('wnd.image')}}">Загрузка Фотографии</a>
+                        <a class="dropdown-item" href="{{route('wnd.menu')}}">Структура меню</a>
+                        <a class="dropdown-item" href="{{route('wnd.svg.list')}}">Список SVG</a>
+                        <a class="dropdown-item" href="{{route('wnd.word.list')}}">Список WORD</a>
+                        <a class="dropdown-item" href="{{route('wnd.menu.list')}}">Список меню</a>
+                    </div>
+                </li>
             @endif
             @if(App\User::isSenateAdmin())
                 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
-       aria-haspopup="true" aria-expanded="false">Сенат</a>
-    <div class="dropdown-menu" aria-labelledby="dropdown09">
-        <a class="dropdown-item" href="{{route('senate.post.new')}}">Новый пост</a>
-    </div>
-</li>
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Сенат</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="{{route('senate.post.new')}}">Новый пост</a>
+                    </div>
+                </li>
             @endif
             @if(App\User::isReadingClubAdmin())
                 <li class="nav-item dropdown">
@@ -92,7 +92,22 @@
                         </div>
                     </li>
             @endif
-
+            @if(App\User::isProductsInfoAdmin())
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">ПродуктИнфо</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="{{route('productsinfo.svg')}}">Загрузка SVG</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.word')}}">Загрузка WORD</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.pdf')}}">Загрузка PDF</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.image')}}">Загрузка Фотографии</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.menu')}}">Структура меню</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.svg.list')}}">Список SVG</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.word.list')}}">Список WORD</a>
+                        <a class="dropdown-item" href="{{route('productsinfo.menu.list')}}">Список меню</a>
+                    </div>
+                </li>
+            @endif
         </ul>
         <form class="form-inline my-2 my-md-0">
             <a href="/logout" class="logout">Выйти</a>
