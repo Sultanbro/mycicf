@@ -69,14 +69,14 @@
                      aria-valuemin="0"
                      aria-valuemax="100">
                     <div class="p-2">
-                        <span class="fs-1" :class="post.isVoted === 1 ? 'color-white' : 'color-black'">{{post.isVoted === 1 ? answer.answer_votes : answer.answer_title}}</span>
+                        <span class="fs-1 color-black">{{post.isVoted === 1 ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
                     </div>
                 </div>
-                <div class='d-flex align-items-center' v-if="post.isVoted === 1">
-                    <span class="p-2 color-black">
-                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}
-                    </span>
-                </div>
+<!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
+<!--                    <span class="p-2 color-black">-->
+<!--                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}-->
+<!--                    </span>-->
+<!--                </div>-->
             </div>
             <div>
                 <h6 class="color-dimgray">

@@ -147,7 +147,7 @@
                                    v-model="answers[index]"
                                    :placeholder="`Ответ ${index + 1}`"
                                    :aria-label="`Ответ ${index + 1}`">
-                            <div v-if="answersCount > 2"
+                            <div v-if="answers.length > 2"
                                  @click="removeAnswer(index)"
                                  class="p-2 d-flex align-items-center custom-blue-button">
                                 <i class="fas fa-minus-circle"></i>
@@ -156,7 +156,7 @@
                     </div>
                     <div class="d-flex justify-content-center gray-button mt-2 mb-2"
                          @click="addAnswer"
-                         v-if="answersCount < maxAnswers">
+                         v-if="answers.length < maxAnswers">
                         <div class="pt-2 pb-2">
                             <span>Добавить пункт</span>
                         </div>
@@ -202,8 +202,7 @@
         data: () => ({
             showPoll: false,
             showAddAnswer: true,
-            answersCount: 2,
-            maxAnswers: 5,
+            maxAnswers: 10,
             poll: false,
             question: null,
             answers : ["", ""],
@@ -569,16 +568,14 @@
             },
 
             addAnswer() {
-                if(this.answersCount < this.maxAnswers) {
+                if(this.answers.length < this.maxAnswers) {
                     this.answers.push("");
-                    this.answersCount++;
                 }
             },
 
             removeAnswer(index) {
-                if(this.answersCount > 2) {
+                if(this.answers.length > 2) {
                     this.answers.splice(index, 1);
-                    this.answersCount--;
                 }
                 else return;
             },
