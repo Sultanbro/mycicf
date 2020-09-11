@@ -1,85 +1,131 @@
 <template>
-    <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
-        <!-- CREATED CARD SLOT -->
-        <div
-                slot="created-card"
-                slot-scope="{ event_information }"
-                class="details-card"
-        >
-            <h4 class="appointment-title">
-                {{ event_information.data.title }} <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-            </h4>
-            <small>
-                {{ event_information.data.description }}
-            </small>
-            <span class="time"
-            >{{ event_information.start_time | formatToHours }} -
-                {{ event_information.end_time | formatToHours }}</span
-            >
-            <button :disabled="loading" @click="removeEvent(event_information)" class="remove">
-                <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                        data-reactid="1326"
-                >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="15" y1="9" x2="9" y2="15"></line>
-                    <line x1="9" y1="9" x2="15" y2="15"></line>
-                </svg>
-            </button>
-        </div>
-        <!-- CREATING CARD SLOT -->
-        <div slot="creating-card" slot-scope="{ event_information }">
-            <h4 class="appointment-title" style="text-align: left;">
-                Новое бронирование
-            </h4>
-            <span class="time">
-                {{ event_information.start_time | formatToHours }}
-                -
-                {{ event_information.end_time | formatToHours }}
-            </span>
-        </div>
-        <!-- POPUP CARD SLOT -->
-        <div
-                slot="popup-form"
-                slot-scope="{ popup_information }"
-                style="display: flex; flex-direction: column;"
-        >
-            <h4 style="margin-bottom: 10px">
-                Новое бронирование
-            </h4>
-            <input
-                    v-model="new_appointment['title']"
-                    type="text"
-                    name="title"
-                    placeholder="Департамент"
-            />
-            <textarea
-                    v-model="new_appointment['description']"
-                    type="text"
-                    name="description"
-                    placeholder="Описание"
-                    rows="2"
-            ></textarea>
-            <div class="buttons">
-                <button :disabled="loading" class="cancel" @click="closePopups()">
-                    Отмена
-                </button>
-                <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                <button :disabled="loading" @click="addAppointment(popup_information)">
-                    Сохранить
-                </button>
+    <div>
+        <div class="row mb-4">
+            <div class="col">
+                <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#basicModal">Забронировать</a>
             </div>
         </div>
-    </kalendar>
+        <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Забронировать конференц</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <input type="text" class="form-control" placeholder="Департамент" v-model="title">
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <input type="text" class="form-control" placeholder="Описание" v-model="description">
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <input type="date" class="form-control" placeholder="Дата начало" v-model="day">
+                                </div>
+                                <div  class="col-md-6 mb-2" >
+                                    <span class="small">С</span>
+                                    <input type="time" class="form-control" placeholder="Дата начало" v-model="fromTime">
+                                </div>
+                                <div  class="col-md-6 mb-2" >
+                                    <span class="small">До</span>
+                                    <input type="time" class="form-control" placeholder="Дата окончания" v-model="toTime">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addManually">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
+            <!-- CREATED CARD SLOT -->
+            <div
+                    slot="created-card"
+                    slot-scope="{ event_information }"
+                    class="details-card"
+            >
+                <h4 class="appointment-title">
+                    {{ event_information.data.title }} <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+                </h4>
+                <small>
+                    {{ event_information.data.description }}
+                </small>
+                <span class="time"
+                >{{ event_information.start_time | formatToHours }} -
+                    {{ event_information.end_time | formatToHours }}</span
+                >
+                <button :disabled="loading" @click="removeEvent(event_information)" class="remove">
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                            data-reactid="1326"
+                    >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                </button>
+            </div>
+            <!-- CREATING CARD SLOT -->
+            <div slot="creating-card" slot-scope="{ event_information }">
+                <h4 class="appointment-title" style="text-align: left;">
+                    Новое бронирование
+                </h4>
+                <span class="time">
+                    {{ event_information.start_time | formatToHours }}
+                    -
+                    {{ event_information.end_time | formatToHours }}
+                </span>
+            </div>
+            <!-- POPUP CARD SLOT -->
+            <div
+                    slot="popup-form"
+                    slot-scope="{ popup_information }"
+                    style="display: flex; flex-direction: column;"
+            >
+                <h4 style="margin-bottom: 10px">
+                    Новое бронирование
+                </h4>
+                <input
+                        v-model="new_appointment['title']"
+                        type="text"
+                        name="title"
+                        placeholder="Департамент"
+                />
+                <textarea
+                        v-model="new_appointment['description']"
+                        type="text"
+                        name="description"
+                        placeholder="Описание"
+                        rows="2"
+                ></textarea>
+                <div class="buttons">
+                    <button :disabled="loading" class="cancel" @click="closePopups()">
+                        Отмена
+                    </button>
+                    <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+                    <button :disabled="loading" @click="addAppointment(popup_information)">
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+        </kalendar>
+    </div>
 </template>
 <script>
     const _existing_events = [

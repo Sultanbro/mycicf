@@ -499,7 +499,7 @@ var __vue_render__ = function __vue_render__() {
   }, [_vm.isToday ? _c('div', {
     ref: "nowIndicator",
     class: _vm.kalendar_options.style === 'material_design' ? 'hour-indicator-line' : 'hour-indicator-tooltip',
-    style: "top:" + _vm.passedTime + "px" + "; display: none"
+    style: "top:" + _vm.passedTime + "px; z-index: 99"
   }, [_c('span', {
     directives: [{
       name: "show",

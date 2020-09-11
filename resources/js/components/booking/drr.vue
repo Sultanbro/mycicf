@@ -1,5 +1,50 @@
 <template>
-    <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
+    <div>
+        <div class="row mb-4">
+            <div class="col">
+                <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#basicModal">Забронировать</a>
+            </div>
+        </div>
+        <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Забронировать конференц</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <input type="text" class="form-control" placeholder="Департамент" v-model="title">
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <input type="text" class="form-control" placeholder="Описание" v-model="description">
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <input type="date" class="form-control" placeholder="Дата начало" v-model="day">
+                                </div>
+                                <div  class="col-md-6 mb-2" >
+                                    <span class="small">С</span>
+                                    <input type="time" class="form-control" placeholder="Дата начало" v-model="fromTime">
+                                </div>
+                                <div  class="col-md-6 mb-2" >
+                                    <span class="small">До</span>
+                                    <input type="time" class="form-control" placeholder="Дата окончания" v-model="toTime">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addManually">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
         <!-- CREATED CARD SLOT -->
         <div
                 slot="created-card"
@@ -80,6 +125,7 @@
             </div>
         </div>
     </kalendar>
+    </div>
 </template>
 
 <script>
@@ -158,6 +204,11 @@
         },
         data() {
             return {
+                title: '',
+                description: '',
+                day: '',
+                fromTime: '',
+                toTime: '',
                 loading: false,
                 reception: [],
                 calendar_settings: {
@@ -211,16 +262,34 @@
                 };
             },
             addManually() {
-                let title = 'New one';
-                let description = 'Lorem dsr';
-                let from = makeNow('2019-07-12T10:22:00+02:00');
-                let to = makeNow('2019-07-13T11:20:00+02:00');
+                this.loading = true;
+                let title = this.title;
+                let description = this.description;
+                let from = `${this.day}T${this.fromTime}:00.000Z`;
+                let to = `${this.day}T${this.toTime}:00.000Z`;
                 let payload = {
-                    data: { title, description },
+                    data: {
+                        title,
+                        description,
+                        office: 'drr',
+                        id: null,
+                        author: null,
+                    },
+                    author: this.isn,
                     from,
                     to,
                 };
-                this.$kalendar.addNewEvent(payload);
+                this.axios.post('/booking/set', {payload}).then(response => {
+                    if(response.data.success){
+                        payload = JSON.parse(response.data.data.data)
+                        this.$kalendar.addNewEvent(payload);
+                        this.title = '';
+                        this.description = '';
+                        this.from = '';
+                        this.to = '';
+                        this.loading = false
+                    }
+                });
             },
             removeEvent(kalendarEvent) {
                 this.loading = true
