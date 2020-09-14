@@ -53,6 +53,50 @@
                 <d-player :options="options"></d-player>
             </div>
         </div>
+
+        <div class="pl-4 pr-4" v-if="post.post_poll.question_title !== null">
+            <div class="d-flex justify-content-center">
+                <h5>{{post.post_poll.question_title}}</h5>
+            </div>
+            <div v-if="post.isVoted !== 1" v-for="(answer, index) in post.post_poll.answers"
+                 @click="check(answer, index)"
+                 class="progress mb-2 progress-bar-hover d-flex"
+                 :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
+                 style="height: 40px;"
+                 :style="answer.checked ? 'background-color : #5fdbe2' : 'background-color : #e9ecef'">
+                <div class="progress-bar"
+                     role="progressbar"
+                     :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    <div class="p-2">
+                        <span class="fs-1 color-black">{{post.isVoted === 1 ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
+                    </div>
+                </div>
+<!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
+<!--                    <span class="p-2 color-black">-->
+<!--                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}-->
+<!--                    </span>-->
+<!--                </div>-->
+            </div>
+            <div v-if="post.isVoted === 1">
+                Вы уже проголосовали!
+            </div>
+
+            <div>
+                <h6 class="color-dimgray">
+                    <small>
+                        Количество голосов: {{post.post_poll.total_votes}}
+                    </small>
+                </h6>
+                <!--                <span class="color-dimgray"></span>-->
+            </div>
+            <div>
+                <button v-if="post.isVoted !== 1" class="btn btn-info" type="button" @click="voteSenate">Проголосовать</button>
+                <!--                <span class="color-dimgray"></span>-->
+            </div>
+        </div>
+
         <div class="pl-2 pr-2">
             <div class="news-block-image-contain">
                 <img :src="image" class="post-image" v-for="(image, index) in post.image.slice(0, 1)" @error="post.image.splice(index, 1)">
@@ -113,7 +157,7 @@
 
         <hr class="mb-0 mt-0">
 
-        <div class="news-contains-bottom custom-voting-block">
+        <div class="news-contains-bottom">
             <div>
                 <div class="flex-row pl-4 pr-4 align-items-center justify-content-between">
                     <div class="flex-row">
@@ -159,7 +203,6 @@
 
                 <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
                     <div class="comments-container w-100">
-
                         <div v-if="!allCommentsShown"
                              v-for="(comment, index) in post.comments.slice(0, 3)">
                             <news-comment :comment="comment"
@@ -217,8 +260,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </template>
 
@@ -238,6 +279,7 @@
         data() {
             return {
                 options: {},
+                isVoted: false,
                 has_video: false,
                 isPinned: false,
                 bottomOfWindow: 0,
@@ -255,6 +297,7 @@
                 NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
                 EDIT_POST_TEXTAREA: 'EDIT_POST',
                 imageViewerOpened: false,
+                checkedAnswers : [],
                 isErlanShown: false,
             }
         },
@@ -431,6 +474,60 @@
                     }
                 });
             },
+            check(answer, index){
+                answer.checked = !answer.checked
+            },
+            voteSenate() {
+                var count = 0
+                this.post.post_poll.answers.forEach(answer => {
+                    if(answer.checked) count++;
+                });
+                if(count !== 3){
+                    alert('Выберите 3-х кандидатов');
+                    return
+                }
+                this.axios.post('/setSenateVote', {
+                    question : this.post.post_poll.question_id,
+                    answers : this.post.post_poll.answers
+                }).then(response => {
+                    if(response.data.success){
+                        location.reload();
+                    }else{
+                        alert('Произошла ошибка попробуйте заново')
+                    }
+                })
+                .catch(error => {
+                    alert(eror)
+                });
+            },
+            vote(object) {
+                if(this.post.isVoted === 1 || this.post.isVoted === '1') {
+                    return;
+                }
+                else {
+                    object.answer_votes++;
+                    this.post.post_poll.total_votes++;
+                    this.post.isVoted = 1;
+                    this.axios.post('/vote', {
+                        postId: this.postId,
+                        isn: this.isn,
+                        answerId: object.answer_id,
+                        questionId: this.post.post_poll.question_id
+                    }).then(response => {
+                        this.fetchVote(response.data);
+                    }).catch(error => {
+                        alert(error);
+                    })
+                }
+            },
+            fetchVote(response) {
+                if(response.success === true) {
+                    this.post.isVoted = 1;
+                }
+                else {
+                    this.post.isVoted = 0;
+                }
+            }
         },
         components: {
             'd-player': VueDPlayer

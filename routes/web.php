@@ -218,6 +218,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/addComment', 'NewsController@addComment');
         Route::post('/deleteComment', 'NewsController@deleteComment');
         Route::post('/editComment', 'NewsController@editComment');
+        Route::post('/vote', 'NewsController@vote');
+
+        Route::post('/setSenateVote', 'NewsController@senateVote');
         //RATING
         Route::get('/rating', 'RatingController@index')->name('rating');
         Route::post('/getRatingList', 'RatingController@getRatingList');
