@@ -7,9 +7,9 @@
                     <span class="bold">Создайте публикацию</span>
                 </div>
                 <transition name="transition-opacity">
-                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 1950">
+                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 3950">
                         <span>Осталось символов:</span>
-                        <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
+                        <span :class="4000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{4000 - postText.length > 0 ? 4000 - postText.length : 0}}</span>
                     </div>
                 </transition>
             </div>
@@ -23,7 +23,7 @@
                         <textarea-autosize v-model="postText"
                                           class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
                                           placeholder="Что у вас нового?"
-                                          :maxlength="2000"
+                                          :maxlength="4000"
                                           :min-height="70"
                                           :max-height="350">{{this.postText}}</textarea-autosize>
                         <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
