@@ -374,4 +374,20 @@ class NewsController extends Controller
     public function getView() {
         return view('news');
     }
+
+    public function senateVote(Request $request){
+        $answers = $request->answers;
+        foreach ($answers as $answer){
+            if($answer['checked']){
+                $userAnswer = new UserAnswer();
+                $userAnswer->question_id = $request->question;
+                $userAnswer->answer_id = $answer['answer_id'];
+                $userAnswer->user_isn = auth()->user()->ISN;
+                $userAnswer->save();
+            }
+        }
+        return response()->json([
+            'success' => true
+        ]);
+    }
 }

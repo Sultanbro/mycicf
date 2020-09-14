@@ -58,11 +58,12 @@
             <div class="d-flex justify-content-center">
                 <h5>{{post.post_poll.question_title}}</h5>
             </div>
-            <div v-for="(answer, index) in post.post_poll.answers"
-                 @click="vote(answer)"
+            <div v-if="post.isVoted !== 1" v-for="(answer, index) in post.post_poll.answers"
+                 @click="check(answer, index)"
                  class="progress mb-2 progress-bar-hover d-flex"
                  :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
-                 style="height: 40px;">
+                 style="height: 40px;"
+                 :style="answer.checked ? 'background-color : #5fdbe2' : 'background-color : #e9ecef'">
                 <div class="progress-bar"
                      role="progressbar"
                      :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
@@ -78,13 +79,21 @@
 <!--                    </span>-->
 <!--                </div>-->
             </div>
+            <div v-if="post.isVoted === 1">
+                Вы уже проголосовали!
+            </div>
+
             <div>
                 <h6 class="color-dimgray">
                     <small>
                         Количество голосов: {{post.post_poll.total_votes}}
                     </small>
                 </h6>
-<!--                <span class="color-dimgray"></span>-->
+                <!--                <span class="color-dimgray"></span>-->
+            </div>
+            <div>
+                <button v-if="post.isVoted !== 1" class="btn btn-info" type="button" @click="voteSenate">Проголосовать</button>
+                <!--                <span class="color-dimgray"></span>-->
             </div>
         </div>
 
@@ -284,6 +293,7 @@
                 NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
                 EDIT_POST_TEXTAREA: 'EDIT_POST',
                 imageViewerOpened: false,
+                checkedAnswers : [],
             }
         },
 
@@ -454,7 +464,32 @@
                     }
                 });
             },
-
+            check(answer, index){
+                answer.checked = !answer.checked
+            },
+            voteSenate() {
+                var count = 0
+                this.post.post_poll.answers.forEach(answer => {
+                    if(answer.checked) count++;
+                });
+                if(count !== 3){
+                    alert('Выберите 3-х кандидатов');
+                    return
+                }
+                this.axios.post('/setSenateVote', {
+                    question : this.post.post_poll.question_id,
+                    answers : this.post.post_poll.answers
+                }).then(response => {
+                    if(response.data.success){
+                        location.reload();
+                    }else{
+                        alert('Произошла ошибка попробуйте заново')
+                    }
+                })
+                .catch(error => {
+                    alert(eror)
+                });
+            },
             vote(object) {
                 if(this.post.isVoted === 1 || this.post.isVoted === '1') {
                     return;

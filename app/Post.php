@@ -31,6 +31,7 @@ class Post extends Model
                 "answer_id" => $answer['id'],
                 "answer_title" => $answer['value'],
                 "answer_votes" => $this->getAnswerVotes($answer['id']),
+                "checked" => false
             ]);
         }
         $post_poll = [
