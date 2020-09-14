@@ -157,7 +157,7 @@
 
         <hr class="mb-0 mt-0">
 
-        <div class="news-contains-bottom custom-voting-block">
+        <div class="news-contains-bottom">
             <div>
                 <div class="flex-row pl-4 pr-4 align-items-center justify-content-between">
                     <div class="flex-row">
@@ -260,8 +260,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </template>
 
