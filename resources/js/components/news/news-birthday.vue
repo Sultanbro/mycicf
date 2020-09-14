@@ -26,6 +26,9 @@
                             :date="birthdays[index].birthday"
                             :ISN="birthdays[index].ISN"
                             :fakeImage="birthdays[index].fakeImage"
+                            :duty="birthdays[index].duty"
+                            :dept="birthdays[index].dept"
+                            :similar="birthdays[index].similar"
                         ></simple-birthday>
                     </div>
                     <hr>

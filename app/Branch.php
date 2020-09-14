@@ -42,4 +42,8 @@ class Branch extends Model
     public static function checkImageExists($ISN){
         return Storage::disk('local')->exists("public/images/employee/$ISN.png");
     }
+
+    public function getParent() {
+        return $this->hasOne('App\Branch','kias_id','kias_parent_id');
+    }
 }

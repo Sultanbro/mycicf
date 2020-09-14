@@ -31,7 +31,7 @@
                     @endif
                 </li>
             </a>
-            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()))
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721)
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('rating')}}">
                     <li class="leftsidebar-icons">
                         <i class="far fa-star"></i>
@@ -51,20 +51,33 @@
                     </li>
                 </a>
             @endif
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+
+            <!--a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-book-reader"></i>
-                    <span>Обучение</span>
+                    <span>Экспресс котировка</span>
+                </li>
+            </a-->
+{{--            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">--}}
+{{--                <li class="leftsidebar-icons">--}}
+{{--                    <i class="fas fa-book-reader"></i>--}}
+{{--                    <span>Обучение</span>--}}
+{{--                </li>--}}
+{{--            </a>--}}
+{{--            @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))--}}
+{{--                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">--}}
+{{--                    <li class="leftsidebar-icons">--}}
+{{--                        <img src="/images/centcoin-fa.png" style="width: 20px;">--}}
+{{--                        <span>Сенткоины</span>--}}
+{{--                    </li>--}}
+{{--                </a>--}}
+{{--            @endif--}}
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-car" aria-hidden="true"></i>
+                    <span>Предстраховой осмотр</span>
                 </li>
             </a>
-            @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
-                    <li class="leftsidebar-icons">
-                        <img src="/images/centcoin-fa.png" style="width: 20px;">
-                        <span>Сенткоины</span>
-                    </li>
-                </a>
-            @endif
         </ul>
     </div>
 </div>

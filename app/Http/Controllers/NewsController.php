@@ -7,13 +7,16 @@ use App\Centcoin;
 use App\CentcoinHistory;
 use App\Comment;
 use App\Events\NewPost;
+use App\Library\Services\KiasServiceInterface;
 use App\Like;
+use App\Mail\Email;
 use App\Post;
 use App\Question;
 use App\User;
 use App\UserAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,6 +49,7 @@ class NewsController extends Controller
         }
 
         try {
+            ini_set("upload_max_filesize","50M");
             $new_post = new Post();
             $new_post->user_isn = $request->isn;
             $new_post->post_text = $request->postText;

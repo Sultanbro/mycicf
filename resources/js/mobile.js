@@ -12,6 +12,8 @@ import VueGoogleCharts from 'vue-google-charts'
 
 import linkify from 'vue-linkify'
 
+import Toastr from 'vue-toastr'
+
 Vue.use(VueAxios, axios);
 
 Vue.use(VueTreeselect);
@@ -19,6 +21,10 @@ Vue.use(VueTreeselect);
 Vue.use(VueGoogleCharts);
 
 Vue.use(TextareaAutosize);
+
+window.addEventListener('load', () => {
+    Vue.use(Toastr);
+});
 
 Vue.directive('linkified', linkify);
 
@@ -47,6 +53,12 @@ Vue.component('colleagues', require('./components/mobile/colleagues/colleagues.v
 Vue.component('colleagues-info', require('./components/mobile/colleagues/colleagues-info.vue').default);
 
 Vue.component('report', require('./components/mobile/employee/report').default);
+
+Vue.component('insurance-inspection', require('./components/mobile/inspections/insurance-inspection').default);
+
+Vue.component('inspection-info', require('./components/mobile/inspections/inspection-info').default);
+
+Vue.component('upload-image', require('./components/common/upload-image').default);
 
 window.onload = function(){
     var app = new Vue({

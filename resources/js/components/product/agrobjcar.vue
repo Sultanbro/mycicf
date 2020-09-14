@@ -1,0 +1,315 @@
+<template>
+    <div class="col-12 row mt-2 mb-2 ml-0 agreement-block h-auto">
+        <h4>Укажите транспортное средство</h4>
+        <div class="row col-12">
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Гос. номер авто</label>
+                <input type="text" class="attr-input-text col-12" v-model="agrobjcar.REGNO" @keyup="calcChanged">
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">ВИН код авто </label>
+                <input type="text" class="attr-input-text col-12" v-model="agrobjcar.VIN" @keyup="calcChanged">
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Дата выпуска авто </label>
+                <input type="date" class="attr-input-text col-12 bg-white" v-model="agrobjcar.ReleaseDate" @keyup="calcChanged">
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Марка</label>
+                <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.Mark" disabled="true" @keyup="calcChanged">
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Модель</label>
+                <input type="text" class="attr-input-text col-12 bg-white" v-model="agrobjcar.Model" disabled="true" @keyup="calcChanged">
+            </div>
+
+            <!--div v-if="!chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Территория регистрации</label>
+                <input type="text"
+                       class="attr-input-text col-12 bg-white"
+                       v-model="agrobjcar.TerritoryName"
+                       disabled="true"
+                       @keyup="calcChanged">
+                <div class="text-center">
+                    <button class="btn btn-outline-info mt-2" @click="getDictiFromBase('regions');chooseRegion = true">
+                        Сменить регион
+                    </button>
+                </div>
+            </div-->
+
+            <div v-if="chooseRegion" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Регион</label>
+                <select class="attr-input-text col-12 bg-white"
+                        v-model="regionIsn"
+                        @change="calcChanged();getDictiFromBase('regions')">
+                    <option v-if="regions.length > 0"
+                            v-for="item in regions"
+                            :value="item.Value">
+                        {{ item.Label }}
+                    </option>
+                </select>
+            </div>
+            <div v-if="regionChilds.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Район</label>
+                <select class="attr-input-text col-12 bg-white"
+                        @change="calcChanged();getDictiFromBase('cities')"
+                        v-model="regionChild">
+                    <option v-if="regionChilds.length > 0" v-for="item in regionChilds" :value="item.Value">{{ item.Label }}</option>
+                </select>
+            </div>
+            <div v-if="cities.length > 0" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Город/Село</label>
+                <select class="attr-input-text col-12 bg-white"
+                        v-model="cityIsn"
+                        @change="calcChanged();">
+                    <option v-if="cities.length > 0" v-for="item in cities" :value="item.Value">{{ item.Label }}</option>
+                </select>
+            </div>
+
+
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">СРТС номер</label>
+                <input type="text" class="attr-input-text col-12" v-model="agrobjcar.SRTSNUM" @keyup="calcChanged">
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">СРТС дата</label>
+                <input type="text"
+                       class="attr-input-text col-12"
+                       v-mask="'##.##.####'"
+                       v-model="agrobjcar.SRTSDATE"
+                       @keyup="calcChanged">
+            </div>
+
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Пробег авто </label>
+                <input type="text" class="attr-input-text col-12" v-model="agrobjcar.PROBEG" @keyup="calcChanged">
+            </div>
+            <div class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 mt-3">
+                <label class="bold">Действительная стоимость</label>
+                <input type="text" class="attr-input-text col-12" v-model="agrobjcar.REALPRICE" @keyup="calcChanged">
+            </div>
+        </div>
+        <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('tNumber')">Поиск по гос. номеру</button>
+        <button class="btn btn-outline-info mt-3 mr-3" @click="chooseSearch('vin')">Поиск по ВИН</button>
+        <button v-if="notFound" class="btn btn-outline-info mt-3 mr-3" @click="showModal()">Добавить авто</button>
+
+
+        <modal :name="modalName"
+               :width="width"
+               :height="height">
+            <new-vehicle v-if="notFound"
+                         :c-index="cIndex"
+                         :aIndex="aIndex"
+                         :preloader="preloader"
+                         :calc-changed="calcChanged"
+                         :agrobject="agrobject"
+                         :agrobjects="agrobjects"
+                         :get-vehicle="getVehicle"
+                         :agrobjcar="agrobjcar">
+            </new-vehicle>
+        </modal>
+
+    </div>
+</template>
+
+<script>
+    import {mask} from 'vue-the-mask'
+    export default {
+        name: "agrobjcar",
+        data() {
+            return {
+                searchType: 'tNumber',
+                notFound: false,
+                regions: [],
+                regionChilds: [],
+                cities: [],
+                regionIsn: null,
+                regionChild: null,
+                cityIsn: null,
+                chooseRegion: true
+            }
+        },
+        directives: {mask},
+        props: {
+            agrobjcar : Object,
+            agrobject: Object,
+            agrobjects: Array,
+            cIndex: Number,
+            aIndex: Number,
+            preloader: Function,
+            calcChanged: Function
+        },
+        methods:{
+            getVehicle(searchType){
+                this.$modal.hide('create-vehicle-'+this.cIndex)
+                if(searchType == 'tNumber' && this.agrobjcar['REGNO'] == ""  || searchType == 'vin' && this.agrobjcar['VIN'] == "") {
+                    if(searchType == 'tNumber') {
+                        alert('Укажите пожалуйста гос. номер автотранспорта');
+                    } else {
+                        alert('Укажите пожалуйста ВИН код автотранспорта');
+                    }
+                } else {
+                    this.preloader(true);
+                    let vehicle = this.agrobjcar;
+                    this.axios.post('/getVehicle', this.agrobjcar)
+                        .then(response => {
+                            if (response.data.success) {
+                                //this.chooseRegion = false;
+                                this.clearVehicle();
+                                for (var prop in response.data.result) {
+                                    this.agrobjcar[prop] = response.data.result[prop];
+                                }
+                                this.preloader(false);
+                                this.notFound = false;
+                                if(this.agrobject.expressTsRelease && this.agrobject.expressTsRelease != undefined) {
+                                    this.agrobjcar.ReleaseDate = this.agrobject.expressTsRelease;
+                                }
+                            } else {
+                                this.clearVehicle();
+                                let error = response.data.error;
+                                if (response.data.error === 'not_found') {
+                                    error = 'Транспортное средство не найдено, добавьте пожалуйста транспортное средство';
+                                    this.notFound = true;
+                                }
+                                alert(error);
+                                this.preloader(false);
+                            }
+                        })
+                        .catch(error => {
+                            alert(error);
+                            this.preloader(false);
+                        });
+                }
+            },
+            getDictiFromBase:async function(dicti,bigCity){
+                let parent = null;
+                switch(dicti){
+                    case 'regions':
+                        parent = this.regionIsn == null ? 0 : this.regionIsn;
+                        this.regionChilds = [];
+                        this.cities = [];
+                        this.agrobjcar.TerritoryISN = '';
+                        this.regionChild = null;
+                        this.cityIsn = '';
+                        break;
+                    case 'cities':
+                        parent = this.regionChild != null ? this.regionChild : this.regionIsn;
+                        break;
+                }
+                this.preloader(true);
+                this.axios.post('/getDictiListFromBase', {
+                    parent: parent,
+                    dictiType: dicti
+                })
+                    .then(response => {
+                        this.fetchDictiFromBase(response,dicti,bigCity);
+                    })
+                    .catch(error => {
+                        alert(error);
+                        this.preloader(false);
+                    });
+            },
+            fetchDictiFromBase(response,dicti,bigCity){
+                if (response.data.success) {
+                    switch (dicti) {
+                        case 'regions':
+                            if(this.regionIsn == null) {
+                                this.regions = response.data.result;
+                                this.preloader(false);
+                            } else {
+                                if(response.data.result.length > 0) {
+                                    this.regionChilds = response.data.result;
+                                    //this.agrobjcar.TerritoryISN = this.regionChilds.length == 0 ? this.regionIsn : "";
+                                    this.preloader(false);
+                                } else {
+                                    this.getDictiFromBase('cities',1);  // 1 это если районы не найдены, то смотрим в cities
+                                }
+                            }
+                            break;
+                        case 'cities':
+                            if(bigCity == 1){
+                                if(response.data.result.length == 1) {
+                                    this.cityIsn = response.data.result[0].Value;
+                                } else {
+                                    if(response.data.result.length > 1) {
+                                        this.cities = response.data.result;
+                                    } else {
+                                        this.cityIsn = this.regionIsn;
+                                    }
+                                }
+                                this.preloader(false);
+                            } else {
+                                this.cities = response.data.result;
+                                this.cityIsn = "";
+                                this.preloader(false);
+                            }
+                            break;
+                    }
+                } else {
+                    switch (dicti) {
+                        case 'regions':
+                            alert('К сожалению, данные по регионам не найдены в базе данных');
+                            this.preloader(false);
+                            break;
+                        case 'cities':
+                            alert('К сожалению, данные по городам/селам не найдены в базе данных');
+                            this.preloader(false);
+                            break;
+                    }
+                }
+            },
+            chooseSearch(searchType){
+                if(searchType == 'tNumber'){
+                    this.agrobjcar.VIN = "";
+                } else {
+                    this.agrobjcar.REGNO = "";
+                }
+                this.getVehicle(searchType);
+            },
+            showModal(){
+                this.$modal.show('create-vehicle-'+this.cIndex)
+            },
+            clearVehicle(){
+                for(var index in this.agrobjcar){
+                    if(index != 'REGNO' && index != 'VIN' && index != 'ClassISN') {
+                        this.agrobjcar[index] = "";
+                    }
+                }
+            }
+        },
+        computed:{
+            modalName(){
+                return 'create-vehicle-'+this.cIndex;
+            },
+        },
+        watch: {
+            'agrobject.SubClassISN': function(val,oldVal){
+                this.agrobjcar.ClassISN = val;
+            },
+            'agrobjcar.MarkaISN': function(val,oldVal){
+                if(val == null){
+                    this.agrobjcar.Mark = null;
+                    this.agrobjcar.Model = null;
+                    this.agrobjcar.ReleaseDate = null;
+                    this.agrobjcar.ReleaseDate = null;
+                    this.agrobjcar.TerritoryName = null;
+                }
+            },
+            'cityIsn': function(val,oldVal) {
+                this.agrobjcar.TerritoryISN = val == undefined ? '' : val;
+            }
+        },
+        created(){
+            this.width = window.innerWidth;
+            this.height = 500;  //window.innerHeight;
+            this.getDictiFromBase('regions');
+        },
+    }
+</script>
+
+<style scoped>
+    input[type=date]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        display: none;
+    }
+</style>
