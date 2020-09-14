@@ -91,6 +91,8 @@ class SiteController extends Controller
         return array(
             3921599 => 3921599,
             3600338 => 3600338,
+            3130949 => 3130949,
+            1445721 => 1445721
         );
     }
 

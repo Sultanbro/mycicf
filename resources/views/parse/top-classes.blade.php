@@ -61,20 +61,22 @@ use App\Http\Controllers\ParseController;
     <div class="bg-white pl-3 pr-3 box-shadow border-16">
         <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
             <div class="flex-row jc-sb">
-                <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
-                    <i class="fa fa-chart-pie"></i>
-                    <div class="mt-1 fs-0_8">
-                        Сборы
+                <a href="/parse/company">
+                    <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-chart-pie"></i>
+                        <div class="mt-1 fs-0_8">
+                            Сборы
+                        </div>
                     </div>
-                </div>
-                <a href="/parse/finance">
+                </a>
+                <!--a href="/parse/finance">
                     <div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-sliders-h settings-icon-transform270"></i>
                         <div class="mt-1 fs-0_8">
                             Показатели
                         </div>
                     </div>
-                </a>
+                </a-->
                 {{--<div class="button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">--}}
                     {{--<i class="fa fa-user-friends"></i>--}}
                     {{--<div class="mt-1 fs-0_8">--}}
@@ -238,7 +240,7 @@ use App\Http\Controllers\ParseController;
                             <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_first'], array_sum($premium_first))}}</td>
                             <td>{{$controller->getPercentOfMarker($class_sum[$id]['premium_second'], array_sum($premium_second))}}</td>
                             <td>{{$controller->getChangedVal($class_sum[$id]['premium_first'], $class_sum[$id]['premium_second'])}}%</td>
-                            <td>{{number_format($class_sum[$id]['premium_second'] - $class_sum[$id]['premium_first'], 0, '.', ' ') }}</td>
+                            <td>{{number_format($class_sum[$id]['premium_first'] - $class_sum[$id]['premium_second'], 0, '.', ' ') }}</td>
                             <td></td>
                             <td>{{number_format($class_sum[$id]['payout_first'], 0, '.', ' ')}}</td>
                             <td>{{number_format($class_sum[$id]['payout_second'], 0, '.', ' ')}}</td>
@@ -268,8 +270,8 @@ use App\Http\Controllers\ParseController;
                     @endforeach
                     <tr>
                         <td class="bold text-left fs-0_9">Итого</td>
-                        <td>{{number_format(array_sum($premium_first), 0, '.', ' ')}}</td>
-                        <td>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</td>
+                        <td>{{number_format($controller->getSumByCompany($premium_first), 0, '.', ' ')}}</td>
+                        <td>{{number_format($controller->getSumByCompany($premium_second), 0, '.', ' ')}}</td>  <!--array_sum-->
                         <td></td>
                         <td></td>
                         <td>{{$controller->getChangedVal(array_sum($premium_first), array_sum($premium_second))}}</td>

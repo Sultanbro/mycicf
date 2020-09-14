@@ -122,6 +122,7 @@ class User extends Authenticatable
             'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
+            'Avarcom' => (string)$response->Avarcom,
         ];
         return $users_data;
     }
@@ -150,6 +151,10 @@ class User extends Authenticatable
         return (new Permissions())->checkUser([Permissions::ROLE_READING_CLUB]);
     }
 
+    public static function isProductsAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_PRODUCTS]);
+    }
+
     public static function getMotivationDepartments(){
         return [
             "1445780", "1445781", "1445783", "1445783", "4100260",
@@ -161,7 +166,7 @@ class User extends Authenticatable
             "3436143", "1445823", "1445797", "1445798", "1445799",
             "1445789", "1445790", "1445791", "1445792", "1445793",
             "1445824", "1445826", "3492324", "3492327", "4380822",
-            "3994433", "3994439", "3436136",
+            "3994433", "3994439", "3436136", "3994444",
 
 
             "1445780", "1445781", "1445783", "1445783", "4100260",
@@ -173,7 +178,7 @@ class User extends Authenticatable
             "1445801", "1445802", "1445805", "1497575", "3367227",
             "3436143", "1445789", "1445790", "1445791", "1445792",
             "1445793", "1445824", "1445826", "3492324", "3492327",
-            "4380822", "3994433", "3994439", "3436136"
+            "4380822", "3994433", "3994439", "3436136", "3994444"
 
         ];
     }

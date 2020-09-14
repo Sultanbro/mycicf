@@ -7,6 +7,11 @@ use App\Library\Services\KiasServiceInterface;
 use App\Notification;
 use App\Providers\KiasServiceProvider;
 use Illuminate\Http\Request;
+use App\Comment;
+use App\Events\NewPost;
+use App\Like;
+use App\Post;
+use Illuminate\Support\Facades\Auth;
 
 class CoordinationController extends Controller
 {
@@ -376,7 +381,7 @@ class CoordinationController extends Controller
         $doc_no = $request->doc_no;
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
-        $url = 'https://bots.n9.kz/notification';
+        $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
         (new NotificationController())->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
@@ -403,6 +408,52 @@ class CoordinationController extends Controller
         return true;
     }
 
+    public function closeDecade(Request $request){
+        $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
+        $contentT .= $request->postText;
+        $isn = 1445725; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
+        $username = 'Даурен Рамазанов';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
+
+        //try {
+            $new_post = new Post();
+            $new_post->user_isn = $isn;  //Даурен Рамазанов
+            $new_post->post_text = $contentT;
+            $new_post->pinned = 0;
+            $new_post->save();
+//        }catch(\Exception $e) {
+//            return false;
+//        }
+
+        $response = [
+            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited' => false,
+            'fullname' => $username,
+            'isLiked' => 0,
+            'isn' => $new_post->user_isn,
+            'userISN' => $new_post->user_isn,
+            'likes' => 0,
+            'pinned' => 0,
+            'postText' => $new_post->getText(),
+            'postId' => $new_post->id,
+            'image' => $new_post->getImage(),
+            'documents' => $new_post->getDocuments(),
+            'youtube' => $new_post->getVideo(),
+            'videos' => $new_post->getVideoUrl(),
+            'comments' => [],
+        ];
+
+        //try {
+            broadcast(new NewPost([
+                'post' => $response,
+                'type' => Post::NEW_POST
+            ]));
+//        }catch(\Exception $e) {
+//            return false;
+//        }
+
+        return 'пост успешно добавлен';
+    }
+
     public function checkNotificationSended($isn, $no, $type){
         $data = Notification::where('user_isn', $isn)
             ->where('doc_no', $no)
@@ -410,5 +461,37 @@ class CoordinationController extends Controller
             ->where('sendDate', date('d.m.Y', time()))
             ->get();
         return sizeof($data) > 0;
+    }
+
+    public function serviceCenterNotify(Request $request) {
+        $data = $request->all();
+
+        $users_isn = explode(',', $data['isn']);
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://botan.kupipolis.kz/serviceCenterNotify';
+
+        foreach ($users_isn as $isn) {
+            $res = $client->request('POST', $url, [
+                'form_params' => [
+                    'ISN'           => $isn,
+                    'serviceCenter' => $data['serviceCenter'],
+                    'customer'      => $data['customer'],
+                    'customerDept'  => $data['customerDept'],
+                    'requestNo'     => $data['requestNo'],
+                    'status'        => $data['status'],
+                    'subject'       => $data['subject'],
+                    'type'          => $data['type']
+                ],
+                'verify' => false
+            ]);
+            if($res->getStatusCode() !== 200){
+                return response()->json([
+                    'success' => false
+                ]);
+            }
+        }
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }
