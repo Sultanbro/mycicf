@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="row mb-4">
+        <div class="row mb-4 mt-4">
             <div class="col">
-                <a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#basicModal">Забронировать</a>
+                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#basicModal">Забронировать</a>
             </div>
         </div>
         <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
