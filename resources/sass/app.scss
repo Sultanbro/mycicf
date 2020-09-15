@@ -317,3 +317,10 @@ ul{padding:0; margin:0}
 .childs-not-bold h4.bold, .childs-not-bold label.bold {
   font-weight: 600;
 }
+.day-indicator {
+  &.is-before {
+  }
+  &.today {
+    background-color: #b2f4f4;
+  }
+}
