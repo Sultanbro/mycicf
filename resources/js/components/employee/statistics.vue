@@ -15,6 +15,9 @@
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
                     </div>
                     <div class="ml-4 mr-4">
+                        <treeselect class="w-95" v-model="ISN" :multiple="false" :options="products"></treeselect>
+                    </div>
+                    <div class="ml-4 mr-4">
                         <div class="date-color border-gray show-btn" @click="getReport">
                             <div class="d-flex pt-1 pb-1 pl-4 pr-4">
                                 <div>
@@ -56,69 +59,63 @@
             </div>
         </div>
         <div class="width100" v-show="show">
-            <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
-                <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
-                    <div class="width100 pl-0 pr-0 main-data-chart-contains">
-                        <div class="flex-row pl-0 pr-0 vertical-middle main-data-border min-width-50">
-                            <div>
-                                <div class="width100 flex-row">
-                                    <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
-                                        <GChart
-                                                class="data-chart-pie"
-                                                type="PieChart"
-                                                :data="chartData"
-                                                :options="chartOptions"
-                                        />
-                                    </div>
+        <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
+            <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
+                <div class="width100 pl-0 pr-0 main-data-chart-contains">
+                    <div class="flex-row pl-0 pr-0 vertical-middle main-data-border min-width-50">
+                        <div>
+                            <div class="width100 flex-row">
+                                <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
+                                    <GChart
+                                        type="PieChart"
+                                        :data="chartData"
+                                        :options="ChartOptions"
+                                    />
                                 </div>
                             </div>
-                            <div class="flex-column chart-mainData-attributes-contain width100">
-                                <strong class="chart-mainData-attributes"><span>Сборы: </span><span>{{numberWithSpaces(Amount)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>Выплаты: </span><span>{{numberWithSpaces(Payout)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>АВ: </span><span>{{numberWithSpaces(AV)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{numberWithSpaces(Income)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>План: </span><span>{{numberWithSpaces(Plan)}}</span></strong>
-                            </div>
                         </div>
-                        <div class="col-12 pl-0 pr-0 min-width-50">
-                            <div>
-                                <div class="width100 flex-row">
-                                    <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px">
-                                        <GChart
-                                                type="BarChart"
-                                                :data="secondChartData"
-                                                :options="secondChartOptions"
-                                        />
-                                    </div>
+                    </div>
+                    <div class="col-12 pl-0 pr-0 min-width-50">
+                        <div>
+                            <div class="width100 flex-row">
+                                <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px">
+                                    <GChart
+                                        type="BarChart"
+                                        :data="secondChartData"
+                                        :options="secondChartOptions"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
-                <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
-                    <div class="width100 col-md-12 pl-0 pr-0 main-data-chart-contains main-data-chart-contains-size">
+        </div>
+        <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
+            <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
+                <div class="width100 col-md-12 pl-0 pr-0 main-data-chart-contains main-data-chart-contains-size">
+                    <div class="flex-row pl-0 pr-0 vertical-middle main-data-border min-width-50">
                         <div class="main-data-chart-contains-size min-width-50 flex-row pl-0 pr-0 vertical-middle">
                             <div class="width100 flex-row">
                                 <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
                                     <GChart
-                                            type="PieChart"
-                                            :data="thirdChartData"
-                                            :options="thirdChartOptions"
+                                        type="PieChart"
+                                        :data="thirdChartData"
+                                        :options="thirdChartOptions"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 pl-0 pr-0 min-width-50 main-data-border-left">
+                    </div>
+                    <div class="col-12 pl-0 pr-0 min-width-50">
+                        <div>
                             <div class="width100 flex-row">
-                                <div class="col-12 pl-0 pr-0 flex-row width100 main-data-first-chart-contain" ref="divElement" style="height : 200px">
+                                <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px">
                                     <GChart
-                                            class="width100"
-                                            type="LineChart"
-                                            :data="fourthChartData"
-                                            :options="fourthChartOptions"
-                                />
+                                        type="BarChart"
+                                        :data="fourthChartData"
+                                        :options="fourthChartOptions"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -127,14 +124,16 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
     export default {
-        name: "report",
+        name: "statistics",
         data () {
             return {
                 options: null,
+                products: null,
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 10),
                 dateEnd: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toJSON().slice(0, 10),
                 Amount : 0,
@@ -148,7 +147,7 @@
                         title: 'Company Performance',
                         subtitle: 'Sales, Expenses, and Profit: 2014-2017',
                     },
-                    title: 'Основные данные',
+                    title: 'По продуктно',
                     legend: {
                         position: 'bottom',
                         alignment: 'center',
@@ -160,11 +159,11 @@
                     fontSize : 14,
                     pieSliceText: 'none',
                     // reverseCategories: 'true',
-                    pieHole: 0.8,
-                    width: 290,
+                    pieHole: 0.5,
+                    width: 450,
                     height : 200,
                     // width : ,
-                    colors: ['#65aef2','transparent','#ffda83','#a3a0fb'],
+                    colors: ['#55d8fe','#ff8373', '#ffda83', '#a3a0fb'],
                 },
                 secondChartData: [],
                 secondChartOptions: {
@@ -194,7 +193,7 @@
                         title: 'Company Performance',
                         subtitle: 'Sales, Expenses, and Profit: 2014-2017',
                     },
-                    title: 'Портфель',
+                    title: '% от общего рассмотрения в ЦО ДА',
                     legend: {
                         position: 'right',
                         alignment: 'center',
@@ -214,16 +213,26 @@
                 },
                 fourthChartData:[],
                 fourthChartOptions: {
-                    colors: ['#a3a1fb','#54d8ff', 'red'],
-                    title: 'Динамика',
-                    fontSize: 12,
-                    curveType: 'function',
-                    legend: {
-                        position: 'bottom',
-                        textStyle: {
-                            fontSize: 14,
-                        },
-                    }
+                    chart: {
+                        title: 'Company Performance',
+                        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                    },
+                    colors: ['#0079ea','#3293ee','#7cb8f1'],
+                    chartArea:{left:100, right: 0},
+                    width: 400,
+                    padding: 123,
+                    axisTitlesPosition: 'out',
+                    // vAxis: {
+                    //     // title: 'Hello',
+                    //     titleTextStyle: {
+                    //         color: '#FF0000'
+                    //     }
+                    //         },
+                    strokeWidth: 5,
+                    title: 'Детализация по рассмотренным заявкам',
+                    height : 200,
+                    fontSize: 14,
+                    legend: { position: "none" },
                 },
                 show: false,
                 ISN: null
@@ -234,10 +243,12 @@
         },
         mounted() {
             this.ISN = this.isn;
-            //this.getReport()
+            this.getReport()
             if(this.checkUrl()){
                 this.getOptions();
             }
+
+
         },
         methods : {
             getReport() {
@@ -264,11 +275,7 @@
                     this.Plan = response.info.FeesPlan;
                     this.setMainData(response.info.FeesPlan, this.Amount);
                     this.setIndicators(response.info.ProlProc, response.info.CrossProc, response.info.Treaties);
-                    if(Object.keys(response.info.PRODUCTS).length == 0){
-                        alert('Нет данных по отчету');
-                    } else {
-                        this.setPortfelData(response.info.PRODUCTS);
-                    }
+                    this.setPortfelData(response.info.PRODUCTS);
                     this.setDynamicData(response.info.DINAMIC);
                     this.show = true;
                     this.preloader(false);
@@ -369,8 +376,19 @@
                 var parts = x.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                 return parts.join(".");
+            },
+
+            getProducts() {
+                this.preloader(true);
+                this.axios.post('/getProdData', {}).then((response) => {
+                    // this.products = response.data.result;
+                }).catch(error => {
+                    alert(error)
+                }).finally(() => {
+                    this.preloader(false);
+                });
             }
-        }
+        },
 
     }
 </script>

@@ -60,6 +60,8 @@ Vue.component('inspection-info', require('./components/mobile/inspections/inspec
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
 
+Vue.component('statistics', require('./components/mobile/employee/statistics').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
