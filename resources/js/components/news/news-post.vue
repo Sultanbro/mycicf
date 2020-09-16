@@ -46,7 +46,7 @@
                 </button>
             </div>
         </div>
-       <!-- Header of the news post section -->
+        <!-- Header of the news post section -->
 
         <div class="pl-2 pr-2" v-if="has_video">
             <div class="news-block-image-contain">
@@ -58,12 +58,11 @@
             <div class="d-flex justify-content-center">
                 <h5>{{post.post_poll.question_title}}</h5>
             </div>
-            <div v-if="post.isVoted !== 1" v-for="(answer, index) in post.post_poll.answers"
-                 @click="check(answer, index)"
+            <div v-for="(answer, index) in post.post_poll.answers"
+                 @click="vote(answer)"
                  class="progress mb-2 progress-bar-hover d-flex"
                  :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
-                 style="height: 40px;"
-                 :style="answer.checked ? 'background-color : #5fdbe2' : 'background-color : #e9ecef'">
+                 style="height: 40px;">
                 <div class="progress-bar"
                      role="progressbar"
                      :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
@@ -73,26 +72,18 @@
                         <span class="fs-1 color-black">{{post.isVoted === 1 ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
                     </div>
                 </div>
-<!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
-<!--                    <span class="p-2 color-black">-->
-<!--                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}-->
-<!--                    </span>-->
-<!--                </div>-->
+                <!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
+                <!--                    <span class="p-2 color-black">-->
+                <!--                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}-->
+                <!--                    </span>-->
+                <!--                </div>-->
             </div>
-            <div v-if="post.isVoted === 1">
-                Вы уже проголосовали!
-            </div>
-
             <div>
                 <h6 class="color-dimgray">
                     <small>
                         Количество голосов: {{post.post_poll.total_votes}}
                     </small>
                 </h6>
-                <!--                <span class="color-dimgray"></span>-->
-            </div>
-            <div>
-                <button v-if="post.isVoted !== 1" class="btn btn-info" type="button" @click="voteSenate">Проголосовать</button>
                 <!--                <span class="color-dimgray"></span>-->
             </div>
         </div>
@@ -103,9 +94,9 @@
                 <div class="d-flex justify-content-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
                 <div class="d-flex justify-content-center" v-if="post.image.length > 1">
                     <button type="button" class="color-blue show-all-btn small"
-                       @click="openImageViewer"
-                       data-toggle="modal"
-                       data-target=".bd-example-modal-lg">Показать ещё {{post.image.length - 1}} изображений</button>
+                            @click="openImageViewer"
+                            data-toggle="modal"
+                            data-target=".bd-example-modal-lg">Показать ещё {{post.image.length - 1}} изображений</button>
                     <image-viewer :array="post.image"></image-viewer>
                 </div>
             </div>
@@ -116,11 +107,11 @@
                 <div class="post-text"
                      v-if="!editMode">
                     <pre v-if="!isAllTextOpened"
-                        v-html="post.postText !== null ? post.postText.substr(0, 300) : ''"
-                        v-linkified></pre>
+                         v-html="post.postText !== null ? post.postText.substr(0, 300) : ''"
+                         v-linkified></pre>
                     <pre v-if="isAllTextOpened"
-                        v-html="post.postText"
-                        v-linkified></pre>
+                         v-html="post.postText"
+                         v-linkified></pre>
                     <div v-if="post.postText !== null && post.postText.length > 300 && !isAllTextOpened && !editMode">
                         <small class="color-blue show-all-btn"
                                @click="showAllText">Показать больше...</small>
@@ -192,10 +183,6 @@
                                         class="common-btn pt-1 pb-1 pl-3 pr-3">Отмена</button>
                             </div>
                         </transition>
-                    </div>
-
-                    <div class="custom-image-voting" v-if="post.isn === 3600338 && isErlanShown">
-                        <img src="/images/Erlan.GIF" alt="" style="width: 30%;">
                     </div>
                 </div>
 
@@ -297,8 +284,6 @@
                 NEW_COMMENT_TEXTAREA: 'NEW_COMMENT',
                 EDIT_POST_TEXTAREA: 'EDIT_POST',
                 imageViewerOpened: false,
-                checkedAnswers : [],
-                isErlanShown: false,
             }
         },
 
@@ -390,17 +375,12 @@
                     this.post.isLiked = 1;
                     this.post.likes++;
                 }
-                if(this.post.isn === 3600338 && this.post.isLiked === 1){
-                    this.isErlanShown = true;
-                    setTimeout(() => {this.isErlanShown = false;}, 4700);
-                }
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
                 });
             },
-
 
             fetchLiked(response) {
                 if(response.success === true) {
@@ -442,8 +422,8 @@
             },
 
             exitEdit() {
-              this.editMode = !this.editMode;
-              this.post.postText = this.oldText;
+                this.editMode = !this.editMode;
+                this.post.postText = this.oldText;
             },
 
             addComment() {
@@ -474,32 +454,7 @@
                     }
                 });
             },
-            check(answer, index){
-                answer.checked = !answer.checked
-            },
-            voteSenate() {
-                var count = 0
-                this.post.post_poll.answers.forEach(answer => {
-                    if(answer.checked) count++;
-                });
-                if(count !== 3){
-                    alert('Выберите 3-х кандидатов');
-                    return
-                }
-                this.axios.post('/setSenateVote', {
-                    question : this.post.post_poll.question_id,
-                    answers : this.post.post_poll.answers
-                }).then(response => {
-                    if(response.data.success){
-                        location.reload();
-                    }else{
-                        alert('Произошла ошибка попробуйте заново')
-                    }
-                })
-                .catch(error => {
-                    alert(eror)
-                });
-            },
+
             vote(object) {
                 if(this.post.isVoted === 1 || this.post.isVoted === '1') {
                     return;
@@ -720,14 +675,5 @@
         width: 25px;
         border: 2px solid #D9D9D9;
         border-radius: 5px;
-    }
-
-    .custom-voting-block {
-        position: relative;
-    }
-
-    .custom-image-voting {
-        position: absolute;
-        right: -180px;
     }
 </style>
