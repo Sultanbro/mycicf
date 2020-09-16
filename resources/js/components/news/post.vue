@@ -7,9 +7,9 @@
                     <span class="bold">Создайте публикацию</span>
                 </div>
                 <transition name="transition-opacity">
-                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 3950">
+                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 1950">
                         <span>Осталось символов:</span>
-                        <span :class="4000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{4000 - postText.length > 0 ? 4000 - postText.length : 0}}</span>
+                        <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
                     </div>
                 </transition>
             </div>
@@ -21,11 +21,11 @@
                         <img :src="imageUrl" @error="fakeImage = true" class="image-circle-add-post" v-else>                    </div>
                     <div class="w-100 h-100 wrapper">
                         <textarea-autosize v-model="postText"
-                                          class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
-                                          placeholder="Что у вас нового?"
-                                          :maxlength="4000"
-                                          :min-height="70"
-                                          :max-height="350">{{this.postText}}</textarea-autosize>
+                                           class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
+                                           placeholder="Что у вас нового?"
+                                           :maxlength="2000"
+                                           :min-height="70"
+                                           :max-height="350">{{this.postText}}</textarea-autosize>
                         <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
                     </div>
                 </div>
@@ -105,9 +105,9 @@
                         <input type="file" id="video-upload" @change="videoUpload" accept="video/*">
                     </div>
                     <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
-                        <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
-                        <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
-                        <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
+                    <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
+                    <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
+                    <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
                     <!--</div>-->
                     <div class="icons-bg mr-2 pt-1 pr-2 pl-2 pb-1 pl-2">
                         <i class="fas fa-file-upload color-black file-icons"></i>
@@ -261,9 +261,9 @@
         mounted: function() {
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
             Echo.private(`post`)
-            .listen("NewPost", (e) => {
-                this.handleIncoming(e);
-            });
+                .listen("NewPost", (e) => {
+                    this.handleIncoming(e);
+                });
             this.getPosts();
             this.getModerators();
         },
@@ -564,7 +564,7 @@
                 //     this.answersCount++;
                 //     this.poll = true;
                 // }
-                 this.poll = !this.poll;
+                this.poll = !this.poll;
             },
 
             addAnswer() {
