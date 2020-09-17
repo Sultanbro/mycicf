@@ -3,11 +3,11 @@
         <div class="row">
             <div class="col-md-12">
                 <select name="" id="" v-model="office" @change="officeChange">
-                    <option value="conf">Конференц зал (6-этаж)</option>
-                    <option value="reception">Конференц зал Приемная (2-этаж)</option>
+                    <option value="reception">Конференц-зал Приемная (2-этаж)</option>
+                    <option value="conf">Конференц-зал (6-этаж)</option>
                     <option value="drr">Комната переговоров 2-этаж (западное крыло ДРР)</option>
                     <option value="dsv">Комната переговоров 1-этаж (западное крыло ДСВ)</option>
-                    <option value="dps">Комната переговоров 1этаж -(восточное крыло ДПС)</option>
+                    <option value="dps">Комната переговоров 1-этаж (восточное крыло ДПС)</option>
                 </select>
             </div>
         </div>
@@ -45,7 +45,7 @@
         },
         data() {
             return {
-                office: 'conf',
+                office: 'reception',
                 conf: [[]],
                 reception: [[]],
                 drr: [[]],
