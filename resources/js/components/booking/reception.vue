@@ -61,7 +61,7 @@
             >{{ event_information.start_time | formatToHours }} -
                 {{ event_information.end_time | formatToHours }}</span
             >
-            <button v-if="!loading && (isn===event_information.data.author || event_information.data.author ==='246533')"
+            <button v-if="!loading && (isn===event_information.data.author || isn===3130949)"
                     :disabled="loading" @click="removeEvent(event_information)" class="remove">
                 <svg
                         xmlns="http://www.w3.org/2000/svg"
