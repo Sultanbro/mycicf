@@ -45,7 +45,7 @@
         },
         data() {
             return {
-                office: 'conf',
+                office: 'reception',
                 conf: [[]],
                 reception: [[]],
                 drr: [[]],
