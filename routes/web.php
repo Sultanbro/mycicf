@@ -207,6 +207,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         });
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
+        Route::get('/booking', 'BookingController@index')->name('booking');
+        Route::post('/booking/set', 'BookingController@set');
+        Route::post('/booking/remove', 'BookingController@delete');
         Route::post('/addPost', 'NewsController@addPost');
         Route::post('/news-birthday', 'NewsController@birthday');
         Route::post('/getPosts', 'NewsController@getPosts');
@@ -218,6 +221,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/addComment', 'NewsController@addComment');
         Route::post('/deleteComment', 'NewsController@deleteComment');
         Route::post('/editComment', 'NewsController@editComment');
+        Route::post('/vote', 'NewsController@vote');
+
+        Route::post('/setSenateVote', 'NewsController@senateVote');
         //RATING
         Route::get('/rating', 'RatingController@index')->name('rating');
         Route::post('/getRatingList', 'RatingController@getRatingList');
@@ -320,6 +326,7 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::post('/serviceCenter/notify', 'CoordinationController@serviceCenterNotify');
 Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');

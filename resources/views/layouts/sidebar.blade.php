@@ -64,18 +64,24 @@
 {{--                    <span>Обучение</span>--}}
 {{--                </li>--}}
 {{--            </a>--}}
-            @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
-                    <li class="leftsidebar-icons">
-                        <img src="/images/centcoin-fa.png" style="width: 20px;">
-                        <span>Сенткоины</span>
-                    </li>
-                </a>
-            @endif
+{{--            @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))--}}
+{{--                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">--}}
+{{--                    <li class="leftsidebar-icons">--}}
+{{--                        <img src="/images/centcoin-fa.png" style="width: 20px;">--}}
+{{--                        <span>Сенткоины</span>--}}
+{{--                    </li>--}}
+{{--                </a>--}}
+{{--            @endif--}}
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
                 <li class="leftsidebar-icons">
                     <i class="fa fa-car" aria-hidden="true"></i>
                     <span>Предстраховой осмотр</span>
+                </li>
+            </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('booking')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <span>Бронирование конференц-зала</span>
                 </li>
             </a>
         </ul>
