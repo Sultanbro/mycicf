@@ -266,8 +266,8 @@
                 this.loading = true;
                 let title = this.title;
                 let description = this.description;
-                let from = `${this.day}T${this.fromTime}:00.000Z`;
-                let to = `${this.day}T${this.toTime}:00.000Z`;
+                let from = `${this.day}T${this.fromTime}:00+06:00`;
+                let to = `${this.day}T${this.toTime}:00+06:00`;
                 let payload = {
                     data: {
                         title,
