@@ -2,7 +2,7 @@
     <div class="nav mt-2 d-flex justify-content-center bg-WHITE">
         <div class="nav-container flex-row width100">
             <div class="row width110">
-                <div class="blue-bg-all width100">
+                <div class="blue-bg-all width100 alert">
                     <div class="flex-row width100 jc-center">
                         <div @click="getLevelOne(item.id, item.url)"
                              v-for="item in itemsLevelZero"
@@ -13,14 +13,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="nav-dropdown initial" v-if="isOpened">
-                    <div class="nav-dropdown__container mr-4 mt-5">
-                        <button type='button'
-                                class="close-btn"
-                                @click="showDropdown"><i class="fas fa-times"></i></button>
-                        <div class="dropdown-content mb-4 flex-row" >
+                <div class=" nav-dropdown initial  alert alert-p width100   "  v-if="isOpened">
+                    <div class="dropdown-content__list flex-con " >
+                        <!--<img src="/images/surface1.png" class="img-size"/><a href="#exampleModal"></a>-->
+
+                        <div v-for="innerItem in itemsLevelOne"
+                             @click="getLevelTwo(innerItem.id, innerItem.url)"
+                             class="flex-row pl-4 pt-3 pb-3 dropbtn-inner flex-start"
+                             :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
+                            <img :src="innerItem.icon_url"
+                                 class="items-icons mr-2">
+                            <span class="d-flex">{{innerItem.label}}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="dropdown-content mb-4 flex-row width-100-imp">
+                    <div class=" nav-drop initial margin-t-5 alert alert-p  margin-r-2  " v-if="isOpened">
+                        <div class="container ">
                             <!--Column 1-->
-                            <div class="dropdown-content__list">
+                            <div class="dropdown-content__list" style="margin-right: 50px">
                                 <div v-for="innerItem in itemsLevelOne"
                                      @click="getLevelTwo(innerItem.id, innerItem.url)"
                                      class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
@@ -28,21 +41,61 @@
                                     <img :src="innerItem.icon_url"
                                          class="items-icons mr-2">
                                     <span class="d-flex">{{innerItem.label}}</span>
+                                    <div>
+                                        <nav class="cl-effect-15  ">
+                                            <img class="attention-size " src="/images/Attention.png"/><a href="#exampleModal"></a>
+
+                                        </nav>
+                                    </div>
+
                                 </div>
-                            </div>
-                            <!--Column 2-->
-                            <div class="dropdown-content__inner pr-4 pl-4 pb-4 w-100 flex-column" >
-                                <div class="m-2"
-                                     v-if="levelOneOpened"
-                                     v-for="innerItem in itemsLevelTwo">
-                                    <img :src="innerItem.icon_url"
-                                         class="items-icons">
-                                    <span class="mr-2"><a :href="'/productsinfo/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
-                                </div>
+
+
+
+
                             </div>
                         </div>
                     </div>
+                    <div class=" nav-drop initial margin-t-5 alert alert-p width-80" v-if="isOpened" id="exampleModal">
+                        <div class="container ">
+                            <button type='button'
+                                    class="close-btn"
+                                    @click="showDropdown"><i class="fas fa-times"></i></button>
+                            <!--Column 2-->
+                                <div class=" pr-4 pl-4 pb-4  flex-column" >
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                                <div role="separator" class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Separated link</a>
+                                            </div>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <img class="attention-size " src="/images/search.png"/>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="m-2"
+                                         v-if="levelOneOpened"
+                                         v-for="innerItem in itemsLevelTwo">
+                                        <img :src="innerItem.icon_url"
+                                             class="items-icons">
+                                        <span class="mr-2"><a :href="'/productsinfo/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
+                                    </div>
+
+                                </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -342,9 +395,18 @@
     }
 
     .nav-dropdown {
+         position: absolute;
+         left: 0;
+         width: 100%;
+         top: 50px;
+         box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.2);
+         /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/
+         z-index: 200;
+     }
+    .nav-drop{
         position: absolute;
         left: 0;
-        width: 100%;
+        width: 35%;
         top: 50px;
         box-shadow: 0px 8px 16px -3px rgba(0,0,0,0.2);
         /*box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);*/

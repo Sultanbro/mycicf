@@ -733,6 +733,58 @@ ul{
     background: #275cc7 !important;
     color: #b7bac5;
 }
+.alert {
+	position: relative;
+	padding: .75rem 1.25rem;
+	margin-bottom: 1rem;
+	border: 1px solid transparent;
+	border-radius: .50rem;
+}
+.alert-p {
+	color: #004085;
+	background-color: #f8f9fa;
+	border-color: #f8f9fa;
+}
+.flex-con {
+	/*генерирует flex-контейнер уровня строки*/
+	display: -webkit-inline-flex;
+	display: inline-flex;
+}
+
+.margin-t-5{
+	margin-top: 2%;
+}
+.img-size{
+	width: 20px;
+	height:20px
+}
+.attention-size{
+	width: 20px;
+	height:20px
+}
+.search-size{
+	width: 35px;
+	heidth:35px;
+}
+.flex-attention{
+	display: flex;
+	justify-content:flex-end !important;
+}
+.flex-start{
+	display: flex;
+	justify-content:flex-start ;
+}
+.width-80{
+	width: 80%!important;
+}
+.width-35{
+	width:35%;!important;
+}
+
+.margin-r-2{
+	margin-right: 2%;
+
+}
 .centcoins-table td{
     color: #6f6f75;
 }
