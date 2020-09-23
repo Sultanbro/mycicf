@@ -47,9 +47,9 @@
         <kalendar ref="calendar" :configuration="calendar_settings" :events.sync="events[0]">
             <!-- CREATED CARD SLOT -->
             <div
-                    slot="created-card"
-                    slot-scope="{ event_information }"
-                    class="details-card"
+                slot="created-card"
+                slot-scope="{ event_information }"
+                class="details-card"
             >
                 <h4 class="appointment-title">
                     {{ event_information.data.title }} <i v-if="loading" class="fas fa-spinner fa-spin"></i>
@@ -59,22 +59,22 @@
                 </small>
                 <span class="time"
                 >{{ event_information.start_time | formatToHours }} -
-                    {{ event_information.end_time | formatToHours }}</span
+                {{ event_information.end_time | formatToHours }}</span
                 >
                 <button v-if="!loading && (isn===event_information.data.author || isn===3130949)"
                         :disabled="loading" @click="removeEvent(event_information)" class="remove">
                     <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            aria-hidden="true"
-                            data-reactid="1326"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                        data-reactid="1326"
                     >
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -88,32 +88,32 @@
                     Новое бронирование
                 </h4>
                 <span class="time">
-                    {{ event_information.start_time | formatToHours }}
-                    -
-                    {{ event_information.end_time | formatToHours }}
-                </span>
+                {{ event_information.start_time | formatToHours }}
+                -
+                {{ event_information.end_time | formatToHours }}
+            </span>
             </div>
             <!-- POPUP CARD SLOT -->
             <div
-                    slot="popup-form"
-                    slot-scope="{ popup_information }"
-                    style="display: flex; flex-direction: column;"
+                slot="popup-form"
+                slot-scope="{ popup_information }"
+                style="display: flex; flex-direction: column;"
             >
                 <h4 style="margin-bottom: 10px">
                     Новое бронирование
                 </h4>
                 <input
-                        v-model="new_appointment['title']"
-                        type="text"
-                        name="title"
-                        placeholder="Департамент"
+                    v-model="new_appointment['title']"
+                    type="text"
+                    name="title"
+                    placeholder="Департамент"
                 />
                 <textarea
-                        v-model="new_appointment['description']"
-                        type="text"
-                        name="description"
-                        placeholder="Описание"
-                        rows="2"
+                    v-model="new_appointment['description']"
+                    type="text"
+                    name="description"
+                    placeholder="Описание"
+                    rows="2"
                 ></textarea>
                 <div class="buttons">
                     <button :disabled="loading" class="cancel" @click="closePopups()">
@@ -128,6 +128,7 @@
         </kalendar>
     </div>
 </template>
+
 <script>
     const _existing_events = [
         {
@@ -193,6 +194,7 @@
                 return dt.toLocaleString(DateTime.TIME_24_SIMPLE);
             });
 
+
         },
         components: {
             Kalendar,
@@ -203,6 +205,11 @@
         },
         data() {
             return {
+                title: '',
+                description: '',
+                day: '',
+                fromTime: '',
+                toTime: '',
                 loading: false,
                 reception: [],
                 calendar_settings: {
@@ -256,16 +263,34 @@
                 };
             },
             addManually() {
-                let title = 'New one';
-                let description = 'Lorem dsr';
-                let from = makeNow('2019-07-12T10:22:00+02:00');
-                let to = makeNow('2019-07-13T11:20:00+02:00');
+                this.loading = true;
+                let title = this.title;
+                let description = this.description;
+                let from = `${this.day}T${this.fromTime}:00+06:00`;
+                let to = `${this.day}T${this.toTime}:00+06:00`;
                 let payload = {
-                    data: { title, description },
+                    data: {
+                        title,
+                        description,
+                        office: 'drr',
+                        id: null,
+                        author: null,
+                    },
+                    author: this.isn,
                     from,
                     to,
                 };
-                this.$kalendar.addNewEvent(payload);
+                this.axios.post('/booking/set', {payload}).then(response => {
+                    if(response.data.success){
+                        payload = JSON.parse(response.data.data.data)
+                        this.$kalendar.addNewEvent(payload);
+                        this.title = '';
+                        this.description = '';
+                        this.from = '';
+                        this.to = '';
+                        this.loading = false
+                    }
+                });
             },
             removeEvent(kalendarEvent) {
                 this.loading = true
@@ -278,8 +303,7 @@
                             key: kalendarEvent.key,
                             id: kalendarEvent.kalendar_id,
                         });
-                    }
-                    else {
+                    } else {
                         alert('Невозможно удалить!')
                     }
                 })
@@ -289,7 +313,50 @@
         },
     }
 </script>
-
-<style scoped>
-
+<style lang="scss">
+    $green: #00f0b5;
+    $red: #f61067;
+    .details-card {
+        display: flex;
+        flex-direction: column;
+        width: 100px;
+        height: 100%;
+        button {
+            margin: 0;
+            border: none;
+            color: #4c4b4b;
+            position: absolute;
+            padding-right: 0px;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            background: transparent;
+            svg {
+                width: 18px;
+                height: 18px;
+                fill: white;
+            }
+        }
+        .remove {
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        &:hover .remove {
+            opacity: 1;
+        }
+    }
+    .popup-event .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+    .popup-event .buttons button {
+        border: none;
+        color: #29771c;
+        background-color: rgba($green, 0.04);
+        padding: 5px 10px;
+        &.cancel {
+            background-color: rgba($red, 0.04);
+            color: $red;
+        }
+    }
 </style>
