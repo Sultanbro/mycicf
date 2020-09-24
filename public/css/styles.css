@@ -770,6 +770,9 @@ ul{
 	display: flex;
 	justify-content:flex-end !important;
 }
+.att-flex-class {
+    width: 270px !important;
+}
 .flex-start{
 	display: flex;
 	justify-content:flex-start ;

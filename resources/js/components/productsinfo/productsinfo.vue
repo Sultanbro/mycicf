@@ -33,20 +33,43 @@
                     <div class=" nav-drop initial margin-t-5 alert alert-p  margin-r-2  " v-if="isOpened">
                         <div class="container ">
                             <!--Column 1-->
-                            <div class="dropdown-content__list" style="margin-right: 50px">
+                            <div class="<!--att-flex-class dropdown-content__list-->" >
                                 <div v-for="innerItem in itemsLevelOne"
                                      @click="getLevelTwo(innerItem.id, innerItem.url)"
-                                     class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
+                                     class="flex-row pl-4 pt-3 pb-3 dropbtn-inner justify-content-between"
                                      :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
-                                    <img :src="innerItem.icon_url"
-                                         class="items-icons mr-2">
-                                    <span class="d-flex">{{innerItem.label}}</span>
-                                    <div>
+                                    <div class="d-flex align-items-center">
+                                        <img :src="innerItem.icon_url"
+                                             class="items-icons mr-2">
+                                        <span class="d-flex">{{innerItem.label}}</span>
+                                    </div>
+                                    <div @click="getModalImage()" >
+                                        <div class="flex-attention">
+                                            <img id="myImg" src="/images/Attention.png" class="attention-size " alt="Snow" >
+                                        </div>
+
+
+                                        <!-- The Modal -->
+                                        <div id="myModal" class="modal">
+                                            <span class="close">&times;</span>
+                                            <img class="modal-content" id="img01">
+                                            <div id="caption"></div>
+                                        </div>
+                                       <!-- <img src="/image/Attention.png">
+                                        <span>{{item.label}}</span>-->
+                                    </div>
+                                    <!--<div  class="flex-attention">
+                                        <a href="#exampleModal">
+                                            <img class="attention-size " src="/images/Attention.png"
+                                               >
+                                        </a>
+                                    </div>-->
+                                    <!--<div class="flex-attention">
                                         <nav class="cl-effect-15  ">
                                             <img class="attention-size " src="/images/Attention.png"/><a href="#exampleModal"></a>
 
                                         </nav>
-                                    </div>
+                                    </div>-->
 
                                 </div>
 
@@ -318,7 +341,25 @@
                 {
                     document.getElementById('preloader').style.display = 'none';
                 }
-            }
+            },
+            getModalImage:function() {
+                var modal = document.getElementById("myModal");
+                // Get the image and insert it inside the modal - use its "alt" text as a caption
+                var img = document.getElementById("myImg");
+                var modalImg = document.getElementById("img01");
+                var captionText = document.getElementById("caption");
+                img.onclick = function () {
+                    modal.style.display = "block";
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.alt;
+                }
+                // Get the <span> element that closes the modal
+                var span = document.getElementsByClassName("close")[0];
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function () {
+                    modal.style.display = "none";
+                }
+            },
 
         },
     }
