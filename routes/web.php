@@ -159,6 +159,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('test/eds', 'SiteController@testEds');
         Route::get('/getEDS', 'SiteController@getEds');
+        Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
+        Route::post('/save_eds_info','SiteController@saveEdsInfo');
         Route::post('/coordinationSaveAttachment','CoordinationController@saveAttachment');
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');

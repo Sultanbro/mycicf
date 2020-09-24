@@ -281,24 +281,26 @@
                     if (!response.data.success) {
                         alert(response.data.error);
                     } else {
-                        if(Solution == 1) {
-                            this.axios.post("/coordinationSaveAttachment", {
-                                isn: this.coordination.ISN,
-                                id: this.coordination.ID,
-                                requestType: 'D',
-                                fileType: 'base64',
-                                file: this.$refs.eds.signedFile,
-                                fileExt: 'sig',
-                            }).then((response) => {
-                                if (!response.data.success) {
-                                    alert(response.data.error);
-                                } else {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            location.reload();
-                        }
+                        // if(Solution == 1) {
+                        //     this.axios.post("/coordinationSaveAttachment", {
+                        //         isn: this.coordination.ISN,
+                        //         id: this.coordination.ID,
+                        //         requestType: 'D',
+                        //         fileType: 'base64',
+                        //         file: this.$refs.eds.signedFile,
+                        //         fileExt: 'sig',
+                        //     }).then((response) => {
+                        //         if (!response.data.success) {
+                        //             alert(response.data.error);
+                        //         } else {
+                        //             location.reload();
+                        //         }
+                        //     });
+                        // } else {
+                        //     location.reload();
+                        // }
+
+                        location.reload();
                     }
                 });
                 //if(this.$refs.eds.signedFile != '') {

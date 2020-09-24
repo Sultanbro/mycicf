@@ -403,7 +403,8 @@ class CoordinationController extends Controller
 
             return response()->json([
                 'success' => $success,
-                'error' => isset($error) ? $error : ''
+                'error' => isset($error) ? $error : '',
+                'result' => isset($results->ISN) ? (string)$results->ISN : ''
             ]);
         } catch (Exception $e) {
             return response()->json([

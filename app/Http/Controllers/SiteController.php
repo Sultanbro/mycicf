@@ -915,4 +915,42 @@ class SiteController extends Controller
 //        echo $res->getBody();
 //        echo $res->getStatusCode();
     }
+
+    public function edsByIsn(Request $request,KiasServiceInterface $kias){
+        $files = [];
+        $ISN = isset($request->isn) ? $request->isn : '';
+        $sigFiles = $kias->getAttachmentPath('','','','','',$ISN);
+        if(isset($sigFiles->error)){
+            return response()->json([
+                'success' => false,
+                'result' => (string)$sigFiles->error->text
+            ]);
+        } else {
+            foreach ($sigFiles->ROWSET->row as $file) {
+                array_push($files, $file->FILEPATH);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'result' => $files
+        ]);
+    }
+
+    public function saveEdsInfo(Request $request,KiasServiceInterface $kias){
+        $data = $request->data;
+        $response = $kias->cicSaveEDS($request->refIsn,$request->isn,$data['iin'],$data['name'],'',$data['tspDate'],$data['certificateValidityPeriod'],'');
+
+        if(isset($response->error)){
+            return response()->json([
+                'success' => false,
+                'result' => (string)$response->error->text
+            ]);
+        }
+        //if(isset($response->result)) {
+            return response()->json([
+                'success' => true
+            ]);
+        //}
+    }
 }
