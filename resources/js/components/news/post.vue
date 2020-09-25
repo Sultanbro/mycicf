@@ -23,7 +23,7 @@
                         <textarea-autosize v-model="postText"
                                            class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
                                            placeholder="Что у вас нового?"
-                                           :maxlength="2000"
+                                           :maxlength="8000"
                                            :min-height="70"
                                            :max-height="350">{{this.postText}}</textarea-autosize>
                         <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
