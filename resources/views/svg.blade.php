@@ -76,10 +76,9 @@
 	<name></name>
 	<main>
 		<div class="w-100 d-flex justify-content-end">
-			<div class="d-flex flex-column mr-3 mt-1">
-				<span><strong>Оргструктура действует с 01.07.2020 года</strong></span><br>
-				<span>на основании решения Совета</span><br>
-				<span>директоров от 29.06.2020 года</span>
+			<div class="d-flex flex-column mr-3 mt-1" style="color:#4267b2;"> <!-- надо добавить в css -->
+				<span><strong>Оргструктура действует с 01.07.2020 года</strong></span>
+				<span>на основании решения Совета директоров от 29.06.2020 года</span>
 			</div>
 		</div>
 	</main>

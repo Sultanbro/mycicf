@@ -122,7 +122,7 @@
                 <transition name="transition-textarea-height">
                     <textarea v-model="post.postText"
                               v-if="editMode"
-                              maxlength="2000"
+                              maxlength="8000"
                               :class="{'textarea-height': editMode}"
                               class="custom-input w-100 pr-5"></textarea>
                 </transition>
