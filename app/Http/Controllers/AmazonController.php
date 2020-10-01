@@ -10,10 +10,11 @@ use Maatwebsite\Excel\Excel;
 
 class AmazonController extends Controller
 {
-    public function client(){
+    public function getData(Request $request, $table){
+
         ini_set('max_execution_time', -1);
         $start = time();
-        $query = "select * from inslab.subject where isn = 3921599";
+        $query = "select * from inslab.{$table} where updated > to_date('dd.mm.YYYY HH:MI:SS', $request->updated)";
         $result = DB::connection('oracle')->select($query);
         $end = time();
         echo $start-$end;

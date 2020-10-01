@@ -229,12 +229,5 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-Route::get('/aws/client', 'AmazonController@client');
-Route::get('/aws/claim', 'AmazonController@claim');
-Route::get('/aws/dksp', 'AmazonController@dksp');
-Route::get('/aws/vts', 'AmazonController@vts');
-Route::get('/aws/mst', 'AmazonController@mst');
-Route::get('/aws/kasko', 'AmazonController@kasko');
-Route::get('/aws/test', 'AmazonController@test');
-
+Route::get('/aws/{table}', 'AmazonController@getData');
 //Route::get('/test', 'AmazonController@storage')
