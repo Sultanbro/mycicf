@@ -31,7 +31,7 @@
                     @endif
                 </li>
             </a>
-            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472)
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472 || auth()->user()->ISN == 5011 || auth()->user()->ISN == 4275866 || auth()->user()->ISN == 766502)
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('rating')}}">
                     <li class="leftsidebar-icons">
                         <i class="far fa-star"></i>
