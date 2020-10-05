@@ -11,8 +11,7 @@ return [
         'charset'        => "AL32UTF8",//env('DB_CHARSET', 'AL32UTF8'),
         'prefix'         => env('DB_PREFIX', ''),
         'prefix_schema'  => env('DB_SCHEMA_PREFIX', ''),
-        'edition'        => "",//env('DB_EDITION', 'ora$base'),
+        'edition'        => env('DB_EDITION', 'ora$base'),
         'server_version' => "12",//env('DB_SERVER_VERSION', '11g'),
-        'skip_session_vars' => "skip"
     ],
 ];

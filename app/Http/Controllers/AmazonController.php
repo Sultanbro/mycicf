@@ -11,14 +11,23 @@ use Maatwebsite\Excel\Excel;
 class AmazonController extends Controller
 {
     public function getData(Request $request, $table){
-
-        ini_set('max_execution_time', -1);
         $start = time();
-        $query = "select * from inslab.{$table} where updated > to_date('dd.mm.YYYY HH:MI:SS', $request->updated)";
+        $upd = date('d.m.Y H:i:s', strtotime($request->updated));
+        $table = ucfirst(strtolower($table));
+        $query = $this->{"get$table"}($request->updated);
         $result = DB::connection('oracle')->select($query);
         $end = time();
-        echo $start-$end;
         $this->temp($result, 'client');
+    }
+
+    public function getAgrclause($updated){
+        $updated = date('d.m.Y H:i:s', strtotime($updated));
+        return "Select 
+        isn, agrisn, orderno, clauseisn, classisn, 
+        TRANSLATE(remark,CHR(10)||CHR(13)||'/|\-' ,'      ') remark,
+        updated, updatedby
+        from inslab.AgrClause
+        where updated > to_date('$updated','dd.mm.YYYY HH24:MI:SS')";
     }
 
     public function temp($data, $type){
