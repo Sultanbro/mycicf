@@ -15,7 +15,7 @@
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
                     </div>
                     <div class="ml-4 mr-4">
-                        <treeselect class="w-95" v-model="ISN" :multiple="false" :options="products"></treeselect>
+                        <treeselect class="w-95" v-model="PRODUCT_ISN" :multiple="false" :options="products"></treeselect>
                     </div>
                     <div class="ml-4 mr-4">
                         <div class="date-color border-gray show-btn" @click="getReport">
@@ -235,7 +235,8 @@
                     legend: { position: "none" },
                 },
                 show: false,
-                ISN: null
+                ISN: null,
+                PRODUCT_ISN: null
             }
         },
         props : {
@@ -243,7 +244,8 @@
         },
         mounted() {
             this.ISN = this.isn;
-            this.getReport()
+            this.getProducts();
+            this.getReport();
             if(this.checkUrl()){
                 this.getOptions();
             }
@@ -253,10 +255,11 @@
         methods : {
             getReport() {
                 this.preloader(true);
-                this.axios.post('/getReport', {
+                this.axios.post('/getStatisticsReport', {
                     isn: this.ISN,
                     dateBeg : this.dateBeg,
-                    dateEnd : this.dateEnd
+                    dateEnd : this.dateEnd,
+                    product: this.PRODUCT_ISN
                 })
                     .then(response => {
                         this.setChartData(response.data)
@@ -380,8 +383,9 @@
 
             getProducts() {
                 this.preloader(true);
-                this.axios.post('/getProdData', {}).then((response) => {
-                    // this.products = response.data.result;
+                this.axios.post('/testiruem', {}).then((response) => {
+                    this.products = response.data.result;
+                    console.log(response);
                 }).catch(error => {
                     alert(error)
                 }).finally(() => {
