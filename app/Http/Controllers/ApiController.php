@@ -17,8 +17,8 @@ class ApiController extends Controller
 
         return response()->json([
             'coins' => $coins->centcoins,
-            'coins_history' => json_encode($info),
-//            'coins_history' => $coins->fullinfo,
+            //'coins_history' => json_encode($info),
+            'coins_history' => json_encode($coins->fullInfo),
         ]);
     }
 }
