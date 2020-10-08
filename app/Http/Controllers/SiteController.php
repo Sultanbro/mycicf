@@ -124,7 +124,7 @@ class SiteController extends Controller
             }
         }
 
-        if($success && $response->VACATION->row[0]->period != 0)
+        if($success && isset($response->VACATION->row[0]->period) && $response->VACATION->row[0]->period != 0)
         {
             $vacation = array();
             foreach ($response->VACATION->row as $row){
