@@ -13,6 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 class Centcoin extends Model
 {
     public function fullInfo() {
-        return $this->hasMany('App\CentcoinHistory','user_isn','user_isn') ;
+        return $this->hasMany('App\CentcoinHistory','changed_user_isn','user_isn') ;
     }
 }
