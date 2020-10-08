@@ -14,4 +14,17 @@ return [
         'edition'        => env('DB_EDITION', 'ora$base'),
         'server_version' => "12",//env('DB_SERVER_VERSION', '11g'),
     ],
+    'kommesk' => [
+        'driver'         => 'oracle',
+        'host'           => "192.168.232.102", //env('DB_HOST', ''),
+        'port'           => "1521",//env('DB_PORT', '1521'),
+        'database'       => "kiasp", //env('DB_DATABASE', ''),
+        'username'       => "MYCIC",//env('DB_USERNAME', ''),
+        'password'       => "uyvLgAJuyCdR0UofnI5T",//env('DB_PASSWORD', ''),
+        'charset'        => "AL32UTF8",//env('DB_CHARSET', 'AL32UTF8'),
+        'prefix'         => env('DB_PREFIX', ''),
+        'prefix_schema'  => env('DB_SCHEMA_PREFIX', ''),
+        'edition'        => env('DB_EDITION', 'ora$base'),
+        'server_version' => "12",//env('DB_SERVER_VERSION', '11g'),
+    ]
 ];
