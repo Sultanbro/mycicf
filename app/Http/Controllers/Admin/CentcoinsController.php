@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CentcointExports;
 
 class CentcoinsController extends Controller
 {
@@ -53,6 +55,11 @@ class CentcoinsController extends Controller
             ->withCallback(
                 $request->input('callback')
             );
+    }
+
+    public function getReport(){
+        return Excel::download(new CentcointExports, 'Сенткоины_'.date("d.m.Y H:i:s").'.xlsx');
+        return back();
     }
 
     public function getHistoryList(Request $request){
