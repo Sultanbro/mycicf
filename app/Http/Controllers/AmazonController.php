@@ -56,11 +56,9 @@ translate(tariffstr, CHR(10)||CHR(13)||'/|\-', '      ') tariffstr,
 premiumsum, franchtype, franchtariff, franchsum, COMISSIONPROC,
 COMISSIONSUM,
 translate(remark, CHR(10)||CHR(13)||'/|\-', '      ') remark,
-fid, 
-TO_CHAR(updated, 'YYYY-MM-DD') updated,
+fid, updated,
 updatedby, parentisn, limitsumtype, paymentkoeff,
-premiumsumtariff, 
-TO_CHAR(created, 'YYYY-MM-DD') created, 
+premiumsumtariff, created, 
 createdby, reasoncancelisn, previsn
 from inslab.agrcond 
 where updated > to_date('$updated','dd.mm.YYYY HH24:MI:SS')";
