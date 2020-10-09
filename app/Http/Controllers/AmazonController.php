@@ -105,7 +105,7 @@ translate(LONGITUDE,'\|/-'||CHR(10)||CHR(13), '      ')LONGITUDE,
 translate(EXTSYSTEMKEY,'\|/-'||CHR(10)||CHR(13), '      ')EXTSYSTEMKEY,
 FRONTNODEISN,SYSTEMISN,ISVIDEOFIXATION,ISDISAGREE,NUMPARTICIPANT
 from inslab.agrclaim
-where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')";
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
     public function getAgrobjaddr($updated){
@@ -125,6 +125,58 @@ translate(fiashouseguid, CHR(10)||CHR(13)||'/|\-', '      ') fiashouseguid,
 translate(fiassteadguid, CHR(10)||CHR(13)||'/|\-', '      ') fiasteadguid
 from inslab.agrobjaddr
 where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')";
+    }
+
+    public function getDicti($updated){
+        return "select 
+isn, parentisn,
+translate(code,'\|/-'||CHR(10)||CHR(13), '      ')code,
+translate(numcode,'\|/-'||CHR(10)||CHR(13), '      ')numcode,
+translate(shortname,'\|/-'||CHR(10)||CHR(13), '      ')shortname,
+translate(fullname,'\|/-'||CHR(10)||CHR(13), '      ')fullname,
+translate(tablename,'\|/-'||CHR(10)||CHR(13), '      ')tablename,
+translate(constname,'\|/-'||CHR(10)||CHR(13), '      ')constname,
+translate(n_kids,'\|/-'||CHR(10)||CHR(13), '      ')n_kids,
+translate(active,'\|/-'||CHR(10)||CHR(13), '      ')active,
+updated,updatedby,
+translate(userconstname,'\|/-'||CHR(10)||CHR(13), '      ')userconstname,
+refclassisn1,refclassisn2,refclassisn3
+from inslab.dicti
+where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')
+";
+    }
+
+    public function getCity($updated){
+        return "select 
+ISN, PARENTISN,
+translate(SOCR,'\|/-'||CHR(10)||CHR(13), '      ')SOCR,
+translate(NAME,'\|/-'||CHR(10)||CHR(13), '      ')NAME,
+ACTIVE,COUNTRYISN,REGIONISN,
+translate(POSTCODE,'\|/-'||CHR(10)||CHR(13), '      ')POSTCODE,
+translate(GNICODE,'\|/-'||CHR(10)||CHR(13), '      ')GNICODE,
+translate(OCATD,'\|/-'||CHR(10)||CHR(13), '      ')OCATD,
+translate(GNINMB,'\|/-'||CHR(10)||CHR(13), '      ')GNINMB,
+POPULATION,UPDATED,UPDATEDBY,
+KT1,KT2,KT1_2009,KT2_2009,KT1_2011,KT2_2011,KT1_2012,KT2_2012,KT1_2015_4,KT2_2015_4,
+translate(THEME,'\|/-'||CHR(10)||CHR(13), '      ')FIASCODE
+from inslab.city
+where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')
+";
+    }
+
+    public function getTariff($updated){
+        return "select *
+ISN, TARIFFISN, TARIFF, CURRISN, X1, X2, X3, X4, X5,
+DATEBEG, DATEEND, 
+translate(REMARK, '\|/-'||CHR(10)||CHR(13), '      ')REMARK, 
+UPDATED, UPDATEDBY,X6,X7,X8,X9,X10,X11,X12,X13,X14,
+X15,X16,X17,X18,X19,X20,X21,X22,X23,X24,X25,X26,X27,
+X28,X29,X30,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,
+S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,
+S26,S27,S28,S29,S30
+from inslab.tariff
+where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')
+";
     }
 
     public function temp($data, $type){
