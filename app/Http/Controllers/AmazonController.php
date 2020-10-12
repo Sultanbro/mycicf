@@ -51,7 +51,7 @@ translate(condname, CHR(10)||CHR(13)||'/|\-', '      ') condname,
 riskisn,
 translate(riskname, CHR(10)||CHR(13)||'/|\-', '      ') riskname,
 insclassisn, addendumisn, datesign, datebeg, dateend, datedenounce,
-duration, currisn, currsumisn, limitsum, limitsumext,
+duration, currisn, currsumisn, limitsum, limitsumext, discount,
 translate(tariffstr, CHR(10)||CHR(13)||'/|\-', '      ') tariffstr,
 premiumsum, franchtype, franchtariff, franchsum, COMISSIONPROC,
 COMISSIONSUM,
@@ -122,7 +122,7 @@ translate(fiasaoguid, CHR(10)||CHR(13)||'/|\-', '      ') fiasaoguid,
 translate(fiashouseguid, CHR(10)||CHR(13)||'/|\-', '      ') fiashouseguid,
 translate(fiassteadguid, CHR(10)||CHR(13)||'/|\-', '      ') fiasteadguid
 from inslab.agrobjaddr
-where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')";
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
     public function getDicti($updated){
@@ -140,7 +140,7 @@ updated,updatedby,
 translate(userconstname,'\|/-'||CHR(10)||CHR(13), '      ')userconstname,
 refclassisn1,refclassisn2,refclassisn3
 from inslab.dicti
-where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
     }
 
@@ -158,7 +158,7 @@ POPULATION,UPDATED,UPDATEDBY,
 KT1,KT2,KT1_2009,KT2_2009,KT1_2011,KT2_2011,KT1_2012,KT2_2012,KT1_2015_4,KT2_2015_4,
 translate(THEME,'\|/-'||CHR(10)||CHR(13), '      ')FIASCODE
 from inslab.city
-where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
     }
 
@@ -173,7 +173,7 @@ X28,X29,X30,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,
 S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,
 S26,S27,S28,S29,S30
 from inslab.tariff
-where updated > to_date('$updated', 'YYYY-MM-DD HH24:MI:SS')
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
     }
 
