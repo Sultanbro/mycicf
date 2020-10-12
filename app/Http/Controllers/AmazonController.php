@@ -163,8 +163,7 @@ where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
     }
 
     public function getTariff($updated){
-        return "select *
-ISN, TARIFFISN, TARIFF, CURRISN, X1, X2, X3, X4, X5,
+        return "select ISN, TARIFFISN, TARIFF, CURRISN, X1, X2, X3, X4, X5,
 DATEBEG, DATEEND, 
 translate(REMARK, '\|/-'||CHR(10)||CHR(13), '      ')REMARK, 
 UPDATED, UPDATEDBY,X6,X7,X8,X9,X10,X11,X12,X13,X14,
@@ -173,6 +172,58 @@ X28,X29,X30,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,
 S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,
 S26,S27,S28,S29,S30
 from inslab.tariff
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
+
+    public function getAddattr($updated){
+        return "select 
+isn,classisn, objisn, attrisn, 
+TRANSLATE(orderno,CHR(10)||CHR(13)||'/|\-' ,'      ')orderno,
+vald,valn,
+TRANSLATE(valc,CHR(10)||CHR(13)||'/|\-' ,'      ')valc,
+updated,updatedby,
+TRANSLATE(remark,CHR(10)||CHR(13)||'/|\-' ,'      ')remark
+from inslab.addattr
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
+
+    public function getAgreement($updated){
+        return "select isn,deptisn,emplisn,clientisn,classisn,productisn,
+translate(id,'\|/-'||CHR(10)||CHR(13), '      ')id,
+translate(name,'\|/-'||CHR(10)||CHR(13), '      ')name,
+status,
+translate(code,'\|/-'||CHR(10)||CHR(13), '      ')code,
+datesign,datebeg,dateend,datedenounce,previsn,addendumisn,
+parentisn,currisn,currate,formisn,datebase,sectclassisn,
+refsubjisn,
+translate(refagrid,'\|/-'||CHR(10)||CHR(13), '      ')refagrid,
+translate(remark,'\|/-'||CHR(10)||CHR(13), '      ')remark,
+fid,created,createdby,updated,updatedby,
+translate(id1c,'\|/-'||CHR(10)||CHR(13), '      ')id1c,
+notrenewcauseisn,timebeg,stageisn,generaldocisn,crossisn,
+reasoncancelisn,reasonaddendumisn,systemisn,dateliability,
+addendumdatesign,addendumdatebeg,
+translate(extsystemkey,'\|/-'||CHR(10)||CHR(13), '      ')extsystemkey,
+frontnodeisn,epolicy,currsumisn,dateliabilityend,datecoolingend
+from inslab.agreement
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+
+";
+    }
+
+    public function getAgrobjagr($updated){
+        return "select 
+isn, classisn, insclassisn, 
+TRANSLATE(id,CHR(10)||CHR(13)||'/|\-' ,'      ')id,
+subjisn, currisn,currsumisn,datesign,datebeg,
+dateend, datedenounce, 
+TRANSLATE(remark,CHR(10)||CHR(13)||'/|\-' ,'      ')remark,
+limitsum,tariff,premiumsum,comissionproc,comissionsum,
+TRANSLATE(objremark,CHR(10)||CHR(13)||'/|\-' ,'      ')objremark,
+updated,updatedby
+from inslab.agrobjagr
 where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
     }
