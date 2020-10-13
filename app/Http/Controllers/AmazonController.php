@@ -317,6 +317,94 @@ where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
     }
 
+    public function getAgrsum($updated){
+        return "select ISN,CLASSISN,CLASSISN2,AGRISN,CONDISN,
+CLAIMISN,REFUNDISN,AGRXISN,CLAIMXISN,SUBJISN,
+PARENTISN,DISCR,ACC,DATEPAY,AMOUNT,AGRCURRISN,
+AMOUNTAGR,DATECROSS,DOCISN,REFDOCISN,SHAREPROC,
+translate(REMARK,'\|/-'||CHR(10)||CHR(13), '      ')REMARK,
+FID,UPDATED,UPDATEDBY,OLDAGRISN,OLDCONDISN,
+REGRESSISN,SALVAGEISN,OPERDOCISN,AHDAGRISN,
+PAYCURRISN,AMOUNTPAY,RECURRISN,AMOUNTRE
+from inslab.agrsum
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+and classisn2 in (2500,     --Возврат премии
+                    3434,     --Возврат премии (вх. Re)
+                    220232,   --Возмещение за ПВУ
+                    223251,   --Вознаграждение брокера (исх. Re)
+                    221752,   --Выплата по ущербу
+                    3433,     --Доля в выплате возмещения (вх. Re)
+                    3397,     --Доля в выплате возмещения (исх. Re)
+                    3398,     --Доля в расходах по урегулированию (исх. Re)
+                    2491,     --Комиссионное вознаграждение
+                    3401,     --Комиссия (исх. Re)
+                    3438,     --Премия (вх. Re)
+                    3439,     --Премия (вх. Re) сторно
+                    3403,     --Премия (исх. Re)
+                    3404,     --Премия (исх. Re) сторно
+                    3446,     --Прочие расходы (вх. Re)
+                    221098,   --Прочие расходы по сопровождению
+                    221012,   --Прочие расходы по урегулированию
+                    2502,     --Регресс/Суброгация
+                    2481,     --Страховая премия
+                   )
+";
+    }
+
+    public function getSubaddr($updated){
+        return "select 
+ISN,SUBJISN,CLASSISN,COUNTRYISN,
+translate(POSTCODE,'\|/-'||CHR(10)||CHR(13),'      ')POSTCODE,
+translate(DISTRICT,'\|/-'||CHR(10)||CHR(13),'      ')DISTRICT,
+CITYISN,STREETISN,
+translate(STREET,'\|/-'||CHR(10)||CHR(13),'      ')STREET,
+translate(HOUSE,'\|/-'||CHR(10)||CHR(13),'      ')HOUSE,
+translate(BUILDING,'\|/-'||CHR(10)||CHR(13),'      ')BUILDING,
+translate(FLAT,'\|/-'||CHR(10)||CHR(13),'      ')FLAT,
+translate(ADDRESS,'\|/-'||CHR(10)||CHR(13),'      ')ADDRESS,
+translate(ADDRESSLAT,'\|/-'||CHR(10)||CHR(13),'      ')ADDRESSLAT,
+UPDATED,UPDATEDBY,
+translate(LATITUDE,'\|/-'||CHR(10)||CHR(13),'      ')LATITUDE,
+translate(LONGITUDE,'\|/-'||CHR(10)||CHR(13),'      ')LONGITUDE
+from inslab.subaddr
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+    }
+
+    public function getSubdoc($updated){
+        return "select isn, subjisn, classisn,
+translate(docser,'\|/-'||CHR(10)||CHR(13), '      ')docser,
+translate(docno,'\|/-'||CHR(10)||CHR(13), '      ')docno,
+docdate,
+translate(handby,'\|/-'||CHR(10)||CHR(13), '      ')handby,
+dateend,
+translate(remark,'\|/-'||CHR(10)||CHR(13), '      ')remark,
+updated,updatedby
+from inslab.subdoc
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+    }
+
+    public function getSubhuman($updated){
+        return "
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+    }
+
+    public function getSubject($updated){
+        return "
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+    }
+
+    public function getSubphone($updated){
+        return "
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+    }
+
+    public function getWebuser($updated){
+        return "
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+    }
+
+
+
     public function temp($data, $type){
         $filename = $type."_data_export_" . date("Y-m-d") . ".csv";
         // disable caching
