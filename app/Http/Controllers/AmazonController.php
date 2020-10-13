@@ -385,21 +385,59 @@ from inslab.subdoc
 
     public function getSubhuman($updated){
         return "
+        select isn,sex,birthday,drivingdatebeg,docclassisn,
+translate(docser,'\|/-'||CHR(10)||CHR(13), '      ')docser,
+translate(docno,'\|/-'||CHR(10)||CHR(13), '      ')docno,
+docdate,
+translate(docissuedby,'\|/-'||CHR(10)||CHR(13), '      ')docissuedby,
+translate(ssn,'\|/-'||CHR(10)||CHR(13), '      ')ssn,
+translate(tabno,'\|/-'||CHR(10)||CHR(13), '      ')tabno,
+deptisn,dutyisn,
+translate(room,'\|/-'||CHR(10)||CHR(13), '      ')room,
+familystateisn,educationisn,professionisn,n_kids,
+translate(orgname,'\|/-'||CHR(10)||CHR(13), '      ')orgname,
+translate(posname,'\|/-'||CHR(10)||CHR(13), '      ')posname,
+translate(remark,'\|/-'||CHR(10)||CHR(13), '      ')remark,
+updated,updatedby,docdateend,docdivisioncode,
+translate(birthplace,'\|/-'||CHR(10)||CHR(13), '      ')birthplace
+from inslab.subhuman
         where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
     public function getSubject($updated){
-        return "
-        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
+        return "Select s.isn,s.deptisn,s.emplisn,
+       translate(s.shortname,'\|/-'||CHR(10)||CHR(13), '      ') shortname,
+       translate(s.fullname,'\|/-'||CHR(10)||CHR(13), '      ') fullname,
+       translate(s.namelat,'\|/-'||CHR(10)||CHR(13), '      ') namelat,
+       s.classisn,s.active,s.juridical,s.resident,s.vip,s.countryisn,s.parentisn,s.inn,s.okvd,s.kpp,s.code,s.orgformisn,s.economicisn,s.subacc,
+       translate(s.remark,'\|/-'||CHR(10)||CHR(13), '      ') remark,
+       s.fid,s.updated,s.updatedby,s.id1c,s.created,s.createdby,s.synisn,s.syndate,s.synby,s.actual,s.enablesms,s.enablemail,s.iin,
+       translate(s.firstname,'\|/-'||CHR(10)||CHR(13), '      ') firstname,
+       translate(s.lastname,'\|/-'||CHR(10)||CHR(13), '      ') lastname,
+       translate(s.parentname,'\|/-'||CHR(10)||CHR(13), '      ') parentname,
+       s.extsystemkey,s.ogrn,s.systemisn,s.frontnodeisn,s.okpo,s.okvdisn,s.dateend,s.verified
+from inslab.SUBJECT s
+        where s.updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
     public function getSubphone($updated){
         return "
+        select isn, subjisn, classisn,
+translate(phone,'\|/-'||CHR(10)||CHR(13), '      ')phone,
+translate(contact,'\|/-'||CHR(10)||CHR(13), '      ')contact,
+refsubjisn,
+translate(remark,'\|/-'||CHR(10)||CHR(13), '      ')remark,
+updated,updatedby
+from inslab.subphone
         where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
     public function getWebuser($updated){
         return "
+        select 
+isn, created, createdby, updated, updatedby,webuserregisn,
+phone,login,email,password,errorpwdcount,closedate,esiaid
+from inslab.webuser
         where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
