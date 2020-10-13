@@ -228,6 +228,95 @@ where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
     }
 
+    public function getAgrobjcar($updated){
+        return "select ISN,MODELISN,
+translate(MODIFICATION,'\|/-'||CHR(10)||CHR(13), '      ')MODIFICATION,
+RELEASEDATE,
+translate(PTSSER,'\|/-'||CHR(10)||CHR(13), '      ')PTSSER,
+translate(PTSNO,'\|/-'||CHR(10)||CHR(13), '      ')PTSNO,
+PTSDATE,
+translate(DOCSER,'\|/-'||CHR(10)||CHR(13), '      ')DOCSER,
+translate(DOCNO,'\|/-'||CHR(10)||CHR(13), '      ')DOCNO,
+DOCDATE,
+translate(VIN,'\|/-'||CHR(10)||CHR(13), '      ')VIN,
+translate(REGNO,'\|/-'||CHR(10)||CHR(13), '      ')REGNO,
+translate(BODYID,'\|/-'||CHR(10)||CHR(13), '      ')BODYID,
+translate(ENGINEID,'\|/-'||CHR(10)||CHR(13), '      ')ENGINEID,
+translate(CHASSISID,'\|/-'||CHR(10)||CHR(13), '      ')CHASSISID,
+POWER,VOLUME,NUMSEATS,TONNAGE,MAXMASS,NUMKEY,OWNERISN,
+OWNERSHIPISN,COUNTRYISN,COLORISN,CARUSEISN,BONUSMALUSISN,
+MULTIDRIVE,SURVEYNO,SURVEYDATE,EXPERTISN,REFISN,PERIODBEG,
+PERIODEND,PERIODBEG1,PERIODEND1,REMARK,UPDATED,UPDATEDBY,
+FOREIGN,CATEGORYISN,TERRITORYISN,PERIODBEG2,PERIODEND2,
+PERIODBEG3,PERIODEND3,PTSCLASSISN,RIGHTWHEEL,DATEBEG,
+ALARMONBOARD,ALARMISN1,ALARMISN2,ALARMISN3,PROBEG,REALPRICE,
+translate(EXTSYSTEMKEY,'\|/-'||CHR(10)||CHR(13), '      ')EXTSYSTEMKEY,
+translate(OSMOTRTALONSER,'\|/-'||CHR(10)||CHR(13), '      ')OSMOTRTALONSER,
+translate(OSMOTRTALONNO,'\|/-'||CHR(10)||CHR(13), '      ')OSMOTRTALONNO,
+OSMOTRSUBJISN,OSMOTRDATE,OSMOTRNEXTDATE,OSMOTRCLASSISN,
+PASSENGER,MODIFICATIONISN,MARKETPRICE,USETRAILER,USESPECIALSIGNAL
+from inslab.agrobjcar
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
+
+    public function getAgrobject($updated){
+        return "Select a.isn,a.agrisn,a.classisn,a.subclassisn,
+  translate(a.orderno,'\|/-'||CHR(10)||CHR(13), '      ')orderno,
+        translate(a.objname,'\|/-'||CHR(10)||CHR(13), '      ') objname,
+        a.objcount,a.parentisn,a.subjisn,a.sex,a.birthday,
+        translate(a.remark,'\|/-'||CHR(10)||CHR(13), '      '),
+  a.fid,a.updated,a.updatedby,a.resident,
+  translate(a.LATITUDE,'\|/-'||CHR(10)||CHR(13),'      ')LATITUDE,
+  translate(a.LONGITUDE,'\|/-'||CHR(10)||CHR(13),'      ')LONGITUDE,
+  a.previsn,a.addendumisn,a.extsystemkey
+from inslab.AGROBJECT a
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
+
+    public function getAgrrefund($updated){
+        return "select ISN,DEPTISN,EMPLISN,CLAIMISN,AGRISN,
+CONDISN,
+translate(REMARK,'\|/-'||CHR(10)||CHR(13), '      ')ORDERNO,
+DATEREG,
+translate(ID,'\|/-'||CHR(10)||CHR(13), '      ')ID,
+STATUS,CLASSISN,CLASSISN2,BENEFICIARYISN,RECIPIENTISN,
+CLAIMSUM,FRANCHSUM,REFUNDSUM,REJECTSUM,CLAIMSUMAGR,
+FRANCHSUMAGR,REFUNDSUMAGR,REJECTSUMAGR,
+translate(SURVEYNO,'\|/-'||CHR(10)||CHR(13), '      ')SURVEYNO,
+SURVEYDATE,EXPERTISN,ALLDOCDATE,
+translate(DOCNO,'\|/-'||CHR(10)||CHR(13), '      ')DOCNO,
+DOCDATE,PAYFORMISN,REJECTISN,OFFENDERISN,RESPONDISN,
+REGRESSISN,REGRESSUM,
+translate(REMARK,'\|/-'||CHR(10)||CHR(13), '      ')REMARK,
+PERIODALL,PERIODNOTUSED,PREMPLAN,PREMFACT,PREMNOTUSED,
+REFUNDPLAN,RVDPROC,RVDSUM,FID,
+translate(ID1C,'\|/-'||CHR(10)||CHR(13), '      ')ID1C,
+UPDATED,UPDATEDBY,PAYFORMCLASSISN,SIGNERISN,DOCMAKEDATE,
+PREMPLANAGR,PREMFACTAGR,PREMNOTUSEDAGR,REFUNDPLANAGR,
+RVDSUMAGR,SIGNERISN1,SIGNERISN2,SIGNERISN3,FRANCHPAYCOMPANY,
+DATESOLUTION,INSUREDSEGMENTISN,STAGEISN,TOTALREFUNDSUM,
+TOTALREFUNDSUMAGR,CREATED,CREATEDBY,ISDIRECTOSAGO,ISSTOPPED,
+CAUSEISN,OBJISN,CURRISN,
+translate(EXTSYSTEMKEY,'\|/-'||CHR(10)||CHR(13), '      ')EXTSYSTEMKEY,
+RECIPIENTACCISN,REPARATIONFORMISN,AHDAGRISN
+from inslab.agrrefund
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
+
+    public function getAgrrole($updated){
+        return "select ISN,AGRISN,
+translate(ORDERNO,'\|/-'||CHR(10)||CHR(13),'      ')ORDERNO,
+CLASSISN,SUBJISN,DATEBEG,DATEEND,SHAREPROC,AMOUNT,
+translate(REMARK,'\|/-'||CHR(10)||CHR(13),'      ')REMARK,
+UPDATED,UPDATEDBY,BONUSMALUSISN,REFDOCISN
+from inslab.agrrole
+where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
+
     public function temp($data, $type){
         $filename = $type."_data_export_" . date("Y-m-d") . ".csv";
         // disable caching
