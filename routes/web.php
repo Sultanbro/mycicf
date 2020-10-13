@@ -237,9 +237,5 @@ Route::get('test', function (){
     return view('test');
 });
 
-Route::get('ttt', function (){
-//    oci_connect('MYCIC', 'QwMcIcerty23#');
-    $query =
-    $a = \Illuminate\Support\Facades\DB::connection('oracle')->select('select * from subject where isn in (3921599, 3600338)');
-    dd($a);
-});
+Route::get('ttt', 'OracleController@test');
+Route::get('tt', 'OracleController@DZnewGani');
