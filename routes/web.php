@@ -230,6 +230,7 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
 Route::get('/aws/{table}', 'AmazonController@getData');
+Route::get('/kommesk/{table}', 'AmazonController@getKommeskData');
 Route::get('/test', 'AmazonController@test');
 Route::get('/php', function(){
     phpinfo();

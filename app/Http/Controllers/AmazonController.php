@@ -15,6 +15,15 @@ class AmazonController extends Controller
         $upd = date('d.m.Y H:i:s', strtotime($request->updated));
         $table = ucfirst(strtolower($table));
         $query = $this->{"get$table"}($upd);
+        $result = DB::connection('oracle')->select($query);
+        $end = time();
+        $this->temp($result, 'client');
+    }
+    public function getKommeskData(Request $request, $table){
+        $start = time();
+        $upd = date('d.m.Y H:i:s', strtotime($request->updated));
+        $table = ucfirst(strtolower($table));
+        $query = $this->{"get$table"}($upd);
         $result = DB::connection('kommesk')->select($query);
         $end = time();
         $this->temp($result, 'client');
@@ -90,12 +99,7 @@ translate(ADDRSTR,'\|/-'||CHR(10)||CHR(13), '      ')ADDRSTR,
 PLACECLASSISN,DRIVERISN,
 translate(REMARK,'\|/-'||CHR(10)||CHR(13), '      ')REMARK,
 translate(ID1C,'\|/-'||CHR(10)||CHR(13), '      ')ID1C,
-TO_CHAR(UPDATED, 'YYYY-MM-DD') UPDATED,
-UPDATEDBY,ACCIDENTMODEISN,
-TO_CHAR(CREATED, 'YYYY-MM-DD') CREATED,
-CREATEDBY,
-TO_CHAR(TIMECLAIM, 'YYYY-MM-DD') TIMECLAIM,
-SCHEMEISN,
+UPDATED,UPDATEDBY,ACCIDENTMODEISN,CREATED,CREATEDBY,TIMECLAIM,SCHEMEISN,
 translate(SCHEMECARAB,'\|/-'||CHR(10)||CHR(13), '      ')SCHEMECARAB,
 translate(ISDECLAREDGIBDD,'\|/-'||CHR(10)||CHR(13), '      ')ISDECLAREDGIBDD,
 translate(LATITUDE,'\|/-'||CHR(10)||CHR(13), '      ')LATITUDE,
