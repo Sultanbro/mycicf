@@ -119,18 +119,20 @@ class StatisticsController extends Controller
 
     public function getReport(Request $request, KiasServiceInterface $kias){
         $product = $request->product;
-        $emplIsn = 1445780;//$request->isn;
-        $response = $kias->getUnderReport($product, $emplIsn,'01.01.2020', '01.09.2020');//$request->dateBeg,$request->dateEnd);
+        $emplIsn = $request->isn;
+        $response = $kias->getUnderReport($product, $emplIsn, $request->dateBeg,$request->dateEnd);
         $pieQuantity = [[
             'Продукт', 'Доля'
         ]];
         $pieType = [[
             'Продукт', 'Доля'
         ]];
-        foreach ($response->CALC1->row as $row){
+        foreach($response->CALC3->row as $row){
             array_push($pieQuantity, [
-                (string)$row->product." ".'- '.$row->quantity.'%', (double)str_replace(',','.', (string)$row->quantity)
+                (string)$row->dept." ".'- '.$row->quantity.'%', (double)str_replace(',','.', (string)$row->quantity)
             ]);
+        }
+        foreach ($response->CALC1->row as $row){
             array_push($pieType, [
                 (string)$row->product." ".'- '.(string)$row->ptype, (double)str_replace(',','.', (string)$row->ptype)
             ]);
