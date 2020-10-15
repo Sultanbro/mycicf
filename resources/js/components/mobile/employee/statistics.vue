@@ -1,94 +1,30 @@
 <template>
     <div>
-        <div v-if="checkUrl()" class="news-tape-bg radius-4px mt-3 pb-2">
-            <div class="pt-4">
-                <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
-                    <div class="d-flex">
-                        <div class="ml-4 mr-4">
-                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
-                        </div>
-                        <div class="ml-4 mr-4">
-                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
-                        </div>
-                    </div>
-                    <div class="ml-4 mr-4">
-                        <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
-                    </div>
-                    <div class="ml-4 mr-4">
-                        <div class="date-color border-gray show-btn" @click="getReport">
-                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
-                                <div>
-                                    <i class="far fa-eye"></i>
-                                </div>
-                                <div class="ml-2">
-                                    <span>Показать</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-else class="news-tape-bg radius-4px mt-3 pb-2">
-            <div class="pt-4">
-                <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
-                    <div class="d-flex">
-                        <div class="ml-4 mr-4">
-                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
-                        </div>
-                        <div class="ml-4 mr-4">
-                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
-                        </div>
-                    </div>
-                    <div class="ml-4 mr-4">
-                        <div class="date-color border-gray show-btn" @click="getReport">
-                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
-                                <div>
-                                    <i class="far fa-eye"></i>
-                                </div>
-                                <div class="ml-2">
-                                    <span>Показать</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="width100" v-show="show">
-            <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
-                <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
-                    <div class="width100 pl-0 pr-0 main-data-chart-contains">
-                        <div class="flex-row pl-0 pr-0 vertical-middle main-data-border min-width-50">
-                            <div>
-                                <div class="width100 flex-row">
-                                    <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
-                                        <GChart
-                                                class="data-chart-pie"
-                                                type="PieChart"
-                                                :data="chartData"
-                                                :options="chartOptions"
-                                        />
+        <div class="mt-2 bg-white">
+            <div class="container-fluid flex-column vertical-middle">
+                <div class="flex-column vertical-middle">
+                    <div>
+                        <div class="flex-column">
+                            <div class="flex-column vertical-middle">
+                                <div class="mobile-date-flex vw90">
+                                    <div class="mobile-date-contain">
+                                        <input type="date" class="border0 width100 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1 date-width" v-model="dateBeg">
+                                    </div>
+                                    <div class="mobile-date-contain">
+                                        <input type="date" class="width100 border0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1 date-width" v-model="dateEnd">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="flex-column chart-mainData-attributes-contain width100">
-                                <strong class="chart-mainData-attributes"><span>Сборы: </span><span>{{numberWithSpaces(Amount)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>Выплаты: </span><span>{{numberWithSpaces(Payout)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>АВ: </span><span>{{numberWithSpaces(AV)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{numberWithSpaces(Income)}}</span></strong>
-                                <strong class="chart-mainData-attributes"><span>План: </span><span>{{numberWithSpaces(Plan)}}</span></strong>
-                            </div>
-                        </div>
-                        <div class="col-12 pl-0 pr-0 min-width-50">
-                            <div>
-                                <div class="width100 flex-row">
-                                    <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px">
-                                        <GChart
-                                                type="BarChart"
-                                                :data="secondChartData"
-                                                :options="secondChartOptions"
-                                        />
+                                <div class="mobile-date-flex">
+                                    <div v-if="checkUrl()" class="mobile-date-contain mobile-dossier-fio-input mobile-date-width">
+                                        <div class="bg-darkgray width100 flex-row date-color pl-2 pr-2 pt-1 pb-1 date-width">
+                                            <treeselect v-model="ISN" :multiple="false" :options="options" />
+                                        </div>
+                                    </div>
+                                    <div class="pl-4 mb-3 border-rad-20 pr-4 pt-1 pb-1 mt-3 mobile-date-width bg-blue-standart color-white" @click="getReport()">
+                                        <div class="flex-row width100 jc-center pointer vertical-middle">
+                                            <i class="far fa-eye"></i>
+                                            <div class="ml-2">Показать</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -96,34 +32,45 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
-                <div class="flex-row jc-sb pb-4 vertical-middle flex-row">
-                    <div class="width100 col-md-12 pl-0 pr-0 main-data-chart-contains main-data-chart-contains-size">
-                        <div class="main-data-chart-contains-size min-width-50 flex-row pl-0 pr-0 vertical-middle">
-                            <div class="width100 flex-row">
-                                <div class="col-md-12 pl-0 pr-0 flex-row width100" ref="divElement" style="height : 200px;">
-                                    <GChart
-                                            type="PieChart"
-                                            :data="thirdChartData"
-                                            :options="thirdChartOptions"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 pl-0 pr-0 min-width-50 main-data-border-left">
-                            <div class="width100 flex-row">
-                                <div class="col-12 pl-0 pr-0 flex-row width100 main-data-first-chart-contain" ref="divElement" style="height : 200px">
-                                    <GChart
-                                            class="width100"
-                                            type="LineChart"
-                                            :data="fourthChartData"
-                                            :options="fourthChartOptions"
-                                />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+        <div v-show="show">
+            <div class="p-2 width100 bg-white d-flex justify-content-center">
+                <GChart
+                        class="width100"
+                        type="PieChart"
+                        :data="chartData"
+                        :options="chartOptions"
+                />
+                <div class="flex-column chart-mainData-attributes-contain width100">
+                    <strong class="chart-mainData-attributes"><span>Сборы: </span><span>{{Amount}}</span></strong>
+                    <strong class="chart-mainData-attributes"><span>Выплаты: </span><span>{{Payout}}</span></strong>
+                    <strong class="chart-mainData-attributes"><span>АВ: </span><span>{{AV}}</span></strong>
+                    <strong class="chart-mainData-attributes"><span>Доход: </span><span>{{Income}}</span></strong>
                 </div>
+            </div>
+            <div class="p-2 width100 bg-white d-flex justify-content-center">
+                <GChart
+                        class="width100"
+                        type="BarChart"
+                        :data="secondChartData"
+                        :options="secondChartOptions"
+                />
+            </div>
+            <div class="p-2 width100 bg-white d-flex justify-content-center">
+                <GChart
+                        class="width100"
+                        type="PieChart"
+                        :data="thirdChartData"
+                        :options="thirdChartOptions"
+                />
+            </div>
+            <div class="p-2 width100 bg-white d-flex justify-content-center">
+                <GChart
+                        class="width100"
+                        type="LineChart"
+                        :data="fourthChartData"
+                        :options="fourthChartOptions"
+                />
             </div>
         </div>
     </div>
@@ -131,8 +78,8 @@
 
 <script>
     export default {
-        name: "report",
-        data () {
+        name: "statistics",
+        data() {
             return {
                 options: null,
                 dateBeg: new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 10),
@@ -141,7 +88,6 @@
                 Payout : 0,
                 AV : 0,
                 Income : 0,
-                Plan: 0,
                 chartData: [],
                 chartOptions: {
                     chart: {
@@ -174,8 +120,8 @@
                     },
                     colors: ['#0079ea','#3293ee','#7cb8f1'],
                     chartArea:{left:100, right: 0},
-                    width: 400,
-                    axisTitlesPosition: 'out',
+                    width: 330,
+                    axisTitlesPosition: 'in',
                     // vAxis: {
                     //     // title: 'Hello',
                     //     titleTextStyle: {
@@ -230,16 +176,16 @@
             }
         },
         props : {
-            isn : Number
+            isn: Number,
         },
-        mounted() {
+        mounted: function(){
             this.ISN = this.isn;
-            //this.getReport()
+            this.getReport()
             if(this.checkUrl()){
                 this.getOptions();
             }
         },
-        methods : {
+        methods: {
             getReport() {
                 this.preloader(true);
                 this.axios.post('/getReport', {
@@ -260,15 +206,10 @@
                     this.Amount = response.info.Amount;
                     this.Payout = response.info.Payout;
                     this.AV = response.info.AV;
-                    this.Income = response.info.Income;
-                    this.Plan = response.info.FeesPlan;
+                    this.Income =response.info.Income;
                     this.setMainData(response.info.FeesPlan, this.Amount);
                     this.setIndicators(response.info.ProlProc, response.info.CrossProc, response.info.Treaties);
-                    if(Object.keys(response.info.PRODUCTS).length == 0){
-                        alert('Нет данных по отчету');
-                    } else {
-                        this.setPortfelData(response.info.PRODUCTS);
-                    }
+                    this.setPortfelData(response.info.PRODUCTS);
                     this.setDynamicData(response.info.DINAMIC);
                     this.show = true;
                     this.preloader(false);
@@ -294,7 +235,7 @@
             setIndicators(Prolongation, Cross, Agreements){
                 this.secondChartData = [
                     ['Element', '', { role: 'style' }],
-                    ['пролонгация', this.getPercent(parseInt(Prolongation.substring(0, Prolongation.length - 1)), Agreements), '#0079ea'],
+                    ['прологация', this.getPercent(parseInt(Prolongation.substring(0, Prolongation.length - 1)), Agreements), '#0079ea'],
                     ['кросс-продажи', this.getPercent(parseInt(Cross.substring(0, Cross.length - 1)), Agreements), '#3293ee'],
                     ['кол-во договоров', Agreements, '#7cb8f1'],
                 ]
@@ -364,17 +305,8 @@
             },
             checkUrl(){
                 return ((window.location.pathname).slice(1,10) !== 'colleague');
-            },
-            numberWithSpaces(x) {
-                var parts = x.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-                return parts.join(".");
             }
-        }
+        },
 
     }
 </script>
-
-<style scoped>
-
-</style>

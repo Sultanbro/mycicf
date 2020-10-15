@@ -50,6 +50,13 @@
                         <span>Отчет</span>
                     </li>
                 </a>
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('statistics')}}">
+                    <li class="leftsidebar-icons">
+                        <i class="far fa-chart-bar"></i>
+{{--                        <i class="fas fa-chart-bar"></i>--}}
+                        <span>Статистика ДА</span>
+                    </li>
+                </a>
             @endif
 
             <!--a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
