@@ -270,4 +270,14 @@ interface KiasServiceInterface
     public function getSubject($firstName, $lastName, $patronymic, $iin);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
+
+    /**
+     * Получить данные по Статистике ДА
+     * @param $productInfo
+     * @param $empiIsn
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return mixed
+     */
+    public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd);
 }

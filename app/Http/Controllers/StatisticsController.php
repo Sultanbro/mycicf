@@ -60,35 +60,34 @@ class StatisticsController extends Controller
         return $result;
     }
 
-    public function getReport(Request $request, KiasServiceInterface $kias){
-        $ISN = $request->isn;
-        /*
-         * 1446265
-         * 1446171
-         * 1446285
-         */
-        $dateBeg = date('d.m.Y', strtotime($request->dateBeg));
-        $dateEnd = date('d.m.Y', strtotime($request->dateEnd));
-        $response = $kias->GetInfoUser($dateBeg, $dateEnd, $ISN);
-        dd($response);
-        if($response->error) {
-            return response()
-                ->json([
-                    'success' => false,
-                    'error' => $response->error->text,
-                ]);
-        }
-        return response()
-            ->json([
-                'success' => true,
-                'info' => $response
-            ]);
-    }
+//    public function getReport(Request $request, KiasServiceInterface $kias){
+//        $ISN = $request->isn;
+//        /*
+//         * 1446265
+//         * 1446171
+//         * 1446285
+//         */
+//        $dateBeg = date('d.m.Y', strtotime($request->dateBeg));
+//        $dateEnd = date('d.m.Y', strtotime($request->dateEnd));
+//        $response = $kias->GetInfoUser($dateBeg, $dateEnd, $ISN);
+//        if($response->error) {
+//            return response()
+//                ->json([
+//                    'success' => false,
+//                    'error' => $response->error->text,
+//                ]);
+//        }
+//        return response()
+//            ->json([
+//                'success' => true,
+//                'info' => $response
+//            ]);
+//    }
 
     public function getProdData(Request $request, KiasServiceInterface $kias){
         $result = $kias->request('GETDICTILIST', [
-           'DictiISN' => self::DICTI_OBZ_ISN,
-           'Mode' => 0
+            'DictiISN' => self::DICTI_OBZ_ISN,
+            'Mode' => 0
         ]);
         //dd($result);
     }
@@ -116,5 +115,58 @@ class StatisticsController extends Controller
                 'success' => true,
                 'result' => $result
             ]);
+    }
+
+    public function getReport(Request $request, KiasServiceInterface $kias){
+        $product = $request->product;
+        $emplIsn = 1445780;//$request->isn;
+        $response = $kias->getUnderReport($product, $emplIsn,'01.01.2020', '01.09.2020');//$request->dateBeg,$request->dateEnd);
+        $pieQuantity = [[
+            'Продукт', 'Доля'
+        ]];
+        $pieType = [[
+            'Продукт', 'Доля'
+        ]];
+        foreach ($response->CALC1->row as $row){
+            array_push($pieQuantity, [
+                (string)$row->product." ".'- '.$row->quantity.'%', (double)str_replace(',','.', (string)$row->quantity)
+            ]);
+            array_push($pieType, [
+                (string)$row->product." ".'- '.(string)$row->ptype, (double)str_replace(',','.', (string)$row->ptype)
+            ]);
+        }
+        $genData = [
+            ['Тип', 'Заявки', 'Согласовано', 'Отказано', 'В работе', 'Договоры'],
+            [
+                'Кол-во',
+                (int)$response->GEN->row->AllReq,
+                (int)$response->GEN->row->done,
+                (int)$response->GEN->row->rejected,
+                (int)$response->GEN->row->onwork,
+                (int)$response->GEN->row->agr,
+            ]
+        ];
+
+        $calc = [
+            ['Тип', 'Заявки', 'Согласовано', 'Отказано', 'В работе', 'Договоры'],
+            [
+                'Кол-во',
+                (int)$response->CALC2->row->AllReq,
+                (int)$response->CALC2->row->done,
+                (int)$response->CALC2->row->rejected,
+                (int)$response->CALC2->row->onwork,
+                (int)$response->CALC2->row->agr,
+            ]
+        ];
+//        foreach ($response->CALC2->row as $row){
+//            array_push();
+//        }
+        return response()->json([
+            'pieQuantity' => $pieQuantity,
+            'pieType' => $pieType,
+            'genData' => $genData,
+            'calc' => $calc,
+            'success' => true,
+        ]);
     }
 }

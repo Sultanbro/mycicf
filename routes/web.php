@@ -238,9 +238,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/report', 'ReportController@index')->name('report');
         Route::post('/getReport', 'ReportController@getReport');
 
+        //STATISTIC-DA
         Route::get('/statistics', 'StatisticsController@index')->name('statistics');
         Route::post('/getStatisticsReport', 'StatisticsController@getReport');
         Route::post('/getProdData', 'StatisticsController@getProdData');
+        Route::get('/getProducts', 'StatisticsController@getProducts');
+        Route::post('/testiruem', 'StatisticsController@testiruem');
 
         Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
@@ -333,7 +336,3 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-
-
-Route::get('/getProducts', 'StatisticsController@getProducts');
-Route::post('/testiruem', 'StatisticsController@testiruem');

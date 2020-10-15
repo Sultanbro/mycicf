@@ -654,4 +654,15 @@ class Kias implements KiasServiceInterface
             'DeptISN' => $deptIsn,
         ]);
     }
+
+
+    public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd)
+    {
+        return $this->request('User_CicGetUnderReport', [
+            'Product' => $productInfo,
+            'EmplISN' => $emplIsn,
+            'DATEBEG' => date('d.m.Y', strtotime($dateBeg)),
+            'DATEEND' => date('d.m.Y', strtotime($dateEnd)),
+        ]);
+    }
 }
