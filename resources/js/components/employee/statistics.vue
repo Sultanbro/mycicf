@@ -339,7 +339,7 @@
 
             getProducts() {
                 this.preloader(true);
-                this.axios.post('/testiruem', {}).then((response) => {
+                this.axios.post('/getProducts', {}).then((response) => {
                     this.products = response.data.result;
                     console.log(response);
                 }).catch(error => {

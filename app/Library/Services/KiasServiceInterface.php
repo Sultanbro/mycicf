@@ -100,6 +100,13 @@ interface KiasServiceInterface
     public function getAttachmentsList($docIsn);
 
     /**
+     * Получение списка прикреплении
+     *
+     * @param $ISN
+     */
+    public function getDictiProducts($ISN);
+
+    /**
      * Получить список фотографии сотрудника по дате обновления
      *
      * @param $date

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dicti;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
 
@@ -19,41 +20,42 @@ class StatisticsController extends Controller
     }
 
     public function getProducts(KiasServiceInterface $kias){
-        //ini_set('xdebug.max_nesting_level', 10000);
-        $mainProducts = [
-            self::DICTI_DOBR_ISN => "ДОБРОВОЛЬНОЕ СТРАХОВАНИЕ",
-            self::DICTI_OBZ_ISN => "ОБЯЗАТЕЛЬНОЕ СТРАХОВАНИЕ",
-            self::DICTI_VXOD_ISN => "ВХОДЯЩЕЕ ПЕРЕСТРАХОВАНИЕ"
-        ];
         $result = [];
-        foreach ($mainProducts as $productIsn => $productLabel){
-            array_push($result, [
-                'id' => $productIsn,
-                'label' => $productLabel,
-                'children' => self::getProductChild($kias, $productIsn)
-            ]);
+        $headData = Dicti::whereIn('isn', [self::DICTI_OBZ_ISN, self::DICTI_DOBR_ISN, self::DICTI_VXOD_ISN])->get();
+        foreach ($headData as $data){
+            if(count($data->childs)){
+                array_push($result, [
+                    'id' => $data->isn,
+                    'label' => $data->fullname,
+                    'children' => $this->getChild($data->isn),
+                ]);
+            }else{
+                array_push($result, [
+                    'id' => $data->isn,
+                    'label' => $data->fullname,
+                ]);
+            }
         }
+
         return response()->json([
             'result' => $result
         ]);
-//        dd($result);
-        //return $result;
     }
 
-    public static function getProductChild($kias, $product){
+    public function getChild($parent){
         $result = [];
-        $data = $kias->getDictList($product, 0);
-        foreach ($data->ROWSET->row as $row){
-            if((int)$row->N_KIDS == 1){
+        $headData = Dicti::where('parent_isn', $parent)->get();
+        foreach ($headData as $data){
+            if(count($data->childs)){
                 array_push($result, [
-                    'id' => (string)$row->ISN,
-                    'label' => (string)$row->FULLNAME,
-                    'children' => self::getProductChild($kias, $row->ISN)
+                    'id' => $data->isn,
+                    'label' => $data->fullname,
+                    'children' => $this->getChild($data->isn),
                 ]);
-            }else {
+            }else{
                 array_push($result, [
-                    'id' => (string)$row->ISN,
-                    'label' => (string)$row->FULLNAME
+                    'id' => $data->isn,
+                    'label' => $data->fullname,
                 ]);
             }
         }
@@ -92,30 +94,12 @@ class StatisticsController extends Controller
         //dd($result);
     }
 
-    public function testiruem(KiasServiceInterface $kias){
-        ini_set('xdebug.max_nesting_level', 10000);
-        $mainProducts = [
-            self::DICTI_DOBR_ISN => "ДОБРОВОЛЬНОЕ СТРАХОВАНИЕ",
-            self::DICTI_OBZ_ISN => "ОБЯЗАТЕЛЬНОЕ СТРАХОВАНИЕ",
-            self::DICTI_VXOD_ISN => "ВХОДЯЩЕЕ ПЕРЕСТРАХОВАНИЕ"
-        ];
-        $result = [];
-        foreach ($mainProducts as $productIsn => $productLabel){
-            array_push($result, [
-                'id' => $productIsn,
-                'label' => $productLabel,
-                'children' => self::getProductChild($kias, $productIsn)
-            ]);
-        }
-//        return response()->json([
-//            'result' => $result
+//    public function getProdData(Request $request, KiasServiceInterface $kias){
+//        $result = $kias->request('User_CicGetFullDictiList', [
+//            'ISN' => 13
 //        ]);
-        return response()
-            ->json([
-                'success' => true,
-                'result' => $result
-            ]);
-    }
+//        //dd($result);
+//    }
 
     public function getReport(Request $request, KiasServiceInterface $kias){
         $product = $request->product;
@@ -148,7 +132,6 @@ class StatisticsController extends Controller
                 (int)$response->GEN->row->agr,
             ]
         ];
-
         $calc = [
             ['Тип', 'Заявки', 'Согласовано', 'Отказано', 'В работе', 'Договоры'],
             [
