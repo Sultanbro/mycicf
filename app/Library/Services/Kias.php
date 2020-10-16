@@ -622,6 +622,20 @@ class Kias implements KiasServiceInterface
     }
 
     /**
+     * Получить справочники товаров
+     *
+     * @param $ISN
+     *
+     * @return SimpleXMLElement
+     */
+
+    public function getDictiProducts($ISN){
+        return $this->request('User_CicGetFullDictiList', [
+            'ISN' => $ISN
+        ]);
+    }
+
+    /**
      * Загрузка файлов
      *
      * @param        $refisn
