@@ -31,26 +31,26 @@
                     @endif
                 </li>
             </a>
-            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472)
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('rating')}}">
-                    <li class="leftsidebar-icons">
-                        <i class="far fa-star"></i>
-                        <span>Рейтинг</span>
-                    </li>
-                </a>
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/motivation">
-                    <li class="leftsidebar-icons">
-                        <i class="far fa-grin-stars"></i>
-                        <span>Мотивация</span>
-                    </li>
-                </a>
-                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('report')}}">
-                    <li class="leftsidebar-icons">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Отчет</span>
-                    </li>
-                </a>
-            @endif
+{{--            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472)--}}
+{{--                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('rating')}}">--}}
+{{--                    <li class="leftsidebar-icons">--}}
+{{--                        <i class="far fa-star"></i>--}}
+{{--                        <span>Рейтинг</span>--}}
+{{--                    </li>--}}
+{{--                </a>--}}
+{{--                <a class="pt-2 pb-2 color-blue font-size-1_2" href="/motivation">--}}
+{{--                    <li class="leftsidebar-icons">--}}
+{{--                        <i class="far fa-grin-stars"></i>--}}
+{{--                        <span>Мотивация</span>--}}
+{{--                    </li>--}}
+{{--                </a>--}}
+{{--                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('report')}}">--}}
+{{--                    <li class="leftsidebar-icons">--}}
+{{--                        <i class="fas fa-chart-pie"></i>--}}
+{{--                        <span>Отчет</span>--}}
+{{--                    </li>--}}
+{{--                </a>--}}
+{{--            @endif--}}
 
             <!--a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
                 <li class="leftsidebar-icons">
@@ -72,6 +72,12 @@
 {{--                    </li>--}}
 {{--                </a>--}}
 {{--            @endif--}}
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('cabinet')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fas fa-user-tie" aria-hidden="true"></i>
+                    <span>Личный кабинет</span>
+                </li>
+            </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
                 <li class="leftsidebar-icons">
                     <i class="fa fa-car" aria-hidden="true"></i>
