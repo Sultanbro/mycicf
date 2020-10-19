@@ -3,23 +3,25 @@
         <div v-if="checkUrl()" class="news-tape-bg radius-4px mt-3 pb-2">
             <div class="pt-4">
                 <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
-                    <div class="d-flex">
+                    <div class="d-flex col">
                         <div class="ml-4 mr-4">
                             <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
-                        </div>
-                        <div class="ml-4 mr-4">
-                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
+<!--                        </div>-->
+<!--                        <div class="ml-4 mr-4">-->
+                            <input type="date" class="border-0 mt-1 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
                         </div>
                     </div>
-                    <div class="ml-4 mr-4">
+                    <div class="col-6">
+                    <div class="ml-9 mr-9">
                         <treeselect class="w-95" v-model="ISN" :multiple="false" :options="options"></treeselect>
                     </div>
-                    <div class="ml-4 mr-4">
+                    <div class="ml-6 mr-6 mt-1">
                         <treeselect class="w-95" v-model="PRODUCT_ISN" :multiple="false" :options="products"></treeselect>
                     </div>
-                    <div class="ml-4 mr-4">
+                    </div>
+                    <div class="ml-6 mr-6 col">
                         <div class="date-color border-gray show-btn" @click="getReport">
-                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
+                            <div class="d-flex pt-1 mt-2 mb-2 pb-1 pl-5 pr-2">
                                 <div>
                                     <i class="far fa-eye"></i>
                                 </div>
@@ -347,7 +349,7 @@
                 }).finally(() => {
                     this.preloader(false);
                 });
-            }
+            },
         },
 
     }
