@@ -173,6 +173,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
         Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
+        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
         Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
