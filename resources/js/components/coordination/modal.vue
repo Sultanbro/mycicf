@@ -79,6 +79,24 @@
                         </div>
                         <div>
                             <div class="pl-5 pt-4 pb-4 pr-5">
+                                <div class="mt-4">
+                                    <div class="table-responsive-sm">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <td v-for="list in doc_row_list">{{list.fieldname}}</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(list,index) in doc_row_inner[1]">
+                                                <td v-for="(list,key) in doc_row_list">
+                                                    {{ doc_row_inner[key][index] }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                                 <div>
                                     <span class="color-blue-standart">Дополнительные сведения</span>
                                 </div>
@@ -262,6 +280,8 @@
             coordination: Object,
             isn: Number,
             attachments: Array || Object,
+            doc_row_list: Object,
+            doc_row_inner: Object
         },
         methods: {
             sendSolution: function (Solution) {
