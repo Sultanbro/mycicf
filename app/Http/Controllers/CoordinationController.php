@@ -154,6 +154,9 @@ class CoordinationController extends Controller
                     'id' => (string)$row->id,
                     'docdate' => (string)$row->docdate,
                     'DeptName' => (string)$row->DeptName,
+                    'ClassISN' => (string)$row->ClassISN,
+                    'RefDocISN' => (string)$row->RefDocISN,
+                    'RefClassISN' => (string)$row->RefClassISN,
                 ]);
             }
         }
