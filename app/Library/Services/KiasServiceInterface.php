@@ -79,7 +79,7 @@ interface KiasServiceInterface
      */
     public function getCoordination($docIsn);
 
-    /**
+    /**isn
      * Отправка ответа на лист согласования
      *
      * @param $DocISN
@@ -270,4 +270,7 @@ interface KiasServiceInterface
     public function getSubject($firstName, $lastName, $patronymic, $iin);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
+
+
+    //public function getSomeData($isn, $name, $date);
 }

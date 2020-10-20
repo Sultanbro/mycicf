@@ -10,13 +10,13 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
+                 @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
                     <a class="header-navigation" href="{{route('parse')}}">
                         <li>
                             parse
                         </li>
                     </a>
-                @endif
+                @endif 
                 {{--<a class="header-navigation" href="javascript:void(0)">--}}
                 {{--<li>--}}
                 {{--Рейтинг--}}
