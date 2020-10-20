@@ -36,9 +36,14 @@ class StatisticsController extends Controller
                 ]);
             }
         }
-
+        $res = [];
+        array_push($res, [
+            'id' => 13,
+            'label' => 'Все продукты',
+            'children' => $result
+        ]);
         return response()->json([
-            'result' => $result
+            'result' => $res
         ]);
     }
 
@@ -61,30 +66,6 @@ class StatisticsController extends Controller
         }
         return $result;
     }
-
-//    public function getReport(Request $request, KiasServiceInterface $kias){
-//        $ISN = $request->isn;
-//        /*
-//         * 1446265
-//         * 1446171
-//         * 1446285
-//         */
-//        $dateBeg = date('d.m.Y', strtotime($request->dateBeg));
-//        $dateEnd = date('d.m.Y', strtotime($request->dateEnd));
-//        $response = $kias->GetInfoUser($dateBeg, $dateEnd, $ISN);
-//        if($response->error) {
-//            return response()
-//                ->json([
-//                    'success' => false,
-//                    'error' => $response->error->text,
-//                ]);
-//        }
-//        return response()
-//            ->json([
-//                'success' => true,
-//                'info' => $response
-//            ]);
-//    }
 
     public function getProdData(Request $request, KiasServiceInterface $kias){
         $result = $kias->request('GETDICTILIST', [
@@ -113,7 +94,7 @@ class StatisticsController extends Controller
         ]];
         foreach($response->CALC3->row as $row){
             array_push($pieQuantity, [
-                (string)$row->dept." ".'- '.$row->quantity.'%', (double)str_replace(',','.', (string)$row->quantity)
+                (string)$row->dept." ".'- '.$row->quantity, (double)str_replace(',','.', (string)$row->quantity)
             ]);
         }
         foreach ($response->CALC1->row as $row){
