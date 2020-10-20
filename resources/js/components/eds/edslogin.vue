@@ -52,7 +52,7 @@
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
                     <input class="form-control mt-1 mb-1" placeholder="Введите пароль" type="text" v-model="sign.password" style="width: 150px;margin: 0 auto;">
                 </div>
-                <!--button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button-->
+                <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
             </div>
         </div>
         <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
@@ -87,6 +87,7 @@
         },
         props: {
             showView: String,
+            doc_row_list_inner_other: Array
         },
         methods: {
             connectSocket(check){
@@ -225,20 +226,59 @@
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
                                 self.loader(false);
-                                this.axios.post("/coordinationSaveAttachment", {
-                                    isn: self.$parent.coordination.ISN,
-                                    id: self.$parent.coordination.ID,
-                                    requestType: 'D',
-                                    fileType: 'base64',
-                                    file: self.signedFile,
-                                    fileExt: 'sig',
-                                }).then((response) => {
-                                    if (!response.data.success) {
-                                        alert(response.data.error);
-                                    } else {
-                                        self.getEdsInfo(response.data.result);
-                                    }
-                                });
+
+
+
+                                // --------------------------------
+
+
+                                for(var i = 0;Object.keys(self.doc_row_list_inner_other[1]).length > i;i++){
+                                    self.axios.post("/coordinationSaveAttachment", {
+                                        isn: self.doc_row_list_inner_other[1][i],
+                                        //isn: self.$parent.coordination.ISN,
+                                        //id: self.$parent.coordination.ID,
+                                        requestType: 'D',
+                                        fileType: 'base64',
+                                        file: self.signedFile,
+                                        fileExt: 'sig',
+                                    }).then((response) => {
+                                        if (!response.data.success) {
+                                            alert(response.data.error);
+                                        } else {
+                                            self.getEdsInfo(response.data.result);
+                                        }
+                                    });
+                                }
+
+
+
+
+
+                                //---------------------------------
+
+
+
+
+
+                                // this.axios.post("/coordinationSaveAttachment", {
+                                //     isn: self.$parent.coordination.ISN,
+                                //     id: self.$parent.coordination.ID,
+                                //     requestType: 'D',
+                                //     fileType: 'base64',
+                                //     file: self.signedFile,
+                                //     fileExt: 'sig',
+                                // }).then((response) => {
+                                //     if (!response.data.success) {
+                                //         alert(response.data.error);
+                                //     } else {
+                                //         self.getEdsInfo(response.data.result);
+                                //     }
+                                // });
+
+
+
+
+
                                 // if(type == 'coordination' && solution != undefined){
                                 //     self.$parent.sendSolution(solution);
                                 // }

@@ -218,7 +218,11 @@
                                                   class="resize modal-note width100"></textarea>
                                     </div>
 
-                                    <edslogin ref="eds" show-view="sign"></edslogin>
+                                    <edslogin
+                                            ref="eds"
+                                            :doc_row_list_inner_other="doc_row_list_inner_other"
+                                            show-view="sign">
+                                    </edslogin>
 
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
