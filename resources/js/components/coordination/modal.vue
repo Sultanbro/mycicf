@@ -140,7 +140,7 @@
                                             <tbody>
                                             <tr v-for="(list,index) in doc_row_list_inner_other[1]">
                                                 <td v-for="(list,key) in doc_row_list_other">
-                                                    {{ doc_row_list_inner_other[key][index] }}
+                                                    {{ doc_row_list_inner_other[key][index]['ID'] }}
                                                 </td>
                                             </tr>
                                             </tbody>

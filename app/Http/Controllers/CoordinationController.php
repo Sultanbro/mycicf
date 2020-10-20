@@ -313,8 +313,16 @@ class CoordinationController extends Controller
                     if(!isset($doc_row_list[(string)$row->orderno])){
                         $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
                     }
-
-                        $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
+                    if(isset($row->classisn)) {
+                        if ($row->classisn == 1784771) {
+                            $doc_row_inner[(string)$row->orderno][] = array(
+                                'ISN' => (string)$row->value,
+                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
+                            );
+                        } else {
+                            $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
+                        }
+                    }
                 }
 
                 return response()->json([

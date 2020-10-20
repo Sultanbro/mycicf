@@ -87,7 +87,7 @@
         },
         props: {
             showView: String,
-            doc_row_list_inner_other: Array
+            doc_row_list_inner_other: Object
         },
         methods: {
             connectSocket(check){
@@ -234,10 +234,10 @@
 
                                 for(var i = 0;Object.keys(self.doc_row_list_inner_other[1]).length > i;i++){
                                     self.axios.post("/coordinationSaveAttachment", {
-                                        isn: self.doc_row_list_inner_other[1][i],
+                                        isn: self.doc_row_list_inner_other[1][i].ISN,
                                         //isn: self.$parent.coordination.ISN,
                                         //id: self.$parent.coordination.ID,
-                                        requestType: 'D',
+                                        requestType: 'А',
                                         fileType: 'base64',
                                         file: self.signedFile,
                                         fileExt: 'sig',
@@ -426,7 +426,7 @@
                     }).then((response) => {
                         if (response.data.success) {
                             //if(type == 'coordination' && solution != undefined){
-                                self.$parent.sendSolution(1);
+                                //self.$parent.sendSolution(1);
                             //}
                         } else {
                             alert(response.data.error);
