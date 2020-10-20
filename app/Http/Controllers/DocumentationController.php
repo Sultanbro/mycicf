@@ -17,6 +17,8 @@ class DocumentationController extends Controller
         return view('welcome');
     }
 
+    //...
+
     public function index(){
         ini_set ('memory_limit', '2048M');
         return view('svg');

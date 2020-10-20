@@ -13,9 +13,30 @@
                 </div>
             </div>
             <div class="width100">
-                <div class="flex-column vertical-middle color-white bg-color-blue width100">
+                <div class="flex-column vertical-middle color-white bg-color-blue width100" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
                     <span>Основная информация</span>
-                    <span><i class="fa fa-chevron-down"></i></span>
+                    <!--span><i class="fa fa-chevron-down"></i></span-->
+                    <span class="ml-2 vertical-middle"><i class="fas " :class="caretClass" data-toggle="collapse" href="#multiCollapseExample1"></i></span>
+                </div>
+            </div>
+            <div class="ml-3 mr-3 mt-2 collapse in show" id="persons-data" v-show="duty != ''">
+                <div class="left-menu-fonts">
+                    <span><strong>{{duty}}</strong></span>
+                </div>
+                <div class="left-menu-fonts" v-if="rating !== ''">
+                    <span><strong>Рейтинг: &nbsp; </strong><span>{{rating}}</span></span>
+                </div>
+                <div class="left-menu-fonts">
+                    <span><strong>Дата рождения: &nbsp; </strong><span>{{birthday}}</span></span>
+                </div>
+                <div class="left-menu-fonts">
+                    <span><strong>Место рождения: &nbsp; </strong><span>{{place_of_birth}}</span></span>
+                </div>
+                <div class="left-menu-fonts">
+                    <span><strong>Семейное положение: &nbsp; </strong><span>{{married}}</span></span>
+                </div>
+                <div class="left-menu-fonts">
+                    <span><strong>Образование: &nbsp; </strong><span>{{education}}</span></span>
                 </div>
             </div>
 <!--            {{                    <div class="width100 mt-3 mb-4">&#45;&#45;}}-->
@@ -44,6 +65,14 @@
                 admins: null,
                 options: null,
                 fakeImage : false,
+
+                caretClass: 'fa-chevron-up',
+                duty: '',
+                birthday: '',
+                place_of_birth: '',
+                married: '',
+                education: '',
+                rating: '',
             }
         },
         props : {
@@ -51,6 +80,7 @@
             fullname: String,
         },
         created: function(){
+            this.getColleagueData();
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
         },
         mounted: function(){
@@ -70,13 +100,34 @@
             },
             fetchResponse: function(response){
                 if(response.success){
-
                     this.carier = response.result.CARIER;
                     this.vacation = response.result.VACATION;
                     this.sick = response.result.SICK;
                     this.mission = response.result.MISSION;
                     this.thanks = response.result.THANKS;
                     this.admins = response.result.ADMINS;
+
+                }else{
+                    alert(response.error);
+                }
+            },
+            reverseCaret: function () {
+                this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
+            },
+            getColleagueData: function(){
+                this.axios.post("/getColleagueData", {isn : this.isn}).then((response) => {
+                    this.fetchColleagueData(response.data)
+                })
+            },
+            fetchColleagueData: function(response){
+                if(response.success){
+                    var information = response.response;
+                    this.fullname = information.Name;
+                    this.duty = information.Duty;
+                    this.birthday = information.Birthday;
+                    this.married = information.Married;
+                    this.education = information.Education;
+                    this.rating = information.Rating;
                 }else{
                     alert(response.error);
                 }

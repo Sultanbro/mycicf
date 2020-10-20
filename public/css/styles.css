@@ -1110,7 +1110,6 @@ ul{
 	display: flex;
 	flex-flow: row;
 }
-
 /*Конец стилей страницы входа*/
 /*Начало главной страницы новостей*/
 .header{
@@ -2448,6 +2447,45 @@ textarea::-webkit-scrollbar-thumb {
 .input7-size{
 	min-width: 176px;
 }
+
+.white-space {
+    white-space: unset !important;
+}
+
+
+.gray-button {
+    background-color: #EEE;
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.gray-button:hover {
+    background-color: #D2D2D2;
+}
+
+.custom-blue-button {
+    cursor: pointer;
+    transition: 0.4s ease;
+}
+
+.custom-blue-button:hover {
+    color:cornflowerblue;
+}
+
+.progress-bar-hover {
+    cursor: pointer;
+    transition: all 0.4s linear;
+}
+
+.progress-bar-hover:hover {
+    color: #FFF;
+    background-color: #C8E3FF;
+}
+
+.progress-bar-hover-disabled {
+    pointer-events:none !important;
+}
+
 
 .white-space {
     white-space: unset !important;

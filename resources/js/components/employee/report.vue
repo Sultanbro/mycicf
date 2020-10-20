@@ -234,7 +234,7 @@
         },
         mounted() {
             this.ISN = this.isn;
-            this.getReport()
+            //this.getReport()
             if(this.checkUrl()){
                 this.getOptions();
             }
@@ -264,7 +264,11 @@
                     this.Plan = response.info.FeesPlan;
                     this.setMainData(response.info.FeesPlan, this.Amount);
                     this.setIndicators(response.info.ProlProc, response.info.CrossProc, response.info.Treaties);
-                    this.setPortfelData(response.info.PRODUCTS);
+                    if(Object.keys(response.info.PRODUCTS).length == 0){
+                        alert('Нет данных по отчету');
+                    } else {
+                        this.setPortfelData(response.info.PRODUCTS);
+                    }
                     this.setDynamicData(response.info.DINAMIC);
                     this.show = true;
                     this.preloader(false);

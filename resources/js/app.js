@@ -22,6 +22,8 @@ import vmodal from 'vue-js-modal'
 
 import VueTheMask from 'vue-the-mask'
 
+import Vue from "vue";
+
 const moment = require('vue-moment');
 
 Vue.use(moment);
@@ -104,6 +106,8 @@ Vue.component('report', require('./components/employee/report.vue').default);
 
 Vue.component('rating', require('./components/employee/rating.vue').default);
 
+Vue.component('statistics', require('./components/employee/statistics.vue').default);
+
 Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
 
 Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
@@ -163,6 +167,20 @@ Vue.component('inspection-info', require('./components/employee/inspection-info'
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
 
+Vue.component('booking', require('./components/common/booking').default);
+
+Vue.component('reception', require('./components/booking/reception').default);
+
+Vue.component('reception', require('./components/booking/reception').default);
+
+Vue.component('conf', require('./components/booking/conf').default);
+
+Vue.component('dps', require('./components/booking/dps').default);
+
+Vue.component('drr', require('./components/booking/drr').default);
+
+Vue.component('dsv', require('./components/booking/dsv').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
@@ -170,6 +188,7 @@ window.onload = function(){
             value: null,
             // define options
             options: null,
+            office: 'conf',
             image: {
                 encoded: 0,
             },

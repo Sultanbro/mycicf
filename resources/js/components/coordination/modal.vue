@@ -107,6 +107,46 @@
                                     <textarea name="comment-modal" rows="3" v-model="coordination.Remark"
                                               class="resize modal-textarea-comment width100" disabled></textarea>
                                 </div>
+                                <div class="mt-4">
+                                    <div class="table-responsive-sm">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td v-for="list in doc_row_list">
+                                                    <b>{{list.fieldname}}</b>
+                                                </td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(list,index) in doc_row_inner[1]">
+                                                <td v-for="(list,key) in doc_row_list">
+                                                    {{ doc_row_inner[key][index] }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <div class="table-responsive-sm">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td v-for="list in doc_row_list_other">
+                                                    <b>{{list.fieldname}}</b>
+                                                </td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(list,index) in doc_row_list_inner_other[1]">
+                                                <td v-for="(list,key) in doc_row_list_other">
+                                                    {{ doc_row_list_inner_other[key][index] }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -265,6 +305,10 @@
             coordination: Object,
             isn: Number,
             attachments: Array || Object,
+            doc_row_list: Object,
+            doc_row_inner: Object,
+            doc_row_list_other: Object,
+            doc_row_list_inner_other: Object
         },
         methods: {
             beforeSendSolution(solution){

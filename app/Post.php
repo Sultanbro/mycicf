@@ -19,6 +19,55 @@ class Post extends Model
     const DELETED_POST = 'deleted';
     const COMMENDTED_POST = 'commented';
 
+    public function getPoll($post_id) {
+        $question = Question::where('post_id', $post_id)->first();
+        $question_id = $question['id'];
+        $question_value = $question['question'];
+        $answers = Answer::where('question_id', $question_id)->get();
+
+        $post_answers = [];
+        foreach ($answers as $answer) {
+            array_push($post_answers, [
+                "answer_id" => $answer['id'],
+                "answer_title" => $answer['value'],
+                "answer_votes" => $this->getAnswerVotes($answer['id']),
+                "checked" => false
+            ]);
+        }
+        $post_poll = [
+            "question_id" => $question_id,
+            "question_title" => $question_value,
+            "total_votes" => $this->getTotalVotes($question_id),
+            "answers" => $post_answers,
+        ];
+        return $post_poll;
+    }
+
+
+    private function getAnswerVotes($answer_id) {
+        $count = UserAnswer::where('answer_id', $answer_id)->count();
+        return $count;
+    }
+
+    private function getTotalVotes($question_id) {
+        $count = UserAnswer::where('question_id', $question_id)->count();
+        return $count;
+    }
+
+    public function getIsVoted($isn, $post_id) {
+        $question_id = Question::where('post_id', $post_id)
+            ->first();
+        $model = UserAnswer::where('question_id', $question_id['id'])
+            ->where('user_isn', $isn)->first();
+        if($model === null) {
+            $is_voted = 0;
+        }
+        else {
+            $is_voted = 1;
+        }
+        return $is_voted;
+    }
+
     public function setPinned(){
         self::where('pinned', 1)->update([
             'pinned' => 0

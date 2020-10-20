@@ -1202,7 +1202,7 @@ class ProductsController extends Controller
                     'ModelISN' => intval($car['ModelISN']),
                     'MarkaISN' => intval($car['MarkaISN']),
                     'ClassISN' => intval($car['ClassISN']),
-                    'ReleaseDate' => $car['ReleaseDate'],
+                    'ReleaseDate' => date('d.m.Y',strtotime($car['ReleaseDate'])),
                     'VIN' => $car['VIN'],
                     'REGNO' => $car['REGNO'],
                     'OwnerJuridical' => 'N',
@@ -1462,7 +1462,7 @@ class ProductsController extends Controller
                 $sendType = 'D';
             } else {
                 $quotation = FullQuotation::where('calc_isn', $request->calc_isn)->first();
-                $sendType = $quotation->calc_da == 1 ? 'Q' : 'C';
+                $sendType = 'C';        //$quotation->calc_da == 1 ? 'Q' :
             }
             foreach($request->file('files') as $file) {
                 $contents = $file->get();
@@ -1710,102 +1710,11 @@ class ProductsController extends Controller
         }
     }
 
-    /*public function getVehicle(Request $request){
-        $success = false;
-        $error = '';
-        $kias = new Kias();
-        $kias->initSystem();
-        $vin = $request->VIN ?? null;
-        $tfNumber = $request->REGNO ?? null;
-        $result = $kias->getVehicle($vin, null, $tfNumber, null);
-        if(!isset($result->VIN)){
-            $result = $kias->getVehicle($vin, null, $tfNumber, null,1);
-        }
-
-        if(isset($result->VIN)){
-            $releaseDate = isset($result->REALESE_DATE) ? '01.12.'.(string)$result->REALESE_DATE : (string)$result->DATERELEASE;
-            $territory_isn = isset($result->REG_TERRITORY) ? (string)$result->REG_TERRITORY : 17;
-            $territory_name = isset($result->REG_TERRITORY_NAME) ? (string)$result->REG_TERRITORY_NAME : 'Временный въезд';
-            $success = true;
-            $result = array(
-                'ModelISN' => (string)$result->MODELISN,
-                'Model' => (string)$result->MODELNAME,
-                'MarkaISN' => (string)$result->MARKISN,
-                'Mark' => (string)$result->MARKNAME,
-                'ClassISN' => $request->ClassISN,
-                'ReleaseDate' => $releaseDate,
-                'VIN' => (string)$result->VIN,
-                'REGNO' => (string)$result->REG_NUM,
-                'OwnerJuridical' => 'N',
-                'TerritoryISN' => $territory_isn,
-                'TerritoryName' => $territory_name,
-                'PROBEG' => '',
-                'REALPRICE' => ''
-            );
+    public function getReport(Request $request){
+        if(isset($request->type) && $request->type == 'full'){
+            $quotations = FullQuotation::all();
         } else {
-            $error = 'not_found';
+            $quotations = ExpressQuotation::all();
         }
-        return response()->json([
-            'success' => $success,
-            'error' => $error,
-            'result' => $result
-        ]);
     }
-
-    public function saveVehicle(Request $request){
-        $kias = new Kias();
-        $kias->initSystem();
-
-        $vin = $request->data['VIN'] ?? null;
-        $tfNumber = $request->data['REGNO'] ?? null;
-        $error = null;
-        $result = null;
-
-        $checkByVin = $kias->getVehicle($vin, null, null, null);    // Сначало проверяем по VIN номеру
-        if(!isset($checkByVin->VIN)){
-            $checkByVin = $kias->getVehicle($vin, null, null, null,1);
-            if(!isset($checkByVin->VIN)){
-                $checkByNumber = $kias->getVehicle(null, null, $tfNumber, null);    // Потом проверяем по гос номеру
-                if(!isset($checkByNumber->VIN)){
-                    $checkByNumber = $kias->getVehicle(null, null, $tfNumber, null,1);
-                    if(isset($checkByNumber->VIN)){
-                        $error = 'В базе данных уже есть автотранспорт с таким гос номером - '.$tfNumber;
-                    }
-                } else {
-                    $error = 'В базе данных уже есть автотранспорт с таким гос номером - '.$tfNumber;
-                }
-            } else {
-                $error = 'В базе данных уже есть автотранспорт с таким VIN номером - '.$vin;
-            }
-        } else {
-            $error = 'В базе данных уже есть автотранспорт с таким VIN номером - '.$vin;
-        }
-
-        if($error != null){
-            return response()->json([
-                'success' => false,
-                'error' => $error
-            ]);
-        }
-
-        try {
-            $saveVehicle = $kias->saveVehicle($request->data);
-            if(isset($saveVehicle->error)){
-                $success = false;
-                $error = (string)$saveVehicle->error->fulltext;
-            } else {
-                $success = true;
-                $result = $request->data;
-            }
-        } catch (KiasRequestException $e) {
-            $success = false;
-            $error = $e->getMessage();
-        }
-
-        return response()->json([
-            'success' => $success,
-            'error' => $error,
-            'result' => $result
-        ]);
-    }*/
 }

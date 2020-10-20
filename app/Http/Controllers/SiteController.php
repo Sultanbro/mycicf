@@ -124,7 +124,7 @@ class SiteController extends Controller
             }
         }
 
-        if($success && $response->VACATION->row[0]->period != 0)
+        if($success && isset($response->VACATION->row[0]->period) && $response->VACATION->row[0]->period != 0)
         {
             $vacation = array();
             foreach ($response->VACATION->row as $row){
@@ -251,6 +251,10 @@ class SiteController extends Controller
             3560197 => 3560197,
             3130949 => 3130949,
             1445721 => 1445721,
+            235472 => 235472, // Эльдар Советович
+            5011 => 5011,
+            4275866 => 4275866,
+            766502 => 766502,
         );
     }
 
@@ -573,6 +577,8 @@ class SiteController extends Controller
                     "ISN" => $birthday->kias_id,
                     "birthday" => date('d.m.Y', strtotime($birthday->birthday)),
                     "fakeImage" => !Branch::checkImageExists($birthday->kias_id),
+                    "duty" => $birthday->duty,
+                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
                     'similar' => []
                 ]);
             } else {
@@ -582,6 +588,8 @@ class SiteController extends Controller
                     "ISN"=>$birthday->kias_id,
                     "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
                     "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
+                    "duty" => $birthday->duty,
+                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
                     'similar' => []
                 ]);
                 $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));

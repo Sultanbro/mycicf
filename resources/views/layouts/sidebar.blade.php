@@ -31,7 +31,7 @@
                     @endif
                 </li>
             </a>
-            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721)
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472 || auth()->user()->ISN == 5011 || auth()->user()->ISN == 4275866 || auth()->user()->ISN == 766502)
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('rating')}}">
                     <li class="leftsidebar-icons">
                         <i class="far fa-star"></i>
@@ -48,6 +48,13 @@
                     <li class="leftsidebar-icons">
                         <i class="fas fa-chart-pie"></i>
                         <span>Отчет</span>
+                    </li>
+                </a>
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('statistics')}}">
+                    <li class="leftsidebar-icons">
+                        <i class="far fa-chart-bar"></i>
+{{--                        <i class="fas fa-chart-bar"></i>--}}
+                        <span>Статистика ДА</span>
                     </li>
                 </a>
             @endif
@@ -76,6 +83,12 @@
                 <li class="leftsidebar-icons">
                     <i class="fa fa-car" aria-hidden="true"></i>
                     <span>Предстраховой осмотр</span>
+                </li>
+            </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('booking')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <span>Бронирование конференц-зала</span>
                 </li>
             </a>
         </ul>
