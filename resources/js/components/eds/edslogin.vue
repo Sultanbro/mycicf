@@ -233,8 +233,9 @@
 
 
                                 for(var i = 0;Object.keys(self.doc_row_list_inner_other[1]).length > i;i++){
+                                    let curr_isn = self.doc_row_list_inner_other[1][i].ISN;
                                     self.axios.post("/coordinationSaveAttachment", {
-                                        isn: self.doc_row_list_inner_other[1][i].ISN,
+                                        isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
                                         //isn: self.$parent.coordination.ISN,
                                         //id: self.$parent.coordination.ID,
                                         requestType: 'A',
@@ -245,7 +246,7 @@
                                         if (!response.data.success) {
                                             alert(response.data.error);
                                         } else {
-                                            self.getEdsInfo(response.data.result);
+                                            self.getEdsInfo(response.data.result,curr_isn);
                                         }
                                     });
                                 }
@@ -297,7 +298,7 @@
                     }
                 }
             },
-            getEdsInfo(docIsn){    // docIsn - isn документа
+            getEdsInfo(docIsn,agreementISN){    // docIsn - isn документа
                 let self = this;
                 self.signedFileInfo = [];
                 self.loader(true);
@@ -308,7 +309,7 @@
                         var obj = response.data.result;
                         if(obj.length > 0){
                             for(let index in obj) {
-                                this.checkSignedFile(obj[index][0],docIsn);     // Проверить подписанные файлы
+                                this.checkSignedFile(obj[index][0],docIsn,agreementISN);     // Проверить подписанные файлы
                             }
                         }
                         self.loader(false);
@@ -373,7 +374,7 @@
             //         alert('Выберите пожалуйста файл');
             //     }
             // },
-            checkSignedFile(url,toKias){        // Посмотреть подписанный файл
+            checkSignedFile(url,toKias,agreementISN){        // Посмотреть подписанный файл
                 let self = this;
                 if(url != ''){
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
@@ -399,7 +400,7 @@
                                         self.signedFileInfo = result.responseObjects;
                                     }
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
-                                        self.sendEdsInfoToKias(toKias); // Записываем в киас данные из подписанного файла
+                                        self.sendEdsInfoToKias(toKias,agreementISN); // Записываем в киас данные из подписанного файла
                                     }
                                 }
                             } else {
@@ -415,14 +416,14 @@
                     alert('Выберите пожалуйста файл');
                 }
             },
-            sendEdsInfoToKias(docIsn){ // docIsn - isn документа, self.isn - это исн котировки
+            sendEdsInfoToKias(docIsn,agreementISN){ // docIsn - isn документа, self.isn - это исн котировки
                 let self = this;
                 let obj = self.signedFileInfo;
                 for (let index in obj) {
                     axios.post("/save_eds_info", {
                         data: obj[index],
                         isn: docIsn,
-                        refIsn: self.isn
+                        refIsn: agreementISN    //self.isn
                     }).then((response) => {
                         if (response.data.success) {
                             //if(type == 'coordination' && solution != undefined){
