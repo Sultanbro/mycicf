@@ -255,6 +255,7 @@ class SiteController extends Controller
             5011 => 5011,
             4275866 => 4275866,
             766502 => 766502,
+            3534147 => 3534147
         );
     }
 
