@@ -374,7 +374,7 @@
             //         alert('Выберите пожалуйста файл');
             //     }
             // },
-            checkSignedFile(url,toKias,agreementISN){        // Посмотреть подписанный файл
+            checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 if(url != ''){
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
@@ -400,7 +400,7 @@
                                         self.signedFileInfo = result.responseObjects;
                                     }
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
-                                        self.sendEdsInfoToKias(toKias,agreementISN); // Записываем в киас данные из подписанного файла
+                                        self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
                                     }
                                 }
                             } else {
@@ -416,9 +416,10 @@
                     alert('Выберите пожалуйста файл');
                 }
             },
-            sendEdsInfoToKias(docIsn,agreementISN){ // docIsn - isn документа, self.isn - это исн котировки
+            sendEdsInfoToKias(docIsn,agreementISN,edsType){ // docIsn - isn документа, self.isn - это исн котировки
                 let self = this;
                 let obj = self.signedFileInfo;
+                self.loader(true);
                 for (let index in obj) {
                     axios.post("/save_eds_info", {
                         data: obj[index],
@@ -429,6 +430,36 @@
                             //if(type == 'coordination' && solution != undefined){
                                 //self.$parent.sendSolution(1);
                             //}
+
+
+
+                            if(edsType != 'cms') {
+                                axios.post("/eds-by-isn", {
+                                    isn: '',
+                                    refISN: agreementISN,
+                                    type: 'A',
+                                    edsType: 'cms'
+                                }).then((response) => {
+                                    if (response.data.success) {
+                                        var obj = response.data.result;
+                                        if (obj.length > 0) {
+                                            for (let index in obj) {
+                                                this.checkSignedFile(obj[index][0], docIsn, agreementISN, 'cms');     // Проверить подписанные файлы
+                                            }
+                                        }
+                                        self.loader(false);
+                                    } else {
+                                        alert(response.data.error);
+                                        self.loader(false);
+                                    }
+                                });
+                            }
+
+
+
+
+
+
                         } else {
                             alert(response.data.error);
                         }

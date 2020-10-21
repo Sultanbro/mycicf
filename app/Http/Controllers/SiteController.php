@@ -931,7 +931,13 @@ class SiteController extends Controller
     public function edsByIsn(Request $request,KiasServiceInterface $kias){
         $files = [];
         $ISN = isset($request->isn) ? $request->isn : '';
-        $sigFiles = $kias->getAttachmentPath('','','','','',$ISN);
+        $type = isset($request->type) ? $request->type : '';
+        $format = isset($request->edsType) ? $request->edsType : '';
+        $refISN = isset($request->refISN) ? $request->refISN : '';
+        $refID = isset($request->refID ) ? $request->refID  : '';
+        $docClass = isset($request->docClass ) ? $request->docClass  : '';
+
+        $sigFiles = $kias->getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN);
         if(isset($sigFiles->error)){
             return response()->json([
                 'success' => false,
