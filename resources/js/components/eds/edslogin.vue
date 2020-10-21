@@ -237,7 +237,7 @@
                                         isn: self.doc_row_list_inner_other[1][i].ISN,
                                         //isn: self.$parent.coordination.ISN,
                                         //id: self.$parent.coordination.ID,
-                                        requestType: 'А',
+                                        requestType: 'A',
                                         fileType: 'base64',
                                         file: self.signedFile,
                                         fileExt: 'sig',
