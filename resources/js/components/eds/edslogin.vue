@@ -87,7 +87,8 @@
         },
         props: {
             showView: String,
-            doc_row_list_inner_other: Object
+            doc_row_list_inner_other: Object,
+            coordination: Object
         },
         methods: {
             connectSocket(check){
@@ -231,25 +232,41 @@
 
                                 // --------------------------------
 
+                                let curr_isn = self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
+                                self.axios.post("/coordinationSaveAttachment", {
+                                    isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
+                                    //isn: self.$parent.coordination.ISN,
+                                    //id: self.$parent.coordination.ID,
+                                    requestType: 'D',
+                                    fileType: 'base64',
+                                    file: self.signedFile,
+                                    fileExt: 'sig',
+                                }).then((response) => {
+                                    if (!response.data.success) {
+                                        alert(response.data.error);
+                                    } else {
+                                        self.getEdsInfo(response.data.result,curr_isn);
+                                    }
+                                });
 
-                                for(var i = 0;Object.keys(self.doc_row_list_inner_other[1]).length > i;i++){
-                                    let curr_isn = self.doc_row_list_inner_other[1][i].ISN;
-                                    self.axios.post("/coordinationSaveAttachment", {
-                                        isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
-                                        //isn: self.$parent.coordination.ISN,
-                                        //id: self.$parent.coordination.ID,
-                                        requestType: 'A',
-                                        fileType: 'base64',
-                                        file: self.signedFile,
-                                        fileExt: 'sig',
-                                    }).then((response) => {
-                                        if (!response.data.success) {
-                                            alert(response.data.error);
-                                        } else {
-                                            self.getEdsInfo(response.data.result,curr_isn);
-                                        }
-                                    });
-                                }
+                                // for(var i = 0;Object.keys(self.doc_row_list_inner_other[1]).length > i;i++){
+                                //     let curr_isn = self.doc_row_list_inner_other[1][i].ISN;
+                                //     self.axios.post("/coordinationSaveAttachment", {
+                                //         isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
+                                //         //isn: self.$parent.coordination.ISN,
+                                //         //id: self.$parent.coordination.ID,
+                                //         requestType: 'A',
+                                //         fileType: 'base64',
+                                //         file: self.signedFile,
+                                //         fileExt: 'sig',
+                                //     }).then((response) => {
+                                //         if (!response.data.success) {
+                                //             alert(response.data.error);
+                                //         } else {
+                                //             self.getEdsInfo(response.data.result,curr_isn);
+                                //         }
+                                //     });
+                                // }
 
 
 
@@ -432,28 +449,77 @@
                             //}
 
 
-
                             if(edsType != 'cms') {
-                                axios.post("/eds-by-isn", {
-                                    isn: '',
-                                    refISN: agreementISN,
-                                    type: 'A',
-                                    edsType: 'cms'
-                                }).then((response) => {
-                                    if (response.data.success) {
-                                        var obj = response.data.result;
-                                        if (obj.length > 0) {
-                                            for (let index in obj) {
-                                                this.checkSignedFile(obj[index][0], docIsn, agreementISN, 'cms');     // Проверить подписанные файлы
+                                if(self.coordination.RefAgrISN != 0){
+                                    let curr_isn = self.coordination.RefAgrISN;
+                                    axios.post("/eds-by-isn", {
+                                        isn: '',
+                                        refISN: curr_isn,
+                                        type: 'A',
+                                        edsType: 'cms'
+                                    }).then((response) => {
+                                        if (response.data.success) {
+                                            var obj = response.data.result;
+                                            if (obj.length > 0) {
+                                                for (let index in obj) {
+                                                    this.checkSignedFile(obj[index][0], docIsn, curr_isn, 'cms');     // Проверить подписанные файлы
+                                                }
                                             }
+                                            self.loader(false);
+                                        } else {
+                                            alert(response.data.error);
+                                            self.loader(false);
                                         }
-                                        self.loader(false);
-                                    } else {
-                                        alert(response.data.error);
-                                        self.loader(false);
+                                    });
+                                } else {
+                                    for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
+                                        let curr_isn = self.doc_row_list_inner_other[1][i].ISN;
+                                        axios.post("/eds-by-isn", {
+                                            isn: '',
+                                            refISN: curr_isn,
+                                            type: 'A',
+                                            edsType: 'cms'
+                                        }).then((response) => {
+                                            if (response.data.success) {
+                                                var obj = response.data.result;
+                                                if (obj.length > 0) {
+                                                    for (let index in obj) {
+                                                        this.checkSignedFile(obj[index][0], docIsn, curr_isn, 'cms');     // Проверить подписанные файлы
+                                                    }
+                                                }
+                                                self.loader(false);
+                                            } else {
+                                                alert(response.data.error);
+                                                self.loader(false);
+                                            }
+                                        });
                                     }
-                                });
+                                }
                             }
+
+
+
+                            // if(edsType != 'cms') {
+                            //     axios.post("/eds-by-isn", {
+                            //         isn: '',
+                            //         refISN: agreementISN,
+                            //         type: 'A',
+                            //         edsType: 'cms'
+                            //     }).then((response) => {
+                            //         if (response.data.success) {
+                            //             var obj = response.data.result;
+                            //             if (obj.length > 0) {
+                            //                 for (let index in obj) {
+                            //                     this.checkSignedFile(obj[index][0], docIsn, agreementISN, 'cms');     // Проверить подписанные файлы
+                            //                 }
+                            //             }
+                            //             self.loader(false);
+                            //         } else {
+                            //             alert(response.data.error);
+                            //             self.loader(false);
+                            //         }
+                            //     });
+                            // }
 
 
 

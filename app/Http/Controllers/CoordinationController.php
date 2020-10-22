@@ -228,6 +228,7 @@ class CoordinationController extends Controller
                             'Date' => (string)$coordination->datesolution,
                             'Remark' => (string)$coordination->remark,
                             'ISN' => (string)$coordination->ISN,
+                            //'RefAgrISN' => isset($coordination->RefAgrISN) ? (string)$coordination->RefAgrISN : 0,
                         ]);
                     }
                 }
@@ -369,6 +370,7 @@ class CoordinationController extends Controller
             'SubjName',             //Наименование страхователя
             'SubjDept',             //Департамент страхователя
             'Remark',               //Примечание листа СЗ
+            'RefAgrISN',
         ];
     }
 

@@ -220,6 +220,7 @@
 
                                     <edslogin
                                             ref="eds"
+                                            :coordination="coordination"
                                             :doc_row_list_inner_other="doc_row_list_inner_other"
                                             show-view="sign">
                                     </edslogin>
