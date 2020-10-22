@@ -226,7 +226,6 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
-                                self.loader(false);
 
 
 
@@ -244,6 +243,7 @@
                                 }).then((response) => {
                                     if (!response.data.success) {
                                         alert(response.data.error);
+                                        this.loader(false);
                                     } else {
                                         self.getEdsInfo(response.data.result,curr_isn);
                                     }
@@ -326,7 +326,7 @@
                         var obj = response.data.result;
                         if(obj.length > 0){
                             for(let index in obj) {
-                                this.checkSignedFile(obj[index].filepath,docIsn,agreementISN);     // Проверить подписанные файлы
+                                this.checkSignedFile(obj[index].filepath,obj[index].docISN,agreementISN);     // Проверить подписанные файлы
                             }
                         }
                         self.loader(false);
