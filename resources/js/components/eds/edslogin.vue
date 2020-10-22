@@ -243,7 +243,7 @@
                                 }).then((response) => {
                                     if (!response.data.success) {
                                         alert(response.data.error);
-                                        this.loader(false);
+                                        self.loader(false);
                                     } else {
                                         self.getEdsInfo(response.data.result,curr_isn);
                                     }
@@ -393,7 +393,7 @@
             // },
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
-                this.loader(true);
+                self.loader(true);
                 if(url != ''){
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
                     self.loader(true);
@@ -411,6 +411,7 @@
                         var result = JSON.parse(msg.data);
                         if(result.code) {
                             if (result.code == 200) {
+                                self.loader(false);
                                 if(result.responseObjects.length > 0) {
                                     if(self.signedFileInfo.length > 0) {
                                         self.signedFileInfo.push(result.responseObjects[0]);
@@ -420,11 +421,10 @@
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                         self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
                                     }
-                                    this.loader(false);
                                 }
                             } else {
                                 alert(result.message);
-                                this.loader(false);
+                                self.loader(false);
                             }
                         }
                     }
@@ -490,7 +490,7 @@
 
 
 
-                            this.loader(false);
+                            self.loader(false);
                         } else {
                             alert(response.data.error);
                         }
