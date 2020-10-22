@@ -508,31 +508,31 @@
             },
             loader(show){
                 this.loading = show;
+            },
+
+            sendCmsInfo(agrIsn){
+                let self = this;
+                axios.post("/eds-by-isn", {
+                    isn: '',
+                    refISN: agrIsn,
+                    type: 'A',
+                    edsType: 'cms'
+                }).then((response) => {
+                    if (response.data.success) {
+                        var obj = response.data.result;
+                        if (obj.length > 0) {
+                            for (let index in obj) {
+                                this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                            }
+                        }
+                        self.loader(false);
+                    } else {
+                        alert(response.data.error);
+                        self.loader(false);
+                    }
+                });
             }
         },
-
-        sendCmsInfo(agrIsn){
-            let self = this;
-            axios.post("/eds-by-isn", {
-                isn: '',
-                refISN: agrIsn,
-                type: 'A',
-                edsType: 'cms'
-            }).then((response) => {
-                if (response.data.success) {
-                    var obj = response.data.result;
-                    if (obj.length > 0) {
-                        for (let index in obj) {
-                            this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
-                        }
-                    }
-                    self.loader(false);
-                } else {
-                    alert(response.data.error);
-                    self.loader(false);
-                }
-            });
-        }
 
         // created: function() {
         //     var message = {
