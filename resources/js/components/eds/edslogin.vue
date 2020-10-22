@@ -457,11 +457,11 @@
                             if(edsType != 'cms') {
                                 if(self.coordination.RefAgrISN != 0){
                                     //self.sendCmsInfo(self.coordination.RefAgrISN);
-
                                     let self = this;
+                                    let agrIsn = self.coordination.RefAgrISN;
                                     axios.post("/eds-by-isn", {
                                         isn: '',
-                                        refISN: self.coordination.RefAgrISN,
+                                        refISN: agrIsn,
                                         type: 'A',
                                         edsType: 'cms'
                                     }).then((response) => {
@@ -485,9 +485,10 @@
                                         //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
 
                                         let self = this;
+                                        let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
                                         axios.post("/eds-by-isn", {
                                             isn: '',
-                                            refISN: self.doc_row_list_inner_other[1][i].ISN,
+                                            refISN: agrIsn,
                                             type: 'A',
                                             edsType: 'cms'
                                         }).then((response) => {
