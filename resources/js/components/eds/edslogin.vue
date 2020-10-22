@@ -328,8 +328,9 @@
                             for(let index in obj) {
                                 this.checkSignedFile(obj[index].filepath,obj[index].docISN,agreementISN);     // Проверить подписанные файлы
                             }
+                        } else {
+                            self.loader(false);
                         }
-                        self.loader(false);
                     } else {
                         alert(response.data.error);
                         self.loader(false);
@@ -411,7 +412,6 @@
                         var result = JSON.parse(msg.data);
                         if(result.code) {
                             if (result.code == 200) {
-                                self.loader(false);
                                 if(result.responseObjects.length > 0) {
                                     if(self.signedFileInfo.length > 0) {
                                         self.signedFileInfo.push(result.responseObjects[0]);
@@ -420,6 +420,8 @@
                                     }
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                         self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
+                                    } else {
+                                        self.loader(false);
                                     }
                                 }
                             } else {
@@ -454,12 +456,59 @@
 
                             if(edsType != 'cms') {
                                 if(self.coordination.RefAgrISN != 0){
-                                    self.sendCmsInfo(self.coordination.RefAgrISN);
+                                    //self.sendCmsInfo(self.coordination.RefAgrISN);
+
+                                    let self = this;
+                                    axios.post("/eds-by-isn", {
+                                        isn: '',
+                                        refISN: self.coordination.RefAgrISN,
+                                        type: 'A',
+                                        edsType: 'cms'
+                                    }).then((response) => {
+                                        if (response.data.success) {
+                                            var obj = response.data.result;
+                                            if (obj.length > 0) {
+                                                for (let index in obj) {
+                                                    this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                                }
+                                            } else {
+                                                self.loader(false);
+                                            }
+                                        } else {
+                                            alert(response.data.error);
+                                            self.loader(false);
+                                        }
+                                    });
+
                                 } else {
                                     for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
-                                        self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
+                                        //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
+
+                                        let self = this;
+                                        axios.post("/eds-by-isn", {
+                                            isn: '',
+                                            refISN: self.doc_row_list_inner_other[1][i].ISN,
+                                            type: 'A',
+                                            edsType: 'cms'
+                                        }).then((response) => {
+                                            if (response.data.success) {
+                                                var obj = response.data.result;
+                                                if (obj.length > 0) {
+                                                    for (let index in obj) {
+                                                        this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                                    }
+                                                } else {
+                                                    self.loader(false);
+                                                }
+                                            } else {
+                                                alert(response.data.error);
+                                                self.loader(false);
+                                            }
+                                        });
                                     }
                                 }
+                            } else {
+                                self.loader(false);
                             }
 
 
@@ -490,7 +539,7 @@
 
 
 
-                            self.loader(false);
+                            //self.loader(false);
                         } else {
                             alert(response.data.error);
                         }
@@ -510,28 +559,28 @@
                 this.loading = show;
             },
 
-            sendCmsInfo(agrIsn){
-                let self = this;
-                axios.post("/eds-by-isn", {
-                    isn: '',
-                    refISN: agrIsn,
-                    type: 'A',
-                    edsType: 'cms'
-                }).then((response) => {
-                    if (response.data.success) {
-                        var obj = response.data.result;
-                        if (obj.length > 0) {
-                            for (let index in obj) {
-                                this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
-                            }
-                        }
-                        self.loader(false);
-                    } else {
-                        alert(response.data.error);
-                        self.loader(false);
-                    }
-                });
-            }
+            // sendCmsInfo(agrIsn){
+            //     let self = this;
+            //     axios.post("/eds-by-isn", {
+            //         isn: '',
+            //         refISN: agrIsn,
+            //         type: 'A',
+            //         edsType: 'cms'
+            //     }).then((response) => {
+            //         if (response.data.success) {
+            //             var obj = response.data.result;
+            //             if (obj.length > 0) {
+            //                 for (let index in obj) {
+            //                     this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+            //                 }
+            //             }
+            //             self.loader(false);
+            //         } else {
+            //             alert(response.data.error);
+            //             self.loader(false);
+            //         }
+            //     });
+            // }
         },
 
         // created: function() {
