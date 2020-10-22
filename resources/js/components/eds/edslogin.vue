@@ -326,7 +326,7 @@
                         var obj = response.data.result;
                         if(obj.length > 0){
                             for(let index in obj) {
-                                this.checkSignedFile(obj[index][0],docIsn,agreementISN);     // Проверить подписанные файлы
+                                this.checkSignedFile(obj[index].filepath,docIsn,agreementISN);     // Проверить подписанные файлы
                             }
                         }
                         self.loader(false);
@@ -462,7 +462,7 @@
                                             var obj = response.data.result;
                                             if (obj.length > 0) {
                                                 for (let index in obj) {
-                                                    this.checkSignedFile(obj[index][0], docIsn, curr_isn, 'cms');     // Проверить подписанные файлы
+                                                    this.checkSignedFile(obj[index].filepath, obj[index].docISN, curr_isn, 'cms');     // Проверить подписанные файлы
                                                 }
                                             }
                                             self.loader(false);
@@ -484,7 +484,7 @@
                                                 var obj = response.data.result;
                                                 if (obj.length > 0) {
                                                     for (let index in obj) {
-                                                        this.checkSignedFile(obj[index][0], docIsn, curr_isn, 'cms');     // Проверить подписанные файлы
+                                                        this.checkSignedFile(obj[index].filepath, obj[index].docISN, curr_isn, 'cms');     // Проверить подписанные файлы
                                                     }
                                                 }
                                                 self.loader(false);

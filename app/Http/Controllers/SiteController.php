@@ -945,7 +945,7 @@ class SiteController extends Controller
             ]);
         } else {
             foreach ($sigFiles->ROWSET->row as $file) {
-                array_push($files, $file->FILEPATH);
+                array_push($files, ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN]);
             }
         }
 
