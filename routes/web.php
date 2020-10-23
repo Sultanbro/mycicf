@@ -269,7 +269,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getUsersData', 'SiteController@getUserData');
         Route::post('/getColleagueData', 'SiteController@getColleagueData');
 
-        Route::get('/motivation', 'MotivationController@motivation');
+        Route::get('/motivation', 'MotivationController@motivation')->name('motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
 
         Route::get('/express', 'ProductsController@expressList');
@@ -343,4 +343,15 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+
+Route::get('test', function () {
+    return view('test');
+});
+//Cabinet
+Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
+Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
+//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
+
+
+
 
