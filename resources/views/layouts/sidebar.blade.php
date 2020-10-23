@@ -8,16 +8,16 @@
     )
     <div class="mb-5">
         <ul class="flex-column mr-3 ml-3">
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('colleagues')}}">
-                <li class="leftsidebar-icons">
-                    <i class="fas fa-users"></i>
-                    <span>Коллеги</span>
-                </li>
-            </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('dossier')}}">
                 <li class="leftsidebar-icons">
                     <i class="far fa-clipboard"></i>
-                    <span>Досье</span>
+                    <span>Обо мне</span>
+                </li>
+            </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('colleagues')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fas fa-users"></i>
+                    <span>Мои коллеги</span>
                 </li>
             </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('coordination')}}">
@@ -85,10 +85,16 @@
                     <span>Предстраховой осмотр</span>
                 </li>
             </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+                <li class="leftsidebar-icons">
+                    <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                    <span>Центр знаний</span>
+                </li>
+            </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('booking')}}">
                 <li class="leftsidebar-icons">
                     <i class="fa fa-calendar" aria-hidden="true"></i>
-                    <span>Бронирование конференц-зала</span>
+                    <span>На переговоры!</span>
                 </li>
             </a>
         </ul>
