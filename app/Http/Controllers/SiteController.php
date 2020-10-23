@@ -388,6 +388,7 @@ class SiteController extends Controller
             'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
             'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
         ];
         $result = [
             'success' => true,
