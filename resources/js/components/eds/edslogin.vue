@@ -458,6 +458,7 @@
                                 if(self.coordination.RefAgrISN != 0){
                                     //self.sendCmsInfo(self.coordination.RefAgrISN);
                                     let self = this;
+                                    self.loader(true);
                                     let agrIsn = self.coordination.RefAgrISN;
                                     axios.post("/eds-by-isn", {
                                         isn: '',
@@ -485,6 +486,7 @@
                                         //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
 
                                         let self = this;
+                                        self.loader(true);
                                         let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
                                         axios.post("/eds-by-isn", {
                                             isn: '',
