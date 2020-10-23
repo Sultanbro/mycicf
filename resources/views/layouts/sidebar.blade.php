@@ -66,10 +66,10 @@
 {{--                    </li>--}}
 {{--                </a>--}}
 {{--            @endif--}}
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('cabinet')}}">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-user-tie" aria-hidden="true"></i>
-                    <span>Личный кабинет</span>
+                    <span>Мои результаты</span>
                 </li>
             </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('insurance/inspection')}}">
@@ -78,16 +78,16 @@
                     <span>Предстраховой осмотр</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('booking')}}">
-                <li class="leftsidebar-icons">
-                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                    <span>На переговоры!</span>
-                </li>
-            </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Центр знаний</span>
+                </li>
+            </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('booking')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <span>На переговоры!</span>
                 </li>
             </a>
         </ul>
