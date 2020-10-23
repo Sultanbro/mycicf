@@ -6,6 +6,7 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Notification;
 use App\Providers\KiasServiceProvider;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Comment;
 use App\Events\NewPost;
@@ -69,6 +70,8 @@ class CoordinationController extends Controller
                     'DeptName' => (string)$row->DeptName,
                     'id' => (string)$row->id,
                     'docdate' => (string)$row->docdate,
+                    'sz_isn' => (string)$row->SzISN,
+                    'sz_class_isn' => (string)$row->SzClassISN
                 ]);
             }
         }
@@ -151,6 +154,9 @@ class CoordinationController extends Controller
                     'id' => (string)$row->id,
                     'docdate' => (string)$row->docdate,
                     'DeptName' => (string)$row->DeptName,
+                    'ClassISN' => (string)$row->ClassISN,
+                    'RefDocISN' => (string)$row->RefDocISN,
+                    'RefClassISN' => (string)$row->RefClassISN,
                 ]);
             }
         }
@@ -289,6 +295,44 @@ class CoordinationController extends Controller
             'result' => (string)$response->Result
         ];
         return response()->json($result)->withCallback($request->input('callback'));
+    }
+
+    public function getDocRowList(Request $request, KiasServiceInterface $kias) {
+        try {
+            $result = $kias->request('User_CicGetDocRowAttr', [
+                'CLASSISN' => $request->class_isn,
+                'DOCISN' => $request->doc_isn,
+            ]);
+
+            if(!isset($result->error))
+            {
+                $doc_row_list = array();
+                $doc_row_inner = array();
+                foreach ($result->DocRow->row as $row)
+                {
+                    if(!isset($doc_row_list[(string)$row->orderno])){
+                        $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
+                    }
+
+                        $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'doc_row_list' => $doc_row_list,
+                    'doc_row_inner' => $doc_row_inner,
+                ]);
+            }
+            else
+                throw new \Exception('Данные не найдены', 400);
+        }
+        catch(\Exception $e) {
+            return response()->json([
+                'success'   => false,
+                'code'      => $e->getCode(),
+                'message'   => $e->getMessage()
+            ]);
+        }
     }
 
     public function attributeKeys(){

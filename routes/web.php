@@ -173,6 +173,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
         Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
+        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
         Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
@@ -237,12 +238,19 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
         Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
         Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
+        Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');
 
         Route::get('/report', 'ReportController@index')->name('report');
         Route::post('/getReport', 'ReportController@getReport');
+
+        //STATISTIC-DA
+        Route::get('/statistics', 'StatisticsController@index')->name('statistics');
+        Route::post('/getStatisticsReport', 'StatisticsController@getReport');
+        Route::post('/getProdData', 'StatisticsController@getProdData');
+        Route::post('/getProducts', 'StatisticsController@getProducts');
 
         Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
@@ -336,6 +344,3 @@ Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-Route::get('test', function () {
-    return view('test');
-});

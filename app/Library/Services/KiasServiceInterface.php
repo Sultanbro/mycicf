@@ -100,6 +100,13 @@ interface KiasServiceInterface
     public function getAttachmentsList($docIsn);
 
     /**
+     * Получение списка прикреплении
+     *
+     * @param $ISN
+     */
+    public function getDictiProducts($ISN);
+
+    /**
      * Получить список фотографии сотрудника по дате обновления
      *
      * @param $date
@@ -270,4 +277,14 @@ interface KiasServiceInterface
     public function getSubject($firstName, $lastName, $patronymic, $iin);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
+
+    /**
+     * Получить данные по Статистике ДА
+     * @param $productInfo
+     * @param $empiIsn
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return mixed
+     */
+    public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd);
 }

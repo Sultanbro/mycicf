@@ -622,6 +622,20 @@ class Kias implements KiasServiceInterface
     }
 
     /**
+     * Получить справочники товаров
+     *
+     * @param $ISN
+     *
+     * @return SimpleXMLElement
+     */
+
+    public function getDictiProducts($ISN){
+        return $this->request('User_CicGetFullDictiList', [
+            'ISN' => $ISN
+        ]);
+    }
+
+    /**
      * Загрузка файлов
      *
      * @param        $refisn
@@ -652,6 +666,17 @@ class Kias implements KiasServiceInterface
     {
         return $this->request('User_CicGetAvarkomByDept', [
             'DeptISN' => $deptIsn,
+        ]);
+    }
+
+
+    public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd)
+    {
+        return $this->request('User_CicGetUnderReport', [
+            'Product' => $productInfo,
+            'EmplISN' => $emplIsn,
+            'DATEBEG' => date('d.m.Y', strtotime($dateBeg)),
+            'DATEEND' => date('d.m.Y', strtotime($dateEnd)),
         ]);
     }
 }

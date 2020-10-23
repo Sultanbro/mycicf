@@ -23,7 +23,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SZ" :key="info.ISN">
-                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'SZ', info)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -249,7 +249,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in other" :key="info.ISN">
-                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'OTHER', info)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -266,6 +266,10 @@
             :coordination="coordination"
             :isn="isn"
             :attachments="attachments"
+            :doc_row_list="doc_row_list"
+            :doc_row_inner="doc_row_inner"
+            :doc_row_list_other="doc_row_list_other"
+            :doc_row_list_inner_other="doc_row_list_inner_other"
         >
         </coordination-modal>
     </div>
@@ -291,6 +295,10 @@
                 none: false,
                 coordination: {},
                 attachments: [] ,
+                doc_row_list: {},
+                doc_row_inner: {},
+                doc_row_list_other: {},
+                doc_row_list_inner_other: {}
             }
         },
         mounted: function(){
@@ -329,11 +337,32 @@
                 }
                 this.preloader(false);
             },
-            openModal (ISN) {
+            openModal (ISN, type = null, data = null) {
+                this.doc_row_list = {};
+                this.doc_row_inner = {};
+                this.doc_row_list_other = {};
+                this.doc_row_list_inner_other = {};
+
                 this.preloader(true);
-                this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
-                    this.setModalData(response.data)
-                });
+                if(type === 'SZ' && data !== null) {
+                    this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                        this.setModalData(response.data);
+                    });
+                    this.getDocRowList(data, type);
+                }
+                else if (type === 'OTHER' && data !== null && data.ClassISN == '1784781') {
+                    this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                        this.setModalData(response.data);
+                    });
+                    this.getDocRowList(data, type);
+                }
+                else {
+                    this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                        this.setModalData(response.data);
+                    }).finally(() => {
+                        this.preloader(false);
+                    });
+                }
             },
             setModalData: function (response) {
                 if(response.success){
@@ -345,7 +374,7 @@
                 {
                     alert('ERROR')
                 }
-                this.preloader(false);
+                // this.preloader(false);
             },
             getAttachments () {
                 var vm = this;
@@ -358,6 +387,41 @@
                         vm.attachments = [];
                     }
                 });
+            },
+            async getDocRowList(data, type) {
+                if(type === 'SZ') {
+                    let response = await this.axios.post('/getDocRowList', {
+                        class_isn: data.sz_class_isn,
+                        doc_isn: data.sz_isn,
+                    });
+                    if(response.data.success) {
+                        this.setDocRowList(response.data, type);
+                    }
+                }
+                if(type === 'OTHER') {
+                    let response = await this.axios.post('/getDocRowList', {
+                        class_isn: data.RefClassISN,
+                        doc_isn: data.RefDocISN,
+                    });
+                    if(response.data.success) {
+                        this.setDocRowList(response.data, type);
+                    }
+                }
+            },
+            setDocRowList(response, type) {
+                switch (type) {
+                    case 'SZ':
+                        this.doc_row_list = response.doc_row_list;
+                        this.doc_row_inner = response.doc_row_inner;
+                        break;
+                    case 'OTHER':
+                        this.doc_row_list_other = response.doc_row_list;
+                        this.doc_row_list_inner_other = response.doc_row_inner;
+                        break;
+                    default:
+                        break;
+                }
+                this.preloader(false);
             },
             preloader(show){
                 if(show)
