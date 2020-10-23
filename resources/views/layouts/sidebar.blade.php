@@ -58,17 +58,17 @@
                     <span>Экспресс котировка</span>
                 </li>
             </a-->
-{{--            @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))--}}
-{{--                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">--}}
-{{--                    <li class="leftsidebar-icons">--}}
-{{--                        <img src="/images/centcoin-fa.png" style="width: 20px;">--}}
-{{--                        <span>Сенткоины</span>--}}
-{{--                    </li>--}}
-{{--                </a>--}}
-{{--            @endif--}}
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
+                    <li class="leftsidebar-icons">
+                        <img src="/images/centcoin-fa.png" style="width: 20px;">
+                        <span>Сенткоины</span>
+                    </li>
+                </a>
+            @endif
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('development', 'results')}}">
                 <li class="leftsidebar-icons">
-                    <i class="fas fa-user-tie" aria-hidden="true"></i>
+                    <i class="far fa-star" aria-hidden="true"></i>
                     <span>Мои результаты</span>
                 </li>
             </a>
@@ -78,7 +78,7 @@
                     <span>Предстраховой осмотр</span>
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="javascript:void(0)">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('development', 'study')}}">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Центр знаний</span>

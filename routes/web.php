@@ -315,6 +315,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+
+        //Dev page route
+        Route::get('development/{name}', 'NewsController@dev')->name('development');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {

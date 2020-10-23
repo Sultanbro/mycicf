@@ -10,10 +10,10 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                <a href="javascript:void(0)" class="header-navigation">
+                <a href="{{route('development', 'boss')}}" class="header-navigation">
                     <li>Шеф говорит!</li>
                 </a>
-                <a class="header-navigation" href="javascript:void(0)">
+                <a class="header-navigation" href="{{route('development', 'company')}}">
                     <li>
                         О компании
                     </li>
@@ -30,7 +30,7 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="{{route('rating')}}">
+                <a class="header-navigation" href="{{route('development', 'rating')}}">
                     <li>
                         Рейтинг
                     </li>
