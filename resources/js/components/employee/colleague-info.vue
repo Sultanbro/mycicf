@@ -73,6 +73,7 @@
                     this.married = information.Married;
                     this.education = information.Education;
                     this.rating = information.Rating;
+                    this.place_of_birth = information.City;
                 }else{
                     alert(response.error);
                 }
