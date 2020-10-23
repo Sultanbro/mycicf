@@ -10,6 +10,14 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
+                <a href="javascript:void(0)" class="header-navigation">
+                    <li>Шеф говорит!</li>
+                </a>
+                <a class="header-navigation" href="javascript:void(0)">
+                    <li>
+                        О компании
+                    </li>
+                </a>
                 @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
                     <a class="header-navigation" href="{{route('parse')}}">
                         <li>
@@ -22,9 +30,9 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="javascript:void(0)">
+                <a class="header-navigation" href="{{route('rating')}}">
                     <li>
-                        О компании
+                        Рейтинг
                     </li>
                 </a>
                 <a class="header-navigation" href="{{route('documentation')}}">
@@ -45,11 +53,11 @@
                         </li>
                     </ul>
                 </li>
-                <a class="header-navigation" href="javascript:void(0)">
-                    <li>
-                        Обучение
-                    </li>
-                </a>
+{{--                <a class="header-navigation" href="javascript:void(0)">--}}
+{{--                    <li>--}}
+{{--                        Обучение--}}
+{{--                    </li>--}}
+{{--                </a>--}}
             </ul>
         </div>
         <div class="col-md-4">
