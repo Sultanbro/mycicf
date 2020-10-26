@@ -178,6 +178,8 @@ Vue.component('drr', require('./components/booking/drr').default);
 
 Vue.component('dsv', require('./components/booking/dsv').default);
 
+Vue.component('statistics', require('./components/employee/statistics').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

@@ -394,4 +394,31 @@ class NewsController extends Controller
             'success' => true
         ]);
     }
+
+    public function dev(Request $request) {
+        switch ($request->name) {
+            case 'boss':
+                return view('dev')->with([
+                   'type' => 'boss'
+                ]);
+            case 'company':
+                return view('dev')->with([
+                    'type' => 'company'
+                ]);
+            case 'rating':
+                return view('dev')->with([
+                    'type' => 'rating'
+                ]);
+            case 'results':
+                return view('dev')->with([
+                    'type' => 'results'
+                ]);
+            case 'study':
+                return view('dev')->with([
+                    'type' => 'study'
+                ]);
+            default:
+                return 0;
+        }
+    }
 }

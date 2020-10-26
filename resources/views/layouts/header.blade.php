@@ -4,16 +4,17 @@
         <div class="col-md-2 vertical-middle">
             <div class="header-img-width">
                 <a href="{{route('index')}}">
-                    <img src="{{asset('images/new-white-logo.png')}}" class="image">
+{{--                    <img src="{{asset('images/new-white-logo.png')}}" class="image">--}}
+                    <img src="{{asset('images/mycic-horizontal-logo.png')}}" class="image">
                 </a>
             </div>
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                <a href="javascript:void(0)" class="header-navigation">
+                <a href="{{route('development', 'boss')}}" class="header-navigation">
                     <li>Шеф говорит!</li>
                 </a>
-                <a class="header-navigation" href="javascript:void(0)">
+                <a class="header-navigation" href="{{route('development', 'company')}}">
                     <li>
                         О компании
                     </li>
@@ -30,7 +31,7 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="{{route('rating')}}">
+                <a class="header-navigation" href="{{route('development', 'rating')}}">
                     <li>
                         Рейтинг
                     </li>
