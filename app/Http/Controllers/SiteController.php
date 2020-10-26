@@ -255,7 +255,9 @@ class SiteController extends Controller
             5011 => 5011,
             4275866 => 4275866,
             766502 => 766502,
-            3534147 => 3534147
+            3534147 => 3534147,
+            801271 => 801271,
+            4555970 => 4555970
         );
     }
 
@@ -386,6 +388,7 @@ class SiteController extends Controller
             'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
             'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
         ];
         $result = [
             'success' => true,
