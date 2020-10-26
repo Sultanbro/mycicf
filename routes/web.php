@@ -344,3 +344,7 @@ Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
+Route::get('/test',function() {
+    return view('refactored.index');
+});
+

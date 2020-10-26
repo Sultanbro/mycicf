@@ -1,1 +1,1 @@
-<?php
+@yield('scripts')
