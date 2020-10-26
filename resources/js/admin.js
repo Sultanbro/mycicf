@@ -16,7 +16,11 @@ Vue.component('dicti-list', require('./components/admin/dicti/list.vue').default
 
 Vue.component('role-list', require('./components/admin/role/list.vue').default);
 
+Vue.component('statistics-list', require('./components/admin/statistics/list.vue').default);
+
 Vue.component('role-new', require('./components/admin/role/new.vue').default);
+
+Vue.component('statistics-new', require('./components/admin/statistics/new.vue').default);
 
 Vue.component('parse-upload', require('./components/admin/parse/upload.vue').default);
 

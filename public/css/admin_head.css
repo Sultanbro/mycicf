@@ -22,8 +22,34 @@ body {
 }
 
 .logout {
-    color: black;
+    color: white;
     text-decoration: underline;
+}
+
+.logout:hover {
+    color: red;
+}
+
+.nnavbar-brand{
+    color: white;
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.nnavbar-brand:hover{
+    color: #00ff3a;
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
 }
 
 .table-data{

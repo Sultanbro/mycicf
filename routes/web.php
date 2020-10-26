@@ -23,7 +23,7 @@ Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->n
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
-Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
+//Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/', 'Admin\SiteController@showLoginForm');
     Route::post('/login', 'Admin\SiteController@checkLogin');
@@ -142,8 +142,17 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('calc/getDicti', 'ProductsController@getDicti');
             Route::post('/updateProductsDicti','ProductsController@updateProductsDicti');
         });
+
+        Route::group(['middleware' => 'kurators'], function() {
+            Route::get('/statistics/kurators', 'Admin\KuratorController@kuratorView')->name('statistics.kurator.list');
+            Route::post('/statistics/getKuratorsList', 'Admin\KuratorController@getKuratorUsers');
+            Route::get('/statistics/newUser', 'Admin\KuratorController@newUserView');
+            Route::post('/statistics/getKurators', 'Admin\KuratorController@getKurators');
+            Route::post('/statistics/setNewUser', 'Admin\KuratorController@newUser');
+            Route::get('/statistics/delete/{kurators}', 'Admin\KuratorController@deleteById');
+        });
     });
-});
+//});
 
 /**
  * FRONTEND APP
@@ -243,7 +252,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getStatisticsReport', 'StatisticsController@getReport');
         Route::post('/getProdData', 'StatisticsController@getProdData');
         Route::post('/getProducts', 'StatisticsController@getProducts');
-
+        Route::post('/getBranchProdData', 'StatisticsController@postBranchProdData');
         Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
         Route::get('/logout', 'SiteController@logout');

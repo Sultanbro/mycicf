@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Dicti;
+use App\Kurators;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StatisticsController extends Controller
 {
@@ -47,19 +50,43 @@ class StatisticsController extends Controller
         ]);
     }
 
+    public function postBranchProdData(Request $request)
+    {
+        $headDept = Kurators::where('user_isn', Auth::user()->ISN)->first()->dept_isn ?? Auth::user()->level ?? Auth::user()->ISN;
+        $headData = Branch::where('kias_id', $headDept)->first();
+        $result = [];
+        if(count($headData->childs)){
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+                'children' => $this->getChild($headData->kias_id),
+            ]);
+        }else{
+            array_push($result, [
+                'id' => $headData->kias_id,
+                'label' => $headData->fullname,
+            ]);
+        }
+        $responseData = [
+            'result' => $result,
+            'value' => $headDept,
+        ];
+        return response()->json($responseData)->withCallback($request->input('callback'));
+    }
+
     public function getChild($parent){
         $result = [];
-        $headData = Dicti::where('parent_isn', $parent)->get();
+        $headData = Branch::where('kias_parent_id', $parent)->get();
         foreach ($headData as $data){
             if(count($data->childs)){
                 array_push($result, [
-                    'id' => $data->isn,
+                    'id' => $data->kias_id,
                     'label' => $data->fullname,
-                    'children' => $this->getChild($data->isn),
+                    'children' => $this->getChild($data->kias_id),
                 ]);
             }else{
                 array_push($result, [
-                    'id' => $data->isn,
+                    'id' => $data->kias_id,
                     'label' => $data->fullname,
                 ]);
             }

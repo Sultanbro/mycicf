@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-    <a class="navbar-brand" href="/">ADMIN</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
+    <a class="nnavbar-brand" href="/">ADMIN</a>
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09"
             aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="navbar-collapse collapse" id="navbarsExample09" style="">
+    <div class="navbar-collapse collapse" id="navbarsExample09" style="margin-left: 60px;">
         <ul class="navbar-nav mr-auto">
             @if(App\User::isParseAdmin())
                 <li class="nav-item dropdown">
@@ -79,6 +79,18 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown09">
                         <a class="dropdown-item" href="{{route('role.dicti.list')}}">Справочник ролей</a>
                         <a class="dropdown-item" href="{{route('role.permission.list')}}">Управление доступом</a>
+                    </div>
+                </li>
+            @endif
+            @if(App\User::isKurators() || App\User::isSuperAdmin())
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Куратор</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="{{route('statistics.kurator.list')}}">Статистика Да</a>
+{{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Рейтинг</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Отчет</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Мотивация</a>--}}
                     </div>
                 </li>
             @endif
