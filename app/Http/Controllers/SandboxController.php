@@ -7,6 +7,8 @@ use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SandboxController extends Controller
 {
@@ -141,5 +143,34 @@ class SandboxController extends Controller
         }
         Dicti::where('isn', $isn)->where('parent_isn', $parentIsn)->where('condition_for_property', $enum)->delete();
         dd('OKk');
+    }
+
+    public function upload()
+    {
+        $html = '<form method="POST" action="/sandbox/uploadDocs" enctype="multipart/form-data">
+                    <input type="hidden" name="_token" value="'.csrf_token().'">
+                    <input type="file" name="upload" multiple />
+                    <input type="submit" name="send" value="Загрузить">
+                </form>';
+        echo $html;
+    }
+
+    public function uploadDocs(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $realPath = $request->file('upload')->getRealPath();
+            $rows = array_map(function ($v) {
+                return str_getcsv($v, ';');
+            }, file($realPath));
+
+            foreach ($rows as $row) {
+                $contains = Str::contains($row[2], 'Заявление');
+                DB::table('dicti')->insert([
+                   ['isn' => $row[1], 'fullname' => $row[2], 'numcode' => $row[0], 'code' => $contains ? 'application' : 'sz']
+                ]);
+            }
+
+            dd('INSERT');
+        }
     }
 }

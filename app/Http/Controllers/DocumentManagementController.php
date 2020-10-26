@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dicti;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use Illuminate\Http\Request;
@@ -25,19 +26,19 @@ class DocumentManagementController extends Controller
 
     public function index()
     {
-        $isn     = 1445769; //$request->isn;
-        $dateBeg = '28.09.2020'; //(new \DateTime())->format('d.m.Y');
-        $dateEnd = '01.10.2020'; //(new \DateTime())->modify('+ 7 days')->format('d.m.Y');
-        try {
-            $getDocuments = $this->kiasService->getMySz($isn, $dateBeg, $dateEnd);
-            dd($getDocuments);
-            $inspections    = Helper::simpleXmlToArray($getInspections->Request);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'error'   => $e->getMessage(),
-            ]);
-        }
+        //$isn     = 1445769; //$request->isn;
+        //$dateBeg = '28.09.2020'; //(new \DateTime())->format('d.m.Y');
+        //$dateEnd = '01.10.2020'; //(new \DateTime())->modify('+ 7 days')->format('d.m.Y');
+        //try {
+        //    $getDocuments = $this->kiasService->getMySz($isn, $dateBeg, $dateEnd);
+        //    dd($getDocuments);
+        //    $inspections    = Helper::simpleXmlToArray($getInspections->Request);
+        //} catch (\Exception $e) {
+        //    return response()->json([
+        //        'success' => false,
+        //        'error'   => $e->getMessage(),
+        //    ]);
+        //}
         return view('document.management.index');
     }
 
@@ -55,20 +56,8 @@ class DocumentManagementController extends Controller
 
     public function getDocument(Request $request)
     {
-        //$isn     = 1445769; //$request->isn;
-        //$dateBeg = (new \DateTime())->format('d.m.Y');
-        //$dateEnd = (new \DateTime())->modify('+ 7 days')->format('d.m.Y');
-        //try {
-        //    $getDocuments = $this->kiasService->getMySz($isn, $dateBeg, $dateEnd);
-        //    dd($getDocuments);
-        //    $inspections    = Helper::simpleXmlToArray($getInspections->Request);
-        //} catch (\Exception $e) {
-        //    return response()->json([
-        //        'success' => false,
-        //        'error'   => $e->getMessage(),
-        //    ]);
-        //}
-
+        $documents = Dicti::whereIn('code', ['sz', 'application'])->get();
+        dd($documents);
         $documents = [
             'Служебные записи' => [
                 1 => 'СЗ на обучение',
