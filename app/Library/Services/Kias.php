@@ -654,4 +654,63 @@ class Kias implements KiasServiceInterface
             'DeptISN' => $deptIsn,
         ]);
     }
+
+    /**
+     * @param $docisn
+     * @param $classisn
+     * @return SimpleXMLElement
+     */
+    public function getDocument($docIsn, $classIsn)
+    {
+        return $this->request('GetDocument', [
+            'DOCISN'   => $docIsn,
+            'CLASSISN' => $classIsn
+        ]);
+    }
+
+    /**
+     * сохранение документа
+     * @param $classIsn
+     * @param $emplIsn
+     * @param $docDate
+     * @param $subIsn
+     * @return SimpleXMLElement
+     */
+    public function saveDocument($classIsn, $emplIsn, $docDate, $subIsn)
+    {
+        return $this->request('User_CicSAVEDOCUMENT', [
+            'CLASSISN' => $classIsn,
+            'EMPLISN' => $emplIsn,
+            'DOCDATE' => $docDate,
+            'SUBJISN' => $subIsn
+        ]);
+    }
+
+    /**
+     * @param $emplIsn
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return mixed|SimpleXMLElement
+     */
+    public function getMySz($emplIsn, $dateBeg, $dateEnd)
+    {
+        return $this->request('User_CicGetMySZ', [
+            'EMPLISN' => $emplIsn,
+            'DATEBEG' => $dateBeg,
+            'DATEEND' => $dateEnd
+        ]);
+    }
+
+    /**
+     * @param $classIsn
+     * @param $docIsn
+     * @return SimpleXMLElement
+     */
+    public function getDocRowAttr($classIsn, $docIsn)
+    {
+        return $this->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => $classIsn,
+            'DOCISN' => $docIsn,
+        ]);
+    }
 }

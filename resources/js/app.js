@@ -161,6 +161,16 @@ Vue.component('inspection-info', require('./components/employee/inspection-info'
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
 
+Vue.component('management-main', require('./components/document/management-main').default);
+
+Vue.component('management-search', require('./components/document/management-search').default);
+
+Vue.component('management-show', require('./components/document/management-show').default);
+
+Vue.component('management-employee', require('./components/document/management-employee').default);
+
+// Vue.component('management-application', require('./components/document/management-application').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

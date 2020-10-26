@@ -78,6 +78,12 @@
                     <span>Предстраховой осмотр</span>
                 </li>
             </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('document.index')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-files-o" aria-hidden="true"></i>
+                    <span>ЭДО</span>
+                </li>
+            </a>
         </ul>
     </div>
 </div>

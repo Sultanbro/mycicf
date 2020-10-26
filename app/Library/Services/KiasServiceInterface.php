@@ -270,4 +270,39 @@ interface KiasServiceInterface
     public function getSubject($firstName, $lastName, $patronymic, $iin);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
+
+    /**
+     * Получить документы
+     * @param $docIsn
+     * @param $classIsn
+     * @return mixed
+     */
+    public function getDocument($docIsn, $classIsn);
+
+    /**
+     * сохранение документа
+     * @param $classIsn
+     * @param $emplIsn
+     * @param $docDate
+     * @param $subIsn
+     * @return mixed
+     */
+    public function saveDocument($classIsn, $emplIsn, $docDate, $subIsn);
+
+    /**
+     * Процедура возвращает СЗ(служебные записки) и заявления в КИАС указанного сотрудника
+     * @param $emplIsn
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return mixed
+     */
+    public function getMySz($emplIsn, $dateBeg, $dateEnd);
+
+    /**
+     * документы табличная часть и доп атрибуты
+     * @param $classIsn
+     * @param $docIsn
+     * @return mixed
+     */
+    public function getDocRowAttr($classIsn, $docIsn);
 }

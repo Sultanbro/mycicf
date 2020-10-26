@@ -300,6 +300,13 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+        //Application
+        Route::get('document/management', 'DocumentManagementController@index')->name('document.index');
+        Route::get('document/{id}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
+        Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
+        Route::post('saveDocument', 'DocumentManagementController@saveDocument')->name('document.save');
+        Route::get('documents', 'DocumentManagementController@documents')->name('document.documents');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
