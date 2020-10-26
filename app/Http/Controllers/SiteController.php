@@ -124,7 +124,7 @@ class SiteController extends Controller
             }
         }
 
-        if($success && $response->VACATION->row[0]->period != 0)
+        if($success && isset($response->VACATION->row[0]->period) && $response->VACATION->row[0]->period != 0)
         {
             $vacation = array();
             foreach ($response->VACATION->row as $row){
@@ -251,6 +251,13 @@ class SiteController extends Controller
             3560197 => 3560197,
             3130949 => 3130949,
             1445721 => 1445721,
+            235472 => 235472, // Эльдар Советович
+            5011 => 5011,
+            4275866 => 4275866,
+            766502 => 766502,
+            3534147 => 3534147,
+            801271 => 801271,
+            4555970 => 4555970
         );
     }
 
@@ -381,6 +388,7 @@ class SiteController extends Controller
             'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
             'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
         ];
         $result = [
             'success' => true,

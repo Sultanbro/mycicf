@@ -46,22 +46,57 @@
                 </button>
             </div>
         </div>
-       <!-- Header of the news post section -->
+        <!-- Header of the news post section -->
 
         <div class="pl-2 pr-2" v-if="has_video">
             <div class="news-block-image-contain">
                 <d-player :options="options"></d-player>
             </div>
         </div>
+
+        <div class="pl-4 pr-4" v-if="post.post_poll.question_title !== null">
+            <div class="d-flex justify-content-center">
+                <h5>{{post.post_poll.question_title}}</h5>
+            </div>
+            <div v-for="(answer, index) in post.post_poll.answers"
+                 @click="vote(answer)"
+                 class="progress mb-2 progress-bar-hover d-flex"
+                 :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
+                 style="height: 40px;">
+                <div class="progress-bar"
+                     role="progressbar"
+                     :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    <div class="p-2">
+                        <span class="fs-1 color-black">{{post.isVoted === 1 ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
+                    </div>
+                </div>
+                <!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
+                <!--                    <span class="p-2 color-black">-->
+                <!--                        {{Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%'}}-->
+                <!--                    </span>-->
+                <!--                </div>-->
+            </div>
+            <div>
+                <h6 class="color-dimgray">
+                    <small>
+                        Количество голосов: {{post.post_poll.total_votes}}
+                    </small>
+                </h6>
+                <!--                <span class="color-dimgray"></span>-->
+            </div>
+        </div>
+
         <div class="pl-2 pr-2">
             <div class="news-block-image-contain">
                 <img :src="image" class="post-image" v-for="(image, index) in post.image.slice(0, 1)" @error="post.image.splice(index, 1)">
                 <div class="d-flex justify-content-center" v-html="post.youtube" @error="showVideo = false" v-if="showVideo"></div>
                 <div class="d-flex justify-content-center" v-if="post.image.length > 1">
                     <button type="button" class="color-blue show-all-btn small"
-                       @click="openImageViewer"
-                       data-toggle="modal"
-                       data-target=".bd-example-modal-lg">Показать ещё {{post.image.length - 1}} изображений</button>
+                            @click="openImageViewer"
+                            data-toggle="modal"
+                            data-target=".bd-example-modal-lg">Показать ещё {{post.image.length - 1}} изображений</button>
                     <image-viewer :array="post.image"></image-viewer>
                 </div>
             </div>
@@ -72,11 +107,11 @@
                 <div class="post-text"
                      v-if="!editMode">
                     <pre v-if="!isAllTextOpened"
-                        v-html="post.postText !== null ? post.postText.substr(0, 300) : ''"
-                        v-linkified></pre>
+                         v-html="post.postText !== null ? post.postText.substr(0, 300) : ''"
+                         v-linkified></pre>
                     <pre v-if="isAllTextOpened"
-                        v-html="post.postText"
-                        v-linkified></pre>
+                         v-html="post.postText"
+                         v-linkified></pre>
                     <div v-if="post.postText !== null && post.postText.length > 300 && !isAllTextOpened && !editMode">
                         <small class="color-blue show-all-btn"
                                @click="showAllText">Показать больше...</small>
@@ -87,7 +122,7 @@
                 <transition name="transition-textarea-height">
                     <textarea v-model="post.postText"
                               v-if="editMode"
-                              maxlength="2000"
+                              maxlength="8000"
                               :class="{'textarea-height': editMode}"
                               class="custom-input w-100 pr-5"></textarea>
                 </transition>
@@ -155,7 +190,6 @@
 
                 <div class="flex-row pl-4 pr-4 pt-3 pb-3 ">
                     <div class="comments-container w-100">
-
                         <div v-if="!allCommentsShown"
                              v-for="(comment, index) in post.comments.slice(0, 3)">
                             <news-comment :comment="comment"
@@ -232,6 +266,7 @@
         data() {
             return {
                 options: {},
+                isVoted: false,
                 has_video: false,
                 isPinned: false,
                 bottomOfWindow: 0,
@@ -387,8 +422,8 @@
             },
 
             exitEdit() {
-              this.editMode = !this.editMode;
-              this.post.postText = this.oldText;
+                this.editMode = !this.editMode;
+                this.post.postText = this.oldText;
             },
 
             addComment() {
@@ -419,6 +454,35 @@
                     }
                 });
             },
+
+            vote(object) {
+                if(this.post.isVoted === 1 || this.post.isVoted === '1') {
+                    return;
+                }
+                else {
+                    object.answer_votes++;
+                    this.post.post_poll.total_votes++;
+                    this.post.isVoted = 1;
+                    this.axios.post('/vote', {
+                        postId: this.postId,
+                        isn: this.isn,
+                        answerId: object.answer_id,
+                        questionId: this.post.post_poll.question_id
+                    }).then(response => {
+                        this.fetchVote(response.data);
+                    }).catch(error => {
+                        alert(error);
+                    })
+                }
+            },
+            fetchVote(response) {
+                if(response.success === true) {
+                    this.post.isVoted = 1;
+                }
+                else {
+                    this.post.isVoted = 0;
+                }
+            }
         },
         components: {
             'd-player': VueDPlayer

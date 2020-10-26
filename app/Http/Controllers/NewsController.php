@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Answer;
 use App\Centcoin;
 use App\CentcoinHistory;
 use App\Comment;
@@ -10,17 +11,24 @@ use App\Library\Services\KiasServiceInterface;
 use App\Like;
 use App\Mail\Email;
 use App\Post;
+use App\Question;
 use App\User;
+use App\UserAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
     public function addPost(Request $request) {
-        $success = false;
-        $error = '';
+        $isPoll = (boolean)$request->poll;
+        if($isPoll) {
+            $question = $request->question;
+            $answers = $request->answers;
+        }
+        DB::beginTransaction();
 
         if(!Auth::check()) {
             $error = 'Пожалуста авторизуйтесь заново';
@@ -30,7 +38,6 @@ class NewsController extends Controller
                 'success' => $success
             ];
         }
-
 
         if($request->postText === null && isset($request->postFiles) && sizeof($request->postFiles) === 0 && isset($request->postVideos) && sizeof($request->postVideos) === 0 && isset($request->postDocuments) && sizeof($request->postDocuments) === 0){
             $error = 'Заполните поле или добавьте вложения';
@@ -69,8 +76,33 @@ class NewsController extends Controller
                     Storage::disk('local')->put("public/post_files/$new_post->id/videos/$fileName", $content);
                 }
             }
-
-        }catch(\Exception $e) {
+            if($isPoll) {
+                $poll = new Question();
+                $poll->question = $question;
+                $poll->post_id = $new_post->id;
+                $poll->save();
+                $post_poll = [];
+                $post_answers = [];
+                foreach ($answers as $answer) {
+                    $answersModel = new Answer();
+                    $answersModel->value = $answer;
+                    $answersModel->question_id = $poll->id;
+                    $answersModel->save();
+                    array_push($post_answers, [
+                        "answer_id" => $answersModel->id,
+                        "answer_title" => $answersModel->value = $answer,
+                        "answer_votes" => 0,
+                    ]);
+                    $post_poll = [
+                        "question_id" => $poll->id,
+                        "question_title" => $poll->question = $question,
+                        "total_votes" => 0,
+                        "answers" => $post_answers,
+                    ];
+                }
+            }
+        } catch(\Exception $e) {
+            DB::rollBack();
             $error = $e->getMessage();
             $success = false;
             return [
@@ -78,7 +110,7 @@ class NewsController extends Controller
                 'error' => $error
             ];
         }
-
+        DB::commit();
         $response = [
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
             'edited' => false,
@@ -95,13 +127,10 @@ class NewsController extends Controller
             'youtube' => $new_post->getVideo(),
             'videos' => $new_post->getVideoUrl(),
             'comments' => [],
+            "post_poll" => $post_poll,
+            "isVoted" => 0,
         ];
 
-        $result = [
-            'success' => true,
-            'error' => $error,
-            'post' => $response,
-        ];
         broadcast(new NewPost([
             'post' => $response,
             'type' => Post::NEW_POST
@@ -141,6 +170,8 @@ class NewsController extends Controller
                 'documents' => $item->getDocuments(),
                 'youtube' => $item->getVideo(),
                 'videos' => $item->getVideoUrl(),
+                'post_poll' => $item->getPoll($item->id),
+                'isVoted' => $item->getIsVoted(Auth::user()->ISN, $item->id),
             ]);
         }
 
@@ -314,7 +345,80 @@ class NewsController extends Controller
         return $response;
     }
 
+    public function vote(Request $request) {
+        $post_id = $request->postId;
+        $user_isn = $request->isn;
+        $question_id = $request->questionId;
+        $answer_id = $request->answerId;
+
+        $model = UserAnswer::where('question_id', $question_id)
+            ->where('answer_id', $answer_id)
+            ->where('user_isn', $user_isn);
+
+        if(sizeof($model->get()) === 0) {
+            $vote = new UserAnswer();
+            $vote->user_isn = $user_isn;
+            $vote->question_id = $question_id;
+            $vote->answer_id = $answer_id;
+            $vote->save();
+            $success = true;
+        }
+        else {
+            $model->delete();
+            $success = false;
+        }
+
+        $response = [
+            'success' => $success,
+        ];
+
+        return $response;
+    }
+
     public function getView() {
         return view('news');
+    }
+
+    public function senateVote(Request $request){
+        $answers = $request->answers;
+        foreach ($answers as $answer){
+            if($answer['checked']){
+                $userAnswer = new UserAnswer();
+                $userAnswer->question_id = $request->question;
+                $userAnswer->answer_id = $answer['answer_id'];
+                $userAnswer->user_isn = auth()->user()->ISN;
+                $userAnswer->save();
+            }
+        }
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function dev(Request $request) {
+        switch ($request->name) {
+            case 'boss':
+                return view('dev')->with([
+                   'type' => 'boss'
+                ]);
+            case 'company':
+                return view('dev')->with([
+                    'type' => 'company'
+                ]);
+            case 'rating':
+                return view('dev')->with([
+                    'type' => 'rating'
+                ]);
+            case 'results':
+                return view('dev')->with([
+                    'type' => 'results'
+                ]);
+            case 'study':
+                return view('dev')->with([
+                    'type' => 'study'
+                ]);
+            default:
+                return 0;
+        }
     }
 }

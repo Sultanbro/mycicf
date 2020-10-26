@@ -19,4 +19,8 @@ class Dicti extends Model
         'numcode',
         'n_kids',
     ];
+
+    public function childs() {
+        return $this->hasMany('App\Dicti','parent_isn','isn') ;
+    }
 }

@@ -21,11 +21,11 @@
                         <img :src="imageUrl" @error="fakeImage = true" class="image-circle-add-post" v-else>                    </div>
                     <div class="w-100 h-100 wrapper">
                         <textarea-autosize v-model="postText"
-                                          class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
-                                          placeholder="Что у вас нового?"
-                                          :maxlength="2000"
-                                          :min-height="70"
-                                          :max-height="350">{{this.postText}}</textarea-autosize>
+                                           class="w-100 pl-4 pt-2 pr-5 pb-2 border-0 post-textarea"
+                                           placeholder="Что у вас нового?"
+                                           :maxlength="8000"
+                                           :min-height="70"
+                                           :max-height="350">{{this.postText}}</textarea-autosize>
                         <emoji-component :type="NEW_POST_TEXTAREA"></emoji-component>
                     </div>
                 </div>
@@ -92,7 +92,6 @@
                 </div>
             </div>
 
-
             <div class="flex-row">
                 <div class="flex-row ml-4 mr-4 pb-2 pt-2 w-100">
                     <div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">
@@ -106,26 +105,65 @@
                         <input type="file" id="video-upload" @change="videoUpload" accept="video/*">
                     </div>
                     <!--<div class="icons-bg mr-2 pt-1 pb-1 pr-2 pl-2">-->
-                        <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
-                        <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
-                        <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
+                    <!--<i class="fas fa-volume-up color-black file-icons"></i>-->
+                    <!--<label for="audio-upload" class="custom-file-upload">Аудио</label>-->
+                    <!--<input type="file" id="audio-upload" accept="audio/*"multiple>-->
                     <!--</div>-->
-                    <div class="icons-bg pt-1 pr-2 pl-2 pb-1">
+                    <div class="icons-bg mr-2 pt-1 pr-2 pl-2 pb-1 pl-2">
                         <i class="fas fa-file-upload color-black file-icons"></i>
                         <label for="file-upload" class="custom-file-upload">Файл</label>
                         <input type="file" id="file-upload" @change="fileUpload" multiple>
                     </div>
+                    <div class="icons-bg mr-2 pt-1 pr-2 pl-2 pb-1 pl-2">
+                        <i class="fas fa-poll color-black file-icons"></i>
+                        <label class="custom-file-upload" @click="createPoll">Опрос</label>
+                        <input type="file">
+                    </div>
                     <transition name="transition-opacity">
                         <div class="icons-bg ml-auto" v-if="postText.length > 0 || files.length > 0 || documents.length > 0 || videos.length > 0">
-                            <button
-                                    @click="addPost"
+                            <button @click="addPost"
                                     class="pt-1 pb-1 pr-2 pl-2 common-btn">Опубликовать</button>
                         </div>
                     </transition>
                 </div>
             </div>
-        </div>
 
+            <div class="pt-2 pb-2 ml-4 mr-4" v-if="poll">
+                <div>
+                    <div class="w-100 mb-2">
+                        <h6 class="color-blue">Тема опроса</h6>
+                        <div>
+                            <input type="text" class="w-50 p-1" v-model="question">
+                        </div>
+                    </div>
+                    <div class="w-100">
+                        <div>
+                            <h6 class="color-blue">Варианты ответа</h6>
+                        </div>
+                        <div v-for="(answer, index) in answers"
+                             class="mb-2 d-flex">
+                            <input type="text"
+                                   class="w-50 p-1"
+                                   v-model="answers[index]"
+                                   :placeholder="`Ответ ${index + 1}`"
+                                   :aria-label="`Ответ ${index + 1}`">
+                            <div v-if="answers.length > 2"
+                                 @click="removeAnswer(index)"
+                                 class="p-2 d-flex align-items-center custom-blue-button">
+                                <i class="fas fa-minus-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center gray-button mt-2 mb-2"
+                         @click="addAnswer"
+                         v-if="answers.length < maxAnswers">
+                        <div class="pt-2 pb-2">
+                            <span>Добавить пункт</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div v-if="pinnedPost !== null">
             <news-post
@@ -146,65 +184,75 @@
             ></news-post>
         </div>
         <div class="text-center">
-            <button type="button" class="load-button pl-2 pr-2" @click="getPosts" v-if="!allPostShown">Больше</button>
+            <button type="button"
+                    class="load-button pl-2 pr-2"
+                    @click="getPosts"
+                    v-if="!allPostShown">Больше</button>
         </div>
-        <a v-if="showToTopBtn" href="javascript:" class="to-top-btn" @click="goToTop()"><i class="fas fa-chevron-up fa-3x"></i></a>
+        <a v-if="showToTopBtn"
+           href="javascript:"
+           class="to-top-btn"
+           @click="goToTop()"><i class="fas fa-chevron-up fa-3x"></i></a>
     </div>
 </template>
 
 <script>
     export default {
         name: "post",
-        data() {
-            return {
-                imgExtensions: [
-                    "image/jpeg",
-                    "image/jpg",
-                    "image/png",
-                    "image/svg+xml"
-                ],
-                docExtensions: [
-                    "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "application/pdf",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "application/vnd.ms-excel",
-                    "application/vnd.ms-powerpoint",
-                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    "application/vnd.rar",
-                    "application/zip",
-                ],
-                files: [],
-                images : [],
-                documents: [],
-                videos: [],
-                lastIndex : null,
-                postText: "",
-                posts: [],
-                pinnedPost: null,
-                pinnedPostIndex: null,
-                bottomOfWindow: 0,
-                scrolled: false,
-                NEW_POST : "new",
-                EDITED_POST : "edit",
-                LIKED_POST : "like",
-                PINNED_POST : "pinned",
-                DELETED_POST : "deleted",
-                COMMENDTED_POST : "commented",
-                NEW_POST_TEXTAREA: "NEW_POST",
-                allPostShown : false,
-                fakeImage : false,
-                imageUrl : null,
-                postIds : [],
-                imgMaxSize: 2 * 1024 * 1024,
-                docMaxSize: 10 * 1024 * 1024,
-                imgMaxNumber: 10,
-                docMaxNumber: 5,
-                videoMaxNumber: 1,
-                moderators: [],
-                showToTopBtn: false,
-            }
-        },
+        data: () => ({
+            showPoll: false,
+            showAddAnswer: true,
+            maxAnswers: 10,
+            poll: false,
+            question: null,
+            answers : ["", ""],
+            imgExtensions: [
+                "image/jpeg",
+                "image/jpg",
+                "image/png",
+                "image/svg+xml"
+            ],
+            docExtensions: [
+                "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/pdf",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.ms-excel",
+                "application/vnd.ms-powerpoint",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "application/vnd.rar",
+                "application/zip",
+            ],
+            files: [],
+            images : [],
+            documents: [],
+            videos: [],
+            lastIndex : null,
+            postText: "",
+            posts: [],
+            pinnedPost: null,
+            pinnedPostIndex: null,
+            bottomOfWindow: 0,
+            scrolled: false,
+            NEW_POST : "new",
+            EDITED_POST : "edit",
+            LIKED_POST : "like",
+            PINNED_POST : "pinned",
+            DELETED_POST : "deleted",
+            COMMENDTED_POST : "commented",
+            NEW_POST_TEXTAREA: "NEW_POST",
+            allPostShown : false,
+            fakeImage : false,
+            imageUrl : null,
+            postIds : [],
+            imgMaxSize: 2 * 1024 * 1024,
+            docMaxSize: 10 * 1024 * 1024,
+            imgMaxNumber: 10,
+            docMaxNumber: 5,
+            videoMaxNumber: 1,
+            moderators: [],
+            showToTopBtn: false,
+        }),
 
         props: {
             isn: Number,
@@ -213,21 +261,22 @@
         mounted: function() {
             this.imageUrl = "/storage/images/employee/" + this.isn + ".png";
             Echo.private(`post`)
-            .listen("NewPost", (e) => {
-                this.handleIncoming(e);
-            });
+                .listen("NewPost", (e) => {
+                    this.handleIncoming(e);
+                });
             this.getPosts();
             this.getModerators();
         },
 
         methods: {
-            getModerators: function () {
+            getModerators() {
                 this.axios.get('/getModerators', {})
                     .then(response => {
                         this.moderators = response.data.moderators
                     })
                     .catch()
             },
+
             videoUpload(e) {
                 const videos = e.target.files;
                 const vm = this;
@@ -246,6 +295,7 @@
                     alert(`Максимальное кол-во файлов: ${this.videoMaxNumber}`)
                 }
             },
+
             fileUpload(e) {
                 const documents = e.target.files;
                 const vm = this;
@@ -273,9 +323,11 @@
                 const vm = this;
                 vm.documents.splice(index, 1);
             },
+
             deleteVideo(index){
                 this.videos.splice(index,1);
             },
+
             checkExtension(type, array) {
                 if(array.includes(type)) return true
                 else return false;
@@ -324,6 +376,7 @@
 
             getFormData() {
                 const formData = new FormData;
+                var pollValue = this.poll ? 1 : 0;
 
                 this.documents.forEach(document => {
                     formData.append('postDocuments[]', document, document.name);
@@ -332,11 +385,21 @@
                 this.files.forEach(file => {
                     formData.append("postFiles[]", file, file.name);
                 });
+
                 this.videos.forEach(file => {
                     formData.append("postVideos[]", file, file.name);
                 });
+
                 formData.append("postText", this.postText);
+                formData.append('poll', pollValue);
                 formData.append("isn", this.isn);
+
+                if(this.poll) {
+                    formData.append('question', this.question);
+                    this.answers.forEach(answer => {
+                        formData.append('answers[]', answer)
+                    });
+                }
 
                 return formData;
             },
@@ -345,6 +408,9 @@
                 this.files = [];
                 this.images = [];
                 this.documents = [];
+                this.poll = false;
+                this.question = null;
+                this.answers = ["", ""];
                 //     this.posts.unshift({
                 //         isn: response.userISN,
                 //         postText: response.postText,
@@ -483,13 +549,36 @@
                     document.getElementById("preloader").style.display = "none";
                 }
             },
+
             goToTop(){
                 window.scroll({
                     top: 0,
                     left: 0,
                     behavior: 'smooth'
                 });
-            }
+            },
+
+            createPoll() {
+                // if(this.answersCount === 0) {
+                //     // this.answers.push("");
+                //     this.answersCount++;
+                //     this.poll = true;
+                // }
+                this.poll = !this.poll;
+            },
+
+            addAnswer() {
+                if(this.answers.length < this.maxAnswers) {
+                    this.answers.push("");
+                }
+            },
+
+            removeAnswer(index) {
+                if(this.answers.length > 2) {
+                    this.answers.splice(index, 1);
+                }
+                else return;
+            },
         },
 
         beforeMount () {
