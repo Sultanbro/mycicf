@@ -4,7 +4,8 @@
         <div class="col-md-2 vertical-middle">
             <div class="header-img-width">
                 <a href="{{route('index')}}">
-                    <img src="{{asset('images/new-white-logo.png')}}" class="image">
+{{--                    <img src="{{asset('images/new-white-logo.png')}}" class="image">--}}
+                    <img src="{{asset('images/mycic-horizontal-logo.png')}}" class="image">
                 </a>
             </div>
         </div>
