@@ -1,18 +1,18 @@
 <?php
-$viewPath = 'admin';
-//switch($_SERVER['HTTP_HOST'] ?? env('FRONTEND_DOMAIN')){
-//    case env('BACKEND_DOMAIN') :
-//        $viewPath = 'admin';
-//        break;
-//    case env('PARSE_DOMAIN') :
-//        $viewPath = 'parse';
-//        break;
-//    case env('FRONTEND_DOMAIN') :
-//        $agent = new \Jenssegers\Agent\Agent;
-//        $result = $agent->isDesktop();
-//        $viewPath = $result ? 'views' : 'mobile';
-//        break;
-//}
+$viewPath = 'views';
+switch($_SERVER['HTTP_HOST'] ?? env('FRONTEND_DOMAIN')){
+    case env('BACKEND_DOMAIN') :
+        $viewPath = 'admin';
+        break;
+    case env('PARSE_DOMAIN') :
+        $viewPath = 'parse';
+        break;
+    case env('FRONTEND_DOMAIN') :
+        $agent = new \Jenssegers\Agent\Agent;
+        $result = $agent->isDesktop();
+        $viewPath = $result ? 'views' : 'mobile';
+        break;
+}
 return [
 
     /*
