@@ -23,7 +23,7 @@ Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->n
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
 
-//Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
+Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/', 'Admin\SiteController@showLoginForm');
     Route::post('/login', 'Admin\SiteController@checkLogin');
@@ -153,7 +153,7 @@ Route::get('/sendNotification', 'NotificationController@sendNotify');
             Route::get('/statistics/delete/{kurators}', 'Admin\KuratorController@deleteById');
         });
     });
-//});
+});
 
 /**
  * FRONTEND APP
