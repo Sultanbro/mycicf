@@ -274,7 +274,8 @@
             participantDocs: Object,
             userList: Array,
             getUserList: Function,
-            attribute: Object
+            attribute: Object,
+            order: Object
         },
         created(){
             this.width = window.innerWidth;
@@ -535,6 +536,8 @@
             },
             deleteParticipant(){
                 if(confirm("Вы точно хотите удалить раздел "+this.participant.Label+'?')) {
+                    this.$emit('deletedPart', this.participants[this.pIndex],this.pIndex);
+                    //this.order.deletedParticipants[this.pIndex]
                     this.participants.splice(this.pIndex, 1);
                     if(this.attribute != undefined){
                         this.attribute.Value = this.attribute.AttrISN == 752071 ? null : this.attribute.Value;  // Перевозчик

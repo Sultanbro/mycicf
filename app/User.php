@@ -123,6 +123,7 @@ class User extends Authenticatable
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
             'Avarcom' => (string)$response->Avarcom,
+            'MyDZ' => (string)$response->MyDZ,
         ];
         return $users_data;
     }
