@@ -18,8 +18,9 @@
                         </div>
                     </div>
                     <div class="ml-4 mr-4 col-2">
-                        <div class="date-color border-gray show-btn" @click="getReport">
-                            <div class="d-flex pt-2 pb-2 pl-3 pr-3">
+                        <div class="date-color border-gray show-btn btn-statistics"
+                             @click="getReport">
+                            <div class="d-flex pt-2 pb-2 pl-3 pr-3 justify-content-center">
                                 <div>
                                     <i class="far fa-eye"></i>
                                 </div>
@@ -44,8 +45,8 @@
                         </div>
                     </div>
                     <div class="ml-4 mr-4">
-                        <div class="date-color border-gray show-btn" @click="getReport">
-                            <div class="d-flex pt-1 pb-1 pl-4 pr-4">
+                        <div class="date-color border-gray show-btn btn-statistics" @click="getReport">
+                            <div class="d-flex pt-1 pb-1 pl-4 pr-4 justify-content-center">
                                 <div>
                                     <i class="far fa-eye"></i>
                                 </div>
@@ -340,5 +341,9 @@
 </script>
 
 <style scoped>
-
+    .btn-statistics{
+        max-width: 200px;
+        width: 100%;
+        margin: 0 auto;
+    }
 </style>
