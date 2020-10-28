@@ -2845,31 +2845,62 @@ class ParseController extends Controller
     {
         $arr = Excel::toArray(new UsersImport, $filePath);
         $model = new ParseOpu();
-        foreach ($this->getOpuOptions() as $key => $functionsString){
-            $value = 0;
-            $functions = explode(',', $functionsString);
-            foreach ($functions as $function) {
-                list($func, $val) = explode('(', $function);
-                $val = substr_replace($val,"",-1);
-                if(in_array($func, ['add', 'minus'])){
-                    if(in_array($val, array_keys($this->getOpuOptions()))){
-                        if($func == 'add'){
-                            $value += $model->$val;
-                        }else{
-                            $value -= $model->$val;
+
+        if($year == '2020') {
+            foreach ($this->getOpuOptions20() as $key => $functionsString) {
+                $value = 0;
+                $functions = explode(',', $functionsString);
+                foreach ($functions as $function) {
+                    list($func, $val) = explode('(', $function);
+                    $val = substr_replace($val, "", -1);
+                    if (in_array($func, ['add', 'minus'])) {
+                        if (in_array($val, array_keys($this->getOpuOptions20()))) {
+                            if ($func == 'add') {
+                                $value += $model->$val;
+                            } else {
+                                $value -= $model->$val;
+                            }
+                        } else {
+                            $value += $this->$func($arr, $val);
                         }
-                    }else{
-                        $value += $this->$func($arr, $val);
+                    } else {
+                        list($a, $b) = explode(';', $val);
+                        if ($model->$b == 0) {
+                            $value = 0;
+                        } else {
+                            $value += ($model->$a / $model->$b);
+                        }
                     }
-                }else{
-                    list($a,$b) = explode(';',$val);
-                    if($model->$b == 0){
-                        $value = 0;
-                    }else {
-                        $value += ($model->$a / $model->$b);
-                    }
+                    $model->$key = $value;
                 }
-                $model->$key = $value;
+            }
+        } else {
+            foreach ($this->getOpuOptions() as $key => $functionsString) {
+                $value = 0;
+                $functions = explode(',', $functionsString);
+                foreach ($functions as $function) {
+                    list($func, $val) = explode('(', $function);
+                    $val = substr_replace($val, "", -1);
+                    if (in_array($func, ['add', 'minus'])) {
+                        if (in_array($val, array_keys($this->getOpuOptions()))) {
+                            if ($func == 'add') {
+                                $value += $model->$val;
+                            } else {
+                                $value -= $model->$val;
+                            }
+                        } else {
+                            $value += $this->$func($arr, $val);
+                        }
+                    } else {
+                        list($a, $b) = explode(';', $val);
+                        if ($model->$b == 0) {
+                            $value = 0;
+                        } else {
+                            $value += ($model->$a / $model->$b);
+                        }
+                    }
+                    $model->$key = $value;
+                }
             }
         }
         $model->year=$year;
@@ -2902,6 +2933,34 @@ class ParseController extends Controller
             'net_income' => 'add(brut_income),minus(kpn)',
         ];
     }
+
+    public function getOpuOptions20(){
+        return [
+            'dsd' => 'add(17),add(21),minus(64),add(22)',
+            'brut_prem' => 'add(14),add(15),minus(64)',
+            'own_ret' => 'division(dsd;brut_prem)',
+            'ins_expense' => 'add(53),add(54),add(63)',
+            'net_payout' => 'add(53),add(54)',
+            'lost_perc' => 'division(net_payout;dsd)',
+            'av' => 'add(63)',
+            'av_perc' => 'division(av;dsd)',
+            'net_ins_income' => 'add(dsd),minus(ins_expense)',
+            'adm_expenses'=>'add(72)',
+            'fot' => 'add(74)',
+            'fot_dsd' => 'division(adm_expenses;dsd)',
+            'fin_result' => 'add(net_ins_income),minus(adm_expenses)',
+            'reserve_changes' => 'add(18),minus(19),add(59),minus(60),add(61),minus(62)',
+            'fin_changes' => 'add(fin_result),minus(reserve_changes)',
+            'invest_income' => 'add(23),minus(65),minus(71)',
+            'other_income' => 'add(43)',
+            'other_expenses' => 'add(81)',
+            'brut_income' => 'add(fin_changes),add(invest_income),add(other_income),minus(other_expenses)',
+            'kpn' => 'add(86)',
+            'net_income' => 'add(brut_income),minus(kpn)'
+        ];
+    }
+
+
     public function getOpuLabels(){
         return [
             'dsd' => 'ДСД',
