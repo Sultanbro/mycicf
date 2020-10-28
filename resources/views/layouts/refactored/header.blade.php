@@ -3,30 +3,42 @@
         <div class="header-wrapper__inner">
             <div class="header-logo">
                 <span>
-                    <a href="">Centras Insurance</a>
+{{--                    <a href="#">Centras Insurance</a>--}}
+                    <a href="#">my.cic</a>
                 </span>
             </div>
             <div class="header-menu">
                 <ul>
                     <li>
-                        <a href="#">Шеф говорит!</a>
+                        <a href="#" class="header-menu__item">Шеф говорит!</a>
                     </li>
                     <li>
-                        <a href="#">О Компании</a>
+                        <a href="#" class="header-menu__item">О Компании</a>
                     </li>
                     <li>
-                        <a href="#">Рейтинг</a>
+                        <a href="#" class="header-menu__item">Рейтинг</a>
                     </li>
                     <li>
-                        <a href="#">Библиотека</a>
+                        <a href="#" class="header-menu__item">Parse</a>
                     </li>
                     <li>
-                        <a href="#">Котировки</a>
+                        <a href="#" class="header-menu__item">Библиотека</a>
+                    </li>
+                    <li>
+                        <a href="#" class="header-menu__item">Котировки</a>
                     </li>
                 </ul>
             </div>
             <div class="header-auth">
-                Авторизация
+                <div class="header-auth__inner">
+                    <div class="header-settings">Настройки</div>
+                    <div class="header-settings_show">
+                        <ul>
+                            <li><a href="#" class="header-settings__item">Уведомление</a></li>
+                            <li><a href="#" class="header-settings__item">Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

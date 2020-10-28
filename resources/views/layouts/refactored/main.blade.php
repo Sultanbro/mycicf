@@ -6,8 +6,10 @@
 </head>
 <body>
     @include('layouts.refactored.header')
-    <main>
+    <main class="container">
+        @include('layouts.refactored.sidebar')
         @yield('content')
     </main>
+    @include('layouts.refactored.scripts')
 </body>
 </html>
