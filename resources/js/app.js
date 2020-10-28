@@ -180,6 +180,8 @@ Vue.component('dsv', require('./components/booking/dsv').default);
 
 Vue.component('statistics', require('./components/employee/statistics').default);
 
+Vue.component('boss-news', require('./components/news/boss-news').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
