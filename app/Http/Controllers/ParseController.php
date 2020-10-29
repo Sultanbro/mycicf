@@ -2846,61 +2846,36 @@ class ParseController extends Controller
         $arr = Excel::toArray(new UsersImport, $filePath);
         $model = new ParseOpu();
 
-        if($year == '2020') {
-            foreach ($this->getOpuOptions20() as $key => $functionsString) {
-                $value = 0;
-                $functions = explode(',', $functionsString);
-                foreach ($functions as $function) {
-                    list($func, $val) = explode('(', $function);
-                    $val = substr_replace($val, "", -1);
-                    if (in_array($func, ['add', 'minus'])) {
-                        if (in_array($val, array_keys($this->getOpuOptions20()))) {
-                            if ($func == 'add') {
-                                $value += $model->$val;
-                            } else {
-                                $value -= $model->$val;
-                            }
-                        } else {
-                            $value += $this->$func($arr, $val);
-                        }
-                    } else {
-                        list($a, $b) = explode(';', $val);
-                        if ($model->$b == 0) {
-                            $value = 0;
-                        } else {
-                            $value += ($model->$a / $model->$b);
-                        }
-                    }
-                    $model->$key = $value;
-                }
-            }
+        if($year == '2020' || $year == 2020 || $year > 2020) {
+            $getOpuOptions = $this->getOpuOptions20();
         } else {
-            foreach ($this->getOpuOptions() as $key => $functionsString) {
-                $value = 0;
-                $functions = explode(',', $functionsString);
-                foreach ($functions as $function) {
-                    list($func, $val) = explode('(', $function);
-                    $val = substr_replace($val, "", -1);
-                    if (in_array($func, ['add', 'minus'])) {
-                        if (in_array($val, array_keys($this->getOpuOptions()))) {
-                            if ($func == 'add') {
-                                $value += $model->$val;
-                            } else {
-                                $value -= $model->$val;
-                            }
+            $getOpuOptions = $this->getOpuOptions();
+        }
+        foreach ($getOpuOptions as $key => $functionsString) {
+            $value = 0;
+            $functions = explode(',', $functionsString);
+            foreach ($functions as $function) {
+                list($func, $val) = explode('(', $function);
+                $val = substr_replace($val, "", -1);
+                if (in_array($func, ['add', 'minus'])) {
+                    if (in_array($val, array_keys($getOpuOptions))) {
+                        if ($func == 'add') {
+                            $value += $model->$val;
                         } else {
-                            $value += $this->$func($arr, $val);
+                            $value -= $model->$val;
                         }
                     } else {
-                        list($a, $b) = explode(';', $val);
-                        if ($model->$b == 0) {
-                            $value = 0;
-                        } else {
-                            $value += ($model->$a / $model->$b);
-                        }
+                        $value += $this->$func($arr, $val);
                     }
-                    $model->$key = $value;
+                } else {
+                    list($a, $b) = explode(';', $val);
+                    if ($model->$b == 0) {
+                        $value = 0;
+                    } else {
+                        $value += ($model->$a / $model->$b);
+                    }
                 }
+                $model->$key = $value;
             }
         }
         $model->year=$year;
@@ -2994,33 +2969,40 @@ class ParseController extends Controller
     public function parseBalanceData($filePath, $year, $month, $company_id){
         $arr = Excel::toArray(new UsersImport, $filePath);
         $model = new ParseBalance();
-        foreach ($this->getBalanceOptions() as $key => $functionsString){
+
+        if($year == '2020' || $year == 2020 || $year > 2020) {
+            $getBalanceOptions = $this->getBalanceOptions20();
+        } else {
+            $getBalanceOptions = $this->getBalanceOptions();
+        }
+        foreach ($getBalanceOptions as $key => $functionsString) {
             $value = 0;
             $functions = explode(',', $functionsString);
             foreach ($functions as $function) {
                 list($func, $val) = explode('(', $function);
-                $val = substr_replace($val,"",-1);
-                if(in_array($func, ['add', 'minus'])){
-                    if(in_array($val, array_keys($this->getBalanceOptions()))){
-                        if($func == 'add'){
+                $val = substr_replace($val, "", -1);
+                if (in_array($func, ['add', 'minus'])) {
+                    if (in_array($val, array_keys($getBalanceOptions))) {
+                        if ($func == 'add') {
                             $value += $model->$val;
-                        }else{
+                        } else {
                             $value -= $model->$val;
                         }
-                    }else{
+                    } else {
                         $value += $this->$func($arr, $val);
                     }
-                }else{
-                    list($a,$b) = explode(';',$val);
-                    if($model->$b == 0){
+                } else {
+                    list($a, $b) = explode(';', $val);
+                    if ($model->$b == 0) {
                         $value = 0;
-                    }else {
+                    } else {
                         $value += ($model->$a / $model->$b);
                     }
                 }
                 $model->$key = $value;
             }
         }
+
         $model->year=$year;
         $model->month=$month;
         $model->company_id=$company_id;
@@ -3094,6 +3076,38 @@ class ParseController extends Controller
             'retained_earnings' => 'add(71)',
             'current_period' => 'add(74)',
             'last_years' => 'add(73)',
+        ];
+    }
+
+    public function getBalanceOptions20(){
+        return [
+            'actives' => 'add(13),add(43)',
+            'cash' => 'add(14)',
+            'deposits' => 'add(15)',
+            'securities' => 'add(16),add(17)',
+            'rev_repo' => 'add(18)',
+            'OS' => 'add(36),add(37),add(38),add(39),add(40)',
+            'NMA' => 'add(41)',
+            'ins_dz' => 'add(26)',
+            'other_dz' => 'add(28),add(29)',
+            'other_actives' => 'add(19),add(20),add(27),add(30),add(31),add(32),add(33),add(34),add(35),add(42)',
+            'liability' => 'add(44),add(65)',
+            'repo' => 'add(58)',
+            'reins_calcs' => 'add(51)',
+            'middleman_calcs' => 'add(52)',
+            'invoices_to_pay' => 'add(54)',
+            'other_credits' => 'add(55)',
+            'other_liability' => 'add(50),add(53),add(56),add(57),add(59),add(60),add(61),add(62),add(63),add(64)',
+            'reserves' => 'add(45),minus(21),add(48),minus(22),add(49),minus(25)',
+            'rnp' => 'add(45),minus(21)',
+            'rznu' => 'add(49),minus(25)',
+            'rpnu' => 'add(48),minus(22)',
+            'capital' => 'add(66),add(79)',
+            'authorized_capital' => 'add(67)',
+            'other_rezerves' => 'add(68),add(69),add(70),add(71),add(72),add(73),add(74)',
+            'retained_earnings' => 'add(75)',
+            'current_period' => 'add(78)',
+            'last_years' => 'add(77)'
         ];
     }
 
