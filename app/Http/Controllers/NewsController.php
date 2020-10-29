@@ -432,14 +432,14 @@ class NewsController extends Controller
 
         if($last_index == null){
             $model = Post::orderBy('id', 'DESC')
-                ->where('user_isn', 3600338)
+                ->where('user_isn', 1472004)
                 ->limit(5)
                 ->get();
         }
         else {
             $model = Post::orderBy('id', 'DESC')
                 ->where('id', '<', $last_index)
-                ->where('user_isn', 3600338)
+                ->where('user_isn', 1472004)
                 ->limit(5)
                 ->get();
         }

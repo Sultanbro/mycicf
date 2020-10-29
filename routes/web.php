@@ -328,8 +328,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
 
-        Route::get('boss-says', 'NewsController@index');
-        Route::post('boss-says/getBossPosts', 'NewsController@getBossPosts');
+        Route::get('boss-news', 'NewsController@index')->name('boss-news');
+        Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {

@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
-                <a href="{{route('development', 'boss')}}" class="header-navigation">
+                <a href="{{route('boss-news')}}" class="header-navigation">
                     <li>Шеф говорит!</li>
                 </a>
                 <a class="header-navigation" href="{{route('development', 'company')}}">
