@@ -16,7 +16,6 @@
     font-family: 'Bicubik Regular', 'sans-serif';
     font-size: 1.6rem;
     font-weight: bold;
-    text-transform: uppercase;
     background: linear-gradient(90deg, rgba(0,84,255,0.7497373949579832) 0%, rgba(0,161,255,0.2847514005602241) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -51,27 +50,38 @@
 
 .header-auth {
     position: relative;
+    transition: 0.4s ease;
     &:hover .header-settings_show {
         display: block;
+    }
+    &:hover {
+        background-color: cornflowerblue;
+        color: #FFF;
     }
 }
 
 .header-auth__inner {
-
 }
 
 .header-settings {
-    padding: 0.8rem 1rem;
-    //border: 1px solid $base-color-dark;
+    padding: 0.2rem;
+    font-size: 1.5rem;
 }
 
 .header-settings_show {
     display: none;
     position: absolute;
-    //box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    right: 0;
     background-color: #FFF;
 }
 
 .header-settings__item {
-    padding: 0.8rem;
+    display: block;
+    padding: 0.4rem 0.8rem;
+    transition: 0.4s ease;
+
+    &:hover {
+        background-color: cornflowerblue;
+        color: #FFF;
+    }
 }

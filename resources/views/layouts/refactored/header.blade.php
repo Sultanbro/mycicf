@@ -3,8 +3,7 @@
         <div class="header-wrapper__inner">
             <div class="header-logo">
                 <span>
-{{--                    <a href="#">Centras Insurance</a>--}}
-                    <a href="#">my.cic</a>
+                    <a href="#">mycic</a>
                 </span>
             </div>
             <div class="header-menu">
@@ -31,7 +30,9 @@
             </div>
             <div class="header-auth">
                 <div class="header-auth__inner">
-                    <div class="header-settings">Настройки</div>
+                    <div class="header-settings">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
                     <div class="header-settings_show">
                         <ul>
                             <li><a href="#" class="header-settings__item">Уведомление</a></li>

@@ -2,17 +2,36 @@
     font-family: 'Bicubik Regular';
     src: url('../../fonts/bicubik/bicubik_regular.eot'); /* IE 9 Compatibility Mode */
     src: url('../../fonts/bicubik/bicubik_regular.eot?#iefix') format('embedded-opentype'), /* IE < 9 */
-    url('../../fonts/bicubik/bicubik_regular.woff2') format('woff2'), /* Super Modern Browsers */
-    url('../../fonts/bicubik/bicubik_regular.woff') format('woff'), /* Firefox >= 3.6, any other modern browser */
-    url('../../fonts/bicubik/bicubik_regular.ttf') format('truetype'), /* Safari, Android, iOS */
-    url('../../fonts/bicubik/bicubik_regular.svg#bicubik_regular') format('svg'); /* Chrome < 4, Legacy iOS */
+         url('../../fonts/bicubik/bicubik_regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../../fonts/bicubik/bicubik_regular.woff') format('woff'), /* Firefox >= 3.6, any other modern browser */
+         url('../../fonts/bicubik/bicubik_regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('../../fonts/bicubik/bicubik_regular.svg#bicubik_regular') format('svg'); /* Chrome < 4, Legacy iOS */
 }
 
 @font-face {
     font-family: 'Euclid Flex Regular';
     src: url('../../fonts/euclidflex/euclidflex_regular.woff2') format('woff2'),
-    url('../../fonts/euclidflex/euclidflex_regular.woff') format('woff'),
-    url('../../fonts/euclidflex/euclidflex_regular.ttf') format('truetype');
+         url('../../fonts/euclidflex/euclidflex_regular.woff') format('woff'),
+         url('../../fonts/euclidflex/euclidflex_regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
+
+//@font-face {
+//    font-family: 'Font Awesome 5 Free', 'Font Awesome 5 Brands';
+//    src: url("~@fortawesome/fontawesome-free/webfonts/fa-brands-400.eot"),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-brands-400.svg"),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf") format('truetype'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff") format('woff'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2") format('woff2'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-regular-400.eot"),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-regular-400.svg"),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf") format('truetype'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff") format('woff'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2") format('woff2'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot"),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-solid-900.svg"),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf") format('truetype'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff") format('woff'),
+//         url("~@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2") format('woff');
+//}
