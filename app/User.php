@@ -123,6 +123,7 @@ class User extends Authenticatable
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
             'Avarcom' => (string)$response->Avarcom,
+            'MyDZ' => (string)$response->MyDZ,
         ];
         return $users_data;
     }
@@ -153,6 +154,10 @@ class User extends Authenticatable
 
     public static function isProductsAdmin(){
         return (new Permissions())->checkUser([Permissions::ROLE_PRODUCTS]);
+    }
+
+    public static function isKurators(){
+        return (new Kurators())->checkUser([kurators::ROLE_KURATORS]);
     }
 
     public static function getMotivationDepartments(){
