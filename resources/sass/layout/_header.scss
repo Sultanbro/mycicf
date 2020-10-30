@@ -4,15 +4,20 @@
     background-color: #FFF;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     margin-bottom: 1.5rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 10;
 }
 
 .header-wrapper__inner {
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
 .header-logo {
+    display: flex;
+    align-items: center;
     font-family: 'Bicubik Regular', 'sans-serif';
     font-size: 1.6rem;
     font-weight: bold;
@@ -64,7 +69,7 @@
 }
 
 .header-settings {
-    padding: 0.2rem;
+    padding: 0.5rem 0.8rem;
     font-size: 1.5rem;
 }
 
@@ -76,12 +81,27 @@
 }
 
 .header-settings__item {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0.4rem 0.8rem;
     transition: 0.4s ease;
+    color: $base-color-dark;
+    cursor: pointer;
 
-    &:hover {
-        background-color: cornflowerblue;
-        color: #FFF;
+    i {
+        padding-left: 1rem;
+        font-size: 1.2rem;
+    }
+    &:hover a{
+        color: cornflowerblue;
+    }
+    &:hover .fa-bell {
+        color: $color-orange;
+        text-shadow: 0 0 8px rgba(255, 205, 40, 0.5);
+    }
+    &:hover .fa-power-off {
+        color: $color-red;
+        text-shadow: 0 0 8px rgba(224, 119, 125, 0.3);
     }
 }

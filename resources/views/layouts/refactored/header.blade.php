@@ -12,19 +12,19 @@
                         <a href="#" class="header-menu__item">Шеф говорит!</a>
                     </li>
                     <li>
-                        <a href="#" class="header-menu__item">О Компании</a>
+                        <a href="#" class="header-menu__item">Parse</a>
                     </li>
                     <li>
                         <a href="#" class="header-menu__item">Рейтинг</a>
-                    </li>
-                    <li>
-                        <a href="#" class="header-menu__item">Parse</a>
                     </li>
                     <li>
                         <a href="#" class="header-menu__item">Библиотека</a>
                     </li>
                     <li>
                         <a href="#" class="header-menu__item">Котировки</a>
+                    </li>
+                    <li>
+                        <a href="#" class="header-menu__item">О Компании</a>
                     </li>
                 </ul>
             </div>
@@ -35,8 +35,14 @@
                     </div>
                     <div class="header-settings_show">
                         <ul>
-                            <li><a href="#" class="header-settings__item">Уведомление</a></li>
-                            <li><a href="#" class="header-settings__item">Выйти</a></li>
+                            <li class="header-settings__item">
+                                <a href="#">Уведомление</a>
+                                <i class="far fa-bell"></i>
+                            </li>
+                            <li class="header-settings__item">
+                                <a href="#">Выйти</a>
+                                <i class="fas fa-power-off"></i>
+                            </li>
                         </ul>
                     </div>
                 </div>
