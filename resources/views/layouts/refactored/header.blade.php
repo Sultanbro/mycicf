@@ -37,7 +37,7 @@
                         <ul>
                             <li class="header-settings__item">
                                 <a href="#">Уведомление</a>
-                                <i class="far fa-bell"></i>
+                                <i class="fas fa-bell"></i>
                             </li>
                             <li class="header-settings__item">
                                 <a href="#">Выйти</a>
