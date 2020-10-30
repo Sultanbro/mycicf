@@ -84,6 +84,12 @@
             </tbody>
         </table>
     </div>
+    <?php
+    $nowtime = time();
+    $workTime = $nowtime - $startTime;
+
+    ?>
+    <h1>Время работы: {{$workTime}}</h1>
     <div class="col"></div>
 </div>
 </body>

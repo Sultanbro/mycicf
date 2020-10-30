@@ -239,3 +239,4 @@ Route::get('test', function (){
 
 Route::get('ttt', 'OracleController@test');
 Route::get('tt', 'OracleController@DZnewGani');
+Route::get('sub', 'OracleController@subject');

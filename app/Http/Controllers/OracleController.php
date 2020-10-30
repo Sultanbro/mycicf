@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\ReportReceivables;
 
 class OracleController extends Controller
 {
@@ -668,11 +669,14 @@ union all
 )
 group by A4
 order by A4 desc';
+        $startTime = time( );
         $result = $this->execute($sql);
-        return view('oracle.test', compact('result'));
+        return view('oracle.test')->with('result', $result)->with('startTime', $startTime);
     }
 
     public function subject(){
+        ini_set('max_execution_time', -1);
+        //\Illuminate\Support\Facades\DB::connection('oracle')::setDateFormat('MM/DD/YYYY');
         $a = \Illuminate\Support\Facades\DB::connection('oracle')->select('select * from subject where isn in (3921599, 3600338)');
         dd($a);
     }
@@ -681,687 +685,599 @@ order by A4 desc';
     {
         ini_set('max_execution_time', -1);
         $sql = "with
-  D1 as ( select distinct j.isn
-            from Employee e, Subject j, SubHuman h, ECareer ec, SubDept dd, Estaff f
-           where e.ISN = j.ISN
-             and e.ISN = h.ISN
-             and j.ISN = ec.EmplISN
-             and sysdate between ec.DateBeg and nvl(ec.DateEnd,sysdate)
-             and ec.StaffISN = f.ISN
-             and f.DeptISN   = dd.ISN
-             and decode(nvl(dd.ClassISN,0),cnt.isn('empDeptBusiness'),cnt.NumCode('SystemBossDept'),dd.isn)
-                 in (select isn from SubDept connect by prior isn = parentisn start with isn = 1445780)
-        ),
+          D1 as ( select distinct j.isn
+                    from Employee e, Subject j, SubHuman h, ECareer ec, SubDept dd, Estaff f
+                   where e.ISN = j.ISN
+                     and e.ISN = h.ISN
+                     and j.ISN = ec.EmplISN
+                     and sysdate between ec.DateBeg and nvl(ec.DateEnd,sysdate)
+                     and ec.StaffISN = f.ISN
+                     and f.DeptISN   = dd.ISN
+                     and decode(nvl(dd.ClassISN,0),cnt.isn('empDeptBusiness'),cnt.NumCode('SystemBossDept'),dd.isn)
+                         in (select isn from SubDept connect by prior isn = parentisn start with isn = 1445780)
+                ),
 
-  AgrType as (select dd.isn from dicti dd  connect by prior dd.isn = dd.parentisn start with dd.isn in (cnt.isn('AgrDirect'),cnt.ISN('ReAgrIn'))),
+          AgrType as (select dd.isn from dicti dd  connect by prior dd.isn = dd.parentisn start with dd.isn in (cnt.isn('AgrDirect'),cnt.ISN('ReAgrIn'))),
 
-  Agr as ( select
-             t.Agrisn     as Agrisn,
-             a.CROSSISN   as AgrCrossIsn,
-             a.id         as Agrid,
-             agr_utils.GetAgrStatus(a.status) as AgrStatus,
-             a.clientisn  as AgrClient,
-             a.classisn   as ClassISN,
-             a.productisn as ProductISN,
-             a.datesign   as AgrSign,
-             a.datebeg    as AgrBeg,
-             nvl(a.datedenounce,a.dateend) as AgrEnd,
-             a.created    as AgrCreated,
-             a.emplisn    as AgrEmpl,
-             a.deptisn    as AgrDep,
-             agr_utils.GetAgrClauses(a.isn, cnt.ISN('cSaleChannel'))   SaleChannel,
-             t.scheduleCount as obgG,
-             t.premium    as amountP,
-             t.payment    as amountF,
-             t.schedule   as amountG,
-             t.DZ         as dz,
-             t.DZ1_12     as dz1_12
+          Agr as ( select
+                     t.Agrisn     as Agrisn,
+                     a.CROSSISN   as AgrCrossIsn,
+                     a.id         as Agrid,
+                     agr_utils.GetAgrStatus(a.status) as AgrStatus,
+                     a.clientisn  as AgrClient,
+                     a.classisn   as ClassISN,
+                     a.productisn as ProductISN,
+                     a.datesign   as AgrSign,
+                     a.datebeg    as AgrBeg,
+                     nvl(a.datedenounce,a.dateend) as AgrEnd,
+                     a.created    as AgrCreated,
+                     a.emplisn    as AgrEmpl,
+                     a.deptisn    as AgrDep,
+                     agr_utils.GetAgrClauses(a.isn, cnt.ISN('cSaleChannel'))   SaleChannel,
+                     t.scheduleCount as obgG,
+                     t.premium    as amountP,
+                     t.payment    as amountF,
+                     t.schedule   as amountG,
+                     t.DZ         as dz,
+                     t.DZ1_12     as dz1_12
 
-  from ( select
-           agrisn,
-           sum (premium) as premium,
-           sum (payment) as payment,
-           sum (amount)  as DZ,
-           round(sum (premium)/12) as DZ1_12,
-           sum(schedule) as schedule,
-           sum(scheduleCount) as scheduleCount
+          from ( select
+                   agrisn,
+                   sum (premium) as premium,
+                   sum (payment) as payment,
+                   sum (amount)  as DZ,
+                   round(sum (premium)/12) as DZ1_12,
+                   sum(schedule) as schedule,
+                   sum(scheduleCount) as scheduleCount
 
-           from (
-                  select
-                    sb.agrisn,
-                    case
-                      when sb.debet  = '1280.42' and sb.credit = '1280.42' and sb.debetsubjisn <> sb.creditsubjisn then 0
-                      when sb.debet  in ('1280.41', '1280.42') and sb.debetsubjisn = sb.creditsubjisn then sb.amount
-                      when sb.credit in ('1280.41', '1280.42') and sb.debetsubjisn = sb.creditsubjisn then -sb.amount
-                      when sb.debet  in ('1280.41', '1280.42') and sb.debetsubjisn <> sb.creditsubjisn then sb.amount
-                      when sb.credit  in ('1280.41', '1280.42') and sb.debetsubjisn <> sb.creditsubjisn then -sb.amount
-                    end as amount,
-                    0 as Premium,
-                    0 as Payment,
-                    0 as schedule,
-                    0 as scheduleCount
-                    from AGRSUMBUH sb
-                   where sb.datepay <= (:pDate1-1)
+                   from (
+                          select
+                            sb.agrisn,
+                            case
+                              when sb.debet  = '1280.42' and sb.credit = '1280.42' and sb.debetsubjisn <> sb.creditsubjisn then 0
+                              when sb.debet  in ('1280.41', '1280.42') and sb.debetsubjisn = sb.creditsubjisn then sb.amount
+                              when sb.credit in ('1280.41', '1280.42') and sb.debetsubjisn = sb.creditsubjisn then -sb.amount
+                              when sb.debet  in ('1280.41', '1280.42') and sb.debetsubjisn <> sb.creditsubjisn then sb.amount
+                              when sb.credit  in ('1280.41', '1280.42') and sb.debetsubjisn <> sb.creditsubjisn then -sb.amount
+                            end as amount,
+                            0 as Premium,
+                            0 as Payment,
+                            0 as schedule,
+                            0 as scheduleCount
+                            from AGRSUMBUH sb
+                           where sb.datepay <= (:pDate1-1)
 
-                     and (sb.debet in ('1280.41', '1280.42') or sb.credit  in ('1280.41', '1280.42'))
+                             and (sb.debet in ('1280.41', '1280.42') or sb.credit  in ('1280.41', '1280.42'))
 
-                  union all
-                  select
-                    sb.agrisn,
-                    0 as amount,
-                    case
-                      when sb.debet  in ('1280.41', '1280.42') and sb.credit  in ('6280.41.1', '6280.41.2') then  sb.amount
-                      when sb.credit in ('1280.41', '1280.42') and sb.debet   in ('6280.41.1', '6280.41.2') then -sb.amount
-                      when sb.credit in ('1280.42') and sb.debet   in ('1280.42') then -sb.amount
-                      when sb.debet  in ('7470.40.2')          and sb.credit  in ('1280.41')                then -sb.amount
-                      when sb.credit in ('7470.40.2')          and sb.debet   in ('1280.41')                then  sb.amount
-                      when sb.debet  in ('1280.41', '1280.42') and sb.credit  in ('6250.02')                 then -sb.amount
-                      when sb.debet  in ('7470.40.3')          and sb.credit  in ('3390.43.2')               then -sb.amount
-                      when sb.credit in ('7470.40.3')          and sb.debet   in ('3390.43.2')               then sb.amount
-                    end as Premium,
-                    0 as Payment,
-                    0 as schedule,
-                    0 as scheduleCount
+                          union all
+                          select
+                            sb.agrisn,
+                            0 as amount,
+                            case
+                              when sb.debet  in ('1280.41', '1280.42') and sb.credit  in ('6280.41.1', '6280.41.2') then  sb.amount
+                              when sb.credit in ('1280.41', '1280.42') and sb.debet   in ('6280.41.1', '6280.41.2') then -sb.amount
+                              when sb.credit in ('1280.42') and sb.debet   in ('1280.42') then -sb.amount
+                              when sb.debet  in ('7470.40.2')          and sb.credit  in ('1280.41')                then -sb.amount
+                              when sb.credit in ('7470.40.2')          and sb.debet   in ('1280.41')                then  sb.amount
+                              when sb.debet  in ('1280.41', '1280.42') and sb.credit  in ('6250.02')                 then -sb.amount
+                              when sb.debet  in ('7470.40.3')          and sb.credit  in ('3390.43.2')               then -sb.amount
+                              when sb.credit in ('7470.40.3')          and sb.debet   in ('3390.43.2')               then sb.amount
+                            end as Premium,
+                            0 as Payment,
+                            0 as schedule,
+                            0 as scheduleCount
 
-                    from AGRSUMBUH sb
-                   where sb.datepay <= (:pDate1-1)
-                     and ((sb.debet in ('1280.41', '1280.42') and sb.credit  in ('6280.41.1','6280.41.2')) or
-                         (sb.debet in ('1280.41', '1280.42') and sb.credit  in ('3510.41','3510.42')) or
-                         (sb.debet in ('1280.41', '1280.42') and sb.credit  in ('3390.41','3390.42')) or
-                           ( sb.credit in ('1280.42') and sb.debet   in ('1280.42') )or
-                         (sb.debet in ('1280.41', '1280.42') and sb.credit  in ('6250.02')) or
-                         (sb.debet in ('7430.02') and sb.credit  in ('1280.41', '1280.42')) or
-                         (sb.debet in ('6280.41.1','6280.41.2') and sb.credit in ('1280.41', '1280.42')) or
-                         (sb.debet in ('7470.40.2') and sb.credit in ('1280.41')) or
-                         (sb.debet in ('7470.40.3') and sb.credit in ('3390.43.2')) or
-                         (sb.debet in ('1280.41')   and sb.credit in ('7470.40.2')) or
-                         (sb.debet in ('3390.43.2') and sb.credit in ('7470.40.3')))
+                            from AGRSUMBUH sb
+                           where sb.datepay <= (:pDate1-1)
+                             and ((sb.debet in ('1280.41', '1280.42') and sb.credit  in ('6280.41.1','6280.41.2')) or
+                                 (sb.debet in ('1280.41', '1280.42') and sb.credit  in ('3510.41','3510.42')) or
+                                 (sb.debet in ('1280.41', '1280.42') and sb.credit  in ('3390.41','3390.42')) or
+                                   ( sb.credit in ('1280.42') and sb.debet   in ('1280.42') )or
+                                 (sb.debet in ('1280.41', '1280.42') and sb.credit  in ('6250.02')) or
+                                 (sb.debet in ('7430.02') and sb.credit  in ('1280.41', '1280.42')) or
+                                 (sb.debet in ('6280.41.1','6280.41.2') and sb.credit in ('1280.41', '1280.42')) or
+                                 (sb.debet in ('7470.40.2') and sb.credit in ('1280.41')) or
+                                 (sb.debet in ('7470.40.3') and sb.credit in ('3390.43.2')) or
+                                 (sb.debet in ('1280.41')   and sb.credit in ('7470.40.2')) or
+                                 (sb.debet in ('3390.43.2') and sb.credit in ('7470.40.3')))
 
-                  union all
-                  select
-                    sb.agrisn,
-                    0 as amount,
-                    0 as Premium,
-                    case
-                      when sb.debet in ('3510.41','3510.42') and sb.credit in ('1280.41', '1280.42') then sb.amount
-                      when sb.debet in ('1280.41','1280.42') and sb.credit in ('3510.41','3510.42')  then - sb.amount
-                      when sb.credit in ('1280.42') and sb.debet   in ('1280.42') then -sb.amount
-                      when sb.debet in ('3520.01') and sb.credit in ('1280.41','1280.42')   then sb.amount
-                      when sb.debet in ('1280.41','1280.42') and sb.credit in ('3520.01')   then -sb.amount
-                      when sb.debet in ('3390.42')   and sb.credit in ('1280.41','1280.42') then sb.amount
-                      when sb.debet in ('1280.41','1280.42') and sb.credit in ('3390.42')   then -sb.amount
-                    end as Payment,
-                    0 as schedule,
-                    0 as scheduleCount
+                          union all
+                          select
+                            sb.agrisn,
+                            0 as amount,
+                            0 as Premium,
+                            case
+                              when sb.debet in ('3510.41','3510.42') and sb.credit in ('1280.41', '1280.42') then sb.amount
+                              when sb.debet in ('1280.41','1280.42') and sb.credit in ('3510.41','3510.42')  then - sb.amount
+                              when sb.credit in ('1280.42') and sb.debet   in ('1280.42') then -sb.amount
+                              when sb.debet in ('3520.01') and sb.credit in ('1280.41','1280.42')   then sb.amount
+                              when sb.debet in ('1280.41','1280.42') and sb.credit in ('3520.01')   then -sb.amount
+                              when sb.debet in ('3390.42')   and sb.credit in ('1280.41','1280.42') then sb.amount
+                              when sb.debet in ('1280.41','1280.42') and sb.credit in ('3390.42')   then -sb.amount
+                            end as Payment,
+                            0 as schedule,
+                            0 as scheduleCount
 
-                    from AGRSUMBUH sb
-                   where sb.datepay <= (:pDate1-1)
-                     and ((sb.debet in ('3510.41','3510.42') and sb.credit in ('1280.41', '1280.42')) or
-                         (sb.debet in ('1280.41','1280.42') and sb.credit in ('3510.41','3510.42')) or
-                         (sb.credit in ('1280.42') and sb.debet   in ('1280.42'))or
-                         (sb.debet in ('3520.01') and sb.credit in ('1280.41','1280.42')) or
-                         (sb.debet in ('1280.41','1280.42') and sb.credit in ('3520.01')) or
-                         (sb.debet in ('3390.42')   and sb.credit in ('1280.41','1280.42')) or
-                         (sb.debet in ('1280.41','1280.42') and sb.credit in ('3390.42')))
-
-
-                  union all
-                  select sa.agrisn,
-                    sum(sa.amountdebet) as debit,
-                    sum(sa.amountdebet) as Premium,
-                    0 as Payment,
-                    0 as schedule,
-                    0 as scheduleCount
-                    from accsaldo sa
-                   where sa.periodisn = 201701
-                     and sa.accisn in(485591,485601)
-                  group by sa.periodisn, sa.datebeg,sa.deptisn, sa.subjisn, sa.agrisn
+                            from AGRSUMBUH sb
+                           where sb.datepay <= (:pDate1-1)
+                             and ((sb.debet in ('3510.41','3510.42') and sb.credit in ('1280.41', '1280.42')) or
+                                 (sb.debet in ('1280.41','1280.42') and sb.credit in ('3510.41','3510.42')) or
+                                 (sb.credit in ('1280.42') and sb.debet   in ('1280.42'))or
+                                 (sb.debet in ('3520.01') and sb.credit in ('1280.41','1280.42')) or
+                                 (sb.debet in ('1280.41','1280.42') and sb.credit in ('3520.01')) or
+                                 (sb.debet in ('3390.42')   and sb.credit in ('1280.41','1280.42')) or
+                                 (sb.debet in ('1280.41','1280.42') and sb.credit in ('3390.42')))
 
 
-                  union all
-                  select
-                    s.agrisn,
-                    0 as debit,
-                    0 as Premium,
-                    0 as Payment,
-                    sum(s.amount) as schedule,
-                    count (distinct s.datepay) as scheduleCount
-                    from agrsum s
-                   where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                     and s.discr ='G'
-                     and s.acc = 'B'
-                  group by s.agrisn
-                ) group by agrisn
-         )  t
-  join Agreement a on a.isn = t.agrisn
-       join (select ssd.isn
-        from subdept ssd
-        start with ssd.isn in( nvl(:pDept1ISN, 1000),
-                               (select 1445766
-                                  from subdept sd
-                                 where sd.isn = 4100260
-                                start with sd.isn = nvl(:pDept1ISN, 1000)
-                                connect by prior sd.isn = sd.parentisn),
-                               (select 1445826
-                                  from subdept sd
-                                 where sd.isn = 2000
-                                start with sd.isn = nvl(:pDept1ISN, 1000)
-                                connect by prior sd.isn = sd.parentisn),
-                               (select 1445824
-                                  from subdept sd
-                                 where sd.isn = 2000
-                                 start with sd.isn = nvl(:pDept1ISN, 1000)
-                                 connect by prior sd.isn = sd.parentisn) )
-          connect by prior ssd.isn = ssd.parentisn ) sd on a.DeptISN = sd.ISN
- where t.DZ <>0
-   and  a.classisn in (select * from AgrType)
-
-                       &mAgreement
-                       &mEmplWhere
-                       &mAgrProduct
-                       &mAgrClass
-                       &mRole
-                       &mJur
-                       &mSign
-                       &mBeg
-                       &mEnd
+                          union all
+                          select sa.agrisn,
+                            sum(sa.amountdebet) as debit,
+                            sum(sa.amountdebet) as Premium,
+                            0 as Payment,
+                            0 as schedule,
+                            0 as scheduleCount
+                            from accsaldo sa
+                           where sa.periodisn = 201701
+                             and sa.accisn in(485591,485601)
+                          group by sa.periodisn, sa.datebeg,sa.deptisn, sa.subjisn, sa.agrisn
 
 
-   and a.emplisn in ( case
-                        when (select max(dt.typ)
-                                from v_dutymain dt
-                               where dt.SubjectISN in (select sys_utils.GetUserISN from dual)) = 151 or
-                             (select sys_utils.GetUserISN from dual) in (select dr.valn1 from docrow dr where docisn = 16039028) or
-                             ( select sys_utils.GetUserISN from dual) in (1445912) or
-                             (select max(dt.DutyISN) from v_dutymain dt where dt.SubjectISN in (select sys_utils.GetUserISN from dual)) in (701,585,637,586,587,588,589)
-                          then a.emplisn
-                        when (select sys_utils.GetUserISN from dual) in (1445939) and exists (select 1 from D1 j where j.isn = a.emplisn)
-                          then a.emplisn
-                            else (select sys_utils.GetUserISN from dual)
-                      end )
+                          union all
+                          select
+                            s.agrisn,
+                            0 as debit,
+                            0 as Premium,
+                            0 as Payment,
+                            sum(s.amount) as schedule,
+                            count (distinct s.datepay) as scheduleCount
+                            from agrsum s
+                           where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
+                             and s.discr ='G'
+                             and s.acc = 'B'
+                          group by s.agrisn
+                        ) group by agrisn
+                 )  t
+          join Agreement a on a.isn = t.agrisn
+               join (select ssd.isn
+                from subdept ssd
+                start with ssd.isn in( nvl(:pDept1ISN, 1000),
+                                       (select 1445766
+                                          from subdept sd
+                                         where sd.isn = 4100260
+                                        start with sd.isn = nvl(:pDept1ISN, 1000)
+                                        connect by prior sd.isn = sd.parentisn),
+                                       (select 1445826
+                                          from subdept sd
+                                         where sd.isn = 2000
+                                        start with sd.isn = nvl(:pDept1ISN, 1000)
+                                        connect by prior sd.isn = sd.parentisn),
+                                       (select 1445824
+                                          from subdept sd
+                                         where sd.isn = 2000
+                                         start with sd.isn = nvl(:pDept1ISN, 1000)
+                                         connect by prior sd.isn = sd.parentisn) )
+                  connect by prior ssd.isn = ssd.parentisn ) sd on a.DeptISN = sd.ISN
+         where t.DZ <>0
+           and  a.classisn in (select * from AgrType)
+                               &mCheckDept
+                               &mAgreement
+                               &mEmplWhere
+                               &mAgrProduct
+                               &mAgrClass
+                               &mRole
+                               &mJur
+                               &mSign
+                               &mBeg
+                               &mEnd
 
 
+           and a.emplisn in ( case
+                                when (select max(dt.typ)
+                                        from v_dutymain dt
+                                       where dt.SubjectISN in (select sys_utils.GetUserISN from dual)) = 151 or
+                                     (select sys_utils.GetUserISN from dual) in (select dr.valn1 from docrow dr where docisn = 16039028) or
+                                     ( select sys_utils.GetUserISN from dual) in (1445912, 1) or
+                                     (select max(dt.DutyISN) from v_dutymain dt where dt.SubjectISN in (select sys_utils.GetUserISN from dual)) in (701,585,637,586,587,588,589)
+                                  then a.emplisn
+                                when (select sys_utils.GetUserISN from dual) in (1445939) and exists (select 1 from D1 j where j.isn = a.emplisn)
+                                  then a.emplisn
+                                    else (select sys_utils.GetUserISN from dual)
+                              end )
+
+
+                 ),
+
+          w_data as ( select
+                        agrisn       as AgrISN,
+                        datepay      as DatePay,
+                        sum(PlanSum) as PlanSum,
+                        sum(FactSum) as FactSum
+                        from ( select
+                                 s.agrisn,
+                                 s.datepay,
+                                 decode(s.discr, 'G', round(s.amount),0) as PlanSum,
+                                 decode(s.discr, 'F', round(s.amount),0) as FactSum
+                                 from agrsum s
+                                where s.acc = 'B'
+                                  and s.discr in ('G', 'F')
+                                  and s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'))
+                                  and s.agrisn in (select AgrISN from Agr)
+                               order by s.datepay
+                             )
+                      group by agrisn, datepay
+                      order by agrisn, datepay
+                   ),
+         w_cnt as (
+         select d1.agrisn, count(d1.plansum) cnt from w_data d1 where d1.agrisn = agrISN and d1.plansum <> 0 group by d1.agrisn
+          ),
+
+           balance as( select
+           t.agrISN,
+            t.DatePay,
+            t.plansum,
+            t.factsum,
+            wc.cnt as tr_Cnt,
+            sum(t.Balance) OVER (partition by t.AgrISN order by t.DatePay) ClosedSum
+            from(  SELECT agrISN,
+                         DatePay,
+                              plansum,
+                              factsum,
+                              plansum-factsum as Balance
+                               FROM w_data
+                               order by agrisn, datepay
+          )t
+          join w_cnt wc on wc.agrisn= t.agrisn
+           order by AgrISN, DatePay),
+
+        BandT as(
+
+         select
+         b.agrISN,
+          b.DatePay,
+          b.plansum,
+          b.factsum,
+          b.ClosedSum,
+          tr_cnt,
+
+
+          case
+
+            when tr_cnt in (0, 1)
+              then (select min(g.DatePay)
+                      from w_data g
+                     where nvl(g.plansum,0) <> 0
+                       and  g.AgrISN = b.AgrISN
+                    group by g.AgrISN)
+
+           when tr_cnt is null
+             then  b.DatePay
+
+            when b.ClosedSum <= 0
+               then  (select min(g.DatePay)
+                       from w_data g
+                       where nvl(g.plansum,0) <> 0 and g.DatePay > b.DatePay
+                       and  g.AgrISN = b.AgrISN
+                     group by g.AgrISN)
+
+              when lag(b.DatePay) over (partition by agrisn order by b.DatePay) is null
+               then (select min(g.DatePay)
+                      from w_data g
+                     where nvl(g.plansum,0) <> 0
+                       and  g.AgrISN = b.AgrISN
+                    group by g.AgrISN)
+
+            when b.ClosedSum > 0 and lag(b.ClosedSum ) over (partition by agrisn order by b.DatePay) > 0
+              then (select min(g.DatePay)
+                      from balance g
+                     where nvl(g.PlanSum,0) <> 0 and  g.closedSUM > 0
+                     and g.DatePay >(select max (g1.DatePay)
+                                       from balance g1
+                                      where g1.closedSUM <=0
+                                         and  g1.AgrISN = g.AgrISN)
+                     and  g.AgrISN = b.AgrISN
+                     group by g.AgrISN )
+
+            when b.plansum <> 0 and
+                 b.ClosedSum > 0 and
+                 lag(b.ClosedSum ) over (partition by agrisn order by b.DatePay) <= 0
+              then b.DatePay
+
+
+            when b.ClosedSum <= 0 and lead (b.DatePay ) over (order by b.DatePay) is null
+              then (select max(g.DatePay)
+                      from w_data g
+                     where nvl(g.plansum,0) <> 0
+                       and  g.AgrISN = b.AgrISN
+                    group by g.AgrISN)
+               when b.ClosedSum > 0 and lag(b.ClosedSum ) over (order by b.DatePay) <= 0
+              then b.DatePay
+
+              end
+              as NextTransch,
+              lead (b.DatePay ) over (partition by agrisn order by b.DatePay) LeadDate
+
+        from balance b
+        order by b.AgrISN, b.DatePay ),
+
+        LastTransch as (
+          select distinct
+            b2.agrISN,
+            last_value(b2.NextTransch) over (partition by b2.agrISN ) as LastTr
+            from BandT b2
+            where b2.NextTransch is not null ),
+
+        newBandT as( select
+          agrISN,
+          max(DatePay) DatePay,
+          max(plansum) PlanSum,
+          max(factsum) FactSum,
+          max(ClosedSum) ClosedSum,
+          Max(NewTransch) NextTransch
+
+          from( select
+                  b1.agrISN,
+                  b1.DatePay,
+                  b1.plansum,
+                  b1.factsum,
+                  b1.ClosedSum,
+                  b1.tr_cnt,
+        case
+          when b1.NextTransch is null and  b1.PlanSum = 0 and b1.ClosedSum  <= 0 and b1.LeadDate is null
+            then lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay)
+         when b1.NextTransch is null and
+              b1.ClosedSum  > 0 and
+               lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay) is null
+
+          then
+
+             (select lt.LastTr
+                    from LastTransch lt
+                   where lt.agrISN = b1.agrISN
+                   )
+                    when b1.NextTransch is null and
+              b1.ClosedSum  > 0 and
+               lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay) is not null
+               then lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay)
+
+                       else b1.NextTransch
+        end NewTransch,
+         lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay) LagTransch,
+              b1.LeadDate
+
+              from BandT b1
+        order by b1.AgrISN, b1.DatePay )
+        where DatePay < :pDate1
+        or ( tr_cnt =1)
+        group by agrisn),
+
+
+           Subj as ( select s.isn, s.iin, s.fullname,
+                            s.juridical jur,
+                            decode(s.resident,'Y','Резидент','Нерезидент') res
+                       from subject s
+                   ),
+           saldoperiod as ( select isn
+                             from accsaldoperiod
+                            where dateend = (select max(dateend )
+                                               from accsaldoperiod
+                                              where dateend < :pDate1 )
+                          ),
+           saldo as ( select sa.periodisn, sa.datebeg, sa.subjisn, sa.agrisn,sum(sa.amountcredit) credit,sum(sa.amountcredit) debit
+                        from accsaldo sa
+                        join saldoperiod sap on sap.isn = sa.periodisn
+                       where sa.accisn in( 485781,485761)
+                      group by sa.periodisn, sa.datebeg, sa.subjisn, sa.agrisn
          ),
 
-  w_data as ( select
-                agrisn       as AgrISN,
-                datepay      as DatePay,
-                sum(PlanSum) as PlanSum,
-                sum(FactSum) as FactSum
-                from ( select
-                         s.agrisn,
-                         s.datepay,
-                         decode(s.discr, 'G', round(s.amount),0) as PlanSum,
-                         decode(s.discr, 'F', round(s.amount),0) as FactSum
-                         from agrsum s
-                        where s.acc = 'B'
-                          and s.discr in ('G', 'F')
-                          and s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'))
-                          and s.agrisn in (select AgrISN from Agr)
-                       order by s.datepay
-                     )
-              group by agrisn, datepay
-              order by agrisn, datepay
-           ),
- w_cnt as (
- select d1.agrisn, count(d1.plansum) cnt from w_data d1 where d1.agrisn = agrISN and d1.plansum <> 0 group by d1.agrisn
-  ),
+        OSV as
+          (SELECT
+             AccISN,
+             SubjISN,
+             AgrISN,
+             greatest(nvl(sum(OstatokDebet), 0)-nvl(sum(OstatokCredit), 0), 0) as OstatokDebet,
+             greatest(nvl(sum(OstatokCredit), 0)-nvl(sum(OstatokDebet), 0), 0) as OstatokCredit
+             FROM
+                 (select
+                    sa.AccISN                                          as AccISN,
+                    sa.AmountDebet                                     as OstatokDebet,
+                    sa.AmountCredit                                    as OstatokCredit,
+                    decode(sa.SubjISN, 0, to_number(null), sa.SubjISN) as SubjISN,
+                    decode(sa.AgrISN, 0, to_number(null), sa.AgrISN)   as AgrISN
+                    from AccSaldo sa
+                   where sa.AccISN in ( 485761,
+                                        485781
+                                      )
+                    and sa.PeriodISN = 201701
+                  union all
+                  select
+                    sa.DebetISN as AccISN,
+                    sa.Amount   as OstatokDebet,
+                    to_number(null) as OstatokCredit,
+                    decode(sa.DebetSubjISN, 0, to_number(null), sa.DebetSubjISN) as SubjISN,
+                    decode(sa.AgrISN, 0, to_number(null), sa.AgrISN) as AgrISN
+                    from AgrSumBuh sa
+                    left join AgrSum s on s.ISN = sa.AgrSumISN
+                   where sa.DebetISN in (
+                                          485761,
+                                          485781
+                                        )
+                     and sa.DatePay between to_date('01.01.2017','dd.mm.yyyy') and :pDate1
+                  union all
+                  select
+                    asb.CreditISN as AccISN,
+                    to_number(null) as OstatokDebet,
+                    asb.Amount as OstatokCredit,
+                    decode(asb.CreditSubjISN, 0, to_number(null), asb.CreditSubjISN) as SubjISN,
+                    decode(asb.AgrISN, 0, to_number(null),asb.AgrISN) as AgrISN
+                    from AgrSumBuh asb
+                    left join AgrSum s on s.ISN = asb.AgrSumISN
+                   where asb.CreditISN in (
+                                            485761,
+                                            485781
+                                          )
+                     and asb.DatePay between to_date('01.01.2017','dd.mm.yyyy') and  :pDate1
 
-   balance as( select
-   t.agrISN,
-    t.DatePay,
-    t.plansum,
-    t.factsum,
-    wc.cnt as tr_Cnt,
-    sum(t.Balance) OVER (partition by t.AgrISN order by t.DatePay) ClosedSum
-    from(  SELECT agrISN,
-                 DatePay,
-                      plansum,
-                      factsum,
-                      plansum-factsum as Balance
-                       FROM w_data
-                       order by agrisn, datepay
-  )t
-  join w_cnt wc on wc.agrisn= t.agrisn
-   order by AgrISN, DatePay),
+            )
+            WHERE 1=1
+          GROUP BY AccISN,SubjISN,AgrISN
+          ),
 
-BandT as(
+           DZ as ( select t1.agrisn, t1.trunsch, t1.amountG ,  t1.DateG, t2.amountF ,  DateF, DateP,
+                          case when nvl(t1.amountG,0)-nvl(t2.amountF,0) >0 then (:pDate1-1) - t1.DateG end Daydz,
+                          case when nvl(t1.amountG,0)-nvl(t2.amountF,0) >0 then nvl(t1.amountG,0)-nvl(t2.amountF,0) end ProsTrunsch,
+                          case
+                            when nvl(t1.amountG,0)-nvl(t2.amountF,0)< = 0
+                              then (select min(datepay)
+                                      from agrsum
+                                     where agrisn = t1.agrisn
+                                       and classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
+                                       and discr = 'G'
+                                       and datepay >  t1.DateG)
+                            when nvl(t1.amountG,0)-nvl(t2.amountF,0) >0
+                              then t1.DateG
+                          end NextPaydate,
+                          (:pDate1-1)- add_months((:pDate1-1),-1) dz30,
+                          (:pDate1-1)- add_months((:pDate1-1),-3) dz90,
+                          (:pDate1-1)- add_months((:pDate1-1),-12)dz365,
+                          ( select t.tdate tdate
+                              from ( select rownum rn,trunc(h.data) tdate, h.*
+                                      from zholiday h
+                                     where h.data between trunc(:pDate1-1, 'month') and trunc(:pDate1-1)
+                                       and holiday not in (1,2,3)
+                                     order by  h.data desc
+                                   )t
+                             where rn=3 ) cdate,
+                              x.amountGmin, x.amountGmax
+                     from (select s.agrisn, case when sum(s.amount) = 0 then round(Sys_Utils.GetCurrRate(sum(s.amountagr),max(s.agrcurrisn),cnt.isn('KZT'),max(s.datepay)),2) else sum(s.amount) end amountG, count(distinct s.datepay) trunsch, max(s.datepay) DateG
+                              from agrsum s
+                             where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
+                               and s.discr = 'G'
+                               and s.datepay <= :pDate1-1
+                            group by s.agrisn ) t1
+                left join ( select s.agrisn, sum(s.amount)  amountF, max(s.datepay) DateF
+                              from agrsum s
+                              join agrsumbuh sb on sb.agrsumisn = s.isn and ((sb.debet in ('3510.41','3510.42') and sb.credit in ('1280.41', '1280.42')) or
+                                 (sb.debet in ('1280.41','1280.42') and sb.credit in ('3510.41','3510.42')) or
+                                 (sb.debet in ('3520.01') and sb.credit in ('1280.41','1280.42')) or
+                                 (sb.debet in ('1280.41','1280.42') and sb.credit in ('3520.01')) or
+                                 (sb.debet in ('3390.42')   and sb.credit in ('1280.41','1280.42')) or
+                                 (sb.debet in ('1280.41','1280.42') and sb.credit in ('3390.42')))
+                             where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
+                               and s.discr = 'F'
+                               and s.datepay <= :pDate1-1
+                            group by s.agrisn) t2 on t1.agrisn = t2.agrisn
+                left join ( select s.agrisn, sum(s.amount) amountP, max(s.datepay) DateP
+                              from agrsum s
+                             where s.classisn2 in (cnt.ISN('amInsPrem'))
+                               and s.discr = 'P'
+                               and s.datepay <= :pDate1-1
+                            group by s.agrisn) t3 on t1.agrisn = t3.agrisn
 
- select
- b.agrISN,
-  b.DatePay,
-  b.plansum,
-  b.factsum,
-  b.ClosedSum,
-  tr_cnt,
+                left join (select agrisn, sum(amountGmin) amountGmin, sum(amountGmax) amountGmax from
+                          ( select s.agrisn, case when s.datepay < trunc(sysdate) and (trunc(sysdate)-1 -s.datepay) > (trunc(sysdate)-1)- add_months((trunc(sysdate)-1),-3) then sum(s.amount) end amountGmin,
+                                             case when s.datepay < trunc(sysdate) and (trunc(sysdate)-1 -s.datepay) <= (trunc(sysdate)-1 - add_months((trunc(sysdate)-1),-3)) then sum(s.amount) end amountGmax
+                              from agrsum s
+                             where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
+                               and s.discr = 'G'
+                               and s.datepay > ( select max(s1.datepay)
+                              from agrsum s1
+                             where s1.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
+                               and s1.discr = 'F'
+                               and s1.datepay <= :pDate1-1
+                               and s1.agrisn = s.agrisn
+                            group by s1.agrisn)
 
+                            group by s.agrisn, s.datepay )group by agrisn) x  on  t1.agrisn = x.agrisn
 
-  case
+                 ),
 
-    when tr_cnt in (0, 1)
-      then (select min(g.DatePay)
-              from w_data g
-             where nvl(g.plansum,0) <> 0
-               and  g.AgrISN = b.AgrISN
-            group by g.AgrISN)
+           maintab as ( select xs.iin iin,
+                               xs.fullname ClientName,
+                               xs.jur jur,
+                               d1.shortname,
+                               d2.fullname,
+                               xa.agrid,
+                               xa.SaleChannel,
+                               xa.AgrStatus,
+                               xa.AgrSign,
 
-   when tr_cnt is null
-     then  b.DatePay
+                               xa.agrbeg,
+                               str_utils.GetMonthName(xa.agrbeg) monthAgrBeg,
+                               trunc(add_months(xa.agrbeg,1),'MONTH')-1 EndMonthAgrBeg,
+                               to_char(xa.agrbeg, 'YYYY') YearAgrBeg,
+                               xa.agrend,
+                               trunc(xa.agrcreated) AgrCreated,
 
-    when b.ClosedSum <= 0
-       then  (select min(g.DatePay)
-               from w_data g
-               where nvl(g.plansum,0) <> 0 and g.DatePay > b.DatePay
-               and  g.AgrISN = b.AgrISN
-             group by g.AgrISN)
-
-      when lag(b.DatePay) over (partition by agrisn order by b.DatePay) is null
-       then (select min(g.DatePay)
-              from w_data g
-             where nvl(g.plansum,0) <> 0
-               and  g.AgrISN = b.AgrISN
-            group by g.AgrISN)
-
-    when b.ClosedSum > 0 and lag(b.ClosedSum ) over (partition by agrisn order by b.DatePay) > 0
-      then (select min(g.DatePay)
-              from balance g
-             where nvl(g.PlanSum,0) <> 0 and  g.closedSUM > 0
-             and g.DatePay >(select max (g1.DatePay)
-                               from balance g1
-                              where g1.closedSUM <=0
-                                 and  g1.AgrISN = g.AgrISN)
-             and  g.AgrISN = b.AgrISN
-             group by g.AgrISN )
-
-    when b.plansum <> 0 and
-         b.ClosedSum > 0 and
-         lag(b.ClosedSum ) over (partition by agrisn order by b.DatePay) <= 0
-      then b.DatePay
-
-
-    when b.ClosedSum <= 0 and lead (b.DatePay ) over (order by b.DatePay) is null
-      then (select max(g.DatePay)
-              from w_data g
-             where nvl(g.plansum,0) <> 0
-               and  g.AgrISN = b.AgrISN
-            group by g.AgrISN)
-       when b.ClosedSum > 0 and lag(b.ClosedSum ) over (order by b.DatePay) <= 0
-      then b.DatePay
-
-      end
-      as NextTransch,
-      lead (b.DatePay ) over (partition by agrisn order by b.DatePay) LeadDate
-
-from balance b
-order by b.AgrISN, b.DatePay ),
-
-LastTransch as (
-  select distinct
-    b2.agrISN,
-    last_value(b2.NextTransch) over (partition by b2.agrISN ) as LastTr
-    from BandT b2
-    where b2.NextTransch is not null ),
-
-newBandT as( select
-  agrISN,
-  max(DatePay) DatePay,
-  max(plansum) PlanSum,
-  max(factsum) FactSum,
-  max(ClosedSum) ClosedSum,
-  Max(NewTransch) NextTransch
-
-  from( select
-          b1.agrISN,
-          b1.DatePay,
-          b1.plansum,
-          b1.factsum,
-          b1.ClosedSum,
-          b1.tr_cnt,
-case
-  when b1.NextTransch is null and  b1.PlanSum = 0 and b1.ClosedSum  <= 0 and b1.LeadDate is null
-    then lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay)
- when b1.NextTransch is null and
-      b1.ClosedSum  > 0 and
-       lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay) is null
-
-  then
-
-     (select lt.LastTr
-            from LastTransch lt
-           where lt.agrISN = b1.agrISN
-           )
-            when b1.NextTransch is null and
-      b1.ClosedSum  > 0 and
-       lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay) is not null
-       then lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay)
-
-               else b1.NextTransch
-end NewTransch,
- lag(b1.NextTransch ) over (partition by agrisn order by b1.datepay) LagTransch,
-      b1.LeadDate
-
-      from BandT b1
-order by b1.AgrISN, b1.DatePay )
-where DatePay < :pDate1
-or ( tr_cnt =1)
-group by agrisn),
-
-
-   Subj as ( select s.isn, s.iin, s.fullname,
-                    decode(s.juridical,'Y','Юр. лицо','Физ.лицо') jur,
-                    decode(s.resident,'Y','Резидент','Нерезидент') res
-               from subject s
-           ),
-   saldoperiod as ( select isn
-                     from accsaldoperiod
-                    where dateend = (select max(dateend )
-                                       from accsaldoperiod
-                                      where dateend < :pDate1 )
-                  ),
-   saldo as ( select sa.periodisn, sa.datebeg, sa.subjisn, sa.agrisn,sum(sa.amountcredit) credit,sum(sa.amountcredit) debit
-                from accsaldo sa
-                join saldoperiod sap on sap.isn = sa.periodisn
-               where sa.accisn in( 485781,485761)
-              group by sa.periodisn, sa.datebeg, sa.subjisn, sa.agrisn
- ),
-
-OSV as
-  (SELECT
-     AccISN,
-     SubjISN,
-     AgrISN,
-     greatest(nvl(sum(OstatokDebet), 0)-nvl(sum(OstatokCredit), 0), 0) as OstatokDebet,
-     greatest(nvl(sum(OstatokCredit), 0)-nvl(sum(OstatokDebet), 0), 0) as OstatokCredit
-     FROM
-         (select
-            sa.AccISN                                          as AccISN,
-            sa.AmountDebet                                     as OstatokDebet,
-            sa.AmountCredit                                    as OstatokCredit,
-            decode(sa.SubjISN, 0, to_number(null), sa.SubjISN) as SubjISN,
-            decode(sa.AgrISN, 0, to_number(null), sa.AgrISN)   as AgrISN
-            from AccSaldo sa
-           where sa.AccISN in ( 485761,
-                                485781
-                              )
-            and sa.PeriodISN = 201701
-          union all
-          select
-            sa.DebetISN as AccISN,
-            sa.Amount   as OstatokDebet,
-            to_number(null) as OstatokCredit,
-            decode(sa.DebetSubjISN, 0, to_number(null), sa.DebetSubjISN) as SubjISN,
-            decode(sa.AgrISN, 0, to_number(null), sa.AgrISN) as AgrISN
-            from AgrSumBuh sa
-            left join AgrSum s on s.ISN = sa.AgrSumISN
-           where sa.DebetISN in (
-                                  485761,
-                                  485781
-                                )
-             and sa.DatePay between to_date('01.01.2017','dd.mm.yyyy') and :pDate1
-          union all
-          select
-            asb.CreditISN as AccISN,
-            to_number(null) as OstatokDebet,
-            asb.Amount as OstatokCredit,
-            decode(asb.CreditSubjISN, 0, to_number(null), asb.CreditSubjISN) as SubjISN,
-            decode(asb.AgrISN, 0, to_number(null),asb.AgrISN) as AgrISN
-            from AgrSumBuh asb
-            left join AgrSum s on s.ISN = asb.AgrSumISN
-           where asb.CreditISN in (
-                                    485761,
-                                    485781
-                                  )
-             and asb.DatePay between to_date('01.01.2017','dd.mm.yyyy') and  :pDate1
-
-    )
-    WHERE 1=1
-  GROUP BY AccISN,SubjISN,AgrISN
-  ),
-
- Reserv as
-  (select *
-     from ( select
-              AgrID,
-              agrisn,
-              sum (Reserv) as Reserv
-
-              from ( select
-                       t.agrisn,
-                       a.id as AgrID,
-                       a.productisn as Product,
-                       t.accisn,
-                       d.code,
-                       OstatokCredit as Reserv
-
-                       from osv  t
-                       left join dicti d on d.isn = t.accisn
-                       left join agreement a on a.isn = t.agrisn
-
-                      where 1 = 1
-                  )
-
-   group by Product, AgrID, agrisn
-   order by Product,Agrid)
- ),
-
-   DZ as ( select t1.agrisn, t1.trunsch, t1.amountG ,  t1.DateG, t2.amountF ,  DateF, DateP,
-                  case when nvl(t1.amountG,0)-nvl(t2.amountF,0) >0 then (:pDate1-1) - t1.DateG end Daydz,
-                  case when nvl(t1.amountG,0)-nvl(t2.amountF,0) >0 then nvl(t1.amountG,0)-nvl(t2.amountF,0) end ProsTrunsch,
-                  case
-                    when nvl(t1.amountG,0)-nvl(t2.amountF,0)< = 0
-                      then (select min(datepay)
-                              from agrsum
-                             where agrisn = t1.agrisn
-                               and classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                               and discr = 'G'
-                               and datepay >  t1.DateG)
-                    when nvl(t1.amountG,0)-nvl(t2.amountF,0) >0
-                      then t1.DateG
-                  end NextPaydate,
-                  (:pDate1-1)- add_months((:pDate1-1),-1) dz30,
-                  (:pDate1-1)- add_months((:pDate1-1),-3) dz90,
-                  (:pDate1-1)- add_months((:pDate1-1),-12)dz365,
-                  ( select t.tdate tdate
-                      from ( select rownum rn,trunc(h.data) tdate, h.*
-                              from zholiday h
-                             where h.data between trunc(:pDate1-1, 'month') and trunc(:pDate1-1)
-                               and holiday not in (1,2,3)
-                             order by  h.data desc
-                           )t
-                     where rn=3 ) cdate,
-                      x.amountGmin, x.amountGmax
-             from (select s.agrisn, case when sum(s.amount) = 0 then round(Sys_Utils.GetCurrRate(sum(s.amountagr),max(s.agrcurrisn),cnt.isn('KZT'),max(s.datepay)),2) else sum(s.amount) end amountG, count(distinct s.datepay) trunsch, max(s.datepay) DateG
-                      from agrsum s
-                     where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                       and s.discr = 'G'
-                       and s.datepay <= :pDate1-1
-                    group by s.agrisn ) t1
-        left join ( select s.agrisn, sum(s.amount)  amountF, max(s.datepay) DateF
-                      from agrsum s
-                      join agrsumbuh sb on sb.agrsumisn = s.isn and ((sb.debet in ('3510.41','3510.42') and sb.credit in ('1280.41', '1280.42')) or
-                         (sb.debet in ('1280.41','1280.42') and sb.credit in ('3510.41','3510.42')) or
-                         (sb.debet in ('3520.01') and sb.credit in ('1280.41','1280.42')) or
-                         (sb.debet in ('1280.41','1280.42') and sb.credit in ('3520.01')) or
-                         (sb.debet in ('3390.42')   and sb.credit in ('1280.41','1280.42')) or
-                         (sb.debet in ('1280.41','1280.42') and sb.credit in ('3390.42')))
-                     where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                       and s.discr = 'F'
-                       and s.datepay <= :pDate1-1
-                    group by s.agrisn) t2 on t1.agrisn = t2.agrisn
-        left join ( select s.agrisn, sum(s.amount) amountP, max(s.datepay) DateP
-                      from agrsum s
-                     where s.classisn2 in (cnt.ISN('amInsPrem'))
-                       and s.discr = 'P'
-                       and s.datepay <= :pDate1-1
-                    group by s.agrisn) t3 on t1.agrisn = t3.agrisn
-
-        left join (select agrisn, sum(amountGmin) amountGmin, sum(amountGmax) amountGmax from
-                  ( select s.agrisn, case when s.datepay < trunc(sysdate) and (trunc(sysdate)-1 -s.datepay) > (trunc(sysdate)-1)- add_months((trunc(sysdate)-1),-3) then sum(s.amount) end amountGmin,
-                                     case when s.datepay < trunc(sysdate) and (trunc(sysdate)-1 -s.datepay) <= (trunc(sysdate)-1 - add_months((trunc(sysdate)-1),-3)) then sum(s.amount) end amountGmax
-                      from agrsum s
-                     where s.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                       and s.discr = 'G'
-                       and s.datepay > ( select max(s1.datepay)
-                      from agrsum s1
-                     where s1.classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                       and s1.discr = 'F'
-                       and s1.datepay <= :pDate1-1
-                       and s1.agrisn = s.agrisn
-                    group by s1.agrisn)
-
-                    group by s.agrisn, s.datepay )group by agrisn) x  on  t1.agrisn = x.agrisn
-
-         ),
-
-   maintab as ( select xs.iin iin,
-                       xs.fullname ClientName,
-                       xs.jur jur,
-                       xs.res res,
-                       d1.shortname,
-                       d2.fullname,
-                       xa.agrid,
-                       xa.SaleChannel,
-                       xa.AgrStatus,
-                       xa.AgrSign,
-
-                       xa.agrbeg,
-                       str_utils.GetMonthName(xa.agrbeg) monthAgrBeg,
-                       trunc(add_months(xa.agrbeg,1),'MONTH')-1 EndMonthAgrBeg,
-                       to_char(xa.agrbeg, 'YYYY') YearAgrBeg,
-                       xa.agrend,
-                       trunc(xa.agrcreated) AgrCreated,
-
-                       agr_utils.GetAgrAgents(xa.agrisn,1) AgrAgent,
-                       s1.fullname emplname,
-                       s2.Fullname DeptName,
-                       agr_utils.GetAgrBlanks(xa.agrisn, Cnt.ISN('cBsoPoliceType'), Cnt.ISN('cBsoStateAgr'), 'N') BSO,
-                       agr_utils.GetAgrBlanks(xa.AgrCrossIsn, Cnt.ISN('cBsoPoliceType'), Cnt.ISN('cBsoStateAgr'), 'N') BSOcross,
-                       xa.amountP,
-                       xa.amountF,
-                       xa.dz,
-                       rs.reserv,
-                        nvl(b.closedsum,xa.dz) as ProsTrunsch ,
-                        nvl(b.nexttransch,xa.agrbeg) as NextPaydate,
-                       xa.agrisn,
-                       xa.dz1_12,
-                       xa.obgG,
-                       (select fullname
-                              from subdept d
-                              where parentisn = 1000
-                              start with isn =  xa.agrdep
-                              connect by prior parentisn=isn) MainDeptName,
-                        d.amountGmin, d.amountGmax
-                  from Agr xa
-                  left join Subj xs on xs.isn  = xa.agrclient
-                  left join Dicti d1 on d1.isn = xa.classisn
-                  left join Dicti d2 on d2.isn = xa.productisn
-
-                  left join reserv rs on rs.agrisn = xa.agrisn
-                  left join DZ d on d.agrisn = xa.agrisn
-                  left join Subject s1 on s1.isn = xa.agrempl
-                  left join V_DeptMain v on v.DEPTISN = xa.agrdep
-                  left join Subject s2 on s2.isn = xa.agrdep
-                  left join NewBandT b on b.AgrISN = xa.Agrisn  /*Гладкова К./26.02.2020/Новый функционал по графику*/
-              )
+                               agr_utils.GetAgrAgents(xa.agrisn,1) AgrAgent,
+                               s1.fullname emplname,
+                               s2.Fullname DeptName,
+                               agr_utils.GetAgrBlanks(xa.agrisn, Cnt.ISN('cBsoPoliceType'), Cnt.ISN('cBsoStateAgr'), 'N') BSO,
+                               agr_utils.GetAgrBlanks(xa.AgrCrossIsn, Cnt.ISN('cBsoPoliceType'), Cnt.ISN('cBsoStateAgr'), 'N') BSOcross,
+                               xa.amountP,
+                               xa.amountF,
+                               xa.dz,
+                                nvl(b.closedsum,xa.dz) as ProsTrunsch ,
+                                nvl(b.nexttransch,xa.agrbeg) as NextPaydate,
+                               xa.agrisn,
+                               xa.dz1_12,
+                               xa.obgG,
+                               (select fullname
+                                      from subdept d
+                                      where parentisn = 1000
+                                      start with isn =  xa.agrdep
+                                      connect by prior parentisn=isn) MainDeptName,
+                                d.amountGmin, d.amountGmax,
+                                xa.agrdep, xa.agrempl, xa.agrclient, xa.productisn
+                          from Agr xa
+                          left join Subj xs on xs.isn  = xa.agrclient
+                          left join Dicti d1 on d1.isn = xa.classisn
+                          left join Dicti d2 on d2.isn = xa.productisn
+                          left join DZ d on d.agrisn = xa.agrisn
+                          left join Subject s1 on s1.isn = xa.agrempl
+                          left join V_DeptMain v on v.DEPTISN = xa.agrdep
+                          left join Subject s2 on s2.isn = xa.agrdep
+                          left join NewBandT b on b.AgrISN = xa.Agrisn  /*Гладкова К./26.02.2020/Новый функционал по графику*/
+                      )
 
 
-select
-  t.iin,
-  t.ClientName,
-  t.jur,
-  t.res,
-  t.shortname,
-  t.fullname,
-
-  t.agrid,
-  t.AgrStatus,
-  t.AgrSign,
-  t.agrbeg,
-  t.monthAgrBeg,
-  t.YearAgrBeg,
-  t.amountP,
-  t.amountF,
-  t.dz,
-    case when to_number(t.ProsTrunsch) > t.dz then t.dz else to_number(t.ProsTrunsch) end ProsTrunsch,
-  t.NextPaydate,
-  to_char(t.NextPaydate,'month'),
-  to_char(t.NextPaydate,'yyyy'),
-  t.obgG,
-  t.reserv,
-  case
-    when ((:pDate1-1) - t.NextPaydate) > 0
-    then ((:pDate1-1) - t.NextPaydate)  end  CntDaysDZ,
-  case
-    when (:pDate1-1) - t.NextPaydate <= 0
-      then null
-    when (:pDate1-1) - t.NextPaydate between 1 and 7 or d.daydz is null
-      then '1. 1 Неделя'
-    when (:pDate1-1) - t.NextPaydate between 8 and 14
-      then '2. 2 Недели'
-    when (:pDate1-1) - t.NextPaydate between 15 and 22
-      then '3. 3 Недели'
-    when (:pDate1-1) - t.NextPaydate >= 23 and (:pDate1-1) -  t.NextPaydate < d.dz30
-      then '4. 4 Недели'
-    when (:pDate1-1) - t.NextPaydate >= d.dz30 and (:pDate1-1) -  t.NextPaydate < d.dz90
-      then '5. свыше 30 дней'
-    when (:pDate1-1) - t.NextPaydate >= d.dz90 and (:pDate1-1) -  t.NextPaydate < d.dz365
-      then '6. свыше 90 дней'
-    when (:pDate1-1) - t.NextPaydate >= d.dz365
-      then '7. свыше 1 года'
-  end GrDayDZ,
-  t.AgrAgent,
-  t.emplname,
-  t.DeptName,
-  t.MainDeptName,
-  t.SaleChannel,
-  t.BSO,
-  a.code,
-  t.BSOcross,
-  case when  t.NextPaydate > :pDate1-1 then t.dz end Overdue,
-  t.dz1_12,
-  Case
-    when  t.NextPaydate > :pDate1-1 and t.amountf> t.dz1_12 or
-         ( t.agrsign between  trunc(add_months(:pDate1,-1),'MONTH') and :pDate1-1 and
-           (case
-              when (t.agrsign between trunc(add_months(:pDate1,-1),'MONTH') and :pDate1-1)
-                then (select min(datepay)
-                        from agrsum
-                       where agrisn = t.agrisn
-                         and classisn2 in (cnt.ISN('amInsPrem'), cnt.ISN('amRePremiumIn'), cnt.ISN('amRePremiumInStorno'))
-                         and discr = 'G'
-                         and datepay >=  :pDate1)
-                  else  t.NextPaydate
-            end) between :pDate1 and trunc(add_months(:pDate1,1),'MONTH')-1)
-      then t.dz
-  end UndisclosedDZ1_12,
-
-  t.agrend,
-  t.AgrCreated,
-  t.EndMonthAgrBeg,
-  (select f.remark from AgrFlow f where f.agrisn = a.isn and f.ClassISN = 220894 and f.CREATEDBY in (1445912, 3141592)
-                  and f.created = (select max(ar.created) from AgrFlow ar where f.agrisn = ar.agrisn and ar.ClassISN   = 220894 and ar.CREATEDBY in (3141592,1445912))) remark,
-  s.fullname
-from  maintab t
-left join DZ d on d.agrisn = t.agrisn
-left join agreement a on a.isn = t.agrisn
-left join agrrole r on r.agrisn = t.agrisn and r.classisn = 2083
-left join subject s on s.isn = r.subjisn
-";
+        select
+          t.agrempl, --// ISN куратора
+          t.agrdep, --//ISN Депратамента куратора
+          t.agrclient, --// ISN Клиента
+          t.productisn, --// ISN Продукта
+          t.agrid, --// Номер договора
+          t.fullname, --//Имя Продукта
+          t.ClientName, --// ФИО \ Название компании
+          t.jur, --// Признак физ юр (Y) - юр лицо, (N) - Физик
+          t.AgrSign, --//Дата подписания
+          t.agrbeg, --//Дата начала действия договора
+          t.amountP, --//Премия
+          t.amountF, --//Факт оплаты / Размер оплаченной премии
+          t.dz, --//Сумма ДЗ
+          t.AgrAgent, --//ФИО Агента
+          t.emplname, --// Куратор договора
+          t.DeptName, --//Департамент
+          t.MainDeptName --основной деп
+        from  maintab t
+        ";
+$startTime = time();
         $AgrISN = null;
-        $DeptISN = 1445781;
+        $DeptISN = 1000;
         $EmplISN = null;
-        $ProductISN = 221711;
+        $ProductISN = null;
         $AgrClass = null;
         $RoleClass = null;
         $RoleSubj = null;
-        $Jur = "'Y'";
-        $Date1 = "to_date('01.10.2020', 'dd.mm.yyyy')";
+        $Jur = null;
+        $Date1 = "to_date('28.09.2020', 'dd.mm.yyyy')";
         $DateSign1 = null;
         $DateSign2 = null;
-        $DateBeg1  = "to_date('11.09.2020', 'dd.mm.yyyy')";
-        $DateBeg2  = "to_date('20.09.2020', 'dd.mm.yyyy')";
+        $DateBeg1  = null;
+        $DateBeg2  = null;
         $DateEnd1  = null;
         $DateEnd2  = null;
+        $CheckDept = null;
+
 
         #Обязательно
         $sql = str_replace(':pDate1', $Date1, $sql); #Отчетная дата:
@@ -1376,11 +1292,66 @@ left join subject s on s.isn = r.subjisn
         $sql = str_replace('&mSign', $DateSign1 != null ? "and a.datesign between $DateSign1 and $DateSign2" : "", $sql); #
         $sql = str_replace('&mBeg',  ($DateBeg1 != null && $DateBeg2 != null) ? "and a.datebeg between $DateBeg1 and $DateBeg2" : "", $sql); #
         $sql = str_replace('&mEnd',  $DateEnd1 != null ? "and a.dateend between $DateEnd1 and $DateEnd2" : "", $sql); #
+        $sql = str_replace('&mCheckDept',  $CheckDept != null ? " and a.DeptISN not in (select isn from subdept start with isn in (2000) connect by prior isn = parentisn)" : "", $sql); #
 
         $result = $this->execute($sql);
-        dd($result);
-        return view('oracle.DZnewGani', compact('result'));
+        $i=0;
+        $sum = 0;
+        foreach ($result as $v) {
+          $i++;
+
+          $nowtime = time();
+          $workTime = $nowtime - $startTime;
+          try {
+            $RR = new ReportReceivables;
+              $RR->agrEmplISN = $v->agrempl; // ISN куратора
+              $RR->agrDepISN = $v->agrdep;  //ISN Депратамента куратора
+              $RR->agrClientISN = $v->agrclient; // ISN Клиента
+              $RR->agrId = $v->agrid; // Номер договора
+              $RR->productISN = $v->productisn; //Имя Продукта
+              $RR->productName = $v->fullname;//Имя Продукта
+              $RR->clientName = $v->clientname; // ФИО \ Название компании
+              $RR->jur = $v->jur;// Признак физ юр (Y) - юр лицо, (N) - Физик
+              $RR->agrSign =  $v->agrsign; //Дата подписания
+              $RR->agrBeg = $v->agrbeg;; //Дата начала действия договора
+              $RR->amountP = $this->tofloat($v->amountp);//Премия
+              $RR->amountF =  $this->tofloat($v->amountf); //Факт оплаты / Размер оплаченной премии
+              $RR->amountD =  $this->tofloat($v->dz); //Сумма ДЗ
+              $RR->agrAgent = $v->agragent; //ФИО Агента
+              $RR->emplName = $v->emplname; // Куратор договора
+              $RR->DeptName = $v->deptname; //Департамент
+              $RR->mainDeptName = $v->maindeptname; // основной деп
+            $RR->save();
+          } catch (\Exception $e) {
+            print '<b>'.var_dump($v).'</b> <br /> <hr />';
+            print $e;
+            break;
+          }
+
+
+        }
+        print"<h1>Общая сумма ДЗ: $sum</h1>";
+        print"<h1>Время работы: $workTime</h1>";
+        // return view('oracle.DZnewGani')
+        //             ->with('result', $result)
+        //             ->with('startTime', $startTime);
     }
+
+    protected function tofloat($num) {
+    $dotPos = strrpos($num, '.');
+    $commaPos = strrpos($num, ',');
+    $sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos :
+        ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
+
+    if (!$sep) {
+        return floatval(preg_replace("/[^0-9]/", "", $num));
+    }
+
+    return floatval(
+        preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+        preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
+    );
+}
 
 
 }
