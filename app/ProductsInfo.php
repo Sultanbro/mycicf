@@ -19,3 +19,4 @@ class ProductsInfo extends Model
         return $this->parent_id === 0 ? 'Не указано' : (self::findOrFail($this->parent_id)->label ?? 'DELETED');
     }
 }
+
