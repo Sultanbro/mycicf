@@ -88,10 +88,14 @@
     transition: 0.4s ease;
     color: $base-color-dark;
     cursor: pointer;
+    border: 0.8px solid transparent;
 
     i {
         padding-left: 1rem;
         font-size: 1.2rem;
+    }
+    &:hover {
+        border: 0.8px solid cornflowerblue;
     }
     &:hover a{
         color: cornflowerblue;
