@@ -94,6 +94,9 @@ ul{
 	.parse-top-company-select{
 		margin-right: 3rem;
 	}
+	.label-size{
+		font-size: 12px;
+	}
 }
 .flex-start{
 	display: flex;
@@ -154,6 +157,10 @@ ul{
 		align-items: flex-start !important;
 		margin-top: 0.25rem;
 	}
+	.label-size{
+		font-size: 12px;
+	}
+
 }
 @media (min-width: 900px) and (max-width: 1170px){
 	.centcoins-date-indicators div{
@@ -163,6 +170,9 @@ ul{
 	}
 	.centcoins-date-indicators div div{
 		margin-top: 0.25rem;
+	}
+	.label-size{
+		font-size: 12px;
 	}
 }
 .mobile-date-contain{
@@ -592,6 +602,7 @@ ul{
 .none{
 	display: none;
 }
+
 .color-blue{
 	color: #4267b2;
 }
@@ -613,6 +624,27 @@ ul{
 .modal-size{
     width: 155% !important;
     margin-left: -12rem;
+}
+.modal-d {
+	transition: transform 0.3s ease-out;
+	transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+}
+.modal-d {
+	-webkit-transform: translate(0, 0);
+	transform: translate(0, 0);
+}
+.modal-d {
+	position: relative;
+	width: auto;
+	margin: 10px;
+}
+
+.modal-d {
+	width: 60%;
+	margin: 30px auto;
+}
+.bg-div{
+	background: #ffffff;
 }
 .fs-1_1{
     font-size: 1.1rem;
@@ -658,6 +690,17 @@ ul{
 }
 .blue-bg-all{
     background: #4267b2;
+}
+.img[src$="/mqdefault.jpg"] + iframe {
+	position: fixed;
+	z-index: 11;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	-moz-box-sizing: border-box; box-sizing: border-box;
+	border: solid rgba(0,0,0,.3);
+	border-width: 5vh 5vw;
 }
 .bg-WHITE{
 	background: #fff !important;
@@ -750,6 +793,10 @@ ul{
 	display: -webkit-inline-flex;
 	display: inline-flex;
 }
+.flex-cent{
+	display: flex;
+	align-items: center;
+}
 
 .margin-t-5{
 	margin-top: 2%;
@@ -769,6 +816,7 @@ ul{
 .flex-attention{
 	display: flex;
 	justify-content:flex-end !important;
+	align-items: center!important;
 }
 .att-flex-class {
     width: 270px !important;
@@ -1015,6 +1063,10 @@ ul{
 	display: flex;
 	align-items: center;
 }
+.vertical-m{
+	display: flex;
+	align-items: flex-start;
+}
 .width100{
 	width: 100%;
 }
@@ -1069,6 +1121,12 @@ ul{
 	border-top-left-radius: 20px !important;
 	border-top-right-radius: 20px !important;
 }
+.bottom-border-modal{
+
+	border-radius: 20px !important;
+	border-radius: 20px !important;
+
+}
 .inline{
 	display: inline;
 }
@@ -1100,6 +1158,17 @@ ul{
 .color-white-standart{
 	color: #ffffff;
 }
+.color-icon{
+	color: #100cff;
+}
+.icon-flex{
+	display: flex;
+	justify-content: flex-start;
+}
+.icon-size{
+	font-size: 16px;
+	font-family: none;
+}
 .border-bottom-white{
 	border-bottom: 1px solid white;
 }
@@ -1108,6 +1177,160 @@ ul{
 	border-right: 0;
 	border-top: 0;
 	border-bottom: 1px solid black;
+}
+.img-flex{
+	display: flex;
+	/*justify-content: flex-start;*/
+	align-items: center;
+	flex-direction: column;
+	width: 45%;
+	heiidh:35%
+	/*position: relative;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    border-right: 1000px;
+    transition: 15s box-shadow;
+    padding: 2px;
+    heidth:40px;
+    max-width: 40px;
+    max-height: 40px;*/
+}
+.img-fx{
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	width: 25px;
+	heiidh:30px;
+
+
+}
+.div-m{
+	margin-left:10px;
+}
+
+/*.bg-img{
+	background-color: #8fbd35;
+	border-color: #508ff4;
+	padding: 20px;
+}*/
+.img-svg path,
+.img-svg polygon {
+	fill-opacity: .5; /* прозрачность заливки */
+	stroke: #ff6c00; /* цвет обводки */
+	stroke-width: 10px; /* толщина обводки */
+	stroke-opacity: .8; /* прозрачность обводки */
+}
+#myImg {
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.btnhjcj {
+	color: #007bff;
+	background-color: transparent;
+	background-image: none;
+	border-color:#007bff;
+}
+.btnhjcj:hover {
+	color: #fff;
+	background-color: #868e96;
+	border-color: #868e96;
+}
+.m-div{
+	width: 610px;
+}
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 200px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,.5); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+	margin: auto;
+	display: block;
+	justify-content: center;
+
+	max-width:70%;
+	height: 80%;
+}
+.modal-size{
+	width: auto;
+
+}
+.modal-flex{
+	display: flex;
+	justify-content: center;
+}
+
+/* Caption of Modal Image */
+#caption {
+	margin: auto;
+	display: block;
+	width: 80%;
+	max-width: 100%;
+	text-align: center;
+	color: #ccc;
+	padding: 10px 0;
+	height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+	-webkit-animation-name: zoom;
+	-webkit-animation-duration: 0.6s;
+	animation-name: zoom;
+	animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+	from {-webkit-transform:scale(0)}
+	to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+	from {transform:scale(0)}
+	to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+	position: absolute;
+	top: 15px;
+	/*right: 35px;*/
+	color: #f1f1f1;
+	font-size: 40px;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+	color: #bbb;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+	.modal-content {
+		width: 90%;
+	}
+	.label-size{
+		font-size: 12px;
+	}
 }
 /*Стили страницы входа*/
 .image{
@@ -1565,6 +1788,9 @@ body {
 .width-100-imp{
 	width: 100% !important;
 }
+.widthMax{
+	width:max-content;
+}
 .data-chart-pie{
 	width: 100% !important;
 }
@@ -1752,10 +1978,21 @@ body {
 	.show-btn-contain div:nth-of-type(2){
 		margin-left: 0.50rem !important;
 	}
+	.label-size{
+		font-family: "Times New Roman";
+		font-size:12px;
+	}
+	.label-size{
+		font-size: 12px;
+	}
 }
 @media(max-width: 600px){
 	.data-chart-pie{
 		padding-left: 0;
+	}
+	.label-size{
+		font-family: "Times New Roman";
+		font-size:15px;
 	}
 }
 @media(max-width: 440px) {
@@ -1767,6 +2004,10 @@ body {
 	.ad-alignitems-end-440{
 		align-items: flex-end;
 		display: flex;
+	}
+	.label-size{
+		font-family: "Times New Roman";
+		font-size:12px;
 	}
 }
 
