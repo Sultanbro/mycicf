@@ -104,7 +104,7 @@ Vue.component('report', require('./components/employee/report.vue').default);
 
 Vue.component('rating', require('./components/employee/rating.vue').default);
 Vue.component('cabinet', require('./components/employee/cabinet.vue').default);
-// Vue.component('cabin', require('./components/employee/cabin.vue').default);
+
 Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
 
 Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
@@ -181,6 +181,14 @@ Vue.component('dsv', require('./components/booking/dsv').default);
 Vue.component('statistics', require('./components/employee/statistics').default);
 
 Vue.component('boss-news', require('./components/news/boss-news').default);
+
+Vue.component('my-results', require('./components/results/my-results').default);
+
+Vue.component('rating', require('./components/results/rating').default);
+
+Vue.component('motivation', require('./components/results/motivation').default);
+
+Vue.component('report', require('./components/results/report').default);
 
 window.onload = function(){
     var app = new Vue({

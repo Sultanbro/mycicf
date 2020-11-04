@@ -330,6 +330,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::get('boss-news', 'NewsController@index')->name('boss-news');
         Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
+
+        //My results page
+        Route::get('my-results', 'CabinetController@index');
+        Route::post('my-results/rating', 'CabinetController@getRatingList');
+        Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
+//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
@@ -362,10 +368,6 @@ Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 Route::get('test', function () {
     return view('test');
 });
-//Cabinet
-Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
-Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
-//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
 
 
 
