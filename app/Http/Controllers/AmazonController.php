@@ -17,6 +17,8 @@ class AmazonController extends Controller
         $query = $this->{"get$table"}($upd);
         $result = DB::connection('oracle')->select($query);
         $end = time();
+        if(count($result) == 0)
+            abort(404, 'Нет данных');
         $this->temp($result, 'client');
     }
     public function getKommeskData(Request $request, $table){
@@ -160,7 +162,7 @@ translate(OCATD,'\|/-'||CHR(10)||CHR(13), '      ')OCATD,
 translate(GNINMB,'\|/-'||CHR(10)||CHR(13), '      ')GNINMB,
 POPULATION,UPDATED,UPDATEDBY,
 KT1,KT2,KT1_2009,KT2_2009,KT1_2011,KT2_2011,KT1_2012,KT2_2012,KT1_2015_4,KT2_2015_4,
-translate(THEME,'\|/-'||CHR(10)||CHR(13), '      ')FIASCODE
+translate(FIASCODE,'\|/-'||CHR(10)||CHR(13), '      ')FIASCODE
 from inslab.city
 where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
 ";
@@ -282,7 +284,7 @@ where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
     public function getAgrrefund($updated){
         return "select ISN,DEPTISN,EMPLISN,CLAIMISN,AGRISN,
 CONDISN,
-translate(REMARK,'\|/-'||CHR(10)||CHR(13), '      ')ORDERNO,
+translate(ORDERNO,'\|/-'||CHR(10)||CHR(13), '      ')ORDERNO,
 DATEREG,
 translate(ID,'\|/-'||CHR(10)||CHR(13), '      ')ID,
 STATUS,CLASSISN,CLASSISN2,BENEFICIARYISN,RECIPIENTISN,
@@ -445,7 +447,16 @@ from inslab.webuser
         where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')";
     }
 
-
+    public function getSubscoring($updated){
+        return "select 
+isn, subjisn, created,createdby,updated,updatedby,category,classisn,
+translate(description, '\|/-'||CHR(10)||CHR(13), '      ')description,
+active,disabled,disableddate,disabledby,
+translate(REMARK, '\|/-'||CHR(10)||CHR(13), '      ')REMARK
+from inslab.subscoring
+        where updated > to_date('$updated', 'DD.MM.YYYY HH24:MI:SS')
+";
+    }
 
     public function temp($data, $type){
         $filename = $type."_data_export_" . date("Y-m-d") . ".csv";
