@@ -61,6 +61,7 @@ class ColleaguesController extends Controller {
         }
         return $result;
         //...
+        //...
     }
 
     public function getImageUrl($isn){
