@@ -262,6 +262,7 @@ class SiteController extends Controller
     }
 
     public function getFullBranch(Request $request){
+        ini_set('xdebug.max_nesting_level', 500);
         $headData = Branch::where('kias_id', 50)->first();
         $result = [];
         if(count($headData->childs)){
@@ -310,7 +311,7 @@ class SiteController extends Controller
     public function getChild($parent_id)
     {
         $result = [];
-        $data = Branch::where('kias_parent_id', $parent_id)->get();
+        $data = Branch::where('kias_parent_id', $parent_id)->orderBy('has_child')->get();
         foreach($data as $branchData){
             if(count($branchData->childs)){
                 array_push($result, [
