@@ -8,26 +8,26 @@ use Illuminate\Http\Request;
 class CabinetController extends Controller
 {
     public $keys = array(
-        'Category' => 'Категория',
-        'DeptName' => 'Подразделение',
-        'DutyName' => 'Должность',
-        'Rentability' => 'Рентабельность',
-        'ExecutionPlan' => 'Исполнение плана',
-        'CostPrice' => 'Себестоимость',
-        'NetClaim' => 'Убыточность',
-        'EmplDZ6' => 'ДЗ текущая',
+//        'Category' => 'Категория',
+//        'DeptName' => 'Подразделение',
+//        'DutyName' => 'Должность',
+        'Rentability' => 'Рентабельность, %',
+        'ExecutionPlan' => 'Исполнение плана, %',
+        'CostPrice' => 'Себестоимость, %',
+        'NetClaim' => 'Убыточность, %',
+        'EmplDZ6' => 'ДЗ текущая, %',
         'PriorityClass' => 'Приоритетные классы',
-        'Prolongation' => 'Пролонгация',
+        'Prolongation' => 'Пролонгация, %',
         'NewClient' => 'Новые клиенты',
-        'DirectSales' => 'Доля прямых продаж',
+        'DirectSales' => 'Доля прямых продаж, %',
 //        'CalcShare' => '% перехода сделки в договор',
         'CrossShare' => 'Кросс-продажи, %'
     );
 
     public $tooltips = array(
-        'Category' => 'Категория',
-        'DeptName' => 'Подразделение',
-        'DutyName' => 'Должность',
+//        'Category' => 'Категория',
+//        'DeptName' => 'Подразделение',
+//        'DutyName' => 'Должность',
         'Rentability' => 'Соотношение дохода от продаж к доходу по страховой деятельности',
         'ExecutionPlan' => 'Среднее исполнение плана за последние 6 месяцев',
         'CostPrice' => 'АВ + ЗП + прочие прямые расходы (без учета мотивации) / доходы по страховой деятельности',
@@ -61,9 +61,14 @@ class CabinetController extends Controller
         try {
             $result = $kias->getEmplRating($user_isn, $begin_date);
 
-//            dd($result);
-
-            if($result->error) throw new \Exception((string)$result->error->text, (string)$result->error->code);
+            if($result->error) throw new \Exception((string)$result->error->fulltext, 419);
+            else if(!isset($result->Rate->row)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Данный пользователь не является продавцом, либо по нему нету данных',
+                    'code'    => 400
+                ]);
+            }
         }
         catch (\Exception $e) {
             return response()->json([
@@ -80,52 +85,89 @@ class CabinetController extends Controller
         $deptName = null;
         $dutyName = null;
         $meanShare = null;
+        $x_axis = array();
+        $y_axis = array();
+
         foreach ((array)$result->Rate->row as $key => $value) {
-            if ($key == 'EmplRate')
+            if (isset($this->keys[$key]))
             {
-                $emplRate = (string)$value;
-            }
-            else if ($key == 'Category')
-            {
-                $category = (string)$value;
-            }
-            else if ($key == 'DeptName')
-            {
-                $deptName = (string)$value;
-            }
-            else if ($key == 'DutyName')
-            {
-                $dutyName = (string)$value;
-            }
-            else if ($key == 'MeanShare')
-            {
-                $meanShare = (int)$value;
-            }
-            else {
-                if (isset($this->keys[$key]))
-                {
-                    array_push($rating, [
-                        'criteria'   => (string)$this->keys[$key],
-                        'mark'       => (string)$result->Rate->row->$key,
-                        'benchmark'  => (string)$this->calcBenchmark($key, (string)$result->Rate->row->$key),
-                        'assessment' => (string)$result->RateMean->row->$key,
-                        'tooltip'    => (string)$this->tooltips[$key],
-                    ]);
-                }
+                array_push($rating, [
+                    'criteria'   => (string)$this->keys[$key],
+                    'mark'       => (string)$result->Rate->row->$key,
+                    'benchmark'  => (string)$this->calcBenchmark($key, (string)$result->Rate->row->$key),
+                    'assessment' => (string)$result->RateMean->row->$key,
+                    'tooltip'    => (string)$this->tooltips[$key],
+                ]);
             }
         }
+        foreach ($result->Rate->row as $row) {
+            $result_date = date('Y-m', strtotime((string)$row->DocDate));
+            if($result_date === $begin_date)
+            {
+                $emplRate = (string)$row->EmplRate;
+                $category = (string)$row->Category;
+                $deptName = (string)$row->DeptName;
+                $dutyName = (string)$row->DutyName;
+                $meanShare = (string)$row->MeanShare;
+            }
+            array_push($x_axis, (string)$row->DocDate);
+            array_push($y_axis, (string)$row->MeanShare);
+        }
+
+
+//        foreach ((array)$result->Rate->row as $key => $value) {
+//            if ($key == 'EmplRate')
+//            {
+//                $emplRate = (string)$value;
+//            }
+//            else if ($key == 'Category')
+//            {
+//                $category = (string)$value;
+//            }
+//            else if ($key == 'DeptName')
+//            {
+//                $deptName = (string)$value;
+//            }
+//            else if ($key == 'DutyName')
+//            {
+//                $dutyName = (string)$value;
+//            }
+//            else if ($key == 'MeanShare')
+//            {
+//                $meanShare = (int)$value;
+//                array_push($data, (int)$value);
+//            }
+//            else if($key == 'DocDate')
+//            {
+//                array_push($categories, (string)$value);
+//            }
+//            else {
+//                if (isset($this->keys[$key]))
+//                {
+//                    array_push($rating, [
+//                        'criteria'   => (string)$this->keys[$key],
+//                        'mark'       => (string)$result->Rate->row->$key,
+//                        'benchmark'  => (string)$this->calcBenchmark($key, (string)$result->Rate->row->$key),
+//                        'assessment' => (string)$result->RateMean->row->$key,
+//                        'tooltip'    => (string)$this->tooltips[$key],
+//                    ]);
+//                }
+//            }
+//        }
 
         $response = array(
-            'success'   => true,
-            'rating'    => $rating,
-            'emplRate'  => $emplRate,
-            'category'  => $category,
-            'deptName'  => $deptName,
-            'emplDuty'  => $dutyName,
-            'meanShare' => $meanShare
+            'success'    => true,
+            'rating'     => $rating,
+            'emplRate'   => $emplRate,
+            'category'   => $category,
+            'deptName'   => $deptName,
+            'emplDuty'   => $dutyName,
+            'meanShare'  => $meanShare,
+            'xAxis'      => $x_axis,
+            'yAxis'      => $y_axis,
+            'emplISN'    => (string)$result->EMPLISN,
+            'emplName'   => (string)$result->EMPLNAME
         );
-
-//        dd($response);
 
         return response()->json($response);
     }

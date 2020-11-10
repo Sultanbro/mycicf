@@ -9,12 +9,12 @@
             <div>
                 <treeselect v-model="userISN" :options="treeOptions" :multiple="false"></treeselect>
             </div>
-            <div class="rating-search-btn">
+            <div class="rating-search-btn" @click="getRating">
                 <span>Показать</span>
             </div>
         </div>
         <!-- Rating Table Section-->
-        <div class="rating-wrapper p-4">
+        <div class="rating-wrapper p-4 mb-3" v-if="showRating">
             <div class="rating-wrapper__inner">
                 <div class="d-flex align-items-center">
                     <div class="mr-2">
@@ -22,7 +22,7 @@
                         <img :src="imageUrl" @error="fakeImage = true" class="rating-avatar" v-else>
                     </div>
                     <div>
-                        <h5>Имя фамилия</h5>
+                        <h5>{{this.emplName}}</h5>
                         <div>{{this.emplDuty}}</div>
                     </div>
                 </div>
@@ -38,7 +38,10 @@
                         <th scope="col">Критерии</th>
                         <th scope="col">Показатель</th>
                         <th scope="col">Оценка</th>
-                        <th scope="col">Бенчмарк</th>
+                        <th scope="col">
+                            <span class="mr-1">Цель</span>
+                            <i class="fas fa-info-circle" v-tooltip.top-center="'Твоя следующая цель по показателю для повышения оценки и рейтинга, галочка - максимальная оценка'"></i>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,10 +59,21 @@
             </div>
             <div class="rating-table-bottom">
                 <div>
-                    <span>Итого:</span>
+                    <span>Итоговая оценка:</span>
                 </div>
                 <div>
                     <span>{{this.meanShare}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- Chart Section -->
+        <div v-if="showRating">
+            <div class="rating-wrapper p-4">
+                <div class="ml-3">
+                    <h4 class="employee-rating">Динамика рейтинга</h4>
+                </div>
+                <div class="chart-container">
+                    <apexchart ref="realtimeChart" type="area" height="400" :options="chartOptions" :series="series"></apexchart>
                 </div>
             </div>
         </div>
@@ -78,17 +92,30 @@
                 userISN: this.propsUserISN,
                 emplRate: null,
                 emplDuty: null,
+                emplName: null,
+                emplISN: null,
                 meanShare: null,
+                showRating: false,
+                showChart: false,
                 ratings: [],
+
+                chartOptions: {
+                    xaxis: {
+                        categories: [],
+                    }
+                },
+                series: [{
+                    name: 'Итог',
+                    data: []
+                }]
             }
         },
         mounted() {
-            this.imageUrl = "/storage/images/employee/" + this.userISN + ".png";
-            // this.getTreeOptions();
-            this.getRating();
+            this.imageUrl = "/storage/images/employee/" + this.emplISN + ".png";
+            this.getTreeOptions();
         },
         updated() {
-            this.imageUrl = "/storage/images/employee/" + this.userISN + ".png";
+            this.imageUrl = "/storage/images/employee/" + this.emplISN + ".png";
         },
         props: {
             propsUserISN: Number
@@ -100,12 +127,12 @@
                     .then((response) => {
                         this.setTreeOptions(response.data);
                     })
+                    .then(() => {
+                        this.getRating();
+                    })
                     .catch(error => {
                         alert(error);
                     })
-                    .finally(() => {
-                        this.preloader(false);
-                    });
             },
             setTreeOptions(data) {
                 this.treeOptions = data.result;
@@ -113,16 +140,19 @@
             },
             getRating() {
                 this.preloader(true);
+                this.showRating = false;
                 this.axios.post('/my-results/rating',
                     {
-                        // user_isn: this.userISN,
-                        user_isn: 1446218,
-                        // begin_date: this.dateBeg,
-                        begin_date: "2020-09",
+                        user_isn: this.userISN,
+                        begin_date: this.dateBeg,
                     })
                     .then(response => {
                         if (response.data.success) {
                             this.setRating(response.data);
+                            this.setChartData(response.data);
+                        }
+                        else {
+                            alert(response.data.message);
                         }
                     })
                     .catch(error => {
@@ -137,6 +167,15 @@
                 this.emplRate = data.emplRate;
                 this.emplDuty = data.emplDuty;
                 this.meanShare = data.meanShare;
+                this.emplName = data.emplName;
+                this.emplISN = data.emplISN;
+                this.showRating = true;
+
+            },
+            setChartData(data) {
+                this.chartOptions.xaxis.categories = data.xAxis;
+                this.series[0].data = data.yAxis;
+
             },
             preloader(show) {
                 if (show) {
@@ -145,7 +184,7 @@
                     document.getElementById('preloader').style.display = 'none';
                 }
             },
-        }
+        },
     }
 </script>
 
@@ -163,7 +202,8 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
     .rating-date-input {
-        padding: 3px;
+        padding: 4px;
+        border: 1px solid #DDD;
     }
     .rating-search-btn {
         display: flex;
@@ -200,7 +240,6 @@
     }
     .rating-table {
         padding-top: 1rem;
-        /*border-top: 1px solid #DEE2E6;*/
         border-top: 1px solid cornflowerblue;
     }
     .rating-table-bottom {
@@ -210,7 +249,10 @@
         font-size: 1.4rem;
         font-weight: bold;
         color: cornflowerblue;
-        /*border-top: 1px solid #DEE2E6;*/
         border-top: 1px solid cornflowerblue;
+    }
+    .chart-container {
+        width: 100%;
+        overflow: hidden;
     }
 </style>

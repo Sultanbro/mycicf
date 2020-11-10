@@ -22,6 +22,8 @@ import vmodal from 'vue-js-modal'
 
 import VueTheMask from 'vue-the-mask'
 
+import VueApexCharts from 'vue-apexcharts'
+
 import Vue from "vue";
 
 const moment = require('vue-moment');
@@ -47,6 +49,10 @@ Vue.use(VueTheMask);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
+
+Vue.use(VueApexCharts);
+
+Vue.component('apexchart', VueApexCharts)
 
 window.addEventListener('load', () => {
     Vue.use(Toastr);
