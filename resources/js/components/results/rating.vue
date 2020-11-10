@@ -22,7 +22,9 @@
                         <img :src="imageUrl" @error="fakeImage = true" class="rating-avatar" v-else>
                     </div>
                     <div>
-                        <h5>{{this.emplName}}</h5>
+                        <h5>
+                            <a :href="`/colleagues/${this.emplISN}/dossier`" class="text-dark">{{this.emplName}}</a>
+                        </h5>
                         <div>{{this.emplDuty}}</div>
                     </div>
                 </div>
