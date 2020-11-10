@@ -18,4 +18,16 @@ class ProductsInfo extends Model
     public function getParent(){
         return $this->parent_id === 0 ? 'Не указано' : (self::findOrFail($this->parent_id)->label ?? 'DELETED');
     }
+    public function saveDescription($description){
+        $fileName = time().'.'.$description->extension();
+        $descript = $description->get();
+        Storage::disk('local')->put("/public/menu/{$fileName}", $descript);
+        $this->description = "/storage/menu/{$fileName}";
+    }
+    public function saveDocuments($documents){
+        $fileName = time().'.'.$documents->extension();
+        $document = $documents->get();
+        Storage::disk('local')->put("/public/menu/{$fileName}", $document);
+        $this->description = "/storage/menu/{$fileName}";
+    }
 }

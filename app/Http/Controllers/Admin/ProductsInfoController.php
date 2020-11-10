@@ -153,7 +153,7 @@ class ProductsInfoController extends Controller
         $model = new ProductsInfo();
         try {
             foreach ($request->all() as $key => $value) {
-                print $key.'-'.$value .'===';
+//                print $key.'-'.$value .'===';
                 if($key !== 'file') {
                     if($key === 'parent_id') {
                         $model->$key =  $value === 'null' || $value === '' ? 0 : $value;
@@ -235,6 +235,8 @@ class ProductsInfoController extends Controller
                 'parent' => $item->getParent(),
                 'url' => $item->url,
                 'icon_url' => $item->icon_url,
+                'description' => $item->description,
+                'documents' => $item->documents,
             ]);
         }
         return response()

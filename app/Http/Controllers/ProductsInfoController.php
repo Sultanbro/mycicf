@@ -111,6 +111,8 @@ class ProductsInfoController extends Controller
                 'label' => $item->label,
                 'url' => $item->url,
                 'icon_url' => $item->icon_url,
+                'description' => $item->description,
+                'documents' => $item->documents,
                 'childs' => [],
                 'opened' => false
             ]);
