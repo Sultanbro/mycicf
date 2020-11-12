@@ -233,7 +233,7 @@
                                             </div>
                                         </div>
                                         <div class="flex-row pl-4 pb-4 pr-4 pointer"
-                                             v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401"'>
+                                             v-if='coordination.DocClass === "883011" || coordination.DocClass === "1256401" || coordination.DocClass === "1797771"'>
                                             <div title="Воздержаться"
                                                  class="vertical-middle button-neutral matching-buttons pl-4 pr-4 pt-1 pb-1"
                                                  @click="sendSolution(2)">
