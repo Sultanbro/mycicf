@@ -399,12 +399,19 @@
                     }
                 }
                 if(type === 'OTHER') {
-                    let response = await this.axios.post('/getDocRowList', {
-                        class_isn: data.RefClassISN,
-                        doc_isn: data.RefDocISN,
-                    });
-                    if(response.data.success) {
-                        this.setDocRowList(response.data, type);
+                    if(data.RefClassISN != '' && data.RefDocISN != '' && data.RefClassISN != null && data.RefDocISN != null) {
+                        let response = await this.axios.post('/getDocRowList', {
+                            class_isn: data.RefClassISN,
+                            doc_isn: data.RefDocISN,
+                        });
+                        if (response.data.success) {
+                            this.setDocRowList(response.data, type);
+                        } else {
+                            alert(response.data.message);
+                            this.preloader(false);
+                        }
+                    } else {
+                        this.preloader(false);
                     }
                 }
             },
