@@ -114,46 +114,7 @@ class CabinetController extends Controller
             array_push($y_axis, (string)$row->MeanShare);
         }
 
-
-//        foreach ((array)$result->Rate->row as $key => $value) {
-//            if ($key == 'EmplRate')
-//            {
-//                $emplRate = (string)$value;
-//            }
-//            else if ($key == 'Category')
-//            {
-//                $category = (string)$value;
-//            }
-//            else if ($key == 'DeptName')
-//            {
-//                $deptName = (string)$value;
-//            }
-//            else if ($key == 'DutyName')
-//            {
-//                $dutyName = (string)$value;
-//            }
-//            else if ($key == 'MeanShare')
-//            {
-//                $meanShare = (int)$value;
-//                array_push($data, (int)$value);
-//            }
-//            else if($key == 'DocDate')
-//            {
-//                array_push($categories, (string)$value);
-//            }
-//            else {
-//                if (isset($this->keys[$key]))
-//                {
-//                    array_push($rating, [
-//                        'criteria'   => (string)$this->keys[$key],
-//                        'mark'       => (string)$result->Rate->row->$key,
-//                        'benchmark'  => (string)$this->calcBenchmark($key, (string)$result->Rate->row->$key),
-//                        'assessment' => (string)$result->RateMean->row->$key,
-//                        'tooltip'    => (string)$this->tooltips[$key],
-//                    ]);
-//                }
-//            }
-//        }
+        usort($x_axis, array($this, "sortByDate"));
 
         $response = array(
             'success'    => true,
@@ -262,6 +223,10 @@ class CabinetController extends Controller
                 else return $benchmark = '';
             default: return '';
         }
+    }
+
+    protected function sortByDate($a, $b) {
+        return strtotime($a) - strtotime($b);
     }
 }
 
