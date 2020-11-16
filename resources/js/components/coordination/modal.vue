@@ -219,6 +219,7 @@
                                     </div>
 
                                     <edslogin
+                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
                                             ref="eds"
                                             :coordination="coordination"
                                             :doc_row_list_inner_other="doc_row_list_inner_other"
@@ -228,8 +229,15 @@
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
                                             <div title="Согласовать"
+                                                 v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
                                                  class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
                                                  @click="$refs.eds.getToken('coordination',1)">
+                                                <i class="far fa-check-circle"></i>
+                                            </div>
+                                            <div title="Согласовать"
+                                                 v-if="coordination.DocClass !== 1784781 && coordination.DocClass !== '1784781'"
+                                                 class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
+                                                 @click="sendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                         </div>
@@ -320,59 +328,23 @@
                  this.$refs.eds.getToken('coordination',solution)
             },
             sendSolution: function (Solution) {
-                this.axios.post("/setCoordination", {
-                    DocISN: this.coordination.ISN,
-                    ISN: this.isn,
-                    Solution: Solution,
-                    Remark: this.Remark,
-                    Resolution: this.resolution
-                }).then((response) => {
-                    if (!response.data.success) {
-                        alert(response.data.error);
-                    } else {
-                        // if(Solution == 1) {
-                        //     this.axios.post("/coordinationSaveAttachment", {
-                        //         isn: this.coordination.ISN,
-                        //         id: this.coordination.ID,
-                        //         requestType: 'D',
-                        //         fileType: 'base64',
-                        //         file: this.$refs.eds.signedFile,
-                        //         fileExt: 'sig',
-                        //     }).then((response) => {
-                        //         if (!response.data.success) {
-                        //             alert(response.data.error);
-                        //         } else {
-                        //             location.reload();
-                        //         }
-                        //     });
-                        // } else {
-                        //     location.reload();
-                        // }
-
-                        location.reload();
-                    }
-                });
-                //if(this.$refs.eds.signedFile != '') {
-                //     if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
-                //         this.axios.post("/setCoordination", {
-                //             DocISN: this.coordination.ISN,
-                //             ISN: this.isn,
-                //             Solution: Solution,
-                //             Remark: this.Remark,
-                //             Resolution: this.resolution
-                //         }).then((response) => {
-                //             if (!response.data.success) {
-                //                 alert(response.data.error);
-                //             } else {
-                //                 //location.reload();
-                //
-                //             }
-                //         });
-                //     }
-                // } else {
-                //     alert('Действие возможно только после подписания ЭЦП.\nПожалуйста подпишите указав ЭЦП ключ и пароль');
-                // }
+                if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                    this.axios.post("/setCoordination", {
+                        DocISN: this.coordination.ISN,
+                        ISN: this.isn,
+                        Solution: Solution,
+                        Remark: this.Remark,
+                        Resolution : this.resolution
+                    }).then((response) => {
+                        if (!response.data.success) {
+                            alert(response.data.error);
+                        } else {
+                            location.reload();
+                        }
+                    });
+                }
             },
+
             close() {
                 this.$parent.$refs.modalButton.click()
             },
