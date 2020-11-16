@@ -4,12 +4,21 @@
         <div class="col-md-2 vertical-middle">
             <div class="header-img-width">
                 <a href="{{route('index')}}">
-                    <img src="{{asset('images/new-white-logo.png')}}" class="image">
+{{--                    <img src="{{asset('images/new-white-logo.png')}}" class="image">--}}
+                    <img src="{{asset('images/mycic-horizontal-logo.png')}}" class="image">
                 </a>
             </div>
         </div>
         <div class="col-md-6">
             <ul class="header-ul flex-row jc-sb">
+                <a href="{{route('boss-news')}}" class="header-navigation">
+                    <li>Шеф говорит!</li>
+                </a>
+                <a class="header-navigation" href="{{route('development', 'company')}}">
+                    <li>
+                        О компании
+                    </li>
+                </a>
                 @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
                     <a class="header-navigation" href="{{route('parse')}}">
                         <li>
@@ -22,9 +31,9 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="javascript:void(0)">
+                <a class="header-navigation" href="{{route('development', 'rating')}}">
                     <li>
-                        О компании
+                        Рейтинг
                     </li>
                 </a>
                 <a class="header-navigation" href="{{route('documentation')}}">
@@ -45,11 +54,11 @@
                         </li>
                     </ul>
                 </li>
-                <a class="header-navigation" href="javascript:void(0)">
-                    <li>
-                        Обучение
-                    </li>
-                </a>
+{{--                <a class="header-navigation" href="javascript:void(0)">--}}
+{{--                    <li>--}}
+{{--                        Обучение--}}
+{{--                    </li>--}}
+{{--                </a>--}}
             </ul>
         </div>
         <div class="col-md-4">

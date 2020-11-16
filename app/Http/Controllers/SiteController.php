@@ -255,14 +255,14 @@ class SiteController extends Controller
             5011 => 5011,
             4275866 => 4275866,
             766502 => 766502,
-            801271 => 801271,
             3534147 => 3534147,
-            506791 => 506791,
+            801271 => 801271,
             4555970 => 4555970
         );
     }
 
     public function getFullBranch(Request $request){
+        ini_set('xdebug.max_nesting_level', 500);
         $headData = Branch::where('kias_id', 50)->first();
         $result = [];
         if(count($headData->childs)){
@@ -311,7 +311,7 @@ class SiteController extends Controller
     public function getChild($parent_id)
     {
         $result = [];
-        $data = Branch::where('kias_parent_id', $parent_id)->get();
+        $data = Branch::where('kias_parent_id', $parent_id)->orderBy('has_child')->get();
         foreach($data as $branchData){
             if(count($branchData->childs)){
                 array_push($result, [
@@ -389,6 +389,7 @@ class SiteController extends Controller
             'Married' => (string)$response->Married == "0" ? 'Не указано' : (string)$response->Married,
             'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
         ];
         $result = [
             'success' => true,

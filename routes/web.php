@@ -143,6 +143,15 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('calc/getDicti', 'ProductsController@getDicti');
             Route::post('/updateProductsDicti','ProductsController@updateProductsDicti');
         });
+
+        Route::group(['middleware' => 'kurators'], function() {
+            Route::get('/statistics/kurators', 'Admin\KuratorController@kuratorView')->name('statistics.kurator.list');
+            Route::post('/statistics/getKuratorsList', 'Admin\KuratorController@getKuratorUsers');
+            Route::get('/statistics/newUser', 'Admin\KuratorController@newUserView');
+            Route::post('/statistics/getKurators', 'Admin\KuratorController@getKurators');
+            Route::post('/statistics/setNewUser', 'Admin\KuratorController@newUser');
+            Route::get('/statistics/delete/{kurators}', 'Admin\KuratorController@deleteById');
+        });
     });
 });
 
@@ -258,7 +267,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getStatisticsReport', 'StatisticsController@getReport');
         Route::post('/getProdData', 'StatisticsController@getProdData');
         Route::post('/getProducts', 'StatisticsController@getProducts');
-
+        Route::post('/getBranchProdData', 'StatisticsController@postBranchProdData');
         Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
         Route::get('/logout', 'SiteController@logout');
@@ -276,7 +285,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getUsersData', 'SiteController@getUserData');
         Route::post('/getColleagueData', 'SiteController@getColleagueData');
 
-        Route::get('/motivation', 'MotivationController@motivation');
+        Route::get('/motivation', 'MotivationController@motivation')->name('motivation');
         Route::post('/getMotivationList', 'MotivationController@getMotivationList');
 
         Route::get('/express', 'ProductsController@expressList');
@@ -322,6 +331,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+
+        //Dev page route
+        Route::get('development/{name}', 'NewsController@dev')->name('development');
+
+        Route::get('boss-news', 'NewsController@index')->name('boss-news');
+        Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
@@ -350,4 +365,15 @@ Route::get('/kolesa/prices', 'SiteController@getPrices');
 Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+
+Route::get('test', function () {
+    return view('test');
+});
+//Cabinet
+Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
+Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
+//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
+
+
+
 
