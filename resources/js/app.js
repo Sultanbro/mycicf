@@ -78,6 +78,8 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
+Vue.component('edslogin', require('./components/eds/edslogin').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);

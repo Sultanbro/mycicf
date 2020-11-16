@@ -140,7 +140,7 @@
                                             <tbody>
                                             <tr v-for="(list,index) in doc_row_list_inner_other[1]">
                                                 <td v-for="(list,key) in doc_row_list_other">
-                                                    {{ doc_row_list_inner_other[key][index] }}
+                                                    {{ doc_row_list_inner_other[key][index]['ID'] }}
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -217,9 +217,25 @@
                                         <textarea rows="4" v-model="Remark"
                                                   class="resize modal-note width100"></textarea>
                                     </div>
+
+                                    <edslogin
+                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
+                                            ref="eds"
+                                            :coordination="coordination"
+                                            :doc_row_list_inner_other="doc_row_list_inner_other"
+                                            show-view="sign">
+                                    </edslogin>
+
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
                                             <div title="Согласовать"
+                                                 v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
+                                                 class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
+                                                 @click="$refs.eds.getToken('coordination',1)">
+                                                <i class="far fa-check-circle"></i>
+                                            </div>
+                                            <div title="Согласовать"
+                                                 v-if="coordination.DocClass !== 1784781 && coordination.DocClass !== '1784781'"
                                                  class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
                                                  @click="sendSolution(1)">
                                                 <i class="far fa-check-circle"></i>
@@ -308,6 +324,9 @@
             doc_row_list_inner_other: Object
         },
         methods: {
+            beforeSendSolution(solution){
+                 this.$refs.eds.getToken('coordination',solution)
+            },
             sendSolution: function (Solution) {
                 if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
                     this.axios.post("/setCoordination", {
@@ -325,6 +344,7 @@
                     });
                 }
             },
+
             close() {
                 this.$parent.$refs.modalButton.click()
             },

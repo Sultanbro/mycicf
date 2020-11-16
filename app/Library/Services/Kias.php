@@ -605,6 +605,30 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN){
+        return $this->request('User_CicGetAttachmentsPath', [
+            'RefID' => $refID,
+            'RefISN' => $refISN,
+            'PictType' => $type,
+            'Format' => $format,
+            'DocClass' => $docClass,
+            'ISN' => $ISN,
+        ]);
+    }
+
+    public function cicSaveEDS($RefISN,$isn,$iin,$signer,$signerisn,$signeddate,$keyperiod,$remark){
+        return $this->request('User_CicSaveEDS', [
+            'RefISN' => $RefISN,
+            'ISN' => $isn,
+            'IIN' => $iin,
+            'SIGNER' => $signer,
+            'SIGNERISN' => $signerisn,
+            'SIGNEDDATE' => $signeddate,
+            'KEYPERIOD' => $keyperiod,
+            'REMARK' => $remark
+        ]);
+    }
+
     /**
      * Получить справочники
      *
