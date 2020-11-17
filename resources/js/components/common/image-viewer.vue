@@ -1,14 +1,14 @@
 <template>
     <div class="">
-        <div class="modal fade bd-example-modal-lg height100vh" id="mainModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg height100vh" :id="`post-modal-${index}`">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="relative d-flex">
                         <div class="relative">
-                            <img class="w-100 image-container" :src="array[imageIndex]"/>
+                            <img class="w-100 image-container" :src="imageArray[imageIndex]"/>
                             <div class="absolute d-flex justify-content-center w-100">
                                 <span class="color-white">
-                                    {{imageIndex + 1}} из {{array.length}}
+                                    {{imageIndex + 1}} из {{imageArray.length}}
                                 </span>
                             </div>
                         </div>
@@ -39,24 +39,26 @@
             return {
                 caretClass: 'fa-chevron-down',
                 imageIndex: 0,
+                imageArray: [...this.array]
             }
         },
 
         props: {
             array: Array,
+            index: Number
         },
 
         methods: {
             prev() {
                 if(this.imageIndex === 0) {
-                    this.imageIndex = this.array.length - 1;
+                    this.imageIndex = this.imageArray.length - 1;
                 }
                 else {
                     this.imageIndex--;
                 }
             },
             next() {
-                if(this.imageIndex === this.array.length - 1) {
+                if(this.imageIndex === this.imageArray.length - 1) {
                     this.imageIndex = 0;
                 }
                 else {
