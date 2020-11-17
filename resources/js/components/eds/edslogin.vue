@@ -413,11 +413,11 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 if(result.responseObjects.length > 0) {
-                                    if(self.signedFileInfo.length > 0) {
-                                        self.signedFileInfo.push(result.responseObjects[0]);
-                                    } else {
+                                    //if(self.signedFileInfo.length > 0) {
+                                    //    self.signedFileInfo.push(result.responseObjects[0]);
+                                    //} else {
                                         self.signedFileInfo = result.responseObjects;
-                                    }
+                                    //}
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                         self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
                                     } else {
@@ -455,8 +455,9 @@
 
 
                             if(edsType != 'cms') {
-                                if(self.coordination.RefAgrISN != 0){
+                                if(self.coordination.RefAgrISN != 0 && self.coordination.RefAgrISN != undefined){
                                     //self.sendCmsInfo(self.coordination.RefAgrISN);
+                                    console.log('1');
                                     let self = this;
                                     self.loader(true);
                                     let agrIsn = self.coordination.RefAgrISN;
@@ -484,7 +485,7 @@
                                 } else {
                                     for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
                                         //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
-
+                                        console.log('2');
                                         let self = this;
                                         self.loader(true);
                                         let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
