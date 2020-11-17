@@ -42,6 +42,8 @@ class CoordinationController extends Controller
                     'DeptName' => (string)$row->DeptName,
                     'id' => (string)$row->id,
                     'docdate' => (string)$row->docdate,
+                    'ClassPovestka' => (string)$row->ClassPovestka,
+                    'Povestka' => (string)$row->Povestka
                 ]);
             }
         }

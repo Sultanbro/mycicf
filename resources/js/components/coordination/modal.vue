@@ -108,7 +108,7 @@
                                               class="resize modal-textarea-comment width100" disabled></textarea>
                                 </div>
                                 <div class="mt-4">
-                                    <div class="table-responsive-sm">
+                                    <div class="table-responsive-sm overflow-auto">
                                         <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
@@ -128,7 +128,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <div class="table-responsive-sm">
+                                    <div class="table-responsive-sm overflow-auto">
                                         <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>

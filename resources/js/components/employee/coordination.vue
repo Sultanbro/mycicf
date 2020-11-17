@@ -162,7 +162,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in AC" :key="info.isn">
-                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'AC', info)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -350,6 +350,12 @@
                     });
                     this.getDocRowList(data, type);
                 }
+                else if(type === 'AC' && data !== null) {
+                    this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                        this.setModalData(response.data);
+                    });
+                    this.getDocRowList(data, type);
+                }
                 else if (type === 'OTHER' && data !== null && data.ClassISN == '1784781') {
                     this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
                         this.setModalData(response.data);
@@ -398,6 +404,15 @@
                         this.setDocRowList(response.data, type);
                     }
                 }
+                else if(type === 'AC') {
+                    let response = await this.axios.post('/getDocRowList', {
+                        class_isn: data.ClassPovestka,
+                        doc_isn: data.Povestka,
+                    });
+                    if(response.data.success) {
+                        this.setDocRowList(response.data, type);
+                    }
+                }
                 if(type === 'OTHER') {
                     if(data.RefClassISN != '' && data.RefDocISN != '' && data.RefClassISN != null && data.RefDocISN != null) {
                         let response = await this.axios.post('/getDocRowList', {
@@ -418,6 +433,10 @@
             setDocRowList(response, type) {
                 switch (type) {
                     case 'SZ':
+                        this.doc_row_list = response.doc_row_list;
+                        this.doc_row_inner = response.doc_row_inner;
+                        break;
+                    case 'AC':
                         this.doc_row_list = response.doc_row_list;
                         this.doc_row_inner = response.doc_row_inner;
                         break;
