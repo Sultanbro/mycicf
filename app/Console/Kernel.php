@@ -50,6 +50,8 @@ class Kernel extends ConsoleKernel
                 ->everyMinute();
             $schedule->command('kolesaprices:file')
                 ->dailyAt('03:00')
+                ->timezone('Asia/Almaty');
+            $schedule->command('kolesaprices:file')
                 ->dailyAt('13:00')
                 ->timezone('Asia/Almaty');
 

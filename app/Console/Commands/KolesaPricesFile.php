@@ -53,9 +53,11 @@ class KolesaPricesFile extends Command
                 'updated_at' => $item->updated_at,
             ]);
         }
-        $fileName = 'kolesa_prices.txt';
-        if(Storage::disk('local')->put("public/$fileName", json_encode($result))){
-            echo 'Файл успешно обновлен';
+        if(count($result) > 0) {
+            $fileName = 'kolesa_prices.txt';
+            if (Storage::disk('local')->put("public/$fileName", json_encode($result))) {
+                echo 'Файл успешно обновлен';
+            }
         }
     }
 }

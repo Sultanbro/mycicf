@@ -362,6 +362,7 @@ Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
+Route::get('/kolesa/show-prices', 'SiteController@showPrices');
 Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
