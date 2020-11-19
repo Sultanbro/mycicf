@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
 {
@@ -520,6 +521,10 @@ class SiteController extends Controller
             ]);
         }
         return response()->json($result);
+    }
+
+    public function showPrices(){
+        return Storage::get('public/kolesa_prices.txt');
     }
 
     /**
