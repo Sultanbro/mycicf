@@ -367,6 +367,5 @@ Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
 Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
 //Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
 
-
-
-
+Route::get('/dashboard', 'DashboardController@index');
+Route::get('/backend/dashboard/get_receivables', 'BackendDashboardController@getReceivables')->name('getReceivables');
