@@ -242,9 +242,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/vote', 'NewsController@vote');
 
         Route::post('/setSenateVote', 'NewsController@senateVote');
-        //RATING
-        Route::get('/rating', 'RatingController@index')->name('rating');
-        Route::post('/getRatingList', 'RatingController@getRatingList');
+//        //RATING
+//        Route::get('/rating', 'RatingController@index')->name('rating');
+//        Route::post('/getRatingList', 'RatingController@getRatingList');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
@@ -339,6 +339,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
 
         //My results page
+        Route::get('rating', 'RatingController@index');
+        Route::post('getTopRatingList', 'RatingController@getTopRatingList');
+
+
         Route::get('my-results', 'CabinetController@index');
         Route::post('my-results/rating', 'CabinetController@getRatingList');
         Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
@@ -379,10 +383,6 @@ Route::get('test', function () {
 Route::get('test2', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
-//Cabinet
-Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
-Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
-//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
 
 
 

@@ -126,4 +126,8 @@ class RatingController extends Controller
     public function index() {
         return view('rating');
     }
+
+    public function getTopRatingList(Request $request, KiasServiceInterface $kias) {
+        $result = $kias;
+    }
 }

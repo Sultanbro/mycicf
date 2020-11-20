@@ -110,7 +110,6 @@ Vue.component('emoji-component', require('./components/news/emoji-component.vue'
 
 Vue.component('report', require('./components/employee/report.vue').default);
 
-Vue.component('rating', require('./components/employee/rating.vue').default);
 Vue.component('cabinet', require('./components/employee/cabinet.vue').default);
 
 Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
@@ -197,6 +196,8 @@ Vue.component('rating', require('./components/results/rating').default);
 Vue.component('motivation', require('./components/results/motivation').default);
 
 Vue.component('report', require('./components/results/report').default);
+
+Vue.component('rating-list', require('./components/results/rating-list').default);
 
 window.onload = function(){
     var app = new Vue({
