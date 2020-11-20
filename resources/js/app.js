@@ -199,6 +199,8 @@ Vue.component('report', require('./components/results/report').default);
 
 Vue.component('rating-list', require('./components/results/rating-list').default);
 
+Vue.component('employee-rate', require('./components/results/employee-rate').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

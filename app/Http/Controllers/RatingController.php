@@ -128,6 +128,11 @@ class RatingController extends Controller
     }
 
     public function getTopRatingList(Request $request, KiasServiceInterface $kias) {
-        $result = $kias;
+        $result = $kias->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => $request->class_isn,
+            'DOCISN' => $request->doc_isn,
+        ]);
+
+        dd($result);
     }
 }

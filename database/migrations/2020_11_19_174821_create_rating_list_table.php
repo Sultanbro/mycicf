@@ -15,6 +15,8 @@ class CreateRatingListTable extends Migration
     {
         Schema::create('rating_list', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('rate_mark');
+            $table->string('rate_mean');
             $table->timestamps();
         });
     }
