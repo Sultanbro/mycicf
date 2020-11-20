@@ -370,7 +370,7 @@ Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 Route::get('test', function () {
     return view('test');
 });
-Route::get('test2', function () {
+Route::get('test3', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
 //Cabinet
