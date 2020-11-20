@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <div class="modal fade bd-example-modal-lg height100vh" :id="`post-modal-${index}`">
+        <div class="modal fade bd-example-modal-lg height100vh" :id="`post-modal-${index}`" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="relative d-flex">

@@ -48,6 +48,13 @@ class Kernel extends ConsoleKernel
 //                ->weekly();
             $schedule->command('email:send')
                 ->everyMinute();
+            $schedule->command('kolesaprices:file')
+                ->dailyAt('03:00')
+                ->timezone('Asia/Almaty');
+            $schedule->command('kolesaprices:file')
+                ->dailyAt('13:00')
+                ->timezone('Asia/Almaty');
+
         }catch (\Exception $e){
             Log::error($e->getMessage());
         }
