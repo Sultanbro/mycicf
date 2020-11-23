@@ -231,7 +231,7 @@
                                             <div title="Согласовать"
                                                  v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
                                                  class="vertical-middle button-accept color-white-standart matching-buttons pl-4 pr-4 pt-1 pb-1"
-                                                 @click="$refs.eds.getToken('coordination',1)">
+                                                 @click="sendEdsSolution()">
                                                 <i class="far fa-check-circle"></i>
                                             </div>
                                             <div title="Согласовать"
@@ -344,7 +344,14 @@
                     });
                 }
             },
-
+            sendEdsSolution(){
+                if(this.$refs.eds.edsConfirmed){
+                    this.sendSolution(1);
+                } else {
+                    alert('Чтобы согласовать сначало надо подписать через ЭЦП');
+                    //$refs.eds.getToken('coordination', 1)
+                }
+            },
             close() {
                 this.$parent.$refs.modalButton.click()
             },
