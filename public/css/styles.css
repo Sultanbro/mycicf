@@ -94,6 +94,9 @@ ul{
 	.parse-top-company-select{
 		margin-right: 3rem;
 	}
+	.label-size{
+		font-size: 12px;
+	}
 }
 .flex-start{
 	display: flex;
@@ -154,6 +157,10 @@ ul{
 		align-items: flex-start !important;
 		margin-top: 0.25rem;
 	}
+	.label-size{
+		font-size: 12px;
+	}
+
 }
 @media (min-width: 900px) and (max-width: 1170px){
 	.centcoins-date-indicators div{
@@ -163,6 +170,9 @@ ul{
 	}
 	.centcoins-date-indicators div div{
 		margin-top: 0.25rem;
+	}
+	.label-size{
+		font-size: 12px;
 	}
 }
 .mobile-date-contain{
@@ -564,6 +574,9 @@ ul{
 	display: block;
 	/*transition: .3s ease-in-out;*/
 }
+div-size{
+	width: 60%!important;
+}
 @media (min-width: 350px){
 	.m-navbar{
 		width: 300px;
@@ -592,7 +605,6 @@ ul{
 .none{
 	display: none;
 }
-
 .color-blue{
 	color: #4267b2;
 }
@@ -614,27 +626,6 @@ ul{
 .modal-size{
     width: 155% !important;
     margin-left: -12rem;
-}
-.modal-d {
-	transition: transform 0.3s ease-out;
-	transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
-}
-.modal-d {
-	-webkit-transform: translate(0, 0);
-	transform: translate(0, 0);
-}
-.modal-d {
-	position: relative;
-	width: auto;
-	margin: 10px;
-}
-
-.modal-d {
-	width: 60%;
-	margin: 30px auto;
-}
-.bg-div{
-	background: #ffffff;
 }
 .fs-1_1{
     font-size: 1.1rem;
@@ -680,17 +671,6 @@ ul{
 }
 .blue-bg-all{
     background: #4267b2;
-}
-.img[src$="/mqdefault.jpg"] + iframe {
-	position: fixed;
-	z-index: 11;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	-moz-box-sizing: border-box; box-sizing: border-box;
-	border: solid rgba(0,0,0,.3);
-	border-width: 5vh 5vw;
 }
 .bg-WHITE{
 	background: #fff !important;
@@ -783,10 +763,6 @@ ul{
 	display: -webkit-inline-flex;
 	display: inline-flex;
 }
-.flex-cent{
-	display: flex;
-	align-items: center;
-}
 
 .margin-t-5{
 	margin-top: 2%;
@@ -806,7 +782,6 @@ ul{
 .flex-attention{
 	display: flex;
 	justify-content:flex-end !important;
-	align-items: center!important;
 }
 .att-flex-class {
     width: 270px !important;
@@ -815,16 +790,13 @@ ul{
 	display: flex;
 	justify-content:flex-start ;
 }
-.width-128{
-	width: 128%!important;
+.width-80{
+	width: 80%!important;
 }
 .width-35{
 	width:35%;!important;
 }
-.size-img{
-	max-width: 20px;
-	max-heidth:20px;
-}
+
 .margin-r-2{
 	margin-right: 2%;
 
@@ -1054,12 +1026,24 @@ ul{
 }
 .vertical-middle{
 	display: flex;
-	align-items: center;
+	align-items: start;
 }
 .vertical-m{
 	display: flex;
 	align-items: flex-start;
 }
+.color-icon{
+	color: #100cff;
+}
+.icon-flex{
+	display: flex;
+	justify-content: flex-start;
+}
+.icon-size{
+	font-size: 16px;
+	font-family: none;
+}
+
 .width100{
 	width: 100%;
 }
@@ -1114,12 +1098,6 @@ ul{
 	border-top-left-radius: 20px !important;
 	border-top-right-radius: 20px !important;
 }
-.bottom-border-modal{
-
-	border-radius: 20px !important;
-	border-radius: 20px !important;
-
-}
 .inline{
 	display: inline;
 }
@@ -1151,17 +1129,6 @@ ul{
 .color-white-standart{
 	color: #ffffff;
 }
-.color-icon{
-	color: #100cff;
-}
-.icon-flex{
-	display: flex;
-	justify-content: flex-start;
-}
-.icon-size{
-	font-size: 16px;
-	font-family: none;
-}
 .border-bottom-white{
 	border-bottom: 1px solid white;
 }
@@ -1178,16 +1145,16 @@ ul{
 	flex-direction: column;
 	width: 45%;
 	heiidh:35%
-    /*position: relative;
-	display: inline-block;
-	vertical-align: top;
-	text-align: left;
-	border-right: 1000px;
-	transition: 15s box-shadow;
-	padding: 2px;
-	heidth:40px;
-	max-width: 40px;
-	max-height: 40px;*/
+	/*position: relative;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    border-right: 1000px;
+    transition: 15s box-shadow;
+    padding: 2px;
+    heidth:40px;
+    max-width: 40px;
+    max-height: 40px;*/
 }
 .img-fx{
 	display: flex;
@@ -1320,6 +1287,9 @@ ul{
 @media only screen and (max-width: 700px){
 	.modal-content {
 		width: 90%;
+	}
+	.label-size{
+		font-size: 12px;
 	}
 }
 /*Стили страницы входа*/
@@ -1778,9 +1748,6 @@ body {
 .width-100-imp{
 	width: 100% !important;
 }
-.widthMax{
-	width:max-content;
-}
 .data-chart-pie{
 	width: 100% !important;
 }
@@ -1900,10 +1867,7 @@ body {
 /*:-ms-input-placeholder      {color:#fff;}*/
 
 /*MEDIA*/
-.label-size{
-	font-family: "Times New Roman";
-	font-size:18px;
-}
+
 @media (max-width: 800px){
 	.ad-flex-column-800{
 		display: flex;
@@ -1980,10 +1944,6 @@ body {
 	.data-chart-pie{
 		padding-left: 0;
 	}
-	.label-size{
-		font-family: "Times New Roman";
-		font-size:15px;
-	}
 }
 @media(max-width: 440px) {
 	.ad-flex-column-440{
@@ -1994,10 +1954,6 @@ body {
 	.ad-alignitems-end-440{
 		align-items: flex-end;
 		display: flex;
-	}
-	.label-size{
-		font-family: "Times New Roman";
-		font-size:12px;
 	}
 }
 
