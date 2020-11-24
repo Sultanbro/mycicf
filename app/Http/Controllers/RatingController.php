@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Library\Services\KiasServiceInterface;
+use App\RatingList;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller
@@ -128,11 +129,44 @@ class RatingController extends Controller
     }
 
     public function getTopRatingList(Request $request, KiasServiceInterface $kias) {
-        $result = $kias->request('User_CicGetDocRowAttr', [
-            'CLASSISN' => $request->class_isn,
-            'DOCISN' => $request->doc_isn,
+//        $result = $kias->request('User_CicGetDocRowAttr', [
+//            'CLASSISN' => $request->class_isn,
+//            'DOCISN' => $request->doc_isn,
+//        ]);
+
+        $available_rating_kias = $kias->request('User_CicGetDocRating', [
+            'Classisn' => 1003961,
         ]);
 
-        dd($result);
+        $available_rating_list = array();
+
+        foreach ($available_rating_kias->ROWSET->row as $row) {
+            array_push($available_rating_list, (int)$row->DocISN);
+        }
+
+        $docs_isn = RatingList::groupBy('doc_isn')->pluck('doc_isn')->toArray();
+
+        $found_docs = array();
+
+        foreach ($available_rating_list as $element) {
+            if(in_array($element, $docs_isn) == true) {
+                continue;
+            }
+            else {
+                array_push($found_docs, $element);
+            }
+        }
+
+        dd($found_docs);
+
+//        dd($response);
+
+//        $rating = RatingList::groupBy('doc_isn')->pluck('doc_isn')->toArray();
+
+//        dd(empty($rating));
+
+//        dd($result);
+
+//        dd($result->DocRow->row[0]);
     }
 }

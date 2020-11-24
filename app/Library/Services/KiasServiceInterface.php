@@ -287,4 +287,17 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd);
+
+    /**
+     * @param $class_isn
+     * @param $doc_isn
+     * @return mixed
+     */
+    public function getDocRowAttr($class_isn, $doc_isn);
+
+    /**
+     * @param $class_isn
+     * @return mixed
+     */
+    public function getDocRating($class_isn);
 }

@@ -703,4 +703,22 @@ class Kias implements KiasServiceInterface
             'DATEEND' => date('d.m.Y', strtotime($dateEnd)),
         ]);
     }
+
+    /**
+     * @param $class_isn
+     * @param $doc_isn
+     * @return mixed|SimpleXMLElement
+     */
+    public function getDocRowAttr($class_isn, $doc_isn) {
+        return $this->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => $class_isn,
+            'DOCISN'   => $doc_isn,
+        ]);
+    }
+
+    public function getDocRating($class_isn) {
+        return $this->request('User_CicGetDocRating', [
+            'Classisn' => $class_isn,
+        ]);
+    }
 }

@@ -44,33 +44,14 @@
 </script>
 
 <style scoped>
-    .rating-list-container:first-child {
-        border-top: 1px solid #EEE;
-    }
-    .rating-list-container {
-        border-bottom: 1px solid #EEE;
-        border-top: 1px solid #EEE;
-    }
-    .rating-list-container:last-child {
-        border: 0;
-    }
-
     .rating-list {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-top: 1px solid #EEE;
         padding: 0.5rem 1rem;
         width: 100%;
     }
-
-    .rating-list:first-child {
-        border-top: 1px solid #EEE;
-    }
-
-    .rating-list:last-child {
-        border: 0;
-    }
-
     .employee-rating {
         color: cornflowerblue;
         font-weight: bold;

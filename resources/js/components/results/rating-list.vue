@@ -42,7 +42,7 @@
             }
         },
         mounted() {
-            // this.getTopRatingList();
+            this.getTopRatingList();
         },
         methods: {
             getTopRatingList() {
