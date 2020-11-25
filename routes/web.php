@@ -339,7 +339,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
 
         //My results page
-        Route::get('rating', 'RatingController@index');
+        Route::get('rating', 'RatingController@index')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
 
 
