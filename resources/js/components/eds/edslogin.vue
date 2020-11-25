@@ -82,7 +82,8 @@
                 base64String: 'dGVzdA==',
                 selectedECPFile: '',
                 signedFile:'',
-                signedFileInfo: []
+                signedFileInfo: [],
+                edsConfirmed: false
             }
         },
         props: {
@@ -512,6 +513,7 @@
                                     }
                                 }
                             } else {
+                                this.edsConfirmed = true;
                                 self.loader(false);
                             }
 
