@@ -88,10 +88,10 @@
         data() {
             return {
                 treeOptions: null,
-                dateBeg: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1, 6).toJSON().slice(0, 7),
+                dateBeg: this.begin !== undefined ? this.begin : new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1, 6).toJSON().slice(0, 7),
                 imageUrl: null,
                 fakeImage: false,
-                userISN: this.propsUserISN,
+                userISN: this.isn,
                 emplRate: null,
                 emplDuty: null,
                 emplName: null,
@@ -120,7 +120,8 @@
             this.imageUrl = "/storage/images/employee/" + this.emplISN + ".png";
         },
         props: {
-            propsUserISN: Number
+            isn: Number,
+            begin: String,
         },
         methods: {
             getTreeOptions() {
@@ -138,7 +139,7 @@
             },
             setTreeOptions(data) {
                 this.treeOptions = data.result;
-                this.userISN = data.value;
+                // this.userISN = data.value;
             },
             getRating() {
                 this.preloader(true);

@@ -31,7 +31,7 @@
                     @endif
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('development', 'results')}}">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('my-results')}}">
                 <li class="leftsidebar-icons">
                     <i class="far fa-star" aria-hidden="true"></i>
                     <span>Мои результаты</span>

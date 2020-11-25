@@ -133,7 +133,7 @@ class RatingController extends Controller
 
         $rating_date = date('Y-m-t', strtotime($rating_date));
 
-        $rating = RatingList::where('rating_date', $rating_date)->get(['employee', 'employee_isn', 'department', 'rate_mark', 'rate_mean']);
+        $rating = RatingList::where('rating_date', $rating_date)->get(['employee', 'employee_isn', 'department', 'rate_mark', 'rate_mean', 'rating_date']);
 
         $rate_a = array();
         $rate_b = array();
@@ -147,7 +147,8 @@ class RatingController extends Controller
                     'employee_isn'  => $rate->employee_isn,
                     'department'    => $rate->department,
                     'rate_mark'     => $rate->rate_mark,
-                    'rate_mean'     => $rate->rate_mean
+                    'rate_mean'     => $rate->rate_mean,
+                    'rating_date'   => date('Y-m', strtotime($rate->rating_date))
                 ]);
             }
             elseif($rate->rate_mark == 'B' || $rate->rate_mark == 'B+' || $rate->rate_mark == 'B-') {
@@ -156,7 +157,8 @@ class RatingController extends Controller
                     'employee_isn'  => $rate->employee_isn,
                     'department'    => $rate->department,
                     'rate_mark'     => $rate->rate_mark,
-                    'rate_mean'     => $rate->rate_mean
+                    'rate_mean'     => $rate->rate_mean,
+                    'rating_date'   => date('Y-m', strtotime($rate->rating_date))
                 ]);
             }
             elseif($rate->rate_mark == 'C') {
@@ -165,7 +167,8 @@ class RatingController extends Controller
                     'employee_isn'  => $rate->employee_isn,
                     'department'    => $rate->department,
                     'rate_mark'     => $rate->rate_mark,
-                    'rate_mean'     => $rate->rate_mean
+                    'rate_mean'     => $rate->rate_mean,
+                    'rating_date'   => date('Y-m', strtotime($rate->rating_date))
                 ]);
             }
             else {
@@ -174,7 +177,8 @@ class RatingController extends Controller
                     'employee_isn'  => $rate->employee_isn,
                     'department'    => $rate->department,
                     'rate_mark'     => $rate->rate_mark,
-                    'rate_mean'     => $rate->rate_mean
+                    'rate_mean'     => $rate->rate_mean,
+                    'rating_date'   => date('Y-m', strtotime($rate->rating_date))
                 ]);
             }
         }

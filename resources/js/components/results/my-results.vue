@@ -21,9 +21,9 @@
             </div>
         </div>
         <div>
-            <rating v-if="viewType === 'rating'" :propsUserISN="propsUserISN"></rating>
-            <motivation v-if="viewType === 'motivation'" :propsUserISN="propsUserISN"></motivation>
-            <report v-if="viewType === 'report'" :propsUserISN="propsUserISN"></report>
+            <rating v-if="viewType === 'rating'" :isn="isn" :begin="begin"></rating>
+            <motivation v-if="viewType === 'motivation'" :isn="isn"></motivation>
+            <report v-if="viewType === 'report'" :isn="isn"></report>
         </div>
     </div>
 </template>
@@ -37,7 +37,11 @@
             }
         },
         props: {
-            propsUserISN: Number,
+            isn: Number,
+            begin: String
+        },
+        mounted() {
+            console.log(this.isn);
         }
     }
 </script>

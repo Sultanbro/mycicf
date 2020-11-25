@@ -247,8 +247,6 @@ class UpdateRatingList extends Command
                 DB::rollBack();
             }
         }
-//        $columns = Schema::getColumnListing('rating_list');
-//        dd($rating_array);
     }
 
     public function getAvailableRatingList($kias) {

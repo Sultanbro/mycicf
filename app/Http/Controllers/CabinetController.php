@@ -51,7 +51,7 @@ class CabinetController extends Controller
     public function index(Request $request)
     {
         if(isset($request->ISN)) {
-            return view('my-results')->with('employee_isn', $request->ISN)->with('rating_date', $request->rating_date);
+            return view('my-results')->with('employee_isn', $request->ISN)->with('rating_date', (string)$request->rating_date);
         }
         else {
             return view('my-results');

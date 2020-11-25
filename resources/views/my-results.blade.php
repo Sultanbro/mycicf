@@ -44,9 +44,9 @@
 
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
             @if(isset($employee_isn))
-                <my-results :propsUserISN="{{$employee_isn}}"></my-results>
+                <my-results :isn="{{$employee_isn}}" :begin="'{{$rating_date}}'"></my-results>
             @else
-                <my-results :propsUserISN="{{Auth::user()->ISN}}"></my-results>
+                <my-results :isn="{{Auth::user()->ISN}}"></my-results>
             @endif
         </div>
 

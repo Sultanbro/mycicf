@@ -5,7 +5,7 @@
                 <div>
                     <div>
                         <span>
-                            <a :href="`/my-results/rating/${rate.employee_isn}`">{{rate.employee}}</a>
+                            <a :href="`/my-results/rating/${rate.employee_isn}/${rate.rating_date}`">{{rate.employee}}</a>
                         </span>
                     </div>
                     <div>
