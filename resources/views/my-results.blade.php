@@ -43,10 +43,11 @@
         @include('layouts.sidebar')
 
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <my-results :propsUserISN="{{Auth::user()->ISN}}"></my-results>
-{{--           <cabinet :isn="{{ Auth::user()->ISN }}"></cabinet>--}}
-{{--            <motivation :isn="{{ Auth::user()->ISN }}">--}}
-{{--            </motivation>--}}
+            @if(isset($employee_isn))
+                <my-results :propsUserISN="{{$employee_isn}}"></my-results>
+            @else
+                <my-results :propsUserISN="{{Auth::user()->ISN}}"></my-results>
+            @endif
         </div>
 
         {{--RIGHT SIDE BAR GOES HERE--}}

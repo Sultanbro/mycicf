@@ -344,6 +344,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
 
         Route::get('my-results', 'CabinetController@index');
+        Route::get('my-results/rating/{ISN}/', 'CabinetController@index');
         Route::post('my-results/rating', 'CabinetController@getRatingList');
         Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
 //Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');

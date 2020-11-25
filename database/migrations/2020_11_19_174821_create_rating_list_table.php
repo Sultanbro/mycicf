@@ -19,8 +19,8 @@ class CreateRatingListTable extends Migration
             $table->tinyInteger('rate_mean')->comment('Среднее значение по показателям'); //2
             $table->string('employee')->comment('Сотрудник'); //3
             $table->integer('employee_isn')->index()->comment('ИСН сотрудника'); //3 value
-            $table->string('department')->comment('Подразделение'); //5
-            $table->string('duty')->comment('Должность'); //6
+            $table->string('department')->nullable()->default('')->comment('Подразделение'); //5
+            $table->string('duty')->nullable()->default('')->comment('Должность'); //6
             $table->integer('rentability')->comment('Рентабельность, %'); //7
             $table->integer('execution_plan')->comment('Исполнение плана, %'); //8
             $table->integer('cost_price')->comment('Себестоимость, %'); //9

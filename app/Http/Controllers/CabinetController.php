@@ -48,9 +48,14 @@ class CabinetController extends Controller
         'Loyality'       => 'Количество проработанных лет',
     );
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('my-results');
+        if(isset($request->ISN)) {
+            return view('my-results')->with('employee_isn', $request->ISN)->with('rating_date', $request->rating_date);
+        }
+        else {
+            return view('my-results');
+        }
     }
 
     public function getRatingList(Request $request, KiasServiceInterface $kias)

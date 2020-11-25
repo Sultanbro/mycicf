@@ -1,31 +1,24 @@
 <template>
     <div>
-        <div class="results-container mt-3 mb-3">
+        <div class="rating-search p-4 mb-3 mt-3">
+            <div>
+                <label for="rating-input">
+                    <input id="rating-input" type="month" class="rating-date-input" v-model="ratingDate">
+                </label>
+            </div>
+            <div class="rating-search-btn" @click="getTopRatingList">
+                <span>Показать</span>
+            </div>
+        </div>
+
+        <div class="results-container mt-3 mb-3" v-for="(rating, index) in ratingList">
             <div class="w-100">
-                <div class="">
-                    <div class="p-3 pointer" data-toggle="collapse" href="#sick_days" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        <strong>Рейтинг A+</strong>
+                <div class>
+                    <div class="p-3 pointer" data-toggle="collapse" :href="`#rating-${index}`" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <strong>Рейтинг {{index}}</strong>
                     </div>
-                    <div class="collapse" id="sick_days">
-                        <employee-rate></employee-rate>
-<!--                        <div class="rating-list-container">-->
-<!--                            <div class="rating-list w-100">-->
-<!--                                <div>-->
-<!--                                    <div>-->
-<!--                                        <span>Имя Фамилия</span>-->
-<!--                                    </div>-->
-<!--                                    <div>-->
-<!--                                        <span><small>Подразделение</small></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div>-->
-<!--                                    <div class="text-center">-->
-<!--                                        <div>Рейтинг</div>-->
-<!--                                        <h4 class="employee-rating">A</h4>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                    <div class="collapse" :id="`rating-${index}`">
+                        <employee-rate :rating="rating"></employee-rate>
                     </div>
                 </div>
             </div>
@@ -39,6 +32,7 @@
         data() {
             return {
                 ratingList: [],
+                ratingDate: new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 10).toJSON().slice(0, 7),
             }
         },
         mounted() {
@@ -46,15 +40,31 @@
         },
         methods: {
             getTopRatingList() {
+                this.preloader(true);
                 this.axios.post('/getTopRatingList',
                     {
-                        class_isn: '1003961',
-                        doc_isn: '34256169'
+                        rating_date: this.ratingDate
                     })
                     .then(response => {
-                        console.log(response);
+                        this.setTopRatingList(response.data);
                     })
-            }
+                    .catch(error => {
+                        alert(error);
+                    })
+                    .finally(() => {
+                        this.preloader(false);
+                    })
+            },
+            setTopRatingList(data) {
+                this.ratingList = data.rating_list;
+            },
+            preloader(show) {
+                if (show) {
+                    document.getElementById('preloader').style.display = 'flex';
+                } else {
+                    document.getElementById('preloader').style.display = 'none';
+                }
+            },
         }
     }
 </script>
@@ -67,24 +77,33 @@
         justify-content: center;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
-    /*.rating-list {*/
-    /*    display: flex;*/
-    /*    justify-content: space-between;*/
-    /*    align-items: center;*/
-    /*    padding: 0.5rem 1rem;*/
-    /*    border-bottom: 1px solid #EEE;*/
-    /*    width: 100%;*/
-    /*}*/
-    /*.rating-list:first-child {*/
-    /*    border-top: 1px solid #EEE;*/
-    /*}*/
-    /*.rating-list:last-child {*/
-    /*    border: 0;*/
-    /*}*/
-    /*.employee-rating {*/
-    /*    color: cornflowerblue;*/
-    /*    font-weight: bold;*/
-    /*    padding: 0;*/
-    /*    margin: 0;*/
-    /*}*/
+    label {
+        padding: 0;
+        margin: 0;
+    }
+    .rating-search {
+        background-color: #FFF;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .rating-date-input {
+        padding: 4px;
+        border: 1px solid #DDD;
+    }
+    .rating-search-btn {
+        display: flex;
+        padding: 5px 15px;
+        cursor: pointer;
+        color: cornflowerblue;
+        border: 1px solid cornflowerblue;
+        transition: 0.4s ease;
+    }
+    .rating-search-btn:hover {
+        background-color: cornflowerblue;
+        box-shadow: 0 0 20px rgba(47, 100, 187, 0.3);
+        color: #FFF;
+    }
 </style>

@@ -128,45 +128,67 @@ class RatingController extends Controller
         return view('rating');
     }
 
-    public function getTopRatingList(Request $request, KiasServiceInterface $kias) {
-//        $result = $kias->request('User_CicGetDocRowAttr', [
-//            'CLASSISN' => $request->class_isn,
-//            'DOCISN' => $request->doc_isn,
-//        ]);
+    public function getTopRatingList(Request $request) {
+        $rating_date = $request->rating_date;
 
-        $available_rating_kias = $kias->request('User_CicGetDocRating', [
-            'Classisn' => 1003961,
-        ]);
+        $rating_date = date('Y-m-t', strtotime($rating_date));
 
-        $available_rating_list = array();
+        $rating = RatingList::where('rating_date', $rating_date)->get(['employee', 'employee_isn', 'department', 'rate_mark', 'rate_mean']);
 
-        foreach ($available_rating_kias->ROWSET->row as $row) {
-            array_push($available_rating_list, (int)$row->DocISN);
-        }
+        $rate_a = array();
+        $rate_b = array();
+        $rate_c = array();
+        $rate_d = array();
 
-        $docs_isn = RatingList::groupBy('doc_isn')->pluck('doc_isn')->toArray();
-
-        $found_docs = array();
-
-        foreach ($available_rating_list as $element) {
-            if(in_array($element, $docs_isn) == true) {
-                continue;
+        foreach ($rating as $rate) {
+            if($rate->rate_mark == 'A' || $rate->rate_mark == 'A-') {
+                array_push($rate_a, [
+                    'employee'      => $rate->employee,
+                    'employee_isn'  => $rate->employee_isn,
+                    'department'    => $rate->department,
+                    'rate_mark'     => $rate->rate_mark,
+                    'rate_mean'     => $rate->rate_mean
+                ]);
+            }
+            elseif($rate->rate_mark == 'B' || $rate->rate_mark == 'B+' || $rate->rate_mark == 'B-') {
+                array_push($rate_b, [
+                    'employee'      => $rate->employee,
+                    'employee_isn'  => $rate->employee_isn,
+                    'department'    => $rate->department,
+                    'rate_mark'     => $rate->rate_mark,
+                    'rate_mean'     => $rate->rate_mean
+                ]);
+            }
+            elseif($rate->rate_mark == 'C') {
+                array_push($rate_c, [
+                    'employee'      => $rate->employee,
+                    'employee_isn'  => $rate->employee_isn,
+                    'department'    => $rate->department,
+                    'rate_mark'     => $rate->rate_mark,
+                    'rate_mean'     => $rate->rate_mean
+                ]);
             }
             else {
-                array_push($found_docs, $element);
+                array_push($rate_d, [
+                    'employee'      => $rate->employee,
+                    'employee_isn'  => $rate->employee_isn,
+                    'department'    => $rate->department,
+                    'rate_mark'     => $rate->rate_mark,
+                    'rate_mean'     => $rate->rate_mean
+                ]);
             }
         }
 
-        dd($found_docs);
+        $rating_list = array(
+            'rating_list' => array(
+                'A' => $rate_a,
+                'B' => $rate_b,
+                'C' => $rate_c,
+                'D' => $rate_d
+            ),
+            'success' => true,
+        );
 
-//        dd($response);
-
-//        $rating = RatingList::groupBy('doc_isn')->pluck('doc_isn')->toArray();
-
-//        dd(empty($rating));
-
-//        dd($result);
-
-//        dd($result->DocRow->row[0]);
+        return response()->json($rating_list);
     }
 }
