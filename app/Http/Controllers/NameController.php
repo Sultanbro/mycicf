@@ -30,4 +30,7 @@ class NameController extends Controller
     public function getView() {
         return view('name');
     }
+    public function getRecruiting() {
+        return view('recruiting');
+    }
 }

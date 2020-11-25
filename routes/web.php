@@ -228,6 +228,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //RATING
         Route::get('/rating', 'RatingController@index')->name('rating');
         Route::post('/getRatingList', 'RatingController@getRatingList');
+
+        //RECRUITING
+        Route::get('/recruiting', 'NameController@getRecruiting')->name('recruiting');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');

@@ -2490,3 +2490,227 @@ textarea::-webkit-scrollbar-thumb {
 .white-space {
     white-space: unset !important;
 }
+.tripplebar{
+    display: flex;
+    justify-content: space-around;
+    background: #fff;
+    margin: 0 2rem;
+    padding: 2rem 0;
+    border-radius: 1rem;
+}
+.tripplebar-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: -2px 2px 9px 0px darkgrey;
+    border-radius: 0.8rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    color: darkgray;
+    font-family: franklin gothic medium;
+    overflow: hidden;
+}
+
+.tripplebar_btn_active:hover{
+    background: #658ede !important;
+}
+.tripplebar-btn:hover{
+    background: darkgray;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.15s easy-in-out;
+}
+.tripplebar-btn .far, .fas{
+    margin-right: 1rem;
+}
+.tripplebar-btn i{
+    font-size: 2rem;
+}
+.recruiting-header{
+    display: flex;
+    padding-left: 5rem;
+    margin-top: 2rem;
+}
+.recruiting-header .rec-active{
+    color: #275cc7;
+}
+.recruiting-header-tab{
+
+}
+.recruiting-header-tab-inner{
+    padding: 1rem 2rem 0.10rem;
+    border-bottom: 1px solid #275cc7;
+    text-transform: uppercase;
+    font-weight: bold;
+    background: #fff;
+}
+.bg-gray{
+    background: #f8fbff;
+}
+.recruiting-container{
+    margin: 2rem;
+}
+.recruiting-header-tab-inner{
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
+    font-size: 0.9rem;
+}
+.tripplebar_btn_active{
+    color: #fff;
+    background: #275cc7;
+}
+.recruiting-body{
+    background: #fff;
+    padding: 5rem 5rem;
+}
+.recruiting-body input{
+    padding-left: 1rem;
+}
+.recruiting-body select{
+    padding-left: 1rem;
+}
+
+.recruiting-select{
+    background: #f0f3f6;
+    border: 1px solid #d5d5d5;
+    border-radius: 0.4rem;
+    height: 2.5rem;
+    width: 100%;
+}
+.recruiting-select:hover{
+    cursor: pointer;
+}
+.recruiting-textarea:hover{
+    cursor: pointer;
+}
+.recruiting-select-header{
+    margin-bottom: 0.75rem;
+    margin-top: 2rem;
+}
+.recruiting-double-block{
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: 2rem;
+}
+.recruiting-tripple-block-center{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    padding: 0;
+}
+.recruiting-tripple-block-container{
+    display: flex;
+    justify-content: space-between;
+}
+.recruiting-tripple-block{
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    padding: 0;
+    margin-top: 2rem;
+}
+.recruiting-textarea{
+    background: #f0f3f6;
+    border: 1px solid #d5d5d5;
+    border-radius: 0.4rem;
+    height: 5rem;
+    resize: none;
+    width: 100%;
+    padding-left: 1rem;
+}
+.recruiting-simple-block{
+    display: flex;
+    align-items: center;
+    background: #f0f3f6;
+    border: 1px solid #d5d5d5;
+    border-radius: 0.4rem;
+    padding: 1rem 2.75rem;
+}
+.recruiting-simple-block:hover{
+    cursor: pointer;
+}
+.recruiting-simple-block-container{
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0;
+}
+.recruiting-btn-container{
+    display: flex;
+    justify-content: flex-end;
+}
+.recruiting-btn{
+    background: #275cc7;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 0.4rem;
+    padding: 0.75rem 4rem;
+    cursor: pointer;
+}
+.recruiting-btn:hover{
+    background: #1f4aa2;
+}
+.recruiting-striped{
+    font-size: 0.9rem;
+}
+.recruiting-striped > tbody > tr:nth-child(2n + 1) > td, .recruiting-striped > tbody > tr:nth-child(2n + 1) > th {
+    background-color: #f1f4f7;
+}
+.recruiting-striped th{
+    color: #3c6ccc;
+}
+.recruiting-striped thead th {
+    vertical-align: top !important;
+}
+.recruiting-striped thead th:not(:last-child),td:not(:last-child) {
+    border-right: 1px dashed #3c6ccc;
+}
+.recruiting-center{
+    text-align: center;
+}
+.recruiting-interwiew-table td:last-child{
+    color: #1e982a;
+}
+.recruiting-modal-size{
+    max-width: 900px !important;
+}
+.modal-header-general{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    width: 100%;
+}
+.modal-margin-general{
+    margin: 0 5rem;
+}
+.modal-cell-general{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+.recruiting-modal-general{
+    background: #f0f3f6;
+    border: 1px solid darkgray;
+    border-radius: 0.5rem;
+    padding: 0.3rem 2rem;
+}
+.recruiting-upload-general{
+    background: #fff;
+    border: 1px solid darkgray;
+    border-radius: 0.5rem;
+    padding: 0.2rem 2rem;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+@media (max-width: 1400px){
+ .tripplebar-btn{
+     flex-flow: column-reverse;
+     word-break: break-word;
+ }
+ .tripplebar-btn .far, .fas {
+     margin-right: 0;
+ }
+}
