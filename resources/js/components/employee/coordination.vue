@@ -405,13 +405,17 @@
                     }
                 }
                 else if(type === 'AC') {
-                    let response = await this.axios.post('/getDocRowList', {
-                        class_isn: data.ClassPovestka,
-                        doc_isn: data.Povestka,
-                    });
-                    if(response.data.success) {
-                        this.setDocRowList(response.data, type);
+                    if(data.ClassPovestka !== '' && data.Povestka !== '') {
+                        let response = await this.axios.post('/getDocRowList', {
+                            class_isn: data.ClassPovestka,
+                            doc_isn: data.Povestka,
+                        });
+                        if(response.data.success) {
+                            this.setDocRowList(response.data, type);
+                        }
                     }
+                    else
+                        return 0;
                 }
                 if(type === 'OTHER') {
                     if(data.RefClassISN != '' && data.RefDocISN != '' && data.RefClassISN != null && data.RefDocISN != null) {
