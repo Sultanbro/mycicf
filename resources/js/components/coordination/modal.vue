@@ -128,7 +128,7 @@
 
                                         <table class="table table-bordered table-striped">
                                             <tbody>
-                                            <tr v-for="(list, index) in doc_row_list">
+                                            <tr v-for="(list, index) in doc_row_list" v-if="doc_row_inner[index][0] !== ''">
                                                 <td>
                                                     <b>{{list.fieldname}}</b>
                                                 </td>

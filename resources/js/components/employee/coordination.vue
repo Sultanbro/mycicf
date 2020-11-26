@@ -380,7 +380,7 @@
                 {
                     alert('ERROR')
                 }
-                // this.preloader(false);
+                this.preloader(false);
             },
             getAttachments () {
                 var vm = this;
