@@ -3,11 +3,11 @@
         <div class="rating-search p-4 mb-3">
             <div>
                 <label for="rating-input">
-                    <input id="rating-input" type="month" class="rating-date-input" v-model="dateBeg">
+                    <input id="rating-input" type="month" class="rating-date-input" v-model="rating_date">
                 </label>
             </div>
             <div>
-                <treeselect v-model="userISN" :options="treeOptions" :multiple="false"></treeselect>
+                <treeselect v-model="employee_isn" :options="treeOptions" :multiple="false"></treeselect>
             </div>
             <div class="rating-search-btn" @click="getRating">
                 <span>Показать</span>
@@ -23,14 +23,14 @@
                     </div>
                     <div>
                         <h5>
-                            <a :href="`/colleagues/${this.emplISN}/dossier`" class="text-dark">{{this.emplName}}</a>
+                            <a :href="`/colleagues/${this.employee_info.isn}/dossier`" class="text-dark">{{this.employee_info.fullname}}</a>
                         </h5>
-                        <div>{{this.emplDuty}}</div>
+                        <div>{{this.employee_info.duty}}</div>
                     </div>
                 </div>
                 <div class="text-center">
                     <div>Рейтинг</div>
-                    <h2 class="employee-rating">{{this.emplRate}}</h2>
+                    <h2 class="employee-rating">{{this.employee_info.rate_mark}}</h2>
                 </div>
             </div>
             <div class="rating-table mt-3">
@@ -64,7 +64,7 @@
                     <span>Итоговая оценка:</span>
                 </div>
                 <div>
-                    <span>{{this.meanShare}}</span>
+                    <span>{{this.employee_info.rate_mean}}</span>
                 </div>
             </div>
         </div>
@@ -88,17 +88,16 @@
         data() {
             return {
                 treeOptions: null,
-                dateBeg: this.begin !== undefined ? this.begin : new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1, 6).toJSON().slice(0, 7),
+                rating_date: this.begin !== undefined ? this.begin : new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1, 10).toJSON().slice(0, 7),
                 imageUrl: null,
                 fakeImage: false,
-                userISN: this.isn,
-                emplRate: null,
-                emplDuty: null,
-                emplName: null,
-                emplISN: null,
-                meanShare: null,
+                employee_isn: this.isn,
                 showRating: false,
                 showChart: false,
+
+                employee_info: {},
+                chart_data: {},
+
                 ratings: [],
 
                 chartOptions: {
@@ -113,11 +112,11 @@
             }
         },
         mounted() {
-            this.imageUrl = "/storage/images/employee/" + this.emplISN + ".png";
+            this.imageUrl = "/storage/images/employee/" + this.employee_info.isn + ".png";
             this.getTreeOptions();
         },
         updated() {
-            this.imageUrl = "/storage/images/employee/" + this.emplISN + ".png";
+            this.imageUrl = "/storage/images/employee/" + this.employee_info.isn + ".png";
         },
         props: {
             isn: Number,
@@ -139,15 +138,14 @@
             },
             setTreeOptions(data) {
                 this.treeOptions = data.result;
-                // this.userISN = data.value;
             },
             getRating() {
                 this.preloader(true);
                 this.showRating = false;
-                this.axios.post('/my-results/rating',
+                this.axios.post('/my-results/getRating',
                     {
-                        user_isn: this.userISN,
-                        begin_date: this.dateBeg,
+                        employee_isn: this.employee_isn,
+                        rating_date: this.rating_date,
                     })
                     .then(response => {
                         if (response.data.success) {
@@ -166,19 +164,13 @@
                     })
             },
             setRating(data) {
-                this.ratings = data.rating;
-                this.emplRate = data.emplRate;
-                this.emplDuty = data.emplDuty;
-                this.meanShare = data.meanShare;
-                this.emplName = data.emplName;
-                this.emplISN = data.emplISN;
+                this.employee_info = data.employee_info;
+                this.ratings = data.employee_rate;
                 this.showRating = true;
-
             },
             setChartData(data) {
-                this.chartOptions.xaxis.categories = data.xAxis;
-                this.series[0].data = data.yAxis;
-
+                this.chartOptions.xaxis.categories = data.chart_data.x_axis;
+                this.series[0].data = data.chart_data.y_axis;
             },
             preloader(show) {
                 if (show) {

@@ -55,7 +55,6 @@
         justify-content: center;
         padding: 0 1rem;
         color: #000;
-        /*border: 1px solid #000;*/
         margin-right: 0.5rem;
     }
     .rate-mark {
@@ -64,7 +63,6 @@
         align-items: center;
         justify-content: center;
         color: cornflowerblue;
-        /*border: 1px solid cornflowerblue;*/
         padding: 0 1rem;
     }
 </style>
