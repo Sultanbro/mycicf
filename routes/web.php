@@ -237,6 +237,11 @@ Route::get('test', function (){
     return view('test');
 });
 
-Route::get('ttt', 'OracleController@test');
+Route::get('ajax/getReceivables', 'BackendDashboardController@getReceivables')->name('getReceivables');
+Route::get('ajax/getReceivablesJur', 'BackendDashboardController@getReceivablesJur')->name('getReceivablesJur');
+Route::get('ajax/getReceivablesByClass', 'BackendDashboardController@getReceivablesByClass')->name('getReceivablesByClass');
+Route::get('fromOracle/getProlongation', 'OracleController@getProlongation');
 Route::get('tt', 'OracleController@DZnewGani');
+Route::get('fromOracle/getReceivables', 'OracleController@DZnewGani');
 Route::get('sub', 'OracleController@subject');
+Route::get('dashboard', 'DashboardController@index');
