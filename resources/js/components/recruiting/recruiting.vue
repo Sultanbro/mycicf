@@ -181,46 +181,91 @@
                             </select>
                         </div>
                     </div>
-                    <div class="recruiting-tripple-block-container">
-                        <div class="recruiting-tripple-block-center col-md-4">
-                            <div>
-                                Язык и уровень владения:
-                            </div>
-                        </div>
-                        <div class="recruiting-tripple-block col-md-4">
-                            <div>
-                                <select class="recruiting-select" v-model="languageAndLvl[0].languageSelect">
-                                    <option v-for="inner in languageAndLvl[0].language">{{inner}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="recruiting-tripple-block col-md-4">
-                            <div>
-                                <select class="recruiting-select" v-model="languageAndLvl[0].lvlSelect">
-                                    <option v-for="inner in languageAndLvl[0].lvl">{{inner}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="recruiting-simple-block-container">
-                        <div class="recruiting-simple-block" @click="addLanguage">
-                            <i class="fas fa-plus-circle"></i>
-                            <div>Добавить язык</div>
-                        </div>
-                    </div>
+
+                    <!--Язык и уровень владения-->
                     <div>
-                        Оплата труда
-                    </div>
-                    <div class="recruiting-tripple-block-container">
-                        <div class="recruiting-tripple-block-center col-md-7">
-                            <div>
-                                На испытательный срок и после испытательного срока:
+                        <div class="recruiting-tripple-block-container" v-for="newLanguageBlock in newLanguageBlocks">
+                            <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>
+                            <div class="recruiting-tripple-block col-md-4">
+                                <select class="recruiting-select" v-model="newLanguageBlock.language">
+                                    <option v-for="(language, key) in newLanguageBlock.languages" :value="language" :key="key">
+                                        {{language}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="recruiting-tripple-block col-md-4">
+                                <select class="recruiting-select" v-model="newLanguageBlock.level">
+                                    <option v-for="(level, key) in languageLevel" :value="level" :key="key">
+                                        {{level}}
+                                    </option>
+                                </select>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="recruiting-simple-block-container">
+                            <div class="recruiting-simple-block" @click="addLanguage">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Добавить язык</span>
+                            </div>
+                            <div class="recruiting-simple-block" @click="deleteLanguage" v-if="languages.length !== 1">
+                                <i class="fas fa-plus-circle"></i>
+                                <div>Удалить язык</div>
                             </div>
                         </div>
+                    </div>
+<!--                    <div>-->
+<!--                        <div class="recruiting-tripple-block-container" v-for="language in languages">-->
+<!--                            <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>-->
+<!--                            <div class="recruiting-tripple-block col-md-4">-->
+<!--                                <select class="recruiting-select" v-model="language.language" v-if="language.language_sel == null" >-->
+<!--                                    <option v-for="inner in languageAndLvl[0].language">{{inner}}</option>-->
+<!--                                </select>-->
+<!--                                <div v-if="language.language_sel != null" @click="language.language_sel = null">{{ language.language_sel }}</div>-->
+
+<!--                            </div>-->
+<!--                            <div class="recruiting-tripple-block col-md-4">-->
+<!--                                <select class="recruiting-select" v-model="language.level">-->
+<!--                                    <option v-for="inner in languageAndLvl[0].lvl">{{inner}}</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="recruiting-simple-block-container">-->
+<!--                            <div class="recruiting-simple-block" @click="addLanguage">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                <span>Добавить язык</span>-->
+<!--                            </div>-->
+<!--                            <div class="recruiting-simple-block" @click="removeAddLanguage" v-if="languages.length !== 1">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                <div>Удалить язык</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="card-body" v-for="newLanguageBlock in newLanguageBlocks">-->
+<!--                        <select class="custom-select mb-2 w-50" v-model="newLanguageBlock.language">-->
+<!--                            <option v-for="(language, key) in newLanguageBlock.languages" :value="language" :key="key">-->
+<!--                                {{language}}-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <select class="custom-select mb-2 w-25" v-model="newLanguageBlock.level">-->
+<!--                            <option v-for="(level, key) in languageLevel" :value="level" :key="key">-->
+<!--                                {{level}}-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <hr>-->
+<!--                    </div>-->
+
+<!--                    <button type="button" class="btn btn-outline-success" @click="addLanguage">Добавить язык</button>-->
+<!--                    <button type="button" class="btn btn-danger" @click="deleteLanguage">Удалить язык</button>-->
+
+
+                    <!--Оплата труда-->
+                    <div>Оплата труда</div>
+                    <div class="recruiting-tripple-block-container">
+                        <div class="recruiting-tripple-block-center col-md-7">На испытательный срок и после испытательного срока:</div>
                         <div class="recruiting-tripple-block col-md-5">
-                            <div>
-                                <input type="text" v-model="salary" class="recruiting-select">
-                            </div>
+                            <input type="text" v-model="salary" class="recruiting-select">
                         </div>
                     </div>
                     <div class="d-flex jc-sb mt-2">
@@ -287,6 +332,55 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div>
+                        <div class="recruiting-tripple-block-container" v-for="newSocialpacketBlock in newSocialpacketBlocks">
+                            <div class="recruiting-tripple-block-center col-md-4">Социальный пакет</div>
+                            <div class="recruiting-tripple-block col-md-4">
+                                <select class="recruiting-select" v-model="socialPacketBlock.packet">
+                                    <option v-for="(packet, key) in newSocialpacketBlock.packets" :value="socialPacket" :key="key">
+                                        {{packet}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="recruiting-tripple-block col-md-4">
+                                <select class="recruiting-select" v-model="socialPacketBlock.level">
+                                    <option v-for="(level, key) in socialPacketLvl" :value="packetLevel" :key="key">
+                                        {{level}}
+                                    </option>
+                                </select>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="recruiting-tripple-block-container" v-for="newLanguageBlock in newLanguageBlocks">
+                            <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>
+                            <div class="recruiting-tripple-block col-md-4">
+                                <select class="recruiting-select" v-model="newLanguageBlock.language">
+                                    <option v-for="(language, key) in newLanguageBlock.languages" :value="language" :key="key">
+                                        {{language}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="recruiting-tripple-block col-md-4">
+                                <select class="recruiting-select" v-model="newLanguageBlock.level">
+                                    <option v-for="(level, key) in languageLevel" :value="level" :key="key">
+                                        {{level}}
+                                    </option>
+                                </select>
+                            </div>
+                            <hr>
+                        </div>
+
+<!--                        <div class="recruiting-simple-block-container">-->
+<!--                            <div class="recruiting-simple-block" @click="addLanguage">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                <span>Добавить язык</span>-->
+<!--                            </div>-->
+<!--                            <div class="recruiting-simple-block" @click="deleteLanguage" v-if="languages.length !== 1">-->
+<!--                                <i class="fas fa-plus-circle"></i>-->
+<!--                                <div>Удалить язык</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                     <div class="recruiting-simple-block-container">
                         <div class="recruiting-simple-block">
@@ -561,6 +655,13 @@
                 computerKnowing: [
                     'Уверенное владение ПК',
                 ],
+                // languages: [
+                //     {
+                //         language : null,
+                //         level : null,
+                //         language_sel: null
+                //     }
+                // ],
                 languageAndLvl:
                     [{
                         languageSelect: '',
@@ -572,6 +673,8 @@
                                 'Английский'
                             ],
                         lvl: [
+                            'Базовый',
+                            'Средний',
                             'Родной',
                         ],
                         languageDublicate: [],
@@ -595,8 +698,6 @@
                     'B, C'
                 ],
                 socialPacket: [{
-                    packetSelect: '',
-                    lvlSelect: '',
                     packet: [
                         'Медицинское страхование',
                     ],
@@ -606,13 +707,128 @@
                 }],
                 candidatsTrait: 'Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)',
                 interviewStage: '',
+                addLanguageBlockItem: 1,
+                languages: [
+                    'Казахский',
+                    'Русский',
+                    'Английский',
+                ],
+                languageLevel: [
+                    'низкий',
+                    'средний',
+                    'высокий',
+                ],
+                newLanguageBlocks: [{
+                    language: null,
+                    level: null,
+                    languages: [
+                        'Казахский',
+                        'Русский',
+                        'Английский',
+                    ],
+                }],
+                languagesCounter: 1,
             }
         },
         methods: {
-            addLanguage(){
-                this.tasks.push({...task})
+            addLanguage() {
+                if (this.newLanguageBlocks[0].language == null){
+                    console.log('Пусто');
+                }
+                else if (this.newLanguageBlocks[0].language !== null){
+                    if (this.languagesCounter == 1){
+                        this.languagesCounter++;
+                        if(this.newLanguageBlocks.length < this.languages.length) {
+                            const lastBlock = this.newLanguageBlocks[this.newLanguageBlocks.length - 1];
+                            this.newLanguageBlocks.push({
+                                language : null,
+                                level : null,
+                                languages: lastBlock.languages.filter(lang => lang !== lastBlock.language)
+                            });
+                        }
+                    }
+                    else if (this.languagesCounter == 2){
+                        if (this.newLanguageBlocks[1].language !== null){
+                            console.log(this.newLanguageBlocks[0].language);
+                            this.languagesCounter++;
+                            if(this.newLanguageBlocks.length < this.languages.length) {
+                                const lastBlock = this.newLanguageBlocks[this.newLanguageBlocks.length - 1];
+                                this.newLanguageBlocks.push({
+                                    language : null,
+                                    level : null,
+                                    languages: lastBlock.languages.filter(lang => lang !== lastBlock.language)
+                                });
+                            }
+                        }
+                    }
+                }
+
+            },
+            deleteLanguage() {
+                if (this.newLanguageBlocks.length > 1) {
+                    this.newLanguageBlocks.pop();
+                    this.languagesCounter--;
+                }
             },
         },
+
+        // methods: {
+        //     // addLanguage(){
+        //     //     if(this.languages.length < 3) {
+        //     //         let key1 = this.languages.length-1;
+        //     //         this.languages.push({
+        //     //             language : null,
+        //     //             level : null,
+        //     //             language_sel: null
+        //     //         });
+        //
+        //             // if (this.languages[0].language) {
+        //             //     let targetIndex = this.languageAndLvl[0].language[1].indexOf(this.languages[0].language);
+        //             //     console.log(targetIndex);
+        //             //     this.languageAndLvl[0].language[1].splice(targetIndex, 1);
+        //             // }
+        //
+        //             // this.languageAndLvl[0].filter(function(){
+        //             //     asdhasj = asghfjhsdaiu
+        //             // });
+        //
+        //             //alert(key1);
+        //
+        //
+        //
+        //             // for(let key in this.languageAndLvl[0].language){
+        //             //     if(this.languageAndLvl[0].language[key] == this.languages[key1].language){
+        //             //         this.languages[key1].language_sel = this.languageAndLvl[0].language[key];
+        //             //         //this.languages[key].splice(key, 1);
+        //             //         this.languageAndLvl[0].language.splice(key, 1);
+        //             //     }
+        //             // }
+        //         // }
+        //     // },
+        //     // removeAddLanguage() {
+        //     //     let key1 = this.languages.length-1;
+        //     //     if(this.languages.length > 1) {
+        //     //         this.languageAndLvl[0].language.push(this.languages[key1].language);
+        //     //         this.languages.pop();
+        //     //     }
+        //     // },
+        //     addLanguage() {
+        //         if(this.newLanguageBlocks.length < this.languages.length) {
+        //             const lastBlock = this.newLanguageBlocks[this.newLanguageBlocks.length - 1];
+        //             this.newLanguageBlocks.push({
+        //                 language : null,
+        //                 level : null,
+        //                 languages: lastBlock.languages.filter(lang => lang !== lastBlock.language)
+        //             });
+        //         }
+        //     },
+        //     deleteLanguage() {
+        //         if (this.newLanguageBlocks.length > 1) {
+        //             this.newLanguageBlocks.pop();
+        //         }
+        //     },
+        //
+        // },
     }
 </script>
 
