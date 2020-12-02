@@ -39,13 +39,19 @@
 <!--                    </div>-->
 <!--                </div>-->
             </div>
+            <div class="pl-4 pr-4">
+                <div class="d-flex justify-content-center">До Нового Года осталось: </div>
+                <Countdown end="January 1, 2021"></Countdown>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Countdown from 'vuejs-countdown'
     export default {
         name: "news-birthday",
+        components: { Countdown },
 
         data() {
             return {
