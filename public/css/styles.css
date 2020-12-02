@@ -2523,6 +2523,9 @@ textarea::-webkit-scrollbar-thumb {
 .tripplebar-btn .far, .fas{
     margin-right: 1rem;
 }
+.recruiting-simple-block i {
+    margin-right: 1rem;
+}
 .tripplebar-btn i{
     font-size: 2rem;
 }
@@ -2603,6 +2606,7 @@ textarea::-webkit-scrollbar-thumb {
 .recruiting-tripple-block-container{
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
 }
 .recruiting-tripple-block{
     display: flex;

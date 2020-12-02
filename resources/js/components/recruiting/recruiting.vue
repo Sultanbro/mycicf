@@ -204,13 +204,13 @@
                         </div>
 
                         <div class="recruiting-simple-block-container">
-                            <div class="recruiting-simple-block" @click="addLanguage">
+                            <div class="recruiting-simple-block ml-2 mr-2" @click="addLanguage">
                                 <i class="fas fa-plus-circle"></i>
                                 <span>Добавить язык</span>
                             </div>
-                            <div class="recruiting-simple-block" @click="deleteLanguage" v-if="languages.length !== 1">
-                                <i class="fas fa-plus-circle"></i>
-                                <div>Удалить язык</div>
+                            <div class="recruiting-simple-block ml-2 mr-2" @click="deleteLanguage" v-if="languages.length !== 1">
+                                <i class="far fa-times-circle"></i>
+                                <span>Удалить язык</span>
                             </div>
                         </div>
                     </div>
@@ -312,64 +312,64 @@
                             </div>
                         </div>
                     </div>
-                    <div class="recruiting-tripple-block-container">
-                        <div class="recruiting-tripple-block-center col-md-4">
-                            <div>
-                                Социальный пакет
-                            </div>
-                        </div>
-                        <div class="recruiting-tripple-block col-md-4">
-                            <div>
-                                <select class="recruiting-select" v-model="socialPacket[0].packetSelect">
-                                    <option v-for="inner in socialPacket[0].packet">{{inner}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="recruiting-tripple-block col-md-4">
-                            <div>
-                                <select class="recruiting-select" v-model="socialPacket[0].lvlSelect">
-                                    <option v-for="inner in socialPacket[0].lvl">{{inner}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="recruiting-tripple-block-container">-->
+<!--                        <div class="recruiting-tripple-block-center col-md-4">-->
+<!--                            <div>-->
+<!--                                Социальный пакет-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--&lt;!&ndash;                        <div class="recruiting-tripple-block col-md-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <select class="recruiting-select" v-model="socialPacket[0].packetSelect">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <option v-for="inner in socialPacket[0].packet">{{inner}}</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </select>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="recruiting-tripple-block col-md-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <select class="recruiting-select" v-model="socialPacket[0].lvlSelect">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <option v-for="inner in socialPacket[0].lvl">{{inner}}</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </select>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                    </div>-->
                     <div>
                         <div class="recruiting-tripple-block-container" v-for="newSocialpacketBlock in newSocialpacketBlocks">
                             <div class="recruiting-tripple-block-center col-md-4">Социальный пакет</div>
                             <div class="recruiting-tripple-block col-md-4">
-                                <select class="recruiting-select" v-model="socialPacketBlock.packet">
-                                    <option v-for="(packet, key) in newSocialpacketBlock.packets" :value="socialPacket" :key="key">
+                                <select class="recruiting-select" v-model="newSocialpacketBlock.packet">
+                                    <option v-for="(packet, key) in newSocialpacketBlock.packets" :value="packet" :key="key">
                                         {{packet}}
                                     </option>
                                 </select>
                             </div>
                             <div class="recruiting-tripple-block col-md-4">
-                                <select class="recruiting-select" v-model="socialPacketBlock.level">
-                                    <option v-for="(level, key) in socialPacketLvl" :value="packetLevel" :key="key">
+                                <select class="recruiting-select" v-model="newSocialpacketBlock.level">
+                                    <option v-for="(level, key) in socialPacketLvl" :value="level" :key="key">
                                         {{level}}
                                     </option>
                                 </select>
                             </div>
                             <hr>
                         </div>
-                        <div class="recruiting-tripple-block-container" v-for="newLanguageBlock in newLanguageBlocks">
-                            <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>
-                            <div class="recruiting-tripple-block col-md-4">
-                                <select class="recruiting-select" v-model="newLanguageBlock.language">
-                                    <option v-for="(language, key) in newLanguageBlock.languages" :value="language" :key="key">
-                                        {{language}}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="recruiting-tripple-block col-md-4">
-                                <select class="recruiting-select" v-model="newLanguageBlock.level">
-                                    <option v-for="(level, key) in languageLevel" :value="level" :key="key">
-                                        {{level}}
-                                    </option>
-                                </select>
-                            </div>
-                            <hr>
-                        </div>
+<!--                        <div class="recruiting-tripple-block-container" v-for="newLanguageBlock in newLanguageBlocks">-->
+<!--                            <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>-->
+<!--                            <div class="recruiting-tripple-block col-md-4">-->
+<!--                                <select class="recruiting-select" v-model="newLanguageBlock.language">-->
+<!--                                    <option v-for="(language, key) in newLanguageBlock.languages" :value="language" :key="key">-->
+<!--                                        {{language}}-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="recruiting-tripple-block col-md-4">-->
+<!--                                <select class="recruiting-select" v-model="newLanguageBlock.level">-->
+<!--                                    <option v-for="(level, key) in languageLevel" :value="level" :key="key">-->
+<!--                                        {{level}}-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <hr>-->
+<!--                        </div>-->
 
 <!--                        <div class="recruiting-simple-block-container">-->
 <!--                            <div class="recruiting-simple-block" @click="addLanguage">-->
@@ -383,9 +383,13 @@
 <!--                        </div>-->
                     </div>
                     <div class="recruiting-simple-block-container">
-                        <div class="recruiting-simple-block">
+                        <div class="recruiting-simple-block ml-2 mr-2" @click="addSocialPacket">
                             <i class="fas fa-plus-circle"></i>
-                            <div>Добавить Соц. пакет</div>
+                            <span>Добавить Соц. пакет</span>
+                        </div>
+                        <div class="recruiting-simple-block" @click="deleteSocialPacket" v-if="languages.length !== 1">
+                            <i class="far fa-times-circle"></i>
+                            <span>Удалить Соц. пакет</span>
                         </div>
                     </div>
                     <div>
@@ -423,24 +427,24 @@
                             <div class="modal-header">
                                 <div class="modal-header-general">
                                     <div class="color-blue">ФИО кандидата</div>
-                                    <strong>Иванов Иван Иванович</strong>
+                                    <strong>{{candidatsFIOModal}}</strong>
                                 </div>
                             </div>
                             <div class="modal-margin-general">
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Структурное подразделение:</div>
-                                    <div class="col-md-6">Департамент развития партнерских отношений</div>
+                                    <div class="col-md-6">{{structuralUnitModal}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">ИИН:</div>
                                     <div class="col-md-6">
-                                        <input type="number" class="recruiting-modal-general" value="99999999999">
+                                        <input type="number" class="recruiting-modal-general" v-model="IINModal">
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Контактный номер кандидата:</div>
                                     <div class="col-md-6">
-                                        <input type="number" class="recruiting-modal-general" value="87777777777">
+                                        <input type="number" class="recruiting-modal-general" v-model="candidatsPhoneNumber">
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
@@ -453,52 +457,48 @@
                             <div class="modal-header modal-margin-general pl-0 pr-0 flex-column">
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Вакансия:</div>
-                                    <div class="col-md-6">Менеджер по работе с кооперативными клиентами</div>
+                                    <div class="col-md-6">{{vacansionModal}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Количество единиц:</div>
-                                    <div class="col-md-6">2</div>
-                                </div>
-                                <div class="modal-cell-general">
-                                    <div class="col-md-6 color-blue">Структурное подразделение:</div>
-                                    <div class="col-md-6">Департамент развития партнерских отношений</div>
+                                    <div class="col-md-6">{{numberOfUnitsModal}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Дата собеседования (ответ в течение 2-х дней после получения резюме):</div>
                                     <div class="col-md-6">
-                                        <input type="date" value="2020-01-01" class="recruiting-modal-general">
+                                        <input type="date" v-model="interviewDateModal" class="recruiting-modal-general">
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Время собеседования:</div>
                                     <div class="col-md-6">
-                                        <input type="text" value="15:00" class="recruiting-modal-general">
+                                        <input type="text" v-model="interviewTimeModal" class="recruiting-modal-general">
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Результат итогового интервью кандидата с руководителем(ответ в течение дня):</div>
                                     <div class="col-md-6">
-                                        <select class="recruiting-modal-general recruiting-modal-general forestgreen">
-                                            <option>Успешно прошел собеседование</option>
+                                        <select v-model="interviewMainResultModalSelect" class="recruiting-modal-general recruiting-modal-general forestgreen">
+                                            <option v-for="inner in interviewMainResultModal">{{inner}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Дата выхода кандидата на стажировку (с указанием даты окончания стажировки, но не более 5 дней):</div>
-                                    <div class="col-md-6">02.01.2020</div>
+                                    <div class="col-md-6">{{candidatsDateInternshipModal}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Дата заключения ДОУ (ответ в течение 5 дней (с даты выхода кандидата на стажировку)):</div>
-                                    <div class="col-md-6">12.01.2020</div>
+                                    <div class="col-md-6">{{dateOfTheDOUContractModal}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Дата заключения ТД (принят в штат):</div>
-                                    <div class="col-md-6">12.01.2020</div>
+                                    <div class="col-md-6">{{dateOfTheStateContractModal}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Комментарий:</div>
                                     <div class="col-md-6">
-                                        <textarea cols="30" rows="4" class="recruiting-modal-general">Текст</textarea>
+                                        <textarea cols="30" rows="4" v-model="commentModal" class="recruiting-modal-general">Текст</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -604,7 +604,7 @@
         name: "recruiting",
         data() {
             return {
-                recruitingTabs: 1,
+                recruitingTabs: 2,
                 cityAdressSelect: '',
                 cityAdress: [
                     'Алматы',
@@ -727,15 +727,62 @@
                         'Английский',
                     ],
                 }],
+                newSocialpacketBlocks: [{
+                    packet: null,
+                    level: null,
+                    packets: [
+                        'Первый соц. пакет',
+                        'Второй соц. пакет',
+                        'Третий соц. пакет',
+                    ],
+                }],
+                packets: [
+                    'Первый соц. пакет',
+                    'Второй соц. пакет',
+                    'Третий соц. пакет'
+                ],
+                socialPacketLvl: [
+                    'Базовый соц. пакет',
+                    'Средний соц.пакет',
+                    'Продвинутый соц.пакет',
+                ],
                 languagesCounter: 1,
+                socialPacketCounter: 1,
+
+            //    Переменные для модалки
+                candidatsFIOModal: 'Иванов Иван Иванович',
+                structuralUnitModal: 'Департамент развития партнерских отношений',
+                IINModal: '99999999999',
+                candidatsPhoneNumber: '87777777777',
+                candidatsResumeModal: '',
+                vacansionModal: 'Менеджер по работе с кооперативными клиентами',
+                numberOfUnitsModal: 2,
+                interviewDateModal: '2020-01-01',
+                interviewTimeModal: '15:00',
+                interviewMainResultModalSelect: '',
+                interviewMainResultModal: [
+                    'Успешно прошел собеседование',
+                    'Не прошел собеседование'
+                ],
+                candidatsDateInternshipModal: '02.01.2020',
+                dateOfTheDOUContractModal: '12.01.2020',
+                dateOfTheStateContractModal: '12.01.2020',
+                commentModal: 'Текст',
+                faq_questions:[
+
+                ],
             }
+        },
+        mounted() {
+            this.getFaqData();
         },
         methods: {
             addLanguage() {
-                if (this.newLanguageBlocks[0].language == null){
-                    console.log('Пусто');
-                }
-                else if (this.newLanguageBlocks[0].language !== null){
+                // if (this.newLanguageBlocks[0].language == null){
+                //     console.log('Пусто');
+                // }
+
+                if (this.newLanguageBlocks[0].language !== null){
                     if (this.languagesCounter == 1){
                         this.languagesCounter++;
                         if(this.newLanguageBlocks.length < this.languages.length) {
@@ -756,7 +803,7 @@
                                 this.newLanguageBlocks.push({
                                     language : null,
                                     level : null,
-                                    languages: lastBlock.languages.filter(lang => lang !== lastBlock.language)
+                                    languages: lastBlock.languages.filter((lang) => lang !== lastBlock.language)
                                 });
                             }
                         }
@@ -768,6 +815,45 @@
                 if (this.newLanguageBlocks.length > 1) {
                     this.newLanguageBlocks.pop();
                     this.languagesCounter--;
+                }
+            },
+            addSocialPacket() {
+                // if (this.newSocialpacketBlocks[0].packet == null){
+                //     console.log('Пусто');
+                // }
+                if (this.newSocialpacketBlocks[0].packet !== null){
+                    if (this.socialPacketCounter == 1){
+                        this.socialPacketCounter++;
+                        if(this.newSocialpacketBlocks.length < this.packets.length) {
+                            const lastPacketBlock = this.newSocialpacketBlocks[this.newSocialpacketBlocks.length - 1];
+                            this.newSocialpacketBlocks.push({
+                                packet : null,
+                                level : null,
+                                packets: lastPacketBlock.packets.filter(lang => lang !== lastPacketBlock.packet)
+                            });
+                        }
+                    }
+                    else if (this.socialPacketCounter == 2){
+                        if (this.newSocialpacketBlocks[1].packet !== null){
+                            console.log(this.newSocialpacketBlocks.packet);
+                            this.socialPacketCounter++;
+
+                            if(this.newSocialpacketBlocks.length < this.packets.length) {
+                                const lastPacketBlock = this.newSocialpacketBlocks[this.newSocialpacketBlocks.length - 1];
+                                this.newSocialpacketBlocks.push({
+                                    packet : null,
+                                    level : null,
+                                    packets: lastPacketBlock.packets.filter(lang => lang !== lastPacketBlock.packet)
+                                });
+                            }
+                        }
+                    }
+                }
+            },
+            deleteSocialPacket() {
+                if (this.newSocialpacketBlocks.length > 1) {
+                    this.newSocialpacketBlocks.pop();
+                    this.socialPacketCounter--;
                 }
             },
         },
