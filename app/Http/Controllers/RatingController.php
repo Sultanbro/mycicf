@@ -214,10 +214,10 @@ class RatingController extends Controller
                 else if($mark < 100) return $benchmark = '100+';
                 else return $benchmark = '';
             case 'cost_price':
-                if($mark > 31) return $benchmark = 29;
-                else if($mark < 30) return $benchmark = 16;
-                else if($mark < 20) return $benchmark = 11;
-                else if($mark < 15) return $benchmark = '10-';
+                if($mark > 30) return $benchmark = 30;
+                else if($mark > 21) return $benchmark = 20;
+                else if($mark > 16) return $benchmark = 15;
+                else if($mark > 11) return $benchmark = 10;
                 else return $benchmark = '';
             case 'net_claim':
                 if($mark > 31) return $benchmark = 29;
