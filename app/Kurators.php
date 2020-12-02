@@ -53,7 +53,7 @@ class Kurators extends Model
     }
 
     public function getActiveUsers() {
-        $data = Kurators::where('active', 1)->pluck('user_isn');
+        $data = Kurators::where('active', 1)->pluck('user_isn')->toArray();
 
         if($data !== null) {
             return $data;
