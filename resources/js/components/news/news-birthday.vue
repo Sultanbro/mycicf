@@ -1,6 +1,10 @@
 <template>
     <div>
         <div>
+            <div class="pl-4 pr-4">
+                <div class="d-flex justify-content-center">До Нового Года осталось: </div>
+                <Countdown end="January 1, 2021"></Countdown>
+            </div>
             <div class="color-blue pt-2 pl-3 pr-3 pb-2 d-flex jc-center">
                 <div class="d-flex vertical-middle">
                     <span class="bold">Ближайшие дни рождения</span>
@@ -38,10 +42,6 @@
 <!--                        Показать еще-->
 <!--                    </div>-->
 <!--                </div>-->
-            </div>
-            <div class="pl-4 pr-4">
-                <div class="d-flex justify-content-center">До Нового Года осталось: </div>
-                <Countdown end="January 1, 2021"></Countdown>
             </div>
         </div>
     </div>
