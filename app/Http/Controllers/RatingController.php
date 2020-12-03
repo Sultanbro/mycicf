@@ -64,7 +64,7 @@ class RatingController extends Controller
                     {
                         array_push($employee_rate, [
                             'criteria'   => $this->keys[$key],
-                            'mark'       => $rate[$key],
+                            'mark'       => $this->calcMark($key, $rate[$key]),
                             'benchmark'  => $this->calcBenchmark($key, $rate[$key]),
                             'assessment' => $rate[$key],
                             'tooltip'    => $this->tooltips[$key],
@@ -99,11 +99,11 @@ class RatingController extends Controller
 
     }
 
-//    public function index() {
-//        return view('rating');
-//    }
+    public function ratingIndex() {
+        return view('rating');
+    }
 
-    public function index(Request $request)
+    public function myResultsIndex(Request $request)
     {
         if(isset($request->ISN)) {
             return view('my-results')->with('employee_isn', $request->ISN)->with('rating_date', (string)$request->rating_date);
@@ -214,20 +214,20 @@ class RatingController extends Controller
                 else if($mark < 100) return $benchmark = '100+';
                 else return $benchmark = '';
             case 'cost_price':
-                if($mark > 30) return $benchmark = 30;
-                else if($mark > 21) return $benchmark = 20;
-                else if($mark > 16) return $benchmark = 15;
-                else if($mark > 11) return $benchmark = 10;
+                if($mark > 31) return $benchmark = 'lt ' . 30;
+                else if($mark > 21) return $benchmark = 'lt ' . 20;
+                else if($mark > 16) return $benchmark = 'lt ' . 15;
+                else if($mark > 11) return $benchmark = 'lt ' . 10;
                 else return $benchmark = '';
             case 'net_claim':
-                if($mark > 31) return $benchmark = 29;
-                else if($mark < 30) return $benchmark = 16;
-                else if($mark < 20) return $benchmark = 11;
-                else if($mark < 15) return $benchmark = '10-';
+                if($mark > 31) return $benchmark = 'lt ' . 30;
+                else if($mark > 21) return $benchmark = 'lt ' . 20;
+                else if($mark > 16) return $benchmark = 'lt ' . 15;
+                else if($mark > 11) return $benchmark = 'lt ' . 10;
                 else return $benchmark = '';
             case 'ar_current':
                 if($mark > 12) return $benchmark = 11;
-                else if($mark < 11) return $benchmark = 9;
+                else if($mark > 11) return $benchmark = 9;
                 else if($mark < 9) return $benchmark = 7;
                 else if($mark < 7) return $benchmark = '5-';
                 else return $benchmark = '';
@@ -260,6 +260,84 @@ class RatingController extends Controller
                 else if($mark < 39) return $benchmark = 40;
                 else if($mark < 59) return $benchmark = '60+';
                 else return $benchmark = '';
+            case 'calc_share':
+                if($mark < 40) return $benchmark = 0;
+                else if($mark < 50) return $benchmark = 40;
+                else if($mark < 69) return $benchmark = 60;
+                else if($mark < 89) return $benchmark = 80;
+                else return $benchmark = 100;
+            default: return '';
+        }
+    }
+
+    protected function calcMark($mark_type, $mark) {
+        switch ($mark_type) {
+            case 'rentability':
+                if($mark < 29) return $rate_mark = 0;
+                else if($mark < 39) return $rate_mark = 40;
+                else if($mark < 69) return $rate_mark = 60;
+                else if($mark < 89) return $rate_mark = 80;
+                else return $rate_mark = 100;
+            case 'execution_plan':
+                if($mark < 59) return $rate_mark = 0;
+                else if($mark < 69) return $rate_mark = 40;
+                else if($mark < 89) return $rate_mark = 60;
+                else if($mark < 100) return $rate_mark = 80;
+                else return $rate_mark = '100+';
+            case 'cost_price':
+                if($mark > 31) return $rate_mark = 0;
+                else if($mark > 21) return $rate_mark = 40;
+                else if($mark > 16) return $rate_mark = 60;
+                else if($mark > 11) return $rate_mark = 80;
+                else return $rate_mark = '10-';
+            case 'net_claim':
+                if($mark > 31) return $rate_mark = 0;
+                else if($mark > 21) return $rate_mark = 40;
+                else if($mark > 16) return $rate_mark = 60;
+                else if($mark > 11) return $rate_mark = 80;
+                else return $rate_mark = 10;
+            case 'ar_current':
+                if($mark > 12) return $rate_mark = 0;
+                else if($mark > 9) return $rate_mark = 40;
+                else if($mark > 7) return $rate_mark = 60;
+                else if($mark > 5) return $rate_mark = 80;
+                else return $rate_mark = 100;
+            case 'priority_class':
+                if($mark === 0) return $rate_mark = 0;
+                else if($mark === 1) return $rate_mark = 40;
+                else if($mark === 2) return $rate_mark = 60;
+                else if($mark === 3) return $rate_mark = 80;
+                else return $rate_mark = 100;
+            case 'prolongation':
+                if($mark < 30) return $rate_mark = 0;
+                else if($mark < 50) return $rate_mark = 40;
+                else if($mark < 60) return $rate_mark = 60;
+                else if($mark < 79) return $rate_mark = 80;
+                else return $rate_mark = '80+';
+            case 'new_clients':
+                if($mark < 19) return $rate_mark = 0;
+                else if($mark < 29) return $rate_mark = 40;
+                else if($mark < 39) return $rate_mark = 60;
+                else if($mark < 49) return $rate_mark = 80;
+                else return $rate_mark = 100;
+            case 'direct_sales':
+                if($mark < 10) return $rate_mark = 0;
+                else if($mark < 29) return $rate_mark = 40;
+                else if($mark < 49) return $rate_mark = 60;
+                else if($mark < 79) return $rate_mark = 80;
+                else return $rate_mark = 100;
+            case 'cross_share':
+                if($mark < 10) return $rate_mark = 0;
+                else if($mark < 20) return $rate_mark = 40;
+                else if($mark < 39) return $rate_mark = 60;
+                else if($mark < 59) return $rate_mark = 80;
+                else return $rate_mark = 100;
+            case 'calc_share':
+                if($mark < 40) return $rate_mark = 0;
+                else if($mark < 50) return $rate_mark = 40;
+                else if($mark < 69) return $rate_mark = 60;
+                else if($mark < 89) return $rate_mark = 80;
+                else return $rate_mark = 100;
             default: return '';
         }
     }

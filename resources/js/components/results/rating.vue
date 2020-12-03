@@ -49,12 +49,15 @@
                     <tbody>
                     <tr v-for="rating in ratings">
                         <td><span v-tooltip.top-center="rating.tooltip">{{rating.criteria}}</span></td>
-                        <td>{{rating.mark}}</td>
                         <td>{{rating.assessment}}</td>
+                        <td>{{rating.mark}}</td>
                         <td v-if="rating.benchmark === ''">
                             <i class="fas fa-check text-success"></i>
                         </td>
-                        <td v-else>{{rating.benchmark}}</td>
+                        <td v-else>
+<!--                            <span v-if="rating.benchmark.includes('lt')">&lt;</span>-->
+                            {{ rating.benchmark.replace('lt', '') }}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
