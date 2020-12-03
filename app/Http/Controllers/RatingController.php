@@ -202,16 +202,16 @@ class RatingController extends Controller
     protected function calcBenchmark($mark_type, $mark) {
         switch ($mark_type) {
             case 'rentability':
-                if($mark < 29) return $benchmark = 30;
-                else if($mark < 39) return $benchmark = 40;
-                else if($mark < 69) return $benchmark = 70;
-                else if($mark < 89) return $benchmark = 90;
+                if($mark < 29) return $benchmark = 'gt' . 30;
+                else if($mark < 39) return $benchmark = 'gt' . 40;
+                else if($mark < 69) return $benchmark = 'gt' . 70;
+                else if($mark < 89) return $benchmark = 'gt' . 90;
                 else return $benchmark = '';
             case 'execution_plan':
-                if($mark < 59) return $benchmark = 60;
-                else if($mark < 69) return $benchmark = 70;
-                else if($mark < 89) return $benchmark = 90;
-                else if($mark < 100) return $benchmark = '100+';
+                if($mark < 59) return $benchmark = 'gt'. 60;
+                else if($mark < 69) return $benchmark = 'gt'. 70;
+                else if($mark < 89) return $benchmark = 'gt'. 90;
+                else if($mark < 100) return $benchmark = 'gt'. 100;
                 else return $benchmark = '';
             case 'cost_price':
                 if($mark > 31) return $benchmark = 'lt ' . 30;
@@ -226,46 +226,46 @@ class RatingController extends Controller
                 else if($mark > 11) return $benchmark = 'lt ' . 10;
                 else return $benchmark = '';
             case 'ar_current':
-                if($mark > 12) return $benchmark = 11;
-                else if($mark > 11) return $benchmark = 9;
-                else if($mark < 9) return $benchmark = 7;
-                else if($mark < 7) return $benchmark = '5-';
+                if($mark > 11) return $benchmark = 'lt' . 11;
+                else if($mark > 9) return $benchmark = 'lt' . 9;
+                else if($mark > 7) return $benchmark = 'lt' . 7;
+                else if($mark > 5) return $benchmark = 'lt' . 5;
                 else return $benchmark = '';
             case 'priority_class':
-                if($mark < 1) return $benchmark = 1;
-                else if($mark < 2) return $benchmark = 3;
-                else if($mark < 3) return $benchmark = 4;
+                if($mark < 1) return $benchmark = 'gt'. 1;
+                else if($mark < 2) return $benchmark = 'gt'. 3;
+                else if($mark < 3) return $benchmark = 'gt'. 4;
                 else return $benchmark = '';
             case 'prolongation':
-                if($mark < 30) return $benchmark = 31;
-                else if($mark < 50) return $benchmark = 51;
-                else if($mark < 60) return $benchmark = 61;
-                else if($mark < 79) return $benchmark = '80+';
+                if($mark < 30) return $benchmark = 'gt'. 31;
+                else if($mark < 50) return $benchmark = 'gt'. 51;
+                else if($mark < 60) return $benchmark = 'gt'. 61;
+                else if($mark < 79) return $benchmark = 'gt'. 80;
                 else return $benchmark = '';
             case 'new_clients':
-                if($mark < 19) return $benchmark = 20;
-                else if($mark < 29) return $benchmark = 30;
-                else if($mark < 39) return $benchmark = 40;
-                else if($mark < 49) return $benchmark = '50+';
+                if($mark < 19) return $benchmark = 'gt'. 20;
+                else if($mark < 29) return $benchmark = 'gt'. 30;
+                else if($mark < 39) return $benchmark = 'gt'. 40;
+                else if($mark < 49) return $benchmark = 'gt'. 50;
                 else return $benchmark = '';
             case 'direct_sales':
-                if($mark < 10) return $benchmark = 11;
-                else if($mark < 29) return $benchmark = 30;
-                else if($mark < 49) return $benchmark = 50;
-                else if($mark < 79) return $benchmark = '80+';
+                if($mark < 10) return $benchmark = 'gt'. 11;
+                else if($mark < 29) return $benchmark = 'gt'. 30;
+                else if($mark < 49) return $benchmark = 'gt'. 50;
+                else if($mark < 79) return $benchmark = 'gt'. 80;
                 else return $benchmark = '';
             case 'cross_share':
-                if($mark < 10) return $benchmark = 11;
-                else if($mark < 20) return $benchmark = 21;
-                else if($mark < 39) return $benchmark = 40;
-                else if($mark < 59) return $benchmark = '60+';
+                if($mark < 10) return $benchmark = 'gt'. 11;
+                else if($mark < 20) return $benchmark = 'gt'. 21;
+                else if($mark < 39) return $benchmark = 'gt'. 40;
+                else if($mark < 59) return $benchmark = 'gt'. 60;
                 else return $benchmark = '';
             case 'calc_share':
-                if($mark < 40) return $benchmark = 0;
-                else if($mark < 50) return $benchmark = 40;
-                else if($mark < 69) return $benchmark = 60;
-                else if($mark < 89) return $benchmark = 80;
-                else return $benchmark = 100;
+                if($mark < 40) return $benchmark = 'gt'. 41;
+                else if($mark < 50) return $benchmark = 'gt'. 51;
+                else if($mark < 69) return $benchmark = 'gt'. 70;
+                else if($mark < 89) return $benchmark = 'gt'. 90;
+                else return $benchmark = '';
             default: return '';
         }
     }

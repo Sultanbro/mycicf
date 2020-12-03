@@ -55,8 +55,8 @@
                             <i class="fas fa-check text-success"></i>
                         </td>
                         <td v-else>
-<!--                            <span v-if="rating.benchmark.includes('lt')">&lt;</span>-->
-                            {{ rating.benchmark.replace('lt', '') }}
+                            <span v-if="rating.benchmark.toString().includes('lt')">&lt; {{ rating.benchmark.toString().replace('lt', '') }}</span>
+                            <span v-else>&gt; {{ rating.benchmark.toString().replace('gt', '') }}</span>
                         </td>
                     </tr>
                     </tbody>
