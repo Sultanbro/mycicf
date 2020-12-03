@@ -96,8 +96,8 @@
                     <button type="button" class="color-blue show-all-btn small"
                             @click="openImageViewer"
                             data-toggle="modal"
-                            data-target=".bd-example-modal-lg">Показать ещё {{post.image.length - 1}} изображений</button>
-                    <image-viewer :array="post.image"></image-viewer>
+                            :data-target="`#post-modal-${index}`">Показать ещё {{post.image.length - 1}} изображений</button>
+                    <image-viewer :array="post.image" :index="index"></image-viewer>
                 </div>
             </div>
         </div>
@@ -675,5 +675,21 @@
         width: 25px;
         border: 2px solid #D9D9D9;
         border-radius: 5px;
+    }
+
+    .d-player-video-wrap {
+        position: relative;
+        padding-bottom: 56.25%;
+        padding-top: 30px;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .d-player-video-wrap.d-player-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 </style>

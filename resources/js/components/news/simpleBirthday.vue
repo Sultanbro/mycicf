@@ -12,7 +12,7 @@
             <!--                            </div>-->
             <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
                 <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
-                    <span>{{fullName}}</span>
+                    <span><a :href="`/colleagues/${this.ISN}/dossier`" class="color-blue">{{fullName}}</a></span>
                 </div>
                 <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{date}}</span>

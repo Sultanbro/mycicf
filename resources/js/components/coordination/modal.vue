@@ -108,19 +108,32 @@
                                               class="resize modal-textarea-comment width100" disabled></textarea>
                                 </div>
                                 <div class="mt-4">
-                                    <div class="table-responsive-sm">
+                                    <div class="table-responsive-sm overflow-auto">
+<!--                                        <table class="table table-bordered table-striped">-->
+<!--                                            <thead>-->
+<!--                                            <tr>-->
+<!--                                                <td v-for="list in doc_row_list">-->
+<!--                                                    <b>{{list.fieldname}}</b>-->
+<!--                                                </td>-->
+<!--                                            </tr>-->
+<!--                                            </thead>-->
+<!--                                            <tbody>-->
+<!--                                            <tr v-for="(list,index) in doc_row_inner[1]">-->
+<!--                                                <td v-for="(list,key) in doc_row_list">-->
+<!--                                                    {{ doc_row_inner[key][index] }}-->
+<!--                                                </td>-->
+<!--                                            </tr>-->
+<!--                                            </tbody>-->
+<!--                                        </table>-->
+
                                         <table class="table table-bordered table-striped">
-                                            <thead>
-                                            <tr>
-                                                <td v-for="list in doc_row_list">
+                                            <tbody>
+                                            <tr v-for="(list, index) in doc_row_list" v-if="doc_row_inner[index][0] !== ''">
+                                                <td>
                                                     <b>{{list.fieldname}}</b>
                                                 </td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="(list,index) in doc_row_inner[1]">
-                                                <td v-for="(list,key) in doc_row_list">
-                                                    {{ doc_row_inner[key][index] }}
+                                                <td>
+                                                    {{doc_row_inner[index][0]}}
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -128,7 +141,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <div class="table-responsive-sm">
+                                    <div class="table-responsive-sm overflow-auto">
                                         <table class="table table-bordered table-striped">
                                             <thead>
                                             <tr>
