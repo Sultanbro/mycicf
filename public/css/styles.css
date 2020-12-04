@@ -2708,7 +2708,21 @@ textarea::-webkit-scrollbar-thumb {
     max-width: 100%;
     overflow: hidden;
 }
-
+.disabledBtnRecruiting {
+    pointer-events: none;
+    background: darkgray;
+}
+.disabledBtnRecruiting:hover {
+    pointer-events: none;
+    background: darkgray;
+}
+.activeBtnRecruiting{
+    pointer-events: auto;
+    background: #275cc7 !important;
+}
+.activeBtnRecruiting:hover{
+    background: #1f4aa2 !important;
+}
 @media (max-width: 1400px){
  .tripplebar-btn{
      flex-flow: column-reverse;

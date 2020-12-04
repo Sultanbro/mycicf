@@ -231,6 +231,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         //RECRUITING
         Route::get('/recruiting', 'NameController@getRecruiting')->name('recruiting');
+        Route::post('/recruiting', 'NameController@getContent');
+        Route::post('/recruiting', 'NameController@getTestData');
+        Route::post('recruiting', 'NameController@sendRequest');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');

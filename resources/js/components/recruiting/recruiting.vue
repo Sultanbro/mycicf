@@ -135,7 +135,7 @@
                                     Наличие подчиненных
                                 </div>
                                 <div>
-                                    <select class="recruiting-select">
+                                    <select v-model="isHeWasBossSelect" class="recruiting-select">
                                         <option v-for="inner in isHeWasBoss">{{inner}}</option>
                                     </select>
                                 </div>
@@ -176,7 +176,7 @@
                             Уровень владения компьютерными программами
                         </div>
                         <div>
-                            <select class="recruiting-select">
+                            <select class="recruiting-select" v-model="computerKnowingSelect">
                                 <option v-for="inner in computerKnowing">{{inner}}</option>
                             </select>
                         </div>
@@ -208,10 +208,12 @@
                                 <i class="fas fa-plus-circle"></i>
                                 <span>Добавить язык</span>
                             </div>
-                            <div class="recruiting-simple-block ml-2 mr-2" @click="deleteLanguage" v-if="languages.length !== 1">
+                            <div class="recruiting-simple-block ml-2 mr-2" @click="deleteLanguage" v-if="this.newLanguageBlocks.length > 1">
                                 <i class="far fa-times-circle"></i>
                                 <span>Удалить язык</span>
                             </div>
+<!--                            TEST FUNCTION-->
+<!--                            <button @click="testFunc">Click here</button>-->
                         </div>
                     </div>
 <!--                    <div>-->
@@ -265,7 +267,7 @@
                     <div class="recruiting-tripple-block-container">
                         <div class="recruiting-tripple-block-center col-md-7">На испытательный срок и после испытательного срока:</div>
                         <div class="recruiting-tripple-block col-md-5">
-                            <input type="text" v-model="salary" class="recruiting-select">
+                            <input type="number" v-model="salary" class="recruiting-select">
                         </div>
                     </div>
                     <div class="d-flex jc-sb mt-2">
@@ -387,7 +389,7 @@
                             <i class="fas fa-plus-circle"></i>
                             <span>Добавить Соц. пакет</span>
                         </div>
-                        <div class="recruiting-simple-block" @click="deleteSocialPacket" v-if="languages.length !== 1">
+                        <div class="recruiting-simple-block" @click="deleteSocialPacket" v-if="this.newSocialpacketBlocks.length > 1">
                             <i class="far fa-times-circle"></i>
                             <span>Удалить Соц. пакет</span>
                         </div>
@@ -406,14 +408,32 @@
                             Этапы интервью с кандидатом в департаменте
                         </div>
                         <div>
-                            <textarea value="interviewStage" class="recruiting-textarea">
+                            <textarea v-model="interviewStage" class="recruiting-textarea">
                             </textarea>
                         </div>
                     </div>
                     <div class="recruiting-btn-container">
-                        <div class="recruiting-btn">
+                        <div class="recruiting-btn" @click="savedSuccess" v-bind:class="{disabledBtnRecruiting : cityAdressSelect == '' || nameOfPostSelect == '' || quantityPeople == '' || ReasonToRecruitingSelect == '' || desiredAge == '' || sexSelect == '' || educationSelect == '' || functionalResponsobilities == '' || workExpirienceSelect == '' || isHeWasBossSelect == '' || typeOfHire == '' || requestToCandidat == '' || perspectiveToCandidat == '' || computerKnowingSelect == '' || salary == '' || motivationSelect == '' || jobChartSelect == '' || haveCarSelect == '' || driverCategorySelect == '' || candidatsTrait == '' || interviewStage == '' || newLanguageBlocks[0].language == null || newSocialpacketBlocks[0].packet == null}">
+<!--                            @click="getFaqData"-->
                             Отправить
                         </div>
+<!--                        ТЕСТОВЫЙ ЗАПРОС-->
+<!--                        <button @click="getTestData">Click here</button>-->
+<!--                        {{testArray}}-->
+<!--                        {{faq_questions}}-->
+
+
+
+<!--                        <div v-if="testArray.length > 0" v-for="answer in testArray">-->
+<!--                            Какое-то значение: {{answer.}}-->
+<!--                        </div>-->
+                        <div v-if="faq_questions.length > 0" v-for="branch in faq_questions">
+                            Имя: {{ branch.fullname }}<br>
+                            ИСН: {{ branch.id }}<br>
+                            Деп: {{ branch.duty }}<br>
+                        </div>
+                        <br>
+
                     </div>
                 </div>
             </div>
@@ -546,6 +566,26 @@
                     </tr>
                     </tbody>
                 </table>
+                <table class="dosier-table table text-align-center">
+                    <thead>
+                    <tr class="header color-white">
+                        <th scope="col">Номер документа</th>
+                        <th scope="col" class="thead-border">Тип документа</th>
+                        <th scope="col" class="thead-border">Инициатор</th>
+                        <th scope="col" class="thead-border">Подразделение</th>
+                        <th scope="col">Дата</th>
+                    </tr>
+                    </thead>
+                    <tbody class="date-color">
+                    <tr v-for="(info, index) in other" :key="info.ISN">
+                        <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                        <td scope="col" class="thead-border">{{info.type}}</td>
+                        <td scope="col" class="thead-border">{{info.curator}}</td>
+                        <td scope="col" class="thead-border">{{info.DeptName}}</td>
+                        <td scope="col">{{info.docdate}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <div v-if="recruitingTabs == 3">
                 <table class="table recruiting-striped">
@@ -596,6 +636,7 @@
                 </table>
             </div>
         </div>
+        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -604,7 +645,8 @@
         name: "recruiting",
         data() {
             return {
-                recruitingTabs: 2,
+                recruitingTabs: 1,
+                activeBtnRecruiting: 'activeBtnRecruiting',
                 cityAdressSelect: '',
                 cityAdress: [
                     'Алматы',
@@ -640,6 +682,7 @@
                     'От 1 года',
                     'От 5 лет',
                 ],
+                isHeWasBossSelect: '',
                 isHeWasBoss: [
                     'Нет',
                     'Да',
@@ -652,6 +695,7 @@
                 perspectiveToCandidat: [
                     'Карьерный рост и внутреннее корпоративное обучение',
                 ],
+                computerKnowingSelect: '',
                 computerKnowing: [
                     'Уверенное владение ПК',
                 ],
@@ -679,7 +723,7 @@
                         ],
                         languageDublicate: [],
                     }],
-                salary: '120000 тг',
+                salary: '120000',
                 motivationSelect: '',
                 motivation: [
                     'Есть',
@@ -771,12 +815,140 @@
                 faq_questions:[
 
                 ],
+                testAxios: null,
+                error: 'Произошла какая-то ошибка',
+                none: false,
+                other: null,
+                testArray:[],
             }
         },
         mounted() {
-            this.getFaqData();
+            //this.getFaqData();
+            this.getTables();
         },
         methods: {
+            savedSuccess: function(){
+                this.flashMessage.error({
+                    title: "Ошибка",
+                    message: 'Не удалось сохранить данные',
+                    time: 5000
+                });
+            },
+            testFunc: function(){
+              console.log(this.newLanguageBlocks[0].languages.length);
+            },
+            getTables: function(){
+                this.preloader(true);
+                this.axios.post("/getCoordinationList", {isn: this.isn}).then((response) => {
+                    this.fetchResponse(response.data)
+                })
+            },
+            fetchResponse: function(response){
+                if(response.success){
+                    this.testAxios = response.result.SP;
+                }else{
+                    alert(response.error);
+                }
+                if(this.SP === null){
+                    this.none = true;
+                }
+                this.preloader(false);
+            },
+            getFaqData() {
+                this.axios.post('/recruiting', {}).then(response => {
+                    if(response.data.success) {
+                        this.faq_questions = response.data.result;
+                    } else {
+                        alert('Произошла ошибка');
+                    }
+                })
+            },
+            getTestData() {
+                let data = {
+                    'recruitingTabs' : this.recruitingTabs,
+                    'cityAdressSelect' : this.cityAdressSelect,
+                    'cityAdress' : this.cityAdress,
+                    'nameOfPostSelect' : this.nameOfPostSelect,
+                    'nameOfPost' : this.nameOfPost,
+                    'quantityPeople' : this.quantityPeople,
+                    'ReasonToRecruitingSelect' : this.ReasonToRecruitingSelect,
+                    'ReasonToRecruiting' : this.ReasonToRecruiting,
+                    'desiredAge' : this.desiredAge,
+                    'sexSelect' : this.sexSelect,
+                    'sex' : this.sex,
+                    'educationSelect' : this.educationSelect,
+                    'education' : this.education,
+                    'functionalResponsobilities' : this.functionalResponsobilities,
+                    'workExpirienceSelect' : this.workExpirienceSelect,
+                    'workExpirience' : this.workExpirience,
+                    'isHeWasBoss' : this.isHeWasBoss,
+                    'typeOfHire' : this.typeOfHire,
+                    'requestToCandidat' : this.requestToCandidat,
+                    'perspectiveToCandidat' : this.perspectiveToCandidat,
+                    'computerKnowingSelect': this.computerKnowingSelect,
+                    'computerKnowing' : this.computerKnowing,
+                    'languageAndLvl' : this.languageAndLvl,
+                    'salary' : this.salary,
+                    'motivationSelect' : this.motivationSelect,
+                    'motivation' : this.motivation,
+                    'jobChartSelect' : this.jobChartSelect,
+                    'jobChart' : this.jobChart,
+                    'haveCarSelect' : this.haveCarSelect,
+                    'haveCar' : this.haveCar,
+                    'driverCategorySelect' : this.driverCategorySelect,
+                    'driverCategory' : this.driverCategory,
+                    'socialPacket' : this.socialPacket,
+                    'candidatsTrait' : this.candidatsTrait,
+                    'interviewStage' : this.interviewStage,
+                    'addLanguageBlockItem' : this.addLanguageBlockItem,
+                    'languages' : this.languages,
+                    'languageLevel' : this.languageLevel,
+                    'newLanguageBlocks' : this.newLanguageBlocks,
+                    'newSocialpacketBlocks' : this.newSocialpacketBlocks,
+                    'packets' : this.packets,
+                    'socialPacketLvl' : this.socialPacketLvl,
+                    'languagesCounter' : this.languagesCounter,
+                    'socialPacketCounter' : this.socialPacketCounter,
+                    'candidatsFIOModal' : this.candidatsFIOModal,
+                    'structuralUnitModal' : this.structuralUnitModal,
+                    'IINModal' : this.IINModal,
+                    'candidatsPhoneNumber' : this.candidatsPhoneNumber,
+                    'candidatsResumeModal' : this.candidatsResumeModal,
+                    'vacansionModal' : this.vacansionModal,
+                    'numberOfUnitsModal' : this.numberOfUnitsModal,
+                    'interviewDateModal' : this.interviewDateModal,
+                    'interviewTimeModal' : this.interviewTimeModal,
+                    'interviewMainResultModalSelect' : this.interviewMainResultModalSelect,
+                    'interviewMainResultModal' : this.interviewMainResultModal,
+                    'candidatsDateInternshipModal' : this.candidatsDateInternshipModal,
+                    'dateOfTheDOUContractModal' : this.dateOfTheDOUContractModal,
+                    'dateOfTheStateContractModal' : this.dateOfTheStateContractModal,
+                    'commentModal' : this.commentModal,
+                }
+                this.axios.post('/recruiting', {}).then(response => {
+                    if (response.data.success){
+                        this.testArray = response.data.result;
+                    } else {
+                        alert('error');
+                    }
+                })
+            },
+            openModal (ISN) {
+                this.preloader(true);
+                this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
+                    this.setModalData(response.data)
+                });
+            },
+            preloader(show){
+                if(show)
+                {
+                    document.getElementById('preloader').style.display = 'flex';
+                }
+                else
+                {
+                    document.getElementById('preloader').style.display = 'none';
+                }
+            },
             addLanguage() {
                 // if (this.newLanguageBlocks[0].language == null){
                 //     console.log('Пусто');

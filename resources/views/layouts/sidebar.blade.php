@@ -8,6 +8,12 @@
     )
     <div class="mb-5">
         <ul class="flex-column mr-3 ml-3">
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('recruiting')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fas fa-male"></i>
+                    <span>Рекрутинг</span>
+                </li>
+            </a>
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('colleagues')}}">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-users"></i>
