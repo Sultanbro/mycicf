@@ -342,8 +342,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('rating', 'RatingController@ratingIndex')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
 
-        Route::get('my-results', 'CabinetController@myresultsIndex')->name('my-results');
-        Route::get('my-results/rating/{ISN}/{rating_date}', 'CabinetController@index');
+        Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
+        Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
         Route::post('my-results/getRating', 'RatingController@getRating');
     });
 });

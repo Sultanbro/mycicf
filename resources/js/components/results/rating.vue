@@ -23,14 +23,14 @@
                     </div>
                     <div>
                         <h5>
-                            <a :href="`/colleagues/${this.employee_info.isn}/dossier`" class="text-dark">{{this.employee_info.fullname}}</a>
+                            <a :href="`/colleagues/${this.employee_info.isn}/dossier`" class="text-dark">{{ this.employee_info.fullname }}</a>
                         </h5>
-                        <div>{{this.employee_info.duty}}</div>
+                        <div>{{ this.employee_info.duty }}</div>
                     </div>
                 </div>
                 <div class="text-center">
                     <div>Рейтинг</div>
-                    <h2 class="employee-rating">{{this.employee_info.rate_mark}}</h2>
+                    <h2 class="employee-rating">{{ this.employee_info.rate_mark }}</h2>
                 </div>
             </div>
             <div class="rating-table mt-3">
@@ -48,9 +48,9 @@
                     </thead>
                     <tbody>
                     <tr v-for="rating in ratings">
-                        <td><span v-tooltip.top-center="rating.tooltip">{{rating.criteria}}</span></td>
-                        <td>{{rating.assessment}}</td>
-                        <td>{{rating.mark}}</td>
+                        <td><span v-tooltip.top-center="rating.tooltip">{{ rating.criteria }}</span></td>
+                        <td>{{ rating.assessment }}</td>
+                        <td>{{ rating.mark }}</td>
                         <td v-if="rating.benchmark === ''">
                             <i class="fas fa-check text-success"></i>
                         </td>
@@ -67,7 +67,7 @@
                     <span>Итоговая оценка:</span>
                 </div>
                 <div>
-                    <span>{{this.employee_info.rate_mean}}</span>
+                    <span>{{ this.employee_info.rate_mean }}</span>
                 </div>
             </div>
         </div>

@@ -40,9 +40,6 @@
             isn: Number,
             begin: String
         },
-        mounted() {
-            console.log(this.isn);
-        }
     }
 </script>
 
