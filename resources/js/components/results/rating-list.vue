@@ -15,10 +15,28 @@
             <div class="w-100">
                 <div class>
                     <div class="p-3 pointer" data-toggle="collapse" :href="`#rating-${index}`" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        <strong>Рейтинг {{index}}</strong>
+                        <div class="d-flex justify-content-between">
+                            <strong>Рейтинг {{index}}</strong>
+                            <div>
+                                <span class="mr-3">Ср. {{ rating.rate_avg }}</span>
+                                <span>Кол-во. {{ rating.count }}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="collapse" :id="`rating-${index}`">
-                        <employee-rate :rating="rating"></employee-rate>
+                        <employee-rate :rating="rating.rate"></employee-rate>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container mt-3 mb-3">
+            <div class="p-3 w-100">
+                <div class="d-flex justify-content-between">
+                    <strong>Общее кол-во:</strong>
+                    <div>
+                        <span class="mr-3">Ср. {{ ratingTotal.rating_avg_total }}</span>
+                        <span>Кол-во. {{ ratingTotal.rating_count_total }}</span>
                     </div>
                 </div>
             </div>
@@ -33,6 +51,7 @@
             return {
                 ratingList: [],
                 ratingDate: new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 10).toJSON().slice(0, 7),
+                ratingTotal: {},
             }
         },
         mounted() {
@@ -57,6 +76,7 @@
             },
             setTopRatingList(data) {
                 this.ratingList = data.rating_list;
+                this.ratingTotal = data.rating_total;
             },
             preloader(show) {
                 if (show) {

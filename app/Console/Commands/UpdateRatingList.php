@@ -131,13 +131,20 @@ class UpdateRatingList extends Command
                     }
                     elseif($rating->orderno == 3) {
                         $rating_array[$row_number] = array_merge($rating_array[$row_number], [
-                            'employee' => (string)$rating->value_name,
+                            'employee'     => (string)$rating->value_name,
                             'employee_isn' => (int)$rating->value
+                        ]);
+                    }
+                    elseif($rating->orderno == 4) {
+                        $rating_array[$row_number] = array_merge($rating_array[$row_number], [
+                            'category'     => (string)$rating->value_name,
+                            'category_isn' => (int)$rating->value
                         ]);
                     }
                     elseif($rating->orderno == 5) {
                         $rating_array[$row_number] = array_merge($rating_array[$row_number], [
-                            'department' => (string)$rating->value_name,
+                            'department'     => (string)$rating->value_name,
+                            'department_isn' => (int)$rating->value
                         ]);
                     }
                     elseif($rating->orderno == 6) {
@@ -225,7 +232,10 @@ class UpdateRatingList extends Command
             $rating_list->employee = $rating['employee'];
             $rating_list->employee_isn = $rating['employee_isn'];
             $rating_list->department = $rating['department'];
+            $rating_list->department_isn = $rating['department_isn'];
             $rating_list->duty = $rating['duty'];
+            $rating_list->category = $rating['category'];
+            $rating_list->category_isn = $rating['category_isn'];
             $rating_list->rentability = $rating['rentability'];
             $rating_list->execution_plan = $rating['execution_plan'];
             $rating_list->cost_price = $rating['cost_price'];

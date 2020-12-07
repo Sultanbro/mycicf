@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class RatingController extends Controller
 {
+    const CATEGORY_ISN = 880961;
+    const DEPARTMENT_ISN = 1445737;
+
     public $keys = array(
         'rentability'    => 'Рентабельность, %',
         'execution_plan' => 'Исполнение плана, %',
@@ -118,7 +121,7 @@ class RatingController extends Controller
 
         $rating_date = date('Y-m-t', strtotime($rating_date));
 
-        $rating = RatingList::where('rating_date', $rating_date)->get(['employee', 'employee_isn', 'department', 'rate_mark', 'rate_mean', 'rating_date']);
+        $rating = RatingList::where('rating_date', $rating_date)->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])->whereNotIn('department_isn',[self::DEPARTMENT_ISN])->get(['employee', 'employee_isn', 'department', 'rate_mark', 'rate_mean', 'rating_date']);
 
         $rate_a = array();
         $rate_b = array();
@@ -168,30 +171,71 @@ class RatingController extends Controller
             }
         }
 
-//        $rate_avg = DB::table('rating_list')
-//            ->select(DB::raw("(SELECT ROUND(AVG(rate_mean))
-//                                     FROM rating_list
-//                                     WHERE rate_mark = 'A' OR rate_mark = 'A-' OR rate_mark = 'A+') as avg_a"),
-//                     DB::raw("(SELECT ROUND(AVG(rate_mean))
-//                                     FROM rating_list
-//                                     WHERE rate_mark = 'B' OR rate_mark = 'B-' OR rate_mark = 'B+') as avg_b"),
-//                     DB::raw("(SELECT ROUND(AVG(rate_mean))
-//                                     FROM rating_list
-//                                     WHERE rate_mark = 'C') as avg_c"),
-//                     DB::raw("(SELECT ROUND(AVG(rate_mean))
-//                                     FROM rating_list
-//                                     WHERE rate_mark = 'D') as avg_d")
-//            )->first();
-//
-//        dd($rate_avg);
+        $rate_avg_a = round(RatingList::where('rating_date', $rating_date)
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
+            ->whereIn('rate_mark', ['A', 'A+', 'A-'])
+            ->avg('rate_mean'));
+        $rate_avg_b = round(RatingList::where('rating_date', $rating_date)
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
+            ->whereIn('rate_mark', ['B', 'B+', 'B-'])
+            ->avg('rate_mean'));
+        $rate_avg_c = round(RatingList::where('rating_date', $rating_date)
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
+            ->where('rate_mark', 'C')
+            ->avg('rate_mean'));
+        $rate_avg_d = round(RatingList::where('rating_date', $rating_date)
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
+            ->where('rate_mark', 'D')
+            ->avg('rate_mean'));
 
+        $rate_avg_total = round(RatingList::where('rating_date', $rating_date)
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
+            ->avg('rate_mean'));
+
+        $rate_cnt_total = RatingList::where('rating_date', $rating_date)
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
+            ->count();
+
+        $rating_a = array(
+            'rate'     => $rate_a ?? 0,
+            'rate_avg' => $rate_avg_a,
+            'count'    => sizeof($rate_a)
+        );
+
+        $rating_b = array(
+            'rate'     => $rate_b ?? 0,
+            'rate_avg' => $rate_avg_b,
+            'count'    => sizeof($rate_b)
+        );
+
+        $rating_c = array(
+            'rate'     => $rate_c ?? 0,
+            'rate_avg' => $rate_avg_c,
+            'count'    => sizeof($rate_c)
+        );
+
+        $rating_d = array(
+            'rate'     => $rate_d ?? 0,
+            'rate_avg' => $rate_avg_d,
+            'count'    => sizeof($rate_d)
+        );
 
         $rating_list = array(
             'rating_list' => array(
-                'A' => $rate_a,
-                'B' => $rate_b,
-                'C' => $rate_c,
-                'D' => $rate_d
+                'A' => $rating_a,
+                'B' => $rating_b,
+                'C' => $rating_c,
+                'D' => $rating_d
+            ),
+            'rating_total' => array(
+                'rating_avg_total'  => $rate_avg_total,
+                'rating_count_total' => $rate_cnt_total,
             ),
             'success' => true,
         );
