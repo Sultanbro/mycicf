@@ -31,12 +31,14 @@
                     @endif
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('my-results')}}">
-                <li class="leftsidebar-icons">
-                    <i class="far fa-star" aria-hidden="true"></i>
-                    <span>Мои результаты</span>
-                </li>
-            </a>
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()))
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('my-results')}}">
+                    <li class="leftsidebar-icons">
+                        <i class="far fa-star" aria-hidden="true"></i>
+                        <span>Мои результаты</span>
+                    </li>
+                </a>
+            @endif
             @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472 || auth()->user()->ISN == 5011 || auth()->user()->ISN == 4275866 || auth()->user()->ISN == 766502 || auth()->user()->ISN == 3534147 || auth()->user()->ISN == 801271)
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('statistics')}}">
                     <li class="leftsidebar-icons">
