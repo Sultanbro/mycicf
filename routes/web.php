@@ -373,10 +373,15 @@ Route::get('test', function () {
 Route::get('test3', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
-//Cabinet
-Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
-Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
-//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
+
+Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
+    Route::get('/', 'Documentation\DocumentationAuthController@index');
+    Route::post('/login', 'Documentation\DocumentationAuthController@login');
+
+    Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
+
+    });
+});
 
 
 
