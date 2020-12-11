@@ -6,9 +6,7 @@
     @yield('head')
 </head>
 <body>
-<main>
     @yield('content')
-</main>
-@include('documentation.layouts.scripts')
+    @include('documentation.layouts.scripts')
 </body>
 </html>

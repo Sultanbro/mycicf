@@ -13,12 +13,20 @@ class DocumentationAuthController extends Controller
 {
     public function index()
     {
-        return view('documentation.pages.login.index');
+        if(Auth::check())
+        {
+            return redirect(route('documentation_main'));
+        }
+        else
+        {
+            return view('documentation.pages.login.index');
+        }
     }
 
     public function login(KiasServiceInterface $kias, Request $request)
     {
         $success = true;
+        $error_message = '';
 
         $username = $request->username;
         $password = $request->password;
@@ -42,7 +50,7 @@ class DocumentationAuthController extends Controller
             $kias->_sId = $response->Sid;
             $user->username = $username;
             $user->password_hash = hash('sha512', $password);
-            $user->level = $this->getUpperLevel($user->ISN, $kias);
+//            $user->level = $this->getUpperLevel($user->ISN, $kias);
             $user->short_name = $userDetails->ShortName;
             $user->full_name = $userDetails->FullName;
             $user->session_id = $response->Sid;
@@ -63,5 +71,11 @@ class DocumentationAuthController extends Controller
         );
 
         return response()->json($response);
+    }
+
+    public function logout()
+    {
+        if(Auth::check()) Auth::logout();
+        return redirect(route('documentation_auth'));
     }
 }

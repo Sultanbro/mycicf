@@ -375,11 +375,12 @@ Route::get('test3', function () {
 });
 
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
-    Route::get('/', 'Documentation\DocumentationAuthController@index');
-    Route::post('/login', 'Documentation\DocumentationAuthController@login');
+    Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');
+    Route::post('login', 'Documentation\DocumentationAuthController@login');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
-
+        Route::get('/main', 'Documentation\DocumentationController@index')->name('documentation_main');
+        Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
 
