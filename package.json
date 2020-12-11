@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.5",
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "@riophae/vue-treeselect": "^0.3.0",
     "@smartweb/vue-flash-message": "^0.5.3",
     "bootstrap": "^4.5.3",
