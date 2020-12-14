@@ -51,4 +51,14 @@ class Kurators extends Model
             ->first();
         return $data === null ? false : true;
     }
+
+    public function getActiveUsers() {
+        $data = Kurators::where('active', 1)->pluck('user_isn')->toArray();
+
+        if($data !== null) {
+            return $data;
+        }
+        else
+            return [];
+    }
 }

@@ -50,7 +50,7 @@
                 <div class="mt-2 mb-1" v-if="selectedECPFile != ''">Выбранный ключ {{ selectedECPFile }}</div>
                 <div class="mt-1 mb-1">
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
-                    <input class="form-control mt-1 mb-1" placeholder="Введите пароль" type="text" v-model="sign.password" style="width: 150px;margin: 0 auto;">
+                    <input class="form-control mt-1 mb-1" placeholder="Введите пароль" type="password" v-model="sign.password" style="width: 150px;margin: 0 auto;">
                 </div>
                 <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
             </div>
