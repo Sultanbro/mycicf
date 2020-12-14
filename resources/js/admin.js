@@ -61,6 +61,9 @@ Vue.component('full-constructor-create', require('./components/admin/products/fu
 Vue.component('constructor', require('./components/admin/products/full_constructor/constructor.vue').default);
 Vue.component('formular', require('./components/admin/products/full_constructor/formular.vue').default);
 
+Vue.component('rating-permission-list', require('./components/admin/rating/rating-permission-list').default);
+Vue.component('rating-permission-new', require('./components/admin/rating/rating-permission-new').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

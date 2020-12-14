@@ -152,6 +152,15 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/statistics/setNewUser', 'Admin\KuratorController@newUser');
             Route::get('/statistics/delete/{kurators}', 'Admin\KuratorController@deleteById');
         });
+
+        Route::group(['middleware' => 'ratingPermission'], function() {
+            Route::get('/rating/kurators', 'Admin\RatingPermissionController@index')->name('rating.kurator.list');
+            Route::post('/rating/getKuratorsList', 'Admin\RatingPermissionController@getKuratorUsers');
+            Route::get('/rating/newUser', 'Admin\RatingPermissionController@newUserView');
+            Route::post('/rating/getKurators', 'Admin\RatingPermissionController@getKurators');
+            Route::post('/rating/setNewUser', 'Admin\RatingPermissionController@newUser');
+            Route::get('/rating/delete/{kurators}', 'Admin\RatingPermissionController@deleteById');
+        });
     });
 });
 
@@ -341,6 +350,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //My results page
         Route::get('rating', 'RatingController@ratingIndex')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
+        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
