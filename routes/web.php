@@ -331,6 +331,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('boss-news', 'NewsController@index')->name('boss-news');
         Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
     });
+
+    Route::post('api/booking/get', 'ApiController@getBookingData');
+    Route::post('api/booking/delete', 'ApiController@deleteBookingData');
+    Route::post('api/booking/add', 'ApiController@addBookingData');
+    Route::post('api/booking/officeList', 'ApiController@getBookingOfficeList');
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::get('/', 'SiteController@parseAuth');
@@ -366,7 +371,3 @@ Route::get('test', function () {
 Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
 Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
 //Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
-
-
-
-

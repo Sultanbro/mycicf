@@ -21,21 +21,25 @@ class BookingController extends Controller
     public function set(Request $request) {
         $booking = new Booking();
         $req = $request['payload'];
-        $booking->data = json_encode($req);
-        if(!$booking->save()){
-            response()->json(['success'=>false]);
-        }
         $req['data']['id'] = $booking->id;
         $req['data']['author'] = Auth::user()->ISN;
         $booking->data = json_encode($req);
-        $booking->save();
+        $booking->author = Auth::user()->ISN;
+        $booking->to = date('Y-m-d H:i:s', strtotime($req['to']));
+        $booking->from = date('Y-m-d H:i:s', strtotime($req['from']));
+        $booking->title = $req['data']['title'];
+        $booking->office = $req['data']['office'];
+        $booking->description = $req['data']['description'];
+        if(!$booking->save()){
+            response()->json(['success'=>false]);
+        }
         return response()->json(['success'=>true, 'data' => $booking]);
     }
     public function delete(Request $request){
         if($request['data']['author']!== Auth::user()->ISN) {
             return response()->json(['success'=>false, 'message'=>'Невозможно удалить!']);
         }
-        $booking = Booking::where('id', ($request['data']['id']))->delete();
+        Booking::where('id', ($request['data']['id']))->delete();
         return response()->json(['success'=>true ]);
     }
 }
