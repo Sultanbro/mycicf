@@ -1,0 +1,37 @@
+.custom-input{
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+    &:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #FFF;
+    }
+}
+
+.input-icon-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none !important;
+    outline: none;
+
+    i {
+        color: #FFF;
+    }
+    .fa-eye-slash, .fa-eye {
+        cursor: pointer;
+        transition: 0.4s ease;
+    }
+    .fa-eye:hover, .fa-eye-slash:hover {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+}
+
+.custom-btn {
+    background: rgba(255, 255, 255, 1);
+    color: $base-color-darkgray;
+    transition: 0.4s ease;
+
+    &:hover {
+        color: $base-color-darkgray;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+}

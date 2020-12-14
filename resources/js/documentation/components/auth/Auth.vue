@@ -1,36 +1,38 @@
 <template>
     <div>
         <div class="row d-flex justify-content-center">
-            <div class="card col-12 p-5">
-                <h3 class="text-center text-uppercase mb-4">docs.cic.kz</h3>
+            <div class="auth-card col-12">
+                <h2 class="text-center text-uppercase mb-4">
+                    <strong>docs.cic.kz</strong>
+                </h2>
                 <form class="pl-4 pr-4" method="POST">
                     <div class="form-group mb-4">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
+                            <div class="input-group-prepend m-0">
+                                <span class="input-icon-container input-group-text">
                                     <i class="fas fa-user"></i>
                                 </span>
                             </div>
                             <input type="text"
-                                   class="form-control p-4"
+                                   class="form-control custom-input border-0 p-4"
                                    placeholder="Имя пользователя КИАС"
                                    v-model="user.username">
                         </div>
                     </div>
                     <div class="form-group mb-4">
                         <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
+                            <div class="input-group-prepend m-0">
+                                <span class="input-icon-container input-group-text">
                                     <i class="fas fa-key"></i>
                                 </span>
                             </div>
                             <input :type="isPasswordShown ? 'text' : 'password'"
-                                   class="form-control p-4"
+                                   class="custom-input form-control border-0 p-4"
                                    placeholder="Пароль"
                                    v-model="user.password">
-                            <div class="input-group-append"
+                            <div class="input-group-append m-0"
                                  @click="showPassword">
-                                <span class="input-group-text">
+                                <span class="input-icon-container input-group-text">
                                     <i :class="isPasswordShown ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                                 </span>
                             </div>
@@ -38,7 +40,7 @@
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="button"
-                                class="btn btn-danger pt-2 pb-2 pl-4 pr-4" @click="login">Войти</button>
+                                class="btn custom-btn pt-2 pb-2 pl-4 pr-4" @click="login">Войти</button>
                     </div>
                 </form>
             </div>
@@ -66,13 +68,17 @@
                 this.setIsLoading(true)
                 this.axios.post('/login', this.user)
                           .then(response => {
-                              console.log(response)
+                              if(response.data.success) {
+                                  location.href = '/main';
+                              }
                           })
                           .catch(error => {
                               alert(error)
                           })
                           .finally(() => {
                               this.setIsLoading(false)
+                              this.user.username = '';
+                              this.user.password = '';
                           })
             },
             setIsLoading(value) {
@@ -86,5 +92,4 @@
 </script>
 
 <style scoped>
-
 </style>

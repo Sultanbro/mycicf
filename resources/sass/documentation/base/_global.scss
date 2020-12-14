@@ -4,10 +4,33 @@ html {
 }
 
 body {
+    display: flex;
     height: 100%;
-    background-color: $base-background-gray;
+    background-color: #161623;
     color: $base-color-darkgray;
     font-family: "Rubik", sans-serif;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#F00, #F0F);
+    clip-path: circle(50% at right 70%);
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#2196F3, #E91E63);
+    clip-path: circle(40% at 10% 10%);
 }
 
 img {
