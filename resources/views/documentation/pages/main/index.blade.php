@@ -1,11 +1,12 @@
 @extends('documentation.layouts.main')
-@section('head')
-    <title>Главная страница</title>
+@section('title')
+    <title>Главная страница | docs.cic.kz</title>
 @endsection
 @section('content')
     @include('documentation.layouts.header')
-    <section>
-    </section>
+    <main id="documentation-app">
+
+    </main>
     @include('documentation.layouts.footer')
 @endsection
 @section('scripts')
