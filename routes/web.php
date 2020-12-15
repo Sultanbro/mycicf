@@ -152,6 +152,15 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/statistics/setNewUser', 'Admin\KuratorController@newUser');
             Route::get('/statistics/delete/{kurators}', 'Admin\KuratorController@deleteById');
         });
+
+        Route::group(['middleware' => 'ratingPermission'], function() {
+            Route::get('/rating/kurators', 'Admin\RatingPermissionController@index')->name('rating.kurator.list');
+            Route::post('/rating/getKuratorsList', 'Admin\RatingPermissionController@getKuratorUsers');
+            Route::get('/rating/newUser', 'Admin\RatingPermissionController@newUserView');
+            Route::post('/rating/getKurators', 'Admin\RatingPermissionController@getKurators');
+            Route::post('/rating/setNewUser', 'Admin\RatingPermissionController@newUser');
+            Route::get('/rating/delete/{kurators}', 'Admin\RatingPermissionController@deleteById');
+        });
     });
 });
 
@@ -242,9 +251,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/vote', 'NewsController@vote');
 
         Route::post('/setSenateVote', 'NewsController@senateVote');
-        //RATING
-        Route::get('/rating', 'RatingController@index')->name('rating');
-        Route::post('/getRatingList', 'RatingController@getRatingList');
+//        //RATING
+//        Route::get('/rating', 'RatingController@index')->name('rating');
+//        Route::post('/getRatingList', 'RatingController@getRatingList');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
@@ -337,6 +346,15 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::get('boss-news', 'NewsController@index')->name('boss-news');
         Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
+
+        //My results page
+        Route::get('rating', 'RatingController@ratingIndex')->name('rating');
+        Route::post('getTopRatingList', 'RatingController@getTopRatingList');
+        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+
+        Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
+        Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
+        Route::post('my-results/getRating', 'RatingController@getRating');
     });
 
     Route::post('api/booking/get', 'ApiController@getBookingData');
@@ -378,7 +396,7 @@ Route::get('test', function () {
 Route::get('test3', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
-//Cabinet
-Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
-Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
-//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
+
+
+
+

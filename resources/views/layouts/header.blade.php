@@ -31,11 +31,19 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="{{route('development', 'rating')}}">
-                    <li>
-                        Рейтинг
-                    </li>
-                </a>
+                @if(in_array(auth()->user()->ISN, ((new \App\RatingPermission())->getActiveUsers())))
+                    <a class="header-navigation" href="{{route('rating')}}">
+                        <li>
+                            Рейтинг
+                        </li>
+                    </a>
+                @else
+                    <a class="header-navigation" href="javascript:void(0)">
+                        <li>
+                            Рейтинг
+                        </li>
+                    </a>
+                @endif
                 <a class="header-navigation" href="{{route('documentation')}}">
                     <li>
                         Библиотека
