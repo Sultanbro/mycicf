@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="collapse" :id="`rating-${index}`">
-                        <employee-rate :rating="rating.rate"></employee-rate>
+                        <employee-rate :rating="rating.rate" :isn="isn"></employee-rate>
                     </div>
                 </div>
             </div>
@@ -53,6 +53,9 @@
                 ratingDate: new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 10).toJSON().slice(0, 7),
                 ratingTotal: {},
             }
+        },
+        props: {
+            isn: Number
         },
         mounted() {
             this.getTopRatingList();

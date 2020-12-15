@@ -43,7 +43,7 @@
         @include('layouts.sidebar')
 
         <div class="col-md-8" id="employee_info">
-            <rating-list></rating-list>
+            <rating-list :isn="{{Auth::user()->ISN}}"></rating-list>
         </div>
 
         {{--RIGHT SIDE BAR GOES HERE--}}

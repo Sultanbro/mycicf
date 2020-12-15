@@ -5,7 +5,8 @@
                 <div>
                     <div>
                         <span>
-                            <a :href="`/my-results/rating/${rate.employee_isn}/${rate.rating_date}`">{{rate.employee}}</a>
+                            <a v-if="permitted_users.includes(isn)" :href="`/my-results/rating/${rate.employee_isn}/${rate.rating_date}`">{{rate.employee}}</a>
+                            <span v-else>{{rate.employee}}</span>
                         </span>
                     </div>
                     <div>
@@ -29,7 +30,15 @@
     export default {
         name: "employee-rate",
         props: {
-            rating: Array
+            rating: Array,
+            isn: Number
+        },
+        data() {
+            return {
+                permitted_users: [
+                    1445771, 1445988, 3611435, 1445765, 5011, 1445999, 5013, 1472004, 1445744, 1445892
+                ]
+            }
         }
     }
 </script>
