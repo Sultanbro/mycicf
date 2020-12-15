@@ -356,6 +356,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
         Route::post('my-results/getRating', 'RatingController@getRating');
     });
+
+    Route::post('api/booking/get', 'ApiController@getBookingData');
+    Route::post('api/booking/delete', 'ApiController@deleteBookingData');
+    Route::post('api/booking/add', 'ApiController@addBookingData');
+    Route::post('api/booking/officeList', 'ApiController@getBookingOfficeList');
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::get('/', 'SiteController@parseAuth');
