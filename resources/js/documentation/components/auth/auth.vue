@@ -42,18 +42,18 @@
                         <button type="button"
                                 class="btn custom-btn pt-2 pb-2 pl-4 pr-4"
                                 @click="login"
-                                :disabled="!user.username || !user.password">Войти</button>
+                                :disabled="!user.username || !user.password || isLoading">Войти</button>
                     </div>
                 </form>
             </div>
         </div>
-        <Preloader v-show="isLoading"></Preloader>
+        <preloader v-show="isLoading"></preloader>
     </div>
 </template>
 
 <script>
     export default {
-        name: "Auth",
+        name: "auth",
         data() {
             return {
                 isLoading: false,

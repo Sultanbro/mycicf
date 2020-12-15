@@ -1,13 +1,11 @@
 <template>
-
+    <div>
+        <auth></auth>
+    </div>
 </template>
 
 <script>
     export default {
-        name: "Footer"
+        name: "root",
     }
 </script>
-
-<style scoped>
-
-</style>

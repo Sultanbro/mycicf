@@ -5,10 +5,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios);
 
-Vue.component('Header', require('./components/common/Header.vue').default);
-Vue.component('Sidebar', require('./components/common/Sidebar.vue').default);
-Vue.component('Footer', require('./components/common/Footer.vue').default);
-Vue.component('Preloader', require('./components/common/Preloader.vue').default);
+
+Vue.component('preloader', require('./components/common/preloader.vue').default);
+Vue.component('header-component', require('./components/common/header-component.vue').default);
+Vue.component('footer-component', require('./components/common/footer-component.vue').default);
+Vue.component('sidebar-component', require('./components/common/sidebar-component.vue').default);
 
 window.onload = function(){
     var app = new Vue({

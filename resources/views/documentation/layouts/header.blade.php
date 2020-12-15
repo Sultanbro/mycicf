@@ -1,3 +1,1 @@
-<header>
-    <Header></Header>
-</header>
+<Header></Header>

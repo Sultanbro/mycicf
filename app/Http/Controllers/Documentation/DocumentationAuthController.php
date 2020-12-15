@@ -76,6 +76,8 @@ class DocumentationAuthController extends Controller
     public function logout()
     {
         if(Auth::check()) Auth::logout();
-        return redirect(route('documentation_auth'));
+        return response()->json([
+            'success' => true,
+        ]);
     }
 }

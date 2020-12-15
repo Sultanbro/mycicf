@@ -5,9 +5,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios);
 
-Vue.component('Root', require('./components/auth/Root.vue').default);
-Vue.component('Auth', require('./components/auth/Auth.vue').default);
-Vue.component('Preloader', require('./components/common/Preloader.vue').default);
+Vue.component('root', require('./components/auth/root.vue').default);
+Vue.component('auth', require('./components/auth/auth.vue').default);
+Vue.component('preloader', require('./components/common/preloader.vue').default);
 
 window.onload = function(){
     var app = new Vue({

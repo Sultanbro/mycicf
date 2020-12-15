@@ -1,11 +1,13 @@
 <template>
-    <div>
-        <Auth></Auth>
-    </div>
+
 </template>
 
 <script>
     export default {
-        name: "Root",
+        name: "footer-component"
     }
 </script>
+
+<style scoped>
+
+</style>

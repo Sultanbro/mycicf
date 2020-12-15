@@ -6,12 +6,20 @@ html {
 body {
     display: flex;
     height: 100%;
-    background-color: #161623;
+    background-color: #F8F8F8;
     color: $base-color-darkgray;
     font-family: "Rubik", sans-serif;
 }
 
-body::before {
+#documentation-login {
+    display: flex;
+    height: 100%;
+    background-color: $base-color-dark;
+    color: $base-color-darkgray;
+    font-family: "Rubik", sans-serif;
+}
+
+#documentation-login::before {
     content: '';
     position: absolute;
     top: 0;
@@ -22,7 +30,7 @@ body::before {
     clip-path: circle(50% at right 70%);
 }
 
-body::after {
+#documentation-login::after {
     content: '';
     position: absolute;
     top: 0;
@@ -61,4 +69,12 @@ li {
 span {
     margin: 0;
     padding: 0;
+}
+
+.main {
+    margin-top: 60px;
+}
+
+.pointer {
+    cursor: pointer;
 }
