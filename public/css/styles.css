@@ -352,6 +352,9 @@ ul{
 .attachment-bg{
 	background: #dce7ff;
 	color: #5d5d5e;
+	height: 100%;
+	width: 100%;
+	word-break: break-all;
 }
 .red-button{
 	color: red;
