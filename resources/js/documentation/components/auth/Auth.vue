@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @keydown.enter="login">
         <div class="row d-flex justify-content-center">
             <div class="auth-card col-12">
                 <h2 class="text-center text-uppercase mb-4">
@@ -40,7 +40,9 @@
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="button"
-                                class="btn custom-btn pt-2 pb-2 pl-4 pr-4" @click="login">Войти</button>
+                                class="btn custom-btn pt-2 pb-2 pl-4 pr-4"
+                                @click="login"
+                                :disabled="!user.username || !user.password">Войти</button>
                     </div>
                 </form>
             </div>
@@ -69,7 +71,7 @@
                 this.axios.post('/login', this.user)
                           .then(response => {
                               if(response.data.success) {
-                                  location.href = '/main';
+                                  location.href = '/main'
                               }
                           })
                           .catch(error => {
@@ -77,15 +79,15 @@
                           })
                           .finally(() => {
                               this.setIsLoading(false)
-                              this.user.username = '';
-                              this.user.password = '';
+                              this.user.username = ''
+                              this.user.password = ''
                           })
             },
             setIsLoading(value) {
-                this.isLoading = value;
+                this.isLoading = value
             },
             showPassword() {
-                this.isPasswordShown = !this.isPasswordShown;
+                this.isPasswordShown = !this.isPasswordShown
             }
         }
     }
