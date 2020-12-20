@@ -31,7 +31,7 @@
                     @endif
                 </li>
             </a>
-            @if(in_array(auth()->user()->ISN, ((new \App\RatingPermission())->getActiveUsers())))
+            @if(in_array(auth()->user()->ISN, ((new \App\RatingPermission())->getActiveUsers())) || in_array(auth()->user()->dept_isn, ((new \App\RatingPermission())->getActiveUsers())))
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('my-results')}}">
                     <li class="leftsidebar-icons">
                         <i class="far fa-star" aria-hidden="true"></i>
