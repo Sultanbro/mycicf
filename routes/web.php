@@ -230,10 +230,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getRatingList', 'RatingController@getRatingList');
 
         //RECRUITING
-        Route::get('/recruiting', 'NameController@getRecruiting')->name('recruiting');
-        Route::post('/recruiting', 'NameController@getContent');
-        Route::post('/recruiting', 'NameController@getTestData');
-        Route::post('recruiting', 'NameController@sendRequest');
+        Route::get('/recruiting', 'RecruitingController@getRecruiting')->name('recruiting');
+        Route::post('/recruiting', 'RecruitingController@getContent');
+        Route::post('/recruiting', 'RecruitingController@getTestData');
+        Route::post('recruiting', 'RecruitingController@sendRequest');
+        Route::post('/recruiting/saveCandidat', 'RecruitingController@saveCandidat');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
@@ -313,6 +314,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+
+        Route::post('recruiting/save', 'RecruitingController@saveCandidat');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {

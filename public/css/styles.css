@@ -2606,7 +2606,8 @@ textarea::-webkit-scrollbar-thumb {
 .recruiting-tripple-block-container{
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: stretch;
+    margin-top: 1rem;
 }
 .recruiting-tripple-block{
     display: flex;
@@ -2673,9 +2674,6 @@ textarea::-webkit-scrollbar-thumb {
 .recruiting-center{
     text-align: center;
 }
-.recruiting-interwiew-table td:last-child{
-    color: #1e982a;
-}
 .recruiting-modal-size{
     max-width: 900px !important;
 }
@@ -2692,6 +2690,7 @@ textarea::-webkit-scrollbar-thumb {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    /*align-items: center;*/
     margin-top: 1rem;
 }
 .recruiting-modal-general{
@@ -2707,6 +2706,7 @@ textarea::-webkit-scrollbar-thumb {
     padding: 0.2rem 2rem;
     max-width: 100%;
     overflow: hidden;
+    cursor: pointer;
 }
 .disabledBtnRecruiting {
     pointer-events: none;
@@ -2723,6 +2723,46 @@ textarea::-webkit-scrollbar-thumb {
 .activeBtnRecruiting:hover{
     background: #1f4aa2 !important;
 }
+.recruiting-savebtn-container{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+.colorRedImportant{
+    color: red !important;
+}
+.colorblack{
+    color: #000;
+}
+.recruiting-modal-borderbot{
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+.recruiting-add-btn{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    border: 2px solid darkgray;
+    color: gray;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+}
+.recruiting-add-btn i{
+    margin-right: 0;
+}
+.colororange{
+    color: orange;
+}
+.typeFile{
+    display: none;
+}
+.recruiting-backward-title{
+    font-size: 1.3rem;
+    font-weight: bold;
+}
 @media (max-width: 1400px){
  .tripplebar-btn{
      flex-flow: column-reverse;
@@ -2731,4 +2771,7 @@ textarea::-webkit-scrollbar-thumb {
  .tripplebar-btn .far, .fas {
      margin-right: 0;
  }
+}
+.z-9999{
+    z-index: 9999 !important;
 }
