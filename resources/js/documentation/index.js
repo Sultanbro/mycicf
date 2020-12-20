@@ -1,5 +1,9 @@
+require('../bootstrap');
 window.Vue = require('vue');
 import Vue from "vue";
+
+window.$ = require('jquery')
+window.JQuery = require('jquery')
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
