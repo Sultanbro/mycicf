@@ -31,7 +31,7 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                @if(in_array(auth()->user()->ISN, ((new \App\RatingPermission())->getActiveUsers())))
+                @if(in_array(auth()->user()->ISN, ((new \App\RatingPermission())->getActiveUsers())) || in_array(auth()->user()->dept_isn, ((new \App\RatingPermission())->getActiveUsers())))
                     <a class="header-navigation" href="{{route('rating')}}">
                         <li>
                             Рейтинг
