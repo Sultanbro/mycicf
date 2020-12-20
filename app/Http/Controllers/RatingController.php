@@ -327,19 +327,19 @@ class RatingController extends Controller
                 else if($mark < 69) return $rate_mark = 40;
                 else if($mark < 89) return $rate_mark = 60;
                 else if($mark < 100) return $rate_mark = 80;
-                else return $rate_mark = '100+';
+                else return $rate_mark = 100;
             case 'cost_price':
                 if($mark > 31) return $rate_mark = 0;
                 else if($mark > 21) return $rate_mark = 40;
                 else if($mark > 16) return $rate_mark = 60;
                 else if($mark > 11) return $rate_mark = 80;
-                else return $rate_mark = '10-';
+                else return $rate_mark = 100;
             case 'net_claim':
                 if($mark > 31) return $rate_mark = 0;
                 else if($mark > 21) return $rate_mark = 40;
                 else if($mark > 16) return $rate_mark = 60;
                 else if($mark > 11) return $rate_mark = 80;
-                else return $rate_mark = 10;
+                else return $rate_mark = 100;
             case 'ar_current':
                 if($mark > 12) return $rate_mark = 0;
                 else if($mark > 9) return $rate_mark = 40;
@@ -357,7 +357,7 @@ class RatingController extends Controller
                 else if($mark < 50) return $rate_mark = 40;
                 else if($mark < 60) return $rate_mark = 60;
                 else if($mark < 79) return $rate_mark = 80;
-                else return $rate_mark = '80+';
+                else return $rate_mark = 100;
             case 'new_clients':
                 if($mark < 19) return $rate_mark = 0;
                 else if($mark < 29) return $rate_mark = 40;
