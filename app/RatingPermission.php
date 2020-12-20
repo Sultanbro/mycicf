@@ -45,7 +45,9 @@ class RatingPermission extends Model
     }
 
     public function getActiveUsers() {
-        $data = RatingPermission::where('active', 1)->pluck('user_isn')->toArray();
+        $user_isn = RatingPermission::where('active', 1)->groupBy('user_isn')->pluck('user_isn')->toArray();
+        $dept_isn = RatingPermission::where('active', 1)->groupBy('dept_isn')->pluck('dept_isn')->toArray();
+        $data = array_merge($user_isn, $dept_isn);
 
         if($data !== null) {
             return $data;
