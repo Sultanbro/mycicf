@@ -803,7 +803,7 @@
                         <td>Иванов Иван Иванович</td>
                         <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
                         <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Казиева А</td>
+                        <td class="recruiting-center">Филимонова Е.</td>
                         <td>01.02.2020</td>
                     </tr>
                     <tr>
@@ -811,7 +811,7 @@
                         <td>Иванов Иван Иванович</td>
                         <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
                         <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Казиева А</td>
+                        <td class="recruiting-center">Филимонова Е.</td>
                         <td>01.02.2020</td>
                     </tr>
                     <tr>
@@ -819,7 +819,7 @@
                         <td>Иванов Иван Иванович</td>
                         <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
                         <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Казиева А</td>
+                        <td class="recruiting-center">Филимонова Е.</td>
                         <td>01.02.2020</td>
                     </tr>
                     <tr>
@@ -827,7 +827,7 @@
                         <td>Иванов Иван Иванович</td>
                         <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
                         <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Казиева А</td>
+                        <td class="recruiting-center">Филимонова Е.</td>
                         <td>01.02.2020</td>
                     </tr>
                     </tbody>
