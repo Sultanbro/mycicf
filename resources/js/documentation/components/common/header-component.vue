@@ -33,14 +33,14 @@
             }
         },
         beforeMount() {
-            window.addEventListener("scroll", this.handleScroll);
+            window.addEventListener("scroll", this.handleScroll)
         },
         beforeDestroy() {
-            window.removeEventListener("scroll", this.handleScroll);
+            window.removeEventListener("scroll", this.handleScroll)
         },
         methods: {
             handleScroll() {
-                this.showToTopBtn = document.documentElement.scrollTop > 50;
+                this.showToTopBtn = document.documentElement.scrollTop > 50
             },
             goToTop() {
                 window.scroll({

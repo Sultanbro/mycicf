@@ -15,7 +15,9 @@ class CreateDocModelDescriptionsTable extends Migration
     {
         Schema::create('doc_model_descriptions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->
+            $table->string('title')->index()->comment('Заголовок, например метод для поиска по справочнику');
+            $table->string('method_name')->index()->comment('Название метода, например getDictiList');
+            $table->json('documentation')->comment('Документация в JSON формате');
             $table->timestamps();
         });
     }
@@ -27,6 +29,10 @@ class CreateDocModelDescriptionsTable extends Migration
      */
     public function down()
     {
+        Schema::table('doc_model_descriptions', function (Blueprint $table) {
+            $table->dropIndex('title');
+            $table->dropIndex('method_name');
+        });
         Schema::dropIfExists('doc_model_descriptions');
     }
 }

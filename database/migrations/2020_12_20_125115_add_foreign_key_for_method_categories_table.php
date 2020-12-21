@@ -13,7 +13,9 @@ class AddForeignKeyForMethodCategoriesTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::table('doc_model_descriptions', function (Blueprint $table) {
+            $table->unsignedBigInteger('doc_category_id');
+        });
     }
 
     /**
@@ -23,6 +25,8 @@ class AddForeignKeyForMethodCategoriesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('doc_model_descriptions', function (Blueprint $table) {
+            $table->dropColumn('doc_category_id');
+        });
     }
 }
