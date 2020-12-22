@@ -380,6 +380,7 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/main', 'Documentation\DocumentationController@index')->name('documentation_main');
+        Route::get('/main/{type}/{id}', 'Documentation\DocumentationController@index');
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });

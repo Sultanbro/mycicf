@@ -15,22 +15,17 @@
             </div>
             <div class="collapse" id="collapse-el-1">
                 <ul>
-                    <li class="">
-                        <a href="" class="d-flex pl-3 pr-3 pt-2 pb-2">Bestsender</a>
-                    </li>
-                    <li class="border-top">
-                        <a href="" class="d-flex pl-3 pr-3 pt-2 pb-2">Oktell</a>
-                    </li>
-                    <li class="border-top">
-                        <a href="" class="d-flex pl-3 pr-3 pt-2 pb-2">Aviata</a>
-                    </li>
-                    <li class="border-top border-bottom">
-                        <a href="" class="d-flex pl-3 pr-3 pt-2 pb-2">Choco</a>
+                    <li class="border-bottom"
+                        v-for="(apiCategory, index) in categories.api"
+                        :key="index"
+                        @click="isLoading = !isLoading"
+                        >
+                        <a :href="`/main/apidocs/${apiCategory.id}`"
+                           class="d-flex pl-3 pr-3 pt-2 pb-2">{{ apiCategory.title }}</a>
                     </li>
                 </ul>
             </div>
         </div>
-
         <div>
             <div class="d-flex justify-content-between p-3 pointer"
                  data-toggle="collapse"
@@ -46,21 +41,17 @@
             </div>
             <div class="collapse" id="collapse-el-2">
                 <ul>
-                    <li class="pl-3 pr-3 pt-2 pb-2 border-top">
-                        <a href="">Test 1</a>
-                    </li>
-                    <li class="pl-3 pr-3 pt-2 pb-2 border-top">
-                        <a href="">Test 1</a>
-                    </li>
-                    <li class="pl-3 pr-3 pt-2 pb-2 border-top">
-                        <a href="">Test 1</a>
-                    </li>
-                    <li class="pl-3 pr-3 pt-2 pb-2 border-top">
-                        <a href="">Test 1</a>
+                    <li class="border-top"
+                        v-for="(kiasCategory, index) in categories.kias"
+                        :key="index"
+                        @click="isLoading = !isLoading">
+                        <a :href="`/main/kiasdocs/${kiasCategory.id}`"
+                           class="d-flex pl-3 pr-3 pt-2 pb-2">{{ kiasCategory.title }}</a>
                     </li>
                 </ul>
             </div>
         </div>
+        <preloader v-if="isLoading"></preloader>
     </div>
 </template>
 
@@ -71,7 +62,11 @@
             return {
                 isApiOpened: false,
                 isKiasOpened: false,
+                isLoading: false,
             }
+        },
+        props: {
+            categories: Object,
         }
     }
 </script>

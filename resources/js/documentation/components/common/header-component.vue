@@ -7,7 +7,8 @@
                     @click="goToTop">
                    <strong>Наверх</strong>
                 </h4>
-                <h4 v-else class="m-0 text-white text-uppercase">
+                <h4 v-else class="m-0 text-white text-uppercase pointer"
+                    @click="goHome">
                     <strong>docs.cic.kz</strong>
                 </h4>
            </div>
@@ -16,7 +17,7 @@
                        @click="logout"
                        :disabled="isLoading">Выйти</button>
            </div>
-           <preloader v-show="isLoading"></preloader>
+           <preloader v-if="isLoading"></preloader>
        </div>
     </div>
 </template>
@@ -48,6 +49,10 @@
                     left: 0,
                     behavior: 'smooth'
                 });
+            },
+            goHome() {
+                this.setLoading(true);
+                location.href = '/main'
             },
             setLoading(value) {
                 this.isLoading = value;

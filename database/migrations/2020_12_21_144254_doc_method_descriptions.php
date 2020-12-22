@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDocModelDescriptionsTable extends Migration
+class DocMethodDescriptions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDocModelDescriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('doc_model_descriptions', function (Blueprint $table) {
+        Schema::create('doc_method_descriptions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title')->index()->comment('Заголовок, например метод для поиска по справочнику');
             $table->string('method_name')->index()->comment('Название метода, например getDictiList');
@@ -29,10 +29,10 @@ class CreateDocModelDescriptionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('doc_model_descriptions', function (Blueprint $table) {
+        Schema::table('doc_method_descriptions', function (Blueprint $table) {
             $table->dropIndex('title');
             $table->dropIndex('method_name');
         });
-        Schema::dropIfExists('doc_model_descriptions');
+        Schema::dropIfExists('doc_method_descriptions');
     }
 }

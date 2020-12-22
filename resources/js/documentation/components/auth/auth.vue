@@ -47,7 +47,7 @@
                 </form>
             </div>
         </div>
-        <preloader v-show="isLoading"></preloader>
+        <preloader v-if="isLoading"></preloader>
     </div>
 </template>
 
