@@ -41,3 +41,48 @@
         box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
     }
 }
+
+.custom-btn-primary {
+    border-radius: 15px;
+    transition: 0.4s ease;
+    background-color: $color-red;
+    color: #FFF;
+    border: 0;
+
+    &:hover {
+        background-color: #e03c3b;
+    }
+}
+
+.custom-btn-outlined {
+    transition: 0.4s ease;
+    border: 1px solid limegreen;
+    color: limegreen;
+    background-color: #FFF;
+
+    &:hover {
+        background-color: limegreen;
+        color: #FFF;
+    }
+    &_active {
+        background-color: limegreen;
+        color: #FFF;
+    }
+}
+
+.custom-add-btn-outlined {
+    transition: 0.4s ease;
+    border: 1px solid #444;
+    color: #444;
+    background-color: #FFF;
+
+    &:hover {
+        background-color: #444;
+        color: #FFF;
+    }
+}
+
+.modal {
+    backdrop-filter: blur(5px);
+    background-color: rgba(255, 255, 255, 0.3);
+}
