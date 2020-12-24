@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="border border-secondary rounded p-4 mb-3">
-            <!-- Delete button block -->
             <div class="d-flex justify-content-end w-100">
                 <button type="button"
                         class="delete-button"
@@ -10,7 +9,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <!-- Title group block-->
+            <!-- First group -->
             <div class="input-group mb-3">
                 <div>
                     <span>Заголовок</span>
@@ -27,7 +26,7 @@
                     <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                 </div>
             </div>
-            <!-- Method name group block -->
+            <!-- Second group -->
             <div class="input-group mb-3">
                 <div>
                     <span>Название метода</span>
@@ -36,69 +35,10 @@
                     <input type="text"
                            class="form-control"
                            :class="isTouched && activeField === 'method' && doc.methodName === '' ? 'is-invalid' : ''"
-                           placeholder="calculate, save, ..."
+                           placeholder="GetDictiList, GetAgrObjectClassList, ..."
                            @focus="activeField = 'method', isTouched = false"
                            @blur="isTouched = true"
                            v-model="doc.methodName"
-                           required>
-                    <div class="invalid-feedback">Необходимо заполнить данное поле</div>
-                </div>
-            </div>
-            <!-- Version group block -->
-            <div class="input-group mb-3">
-                <div class="form-row w-100">
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <div>
-                            <span>Версия</span>
-                        </div>
-                        <div class="w-100">
-                            <input type="text"
-                                   class="form-control"
-                                   :class="isTouched && activeField === 'version' && doc.version === '' ? 'is-invalid' : ''"
-                                   placeholder="v1, v2, ..."
-                                   maxlength="3"
-                                   v-model="doc.version">
-                            <div class="invalid-feedback">Необходимо заполнить данное поле</div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <div>
-                            <span>Метод защиты</span>
-                        </div>
-                        <div class="w-100">
-                            <input type="text"
-                                   class="form-control"
-                                   :class="isTouched && activeField === 'security' && doc.securedBy === '' ? 'is-invalid' : ''"
-                                   placeholder="OAuth2, JWT, ..."
-                                   v-model="doc.securedBy">
-                            <div class="invalid-feedback">Необходимо заполнить данное поле</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- URL group block -->
-            <div class="mb-3">
-                <div>
-                    <span>URL адрес</span>
-                </div>
-                <div class="input-group w-100">
-                    <div class="input-group-prepend">
-                        <select class="form-control"
-                                v-model="doc.method">
-                            <option value="GET">GET</option>
-                            <option value="POST">POST</option>
-                            <option value="PUT">PUT</option>
-                            <option value="DELETE">DELETE</option>
-                            <option value="" selected hidden>Метод</option>
-                        </select>
-                    </div>
-                    <input type="text"
-                           class="form-control"
-                           :class="isTouched && activeField === 'url' && doc.baseUrl === '' ? 'is-invalid' : ''"
-                           placeholder="https://api.kupipolis.kz/..."
-                           @focus="activeField = 'url', isTouched = false"
-                           @blur="isTouched = true"
-                           v-model="doc.baseUrl"
                            required>
                     <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                 </div>
@@ -109,7 +49,7 @@
                     <h5 class="text-center">Параметры</h5>
                 </div>
                 <div v-for="(param, index) in doc.params">
-                    <apidoc-element-param :param="param" :index="index" :key="index"></apidoc-element-param>
+                    <kiasdoc-element-param :param="param" :index="index" :key="index"></kiasdoc-element-param>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"
@@ -124,7 +64,7 @@
 
 <script>
     export default {
-        name: "apidoc-element",
+        name: "kiasdoc-element",
         data() {
             return {
                 param: {
