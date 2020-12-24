@@ -11,6 +11,9 @@
                 </div>
             </div>
             <hr class="mt-0">
+            <div class="d-flex align-items-center justify-content-center">
+                <h4>{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[month] }}</h4>
+            </div>
             <div class="pt-2 pl-4 pr-4 pb-2 relative">
                 <div class="text-center relative">
                     <div>
@@ -57,6 +60,22 @@
             return {
                 birthdays: [],
                 index : 0,
+                today: new Date().getDate(),
+                month: new Date().getMonth() + 1,
+                monthNames: {
+                    1: 'Январь',
+                    2: 'Февраль',
+                    3: 'Март',
+                    4: 'Апрель',
+                    5: 'Май',
+                    6: 'Июнь',
+                    7: 'Июль',
+                    8: 'Август',
+                    9: 'Сентябрь',
+                    10: 'Октябрь',
+                    11: 'Ноябрь',
+                    12: 'Декабрь'
+                }
             }
         },
         mounted () {
