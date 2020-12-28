@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="create-docs" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade p-0" id="create-docs" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header p-sm-4 pt-md-4 pb-md-4 pl-md-5 pr-md-5">

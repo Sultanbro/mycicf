@@ -49,7 +49,9 @@
                     <h5 class="text-center">Параметры</h5>
                 </div>
                 <div v-for="(param, index) in doc.params">
-                    <kiasdoc-element-param :param="param" :index="index" :key="index"></kiasdoc-element-param>
+                    <kiasdoc-element-param :param="param"
+                                           :index="index"
+                                           :key="index"></kiasdoc-element-param>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"
@@ -69,7 +71,7 @@
             return {
                 param: {
                     paramName: '',
-                    paramType: '',
+                    paramType: 'String',
                     description: '',
                     format: '',
                     required: '',

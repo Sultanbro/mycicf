@@ -13,7 +13,9 @@
             <div class="invalid-feedback">Необходимо заполнить данное поле</div>
         </div>
         <div v-for="(doc, index) in docs">
-            <kiasdoc-element :doc="doc" :index="index" :key="index"></kiasdoc-element>
+            <kiasdoc-element :doc="doc"
+                             :index="index"
+                             :key="index"></kiasdoc-element>
         </div>
         <div class="d-flex justify-content-center">
             <button class="custom-add-btn-outlined rounded pt-2 pb-2 pl-3 pr-3"

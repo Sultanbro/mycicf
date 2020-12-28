@@ -13,7 +13,9 @@
             <div class="invalid-feedback">Необходимо заполнить данное поле</div>
         </div>
         <div v-for="(doc, index) in docs">
-            <apidoc-element :doc="doc" :index="index" :key="index"></apidoc-element>
+            <apidoc-element :doc="doc"
+                            :index="index"
+                            :key="index"></apidoc-element>
         </div>
         <div class="d-flex justify-content-center">
             <button class="custom-add-btn-outlined rounded pt-2 pb-2 pl-3 pr-3"
@@ -28,25 +30,55 @@
         data() {
             return {
                 categoryName: '',
-                docs: [],
+                docs: [
+                    {
+                        title: '',
+                        methodName: '',
+                        version: '',
+                        baseUrl: '',
+                        securedBy: '',
+                        method: 'GET',
+                        params: [
+                            {
+                                paramName: '',
+                                paramType: 'String',
+                                description: '',
+                                format: '',
+                                required: 'false',
+                            }
+                        ],
+                        returnValue: ''
+                    }
+                ],
                 docElement: {
                     title: '',
                     methodName: '',
                     version: '',
                     baseUrl: '',
                     securedBy: '',
-                    method: '',
-                    params: [],
-                    errors: [],
+                    method: 'GET',
+                    params: [
+                        {
+                            paramName: '',
+                            paramType: 'String',
+                            description: '',
+                            format: '',
+                            required: 'false',
+                        }
+                    ],
                     returnValue: ''
+                },
+                param: {
+                    paramName: '',
+                    paramType: 'String',
+                    description: '',
+                    format: '',
+                    required: 'false',
                 },
                 activeField: '',
                 isTouched: false,
                 isFocused: false,
             }
-        },
-        mounted() {
-            this.docs.push({...this.docElement})
         },
         methods: {
             createDoc() {

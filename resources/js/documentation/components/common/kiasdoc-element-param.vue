@@ -13,13 +13,16 @@
             <!-- Parameter select block -->
             <div class="form-row w-100 mb-3">
                 <div class="col-sm-12 col-md-6 col-lg-6 mb-sm-4 mb-lg-0 mb-md-0">
-                    <select class="form-control" v-model="param.paramType">
-                        <option :value="dataType" v-for="dataType in dataTypes">{{dataType}}</option>
+                    <select class="form-control"
+                            v-model="param.paramType">
+                        <option :value="dataType"
+                                v-for="dataType in dataTypes">{{dataType}}</option>
                         <option value="" selected hidden>Тип параметра</option>
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-6">
-                    <select class="form-control" v-model="param.required">
+                    <select class="form-control"
+                            v-model="param.required">
                         <option value="true">Да</option>
                         <option value="false">Нет</option>
                         <option value="" selected hidden>Обязательный</option>

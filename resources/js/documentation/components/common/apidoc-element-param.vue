@@ -12,14 +12,17 @@
             </div>
             <!-- Parameter select block -->
             <div class="form-row w-100 mb-3">
-                <div class="col-sm-12 col-md-6 col-lg-6 mb-sm-4 mb-lg-0 mb-md-0">
-                    <select class="form-control" v-model="param.paramType">
-                        <option :value="dataType" v-for="dataType in dataTypes">{{dataType}}</option>
+                <div class="col-sm-12 col-md-12 col-lg-6 mb-4">
+                    <select class="form-control"
+                            v-model="param.paramType">
+                        <option :value="dataType"
+                                v-for="dataType in dataTypes">{{dataType}}</option>
                         <option value="" selected hidden>Тип параметра</option>
                     </select>
                 </div>
-                <div class="col-sm-12 col-md-6 col-lg-6">
-                    <select class="form-control" v-model="param.required">
+                <div class="col-sm-12 col-md-12 col-lg-6">
+                    <select class="form-control"
+                            v-model="param.required">
                         <option value="true">Да</option>
                         <option value="false">Нет</option>
                         <option value="" selected hidden>Обязательный</option>
@@ -27,8 +30,8 @@
                 </div>
             </div>
             <!-- Parameter description block -->
-            <div class="form-row w-100">
-                <div class="col-sm-12 col-md-4 col-lg-4">
+            <div class="form-row w-100 mb-4">
+                <div class="col-sm-12 col-md-12 col-lg-4">
                     <div>
                         <span>Название</span>
                     </div>
@@ -38,13 +41,13 @@
                                :class="isTouched && activeField === 'paramName' && param.paramName === '' ? 'is-invalid' : ''"
                                @focus="activeField = 'paramName', isTouched = false"
                                @blur="isTouched = true"
-                               placeholder="tokem, isn, doc_id, ..."
+                               placeholder="token, isn, doc_id, ..."
                                v-model="param.paramName"
                                required>
                         <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="col-sm-12 col-md-12 col-lg-4">
                     <div>
                         <span>Описание</span>
                     </div>
@@ -60,7 +63,7 @@
                         <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="col-sm-12 col-md-12 col-lg-4">
                     <div>
                         <span>Формат</span>
                     </div>
@@ -90,7 +93,7 @@
                 isFocused: false,
 
                 dataTypes: [
-                    'Boolean', 'Integer', 'Double', 'String', 'Array', 'Object', 'Resources', 'NULL'
+                    'Boolean', 'Integer', 'Double', 'String', 'Array', 'Object', 'Resources', 'NULL', 'DATE', 'TIME', 'DATETIME',
                 ]
             }
         },

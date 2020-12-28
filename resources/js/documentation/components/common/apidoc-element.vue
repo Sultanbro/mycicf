@@ -47,7 +47,7 @@
             <!-- Version group block -->
             <div class="input-group mb-3">
                 <div class="form-row w-100">
-                    <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
                         <div>
                             <span>Версия</span>
                         </div>
@@ -61,17 +61,17 @@
                             <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6 col-lg-6">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
                         <div>
                             <span>Метод защиты</span>
                         </div>
                         <div class="w-100">
-                            <input type="text"
-                                   class="form-control"
-                                   :class="isTouched && activeField === 'security' && doc.securedBy === '' ? 'is-invalid' : ''"
-                                   placeholder="OAuth2, JWT, ..."
-                                   v-model="doc.securedBy">
-                            <div class="invalid-feedback">Необходимо заполнить данное поле</div>
+                            <select class="form-control"
+                                    v-model="doc.securedBy">
+                                <option :value="securityType"
+                                        v-for="securityType in securityTypes">{{securityType}}</option>
+                                <option value="" selected>Нет</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,9 @@
                     <h5 class="text-center">Параметры</h5>
                 </div>
                 <div v-for="(param, index) in doc.params">
-                    <apidoc-element-param :param="param" :index="index" :key="index"></apidoc-element-param>
+                    <apidoc-element-param :param="param"
+                                          :index="index"
+                                          :key="index"></apidoc-element-param>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"
@@ -118,6 +120,23 @@
                     </button>
                 </div>
             </div>
+            <!-- Error group block -->
+<!--            <div class="border-top mt-3 pt-3">-->
+<!--                <div>-->
+<!--                    <h5 class="text-center">Список ошибок</h5>-->
+<!--                </div>-->
+<!--                <div v-for="(param, index) in doc.params">-->
+<!--                    <apidoc-element-param :param="param"-->
+<!--                                          :index="index"-->
+<!--                                          :key="index"></apidoc-element-param>-->
+<!--                </div>-->
+<!--                <div class="d-flex justify-content-center">-->
+<!--                    <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"-->
+<!--                            @click="createParam">-->
+<!--                        <i class="fas fa-plus"></i>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 </template>
@@ -129,18 +148,19 @@
             return {
                 param: {
                     paramName: '',
-                    paramType: '',
+                    paramType: 'String',
                     description: '',
                     format: '',
-                    required: '',
+                    required: 'false',
                 },
                 activeField: '',
                 isTouched: false,
                 isFocused: false,
+                securityTypes: ['Token', 'OAuth2', 'JWT'],
             }
         },
         mounted() {
-            this.doc.params.push({...this.param});
+            //this.doc.params.push({...this.param});
         },
         props: {
             doc: Object,
