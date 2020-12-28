@@ -108,14 +108,15 @@
                 <div>
                     <h5 class="text-center">Параметры</h5>
                 </div>
-                <div v-for="(param, index) in doc.params">
-                    <apidoc-element-param :param="param"
+                <div>
+                    <apidoc-element-param v-for="(param, index) in doc.params"
+                                          :param="param"
                                           :index="index"
                                           :key="index"></apidoc-element-param>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"
-                            @click="createParam">
+                            @click="createParam(index)">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -159,9 +160,6 @@
                 securityTypes: ['Token', 'OAuth2', 'JWT'],
             }
         },
-        mounted() {
-            //this.doc.params.push({...this.param});
-        },
         props: {
             doc: Object,
             index: Number
@@ -171,7 +169,7 @@
                 this.$parent.deleteDoc(index)
             },
             createParam() {
-                this.doc.params.push({...this.param})
+                this.doc.params = [...this.doc.params, {...this.param}]
             },
             deleteParam(index) {
                 this.doc.params.splice(index, 1)

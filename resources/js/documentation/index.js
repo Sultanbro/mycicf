@@ -9,6 +9,7 @@ Vue.use(VueAxios, axios);
 Vue.component('preloader', require('./components/common/preloader.vue').default);
 Vue.component('modal', require('./components/common/modal.vue').default);
 Vue.component('apidoc-element', require('./components/common/apidoc-element').default);
+Vue.component('apidoc-errors', require('./components/common/apidoc-errors').default);
 Vue.component('apidoc-element-param', require('./components/common/apidoc-element-param').default);
 Vue.component('kiasdoc-element', require('./components/common/kiasdoc-element').default);
 Vue.component('kiasdoc-element-param', require('./components/common/kiasdoc-element-param').default);

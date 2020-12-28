@@ -25,8 +25,15 @@
                     <create-apidocs v-if="modalType === 'api'"></create-apidocs>
                     <create-kiasdocs v-if="modalType === 'kias'"></create-kiasdocs>
                 </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-success"
+                                @click="createDocumentation">Создать документацию</button>
+                    </div>
+                </div>
             </div>
         </div>
+        <preloader v-if="isLoading"></preloader>
     </div>
 </template>
 
@@ -36,8 +43,48 @@
         data() {
             return {
                 modalType: 'api',
+                isLoading: false,
             }
         },
+        methods: {
+            createDocumentation(type, data) {
+                switch (type) {
+                    case 'api':
+                        this.setIsLoading(true)
+
+                        const apiDocUrl = ''
+
+                        this.axios.post(apiDocUrl, data)
+                            .then(response => {
+                            })
+                            .catch(error => {
+                            })
+                            .finally(() => {
+                                this.setIsLoading(false)
+                            })
+                        break;
+                    case 'kias':
+                        this.setIsLoading(true)
+
+                        const kiasDocUrl = ''
+
+                        this.axios.post(kiasDocUrl, data)
+                            .then(response => {
+                            })
+                            .catch(error => {
+                            })
+                            .finally(() => {
+                                this.setIsLoading(false)
+                            })
+                        break;
+                    default:
+                        return
+                }
+            },
+            setIsLoading(value) {
+                this.isLoading = value
+            }
+        }
     }
 </script>
 
