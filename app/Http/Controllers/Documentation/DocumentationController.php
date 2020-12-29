@@ -34,4 +34,20 @@ class DocumentationController extends Controller
     public function getKiasDocs($id) {
 
     }
+
+    public function create(Request $request) {
+        dd($request->all());
+
+        $category = new DocMethodCategory();
+        $category->title = $request->category_name;
+        $category->category = $request->type;
+
+        if($category->save()) {
+            $documentation = new DocMethodDescription();
+//            $documentation->title = $request->
+        }
+        else {
+            throw new \Exception("Произошла ошибка при сохранении данных", 400);
+        }
+    }
 }

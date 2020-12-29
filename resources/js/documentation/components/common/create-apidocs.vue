@@ -1,5 +1,6 @@
 <template>
     <div>
+        <preloader v-if="isLoading"></preloader>
         <div class="mb-3">
             <h3 class="text-center">Наименование категории</h3>
             <input type="text"
@@ -91,6 +92,7 @@
                 activeField: '',
                 isTouched: false,
                 isFocused: false,
+                isLoading: false,
             }
         },
         methods: {
@@ -106,6 +108,65 @@
             deleteError(index) {
                 this.errors.splice(index, 1)
             },
+            createDocumentation() {
+                console.log("here")
+
+                this.setIsLoading(true)
+
+                const url = '/main/create'
+
+                this.axios.post(url, {
+                        type: 'api',
+                        category_name: this.categoryName,
+                        docs: this.docs,
+                        errors: this.errors
+                    })
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false)
+                    })
+
+                // switch (type) {
+                //     case 'api':
+                //         this.setIsLoading(true)
+                //
+                //         const apiDocUrl = ''
+                //
+                //         // this.axios.post(apiDocUrl, {})
+                //         //     .then(response => {
+                //         //     })
+                //         //     .catch(error => {
+                //         //     })
+                //         //     .finally(() => {
+                //         //         this.setIsLoading(false)
+                //         //     })
+                //         break;
+                //     case 'kias':
+                //         this.setIsLoading(true)
+                //
+                //         const kiasDocUrl = ''
+                //
+                //         this.axios.post(kiasDocUrl, {})
+                //             .then(response => {
+                //             })
+                //             .catch(error => {
+                //             })
+                //             .finally(() => {
+                //                 this.setIsLoading(false)
+                //             })
+                //         break;
+                //     default:
+                //         return
+                // }
+            },
+            setIsLoading(value) {
+                this.isLoading = value
+            }
         }
     }
 </script>

@@ -30,8 +30,8 @@ class DocMethodDescriptions extends Migration
     public function down()
     {
         Schema::table('doc_method_descriptions', function (Blueprint $table) {
-            $table->dropIndex('title');
-            $table->dropIndex('method_name');
+            $table->dropIndex('doc_method_descriptions_title_index');
+            $table->dropIndex('doc_method_descriptions_method_name_index');
         });
         Schema::dropIfExists('doc_method_descriptions');
     }

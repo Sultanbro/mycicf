@@ -14,7 +14,8 @@ class AddDocCategoryIdToTableDocMethodDescriptions extends Migration
     public function up()
     {
         Schema::table('doc_method_descriptions', function (Blueprint $table) {
-            $table->unsignedBigInteger('doc_category_id');
+            $table->unsignedBigInteger('doc_category_id')->index();
+            $table->foreign('doc_category_id')->references('id')->on('doc_method_categories');
         });
     }
 
@@ -26,6 +27,8 @@ class AddDocCategoryIdToTableDocMethodDescriptions extends Migration
     public function down()
     {
         Schema::table('doc_method_descriptions', function (Blueprint $table) {
+            $table->dropForeign('doc_method_descriptions_doc_category_id_foreign');
+            $table->dropIndex('doc_method_descriptions_doc_category_id_index');
             $table->dropColumn('doc_category_id');
         });
     }
