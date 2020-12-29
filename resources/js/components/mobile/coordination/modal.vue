@@ -132,7 +132,7 @@
                                 <div>
                                     <div class="ml-4 mr-4 mt-4">
                                         <textarea class="resize modal-textarea-comment-solid width100"
-                                                  rows="3" v-model="Remark"></textarea>
+                                                  rows="3" v-model="Remark" maxlength="2000"></textarea>
                                     </div>
                                 </div>
                                 <div class="pl-4">
