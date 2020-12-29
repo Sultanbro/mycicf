@@ -569,6 +569,7 @@
             checkSignedFiles(url){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
+                console.log(url);
                 if(url != ''){
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
                     self.loader(true);
@@ -601,10 +602,13 @@
                                     // }
                                 }
                             } else {
+                                console.log('error 1');
                                 alert(result.message);
                                 self.loader(false);
                             }
                         }
+                        console.log('error 2');
+                        console.log(result);
                     }
                     webSocket.onerror = function (msg) {
                         self.loader(false);
