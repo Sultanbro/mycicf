@@ -24,12 +24,12 @@
             </div>
         </div-->
 
-        <div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
+        <div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket('check')">Выберите файл для проверки</button>
                 <div class="mt-2 mb-1" v-if="selectedFile != ''">Выбранный для проверки файл {{ selectedFile }}</div>
                 <div>
-                    <button class="btn btn-primary mt-2" v-on:click="checkSignedFile">Показать информацию о подписях</button>
+                    <button class="btn btn-primary mt-2" v-on:click="checkSignedFileReal">Показать информацию о подписях</button>
                 </div>
 
                 <div class="mt-2 mb-1" v-if="signedFileInfo.length > 0">
@@ -246,7 +246,7 @@
                                         alert(response.data.error);
                                         self.loader(false);
                                     } else {
-                                        self.getEdsInfo(response.data.result,curr_isn);
+                                        //self.getEdsInfo(response.data.result,curr_isn);
                                     }
                                 });
 
@@ -351,48 +351,48 @@
                     }
                 });
             },
-            // checkSignedFile(){
-            //     this.signedFileInfo = [];
-            //     let self = this;
-            //     if(self.selectedFile != '') {
-            //         var webSocket = new WebSocket('wss://127.0.0.1:13579');
-            //         self.loader(true);
-            //         webSocket.onopen = function () {
-            //             var responseObj = {
-            //                 module: 'kz.uchet.signUtil.commonUtils',
-            //                 lang: 'en',
-            //                 method: 'checkCMS',
-            //                 args: [self.selectedFile]
-            //             };
-            //             webSocket.send(JSON.stringify(responseObj));
-            //         };
-            //
-            //         webSocket.onmessage = function (msg) {
-            //             var result = JSON.parse(msg.data);
-            //             if(result.code) {
-            //                 if (result.code == 200) {
-            //                     if(result.responseObjects.length > 0) {
-            //                         self.signedFileInfo = result.responseObjects;
-            //                         //webSocket.close();
-            //                         self.loader(false);
-            //                     }
-            //                 } else {
-            //                     alert(result.message);
-            //                     self.loader(false);
-            //                     //webSocket.close();
-            //                 }
-            //             }
-            //         }
-            //         webSocket.onerror = function (msg) {
-            //             // TODO PUSH ERROR
-            //             //webSocket.close();
-            //             this.loader(false);
-            //             console.log(msg);
-            //         }
-            //     } else {
-            //         alert('Выберите пожалуйста файл');
-            //     }
-            // },
+            checkSignedFileReal(){
+                this.signedFileInfo = [];
+                let self = this;
+                if(self.selectedFile != '') {
+                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                    self.loader(true);
+                    webSocket.onopen = function () {
+                        var responseObj = {
+                            module: 'kz.uchet.signUtil.commonUtils',
+                            lang: 'en',
+                            method: 'checkCMS',
+                            args: [self.selectedFile]
+                        };
+                        webSocket.send(JSON.stringify(responseObj));
+                    };
+
+                    webSocket.onmessage = function (msg) {
+                        var result = JSON.parse(msg.data);
+                        if(result.code) {
+                            if (result.code == 200) {
+                                if(result.responseObjects.length > 0) {
+                                    self.signedFileInfo = result.responseObjects;
+                                    //webSocket.close();
+                                    self.loader(false);
+                                }
+                            } else {
+                                alert(result.message);
+                                self.loader(false);
+                                //webSocket.close();
+                            }
+                        }
+                    }
+                    webSocket.onerror = function (msg) {
+                        // TODO PUSH ERROR
+                        //webSocket.close();
+                        this.loader(false);
+                        console.log(msg);
+                    }
+                } else {
+                    alert('Выберите пожалуйста файл');
+                }
+            },
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
@@ -563,6 +563,55 @@
             },
             loader(show){
                 this.loading = show;
+            },
+
+            checkSignedFiles(url){        // Посмотреть подписанный файл
+                let self = this;
+                self.loader(true);
+                if(url != ''){
+                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                    self.loader(true);
+                    webSocket.onopen = function () {
+                        var responseObj = {
+                            module: 'kz.uchet.signUtil.commonUtils',
+                            lang: 'en',
+                            method: 'checkCMS',
+                            args: [url]
+                        };
+                        webSocket.send(JSON.stringify(responseObj));
+                    };
+
+                    webSocket.onmessage = function (msg) {
+                        var result = JSON.parse(msg.data);
+                        if(result.code) {
+                            if (result.code == 200) {
+                                if(result.responseObjects.length > 0) {
+                                    //if(self.signedFileInfo.length > 0) {
+                                    //    self.signedFileInfo.push(result.responseObjects[0]);
+                                    //} else {
+                                    console.log('test');
+                                    console.log(result.responseObjects);
+                                    //self.signedFileInfo = result.responseObjects;
+                                    //}
+                                    // if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
+                                    //     self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
+                                    // } else {
+                                    //     self.loader(false);
+                                    // }
+                                }
+                            } else {
+                                alert(result.message);
+                                self.loader(false);
+                            }
+                        }
+                    }
+                    webSocket.onerror = function (msg) {
+                        self.loader(false);
+                        alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
+                    }
+                } else {
+                    alert('Выберите пожалуйста файл');
+                }
             },
 
             // sendCmsInfo(agrIsn){

@@ -438,7 +438,15 @@ class CoordinationController extends Controller
             if($request->fileType == 'base64'){
                 $file = $request->file;
                 $extension = isset($request->fileExt) ? $request->fileExt : '';
-                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
+                $filename = 'signed_'.mt_rand(1000000, 9999999).'.'.$extension;  //'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
+
+                $image = $request->file;    //$request->input('image'); // your base64 encoded
+                $image = str_replace('data:image/png;base64,', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName = $filename;
+                //\File::put(storage_path(). '/app/public/' . $imageName, base64_decode($image));
+                \File::put(storage_path(). '/app/public/' . $imageName, base64_decode($image));
+
             } else {
 //                $file = $request->base64_encode($request->file);
 //                $contents = $file->get();
@@ -446,21 +454,21 @@ class CoordinationController extends Controller
 //                $filename = mt_rand(1000000, 9999999).'.'.$extension;
             }
 
-            $results = $kias->saveAttachment(
-                $request->isn,
-                $filename,
-                $file,
-                $request->requestType
-            );
-            if(isset($results->error)){
-                $success = false;
-                $error = 'Ошибка загрузки файла, обратитесь к системному администратору';  //(string)$results->error->text
-            }
+//            $results = $kias->saveAttachment(
+//                $request->isn,
+//                $filename,
+//                $file,
+//                $request->requestType
+//            );
+//            if(isset($results->error)){
+//                $success = false;
+//                $error = 'Ошибка загрузки файла, обратитесь к системному администратору';  //(string)$results->error->text
+//            }
 
             return response()->json([
                 'success' => $success,
                 'error' => isset($error) ? $error : '',
-                'result' => isset($results->ISN) ? (string)$results->ISN : ''
+                'result' => 'https://ta.cic.kz/storage/app/public/'.$filename, //isset($results->ISN) ? (string)$results->ISN : ''
             ]);
         } catch (Exception $e) {
             return response()->json([
