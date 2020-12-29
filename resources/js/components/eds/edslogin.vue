@@ -247,6 +247,7 @@
                                         self.loader(false);
                                     } else {
                                         //self.getEdsInfo(response.data.result,curr_isn);
+                                        self.checkSignedFiles(response.data.result);
                                     }
                                 });
 
