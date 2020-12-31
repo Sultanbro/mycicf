@@ -17,6 +17,15 @@
             </div>
         </div>
         <div>
+            <div v-for="(post, index) in posts" v-if="post.pinned === 1" class="mb-3 rounded">
+                <news-post
+                        :post="post"
+                        :isn="isn"
+                        :index="index"
+                        :moderators="moderators"
+                        v-on:deletePost="deleteFromPost(index)"
+                ></news-post>
+            </div>
             <div v-for="(post, index) in posts" v-if="post.pinned === 0" class="mb-3 rounded">
                 <news-post
                     :post="post"
