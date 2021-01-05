@@ -71,6 +71,7 @@
     <script src="{{asset('js/app.js')}}"></script>
 </head>
 <body>
+
 @include('layouts.header')
 <div id="app">
 	<name></name>
