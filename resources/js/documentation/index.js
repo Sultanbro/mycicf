@@ -16,6 +16,7 @@ Vue.component('apidoc-description-table', require('./components/common/apidoc-de
 Vue.component('apidoc-param-table', require('./components/common/apidoc-param-table').default);
 Vue.component('apidoc-error-table', require('./components/common/apidoc-error-table').default);
 Vue.component('kiasdoc-element', require('./components/common/kiasdoc-element').default);
+Vue.component('kiasdoc-errors', require('./components/common/kiasdoc-errors').default);
 Vue.component('kiasdoc-element-param', require('./components/common/kiasdoc-element-param').default);
 Vue.component('create-apidocs', require('./components/common/create-apidocs.vue').default);
 Vue.component('create-kiasdocs', require('./components/common/create-kiasdocs.vue').default);

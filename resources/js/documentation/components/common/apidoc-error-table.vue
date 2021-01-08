@@ -6,14 +6,15 @@
         <table class="table table-borderless table-danger text-white">
             <thead>
             <tr>
-                <th scope="col" class="border-right border-white">Код ошибки</th>
+                <th scope="col">Код ошибки</th>
                 <th scope="col">Описание</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(error, index) in errors"
-                :key="index" class="border-top border-white">
-                <td class="border-right border-white">{{error.errorCode}}</td>
+                :key="index"
+                class="border-top border-white">
+                <td class="border-white">{{error.errorCode}}</td>
                 <td>{{error.description}}</td>
             </tr>
             </tbody>

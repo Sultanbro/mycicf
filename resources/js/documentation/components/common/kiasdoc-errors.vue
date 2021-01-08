@@ -41,7 +41,7 @@
 
 <script>
     export default {
-        name: "apidoc-errors",
+        name: "kiasdoc-errors",
         props: {
             error: Object,
             index: Number

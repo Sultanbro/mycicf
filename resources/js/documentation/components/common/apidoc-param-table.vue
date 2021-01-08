@@ -1,6 +1,7 @@
 <template>
     <div class="overflow-auto">
-        <table class="table" v-if="params.length">
+        <table class="table"
+               v-if="params.length">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>

@@ -27,8 +27,12 @@
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-end">
-                        <button class="btn btn-success"
+                        <button v-if="modalType === 'api'"
+                                class="btn btn-success"
                                 @click="$refs.apiDocs.createDocumentation()">Создать документацию</button>
+                        <button v-if="modalType === 'kias'"
+                                class="btn btn-success"
+                                @click="$refs.kiasDocs.createDocumentation()">Создать документацию</button>
                     </div>
                 </div>
             </div>

@@ -4,8 +4,13 @@
             <h3>{{doc.title}}</h3>
             <p>Наименование метода: <span class="font-weight-bold">{{doc.methodName}}</span></p>
             <div class="d-flex border rounded mb-3"
-                 :class="doc.method === 'GET' ? 'border-success' : doc.method === 'POST' ? 'border-primary' : doc.method === 'PUT' ? 'border-warning' : 'border-danger'">
-                <div class="d-flex align-items-center text-white pt-2 pb-2 pl-3 pr-3" :class="doc.method === 'GET' ? 'bg-success' : doc.method === 'POST' ? 'bg-primary' : doc.method === 'PUT' ? 'bg-warning' : 'bg-danger'">
+                 :class="doc.method === 'GET' ? 'border-success'
+                 : doc.method === 'POST' ? 'border-primary'
+                 : doc.method === 'PUT' ? 'border-warning' : 'border-danger'">
+                <div class="d-flex align-items-center text-white pt-2 pb-2 pl-3 pr-3"
+                     :class="doc.method === 'GET' ? 'bg-success'
+                     : doc.method === 'POST' ? 'bg-primary'
+                     : doc.method === 'PUT' ? 'bg-warning' : 'bg-danger'">
                     <span class="text-uppercase font-weight-bold">{{doc.method}}</span>
                 </div>
                 <div class="p-2 overflow-auto">
