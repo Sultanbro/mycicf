@@ -22,7 +22,7 @@
                     <div class="col-sm-12 col-md-8 col-lg-9 mb-3">
                         @if(isset($apidocs))
                             <div class="card border p-4">
-
+                                <apidoc-description :apidocs="{{ json_encode($apidocs) }}"></apidoc-description>
                             </div>
                         @elseif(isset($kiasdocs))
                             <div class="card border p-4">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </main>
-
+        <footer-component></footer-component>
     </div>
 @endsection
 @section('scripts')

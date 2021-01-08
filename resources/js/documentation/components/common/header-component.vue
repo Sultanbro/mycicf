@@ -1,5 +1,5 @@
 <template>
-    <div class="header" @onscroll="bottomOfWindow">
+    <header class="header" @onscroll="bottomOfWindow">
        <div class="container d-flex justify-content-between align-items-center">
            <div class="header-logo">
                 <h4 v-if="showToTopBtn"
@@ -19,7 +19,7 @@
            </div>
            <preloader v-if="isLoading"></preloader>
        </div>
-    </div>
+    </header>
 </template>
 
 <script>

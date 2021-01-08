@@ -23,7 +23,7 @@
                 </div>
                 <div class="modal-body p-sm-4 pt-md-4 pb-md-4 pl-md-5 pr-md-5">
                     <create-apidocs v-if="modalType === 'api'" ref="apiDocs"></create-apidocs>
-                    <create-kiasdocs v-if="modalType === 'kias'"></create-kiasdocs>
+                    <create-kiasdocs v-if="modalType === 'kias'" ref="kiasDocs"></create-kiasdocs>
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-end">
@@ -45,8 +45,6 @@
                 modalType: 'api',
             }
         },
-        methods: {
-        }
     }
 </script>
 

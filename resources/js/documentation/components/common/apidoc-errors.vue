@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="input-group border rounded p-3 mb-3">
+        <div class="input-group border-bottom rounded p-3 mb-3">
             <!-- Delete button block -->
             <div class="d-flex justify-content-end w-100 mb-0">
                 <button type="button"

@@ -17,37 +17,59 @@ class DocumentationController extends Controller
         $categories = (new DocMethodCategory())->getCategories();
 
         if($request->type === self::API_DOCS_TYPE) {
+            $apidocs = $this->getDocs($request->id);
 
+            return view('documentation.pages.main.index')->with('categories', $categories)->with('apidocs', $apidocs);
         }
         elseif($request->type === self::KIAS_DOCS_TYPE) {
+            $kiasdocs = $this->getDocs($request->id);
 
+            return view('documentation.pages.main.index')->with('categories', $categories)->with('kiasdocs', $kiasdocs);
         }
         else {
             return view('documentation.pages.main.index')->with('categories', $categories);
         }
     }
 
-    public function getApiDocs($id) {
-        $docs = DocMethodDescription::where('category_id', $id);
+    public function getDocs($id)
+    {
+        $docs = DocMethodDescription::where('doc_category_id', $id)->first();
+
+        if($docs) {
+            return json_decode($docs->documentation);
+        }
+        else
+            return [];
     }
 
-    public function getKiasDocs($id) {
-
-    }
-
-    public function create(Request $request) {
-        dd($request->all());
-
+    public function create(Request $request)
+    {
         $category = new DocMethodCategory();
-        $category->title = $request->category_name;
+        $category->title = $request->categoryName;
         $category->category = $request->type;
 
-        if($category->save()) {
+        if($category->save())
+        {
+            $docs = array(
+                'docs'   => $request->docs,
+                'errors' => $request->errors
+            );
+
             $documentation = new DocMethodDescription();
-//            $documentation->title = $request->
+            $documentation->title = $request->categoryName;
+            $documentation->documentation = json_encode($docs);
+            $documentation->doc_category_id = $category->id;
+
+            if(!$documentation->save())
+                throw new \Exception("Произошла ошибка при сохранении данных", 400);
+            else
+                return response()->json([
+                    'success' => true,
+                    'code'    => 200
+                ]);
         }
-        else {
+        else
             throw new \Exception("Произошла ошибка при сохранении данных", 400);
-        }
+
     }
 }

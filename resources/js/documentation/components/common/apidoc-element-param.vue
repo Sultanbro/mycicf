@@ -5,7 +5,6 @@
             <div class="d-flex justify-content-end w-100 mb-3">
                 <button type="button"
                         class="delete-button text-white"
-                        v-if="index > 0"
                         @click="deleteParam(index)">
                     <i class="fas fa-times"></i>
                 </button>

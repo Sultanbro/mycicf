@@ -116,28 +116,12 @@
                 </div>
                 <div class="d-flex justify-content-center">
                     <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"
-                            @click="createParam(index)">
+                            @click="createParam()">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
             <!-- Error group block -->
-<!--            <div class="border-top mt-3 pt-3">-->
-<!--                <div>-->
-<!--                    <h5 class="text-center">Список ошибок</h5>-->
-<!--                </div>-->
-<!--                <div v-for="(param, index) in doc.params">-->
-<!--                    <apidoc-element-param :param="param"-->
-<!--                                          :index="index"-->
-<!--                                          :key="index"></apidoc-element-param>-->
-<!--                </div>-->
-<!--                <div class="d-flex justify-content-center">-->
-<!--                    <button class="custom-plus-btn rounded pt-2 pb-2 pl-3 pr-3"-->
-<!--                            @click="createParam">-->
-<!--                        <i class="fas fa-plus"></i>-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     </div>
 </template>

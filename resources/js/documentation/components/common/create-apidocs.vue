@@ -1,6 +1,5 @@
 <template>
     <div>
-        <preloader v-if="isLoading"></preloader>
         <div class="mb-3">
             <h3 class="text-center">Наименование категории</h3>
             <input type="text"
@@ -40,6 +39,7 @@
                 </div>
             </div>
         </div>
+        <preloader v-if="isLoading"></preloader>
     </div>
 </template>
 
@@ -57,15 +57,7 @@
                         baseUrl: '',
                         securedBy: '',
                         method: 'GET',
-                        params: [
-                            {
-                                paramName: '',
-                                paramType: 'String',
-                                description: '',
-                                format: '',
-                                required: 'false',
-                            }
-                        ],
+                        params: [],
                         returnValue: ''
                     }
                 ],
@@ -117,7 +109,7 @@
 
                 this.axios.post(url, {
                         type: 'api',
-                        category_name: this.categoryName,
+                        categoryName: this.categoryName,
                         docs: this.docs,
                         errors: this.errors
                     })
@@ -130,39 +122,6 @@
                     .finally(() => {
                         this.setIsLoading(false)
                     })
-
-                // switch (type) {
-                //     case 'api':
-                //         this.setIsLoading(true)
-                //
-                //         const apiDocUrl = ''
-                //
-                //         // this.axios.post(apiDocUrl, {})
-                //         //     .then(response => {
-                //         //     })
-                //         //     .catch(error => {
-                //         //     })
-                //         //     .finally(() => {
-                //         //         this.setIsLoading(false)
-                //         //     })
-                //         break;
-                //     case 'kias':
-                //         this.setIsLoading(true)
-                //
-                //         const kiasDocUrl = ''
-                //
-                //         this.axios.post(kiasDocUrl, {})
-                //             .then(response => {
-                //             })
-                //             .catch(error => {
-                //             })
-                //             .finally(() => {
-                //                 this.setIsLoading(false)
-                //             })
-                //         break;
-                //     default:
-                //         return
-                // }
             },
             setIsLoading(value) {
                 this.isLoading = value
