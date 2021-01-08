@@ -1,8 +1,8 @@
 <template>
-    <div class="border-bottom">
+    <div class="border-bottom mb-4">
         <div class="mb-4">
             <h3>{{doc.title}}</h3>
-            <h4>Наименование метода: <span class="font-weight-bold">{{doc.methodName}}</span></h4>
+            <p>Наименование метода: <span class="font-weight-bold">{{doc.methodName}}</span></p>
             <div class="d-flex border rounded mb-3"
                  :class="doc.method === 'GET' ? 'border-success' : doc.method === 'POST' ? 'border-primary' : doc.method === 'PUT' ? 'border-warning' : 'border-danger'">
                 <div class="d-flex align-items-center text-white pt-2 pb-2 pl-3 pr-3" :class="doc.method === 'GET' ? 'bg-success' : doc.method === 'POST' ? 'bg-primary' : doc.method === 'PUT' ? 'bg-warning' : 'bg-danger'">
