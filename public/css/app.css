@@ -561,3 +561,12 @@ ul {
   background-color: #b2f4f4;
 }
 
+.countdown-main {
+  background-color: #4267B2;
+  color: white;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+

@@ -33,6 +33,9 @@ Vue.component('parse-add-info', require('./components/admin/parse/addInfo.vue').
 
 Vue.component('centcoin-list', require('./components/admin/centcoins/list.vue').default);
 Vue.component('centcoin-history', require('./components/admin/centcoins/history.vue').default);
+
+Vue.component('centcoin-application', require('./components/admin/centcoins/application.vue').default);
+
 Vue.component('centcoin-spend', require('./components/admin/centcoins/spend.vue').default);
 Vue.component('centcoin-replenish', require('./components/admin/centcoins/relpenish.vue').default);
 Vue.component('centcoin-items', require('./components/admin/centcoins/items.vue').default);

@@ -6,7 +6,7 @@
                     <div class="font-size-1_6">Сенткоины</div>
                     <div class="flex-row jc-center vertical-middle">
                         <div class="font-size-4rem centcoins-value">
-                            {{this.centcoins}}
+                            {{getCentcoins}}
                         </div>
                         <div class="font-size-3_8rem ml-2">
                             <img src="/images/centcoin-logo.png" class="centcoin">
@@ -49,35 +49,24 @@
 
         data() {
             return {
-                centcoins: '',
                 colleaguesMode: false,
             }
         },
 
         props: {
-            isn: Number,
+            getCentcoins: Number,
         },
 
         mounted() {
             if(this.checkColleagues()){
                 this.colleaguesMode = true;
             }
-            this.getCentcoins();
         },
 
         methods: {
             checkColleagues(){
                 return (window.location.pathname).slice(1,10) === 'colleague';
             },
-            getCentcoins: function () {
-                this.axios.post('/getCentcoins', {isn: this.isn}).then(response => {
-                    this.fetchCentcoins(response.data);
-                });
-            },
-
-            fetchCentcoins(response) {
-                this.centcoins = response;
-            }
         }
     }
 </script>

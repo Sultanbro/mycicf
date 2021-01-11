@@ -14,6 +14,12 @@
 
         gtag('config', 'UA-29153373-9');
     </script>
+    <script>
+        window.userIsn = {
+            'user_isn' : {{ Auth::user()->ISN }}
+        }
+    </script>
+
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
     <!-- Bootstrap-->
@@ -28,19 +34,16 @@
     <!-- include vue-treeselect & its styles. you can change the version tag to better suit your needs. -->
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
-
-    <script src="{{asset('js/app.js')}}"></script>
-    {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
 @include('layouts.header')
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         {{--            @include('layouts.sidebar')--}}
-        <centcoins :isn="{{Auth::user()->ISN}}"></centcoins>
+        <centcoins :get-centcoins="cent"></centcoins>
         <div class="col-md-6" id="employee_info">
 {{--            <operations-history :isn="{{Auth::user()->ISN}}"></operations-history>--}}
-                            <spend-centcoins :isn="{{Auth::user()->ISN}}"></spend-centcoins>
+                <spend-centcoins :get-centcoins="cent"></spend-centcoins>
         </div>
 
 
@@ -49,5 +52,10 @@
 </main>
 {{--    @include('layouts.footer')--}}
 {{--FOOTER GOES HERE--}}
+
+
+<script src="{{asset('js/app.js')}}"></script>
+{{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
+
 </body>
 </html>

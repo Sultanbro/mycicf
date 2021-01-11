@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Centcoin;
+use App\CentkoinApplication;
 use App\CentcoinHistory;
 use App\StoreItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CentcoinsController extends Controller
 {
@@ -39,8 +42,7 @@ class CentcoinsController extends Controller
     public function getCentcoins(Request $request) {
         $isn = $request->isn;
 
-        $centcoin = Centcoin::where('user_isn', $isn)
-            ->first();
+        $centcoin = Centcoin::where('user_isn', $isn)->first();
 
         if($centcoin === null){
             $centcoin = new Centcoin();
@@ -69,19 +71,40 @@ class CentcoinsController extends Controller
     }
 
     public function buyItem(Request $request) {
+        DB::beginTransaction();
+        try {
+            $price = StoreItem::where('id', $request->itemId)->first();
+            $model = new CentcoinHistory();
+            $model->type = 'Оплата';
+            $model->description = "Оплата за " . $price->name;
+            $model->quantity = $price->price;
+            $model->operation_type = CentcoinHistory::OPERATION_TYPE_SPEND;
+            $model->user_isn = $request->isn;
+            $model->changed_user_isn = $request->isn;
+            $model->save();
 
-        $price = StoreItem::where('id', $request->itemId)->first();
-        $model = new CentcoinHistory();
-        $model->type = 'Оплата';
-        $model->description = "Оплата за ".$price->name;
-        $model->quantity =$price->price;
-        $model->operation_type = CentcoinHistory::OPERATION_TYPE_SPEND;
-        $model->user_isn = $request->isn;
-        $model->changed_user_isn = $request->isn;
-        $model->save();
+            $CentkoinApplication = new CentkoinApplication();
+            $CentkoinApplication->store_item_id = $request->itemId;
+            $CentkoinApplication->centcoin_history_id = $model->id;
+            $CentkoinApplication->user_id = Auth::user()->id;
+            $CentkoinApplication->position = Branch::where('kias_id', Auth::user()->ISN)->first()->duty;
+            $CentkoinApplication->department = Branch::where('kias_id', Auth::user()->dept_isn)->first()->fullname;
+            $CentkoinApplication->comment = '';
+            $CentkoinApplication->save();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+            ]);
+        }
+        catch (\Exception $ex)
+        {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'error'   => $ex->getMessage()
+            ]);
 
-
-
+        }
     }
 
     public function getView() {

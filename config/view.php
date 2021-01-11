@@ -1,5 +1,6 @@
 <?php
 $viewPath = 'views';
+//$viewPath = 'admin';
 switch($_SERVER['HTTP_HOST'] ?? env('FRONTEND_DOMAIN')){
     case env('BACKEND_DOMAIN') :
         $viewPath = 'admin';

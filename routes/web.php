@@ -43,6 +43,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('/role/newUser', 'Admin\RoleController@newUserView');
             Route::post('/role/getRoles', 'Admin\RoleController@getRoles');
             Route::post('/role/setNewUser', 'Admin\RoleController@newUser');
+           // здесь надо писать
+
         });
 
         Route::group(['middleware' => 'parseAdmin'], function () {
@@ -81,9 +83,10 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
-
+            Route::get('/centcoins/applications', 'Admin\CentcoinsController@getApplications')->name('centcoins.applications');
+            Route::post('/centcoins/showAllApplications', 'Admin\CentcoinsController@showAllApplications');
+            Route::post('/centcoins/processingApplication', 'Admin\CentcoinsController@processingApplication');
         });
-
         Route::group(['middleware' => 'wndAdmin'], function () {
             Route::get('wnd/org_structure', 'Admin\DocumentationController@orgStructure')->name('wnd.org');
             Route::post('wnd/save_struct', 'Admin\DocumentationController@saveStructure');
@@ -223,6 +226,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 //        Route::group(['middleware' => 'cors'], function() {
 //            Route::get('/getVersion', 'Controller@getVersion');
 //        });
+        //NEWS
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::get('/booking', 'BookingController@index')->name('booking');

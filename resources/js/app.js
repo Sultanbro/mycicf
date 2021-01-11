@@ -1,3 +1,5 @@
+import {ordinalToGregorian} from "luxon/src/impl/conversions";
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -184,7 +186,7 @@ Vue.component('statistics', require('./components/employee/statistics').default)
 
 Vue.component('boss-news', require('./components/news/boss-news').default);
 
-window.onload = function(){
+// window.onload = function(){
     var app = new Vue({
         el: '#app',
         data: {
@@ -192,21 +194,34 @@ window.onload = function(){
             // define options
             options: null,
             office: 'conf',
+            cent: null,
+            asd: null,
             image: {
                 encoded: 0,
             },
         },
-        mounted: function () {
+        mounted() {
             // this.getOptions();
+            this.getCentcoins();
         },
         methods: {
-            getOptions: function () {
+            // getOptions: function () {
                 // this.axios.post('/getBranchData', {}).then((response) => {
                 //     this.options = response.data.result;
                 //     this.value = response.data.value;
                 // })
-            }
-        },
+            // },
+            getCentcoins: function () {
+                this.axios.post('/getCentcoins', {isn: window.userIsn.user_isn}).then(response => {
+                    this.fetchCentcoins(response.data);
+                });
+            },
+
+            fetchCentcoins(response) {
+                console.log(response); //1000
+                this.cent = response;
+            },
+         },
         watch: {
             multiple(newValue) {
                 if (newValue) {
@@ -224,4 +239,5 @@ window.onload = function(){
     var head = new Vue({
         el: '#header',
     });
-};
+// };
+

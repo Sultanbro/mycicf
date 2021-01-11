@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Branch;
 use App\Centcoin;
 use App\CentcoinHistory;
+use App\CentkoinApplication;
 use App\StoreItem;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\MessageBag;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CentcointExports;
 
@@ -68,7 +70,6 @@ class CentcoinsController extends Controller
             array_push($result, [
                 'id' => $data->id,
                 'type' => $data->type,
-                'to' => (new User)->getFullName($data->changed_user_isn),
                 'from' => (new User)->getFullName($data->user_isn),
                 'coins' => $data->quantity,
                 'description' => $data->description,
@@ -208,4 +209,63 @@ class CentcoinsController extends Controller
                 $request->input('callback')
             );
     }
+
+    public function getApplications(Request $request){
+        return view('centcoins.applications');
+    }
+
+    public function showAllApplications(Request $request){
+        $result = [];
+        $cent = CentkoinApplication::all();
+
+        foreach(CentkoinApplication::all() as $data){
+            array_push($result, [
+                'id' => $data->id,
+                'user' => $data->user,
+                'items' => $data->centcoin_items,
+                'type' => $data->centkoin ,
+                'type2'  => $data->tovar,
+                'initiator' => $data->user_id,
+                'position' => $data->position,
+                'department' => $data->department,
+                'created' => date('d.m.Y H:i:s', strtotime($data->created_at))
+                ]);
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'result' => $result
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
+    }
+
+    public function processingApplication(Request $request){
+        $errors = new MessageBag();
+        try {
+           $centApply = new CentkoinApplication();
+           $centApply->user_id = $request->user;
+           $centApply->comment = $request->comment;
+           $centApply->store_item_id = $request->person.items.name;
+
+           $centApply->pressed_user = Auth::user()->ISN;
+           $centApply->payment = $request->payment;
+           $centApply->save();
+            return response()->json([
+                'success' => true,
+            ]);
+        }
+        catch (\Exception $ex)
+        {
+            return response()->json([
+                'success' => false,
+                'error'   => $ex->getMessage()
+            ]);
+        }
+    }
+
+
+
 }

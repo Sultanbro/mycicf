@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-center pt-4 pb-4">
             <select v-model="itemIndex" class="custom-select w-25">
                 <option :value="null" selected disabled hidden>Выберите товар</option>
-                <option :value="index" v-for="(item, index) in itemsStorage" :disabled="centcoins < item.price">{{item.name}} - {{item.price}}₵</option>
+                <option :value="index" v-for="(item, index) in itemsStorage" :disabled="getCentcoins < item.price">{{item.name}} - {{item.price}}₵</option>
             </select>
         </div>
 
@@ -14,10 +14,16 @@
             <div class="d-flex justify-content-center mt-4 mb-4">
                 <button type="button"
                         class="buy-btn"
-                        @click="buyItem"
-                        :disabled="centcoins < price">Купить</button>
+                        @click="successforapply"
+                        :disabled="getCentcoins < price || isSuccessShow">Купить</button>
             </div>
         </div>
+<div class="row" v-if="isSuccessShow">
+    <div class="col-md-6 offset-md-3">
+        <div class="p-3 bg-info text-white text-center mt-4 mb-5" ><h5>Ваша заявка принята!<br>Ожидайте чуда :)</h5></div>
+    </div>
+</div>
+
 
         <FlashMessage></FlashMessage>
     </div>
@@ -32,19 +38,20 @@
                 itemsStorage: [],
                 itemIndex: null,
                 price: 0,
-                centcoins: null,
+                // centcoins: null,
                 itemId: null,
+                isSuccessShow: false,
             }
         },
 
         props: {
-            isn: Number,
+            getCentcoins: Number,
         },
 
         mounted() {
             this.getOperations();
             this.getItemsStorage();
-            this.getCentcoins();
+            // this.getCentcoins();
         },
 
         methods: {
@@ -73,30 +80,45 @@
             },
 
             buyItem: function() {
-                this.axios.post('/buyItem', {isn: this.isn, itemId: this.itemId}).then(response => {
-                    this.fetchBuyItem(response.data);
+                let data = {
+                    isn: window.userIsn.user_isn,
+                    itemId: this.itemId,
+                };
+
+                if(this.getCentcoins < this.price){
                     this.flashMessage.error({
                         title: "Ошибка",
-                        message: "Ошибка на стороне сервера",
+                        message: "Сорри у вас денюжек не хватает",
                         time: 5000
                     });
-                }).catch(error => {
+                } else {
+                    this.axios.post('/buyItem', data).then(response => {
+                        this.fetchBuyItem(response.data);
 
-                })
+                    }).catch(error => {
+
+                    })
+                }
             },
 
-            fetchBuyItem: function() {
-                location.replace('/centcoins')
-            },
+            fetchBuyItem: function(response) {
+                if(response.success){
+                    this.flashMessage.success({
+                        title : 'Успешно',
+                        message : 'Спасибо за покупку',
+                        time : 5000
+                    });
 
-            getCentcoins: function () {
-                this.axios.post('/getCentcoins', {isn: this.isn}).then(response => {
-                    this.fetchCentcoins(response.data);
-                });
-            },
+                    // this.$root.centcoins = this.$root.centcoins - this.price;
+                }else{
+                    this.flashMessage.error({
+                        title: "Ошибка",
+                        message: response.error,
+                        time: 5000
+                    });
+                }
 
-            fetchCentcoins(response) {
-                this.centcoins = response;
+                // location.replace('/centcoins')
             },
 
             preloader: function(show) {
@@ -109,7 +131,11 @@
                     document.getElementById('preloader').style.display = 'none';
                 }
             },
-
+            successforapply() {
+                //this.resultCentcoins = this.centcoins - this.price;
+                this.isSuccessShow = !this.isSuccessShow;
+                this.buyItem();
+            },
         },
 
         watch: {
@@ -146,6 +172,9 @@
 
     select:disabled{
         background-color: #c1c1c1;
+    }
+    .adoption{
+        background: lightseagreen;
     }
 
 </style>
