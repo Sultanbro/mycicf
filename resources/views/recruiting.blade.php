@@ -43,7 +43,7 @@
         @include('layouts.sidebar')
 
         <div class="col-md-8" id="employee_info">
-            <recruiting></recruiting>
+            <recruiting :user="{{ Auth::user() }}"></recruiting>
         </div>
 
         {{--RIGHT SIDE BAR GOES HERE--}}

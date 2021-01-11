@@ -6,6 +6,7 @@ use App\DocumentationStructure;
 use App\Item;
 use App\Library\Services\KiasServiceInterface;
 use App\Recruiting;
+use App\CandidatsData;
 use Illuminate\Http\Request;
 use App\Branch;
 use App\Answer;
@@ -29,6 +30,24 @@ class RecruitingController extends Controller
             ]);
         }
         return $result;
+    }
+
+    public function getRequests(Request $request){
+        $requests = Recruiting::all();
+//        Как вариант вытаскивать конкретные значения
+//        $requests = Recruiting::where('sex','Мужской')->where('education','Высшее')->first();
+
+        return response()->json([
+            'success' => $requests ? true : false,
+            'result' => $requests
+        ]);
+    }
+    public function  getChiefsRequest(Request $request){
+        $requests = Recruiting::all();
+        return response()->json([
+            'success' => $requests ? true : false,
+            'result' => $requests
+        ]);
     }
 
     public function getView() {
@@ -167,7 +186,29 @@ class RecruitingController extends Controller
         ];
         return response()->json($result)->withCallback($request->input('callback'));
     }
+    public function saveCandidatsData(Request $request,KiasServiceInterface $kias){
+        $candidats_data = new CandidatsData();
 
+        $candidats_data->candidats_fullname = $request->candidatsData['manualFullname'];
+        $candidats_data->candidats_iin = $request->candidatsData['manualIIN'];
+        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
+        if(!$candidats_data->save()){
+            return response()->json([
+                'success' => false,
+                'error' => 'Ошибка'
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+    public function  getCandidatsDataRequest(Request $request){
+        $requests = CandidatsData::all();
+        return response()->json([
+            'success' => $requests ? true : false,
+            'result' => $requests
+        ]);
+    }
     public function saveCandidat(Request $request,KiasServiceInterface $kias){
 //        $candidate = $request->candidate;
 
@@ -177,6 +218,9 @@ class RecruitingController extends Controller
 
 
         $recruiting = new Recruiting();
+        $recruiting->chiefs_duty = $request->candidat['chiefsDuty'];
+        $recruiting->chiefs_fullname = $request->candidat['chiefsFullname'];
+//        $recruiting->userAuthDepartment = $request->candidat['userAuthDepartment'];
         $recruiting->unit_structural_name_and_city = $request->candidat['cityAdressSelect'];
         $recruiting->name_of_post = $request->candidat['nameOfPostSelect'];
         $recruiting->quantity_people = $request->candidat['quantityPeople'];

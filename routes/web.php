@@ -235,6 +235,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/recruiting', 'RecruitingController@getTestData');
         Route::post('recruiting', 'RecruitingController@sendRequest');
         Route::post('/recruiting/saveCandidat', 'RecruitingController@saveCandidat');
+        Route::post('/recruiting/getRequests', 'RecruitingController@getRequests');
+        Route::post('/recruiting/getChiefsRequest', 'RecruitingController@getChiefsRequest');
+        Route::post('/recruiting/saveCandidatsData', 'RecruitingController@saveCandidatsData');
+        Route::post('/recruiting/getCandidatsDataRequest', 'RecruitingController@getCandidatsDataRequest');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');

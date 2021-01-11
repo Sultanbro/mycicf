@@ -1,6 +1,11 @@
 <template>
     <div>
         <div class="bg-gray pt-5">
+<!--            v-if="showToTopBtn"-->
+            <a
+               href="javascript:"
+               class="to-top-btn"
+               @click="goToTop()"><i class="fas fa-chevron-up fa-3x"></i></a>
             <div class="tripplebar">
                 <div class="tripplebar-btn col-md-3" v-on:click="recruitingTabs = 1" v-bind:class="{tripplebar_btn_active: recruitingTabs == 1}">
                     <div>
@@ -346,13 +351,52 @@
                 </div>
             </div>
             <div v-if="recruitingTabs == 2">
+
+                <div>
+<!--                    <table>-->
+<!--                        <thead>-->
+<!--                            <tr>-->
+<!--                                <td>Умения</td>-->
+<!--                                <td>Образование</td>-->
+<!--                                <td>Наличие авто</td>-->
+<!--                                <td>График</td>-->
+<!--                                <td>Босс или нет</td>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                            <tr v-for="recs in kek">-->
+<!--                                <td>{{ recs.candidats_trait }}</td>-->
+<!--                                <td>{{ recs.education }}</td>-->
+<!--                                <td>{{ recs.have_car }}</td>-->
+<!--                                <td>{{ recs.job_chart }}</td>-->
+<!--                                <td>{{ recs.is_he_was_boss }}</td>-->
+<!--                            </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+
+<!--                    Вывод-->
+<!--                    <table>-->
+<!--                        <thead>-->
+<!--                            <tr>-->
+<!--                                <td>Умения</td>-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                            <tr v-for="inner in ChiefsData">-->
+<!--                                <td>{{inner.candidats_trait}}</td>-->
+<!--                            </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+                </div>
+
                 <div class="modal fade show z-9999" id="interviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                     <div class="modal-dialog recruiting-modal-size" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div class="modal-header-general">
                                     <div class="color-blue">ФИО кандидата</div>
-                                    <strong>{{candidatsFIOModal}}</strong>
+                                    <strong v-if="manualSearchIIN == false">{{candidatsFIOModal}}</strong>
+                                    <input v-if="manualSearchIIN" type="text" class="recruiting-modal-general" v-model="candidatsData.manualFullname">
                                 </div>
                             </div>
                             <div class="modal-margin-general recruiting-modal-borderbot">
@@ -363,13 +407,16 @@
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">ИИН:</div>
                                     <div class="col-md-6">
-                                        <input type="number" onclick="this.select()" class="recruiting-modal-general" v-model="IINModal">
+                                        <input v-if="manualSearchIIN == false" type="number" onclick="this.select()" class="recruiting-modal-general" v-model="IINModal">
+                                        <input v-if="manualSearchIIN" type="number" class="recruiting-modal-general" v-model="candidatsData.manualIIN">
+                                        <i class="far fa-edit pointer" @click="candidatWithoutIIN"></i>
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Контактный номер кандидата:</div>
                                     <div class="col-md-6">
-                                        <input type="number" onclick="this.select()" class="recruiting-modal-general" v-model="candidatsPhoneNumber">
+                                        <input v-if="manualSearchIIN == false" type="number" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidatsPhoneNumber">
+                                        <input v-if="manualSearchIIN" type="number" class="recruiting-modal-general" v-model="candidatsData.manualPhoneNumber">
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
@@ -463,7 +510,7 @@
                                     </div>
                                 </div>
                                 <div class="recruiting-savebtn-container">
-                                    <div class="recruiting-btn" @click="sendCandidatsApplication">
+                                    <div class="recruiting-btn" @click="sendCandidatsData">
                                         Сохранить
                                     </div>
                                 </div>
@@ -474,22 +521,32 @@
                 <input class="form-control" type="text" placeholder="Поиск" id="interwiewWithCandidatesSearch" @keyup="tableSearch()">
                 <table class="table recruiting-striped" id="interwiewWithCandidatesTable">
                     <thead>
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">ФИО кандидата</th>
-                        <th scope="col">Структурное подразделение</th>
-                        <th scope="col">Дата собеседования</th>
-                        <th scope="col">Результат итогового интервью</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">ФИО кандидата</th>
+                            <th scope="col">Структурное подразделение</th>
+                            <th scope="col">Дата собеседования</th>
+                            <th scope="col">Результат итогового интервью</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="inner in recruitingInterviewCluster">
-                            <td scope="row">{{inner.id}}</td>
-                            <td>{{inner.name}}</td>
-                            <td>{{inner.structureUnit}}</td>
-                            <td>{{inner.dateOfInterview}}</td>
-                            <td :class="modalSelectCheck(inner)">{{inner.label}}</td>
+<!--                    Цветные примеры-->
+<!--                        <tr v-for="inner in recruitingInterviewCluster1">-->
+<!--                            <td scope="row">{{inner.id}}</td>-->
+<!--                            <td>{{inner.name}}</td>-->
+<!--                            <td>{{inner.structureUnit}}</td>-->
+<!--                            <td>{{inner.dateOfInterview}}</td>-->
+<!--                            <td :class="modalSelectCheck(inner)">{{inner.label}}</td>-->
+<!--                        </tr>-->
+
+                        <tr v-for="(person, index) in candidatDataLocal">
+                            <td scope="row">{{person.id}}</td>
+                            <td>{{person.candidats_fullname}}</td>
+                            <td></td>
+                            <td></td>
+                            <td :class="modalSelectCheck(person)"></td>
                         </tr>
+
                     </tbody>
                 </table>
                 <table class="table recruiting-striped" id="interwiewWithCandidatesTableUnits">
@@ -501,17 +558,51 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData" v-for="inner in recruitingInterviewCluster">
-                            <td scope="row">{{inner.id}}</td>
-                            <td >{{inner.name}}</td>
-                            <td>{{inner.structureUnit}}</td>
+<!--                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData" v-for="inner in recruitingInterviewCluster1">-->
+<!--                            <td scope="row">{{inner.id}}</td>-->
+<!--                            <td>{{inner.name}}</td>-->
+<!--                            <td>{{inner.structureUnit}}</td>-->
+<!--                        </tr>-->
+
+
+<!--                        <tr-->
+<!--                            v-for="(person, index) in recruitingInterviewCluster"-->
+<!--                            class="pointer"-->
+<!--                            data-toggle="modal"-->
+<!--                            data-target="#interviewModalApplicationData"-->
+<!--                            @click="showModal(index)"-->
+<!--                        >-->
+<!--                            <td scope="row">{{ person.id }}</td>-->
+<!--                            <td>{{ person.fullName }}</td>-->
+<!--                            <td>{{ person.department }}</td>-->
+<!--                        </tr>-->
+                        <tr
+                            v-for="(person, index) in chiefsDataLocal"
+                            class="pointer"
+                            data-toggle="modal"
+                            data-target="#interviewModalApplicationData"
+                            @click="showModal(index)"
+                        >
+                            <td scope="row">{{ person.id }}</td>
+                            <td>{{ person.chiefs_fullname }}</td>
+                            <td>{{ person.chiefs_duty }}</td>
                         </tr>
+<!--                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData">-->
+<!--                            <td scope="row">{{recruitingInterviewCluster.depProg[0]}}</td>-->
+<!--                            <td>{{recruitingInterviewCluster.depProg[1]}}</td>-->
+<!--                            <td>{{recruitingInterviewCluster.depProg[2]}}</td>-->
+<!--                        </tr>-->
+<!--                        <tr class="pointer mt-2" data-toggle="modal" data-target="#interviewModalApplicationData">-->
+<!--                            <td scope="row">{{recruitingInterviewCluster.depHR[0]}}</td>-->
+<!--                            <td>{{recruitingInterviewCluster.depHR[1]}}</td>-->
+<!--                            <td>{{recruitingInterviewCluster.depHR[2]}}</td>-->
+<!--                        </tr>-->
                     </tbody>
                 </table>
                 <div class="modal fade show" id="interviewModalApplicationData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                     <div class="modal-dialog recruiting-modal-size" role="document">
                         <div class="modal-content">
-                            <div class="recruiting-body">
+                            <div class="recruiting-body"  v-if="person">
                                 <div>
                                     <div class="recruiting-backward-title">
                                         Заявка на поиск кандидата
@@ -763,7 +854,7 @@
                                         Личностные компетенции кандидата
                                     </div>
                                     <div>
-                            <textarea v-model="candidatBackward.candidatsTrait" class="recruiting-textarea" disabled>Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)
+                            <textarea v-model="candidatBackward.candidatsTrait" class="recruiting-textarea" disabled>
                             </textarea>
                                     </div>
                                 </div>
@@ -843,6 +934,9 @@
         name: "recruiting",
         data() {
             return {
+                showToTopBtn: false,
+                bottomOfWindow: 0,
+                scrolled: false,
                 cityAdress: [
                     'Алматы',
                     'Астана',
@@ -961,6 +1055,9 @@
                     'Продвинутый соц.пакет',
                 ],
                 candidat: {
+                    chiefsDuty: '',
+                    chiefsFullname: '',
+                    userAuthDepartment: '',
                     cityAdressSelect: '',
                     nameOfPostSelect: '',
                     quantityPeople: 1,
@@ -1017,7 +1114,8 @@
                 dateOfTheDOUContractModal: '12.01.2020',
                 dateOfTheStateContractModal: '12.01.2020',
                 commentModal: 'Текст',
-                recruitingInterviewCluster:[
+                // },
+                recruitingInterviewCluster1:[
                     {
                         id: 0,
                         name: 'Иванов Иван Иванович',
@@ -1039,6 +1137,33 @@
                         dateOfInterview: '02.01.2020',
                         label: 'Успешно прошел собеседование'
                     },
+                ],
+                //     depProg: [
+                //         '0',
+                //         'Хамитов Руслан Решатович',
+                //         'Департамент программирования'
+                //     ],
+                //     depHR: [
+                //         '1',
+                //         'Руководитель департамента',
+                //         'Отдел кадров'
+                //     ],
+                recruitingInterviewCluster: [
+                    {
+                        id: 0,
+                        fullName: 'Хамитов Руслан Решатович',
+                        department: 'Департамент программирования'
+                    },
+                    {
+                        id: 1,
+                        fullName: 'Джумагулов Дмитрий Романович',
+                        department: 'Департамент программирования'
+                    },
+                    {
+                        id: 2,
+                        fullName: 'Qwerty qwerty qwerty',
+                        department: 'Департамент Непрограммирования'
+                    }
                 ],
                 faq_questions:[
 
@@ -1064,26 +1189,26 @@
                 ],
             //    Получение данных на 2 вкладке
                 candidatBackward: {
-                    cityAdressSelect: 'Алматы',
-                    nameOfPostSelect: 'Web-программист',
-                    quantityPeople: 1,
-                    ReasonToRecruitingSelect: 'Нехватка сотрудников',
-                    desiredAgeSelect: '19-25',
-                    sexSelect: 'Мужской',
-                    educationSelect: 'Высшее',
-                    functionalResponsobilities: 'Работа с продуктами на kupipolis',
-                    workExpirienceSelect: 'От 1 года',
-                    isHeWasBossSelect: 'Да',
-                    typeOfHireSelect: 'На испытательный срок',
-                    requestToCandidat: 'Знание html, css, js, php',
-                    perspectiveToCandidatSelect: 'Карьерный рост и внутреннее корпоративное обучение',
-                    computerKnowingSelect: 'Уверенное владение пк',
-                    salary: '120000',
-                    motivationSelect: 'Нет',
-                    jobChartSelect: '09:00-18:00, 5/2',
-                    haveCarSelect: 'Да',
-                    driverCategorySelect: 'B,C',
-                    candidatsTrait: 'Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)',
+                    cityAdressSelect: '',
+                    nameOfPostSelect: '',
+                    quantityPeople: '',
+                    ReasonToRecruitingSelect: '',
+                    desiredAgeSelect: '',
+                    sexSelect: '',
+                    educationSelect: '',
+                    functionalResponsobilities: '',
+                    workExpirienceSelect: '',
+                    isHeWasBossSelect: '',
+                    typeOfHireSelect: '',
+                    requestToCandidat: '',
+                    perspectiveToCandidatSelect: '',
+                    computerKnowingSelect: '',
+                    salary: '',
+                    motivationSelect: '',
+                    jobChartSelect: '',
+                    haveCarSelect: '',
+                    driverCategorySelect: '',
+                    candidatsTrait: '',
                     interviewStage: '',
                 },
                 languageAndLvlBackward:
@@ -1112,14 +1237,152 @@
                         'Третий соц. пакет',
                     ],
                 }],
+                chiefsDuty: '',
+                person: null,
+                chiefsDataLocal: this.ChiefsData,
+                manualSearchIIN: false,
+                candidatsData: {
+                    manualFullname: '',
+                    manualIIN: '',
+                    manualPhoneNumber: '',
+                },
+                candidatDataLocal: this.candidatData,
             }
+        },
+        props: {
+            // isn: Number,
+            attributes: Array,
+            user: Object,
+            kek: Array,
+            ChiefsData: Array,
+            candidatData: Array,
         },
         mounted() {
             //this.getFaqData();
+            // this.getRequests();
+            this.getChiefsRequest();
+            this.getCandidatsDataRequest();
+            // this.applicationDataOutput();
         },
         computed: {
         },
         methods: {
+            candidatsDataSavedSuccess: function(){
+                //  Отправка данных на поиск кандидата
+                this.axios.post('/recruiting/saveCandidatsData',{candidatsData: this.candidatsData})
+                    .then(response => {
+                        this.candidatsDataAfterSavedSuccess(response);
+                    });
+            },
+            candidatsDataAfterSavedSuccess(response){
+                if (response.data.success){
+                    this.flashMessage.success({
+                        title: "",
+                        message: 'Кандидат успешно сохранен',
+                        time: 5000
+                    });
+                } else {
+                    this.flashMessage.error({
+                        title: "Ошибка",
+                        message: 'Не удалось сохранить данные',
+                        time: 5000
+                    });
+                }
+            },
+            sendCandidatsData(){
+                this.candidatsDataSavedSuccess();
+            },
+            checkLengthIIN: function(){
+                this.manualIIN.length <= 12;
+            },
+            candidatWithoutIIN: function(){
+                this.manualSearchIIN = true;
+            },
+            goToTop(){
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            },
+            handleScroll() {
+                if(document.documentElement.scrollTop > 50){
+                    this.showToTopBtn = true;
+                }else{
+                    this.showToTopBtn = false;
+                }
+                this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+                if (this.bottomOfWindow && !this.allPostShown) {
+                    this.preloader(true);
+                    this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
+                        this.setPosts(response.data)
+                    });
+                }
+            },
+            showModal: function(index){
+                // this.person =  this.recruitingInterviewCluster[index];
+               this.person =  this.chiefsDataLocal[index];
+               this.candidatBackward.cityAdressSelect = this.person.unit_structural_name_and_city;
+               this.candidatBackward.nameOfPostSelect = this.person.name_of_post;
+               this.candidatBackward.quantityPeople = this.person.quantity_people;
+               this.candidatBackward.ReasonToRecruitingSelect =  this.person.reason_to_recruiting;
+               this.candidatBackward.desiredAgeSelect = this.person.desired_age;
+               this.candidatBackward.sexSelect = this.person.sex;
+               this.candidatBackward.educationSelect = this.person.education;
+               this.candidatBackward.functionalResponsobilities = this.person.functional_responsobilities;
+               this.candidatBackward.workExpirienceSelect = this.person.work_expirience;
+               this.candidatBackward.isHeWasBossSelect = this.person.is_he_was_boss;
+               this.candidatBackward.typeOfHireSelect = this.person.type_of_hire;
+               this.candidatBackward.request_to_candidat = this.person.request_to_candidat;
+               this.candidatBackward.perspectiveToCandidatSelect = this.person.perspective_to_candidat;
+               this.candidatBackward.computerKnowingSelect = this.person.computer_knowing;
+               this.candidatBackward.salary = this.person.salary;
+               this.candidatBackward.motivationSelect = this.person.motivation;
+               this.candidatBackward.jobChartSelect = this.person.job_chart;
+               this.candidatBackward.haveCarSelect = this.person.have_car;
+               this.candidatBackward.driverCategorySelect = this.person.driver_category;
+               this.candidatBackward.candidatsTrait = this.person.candidats_trait;
+               this.candidatBackward.interviewStage = this.person.interview_stage;
+            },
+            // getRequests: function(){
+            //     this.axios.post('/recruiting/getRequests')
+            //         .then(response => {
+            //             this.aftergetRequests(response.data);
+            //         });
+            // },
+            // aftergetRequests(data){
+            //     if(data.success){
+            //         this.kek = data.result;
+            //     } else {
+            //         alert('Сорян, нет данных');
+            //     }
+            // },
+            getChiefsRequest(){
+                this.axios.post('/recruiting/getChiefsRequest')
+                    .then(response => {
+                        this.afterChiefsRequest(response.data);
+                    });
+            },
+            afterChiefsRequest(data){
+                if(data.success){
+                    this.chiefsDataLocal = data.result;
+                }  else{
+                    alert('Ошибка, нет данных');
+                }
+            },
+            getCandidatsDataRequest(){
+                this.axios.post('/recruiting/getCandidatsDataRequest')
+                    .then(response => {
+                        this.afterCandidatsDataRequest(response.data);
+                    });
+            },
+            afterCandidatsDataRequest(data){
+                if(data.success){
+                    this.candidatDataLocal = data.result;
+                }  else{
+                    alert('Ошибка, нет данных');
+                }
+            },
             interviewResultCheck: function(){
                 if (this.interviewMainResultModalSelect == 'Успешно прошел собеседование'){
                     this.resultCheckCounter = 'success';
@@ -1206,6 +1469,10 @@
                 savedSuccess();
             },
             savedSuccess: function(){
+                // Добавляем должность и имя руководителя, заполнившего заявку
+                this.candidat.chiefsFullname = this.user.branch.fullname;
+                this.candidat.chiefsDuty = this.user.branch.duty;
+                //  Отправка данных на поиск кандидата
                 this.axios.post('/recruiting/saveCandidat',{candidat: this.candidat, languages: this.newLanguageBlocks})
                 .then(response => {
                     this.afterSavedSuccess(response);
