@@ -94,20 +94,24 @@
                 this.errors.splice(index, 1)
             },
             createDocumentation() {
-                console.log("here")
+                if(this.categoryName === '' || this.categoryName === null) {
+                    return
+                }
 
                 this.setIsLoading(true)
 
                 const url = '/main/create'
 
                 this.axios.post(url, {
-                    type: 'kias',
-                    categoryName: this.categoryName,
-                    docs: this.docs,
-                    errors: this.errors
-                })
+                        type: 'kias',
+                        categoryName: this.categoryName,
+                        docs: this.docs,
+                        errors: this.errors
+                    })
                     .then(response => {
-                        console.log(response)
+                        if(response.data.success) {
+                            location.href = `/main/kiasdocs/${response.data.id}`
+                        }
                     })
                     .catch(error => {
 

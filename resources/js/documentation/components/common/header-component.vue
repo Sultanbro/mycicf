@@ -31,7 +31,6 @@
             return {
                 bottomOfWindow: 0,
                 showToTopBtn: false,
-
                 isLoading: false
             }
         },
