@@ -65,11 +65,11 @@ class DocumentationController extends Controller
             else
                 return response()->json([
                     'success' => true,
-                    'code'    => 200
+                    'code'    => 200,
+                    'id'      => $documentation->doc_category_id,
                 ]);
         }
         else
             throw new \Exception("Произошла ошибка при сохранении данных", 400);
-
     }
 }

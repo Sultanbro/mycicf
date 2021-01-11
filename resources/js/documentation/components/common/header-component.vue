@@ -1,21 +1,23 @@
 <template>
     <header class="header" @onscroll="bottomOfWindow">
        <div class="container d-flex justify-content-between align-items-center">
-           <div class="header-logo">
-                <h4 v-if="showToTopBtn"
-                    class="m-0 text-white text-uppercase pointer"
-                    @click="goToTop">
-                   <strong>Наверх</strong>
-                </h4>
-                <h4 v-else class="m-0 text-white text-uppercase pointer"
-                    @click="goHome">
-                    <strong>docs.cic.kz</strong>
-                </h4>
-           </div>
-           <div class="header-auth">
-               <button class="btn custom-btn"
-                       @click="logout"
-                       :disabled="isLoading">Выйти</button>
+           <div class="d-flex justify-content-between align-items-center w-100">
+               <div class="header-logo">
+                   <h4 v-if="showToTopBtn"
+                       class="m-0 text-white text-uppercase pointer"
+                       @click="goToTop">
+                       <strong>Наверх</strong>
+                   </h4>
+                   <h4 v-else class="m-0 text-white text-uppercase pointer"
+                       @click="goHome">
+                       <strong>docs.cic.kz</strong>
+                   </h4>
+               </div>
+               <div class="header-auth">
+                   <button class="btn custom-btn"
+                           @click="logout"
+                           :disabled="isLoading">Выйти</button>
+               </div>
            </div>
            <preloader v-if="isLoading"></preloader>
        </div>

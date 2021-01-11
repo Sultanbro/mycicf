@@ -105,23 +105,25 @@
 
                 this.setIsLoading(true)
 
-                const url = '/main/create'
-
-                this.axios.post(url, {
-                        type: 'api',
-                        categoryName: this.categoryName,
-                        docs: this.docs,
-                        errors: this.errors
-                    })
-                    .then(response => {
-                        console.log(response)
-                    })
-                    .catch(error => {
-
-                    })
-                    .finally(() => {
-                        this.setIsLoading(false)
-                    })
+                // const url = '/main/create'
+                //
+                // this.axios.post(url, {
+                //         type: 'api',
+                //         categoryName: this.categoryName,
+                //         docs: this.docs,
+                //         errors: this.errors
+                //     })
+                //     .then(response => {
+                //         if(response.data.success) {
+                //             location.href = `/main/apidocs/${response.data.id}`
+                //         }
+                //     })
+                //     .catch(error => {
+                //         alert(error)
+                //     })
+                //     .finally(() => {
+                //         this.setIsLoading(false)
+                //     })
             },
             setIsLoading(value) {
                 this.isLoading = value

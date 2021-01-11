@@ -4,7 +4,6 @@
             <div class="d-flex justify-content-end w-100">
                 <button type="button"
                         class="delete-button"
-                        v-if="index > 0"
                         @click="deleteDoc(index)">
                     <i class="fas fa-times"></i>
                 </button>
@@ -80,9 +79,6 @@
                 isTouched: false,
                 isFocused: false,
             }
-        },
-        mounted() {
-            this.doc.params.push({...this.param});
         },
         props: {
             doc: Object,
