@@ -26,7 +26,7 @@
                             </div>
                         @elseif(isset($kiasdocs))
                             <div class="card border p-4">
-
+                                <kiasdoc-description :kiasdocs="{{ json_encode($kiasdocs) }}"></kiasdoc-description>
                             </div>
                         @else
                             <div class="card border p-4">

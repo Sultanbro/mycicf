@@ -114,7 +114,7 @@
                         }
                     })
                     .catch(error => {
-
+                        alert(error)
                     })
                     .finally(() => {
                         this.setIsLoading(false)
