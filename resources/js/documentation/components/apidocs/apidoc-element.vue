@@ -18,10 +18,9 @@
                 <div class="w-100">
                     <input type="text"
                            class="form-control"
-                           :class="isTouched && activeField === 'title' && doc.title === '' ? 'is-invalid' : ''"
+                           :class="touchedFields.includes('title') && doc.title === '' ? 'is-invalid' : ''"
                            placeholder="Метод для ..."
-                           @focus="activeField = 'title', isTouched = false"
-                           @blur="isTouched = true"
+                           @blur="pushTouched('title')"
                            v-model="doc.title"
                            required>
                     <div class="invalid-feedback">Необходимо заполнить данное поле</div>
@@ -35,10 +34,9 @@
                 <div class="w-100">
                     <input type="text"
                            class="form-control"
-                           :class="isTouched && activeField === 'method' && doc.methodName === '' ? 'is-invalid' : ''"
+                           :class="touchedFields.includes('method') && doc.methodName === '' ? 'is-invalid' : ''"
                            placeholder="calculate, save, ..."
-                           @focus="activeField = 'method', isTouched = false"
-                           @blur="isTouched = true"
+                           @blur="pushTouched('method')"
                            v-model="doc.methodName"
                            required>
                     <div class="invalid-feedback">Необходимо заполнить данное поле</div>
@@ -54,7 +52,6 @@
                         <div class="w-100">
                             <input type="text"
                                    class="form-control"
-                                   :class="isTouched && activeField === 'version' && doc.version === '' ? 'is-invalid' : ''"
                                    placeholder="v1, v2, ..."
                                    maxlength="3"
                                    v-model="doc.version">
@@ -94,10 +91,9 @@
                     </div>
                     <input type="text"
                            class="form-control"
-                           :class="isTouched && activeField === 'url' && doc.baseUrl === '' ? 'is-invalid' : ''"
+                           :class="touchedFields.includes('url') && doc.baseUrl === '' ? 'is-invalid' : ''"
                            placeholder="https://api.kupipolis.kz/..."
-                           @focus="activeField = 'url', isTouched = false"
-                           @blur="isTouched = true"
+                           @blur="pushTouched('url')"
                            v-model="doc.baseUrl"
                            required>
                     <div class="invalid-feedback">Необходимо заполнить данное поле</div>
@@ -138,9 +134,7 @@
                     format: '',
                     required: 'false',
                 },
-                activeField: '',
-                isTouched: false,
-                isFocused: false,
+                touchedFields: [],
                 securityTypes: ['Token', 'OAuth2', 'JWT'],
             }
         },
@@ -157,7 +151,14 @@
             },
             deleteParam(index) {
                 this.doc.params.splice(index, 1)
-            }
+            },
+            pushTouched(field) {
+                if(!this.touchedFields.includes(field)) {
+                    this.touchedFields.push(field)
+                }
+                else
+                    return
+            },
         }
     }
 </script>

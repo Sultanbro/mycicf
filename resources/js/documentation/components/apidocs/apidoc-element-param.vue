@@ -37,9 +37,8 @@
                     <div class="w-100">
                         <input type="text"
                                class="form-control"
-                               :class="isTouched && activeField === 'paramName' && param.paramName === '' ? 'is-invalid' : ''"
-                               @focus="activeField = 'paramName', isTouched = false"
-                               @blur="isTouched = true"
+                               :class="touchedFields.includes('paramName') && param.paramName === '' ? 'is-invalid' : ''"
+                               @blur="pushTouched('paramName')"
                                placeholder="token, isn, doc_id, ..."
                                v-model="param.paramName"
                                required>
@@ -53,9 +52,8 @@
                     <div class="w-100">
                         <input type="text"
                                class="form-control"
-                               :class="isTouched && activeField === 'description' && param.description === '' ? 'is-invalid' : ''"
-                               @focus="activeField = 'description', isTouched = false"
-                               @blur="isTouched = true"
+                               :class="touchedFields.includes('description') && param.description === '' ? 'is-invalid' : ''"
+                               @blur="pushTouched('description')"
                                placeholder="Тип документа, ИСН документа, ..."
                                v-model="param.description"
                                required>
@@ -69,10 +67,9 @@
                     <div class="w-100">
                         <input type="text"
                                class="form-control"
-                               :class="isTouched && activeField === 'format' && param.format === '' ? 'is-invalid' : ''"
+                               :class="touchedFields.includes('format') && param.format === '' ? 'is-invalid' : ''"
                                placeholder="ДД.ММ.ГГ, +7(XXX), ..."
-                               @focus="activeField = 'format', isTouched = false"
-                               @blur="isTouched = true"
+                               @blur="pushTouched('format')"
                                v-model="param.format">
                         <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                     </div>
@@ -87,9 +84,7 @@
         name: "apidoc-element-param",
         data() {
             return {
-                activeField: '',
-                isTouched: false,
-                isFocused: false,
+                touchedFields: [],
 
                 dataTypes: [
                     'Boolean', 'Integer', 'Double', 'String', 'Array', 'Object', 'Resources', 'NULL', 'DATE', 'TIME', 'DATETIME',
@@ -103,7 +98,14 @@
         methods: {
             deleteParam(index) {
                 this.$parent.deleteParam(index)
-            }
+            },
+            pushTouched(field) {
+                if(!this.touchedFields.includes(field)) {
+                    this.touchedFields.push(field)
+                }
+                else
+                    return
+            },
         }
     }
 </script>
