@@ -31,7 +31,7 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="{{route('development', 'rating')}}">
+                <a class="header-navigation" href="{{route('rating')}}">
                     <li>
                         Рейтинг
                     </li>

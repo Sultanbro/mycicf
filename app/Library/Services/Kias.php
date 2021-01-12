@@ -286,12 +286,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getEmplRating($isn, $begin)
+    public function getEmplRating($user_isn, $begin_date)
     {
         return $this->request('User_CicGetEmplRating', [
-            'EmplISN' => $isn,
-            'Month'   => date('m', strtotime($begin)),
-            'Year'    => date('Y', strtotime($begin)),
+            'EmplISN' => $user_isn,
+            'Month'   => date('m', strtotime($begin_date)),
+            'Year'    => date('Y', strtotime($begin_date)),
         ]);
     }
 
@@ -701,6 +701,24 @@ class Kias implements KiasServiceInterface
             'EmplISN' => $emplIsn,
             'DATEBEG' => date('d.m.Y', strtotime($dateBeg)),
             'DATEEND' => date('d.m.Y', strtotime($dateEnd)),
+        ]);
+    }
+
+    /**
+     * @param $class_isn
+     * @param $doc_isn
+     * @return mixed|SimpleXMLElement
+     */
+    public function getDocRowAttr($class_isn, $doc_isn) {
+        return $this->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => $class_isn,
+            'DOCISN'   => $doc_isn,
+        ]);
+    }
+
+    public function getDocRating($class_isn) {
+        return $this->request('User_CicGetDocRating', [
+            'Classisn' => $class_isn,
         ]);
     }
 }

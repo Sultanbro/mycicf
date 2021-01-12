@@ -140,10 +140,10 @@ interface KiasServiceInterface
     /**
      * Получить рейтинг продавца
      *
-     * @param $isn
-     * @param $begin
+     * @param $user_isn
+     * @param $begin_date
      */
-    public function getEmplRating($isn, $begin);
+    public function getEmplRating($user_isn, $begin_date);
 
     /**
      * Получить печатную форму документа
@@ -287,4 +287,17 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd);
+
+    /**
+     * @param $class_isn
+     * @param $doc_isn
+     * @return mixed
+     */
+    public function getDocRowAttr($class_isn, $doc_isn);
+
+    /**
+     * @param $class_isn
+     * @return mixed
+     */
+    public function getDocRating($class_isn);
 }

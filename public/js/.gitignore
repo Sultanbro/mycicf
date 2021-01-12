@@ -1,5 +1,7 @@
 ./app.js
 ./login.js
+./mobile.js
+./admin.js
 ./simple_info.js
 ./tree_test.js
 ./tree_view.js

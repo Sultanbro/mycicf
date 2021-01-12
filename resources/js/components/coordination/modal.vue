@@ -105,7 +105,7 @@
                                 <!--</div>-->
                                 <div class="mt-4">
                                     <textarea name="comment-modal" rows="3" v-model="coordination.Remark"
-                                              class="resize modal-textarea-comment width100" disabled></textarea>
+                                              class="resize modal-textarea-comment width100" maxlength="2000" disabled></textarea>
                                 </div>
                                 <div class="mt-4">
                                     <div class="table-responsive-sm overflow-auto">
@@ -228,7 +228,7 @@
                                     </div>
                                     <div class="pl-5 pt-4 pb-4 pr-5">
                                         <textarea rows="4" v-model="Remark"
-                                                  class="resize modal-note width100"></textarea>
+                                                  class="resize modal-note width100" maxlength="2000"></textarea>
                                     </div>
 
                                     <edslogin

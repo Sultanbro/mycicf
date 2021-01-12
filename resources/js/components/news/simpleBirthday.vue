@@ -15,13 +15,7 @@
                     <span><a :href="`/colleagues/${this.ISN}/dossier`" class="color-blue">{{fullName}}</a></span>
                 </div>
                 <div class="Birthday-line_height mt-1 mb-1">
-                    <span class="fs-0_9">{{date}}</span>
-                </div>
-                <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{dept}}</span>
-                </div>
-                <div class="Birthday-line_height mt-1 mb-1">
-                    <span class="fs-0_9">{{duty}}</span>
                 </div>
             </div>
         </div>
@@ -30,21 +24,15 @@
             <div class="jc-center d-flex width50 events-window-size relative">
                 <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
-                <img :src="'/storage/images/employee/'+birthday.ISN+'.png'" class="width100" v-if="!birthday.fakeImage">
+                <img :src="'/storage/images/employee/' + birthday.ISN + '.png'" class="width100" v-if="!birthday.fakeImage">
                 <img :src="fakeImageUrl" class="width100" v-else>
             </div>
             <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
                 <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
-                    <span>{{birthday.fullname}}</span>
-                </div>
-                <div class="Birthday-line_height mt-1 mb-1">
-                    <span class="fs-0_9">{{birthday.birthday}}</span>
+                    <span><a :href="`/colleagues/${birthday.ISN}/dossier`" class="color-blue">{{birthday.fullname}}</a></span>
                 </div>
                 <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{birthday.dept}}</span>
-                </div>
-                <div class="Birthday-line_height mt-1 mb-1">
-                    <span class="fs-0_9">{{birthday.duty}}</span>
                 </div>
             </div>
         </div>
@@ -58,7 +46,8 @@
         data() {
             return {
                 imageUrl : null,
-                fakeImageUrl : '/images/avatar.png'
+                fakeImageUrl : '/images/avatar.png',
+                today: new Date().getDate(),
             }
         },
         props : {

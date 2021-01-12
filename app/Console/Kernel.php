@@ -54,6 +54,9 @@ class Kernel extends ConsoleKernel
             $schedule->command('kolesaprices:file')
                 ->dailyAt('13:00')
                 ->timezone('Asia/Almaty');
+            $schedule->command('kias:rating')
+                ->monthlyOn(10, '18:00')
+                ->timezone('Asia/Almaty');
 
         }catch (\Exception $e){
             Log::error($e->getMessage());

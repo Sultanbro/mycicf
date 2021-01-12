@@ -26,7 +26,7 @@ class AddConditionForPropertyToDictiTable extends Migration
     public function down()
     {
         Schema::table('dicti', function (Blueprint $table) {
-            //
+            $table->dropColumn('condition_for_property');
         });
     }
 }

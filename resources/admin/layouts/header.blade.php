@@ -89,7 +89,7 @@
                        aria-haspopup="true" aria-expanded="false">Куратор</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown09">
                         <a class="dropdown-item" href="{{route('statistics.kurator.list')}}">Статистика Да</a>
-{{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Рейтинг</a>--}}
+                        <a class="dropdown-item" href="{{route('rating.kurator.list')}}">Рейтинг</a>
 {{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Отчет</a>--}}
 {{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Мотивация</a>--}}
                     </div>
