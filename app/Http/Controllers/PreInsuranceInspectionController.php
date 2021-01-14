@@ -42,7 +42,7 @@ class PreInsuranceInspectionController extends Controller
     public function index(KiasServiceInterface $kias)
     {
         $user = (new User)->getUserData($kias)['Avarcom'];
-        if ($user == self::AVARCOM || Auth::user()->ISN == 3418677 || Auth::user()->ISN == 4774176) {
+        if ($user == self::AVARCOM || Auth::user()->ISN == 3418677 || Auth::user()->dept_isn == 4774176) {
             return view('insurance_inspection');
         }
         abort(403, 'У вас нет доступа для просмотра данной страницы');
