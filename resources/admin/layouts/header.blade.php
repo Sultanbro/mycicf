@@ -1,15 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-    <a class="navbar-brand" href="/">ADMIN</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow p-3 mb-5 rounded">
+    <a class="nnavbar-brand" href="/">ADMIN</a>
     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample09"
             aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="navbar-collapse collapse" id="navbarsExample09" style="">
+    <div class="navbar-collapse collapse" id="navbarsExample09" style="margin-left: 60px;">
         <ul class="navbar-nav mr-auto">
             @if(App\User::isParseAdmin())
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">PARSE</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
                     <a class="dropdown-item" href="{{route('parse.upload')}}">Загрузка</a>
@@ -24,7 +24,7 @@
             @endif
             @if(App\User::isOtdeKadrovAdmin())
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">Отдел кадров</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
                     <a class="dropdown-item" href="{{route('centcoins.list')}}">Сенткойн - Список</a>
@@ -40,7 +40,7 @@
             @endif
             @if(App\User::isWNDAdmin())
                 <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+            <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">ВНД</a>
             <div class="dropdown-menu" aria-labelledby="dropdown09">
                 <a class="dropdown-item" href="{{route('wnd.org')}}">Орг. структура</a>
@@ -57,7 +57,7 @@
             @endif
             @if(App\User::isSenateAdmin())
                 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+    <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
        aria-haspopup="true" aria-expanded="false">Сенат</a>
     <div class="dropdown-menu" aria-labelledby="dropdown09">
         <a class="dropdown-item" href="{{route('senate.post.new')}}">Новый пост</a>
@@ -66,7 +66,7 @@
             @endif
             @if(App\User::isReadingClubAdmin())
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">Читательский клуб</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
                     <a class="dropdown-item" href="{{route('reading.post.new')}}">Новый пост</a>
@@ -75,7 +75,7 @@
             @endif
             @if(App\User::isSuperAdmin())
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                    <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">Доступ</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown09">
                         <a class="dropdown-item" href="{{route('role.dicti.list')}}">Справочник ролей</a>
@@ -83,9 +83,21 @@
                     </div>
                 </li>
             @endif
+            @if(App\User::isKurators() || App\User::isSuperAdmin())
+                <li class="nav-item dropdown">
+                    <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Куратор</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="{{route('statistics.kurator.list')}}">Статистика Да</a>
+                        <a class="dropdown-item" href="{{route('rating.kurator.list')}}">Рейтинг</a>
+{{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Отчет</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('role.permission.list')}}">Мотивация</a>--}}
+                    </div>
+                </li>
+            @endif
             @if(App\User::isProductsAdmin())
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                        <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">Продукты</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown09">
                             <a class="dropdown-item" href="{{route('list.express')}}">Экспресс котировка</a>

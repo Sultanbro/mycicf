@@ -140,10 +140,10 @@ interface KiasServiceInterface
     /**
      * Получить рейтинг продавца
      *
-     * @param $isn
-     * @param $begin
+     * @param $user_isn
+     * @param $begin_date
      */
-    public function getEmplRating($isn, $begin);
+    public function getEmplRating($user_isn, $begin_date);
 
     /**
      * Получить печатную форму документа
@@ -289,37 +289,15 @@ interface KiasServiceInterface
     public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd);
 
     /**
-     * Получить документы
-     * @param $docIsn
-     * @param $classIsn
+     * @param $class_isn
+     * @param $doc_isn
      * @return mixed
      */
-    public function getDocument($docIsn, $classIsn);
+    public function getDocRowAttr($class_isn, $doc_isn);
 
     /**
-     * сохранение документа
-     * @param $classIsn
-     * @param $emplIsn
-     * @param $docDate
-     * @param $subIsn
+     * @param $class_isn
      * @return mixed
      */
-    public function saveDocument($classIsn, $emplIsn, $docDate, $subIsn);
-
-    /**
-     * Процедура возвращает СЗ(служебные записки) и заявления в КИАС указанного сотрудника
-     * @param $emplIsn
-     * @param $dateBeg
-     * @param $dateEnd
-     * @return mixed
-     */
-    public function getMySz($emplIsn, $dateBeg, $dateEnd);
-
-    /**
-     * документы табличная часть и доп атрибуты
-     * @param $classIsn
-     * @param $docIsn
-     * @return mixed
-     */
-    public function getDocRowAttr($classIsn, $docIsn);
+    public function getDocRating($class_isn);
 }

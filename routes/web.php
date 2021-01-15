@@ -145,6 +145,24 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('calc/getDicti', 'ProductsController@getDicti');
             Route::post('/updateProductsDicti','ProductsController@updateProductsDicti');
         });
+
+        Route::group(['middleware' => 'kurators'], function() {
+            Route::get('/statistics/kurators', 'Admin\KuratorController@kuratorView')->name('statistics.kurator.list');
+            Route::post('/statistics/getKuratorsList', 'Admin\KuratorController@getKuratorUsers');
+            Route::get('/statistics/newUser', 'Admin\KuratorController@newUserView');
+            Route::post('/statistics/getKurators', 'Admin\KuratorController@getKurators');
+            Route::post('/statistics/setNewUser', 'Admin\KuratorController@newUser');
+            Route::get('/statistics/delete/{kurators}', 'Admin\KuratorController@deleteById');
+        });
+
+        Route::group(['middleware' => 'ratingPermission'], function() {
+            Route::get('/rating/kurators', 'Admin\RatingPermissionController@index')->name('rating.kurator.list');
+            Route::post('/rating/getKuratorsList', 'Admin\RatingPermissionController@getKuratorUsers');
+            Route::get('/rating/newUser', 'Admin\RatingPermissionController@newUserView');
+            Route::post('/rating/getKurators', 'Admin\RatingPermissionController@getKurators');
+            Route::post('/rating/setNewUser', 'Admin\RatingPermissionController@newUser');
+            Route::get('/rating/delete/{kurators}', 'Admin\RatingPermissionController@deleteById');
+        });
     });
 });
 
@@ -158,10 +176,13 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
-    Route::get('test/eds', 'Controller@testEds');
-    Route::get('/getEDS', 'Controller@getEds');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
+        Route::get('test/eds', 'SiteController@testEds');
+        Route::get('/getEDS', 'SiteController@getEds');
+        Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
+        Route::post('/save_eds_info','SiteController@saveEdsInfo');
+        Route::post('/coordinationSaveAttachment','CoordinationController@saveAttachment');
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
@@ -209,6 +230,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
             Route::post('/buyItem', 'CentcoinsController@buyItem');
         });
+
+//        Route::group(['middleware' => 'cors'], function() {
+//            Route::get('/getVersion', 'Controller@getVersion');
+//        });
         //NEWS
         Route::get('/news', 'NewsController@getView')->name('news');
         Route::get('/booking', 'BookingController@index')->name('booking');
@@ -228,9 +253,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/vote', 'NewsController@vote');
 
         Route::post('/setSenateVote', 'NewsController@senateVote');
-        //RATING
-        Route::get('/rating', 'RatingController@index')->name('rating');
-        Route::post('/getRatingList', 'RatingController@getRatingList');
+//        //RATING
+//        Route::get('/rating', 'RatingController@index')->name('rating');
+//        Route::post('/getRatingList', 'RatingController@getRatingList');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
@@ -253,7 +278,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getStatisticsReport', 'StatisticsController@getReport');
         Route::post('/getProdData', 'StatisticsController@getProdData');
         Route::post('/getProducts', 'StatisticsController@getProducts');
-
+        Route::post('/getBranchProdData', 'StatisticsController@postBranchProdData');
         Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
         Route::get('/logout', 'SiteController@logout');
@@ -327,7 +352,24 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
+
+        Route::get('boss-news', 'NewsController@index')->name('boss-news');
+        Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
+
+        //My results page
+        Route::get('rating', 'RatingController@ratingIndex')->name('rating');
+        Route::post('getTopRatingList', 'RatingController@getTopRatingList');
+        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+
+        Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
+        Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
+        Route::post('my-results/getRating', 'RatingController@getRating');
     });
+
+    Route::post('api/booking/get', 'ApiController@getBookingData');
+    Route::post('api/booking/delete', 'ApiController@deleteBookingData');
+    Route::post('api/booking/add', 'ApiController@addBookingData');
+    Route::post('api/booking/officeList', 'ApiController@getBookingOfficeList');
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::get('/', 'SiteController@parseAuth');
@@ -352,6 +394,7 @@ Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
 Route::get('/kolesa/models', 'SiteController@getModels');
 Route::get('/kolesa/prices', 'SiteController@getPrices');
+Route::get('/kolesa/show-prices', 'SiteController@showPrices');
 Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
@@ -359,10 +402,9 @@ Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 Route::get('test', function () {
     return view('test');
 });
-//Cabinet
-Route::get('/cabinet', 'CabinetController@index')->name('cabinet');
-Route::post('/cabinet/getRatingList', 'CabinetController@getRatingList');
-//Route::get('/cabinet/MotivationList', 'CabinetController@MotivationList');
+Route::get('test3', function () {
+    echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
+});
 
 
 

@@ -286,12 +286,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getEmplRating($isn, $begin)
+    public function getEmplRating($user_isn, $begin_date)
     {
         return $this->request('User_CicGetEmplRating', [
-            'EmplISN' => $isn,
-            'Month'   => date('m', strtotime($begin)),
-            'Year'    => date('Y', strtotime($begin)),
+            'EmplISN' => $user_isn,
+            'Month'   => date('m', strtotime($begin_date)),
+            'Year'    => date('Y', strtotime($begin_date)),
         ]);
     }
 
@@ -605,6 +605,30 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN){
+        return $this->request('User_CicGetAttachmentsPath', [
+            'RefID' => $refID,
+            'RefISN' => $refISN,
+            'PictType' => $type,
+            'Format' => $format,
+            'DocClass' => $docClass,
+            'ISN' => $ISN,
+        ]);
+    }
+
+    public function cicSaveEDS($RefISN,$isn,$iin,$signer,$signerisn,$signeddate,$keyperiod,$remark){
+        return $this->request('User_CicSaveEDS', [
+            'RefISN' => $RefISN,
+            'ISN' => $isn,
+            'IIN' => $iin,
+            'SIGNER' => $signer,
+            'SIGNERISN' => $signerisn,
+            'SIGNEDDATE' => $signeddate,
+            'KEYPERIOD' => $keyperiod,
+            'REMARK' => $remark
+        ]);
+    }
+
     /**
      * Получить справочники
      *
@@ -681,61 +705,20 @@ class Kias implements KiasServiceInterface
     }
 
     /**
-     * @param $docisn
-     * @param $classisn
-     * @return SimpleXMLElement
-     */
-    public function getDocument($docIsn, $classIsn)
-    {
-        return $this->request('GetDocument', [
-            'DOCISN'   => $docIsn,
-            'CLASSISN' => $classIsn
-        ]);
-    }
-
-    /**
-     * сохранение документа
-     * @param $classIsn
-     * @param $emplIsn
-     * @param $docDate
-     * @param $subIsn
-     * @return SimpleXMLElement
-     */
-    public function saveDocument($classIsn, $emplIsn, $docDate, $subIsn)
-    {
-        return $this->request('User_CicSAVEDOCUMENT', [
-            'CLASSISN' => $classIsn,
-            'EMPLISN' => $emplIsn,
-            'DOCDATE' => $docDate,
-            'SUBJISN' => $subIsn
-        ]);
-    }
-
-    /**
-     * @param $emplIsn
-     * @param $dateBeg
-     * @param $dateEnd
+     * @param $class_isn
+     * @param $doc_isn
      * @return mixed|SimpleXMLElement
      */
-    public function getMySz($emplIsn, $dateBeg, $dateEnd)
-    {
-        return $this->request('User_CicGetMySZ', [
-            'EMPLISN' => $emplIsn,
-            'DATEBEG' => $dateBeg,
-            'DATEEND' => $dateEnd
+    public function getDocRowAttr($class_isn, $doc_isn) {
+        return $this->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => $class_isn,
+            'DOCISN'   => $doc_isn,
         ]);
     }
 
-    /**
-     * @param $classIsn
-     * @param $docIsn
-     * @return SimpleXMLElement
-     */
-    public function getDocRowAttr($classIsn, $docIsn)
-    {
-        return $this->request('User_CicGetDocRowAttr', [
-            'CLASSISN' => $classIsn,
-            'DOCISN' => $docIsn,
+    public function getDocRating($class_isn) {
+        return $this->request('User_CicGetDocRating', [
+            'Classisn' => $class_isn,
         ]);
     }
 }

@@ -16,7 +16,11 @@ Vue.component('dicti-list', require('./components/admin/dicti/list.vue').default
 
 Vue.component('role-list', require('./components/admin/role/list.vue').default);
 
+Vue.component('statistics-list', require('./components/admin/statistics/list.vue').default);
+
 Vue.component('role-new', require('./components/admin/role/new.vue').default);
+
+Vue.component('statistics-new', require('./components/admin/statistics/new.vue').default);
 
 Vue.component('parse-upload', require('./components/admin/parse/upload.vue').default);
 
@@ -56,6 +60,9 @@ Vue.component('full-constructor-create', require('./components/admin/products/fu
 // Vue.component('constructor-attributes', require('./components/admin/products/full_constructor/constructor-attributes.vue').default);
 Vue.component('constructor', require('./components/admin/products/full_constructor/constructor.vue').default);
 Vue.component('formular', require('./components/admin/products/full_constructor/formular.vue').default);
+
+Vue.component('rating-permission-list', require('./components/admin/rating/rating-permission-list').default);
+Vue.component('rating-permission-new', require('./components/admin/rating/rating-permission-new').default);
 
 window.onload = function(){
     var app = new Vue({
