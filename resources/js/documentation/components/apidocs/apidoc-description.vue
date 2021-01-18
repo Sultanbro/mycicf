@@ -4,7 +4,6 @@
                                   :doc="doc"
                                   :key="index"></apidoc-description-table>
         <apidoc-error-table :errors="apidocs.errors"></apidoc-error-table>
-        <flash-message></flash-message>
     </div>
 </template>
 
