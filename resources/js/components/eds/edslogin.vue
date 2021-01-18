@@ -461,7 +461,7 @@
                                         }
                                     });
                                 } else {
-                                    if(Object.keys(self.doc_row_list_inner_other[1]).length > 0) {
+                                    if(Object.keys(self.doc_row_list_inner_other).length > 0) {
                                         for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
                                             //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
                                             console.log('2');
