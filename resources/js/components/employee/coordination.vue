@@ -426,7 +426,7 @@
                         if (response.data.success) {
                             this.setDocRowList(response.data, type);
                         } else {
-                            alert(response.data.message);
+                            //alert(response.data.message);
                             this.preloader(false);
                         }
                     } else {
