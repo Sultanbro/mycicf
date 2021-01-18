@@ -48,6 +48,9 @@
             </div>
         </div>
         <preloader v-if="isLoading"></preloader>
+        <flash-message v-if="showFlash"
+                       :message="flashMessage"
+                       :type="flashType"></flash-message>
     </div>
 </template>
 
@@ -59,6 +62,10 @@
                 isLoading: false,
                 isPasswordShown: false,
 
+                showFlash: false,
+                flashMessage: '',
+                flashType: '',
+
                 user: {
                     username: '',
                     password: '',
@@ -69,25 +76,40 @@
             login() {
                 this.setIsLoading(true)
                 this.axios.post('/login', this.user)
-                          .then(response => {
-                              if(response.data.success) {
-                                  location.href = '/main'
-                              }
-                          })
-                          .catch(error => {
-                              alert(error)
-                          })
-                          .finally(() => {
-                              this.setIsLoading(false)
-                              this.user.username = ''
-                              this.user.password = ''
-                          })
+                    .then(response => {
+                        if(response.data.success) {
+                            this.setFlashOptions('Успешно', 'success')
+                            this.showFlashMessage(true)
+
+                            location.href = '/main'
+                        }
+                        else {
+                            this.setFlashOptions(response.data.message, 'error')
+                            this.showFlashMessage(true)
+                        }
+                    })
+                    .finally(() => {
+                        this.setIsLoading(false)
+                        this.user.username = ''
+                        this.user.password = ''
+
+                        setTimeout(() => {
+                            this.showFlashMessage(false)
+                        }, 4000)
+                    })
             },
             setIsLoading(value) {
                 this.isLoading = value
             },
             showPassword() {
                 this.isPasswordShown = !this.isPasswordShown
+            },
+            showFlashMessage(value) {
+                this.showFlash = value
+            },
+            setFlashOptions(message, type) {
+                this.flashMessage = message
+                this.flashType = type
             }
         }
     }

@@ -28,6 +28,7 @@ Vue.component('kiasdoc-error-table', require('./components/kiasdocs/kiasdoc-erro
 Vue.component('header-component', require('./components/common/header-component').default);
 Vue.component('footer-component', require('./components/common/footer-component').default);
 Vue.component('sidebar-component', require('./components/common/sidebar-component').default);
+Vue.component('flash-message', require('./components/common/flash-message').default);
 Vue.component('preloader', require('./components/common/preloader').default);
 Vue.component('modal', require('./components/common/modal').default);
 

@@ -47,6 +47,9 @@
                 </div>
             </div>
         </div>
+        <flash-message v-if="showFlash"
+                       :message="flashMessage"
+                       :type="flashType"></flash-message>
     </div>
 </template>
 
@@ -56,8 +59,20 @@
         data() {
             return {
                 modalType: 'api',
+                showFlash: false,
+                flashMessage: '',
+                flashType: ''
             }
         },
+        methods: {
+            showFlashMessage(value) {
+                this.showFlash = value
+            },
+            setFlashOptions(message, type) {
+                this.flashMessage = message
+                this.flashType = type
+            }
+        }
     }
 </script>
 

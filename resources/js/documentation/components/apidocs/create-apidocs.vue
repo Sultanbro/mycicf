@@ -85,6 +85,9 @@
                 isTouched: false,
                 isFocused: false,
                 isLoading: false,
+                showFlash: false,
+                flashMessage: '',
+                flashType: ''
             }
         },
         methods: {
@@ -117,19 +120,27 @@
                     })
                     .then(response => {
                         if(response.data.success) {
+                            this.$parent.setFlashOptions('Успешно создано', 'success')
+                            this.$parent.showFlashMessage(true)
+
                             location.href = `/main/apidocs/${response.data.id}`
                         }
                     })
                     .catch(error => {
-                        alert(error)
+                        this.$parent.setFlashOptions(error.response.data.message, 'error')
+                        this.$parent.showFlashMessage(true)
                     })
                     .finally(() => {
                         this.setIsLoading(false)
+
+                        setTimeout(() => {
+                            this.$parent.showFlashMessage(false)
+                        }, 4000)
                     })
             },
             setIsLoading(value) {
                 this.isLoading = value
-            }
+            },
         }
     }
 </script>

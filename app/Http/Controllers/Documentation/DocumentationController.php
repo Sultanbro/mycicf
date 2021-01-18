@@ -60,14 +60,15 @@ class DocumentationController extends Controller
             $documentation->documentation = json_encode($docs);
             $documentation->doc_category_id = $category->id;
 
-            if(!$documentation->save())
-                throw new \Exception("Произошла ошибка при сохранении данных", 400);
-            else
+            if($documentation->save()) {
                 return response()->json([
                     'success' => true,
                     'code'    => 200,
                     'id'      => $documentation->doc_category_id,
                 ]);
+            }
+            else
+                throw new \Exception("Произошла ошибка при сохранении данных", 400);
         }
         else
             throw new \Exception("Произошла ошибка при сохранении данных", 400);
