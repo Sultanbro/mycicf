@@ -87,6 +87,7 @@
             }
         },
         props: {
+            sendSolution: Function,
             showView: String,
             doc_row_list_inner_other: Object,
             coordination: Object
@@ -490,6 +491,7 @@
                                             });
                                         }
                                     } else {
+                                        self.sendSolution(1);
                                         self.loader(false);
                                     }
                                 }
