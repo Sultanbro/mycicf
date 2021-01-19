@@ -9,6 +9,9 @@ use App\Recruiting;
 use App\CandidatsData;
 use Illuminate\Http\Request;
 use App\Branch;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use App\Answer;
 
 class RecruitingController extends Controller
@@ -186,18 +189,36 @@ class RecruitingController extends Controller
         ];
         return response()->json($result)->withCallback($request->input('callback'));
     }
+//    Отправка данных кандидата
     public function saveCandidatsData(Request $request,KiasServiceInterface $kias){
         $candidats_data = new CandidatsData();
 
+        $candidats_data->manualPhoneNumber = $request->candidatsData['cityAdress'];
         $candidats_data->candidats_fullname = $request->candidatsData['manualFullname'];
         $candidats_data->candidats_iin = $request->candidatsData['manualIIN'];
-        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
+//        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
         if(!$candidats_data->save()){
             return response()->json([
                 'success' => false,
                 'error' => 'Ошибка'
             ]);
         }
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+    public function testt1(Request $request){
+        $recruiting = new Recruiting();
+        $recruiting->candidats_iin = $request->candidatsData['manualIIN'];
+        if(!$recruiting->update()){
+            return response()->json([
+                'success' => false,
+                'error' => 'Ошибка'
+            ]);
+        }
+//        if($request->candidat['cityAdressSelect'] == '1'){
+//
+//        }
         return response()->json([
             'success' => true,
         ]);
@@ -209,14 +230,30 @@ class RecruitingController extends Controller
             'result' => $requests
         ]);
     }
+//    Тут должно быть сохранение резюме
+    public function getResumeRecruiting(Request $request){
+        dd($request->all());
+
+        $requests = CandidatsData::all();
+
+        return response()->json([
+            'success' => $requests ? true : false,
+            'result' => $requests
+        ]);
+    }
+    public function testKiasDima(Request $request, KiasServiceInterface $kias){
+        $Test = $kias->getTestKiadData();
+        dd($Test);
+    }
     public function saveCandidat(Request $request,KiasServiceInterface $kias){
 //        $candidate = $request->candidate;
 
 
-
 //        $language = new RecruitingLanguage();
 
+        if($request->candidat['cityAdressSelect'] == '1'){
 
+        }
         $recruiting = new Recruiting();
         $recruiting->chiefs_duty = $request->candidat['chiefsDuty'];
         $recruiting->chiefs_fullname = $request->candidat['chiefsFullname'];
@@ -242,12 +279,19 @@ class RecruitingController extends Controller
         $recruiting->driver_category = $request->candidat['driverCategorySelect'];
         $recruiting->candidats_trait = $request->candidat['candidatsTrait'];
         $recruiting->interview_stage = $request->candidat['interviewStage'];
+
+        $recruiting->candidats_fullname = $request->candidat['manualFullname'];
+        $recruiting->candidats_iin = $request->candidat['manualIIN'];
+        $recruiting->candidats_phone_number = $request->candidat['manualPhoneNumber'];
         if(!$recruiting->save()){
             return response()->json([
                 'success' => false,
                 'error' => 'Ошибка'
             ]);
         }
+//        if($request->candidat['cityAdressSelect'] == '1'){
+//
+//        }
         return response()->json([
             'success' => true,
         ]);

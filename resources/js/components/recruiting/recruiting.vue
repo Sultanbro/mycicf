@@ -326,7 +326,30 @@
                         </div>
                     </div>
                     <div class="recruiting-btn-container">
-                        <div class="recruiting-btn" @click="savedSuccess" v-bind:class="{disabledBtnRecruiting : candidat.cityAdressSelect == '' || candidat.nameOfPostSelect == '' || candidat.quantityPeopleSelect == '' || candidat.ReasonToRecruitingSelect == '' || candidat.desiredAgeSelect == '' || candidat.sexSelect == '' || candidat.educationSelect == '' || candidat.functionalResponsobilities == '' || candidat.workExpirienceSelect == '' || candidat.isHeWasBossSelect == '' || typeOfHire == '' || candidat.requestToCandidat == '' || candidat.perspectiveToCandidatSelect == '' || candidat.computerKnowingSelect == '' || candidat.salary == '' || candidat.motivationSelect == '' || candidat.jobChartSelect == '' || candidat.haveCarSelect == '' || candidat.driverCategorySelect == '' || candidat.candidatsTrait == '' || candidat.interviewStage == '' || newLanguageBlocks[0].language == null || newSocialpacketBlocks[0].packet == null}">
+                        <div class="recruiting-btn" @click="savedSuccess" v-bind:class="{
+                            disabledBtnRecruiting : candidat.cityAdressSelect == '' ||
+                                                    candidat.nameOfPostSelect == '' ||
+                                                    candidat.quantityPeopleSelect == '' ||
+                                                    candidat.ReasonToRecruitingSelect == '' ||
+                                                    candidat.desiredAgeSelect == '' ||
+                                                    candidat.sexSelect == '' ||
+                                                    candidat.educationSelect == '' ||
+                                                    candidat.functionalResponsobilities == '' ||
+                                                    candidat.workExpirienceSelect == '' ||
+                                                    candidat.isHeWasBossSelect == '' ||
+                                                    typeOfHire == '' ||
+                                                    candidat.requestToCandidat == '' ||
+                                                    candidat.perspectiveToCandidatSelect == '' ||
+                                                    candidat.computerKnowingSelect == '' ||
+                                                    candidat.salary == '' ||
+                                                    candidat.motivationSelect == '' ||
+                                                    candidat.jobChartSelect == '' ||
+                                                    candidat.haveCarSelect == '' ||
+                                                    candidat.driverCategorySelect == '' ||
+                                                    candidat.candidatsTrait == '' ||
+                                                    candidat.interviewStage == '' ||
+                                                    newLanguageBlocks[0].language == null ||
+                                                    newSocialpacketBlocks[0].packet == null}">
 <!--                            @click="getFaqData"-->
                             Отправить
                         </div>
@@ -395,6 +418,9 @@
                             <div class="modal-header">
                                 <div class="modal-header-general">
                                     <div class="color-blue">ФИО кандидата</div>
+                                    <div>{{candidatsData.manualFullname}}</div>
+                                    <div>{{candidatsData.manualIIN}}</div>
+                                    <div>{{candidatsData.manualPhoneNumber}}</div>
                                     <strong v-if="manualSearchIIN == false">{{candidatsFIOModal}}</strong>
                                     <input v-if="manualSearchIIN" type="text" class="recruiting-modal-general" v-model="candidatsData.manualFullname">
                                 </div>
@@ -402,7 +428,7 @@
                             <div class="modal-margin-general recruiting-modal-borderbot">
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Структурное подразделение:</div>
-                                    <div class="col-md-6">{{structuralUnitModal}}</div>
+                                    <div class="col-md-6">{{candidatBackward.cityAdressSelect}}</div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">ИИН:</div>
@@ -455,6 +481,14 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        <div class="recruiting-savebtn-container">
+<!--                                            candidatsResumeModalSend Функция отправки резюме-->
+<!--                                            savedSuccess-->
+                                            <div class="recruiting-btn" @click="sendCandidatsData">
+                                                Сохранить
+                                            </div>
+                                            <div @click="clickertest">click</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -462,22 +496,22 @@
                                 <div class="recruiting-modal-borderbot">
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Вакансия:</div>
-                                        <div class="col-md-6">{{vacansionModal}}</div>
+                                        <div class="col-md-6">{{candidatBackward.nameOfPostSelect}}</div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Количество единиц:</div>
-                                        <div class="col-md-6">{{numberOfUnitsModal}}</div>
+                                        <div class="col-md-6">{{candidatBackward.quantityPeople}}</div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата собеседования (ответ в течение 2-х дней после получения резюме):</div>
                                         <div class="col-md-6">
-                                            <input type="date" onclick="this.select()" v-model="interviewDateModal" class="recruiting-modal-general">
+                                            <input type="date" onclick="this.select()" v-model="candidatsData.interviewDateModal" class="recruiting-modal-general">
                                         </div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Время собеседования:</div>
                                         <div class="col-md-6">
-                                            <input type="time" onclick="this.select()" value="09:00" min="09:00" max="18:00" v-model="interviewTimeModal" class="recruiting-modal-general">
+                                            <input type="time" value="09:00" min="09:00" max="18:00" v-model="candidatsData.interviewTimeModal" class="recruiting-modal-general">
                                         </div>
                                     </div>
                                     <div class="modal-cell-general">
@@ -492,15 +526,15 @@
                                 <div v-if="resultCheckCounter == 'success'">
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата выхода кандидата на стажировку (с указанием даты окончания стажировки, но не более 5 дней):</div>
-                                        <div class="col-md-6">{{candidatsDateInternshipModal}}</div>
+                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="candidatsDateInternshipModal"></div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата заключения ДОУ (ответ в течение 5 дней (с даты выхода кандидата на стажировку)):</div>
-                                        <div class="col-md-6">{{dateOfTheDOUContractModal}}</div>
+                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="dateOfTheDOUContractModal"></div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата заключения ТД (принят в штат):</div>
-                                        <div class="col-md-6">{{dateOfTheStateContractModal}}</div>
+                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="dateOfTheStateContractModal"></div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Комментарий:</div>
@@ -509,6 +543,7 @@
                                         </div>
                                     </div>
                                 </div>
+<!--                                Кнопка сохранения в разделе ВРЕМЯ-->
                                 <div class="recruiting-savebtn-container">
                                     <div class="recruiting-btn" @click="sendCandidatsData">
                                         Сохранить
@@ -540,7 +575,7 @@
 <!--                        </tr>-->
 
                         <tr v-for="(person, index) in candidatDataLocal">
-                            <td scope="row">{{person.id}}</td>
+                            <td scope="row">{{index + 1}}</td>
                             <td>{{person.candidats_fullname}}</td>
                             <td></td>
                             <td></td>
@@ -1079,6 +1114,9 @@
                     driverCategorySelect: '',
                     candidatsTrait: 'Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)',
                     interviewStage: '',
+                    manualFullname: '',
+                    manualIIN: '',
+                    manualPhoneNumber: '',
                 },
                 recruitingTabs: 2,
                 languagesCounter: 1,
@@ -1210,6 +1248,9 @@
                     driverCategorySelect: '',
                     candidatsTrait: '',
                     interviewStage: '',
+                    manualFullname: '',
+                    manualIIN: '',
+                    manualPhoneNumber: '',
                 },
                 languageAndLvlBackward:
                     [{
@@ -1245,6 +1286,9 @@
                     manualFullname: '',
                     manualIIN: '',
                     manualPhoneNumber: '',
+                    dateOfInterview: '',
+                    timeOfInterview: '',
+                    cityAdress: '',
                 },
                 candidatDataLocal: this.candidatData,
             }
@@ -1267,8 +1311,29 @@
         computed: {
         },
         methods: {
+            clickertest: function(){
+                this.axios.post('/recruiting/test21',{candidatsData: this.candidatsData, index})
+            },
+            candidatsResumeModalSend: function(){
+                    this.preloader(true);
+                    this.axios.post("/recruiting/getResumeRecruiting", this.getFormData()).then(response => {
+                        this.fetchAddPost(response.data);
+                    }).catch(error => {
+                        alert("Ошибка на стороне сервера");
+                    });
+            },
+            getFormData() {
+                const formData = new FormData;
+
+                this.documents.forEach(document => {
+                    formData.append('documents[]', document, document.name);
+                });
+
+                return formData;
+            },
             candidatsDataSavedSuccess: function(){
                 //  Отправка данных на поиск кандидата
+                this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
                 this.axios.post('/recruiting/saveCandidatsData',{candidatsData: this.candidatsData})
                     .then(response => {
                         this.candidatsDataAfterSavedSuccess(response);
@@ -1296,7 +1361,13 @@
                 this.manualIIN.length <= 12;
             },
             candidatWithoutIIN: function(){
-                this.manualSearchIIN = true;
+                if (this.manualSearchIIN == true){
+                    this.manualSearchIIN = false;
+                }
+                else if (this.manualSearchIIN == false){
+                    this.manualSearchIIN = true;
+                }
+
             },
             goToTop(){
                 window.scroll({
@@ -1319,6 +1390,7 @@
                     });
                 }
             },
+
             showModal: function(index){
                 // this.person =  this.recruitingInterviewCluster[index];
                this.person =  this.chiefsDataLocal[index];
@@ -1343,6 +1415,9 @@
                this.candidatBackward.driverCategorySelect = this.person.driver_category;
                this.candidatBackward.candidatsTrait = this.person.candidats_trait;
                this.candidatBackward.interviewStage = this.person.interview_stage;
+               this.candidatBackward.manualFullname = this.person.candidats_fullname;
+               this.candidatBackward.manualIIN = this.person.candidats_iin;
+               this.candidatBackward.manualPhoneNumber = this.person.candidats_phone_number;
             },
             // getRequests: function(){
             //     this.axios.post('/recruiting/getRequests')

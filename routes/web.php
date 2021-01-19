@@ -150,7 +150,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
  */
-Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+Route::group(['domain' => env('FRONTEND_DOMAIN', '127.0.0.1')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
     Route::get('getModerators', 'SiteController@getModerators');
@@ -239,6 +239,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/recruiting/getChiefsRequest', 'RecruitingController@getChiefsRequest');
         Route::post('/recruiting/saveCandidatsData', 'RecruitingController@saveCandidatsData');
         Route::post('/recruiting/getCandidatsDataRequest', 'RecruitingController@getCandidatsDataRequest');
+        Route::post('/recruiting/getResumeRecruiting', 'RecruitingController@getResumeRecruiting');
+        Route::get('/getTestKiasDima', 'RecruitingController@testKiasDima');
+        Route::post('/recruiting/test21  ', 'RecruitingController@testt1');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
