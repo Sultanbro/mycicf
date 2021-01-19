@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRecruitingCandidatsDataTable extends Migration
+class AddRecruitingIdToCandidatsData extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateRecruitingCandidatsDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('recruiting_candidats_data', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+        Schema::table('candidats_data', function (Blueprint $table) {
+	    $table->integer('recruiting_id')->nullable();
         });
     }
 
@@ -26,6 +25,8 @@ class CreateRecruitingCandidatsDataTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recruiting_candidats_data');
+        Schema::table('candidats_data', function (Blueprint $table) {
+            $table->dropColumn('recruiting_id');
+        });
     }
 }

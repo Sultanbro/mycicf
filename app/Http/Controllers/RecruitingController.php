@@ -191,9 +191,13 @@ class RecruitingController extends Controller
     }
 //    Отправка данных кандидата
     public function saveCandidatsData(Request $request,KiasServiceInterface $kias){
-        $candidats_data = new CandidatsData();
+        $candidats_data = CandidatsData::where('recruiting_id',$request->candidatsData['recruitingId']);
+        if(!isset($candidats_data->id)) {
+            $candidats_data = new CandidatsData();
+        }
 
         $candidats_data->manualPhoneNumber = $request->candidatsData['cityAdress'];
+        $candidats_data->recruiting_id = $request->candidatsData['recruitingId'];
         $candidats_data->candidats_fullname = $request->candidatsData['manualFullname'];
         $candidats_data->candidats_iin = $request->candidatsData['manualIIN'];
 //        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
@@ -207,6 +211,26 @@ class RecruitingController extends Controller
             'success' => true,
         ]);
     }
+
+    public function saveRecruitingData(Request $request,KiasServiceInterface $kias){
+        $rec_data = Recruiting::where('id',$request->recruitingData['id'])->first();
+
+        $rec_data->interview_stage = $request->recruitingData['interviewDate'];
+//        $rec_data->recruiting_id = $request->recruitingData['recruitingId'];
+//        $rec_data->candidats_fullname = $request->recruitingData['manualFullname'];
+//        $rec_data->candidats_iin = $request->recruitingData['manualIIN'];
+//        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
+        if(!$rec_data->save()){
+            return response()->json([
+                'success' => false,
+                'error' => 'Ошибка'
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
     public function testt1(Request $request){
         $recruiting = new Recruiting();
         $recruiting->candidats_iin = $request->candidatsData['manualIIN'];

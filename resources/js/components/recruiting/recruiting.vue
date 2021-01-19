@@ -505,9 +505,10 @@
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата собеседования (ответ в течение 2-х дней после получения резюме):</div>
                                         <div class="col-md-6">
-                                            <input type="date" onclick="this.select()" v-model="candidatsData.interviewDateModal" class="recruiting-modal-general">
+                                            <input type="date" v-model="recruitingData.interviewDate" class="recruiting-modal-general">
                                         </div>
                                     </div>
+                                    <!---onclick="this.select()" -->
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Время собеседования:</div>
                                         <div class="col-md-6">
@@ -545,7 +546,7 @@
                                 </div>
 <!--                                Кнопка сохранения в разделе ВРЕМЯ-->
                                 <div class="recruiting-savebtn-container">
-                                    <div class="recruiting-btn" @click="sendCandidatsData">
+                                    <div class="recruiting-btn" @click="recruitingDataSavedSuccess">
                                         Сохранить
                                     </div>
                                 </div>
@@ -969,6 +970,10 @@
         name: "recruiting",
         data() {
             return {
+                recruitingData: {
+                    id: '',
+                    interviewDate: '',
+                },
                 showToTopBtn: false,
                 bottomOfWindow: 0,
                 scrolled: false,
@@ -1227,6 +1232,7 @@
                 ],
             //    Получение данных на 2 вкладке
                 candidatBackward: {
+                    id: '',
                     cityAdressSelect: '',
                     nameOfPostSelect: '',
                     quantityPeople: '',
@@ -1283,6 +1289,7 @@
                 chiefsDataLocal: this.ChiefsData,
                 manualSearchIIN: false,
                 candidatsData: {
+                    recruiting_id: '',
                     manualFullname: '',
                     manualIIN: '',
                     manualPhoneNumber: '',
@@ -1331,9 +1338,40 @@
 
                 return formData;
             },
+
+
+
+
+            recruitingDataSavedSuccess: function(){
+                //  Отправка данных на поиск кандидата
+                this.recruitingData.id = this.candidatBackward.id;
+                this.axios.post('/recruiting/saveRecruitingData',{recruitingData: this.recruitingData})
+                    .then(response => {
+                        this.recruitingDataAfterSavedSuccess(response);
+                    });
+            },
+            recruitingDataAfterSavedSuccess(response){
+                if (response.data.success){
+                    this.flashMessage.success({
+                        title: "",
+                        message: 'Кандидат успешно сохранен',
+                        time: 5000
+                    });
+                } else {
+                    this.flashMessage.error({
+                        title: "Ошибка",
+                        message: 'Не удалось сохранить данные',
+                        time: 5000
+                    });
+                }
+            },
+
+
+
             candidatsDataSavedSuccess: function(){
                 //  Отправка данных на поиск кандидата
                 this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
+                this.candidatsData.recruitingId =  this.candidatBackward.id;
                 this.axios.post('/recruiting/saveCandidatsData',{candidatsData: this.candidatsData})
                     .then(response => {
                         this.candidatsDataAfterSavedSuccess(response);
@@ -1394,6 +1432,7 @@
             showModal: function(index){
                 // this.person =  this.recruitingInterviewCluster[index];
                this.person =  this.chiefsDataLocal[index];
+               this.candidatBackward.id =  this.person.id;
                this.candidatBackward.cityAdressSelect = this.person.unit_structural_name_and_city;
                this.candidatBackward.nameOfPostSelect = this.person.name_of_post;
                this.candidatBackward.quantityPeople = this.person.quantity_people;

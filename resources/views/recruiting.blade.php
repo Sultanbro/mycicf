@@ -53,9 +53,4 @@
 {{--FOOTER GOES HERE--}}
 </body>
 </html>
-<script>
-    import recruiting from "../js/components/recruiting/recruiting";
-    export default {
-        components: {recruiting}
-    }
-</script>
+
