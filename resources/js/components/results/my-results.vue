@@ -1,19 +1,25 @@
 <template>
     <div>
         <div class="results-container mt-3 mb-3">
-            <div @click="viewType = 'rating'" class="results-item" :class="viewType === 'rating' ? 'results-item_active' : ''">
+            <div @click="viewType = 'rating'"
+                 class="results-item"
+                 :class="viewType === 'rating' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
                     <i class="far fa-star results-icon"></i>
                     <span>Рейтинг</span>
                 </div>
             </div>
-            <div @click="viewType = 'motivation'" class="results-item" :class="viewType === 'motivation' ? 'results-item_active' : ''">
+            <div @click="viewType = 'motivation'"
+                 class="results-item"
+                 :class="viewType === 'motivation' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
                     <i class="far fa-grin-stars results-icon"></i>
                     <span>Мотивация</span>
                 </div>
             </div>
-            <div @click="viewType = 'report'" class="results-item" :class="viewType === 'report' ? 'results-item_active' : ''">
+            <div @click="viewType = 'report'"
+                 class="results-item"
+                 :class="viewType === 'report' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-chart-pie results-icon"></i>
                     <span>Отчет</span>
@@ -21,9 +27,14 @@
             </div>
         </div>
         <div>
-            <rating v-if="viewType === 'rating'" :isn="isn" :begin="begin"></rating>
-            <motivation v-if="viewType === 'motivation'" :isn="isn"></motivation>
-            <report v-if="viewType === 'report'" :isn="isn"></report>
+            <rating v-show="viewType === 'rating'"
+                    :isn="isn"
+                    :begin="begin"></rating>
+            <motivation v-show="viewType === 'motivation'"
+                        :isn="isn"
+                        :begin="begin"></motivation>
+            <report v-show="viewType === 'report'"
+                    :isn="isn"></report>
         </div>
     </div>
 </template>

@@ -17,6 +17,7 @@ class MotivationController extends Controller
         $ISN = $request->isn;
         $begin = $request->begin;
         $motivations = [];
+        $mot_sum = '';
         $response = $kias->getEmplMotivation($ISN, $begin);
         if($response->error) {
             return response()
