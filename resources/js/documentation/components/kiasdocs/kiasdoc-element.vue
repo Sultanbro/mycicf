@@ -41,6 +41,22 @@
                     <div class="invalid-feedback">Необходимо заполнить данное поле</div>
                 </div>
             </div>
+            <!-- Method return value group block -->
+            <div class="input-group mb-3">
+                <div>
+                    <span>Возвращает</span>
+                </div>
+                <div class="w-100">
+                    <input type="text"
+                           class="form-control"
+                           :class="touchedFields.includes('returnValue') && doc.methodName === '' ? 'is-invalid' : ''"
+                           placeholder="Данные по..."
+                           @blur="pushTouched('returnValue')"
+                           v-model="doc.returnValue"
+                           required>
+                    <div class="invalid-feedback">Необходимо заполнить данное поле</div>
+                </div>
+            </div>
             <!-- Parameters group block -->
             <div>
                 <div>
