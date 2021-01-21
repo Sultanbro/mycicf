@@ -232,7 +232,7 @@
                                     </div>
 
                                     <edslogin
-                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
+                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
                                             ref="eds"
                                             :sendSolution="sendSolution"
                                             :coordination="coordination"

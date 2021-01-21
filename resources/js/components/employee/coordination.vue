@@ -23,7 +23,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SZ" :key="info.ISN">
-                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'SZ', info)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'SZ', info, index)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -337,7 +337,7 @@
                 }
                 this.preloader(false);
             },
-            openModal (ISN, type = null, data = null) {
+            openModal (ISN, type = null, data = null, index = null) {
                 this.doc_row_list = {};
                 this.doc_row_inner = {};
                 this.doc_row_list_other = {};
@@ -346,7 +346,7 @@
                 this.preloader(true);
                 if(type === 'SZ' && data !== null) {
                     this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
-                        this.setModalData(response.data);
+                        this.setModalData(response.data, index, type);
                     });
                     this.getDocRowList(data, type);
                 }
@@ -370,9 +370,14 @@
                     });
                 }
             },
-            setModalData: function (response) {
+            setModalData: function (response,index = null, type = null) {
                 if(response.success){
                     this.coordination = response.response;
+                    if(type === 'SZ' && index != null  && index != undefined){
+                        this.coordination.sz_class_isn = this.SZ[index].sz_class_isn;
+                        this.coordination.sz_type = this.SZ[index].type;
+                    }
+
                     this.getAttachments();
                     this.$refs.modalButton.click();
                 }
