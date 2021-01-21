@@ -41,6 +41,13 @@ class Controller extends BaseController
         return view('eds');
     }
 
+    public function edsOD(){
+        $info = file_get_contents('http://t3.kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');
+        //$info = json_decode($info, true);
+        $od = true;
+        return view('eds')->compact('info','od');
+    }
+
     public function getEDS(){
         $success = false;
         $curl = curl_init();
