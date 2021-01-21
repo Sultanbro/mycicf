@@ -38,15 +38,22 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         @if(isset($od))
-
+            <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+                <eds-od
+                        :info="{{ $info }}"
+                        showView="sign"
+                        :doc_row_list_inner_other="{}"
+                        show-view="check">
+                </eds-od>
+            </div>
         @else
             <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
                 <edslogin show-view="check"></edslogin>
             </div>
+            <div class="col-md-2-sm-3-lg mt-3">
+                <news-birthday></news-birthday>
+            </div>
         @endif
-        <div class="col-md-2-sm-3-lg mt-3">
-            <news-birthday></news-birthday>
-        </div>
     </div>
 </main>
 </body>

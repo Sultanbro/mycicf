@@ -37,49 +37,28 @@ class Controller extends BaseController
         ];
     }
 
-    public function testEds(){
-        return view('eds');
-    }
-
     public function edsOD(){
-        $info = file_get_contents('http://t3.kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');
-        //$info = json_decode($info, true);
+
+        //$ch = curl_init();
+// IMPORTANT: the below line is a security risk, read https://paragonie.com/blog/2017/10/certainty-automated-cacert-pem-management-for-php-software
+// in most cases, you should set it to true
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        curl_setopt($ch, CURLOPT_URL, 'http://lar.test:8001/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');
+//        $result = curl_exec($ch);
+//        curl_close($ch);
+//
+//        $obj = json_decode($result);
+//        print $result;
+
+
+        $info = file_get_contents('http://lar.test:8001/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');    //'http://t3.kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');
+        dd(json_decode($info));
+        print gettype($info);exit();
+        $info = json_decode($info, true);
+        print_r((array)$info);
+        $info = $info;
         $od = true;
-        return view('eds')->compact('info','od');
-    }
-
-    public function getEDS(){
-        $success = false;
-        $curl = curl_init();
-        curl_setopt_array($curl,array(
-            CURLOPT_URL => "http://ncalayer.uchet.kz:8080/getSignToken",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_POSTFIELDS => "{\n\t\"company_token\":\"7006cebf-82b9-4dbf-9cca-7d35d2eaf763\"\n}",
-            CURLOPT_HTTPHEADER => array("Content-Type: application/json"),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $response = json_decode($response);
-//        echo $response->token;
-
-        //$response = (object)['token' => '90aff245-c06c-11ea-8948-000c296105aa'];
-        //$response = json_decode((string)$response);
-        if(isset($response->token)){
-            $success = true;
-        }
-        return response()->json([
-            'success' => $success,
-            'result' => $response
-        ]);
-//        $client = new Client();
-//        $res = $client->get('http://ncalayer.uchet.kz:8080/getSignToken', ['json' => ['company_token'=>'7006cebf-82b9-4dbf-9cca-7d35d2eaf763']]);
-//        echo $res->getBody();
-//        echo $res->getStatusCode();
+        return view('eds',compact('info','od'));
     }
 }
