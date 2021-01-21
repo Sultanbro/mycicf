@@ -88,7 +88,7 @@
                     paramType: 'String',
                     description: '',
                     format: '',
-                    required: '',
+                    required: 'false',
                 },
                 touchedFields: [],
             }
