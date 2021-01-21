@@ -12,6 +12,9 @@
             <!-- Parameter select block -->
             <div class="form-row w-100 mb-3">
                 <div class="col-sm-12 col-md-12 col-lg-6 mb-4">
+                    <div>
+                        <span>Тип параметра</span>
+                    </div>
                     <select class="form-control"
                             v-model="param.paramType">
                         <option :value="dataType"
@@ -20,6 +23,9 @@
                     </select>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-6">
+                    <div>
+                        <span>Обязательный</span>
+                    </div>
                     <select class="form-control"
                             v-model="param.required">
                         <option value="true">Да</option>
