@@ -26,7 +26,7 @@ class AddTypeToDictiTable extends Migration
     public function down()
     {
         Schema::table('dicti', function (Blueprint $table) {
-            //
+            $table->dropColumn('type');
         });
     }
 }

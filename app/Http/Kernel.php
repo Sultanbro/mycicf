@@ -72,7 +72,9 @@ class Kernel extends HttpKernel
         'centcoinExcepts' => \App\Http\Middleware\centcoinExcepts::class,
         'productsAdmin' => \App\Http\Middleware\ProductsAdmin::class,
         'kurators' => \App\Http\Middleware\Kurators::class,
+        'cors' => \App\Http\Middleware\cors::class,
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
+        'ratingPermission' => \App\Http\Middleware\RatingPermission::class
     ];
 
     /**

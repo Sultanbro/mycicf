@@ -38,10 +38,10 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         @if(isset($od))
-            
+
         @else
             <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-                <edslogin></edslogin>
+                <edslogin show-view="check"></edslogin>
             </div>
         @endif
         <div class="col-md-2-sm-3-lg mt-3">
