@@ -2,7 +2,10 @@
     <div>
         <div class="param-card input-group p-4 mb-3">
             <!-- Delete button block -->
-            <div class="d-flex justify-content-end w-100 mb-3">
+            <div class="d-flex justify-content-between w-100 mb-3">
+                <div>
+                    <span>Параметр {{index + 1}}</span>
+                </div>
                 <button type="button"
                         class="delete-button text-white"
                         @click="deleteParam(index)">
