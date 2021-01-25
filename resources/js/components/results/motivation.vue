@@ -61,7 +61,7 @@
         data() {
           return {
               treeOptions: null,
-              motivation_date: this.begin !== undefined ? this.begin : new Date(new Date().getFullYear(), new Date().getMonth(),  1, 6).toJSON().slice(0, 7),
+              motivation_date: this.begin !== undefined ? this.begin : new Date(new Date().getFullYear(), new Date().getMonth() - 1,  1, 6).toJSON().slice(0, 7),
               imageUrl: null,
               fakeImage: false,
               employee_isn: this.isn,
