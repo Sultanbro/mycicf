@@ -1,0 +1,23 @@
+.footer {
+    display: flex;
+    width: 100%;
+    background-color: $base-color-dark;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    min-height: 80px;
+    flex: 0 0 auto;
+}
+
+.footer-logo a i{
+    color: #FFF;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: 0.4s ease;
+
+    &:hover {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    }
+}
+
+.footer-title {
+    line-height: 90%;
+}
