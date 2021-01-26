@@ -60,7 +60,7 @@ class KiasImages extends Command
                     echo "\nFinished at : $diff";
                 }
                 $imageData = base64_decode((string)$result->FILEDATA);
-                Storage::disk('local')->put("public/images/employee/$SubjISN.png", $imageData);
+                    Storage::disk('local')->put("public/images/employee/$SubjISN.png", $imageData);
             }
         }
         $diff = time() - $start;
