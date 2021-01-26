@@ -229,7 +229,7 @@ class CoordinationController extends Controller
                             'Solution' => (string)$coordination->Solution,
                             'Date' => (string)$coordination->datesolution,
                             'Remark' => (string)$coordination->remark,
-                            'ISN' => (string)$coordination->ISN,
+                            'ISN' => (string)$coordination->ISN
                             //'RefAgrISN' => isset($coordination->RefAgrISN) ? (string)$coordination->RefAgrISN : 0,
                         ]);
                     }
@@ -267,6 +267,7 @@ class CoordinationController extends Controller
             'Attributes' => $attributes,
             'Coordinations' => $coordinations,
             'Limit' => $LimitISN ?? null,
+            'link' => (string)$response->Link
         ]);
         $result = [
             'success' => $success,
