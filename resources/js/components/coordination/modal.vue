@@ -71,6 +71,12 @@
                                                 <div class="pt-2 pb-2" v-else>
                                                     <span>{{coordination.Curator}}</span>
                                                 </div>
+                                                <div class="pt-2 pb-2" v-if="coordination.DocClass == '2011501'">
+                                                    <div class="border-bottom pl-1 pr-1">
+                                                        <i class="fas fa-link"></i>
+                                                    </div>
+                                                    <a class="text-white" :href="coordination.link">Ссылка на документ</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
