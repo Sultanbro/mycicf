@@ -267,6 +267,7 @@ class CoordinationController extends Controller
             'Attributes' => $attributes,
             'Coordinations' => $coordinations,
             'Limit' => $LimitISN ?? null,
+            'link' => (string)$response->Link
         ]);
         $result = [
             'success' => $success,
