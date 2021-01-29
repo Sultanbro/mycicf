@@ -15,5 +15,8 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/login.js', 'public/js')
     .js('resources/js/admin.js', 'public/js')
     .js('resources/js/mobile.js', 'public/js')
+    .js('resources/js/documentation/index.js', 'js/documentation/index.js')
+    .js('resources/js/documentation/login.js', 'js/documentation/login.js')
     //.js('resources/js/agreement.js', 'public/js')
+    .sass('resources/sass/documentation/style.scss', 'public/css/documentation')
     .sass('resources/sass/app.scss', 'public/css');
