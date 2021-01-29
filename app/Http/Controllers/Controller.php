@@ -36,29 +36,4 @@ class Controller extends BaseController
             4 => 4
         ];
     }
-
-    public function edsOD(){
-
-        //$ch = curl_init();
-// IMPORTANT: the below line is a security risk, read https://paragonie.com/blog/2017/10/certainty-automated-cacert-pem-management-for-php-software
-// in most cases, you should set it to true
-//        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        curl_setopt($ch, CURLOPT_URL, 'http://lar.test:8001/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');
-//        $result = curl_exec($ch);
-//        curl_close($ch);
-//
-//        $obj = json_decode($result);
-//        print $result;
-
-
-        $info = file_get_contents('http://lar.test:8001/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');    //'http://t3.kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791');
-        dd(json_decode($info));
-        print gettype($info);exit();
-        $info = json_decode($info, true);
-        print_r((array)$info);
-        $info = $info;
-        $od = true;
-        return view('eds',compact('info','od'));
-    }
 }

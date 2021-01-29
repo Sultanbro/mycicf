@@ -40,10 +40,9 @@
         @if(isset($od))
             <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
                 <eds-od
-                        :info="{{ $info }}"
-                        showView="sign"
-                        :doc_row_list_inner_other="{}"
-                        show-view="check">
+                        :info="{{ json_encode((object)$od) }}"
+                        show-view="sign"
+                        :doc_row_list_inner_other="{}">
                 </eds-od>
             </div>
         @else

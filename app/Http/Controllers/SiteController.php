@@ -900,6 +900,24 @@ class SiteController extends Controller
         return view('eds');
     }
 
+    public function edsOD(KiasServiceInterface $kias){
+        //$test = $kias->getDocRowAttr(1920701,'');
+        //dd($test);
+
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $od= file_get_contents('http://lar.test:8001/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791', false, stream_context_create($arrContextOptions));
+        if (0 === strpos(bin2hex($od), 'efbbbf')) {
+            $od = substr($od, 3);
+        }
+        $od = json_decode($od)->refunds;
+        return view('eds',compact('od'));
+    }
+
     public function getEDS(){
         $success = false;
         $curl = curl_init();

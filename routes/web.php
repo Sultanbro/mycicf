@@ -174,7 +174,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
-    Route::get('eds/od', 'Controller@edsOD');
+    Route::get('eds/od', 'SiteController@edsOD');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('test/eds', 'SiteController@testEds');
