@@ -10,6 +10,7 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Permissions;
 use App\Providers\KiasServiceProvider;
+use App\Score;
 use App\User;
 use App\Dicti;
 use App\Region;
@@ -390,6 +391,9 @@ class SiteController extends Controller
             (string)$response->Married = 0;
         }
 
+        $likes = Score::where('user_isn', $request->isn)->where('type','like')->get()->count();
+        $dislikes = Score::where('user_isn',$request->isn)->where('type','dislike')->get()->count();
+
         $data = [
             'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
             'Name' => (string)$response->Name == "0" ? (new Branch())->getUserName($request->isn) : (string)$response->Name,
@@ -398,6 +402,8 @@ class SiteController extends Controller
             'Education' => (string)$response->Edu == "0" ? 'Не указано' : (string)$response->Edu,
             'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
+            'Likes' => $likes,
+            'Dislikes' => $dislikes,
         ];
         $result = [
             'success' => true,

@@ -1029,12 +1029,12 @@ ul{
 .sticker-like{
     width: 30px;
     height: 30px;
-    background-image: url("/images/sticker-coin.png");
+    background-image: url("/images/icons/sticker-coin.png");
 }
 .sticker-dislike{
     width: 30px;
     height: 30px;
-    background-image: url("/images/sticker-tomato.png");
+    background-image: url("/images/icons/sticker-tomato.png");
 }
 
 .radius-4px{
