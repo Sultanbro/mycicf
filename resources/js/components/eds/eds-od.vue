@@ -105,7 +105,7 @@
                 self.signedFileInfo = [];
                 self.loader(true);
                 axios.post("/eds-by-isn", {
-                    isn: docIsn,
+                    refISN: docIsn,
                     type: 'D',
                     edsType: 'cms'
                 }).then((response) => {

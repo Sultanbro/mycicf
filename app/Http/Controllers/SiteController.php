@@ -910,7 +910,7 @@ class SiteController extends Controller
                 "verify_peer_name"=>false,
             ),
         );
-        $od= file_get_contents('http://lar.test:8001/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791', false, stream_context_create($arrContextOptions));
+        $od= file_get_contents('http://t3.kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791', false, stream_context_create($arrContextOptions));
         if (0 === strpos(bin2hex($od), 'efbbbf')) {
             $od = substr($od, 3);
         }
