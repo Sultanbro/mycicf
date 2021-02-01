@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Booking;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\Array_;
 
 class BookingController extends Controller
 {
@@ -16,7 +17,64 @@ class BookingController extends Controller
         $booking = Booking::orderBy('data', 'desc')
             ->take(100)
             ->get();
-        return view('booking', compact('booking'));
+
+        if(!$booking->isEmpty())
+        {
+            $results = array();
+
+            foreach ($booking as $book) {
+                array_push($results, [
+                    'author'      => $book->author,
+                    'to'          => $this->convert($book->to),
+                    'from'        => $book->from,
+                    'title'       => $book->title,
+                    'office'      => $book->office,
+                    'description' => $book->description
+                ]);
+            }
+        }
+        else
+            $results = array();
+
+        dd($results);
+
+        return view('booking')->with('booking', $booking);
+    }
+    public function convert($date) {
+//        dd($date);
+        $day = date('d', strtotime($date));
+        $month = date('M', strtotime($date));
+        $week = date('D', strtotime($date));
+        $year = date('Y', strtotime($date));
+//        dd($month);
+
+//        dd($week);
+        $weeks = array(
+            'Mon' => 'Понедельник',
+            'Tue' => 'Вторник',
+            'Wed' => 'Среда',
+            'Thu' => 'Четверг',
+            'Fri' => 'Пятница',
+            'Sat' => 'Суббота',
+            'Sun' => 'Воскресенье'
+        );
+
+        $months = array(
+            'Jan' => 'Январь',
+            'Feb' => 'Февраль',
+            'Mar' => 'Март',
+            'Apr' => 'Апрель',
+            'May' => 'Май',
+            'Jun' => 'Июнь',
+            'Jul' => 'Июль',
+            'Aug' => 'Август',
+            'Sep' => 'Сентябрь',
+            'Oct' => 'Октябрь',
+            'Nov' => 'Ноябрь',
+            'Dec' => 'Декабрь'
+        );
+
+        return $weeks[$week] . ' ' . $day . ' ' . $months[$month] . ' ' . $year;
     }
     public function set(Request $request) {
         $booking = new Booking();
