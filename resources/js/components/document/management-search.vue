@@ -23,21 +23,24 @@
         <!-- MODAL -->
         <div class="modal fade" id="createDocument" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="document">
-                            <div class="document-type pl-4 pr-4" v-for="(document, key, index) in documents">
+                            <div class="document-type pl-4 pr-4" v-for="(document, index) in documents">
                                 <div class="document-title pointer" @click="reverseCaret(index)"
-                                     data-toggle="collapse" :data-target="`#document-kind-${index}`" aria-expanded="true">
-                                    <span class="" :class="dataId == index ? caretColor : ''">{{key}}</span>
+                                     data-toggle="collapse" :data-target="`#document-kind-${index}`"
+                                     aria-expanded="true">
+                                    <span class="" :class="dataId == index ? caretColor : ''">{{document.fullname}}</span>
                                     <span class="caret">
-                                        <i class="fas " :class="dataId == index ? caretClass+ ' ' +caretColor : 'fa-chevron-down color-black'" data-toggle="collapse" href="#multiCollapseExample1"></i>
+                                        <i class="fas "
+                                           :class="dataId == index ? caretClass+ ' ' +caretColor : 'fa-chevron-down color-black'"
+                                           data-toggle="collapse" href="#multiCollapseExample1"></i>
                                     </span>
                                 </div>
-                                <ul :id="`document-kind-${index}`" class="document-kinds pl-5 pr-5 collapse in" >
-                                    <li v-for="(item, key) in document">
-                                        <a class="color-black" :href="`/document/${key}`">{{item}}</a>
+                                <ul :id="`document-kind-${index}`" class="document-kinds pl-5 pr-5 collapse in">
+                                    <li v-for="(item, index) in document.children" :key="index">
+                                        <button class="color-black" @click="isnShow(item.isn, index)">{{ item.fullname }}</button>
                                     </li>
                                 </ul>
                             </div>
@@ -68,13 +71,18 @@
             isn: Number,
         },
         methods: {
+            isnShow(isn, id) {
+                console.log(isn);
+                console.log(id);
+                this.axios.get(`/document/${id}/${isn}`).then(response => {
+                    location.href = `/document/${id}/${isn}`
+                    console.log(response)
+                })
+            },
             createDocument: function (e) {
                 this.axios.post("/getDocument").then((response) => {
-                    let isEmpty = $.isEmptyObject(response.data.result);
                     if (response.data.success) {
-                        if (!isEmpty) {
-                            this.documents = response.data.result;
-                        }
+                        this.documents = response.data.result;
                     } else {
                         alert(response.data.error)
                     }

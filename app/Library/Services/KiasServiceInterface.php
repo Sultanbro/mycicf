@@ -300,4 +300,24 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getDocRating($class_isn);
+
+    /**
+     * @param $emplIsn
+     * @param $dateBeg
+     * @param $dateEnd
+     * @param $status
+     * @return mixed
+     */
+    public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status);
+
+    /**
+     * @param $class_isn
+     * @param $emplIsn
+     * @param $docDate
+     * @param $subjIsn
+     * @param $row
+     * @param $docrows
+     * @return mixed
+     */
+    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docrows);
 }

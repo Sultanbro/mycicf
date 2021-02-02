@@ -262,6 +262,11 @@ class SiteController extends Controller
         );
     }
 
+    public function test(Request $request) {
+        return response()->json([
+           'test' => 'test'
+        ]);
+    }
     public function getFullBranch(Request $request){
         ini_set('xdebug.max_nesting_level', 500);
         $headData = Branch::where('kias_id', 50)->first();
@@ -373,6 +378,9 @@ class SiteController extends Controller
     }
 
     public function getUserData(KiasServiceInterface $kias){
+        $documents = $kias->getMySZ(3130947, '01.12.2020', '20.01.2021', '1');
+//        dd($documents);
+
         $data = (new User)->getUserData($kias);
         $result = [
             'success' => true,

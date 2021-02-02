@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 class ColleaguesController extends Controller {
 
     public function search(Request $request) {
+        dd($request);
         $result = [];
         $searchText = $request->searchText;
         $parentId = isset($request->parentId) ? $request->parentId : 50;

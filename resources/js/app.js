@@ -32,6 +32,8 @@ Vue.use(moment);
 
 Vue.use(vmodal);
 
+Vue.use(VueTreeselect);
+
 import Toastr from 'vue-toastr'
 
 Vue.use(FlashMessage);
@@ -63,6 +65,7 @@ Vue.directive('linkified', linkify);
 // Vue.component('login', require('./components/registration/login.vue').default);
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
+Vue.component('treeselect-value', VueTreeselect.TreeselectValue);
 
 Vue.component('simple-info', require('./components/employee/simple-info.vue').default);
 

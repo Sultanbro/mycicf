@@ -112,7 +112,15 @@
                 ]
             }
         },
+        mounted() {
+            this.listEmployee();
+        },
         methods: {
+            listEmployee() {
+                this.axios.post('document/'+this.id+'/list', {isn: this.isn}).then((response) => {
+                    console.log(response);
+                })
+            },
             addRow: function() {
                 this.rows.push({ 'name': ''});
             },

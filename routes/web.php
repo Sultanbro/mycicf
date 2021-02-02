@@ -24,7 +24,7 @@ Route::post('/sandbox/uploadDocs', 'SandboxController@uploadDocs');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
-
+Route::post('/document/test', 'SiteController@test');
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/', 'Admin\SiteController@showLoginForm');
@@ -170,7 +170,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
  */
-Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
     Route::get('getModerators', 'SiteController@getModerators');
@@ -344,10 +344,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
         //Application
         Route::get('document/management', 'DocumentManagementController@index')->name('document.index');
-        Route::get('document/{id}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('document/{id}/{isn}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
         Route::get('document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
         Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
-        Route::post('saveDocument', 'DocumentManagementController@saveDocument')->name('document.save');
+        //Route::get('/document/saveDocument', 'DocumentManagementController@saveDocument');
         Route::get('documents', 'DocumentManagementController@documents')->name('document.documents');
 
         //Dev page route
@@ -406,6 +407,8 @@ Route::get('test3', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
 
+Route::post('/check-test', 'DocumentManagementController@checkTest');
+Route::post('/document/saveDocument', 'DocumentManagementController@saveDocument');
 
 
 

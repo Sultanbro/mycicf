@@ -1,17 +1,17 @@
 <template>
     <div class="news-tape-bg radius-4px mt-3 pb-2">
-        <ManagementSearch></ManagementSearch>
-        <form id="object-form" @submit.prevent="saveDocument">
-            <ManagementApplication v-if="id===2"></ManagementApplication>
-            <ManagementBusinessTrip v-if="id===3" :id="id"></ManagementBusinessTrip>
-            <ApplicationNotAdministrativeDay v-if="id===4"></ApplicationNotAdministrativeDay>
-            <ApprovalSheet v-if="id===5"></ApprovalSheet>
+        <ManagementSearch :results="results"></ManagementSearch>
+<!--        <form id="object-form" @submit.prevent="saveDocument">-->
+            <ManagementApplication v-if="results.id==2"></ManagementApplication>
+            <ManagementBusinessTrip v-if="results.id==3" :id="results.id"></ManagementBusinessTrip>
+            <ApplicationNotAdministrativeDay v-if="results.id==4"></ApplicationNotAdministrativeDay>
+            <ApprovalSheet v-if="results.id==5" :results="results"></ApprovalSheet>
             <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
-                <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument">
-                    Сохранить
+                <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument" @click="saveDocument">
+                    Сохранитьasdasdsa
                 </button>
             </div>
-        </form>
+<!--        </form>-->
     </div>
 </template>
 
@@ -40,14 +40,14 @@
         },
         props: {
             isn: Number,
-            id: Number,
+            results: Object,
         },
         methods: {
             saveDocument: function (e) {
+                console.log('main test');
                 var form = document.getElementById('object-form');
                 var formData = new FormData(form);
-                if (!this.isJoin) {
-                    axios.post('/saveDocument', formData)
+                    this.axios.post('/document/saveDocument', formData)
                         .then((response) => {
                             if (!response.data.success) {
                                 alert(response.data.error);
@@ -58,7 +58,7 @@
                         .catch(function (error) {
                             alert(error.response);
                         });
-                }
+                //console.log(formData);
             },
         },
     }

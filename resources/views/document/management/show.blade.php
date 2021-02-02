@@ -10,11 +10,15 @@
 @section('title', 'ЭДО')
 
 @section('content')
-    <div class="col-md-10" id="management-show">
-        <management-show
-            :isn="{{ Auth::user()->ISN }}"
-            :id="{{$id}}"
-        >
-        </management-show>
-    </div>
+{{--    {{print_r($arReturn)}}--}}
+{{--    @foreach ($arReturn as $item)--}}
+       <br>
+        <div class="col-md-10" id="management-show">
+            <management-show
+                :results="{{ json_encode($results) }}"
+                :isn="{{ Auth::user()->ISN }}"
+            >
+            </management-show>
+        </div>
+{{--    @endforeach--}}
 @stop

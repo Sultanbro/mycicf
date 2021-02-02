@@ -721,4 +721,38 @@ class Kias implements KiasServiceInterface
             'Classisn' => $class_isn,
         ]);
     }
+    public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status) {
+        return $this->request('User_CicGetMySZ', [
+            'EMPLISN' => $emplIsn,
+            'DATEBEG' => date('d.m.Y', strtotime($dateBeg)),
+            'DATEEND' => date('d.m.Y', strtotime($dateEnd)),
+            'STATUS' => $status,
+        ]);
+    }
+
+    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docrows) {
+        return $this->request('User_CicSAVEDOCUMENT', [
+            'CLASSISN' => $class_isn,
+            'EMPLISN' => $emplIsn,
+            'DOCDATE' => $docDate,
+            'SUBJISN' => $subjIsn,
+            'DocParams' => [
+                'row' => $row
+//                    [
+//                        'ATTRISN' => $attrIsn,
+//                        'REMARK' => $remark,
+//                        'VAL' => $val, //Значение
+//                        'VALUE' => $value, //Значение атрибута
+//                ]
+            ],
+//            'DocRow' => [
+//                'row' => [
+//                    'valn1' => $valn1, //Число 1 значения
+//                    'valc1' => $valc1, //Строка 1 значания
+//                    'vald1' => $vald1, //Дата 1 значения
+//                ]
+//            ],
+        ]);
+    }
+
 }
