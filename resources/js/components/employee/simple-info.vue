@@ -3,15 +3,6 @@
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
             <img src="/images/avatar.png" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
-
-            <div class="sticker-block">
-                <span class="sticker sticker-like hidden">
-                    <span></span>
-                </span>
-                <span class="sticker sticker-dislike hidden">
-                    <span></span>
-                </span>
-            </div>
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
             <div class="pointer left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">

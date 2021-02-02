@@ -404,6 +404,8 @@ class SiteController extends Controller
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
             'Likes' => $likes,
             'Dislikes' => $dislikes,
+            'isLiked' => (new Score())->getLikedOrDisliked(Auth::user()->ISN, $request->isn, 'like'),
+            'isDisLiked' => (new Score())->getLikedOrDisliked(Auth::user()->ISN, $request->isn, 'dislike')
         ];
         $result = [
             'success' => true,

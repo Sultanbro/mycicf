@@ -3,6 +3,16 @@
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
             <img src="/images/avatar.png" class="image" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
+
+            <div class="sticker-block">
+                <span @click="score('like')" class="sticker sticker-like hidden">
+                    <span style="color:white; position:absolute; right:17px; top:6px; font-size: 22px;">{{likes}}</span>
+                </span>
+                <span @click="score('dislike')" class="sticker sticker-dislike hidden">
+                    <span style="color:white; position:absolute; left:22px; top:6px; font-size: 22px;">{{dislikes}}</span>
+                </span>
+            </div>
+
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
             <div class="pointer left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">
@@ -49,6 +59,10 @@
                 rating: '',
                 fakeImage: false,
                 imageUrl : null,
+                likes: 0,
+                dislikes: 0,
+                isLiked: 0,
+                isDisLiked: 0,
             }
         },
         props: {
@@ -74,12 +88,63 @@
                     this.education = information.Education;
                     this.rating = information.Rating;
                     this.place_of_birth = information.City;
+                    this.likes = information.Likes;
+                    this.dislikes = information.Dislikes;
+                    this.isLiked = information.isLiked;
+                    this.isDisLiked = information.isDisliked;
                 }else{
                     alert(response.error);
                 }
             },
             reverseCaret: function () {
                 this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
+            },
+
+            score: function (type) {
+                switch (type) {
+                    case 'like':
+                        if(this.isLiked === 1 || this.isLiked === '1') {
+                            this.isLiked = 0;
+                            this.likes--;
+                        }
+                        else {
+                            this.isLiked = 1;
+                            this.likes++;
+                        }
+
+                        this.axios.post('/addScore', {user_isn: this.isn, type: type})
+                            .then(response => {
+                                if(response.success === true) {
+                                    this.isLiked = 1;
+                                }
+                                else {
+                                    this.isLiked = 0;
+                                }
+                            })
+                        break;
+                    case 'dislike':
+                        if(this.isDisliked === 1 || this.isDisliked === '1') {
+                            this.isDisliked = 0;
+                            this.dislikes--;
+                        }
+                        else {
+                            this.isDisliked = 1;
+                            this.dislikes++;
+                        }
+
+                        this.axios.post('/addScore', {user_isn: this.isn, type: type})
+                            .then(response => {
+                                if(response.success === true) {
+                                    this.isDisliked = 1;
+                                }
+                                else {
+                                    this.isDisliked = 0;
+                                }
+                            })
+                        break;
+                    default:
+                        break;
+                }
             },
         },
 
