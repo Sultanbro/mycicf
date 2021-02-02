@@ -390,7 +390,14 @@ class SiteController extends Controller
     }
 
     public function getColleagueData(Request $request, KiasServiceInterface $kias){
+        $expcept_isns = [248364];
+
         $response = $kias->getEmplInfo($request->isn, date('01.m.Y'), date('d.m.Y', strtotime('today')));
+
+        if(in_array($request->isn, $expcept_isns)) {
+            (string)$response->Married = 0;
+        }
+
         $data = [
             'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
             'Name' => (string)$response->Name == "0" ? (new Branch())->getUserName($request->isn) : (string)$response->Name,

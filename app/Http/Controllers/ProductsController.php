@@ -876,7 +876,7 @@ class ProductsController extends Controller
 
         $quotations = $quotations->orderBy('created_at','desc')->paginate(15);
         $product = ExpressProduct::where('product_isn',$productISN)->first();
-        $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
+        $statuses = isset($product->constr->parentisns) ? (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status) : [];
         return view('express.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
     }
 
