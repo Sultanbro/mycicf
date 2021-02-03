@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Library\Services\Kias;
+use App\Library\Services\KiasMock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,7 +22,12 @@ class KiasServiceProvider extends ServiceProvider
             if(Auth::check()){
                 $session = Auth::user()->session_id;
             }
-            $kias = new Kias();
+
+            if (config('kias.mock')) {
+                $kias = new KiasMock();
+            } else {
+                $kias = new Kias();
+            }
             $kias->init($session);
             return $kias;
         });

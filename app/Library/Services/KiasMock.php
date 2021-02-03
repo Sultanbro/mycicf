@@ -8,19 +8,12 @@
 
 namespace App\Library\Services;
 
-use Exception;
-use Faker\Guesser\Name;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use SoapClient;
 use SimpleXMLElement;
-use App\Library\Services\KiasServiceInterface;
 
 
-class Kias implements KiasServiceInterface
+class KiasMock implements KiasServiceInterface
 {
     const APP_ID = 868281;
     const ACTIVE = 'Y';
@@ -29,6 +22,8 @@ class Kias implements KiasServiceInterface
     public $password;
     /**
      * @var SoapClient
+     *
+     * @deprecated
      */
     public $client;
     public $request;
@@ -49,7 +44,6 @@ class Kias implements KiasServiceInterface
     public function init($session)
     {
         $this->url = env('KIAS_URL');
-        $this->getClient();
         $this->_sId = $session;
     }
 
@@ -57,37 +51,16 @@ class Kias implements KiasServiceInterface
      */
     public function initSystem()
     {
-        $this->url = env('KIAS_URL');
-        $this->getClient();
+        $this->url = route('kias.xml');
         $systemData = $this->authenticate(env('KIAS_LOGIN'), hash('sha512', env('KIAS_PASSWORD')));
         $this->_sId = $systemData->Sid;
-    }
-
-    /**
-     * Получить Soap-клиент
-     *
-     * @return SoapClient
-     */
-    public function getClient()
-    {
-        if (!$this->client) {
-            $this->client = new SoapClient($this->url, [
-                'cache_wsdl' => WSDL_CACHE_NONE,
-                'trace'      => 1,
-            ]);
-        }
-
-        return $this->client;
     }
 
     public function request($name, $params = [])
     {
         try {
             $xml = new SimpleXMLElement(
-                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-                .$this->client->ExecProc([
-                    'pData' => $this->createRequestData($name, $params),
-                ])->ExecProcResult->any
+                $this->createRequestData($name, $params)
             );
 
         } catch (\SoapFault $exception) {
@@ -126,6 +99,7 @@ class Kias implements KiasServiceInterface
 
         return $xml->result ?? $xml;
     }
+
 
     public function createRequestData($name, $params)
     {
@@ -188,22 +162,25 @@ class Kias implements KiasServiceInterface
 
     public function authBySystem()
     {
-        $response = $this->request('Auth', [
-            'Name' => env('KIAS_LOGIN'),
-            'Pwd'  => hash('sha512', env('KIAS_PASSWORD')),
-        ]);
-        if ($response->error) {
-            throw new Exception('Authentication failed', '419');
-        }
-
-        $this->_sId = $response->Sid;
+        $this->_sId = 1;
     }
 
     public function getBranches()
     {
-        return $this->request('User_CicGetUserList', [
-            'number' => 1,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+    <data>
+        <LIST>
+            <row>
+                <FullName>Developer</FullName>
+                <ISN>5565</ISN>
+                <ParentISN>55651</ParentISN>
+                <Kids>1</Kids>
+                <Duty>Duty</Duty>
+                <Birthday>1991-05-22</Birthday>
+            </row>
+        </LIST>
+    </data>
+');
     }
 
     public function getUpperLevel($ISN)
@@ -563,12 +540,24 @@ class Kias implements KiasServiceInterface
      */
     public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $docIsn)
     {
-        return $this->request('User_CicGetOsmotrDocs', [
-            'Agrisn'     => $agrisn,
-            'Agrcalcisn' => $agrcalcisn,
-            'Request'    => $isn,
-            'Docisn'     => $docIsn,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <ROWSET>
+        <row>
+            <details>
+                <row>
+                    <el>
+                        <detailisn>5565</detailisn>
+                        <detail>Developer</detail>
+                    </el>
+
+                </row>
+            </details>
+        </row>
+    </ROWSET>
+</data>
+
+        ');
     }
 
     /**
