@@ -636,7 +636,7 @@ class SiteController extends Controller
     }
 
     public function getDictiList($parent){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $kias->initSystem();
         $response = $kias->getDictiList($parent);
         $result = [];
