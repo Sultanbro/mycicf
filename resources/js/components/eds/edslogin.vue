@@ -485,33 +485,36 @@
 
                                 } else {
                                     for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
-                                        //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
-                                        console.log('2');
-                                        let self = this;
-                                        self.loader(true);
-                                        let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
-                                        axios.post("/eds-by-isn", {
-                                            isn: '',
-                                            refISN: agrIsn,
-                                            type: 'A',
-                                            edsType: 'cms'
-                                        }).then((response) => {
-                                            if (response.data.success) {
-                                                var obj = response.data.result;
-                                                if (obj.length > 0) {
-                                                    for (let index in obj) {
-                                                        this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                        if(self.doc_row_list_inner_other[1][i].ISN != undefined) {
+                                            //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
+                                            console.log('2');
+                                            let self = this;
+                                            self.loader(true);
+                                            let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
+                                            axios.post("/eds-by-isn", {
+                                                isn: '',
+                                                refISN: agrIsn,
+                                                type: 'A',
+                                                edsType: 'cms'
+                                            }).then((response) => {
+                                                if (response.data.success) {
+                                                    var obj = response.data.result;
+                                                    if (obj.length > 0) {
+                                                        for (let index in obj) {
+                                                            this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                                        }
+                                                    } else {
+                                                        self.loader(false);
                                                     }
                                                 } else {
+                                                    alert(response.data.error);
                                                     self.loader(false);
                                                 }
-                                            } else {
-                                                alert(response.data.error);
-                                                self.loader(false);
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
+                                self.loader(false);
                             } else {
                                 this.edsConfirmed = true;
                                 self.loader(false);
