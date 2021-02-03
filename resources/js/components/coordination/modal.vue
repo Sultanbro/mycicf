@@ -159,7 +159,8 @@
                                             <tbody>
                                             <tr v-for="(list,index) in doc_row_list_inner_other[1]">
                                                 <td v-for="(list,key) in doc_row_list_other">
-                                                    {{ doc_row_list_inner_other[key][index]['ID'] }}
+                                                    <span v-if="doc_row_list_inner_other[key][index]['ID'] != undefined">{{ doc_row_list_inner_other[key][index]['ID'] }}</span>
+                                                    <span v-else>{{ doc_row_list_inner_other[key][index] }}</span>
                                                 </td>
                                             </tr>
                                             </tbody>
