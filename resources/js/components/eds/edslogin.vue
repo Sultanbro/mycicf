@@ -514,6 +514,7 @@
                                         }
                                     }
                                 }
+                                this.edsConfirmed = true;
                                 self.loader(false);
                             } else {
                                 this.edsConfirmed = true;
