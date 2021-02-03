@@ -6,7 +6,8 @@
             </div>
             <p v-for="(item,index) in info">
                 {{ parseInt(index)+1 }}. РВ isn: {{ item.rv_isn }}
-                <span v-if="item.confirmed != undefined && item.confirmed">прошел проверку</span>
+                <span class="text-success" v-if="item.confirmed == 1">прошел проверку</span>
+                <span class="text-danger" v-if="item.confirmed == 0">не проверен</span>
             </p>
         </div>
         <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
@@ -113,7 +114,7 @@
                         var obj = response.data.result;
                         if(obj.length > 0){
                             for(let index in obj) {
-                                this.checkSignedFile(obj[index].filepath,docIsn,obj[index].docISN, doc_index);     // Проверить подписанные файлы  obj[index].docISN
+                                this.checkSignedFile(obj[index].filepath,docIsn,obj[index].docISN, doc_index,obj[index]);     // Проверить подписанные файлы  obj[index].docISN
                             }
                         } else {
                             self.loader(false);
@@ -124,7 +125,7 @@
                     }
                 });
             },
-            checkSignedFile(url,refIsn,docISN, doc_index){        // Посмотреть подписанный файл
+            checkSignedFile(url,refIsn,docISN, doc_index,rv_data){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
                 if(url != ''){
@@ -145,7 +146,13 @@
                             if (result.code == 200) {
                                 if(result.responseObjects.length > 0) {
                                     self.signedFileInfo = result.responseObjects;
-                                    self.sendEdsInfoToKias(refIsn,docISN,doc_index); // Записываем в киас данные из подписанного файла
+                                    //console.log(self.signedFileInfo[0].iin);
+                                    console.log(self.signedFileInfo[0].iin+'='+self.info[doc_index].iin);
+                                    if(self.signedFileInfo[0].iin == self.info[doc_index].iin) {
+                                        self.sendEdsInfoToKias(refIsn,docISN,doc_index); // Записываем в киас данные из подписанного файла
+                                    } else {
+                                        self.loader(false);
+                                    }
                                 }
                             } else {
                                 alert(result.message);
@@ -175,7 +182,7 @@
                             let self = this;
                             self.loader(false);
                             console.log('signed success');
-                            this.info[doc_index].confirmed = true;
+                            this.info[doc_index].confirmed = 1;
                         }
                     });
                 }
@@ -202,6 +209,11 @@
         created: function() {
             //...
         },
+        watch: {
+            'info': function(){
+                console.log('this changed');
+            }
+        }
 
 
     }
