@@ -42,10 +42,6 @@ class ScoreController extends Controller
             $user_score->delete();
         }
 
-        broadcast(new Score([
-            'type' => $data['type']
-        ]));
-
         return response()->json([
             'success' => true,
         ]);

@@ -998,6 +998,34 @@ ul{
 .avatar-menu-size:hover .sticker-block{
     display: block;
 }
+/*Crown
+    Gold > 300
+    Silver > 200
+    Bronze > 100
+*/
+
+.crown {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+
+}
+
+.crown-bronze {
+    color: #cd7f32;
+    text-shadow: 0 0 5px #cd7f32;
+}
+.crown-silver {
+    color: #c0c0c0;
+    text-shadow: 0 0 5px #c0c0c0;
+}
+.crown-gold {
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700;
+}
+
 /*Sticker Coin vs Tomato*/
 .sticker-block{
     position: absolute;
@@ -1006,6 +1034,14 @@ ul{
     height: 20%;
     display: none;
     color: white;
+}
+.sticker-num {
+    text-align: center;
+    color: white;
+    position: absolute;
+    top: 5px;
+    font-size: 22px;
+    width: 100%;
 }
 .sticker {
     position: absolute;
@@ -1016,22 +1052,19 @@ ul{
     cursor: pointer;
 }
 .sticker-block .sticker-like {
-    width: 44px;
-    height: 44px;
+    width: 54px;
+    height: 54px;
     left: 0px;
-    bottom: -1px;
+    bottom: -9px;
 }
 .sticker-block .sticker-dislike {
     width: 56px;
     height: 56px;
     right: -5px;
-    bottom: -12px;
+    bottom: -9px;
 }
 .sticker-like{
-    width: 30px;
-    height: 30px;
-    background-image: url("/images/icons/sticker-coin.png");
-    /*position: relative;*/
+    background-image: url("/images/icons/cup.png");
 }
 .sticker-dislike{
     width: 30px;

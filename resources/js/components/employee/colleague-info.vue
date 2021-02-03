@@ -1,15 +1,24 @@
 <template>
     <div>
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
+
+            <div class="crown" :class="likes < 100
+            ? '' : likes >= 100 && likes < 200
+            ? 'crown-bronze' : likes >= 200 && likes < 300
+            ? 'crown-silver' : likes >= 300
+            ? 'crown-gold' : 'crown-gold'"
+                 v-if="likes >= 100">
+                <i class="fas fa-crown"></i>
+            </div>
+
             <img src="/images/avatar.png" class="image" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
-
             <div class="sticker-block">
                 <span @click="score('like')" class="sticker sticker-like hidden">
-                    <span style="color:white; position:absolute; right:17px; top:6px; font-size: 22px;">{{likes}}</span>
+                    <span class="sticker-num">{{likes}}</span>
                 </span>
                 <span @click="score('dislike')" class="sticker sticker-dislike hidden">
-                    <span style="color:white; position:absolute; left:22px; top:6px; font-size: 22px;">{{dislikes}}</span>
+                    <span class="sticker-num">{{dislikes}}</span>
                 </span>
             </div>
 
@@ -104,11 +113,11 @@
                 switch (type) {
                     case 'like':
                         if(this.isLiked === 1 || this.isLiked === '1') {
-                            this.isLiked = 0;
+                            this.isLiked = false;
                             this.likes--;
                         }
                         else {
-                            this.isLiked = 1;
+                            this.isLiked = true;
                             this.likes++;
                         }
 
