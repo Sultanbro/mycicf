@@ -87,6 +87,7 @@
             }
         },
         props: {
+            sendSolution: Function,
             showView: String,
             doc_row_list_inner_other: Object,
             coordination: Object
@@ -227,11 +228,7 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
-
-
-
                                 // --------------------------------
-
                                 let curr_isn = self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
                                 self.axios.post("/coordinationSaveAttachment", {
                                     isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
@@ -249,7 +246,6 @@
                                         self.getEdsInfo(response.data.result,curr_isn);
                                     }
                                 });
-
                                 // for(var i = 0;Object.keys(self.doc_row_list_inner_other[1]).length > i;i++){
                                 //     let curr_isn = self.doc_row_list_inner_other[1][i].ISN;
                                 //     self.axios.post("/coordinationSaveAttachment", {
@@ -268,17 +264,7 @@
                                 //         }
                                 //     });
                                 // }
-
-
-
-
-
                                 //---------------------------------
-
-
-
-
-
                                 // this.axios.post("/coordinationSaveAttachment", {
                                 //     isn: self.$parent.coordination.ISN,
                                 //     id: self.$parent.coordination.ID,
@@ -293,11 +279,6 @@
                                 //         self.getEdsInfo(response.data.result);
                                 //     }
                                 // });
-
-
-
-
-
                                 // if(type == 'coordination' && solution != undefined){
                                 //     self.$parent.sendSolution(solution);
                                 // }
@@ -453,8 +434,6 @@
                             //if(type == 'coordination' && solution != undefined){
                                 //self.$parent.sendSolution(1);
                             //}
-
-
                             if(edsType != 'cms') {
                                 if(self.coordination.RefAgrISN != 0 && self.coordination.RefAgrISN != undefined){
                                     //self.sendCmsInfo(self.coordination.RefAgrISN);
@@ -482,34 +461,38 @@
                                             self.loader(false);
                                         }
                                     });
-
                                 } else {
-                                    for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
-                                        //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
-                                        console.log('2');
-                                        let self = this;
-                                        self.loader(true);
-                                        let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
-                                        axios.post("/eds-by-isn", {
-                                            isn: '',
-                                            refISN: agrIsn,
-                                            type: 'A',
-                                            edsType: 'cms'
-                                        }).then((response) => {
-                                            if (response.data.success) {
-                                                var obj = response.data.result;
-                                                if (obj.length > 0) {
-                                                    for (let index in obj) {
-                                                        this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                    if(Object.keys(self.doc_row_list_inner_other).length > 0) {
+                                        for (var i = 0; Object.keys(self.doc_row_list_inner_other[1]).length > i; i++) {
+                                            //self.sendCmsInfo(self.doc_row_list_inner_other[1][i].ISN);
+                                            console.log('2');
+                                            let self = this;
+                                            self.loader(true);
+                                            let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
+                                            axios.post("/eds-by-isn", {
+                                                isn: '',
+                                                refISN: agrIsn,
+                                                type: 'A',
+                                                edsType: 'cms'
+                                            }).then((response) => {
+                                                if (response.data.success) {
+                                                    var obj = response.data.result;
+                                                    if (obj.length > 0) {
+                                                        for (let index in obj) {
+                                                            this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                                        }
+                                                    } else {
+                                                        self.loader(false);
                                                     }
                                                 } else {
+                                                    alert(response.data.error);
                                                     self.loader(false);
                                                 }
-                                            } else {
-                                                alert(response.data.error);
-                                                self.loader(false);
-                                            }
-                                        });
+                                            });
+                                        }
+                                    } else {
+                                        self.sendSolution(1);
+                                        self.loader(false);
                                     }
                                 }
                             } else {
