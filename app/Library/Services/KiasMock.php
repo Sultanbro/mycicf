@@ -51,13 +51,28 @@ class KiasMock implements KiasServiceInterface
      */
     public function initSystem()
     {
-        $this->url = route('kias.xml');
         $systemData = $this->authenticate(env('KIAS_LOGIN'), hash('sha512', env('KIAS_PASSWORD')));
         $this->_sId = $systemData->Sid;
     }
 
+    /**
+     * @param $name
+     * @param array $params
+     * @return SimpleXMLElement
+     * @throws \Exception
+     *
+     * @deprecated
+     */
     public function request($name, $params = [])
     {
+        if ($name === 'User_CicHelloSvc') {
+            return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+                <data>
+                </data>
+            ');
+        }
+        dd($name, $params);
+        throw new \Exception('DEPRECATED');
         try {
             $xml = new SimpleXMLElement(
                 $this->createRequestData($name, $params)
@@ -100,64 +115,13 @@ class KiasMock implements KiasServiceInterface
         return $xml->result ?? $xml;
     }
 
-
-    public function createRequestData($name, $params)
-    {
-        $params['Sid'] = $this->_sId;
-        if ($name == 'Auth') {
-            unset($params['Sid']);
-        }
-        $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><data></data>');
-        $request = $xml->addChild('request');
-        $request->addChild('reqName', $name);
-        $request->addChild('AppId', static::APP_ID);
-        $request->addChild('RequestIp', $_SERVER['REMOTE_ADDR'] ?? '1');
-        $request->addChild('UserAgent', $_SERVER['HTTP_USER_AGENT'] ?? '1');
-        self::addXmlChildren($request->addChild('params'), $params);
-        if (env('APP_ENV', 'local') !== 'production') {
-            if ($name != 'GetDictiList' && $name != 'User_CicHelloSvc' && $name != 'User_CicGetAgrObjectClassList'
-                && $name != 'Auth'
-                && $name != 'GETATTACHMENTDATA') {
-                $t     = microtime(true) + 6 * 60 * 60;
-                $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-                $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
-                $date  = $d->format('d-m-Y_H-i-s-u');
-                file_put_contents(
-                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
-                    $xml->asXML()
-                );
-            }
-        }
-
-        return $xml->asXML();
-    }
-
-    protected static function addXmlChildren($object, $params, $parentName = null)
-    {
-        foreach ($params as $paramName => $paramValue) {
-            if (is_array($paramValue)) {
-                $integerArray = isset($paramValue[0]);
-                static::addXmlChildren(
-                    ($integerArray)
-                        ? $object
-                        : $object->addChild((is_int($paramName) && $parentName)
-                        ? $parentName : $paramName
-                    ),
-                    $paramValue,
-                    $integerArray ? $paramName : null
-                );
-            } else {
-                $object->addChild($paramName, $paramValue);
-            }
-        }
-    }
-
     public function authenticate($username, $password)
     {
-        return $this->request('Auth', [
-            'Name' => $username,
-            'Pwd'  => $password,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+    <data>
+        <Sid>1</Sid>
+    </data>
+');
     }
 
     public function authBySystem()
@@ -192,24 +156,25 @@ class KiasMock implements KiasServiceInterface
 
     public function getEmplInfo($ISN, $dateBeg, $dateEnd)
     {
-        return $this->request('User_CicGetEmplInfo', [
-            'DateBeg' => $dateBeg,
-            'DateEnd' => $dateEnd,
-            'EmplISN' => $ISN,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+    <data>
+        <Mail>mail1@mail.com mail1@mail.com</Mail>
+    </data>
+');
     }
 
     public function getAttachmentData($refisn, $isn, $pictType)
     {
-        return $this->request('GETATTACHMENTDATA', [
-            'REFISN'   => $refisn,
-            'ISN'      => $isn,
-            'PICTTYPE' => $pictType,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+            <data>
+                <FILEDATA>'. base64_encode('test').'</FILEDATA>
+            </data>
+        ');
     }
 
     public function myCoordinationList($ISN)
     {
+        // post
         return $this->request('User_CicMyCoordinationList', [
             'DateBeg' => '01.01.1970',
             'DateEnd' => date('d.m.Y', strtotime('tomorrow')),
@@ -219,6 +184,7 @@ class KiasMock implements KiasServiceInterface
 
     public function getCoordination($docIsn)
     {
+        // post
         return $this->request('User_CicGetCoordinationList', [
             'DocISN' => $docIsn,
         ]);
@@ -226,6 +192,7 @@ class KiasMock implements KiasServiceInterface
 
     public function setCoordination($DocISN, $EmplISN, $Solution, $Remark, $Resolution)
     {
+        // post
         return $this->request('User_CicSetCoordinationList', [
             'DocISN'     => $DocISN,
             'EmplISN'    => $EmplISN,
@@ -237,6 +204,7 @@ class KiasMock implements KiasServiceInterface
 
     public function getAttachmentsList($docIsn)
     {
+        // post
         return $this->request('User_CicGetAttachmentList', [
             'ISN' => $docIsn,
         ]);
@@ -244,13 +212,25 @@ class KiasMock implements KiasServiceInterface
 
     public function getEmplImagesByDate($date)
     {
-        return $this->request('User_CicGetEmplImagesByDate', [
-            'Date' => $date,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+    <data>
+        <images>
+            <row>
+                <SubjISN>12345</SubjISN>
+                <RefISN>12345</RefISN>
+            </row>
+            <row>
+                <SubjISN>12345</SubjISN>
+                <RefISN>12345</RefISN>
+            </row>
+        </images>
+    </data>
+');
     }
 
     public function getEmplMotivation($isn, $begin)
     {
+        // post
         return $this->request('User_CicGetEmplMotivation', [
             'EmplISN' => $isn,
             'Month'   => date('m', strtotime($begin)),
@@ -260,6 +240,7 @@ class KiasMock implements KiasServiceInterface
 
     public function GetInfoUser($dateBeg, $dateEnd, $emplIsn)
     {
+        // post
         return $this->request('User_CicGetUserInfo', [
             'DateBeg' => $dateBeg,
             'DateEnd' => $dateEnd,
@@ -269,6 +250,7 @@ class KiasMock implements KiasServiceInterface
 
     public function getEmplRating($user_isn, $begin_date)
     {
+        // not used
         return $this->request('User_CicGetEmplRating', [
             'EmplISN' => $user_isn,
             'Month'   => date('m', strtotime($begin_date)),
@@ -278,34 +260,94 @@ class KiasMock implements KiasServiceInterface
 
     public function getPrintableDocument($isn, $template, $classId)
     {
-        return $this->request('GetPrintableDocument', [
-            'ISN'         => $isn,
-            'TemplateISN' => $template,
-            'ClassID'     => $classId,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+    <data>
+        <Bytes>'.base64_encode('12312').'</Bytes>
+        <FileName>1.txt</FileName>
+    </data>
+');
     }
 
     public function getExpressAttributes($product){
-        return $this->request('User_CicGetAttrExpress', [
-            'Product' => $product,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <ROWSET>
+        <row>
+            <NumCode>1155</NumCode>
+            <AttrName>1111</AttrName>
+            <TypeValue>ATTR</TypeValue>
+        </row>
+    </ROWSET>
+</data>
+
+        ');
     }
 
     public function getFullObject($product){
-        return $this->request('User_CicGetProductInform', [
-            'ProductISN' => $product
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <Object>
+        <row>
+            <classobjisn>1155</classobjisn>
+            <subclassobjisn>1111</subclassobjisn>
+            <classobjname>class</classobjname>
+            <subclassobjname>subclass</subclassobjname>
+            <ObjAttr>
+                <row>
+                    <AttrISN>111</AttrISN>
+                    <TypeValue>111</TypeValue>
+                    <Label>mylabel</Label>
+                    <NumCode>555</NumCode>
+                    <Required>0</Required>
+                    <ReadOnly>0</ReadOnly>
+                </row>
+            </ObjAttr>
+        </row>
+    </Object>
+    <RiskPack>
+        <row>
+            <FranchSum>
+                <row>
+                    <RiskPackisn>1111</RiskPackisn>
+                    <Franch>1111</Franch>
+                </row>
+            </FranchSum>
+            <FranchProc>
+                <row>
+                    <uFranchProc>,5</uFranchProc>
+                    <cFranchProc>,5</cFranchProc>
+                </row>
+            </FranchProc>
+            <ClassObjISN>777</ClassObjISN>
+            <InsClassisn>777</InsClassisn>
+            <InsClassname>777</InsClassname>
+            <RiskPackisn>777</RiskPackisn>
+            <RiskPackname>444</RiskPackname>
+        </row>
+    </RiskPack>
+</data>
+
+        ');
     }
 
     public function getDictiList($parent)
     {
-        return $this->request('GETDICTILIST', [
-            'DictiISN' => $parent,
-            'Mode' => 0
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <ROWSET>
+        <row>
+            <ISN>1155</ISN>
+            <AttrName>1111</AttrName>
+            <TypeValue>ATTR</TypeValue>
+        </row>
+    </ROWSET>
+</data>
+
+        ');
     }
 
     public function getRegions($parent){
+        // not used
         return $this->request('User_CicGetRegionsAndCity', [
             'region' => $parent
         ]);
@@ -313,6 +355,7 @@ class KiasMock implements KiasServiceInterface
 
     public function getSubject($firstName, $lastName, $patronymic, $iin)
     {
+        // post
         return $this->request('User_CicSearchSubject', [
             'IIN'          => $iin,
             'FIRSTNAME'    => $firstName,
@@ -322,6 +365,7 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function saveSubject($participant){
+        // post
         return $this->request('User_CicSaveSubject', array_merge($participant,[
                 'RESIDENT' => "Y",
                 'COUNTRYISN' => "9515"
@@ -330,6 +374,7 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function setSubject($participant){
+        // not used
         return $this->request('User_CicSetSubject', array_merge($participant,[
                 'RESIDENT' => "Y",
                 'COUNTRYISN' => "9515"
@@ -339,6 +384,7 @@ class KiasMock implements KiasServiceInterface
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb)
     {
+        // post
         return $this->request('User_CicExpressCalculator', [
             'CustomTemplate' => $nshb,
             'ReqText' => $nshb == 1 ? 'Прошу рассмотреть заявку' : '',
@@ -352,6 +398,7 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function CreateAgrByAgrcalc($isn){
+        // post
         return $this->request('CreateAgrByAgrcalc', [
             'CalcISN' => $isn,
             'MODE' => 0
@@ -359,6 +406,7 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function getAgreementCalc($isn,$product_id){
+        // post
         return $this->request('GETAGREEMENTCALC', [
             'AGREEMENTCALCISN' => $isn,
             'PRODUCTISN' => $product_id
@@ -367,7 +415,7 @@ class KiasMock implements KiasServiceInterface
 
     public function calcFull($order)
     {
-
+        // post
         $result = $this->request('User_CicSaveAgrCalc', [
             'ISN' => $order['calc_isn'],
             'ID' => $order['calc_id'], //"TEMP_515431_" . $order['prodIsn'] . "_" . time(),
@@ -410,6 +458,7 @@ class KiasMock implements KiasServiceInterface
 
     public function sendtoExpertSakta($isn,$dateTime,$address)
     {
+        // post
         return $this->request('User_CicSendtoExpertSakta', [
             'AGRISN' => $isn,
             'DATE' => $dateTime,
@@ -418,6 +467,7 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function sendtoExpert($isn,$dateTime,$address){
+        // post
         return $this->request('User_CicSendtoExpert', [
             'AGRISN'    => $isn,
             'DATE'  => $dateTime,
@@ -426,12 +476,14 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function createAgrFromAgrCalc($agrCalcIsn){
+        // post
         return $this->request('User_CicCreateAgrFromAgrCalc',
             ['AgrCalcISN' => $agrCalcIsn ]);
     }
 
     public function getVehicle($vin = null, $engine = null, $tfNumber = null, $srts = null,$searchTFESBD = null)
     {
+        // not used
         $kiasMethod = $searchTFESBD == null ? 'User_CicSearchVehiclesESBD' : 'User_CicSearchTFESBD';
         $result = $this->request($kiasMethod, [
             'MODELISN'  => null,
@@ -448,6 +500,7 @@ class KiasMock implements KiasServiceInterface
 
     public function saveVehicle($data)
     {
+        // not used
         $data['DATERELEASE'] = '01.01.'.$data['DATERELEASE'];
 
         return $this->request('User_CicSaveTFESBD', [
@@ -488,6 +541,7 @@ class KiasMock implements KiasServiceInterface
 //    }
 
     public function getPrintableDocumentList($contract_number){
+        // post
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
             'TemplateISN' => ''
@@ -495,12 +549,14 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function getAgrStatus($ISN){
+        // post
         return $this->request('User_CicGetAgrCalcStatus',[
             'AgrID' => $ISN
         ]);
     }
 
     public function getOrSetDocs($doc_isn, $type, $status){
+        // post
         return $this->request('User_CicGetOrSetDocs',[
             'DocISN' => $doc_isn,
             'Type' => $type, // 1 сменить статус, 2 посмотреть статус
@@ -510,9 +566,12 @@ class KiasMock implements KiasServiceInterface
 
     public function getCoordinationCount($ISN)
     {
-        return $this->request('User_CicCountEmplCoordination', [
-            'EmplISN' => $ISN,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+<MyCoord>6</MyCoord>
+</data>
+
+        ');
     }
 
     /**
@@ -522,6 +581,7 @@ class KiasMock implements KiasServiceInterface
      */
     public function getInsuranceInspectionList($isn, $status, $DateBeg, $DateEnd)
     {
+        // post
         return $this->request('User_CicGetOsmotrRequest', [
             'EmplISN'   => $isn,
             'StatusISN' => $status,
@@ -549,6 +609,7 @@ class KiasMock implements KiasServiceInterface
                     <el>
                         <detailisn>5565</detailisn>
                         <detail>Developer</detail>
+                        <dicti>Developer</dicti>
                     </el>
 
                 </row>
@@ -571,6 +632,7 @@ class KiasMock implements KiasServiceInterface
      */
     public function setInsuranceInspectionInfo($docIsn, $dremark, $data)
     {
+        // post
         return $this->request('User_CicSetOsmotrDocs', [
             'docisn'  => $docIsn,
             'dremark' => $dremark,
@@ -590,6 +652,7 @@ class KiasMock implements KiasServiceInterface
      */
     public function setAppointmentOperator($emplIsn, $docIsn, $statusIsn, $remark)
     {
+        // post
         return $this->request('User_CicSetOsmotrRequest', [
             'OperatorISN' => $emplIsn,
             'RequestISN'  => $docIsn,
@@ -599,6 +662,8 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN){
+
+        // post
         return $this->request('User_CicGetAttachmentsPath', [
             'RefID' => $refID,
             'RefISN' => $refISN,
@@ -610,6 +675,7 @@ class KiasMock implements KiasServiceInterface
     }
 
     public function cicSaveEDS($RefISN,$isn,$iin,$signer,$signerisn,$signeddate,$keyperiod,$remark){
+        // post
         return $this->request('User_CicSaveEDS', [
             'RefISN' => $RefISN,
             'ISN' => $isn,
@@ -632,10 +698,18 @@ class KiasMock implements KiasServiceInterface
      */
     public function getDictList($dictiISN, $mode)
     {
-        return $this->request('GetDictiList', [
-            'DictiISN' => $dictiISN,
-            'Mode'     => $mode,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <ROWSET>
+        <row>
+           <ISN>1234</ISN>
+           <FULLNAME>FULLNAME</FULLNAME>
+           <detailisn>666</detailisn>
+        </row>
+    </ROWSET>
+</data>
+
+        ');
     }
 
     /**

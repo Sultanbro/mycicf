@@ -29,7 +29,7 @@ class checkAuth
         if($this->user === null){
             return redirect('/');
         }
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $kias->initSystem();
         (new User)->getUserData($kias);
         return $next($request);

@@ -62,7 +62,7 @@ class User extends Authenticatable
             if(Auth::check()){
                 $session = Auth::user()->session_id;
             }
-            $kias = new Kias();
+            $kias = app(KiasServiceInterface::class);
             $kias->init($session);
             $count = (string)$kias->getCoordinationCount(Auth::user()->ISN)->MyCoord;
             return $count;
