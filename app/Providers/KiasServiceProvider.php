@@ -6,6 +6,7 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasMock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use App\Library\Services\KiasServiceInterface;
 
 
 class KiasServiceProvider extends ServiceProvider
@@ -17,7 +18,7 @@ class KiasServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Library\Services\KiasServiceInterface', function ($app) {
+        $this->app->bind(KiasServiceInterface::class, function ($app) {
             $session = null;
             if(Auth::check()){
                 $session = Auth::user()->session_id;
