@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Library\Services\Kias;
-use App\Library\Services\KiasMock;
+use App\Library\Services\Mocks\KiasMock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use App\Library\Services\KiasServiceInterface;
