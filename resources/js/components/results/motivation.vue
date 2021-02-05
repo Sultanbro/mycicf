@@ -52,6 +52,17 @@
                 </table>
             </div>
         </div>
+        <!-- Chart Section -->
+        <div v-if="showMotivation">
+            <div class="rating-wrapper p-4">
+                <div class="ml-3">
+                    <h4 class="employee-rating">Динамика мотивации</h4>
+                </div>
+                <div class="chart-container">
+                    <apexchart ref="realtimeChart" type="area" height="400" :options="chartOptions" :series="series"></apexchart>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -136,6 +147,7 @@
                                 this.label = ''
                             }
                             this.motSum = response.data.mot_sum
+                            this.setChartData(response.data)
                             this.showMotivation = true
                         }
                         else{
@@ -148,6 +160,10 @@
                     .finally(() => {
                         this.preloader(false)
                     });
+            },
+            setChartData(data) {
+                this.chartOptions.xaxis.categories = data.chart_data.x_axis;
+                this.series[0].data = data.chart_data.y_axis;
             },
             preloader(show) {
                 if (show) {
