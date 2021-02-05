@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\User;
 use Closure;
@@ -10,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class checkAuth
 {
+    /**
+     * @var User|\Illuminate\Contracts\Auth\Authenticatable|null
+     */
     public $user;
 
     public function __construct()
