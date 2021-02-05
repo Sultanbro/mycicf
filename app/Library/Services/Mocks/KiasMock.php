@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: IAkbergen
- * Date: 12.04.2019
- * Time: 17:14
- */
 
-namespace App\Library\Services;
+namespace App\Library\Services\Mocks;
 
+use App\Library\Services\KiasServiceInterface;
 use Illuminate\Support\Facades\Auth;
 use SoapClient;
 use SimpleXMLElement;
