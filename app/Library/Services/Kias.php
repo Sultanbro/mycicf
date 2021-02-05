@@ -178,6 +178,14 @@ class Kias implements KiasServiceInterface
         }
     }
 
+    /**
+     * Этот метод вешает всю систему, т.к. вызывается в Middleware на большом количестве
+     * роутов
+     *
+     * @param string $username
+     * @param string $password
+     * @return mixed|SimpleXMLElement
+     */
     public function authenticate($username, $password)
     {
         return $this->request('Auth', [
