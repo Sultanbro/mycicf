@@ -12,6 +12,7 @@ use App\Like;
 use App\Mail\Email;
 use App\Post;
 use App\Question;
+use App\Score;
 use App\User;
 use App\UserAnswer;
 use Illuminate\Http\Request;
@@ -172,10 +173,9 @@ class NewsController extends Controller
                 'videos' => $item->getVideoUrl(),
                 'post_poll' => $item->getPoll($item->id),
                 'isVoted' => $item->getIsVoted(Auth::user()->ISN, $item->id),
+                'score_likes' => Score::where('user_isn', $item->user_isn)->where('type','like')->get()->count()
             ]);
         }
-
-
 //        $result = [
 //            'success' => $success,
 //            'error' => $error,

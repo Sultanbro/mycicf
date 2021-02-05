@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
-
             <div class="crown" :class="likes < 100
             ? '' : likes >= 100 && likes < 200
             ? 'crown-bronze' : likes >= 200 && likes < 300
@@ -10,7 +9,6 @@
                  v-if="likes >= 100">
                 <i class="fas fa-crown"></i>
             </div>
-
             <img src="/images/avatar.png" class="image" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
             <div class="sticker-block">

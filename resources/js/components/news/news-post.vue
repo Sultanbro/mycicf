@@ -4,8 +4,23 @@
         <div class="d-flex pl-4 pr-4 pt-3 pb-3">
             <div>
                 <div class="small-avatar-circle-width">
-                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
-                    <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                    <img src="/images/avatar.png"
+                         class="small-avatar-circle small-avatar-circle-width"
+                         :class="post.score_likes < 100
+                         ? '' : post.score_likes >= 100 && post.score_likes  < 200
+                         ? 'ava-bord-bronze' : post.score_likes  >= 200 && post.score_likes  < 300
+                         ? 'ava-bord-silver' : post.score_likes  >= 300
+                         ? 'ava-bord-gold' : 'ava-bord-gold'"
+                         v-if="fakeImage">
+
+                    <img :src="imageUrl"
+                         :class="post.score_likes < 100
+                         ? '' : post.score_likes >= 100 && post.score_likes  < 200
+                         ? 'ava-bord-bronze' : post.score_likes  >= 200 && post.score_likes  < 300
+                         ? 'ava-bord-silver' : post.score_likes  >= 300
+                         ? 'ava-bord-gold' : 'ava-bord-gold'"
+                         @error="fakeImage = true"
+                         class="small-avatar-circle small-avatar-circle-width" v-else>
                 </div>
             </div>
             <div class="flex-column ml-2">
