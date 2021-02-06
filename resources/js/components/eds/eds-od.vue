@@ -7,7 +7,8 @@
             <p v-for="(item,index) in info">
                 {{ parseInt(index)+1 }}. РВ isn: {{ item.rv_isn }}
                 <span class="text-success" v-if="item.confirmed == 1">прошел проверку</span>
-                <span class="text-danger" v-if="item.confirmed == 0">не проверен</span>
+                <!--span class="text-danger" v-if="item.confirmed == 0">не проверен </span-->
+                <span class="text-danger" v-if="item.iin_fail == 1">не совпадает ИИН</span>
             </p>
         </div>
         <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
@@ -17,9 +18,10 @@
 <script>
     const axios = require('axios');
     export default {
-        name: "edslogin",
+        name: "eds-od",
         data() {
             return {
+                confirmed: false,
                 loading: false,
                 seenmoney: false,
                 ws: null,
@@ -38,13 +40,16 @@
                 selectedECPFile: '',
                 signedFile:'',
                 signedFileInfo: [],
-                edsConfirmed: false
+                edsConfirmed: false,
+                hasConfirmed: false,
             }
         },
         props: {
             showView: String,
             doc_row_list_inner_other: Object,
-            info: Object
+            info: Array,
+            classIsn: Number,
+            emplIsn: Number
         },
         methods: {
             connectSocket(check){
@@ -66,9 +71,9 @@
                         if(result.code == 200) {
                             if(check != undefined) {
                                 //vm.openWindow();
-                                vm.checknut();
+                                vm.checkSigns();
                             } else {
-                                vm.checknut();
+                                vm.checkSigns();
                                 //vm.getKey();
                             }
                         }
@@ -77,7 +82,7 @@
                 webSocket.onerror = function(msg) {
                     // TODO PUSH ERROR
                     //webSocket.close();
-                    console.log(msg);
+                    //console.log(msg);
                     if(msg.type == 'error') {
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
                     }
@@ -94,17 +99,16 @@
                 };
                 webSocket.onmessage = function(msg) {
                     // console.log(msg)
-                    console.log(msg);
                 }
                 webSocket.onerror = function(msg) {
                     // TODO PUSH ERROR
-                    console.log(msg);
+                    //console.log(msg);
                 }
             },
             getEdsInfo(docIsn,doc_index){    // docIsn - isn документа
                 let self = this;
                 self.signedFileInfo = [];
-                self.loader(true);
+                //self.loader(true);
                 axios.post("/eds-by-isn", {
                     refISN: docIsn,
                     type: 'D',
@@ -117,20 +121,22 @@
                                 this.checkSignedFile(obj[index].filepath,docIsn,obj[index].docISN, doc_index,obj[index]);     // Проверить подписанные файлы  obj[index].docISN
                             }
                         } else {
-                            self.loader(false);
+                            //self.loader(false);
+                            self.checkContinue(doc_index+1);
                         }
                     } else {
                         alert(response.data.error);
-                        self.loader(false);
+                        self.checkContinue(doc_index+1);
+                        //self.loader(false);
                     }
                 });
             },
             checkSignedFile(url,refIsn,docISN, doc_index,rv_data){        // Посмотреть подписанный файл
                 let self = this;
-                self.loader(true);
+                //self.loader(true);
                 if(url != ''){
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
-                    self.loader(true);
+                    //self.loader(true);
                     webSocket.onopen = function () {
                         var responseObj = {
                             module: 'kz.uchet.signUtil.commonUtils',
@@ -146,22 +152,25 @@
                             if (result.code == 200) {
                                 if(result.responseObjects.length > 0) {
                                     self.signedFileInfo = result.responseObjects;
-                                    //console.log(self.signedFileInfo[0].iin);
-                                    console.log(self.signedFileInfo[0].iin+'='+self.info[doc_index].iin);
-                                    if(self.signedFileInfo[0].iin == self.info[doc_index].iin) {
+                                    //console.log(result.responseObjects);
+                                    //console.log(self.signedFileInfo[0].iin+'='+self.info[doc_index].iin);
+                                    if(result.responseObjects[0].iin == self.info[doc_index].iin) {
                                         self.sendEdsInfoToKias(refIsn,docISN,doc_index); // Записываем в киас данные из подписанного файла
                                     } else {
-                                        self.loader(false);
+                                        self.info[doc_index].iin_fail = 1;
+                                        self.checkContinue(doc_index+1);
+                                        //self.loader(false);
                                     }
                                 }
                             } else {
                                 alert(result.message);
-                                self.loader(false);
+                                //self.checkContinue(doc_index+1);
+                                //self.loader(false);
                             }
                         }
                     }
                     webSocket.onerror = function (msg) {
-                        self.loader(false);
+                        //self.loader(false);
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
                     }
                 } else {
@@ -171,7 +180,7 @@
             sendEdsInfoToKias(refIsn,docIsn,doc_index){ // docIsn - isn документа, self.isn - это исн котировки
                 let self = this;
                 let obj = self.signedFileInfo;
-                self.loader(true);
+                //this.loader(true);
                 for (let index in obj) {
                     axios.post("/save_eds_info", {
                         data: obj[index],
@@ -179,10 +188,18 @@
                         refIsn: refIsn    //self.isn
                     }).then((response) => {
                         if (response.data.success) {
-                            let self = this;
-                            self.loader(false);
-                            console.log('signed success');
-                            this.info[doc_index].confirmed = 1;
+                            //console.log(doc_index+'='+this.info[doc_index].iin);
+                            self.info[doc_index].confirmed = 1;
+                            self.hasConfirmed = true;
+                            //if(doc_index == Object.keys(self.info).length-1){
+                                //self.confirmed = true;
+                            //    this.saveDocument();
+                            //} else {
+                                self.checkContinue(doc_index+1);
+                            //}
+                            //self.loader(false);
+                        } else {
+                            self.checkContinue(doc_index+1);
                         }
                     });
                 }
@@ -197,11 +214,50 @@
             loader(show){
                 this.loading = show;
             },
-            checknut(){
-                if(Object.keys(this.info).length > 0) {
-                    for(let i = 0; Object.keys(this.info).length > i; i++){
-                        this.getEdsInfo(this.info[i].rv_isn,i);
-                    }
+            saveDocument(){
+                if(this.hasConfirmed) {
+                    axios.post("/save_document", {
+                        classISN: this.classIsn,
+                        data: this.info,
+                        emplISN: this.emplIsn
+                    }).then((response) => {
+                        if (response.data.success) {
+                            this.loader(false);
+                        } else {
+                            this.loader(false);
+                        }
+                    });
+                } else {
+                    axios.post("/save_fail_status", {
+                        data: this.info,
+                    }).then((response) => {
+                        if (response.data.success) {
+                            this.loader(false);
+                        } else {
+                            this.loader(false);
+                        }
+                    });
+                }
+            },
+            checkSigns(){
+                this.loader(true);
+                if(this.info.length > 0) {
+                    this.getEdsInfo(this.info[0].rv_isn,0);
+                    // for(let i = 0; Object.keys(this.info).length > i; i++){
+                    //     this.getEdsInfo(this.info[i].rv_isn,i);
+                    //     if(i == Object.keys(this.info).length-1){
+                    //         this.loader(false);
+                    //     }
+                    // }
+                }
+            },
+            checkContinue(index){
+                if(index > this.info.length-1) {
+                    this.saveDocument();
+                    //console.log(index+'!!!');
+                } else {
+                    this.getEdsInfo(this.info[index].rv_isn,index);
+                    //console.log(index+'???');
                 }
             }
         },

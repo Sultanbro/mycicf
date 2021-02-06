@@ -174,7 +174,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
-    Route::get('eds/od', 'SiteController@edsOD');
+    Route::get('eds/od', 'EdsController@edsOD');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('test/eds', 'SiteController@testEds');
@@ -377,6 +377,8 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
+Route::post('/save_document', 'EdsController@saveDocument');
+Route::post('/save_fail_status', 'EdsController@saveFailStatus');
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
