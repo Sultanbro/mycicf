@@ -41,11 +41,13 @@ class SiteController extends Controller
         $username = $request->username;
         $password = $request->password;
         $response = $kias->authenticate($username, hash('sha512', $password));
+
         if($response->error)
         {
             $success = false;
             $error = (string)$response->error->text;
         }
+
         if($success && $response->UserDetails)
         {
             $userDetails = $response->UserDetails;

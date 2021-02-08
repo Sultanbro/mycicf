@@ -48,7 +48,7 @@ class Kias implements KiasServiceInterface
 
     public function init($session)
     {
-        $this->url = env('KIAS_URL');
+        $this->url = config('kias.url');
         $this->getClient();
         $this->_sId = $session;
     }
@@ -57,9 +57,9 @@ class Kias implements KiasServiceInterface
      */
     public function initSystem()
     {
-        $this->url = env('KIAS_URL');
+        $this->url = config('kias.url');
         $this->getClient();
-        $systemData = $this->authenticate(env('KIAS_LOGIN'), hash('sha512', env('KIAS_PASSWORD')));
+        $systemData = $this->authenticate(config('kias.auth.login'), hash('sha512', config('kias.auth.password')));
         $this->_sId = $systemData->Sid;
     }
 

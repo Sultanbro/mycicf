@@ -38,18 +38,18 @@ class KiasMock implements KiasServiceInterface {
     public $url;
 
     public function __construct() {
-        sleep(1);
+        // sleep(1); // sleep здесь для имитации задержки
     }
 
     public function init($session) {
-        $this->url = env('KIAS_URL');
+        $this->url = config('kias.url');
         $this->_sId = $session;
     }
 
     /** Get kias by system credentials
      */
     public function initSystem() {
-        $systemData = $this->authenticate(env('KIAS_LOGIN'), hash('sha512', env('KIAS_PASSWORD')));
+        $systemData = $this->authenticate(config('kias.auth.login'), hash('sha512', config('kias.auth.password')));
         $this->_sId = $systemData->Sid;
     }
 
