@@ -49,7 +49,14 @@ class KiasMock implements KiasServiceInterface {
     /** Get kias by system credentials
      */
     public function initSystem() {
-        $systemData = $this->authenticate(config('kias.auth.login'), hash('sha512', config('kias.auth.password')));
+        $this->url = config('kias.url');
+
+        $username = config('kias.auth.login');
+        $password = config('kias.auth.password');
+        $passwordHash = hash('sha512', $password);
+
+        $systemData = $this->authenticate($username, $passwordHash);
+
         $this->_sId = $systemData->Sid;
     }
 
@@ -217,12 +224,106 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function myCoordinationList($ISN) {
-        // post
-        return $this->request('User_CicMyCoordinationList', [
-            'DateBeg' => '01.01.1970',
-            'DateEnd' => date('d.m.Y', strtotime('tomorrow')),
-            'EmplISN' => $ISN,
-        ]);
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+            <data>
+                <AC>
+                    <row>
+                        <ISN>5565</ISN>
+                        <type>1</type>
+                        <curator>1</curator>
+                        <DeptName>1</DeptName>
+                        <id>1</id>
+                        <docdate>01.01.2021</docdate>
+                        <ClassPovestka>1</ClassPovestka>
+                        <Povestka>1</Povestka>
+                    </row>
+                </AC>
+                <SP>
+                    <row>
+                        <ISN>5565</ISN>
+                        <type></type>
+                        <curator></curator>
+                        <DeptName></DeptName>
+                        <id></id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                </SP>
+                <SZ>
+                    <row>
+                        <ISN>5565</ISN>
+                        <type></type>
+                        <curator></curator>
+                        <DeptName></DeptName>
+                        <id></id>
+                        <docdate>01.01.2021</docdate>
+                        <SzISN></SzISN>
+                        <SzClassISN></SzClassISN>
+                    </row>
+                </SZ>
+                <KV>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl></empl>
+                        <curator></curator>
+                        <DeptName></DeptName>
+                        <id></id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                </KV>
+                <OL>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl></empl>
+                        <id></id>
+                        <docdate>01.01.2021</docdate>
+                        <DeptName></DeptName>
+                    </row>
+                </OL>
+                <AD>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl></empl>
+                        <id>1</id>
+                        <period>1</period>
+                        <docdate>01.01.2021</docdate>
+                        <days></days>
+                    </row>
+                </AD>
+                <RV>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl></empl>
+                        <curator></curator>
+                        <DeptName></DeptName>
+                        <id></id>
+                        <docpaydate>01.01.2021</docpaydate>
+                    </row>
+                </RV>
+                <BK>
+                    <row>
+                        <ISN>5565</ISN>
+                        <type></type>
+                        <curator></curator>
+                        <DeptName></DeptName>
+                        <id></id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                </BK>
+                <other>
+                    <row>
+                        <ISN>5565</ISN>
+                        <Type></Type>
+                        <curator></curator>
+                        <id></id>
+                        <docdate>01.01.2021</docdate>
+                        <DeptName></DeptName>
+                        <ClassISN></ClassISN>
+                        <RefDocISN></RefDocISN>
+                        <RefClassISN></RefClassISN>
+                    </row>
+                </other>
+            </data>
+        ');
     }
 
     public function getCoordination($docIsn) {

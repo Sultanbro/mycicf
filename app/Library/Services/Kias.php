@@ -53,13 +53,23 @@ class Kias implements KiasServiceInterface
         $this->_sId = $session;
     }
 
-    /** Get kias by system credentials
+    /**
+     * Get kias by system credentials
      */
     public function initSystem()
     {
         $this->url = config('kias.url');
         $this->getClient();
-        $systemData = $this->authenticate(config('kias.auth.login'), hash('sha512', config('kias.auth.password')));
+
+        $username = config('kias.auth.login');
+        $password = config('kias.auth.password');
+        $passwordHash = hash('sha512', $password);
+
+        $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
+        $systemData = cache()->remember($key, 10, function () use ($username, $passwordHash) {
+            return $this->authenticate($username, $passwordHash);
+        });
+
         $this->_sId = $systemData->Sid;
     }
 
