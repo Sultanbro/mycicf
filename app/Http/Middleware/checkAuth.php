@@ -32,7 +32,9 @@ class checkAuth
             return redirect('/');
         }
         $kias = app(KiasServiceInterface::class);
-        $kias->initSystem();
+        \Debugbar::measure('Init Kias in middleware', function () use ($kias) {
+            $kias->initSystem();
+        });
         (new User)->getUserData($kias);
         return $next($request);
     }
