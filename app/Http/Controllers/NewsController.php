@@ -127,7 +127,7 @@ class NewsController extends Controller
             'youtube' => $new_post->getVideo(),
             'videos' => $new_post->getVideoUrl(),
             'comments' => [],
-            "post_poll" => $post_poll,
+            "post_poll" => !empty($post_poll) ? $post_poll : [],
             "isVoted" => 0,
         ];
 
@@ -139,8 +139,9 @@ class NewsController extends Controller
     }
 
     public function getPosts(Request $request) {
-        $response = [];
+        $user_isn = Auth::user()->ISN;
         $last_index = $request->lastIndex;
+        $response = [];
 
         if($last_index == null){
             $model = Post::orderBy('id', 'DESC')
@@ -154,7 +155,7 @@ class NewsController extends Controller
                 ->get();
         }
         foreach ($model as $item) {
-            array_push($response, [
+            $response[] = [
                 'isn' => $item->user_isn,
                 'fullname' => (new User())->getFullName($item->user_isn),
                 'postText' => $item->getText(),
@@ -162,7 +163,7 @@ class NewsController extends Controller
                 'postId' => $item->id,
                 'edited' => (new Post())->getIsEdited($item->id),
                 'likes' => (new Like())->getLikes($item->id),
-                'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
+                'isLiked' => (new Like())->getIsLiked($item->id, $user_isn),
                 'date' => date('d.m.Y H:i', strtotime($item->created_at)),
                 'userISN' => $item->user_isn,
                 'comments' => $item->getComments(),
@@ -171,8 +172,8 @@ class NewsController extends Controller
                 'youtube' => $item->getVideo(),
                 'videos' => $item->getVideoUrl(),
                 'post_poll' => $item->getPoll($item->id),
-                'isVoted' => $item->getIsVoted(Auth::user()->ISN, $item->id),
-            ]);
+                'isVoted' => $item->getIsVoted($user_isn, $item->id),
+            ];
         }
 
 
