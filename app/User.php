@@ -105,27 +105,37 @@ class User extends Authenticatable
     public function getFullName($user_isn){
         if($user_isn === User::SENATE_ISN){
             return 'Сенат';
-        }else if($user_isn === User::READING_CLUB_ISN){
+        }
+
+        if($user_isn === User::READING_CLUB_ISN){
             return 'Читательский клуб';
         }
+
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
     }
 
-    public function getUserData(KiasServiceInterface $kias){
-        $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
-        $users_data = [
-            'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
-            'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
-            'Birthday' => (string)$response->Birthday == "0" ? '' : (string)$response->Birthday,
-            'Married' => (string)$response->Married == "0" ? '' : (string)$response->Married,
-            'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
-            'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
-            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
-            'Avarcom' => (string)$response->Avarcom,
-            'MyDZ' => (string)$response->MyDZ,
-        ];
-        return $users_data;
+    public function getUserData(KiasServiceInterface $kias) {
+        $ISN = Auth::user()->ISN;
+        $dateBeg = date('01.m.Y');
+        $dateEnd = date('d.m.Y', strtotime('today'));
+
+        $key = 'userData::' . $ISN . '::' . $dateBeg . '::' . $dateEnd;
+
+        return cache()->remember($key, 10, function () use ($kias, $ISN, $dateBeg, $dateEnd) {
+            $response = $kias->getEmplInfo($ISN, $dateBeg, $dateEnd);
+            return [
+                'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
+                'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
+                'Birthday' => (string)$response->Birthday == "0" ? '' : (string)$response->Birthday,
+                'Married' => (string)$response->Married == "0" ? '' : (string)$response->Married,
+                'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
+                'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+                'City' => (string)$response->City == "0" ? '' : (string)$response->City,
+                'Avarcom' => (string)$response->Avarcom,
+                'MyDZ' => (string)$response->MyDZ,
+            ];
+        });
     }
 
     public static function isSuperAdmin(){
