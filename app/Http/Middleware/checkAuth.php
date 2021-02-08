@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Library\Services\KiasServiceInterface;
 use App\User;
 use Closure;
+use Debugbar;
 use Illuminate\Support\Facades\Auth;
 
 class checkAuth
@@ -31,11 +32,15 @@ class checkAuth
         if($this->user === null){
             return redirect('/');
         }
+
         $kias = app(KiasServiceInterface::class);
-        \Debugbar::measure('Init Kias in middleware', function () use ($kias) {
+
+        Debugbar::measure('Init Kias in middleware', function () use ($kias) {
             $kias->initSystem();
         });
+
         (new User)->getUserData($kias);
+
         return $next($request);
     }
 }
