@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <div class="modal fade bd-example-modal-lg" id="test" tabindex="-1" role="dialog"
+        <div class="modal fade bd-example-modal-lg" :style="modalHide" id="test" tabindex="-1" role="dialog"
              aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content products-margin modal-lg-custom modal-custom-border-top">
@@ -70,6 +70,12 @@
                                                 </div>
                                                 <div class="pt-2 pb-2" v-else>
                                                     <span>{{coordination.Curator}}</span>
+                                                </div>
+                                                <div class="pt-2 pb-2" v-if="coordination.DocClass == '2011501'">
+                                                    <div class="border-bottom pl-1 pr-1">
+                                                        <i class="fas fa-link"></i>
+                                                    </div>
+                                                    <a class="text-white" :href="coordination.link">Ссылка на документ</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -153,7 +159,8 @@
                                             <tbody>
                                             <tr v-for="(list,index) in doc_row_list_inner_other[1]">
                                                 <td v-for="(list,key) in doc_row_list_other">
-                                                    {{ doc_row_list_inner_other[key][index]['ID'] }}
+                                                    <span v-if="doc_row_list_inner_other[key][index]['ID'] != undefined">{{ doc_row_list_inner_other[key][index]['ID'] }}</span>
+                                                    <span v-else>{{ doc_row_list_inner_other[key][index] }}</span>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -232,8 +239,9 @@
                                     </div>
 
                                     <edslogin
-                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
+                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
                                             ref="eds"
+                                            :sendSolution="sendSolution"
                                             :coordination="coordination"
                                             :doc_row_list_inner_other="doc_row_list_inner_other"
                                             show-view="sign">
@@ -325,6 +333,7 @@
             return {
                 Remark: "",
                 resolution: "0",
+                modalHide: '',
             }
         },
         props: {
@@ -342,6 +351,7 @@
             },
             sendSolution: function (Solution) {
                 if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                    this.preloader(true);
                     this.axios.post("/setCoordination", {
                         DocISN: this.coordination.ISN,
                         ISN: this.isn,
@@ -350,8 +360,10 @@
                         Resolution : this.resolution
                     }).then((response) => {
                         if (!response.data.success) {
+                            this.preloader(false);
                             alert(response.data.error);
                         } else {
+                            this.preloader(false);
                             location.reload();
                         }
                     });
@@ -370,6 +382,15 @@
             },
             checkIsDir(){
                 return this.$parent.isDirector;
+            },
+            preloader(show){
+                if(show){
+                    document.getElementById('preloader').style.display = 'flex';
+                    this.modalHide = 'z-index:0;';
+                } else {
+                    document.getElementById('preloader').style.display = 'none';
+                    this.modalHide = 'z-index:1050;';
+                }
             }
         },
     }

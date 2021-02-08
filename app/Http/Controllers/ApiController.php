@@ -23,7 +23,11 @@ class ApiController extends Controller
     public function getBookingData(Request $request){
         $dateStart = date('Y-m-d 00:00:00', strtotime($request->dateStart));
         $dateEnd = date('Y-m-d 23:59:59', strtotime($request->dateEnd));
-        $bookings = Booking::whereBetween('to', [$dateStart, $dateEnd])->get();
+        $office = $request->office;
+        $bookings = Booking::whereBetween('to', [$dateStart, $dateEnd])
+                    ->where('office', $office)
+                    ->get();
+        $result = [];
         foreach ($bookings as $booking){
             if(!isset($result[$booking->office])){
                 $result[$booking->office] = [];
