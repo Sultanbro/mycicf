@@ -37,7 +37,7 @@ class CentcoinsController extends Controller
     }
     //Заявка в Админ
     public function getCoinReqView(){
-        return view('centcoins.newrequest');
+        return view('centcoins.new-zapros');
     }
 
     public function getUserList(Request $request){

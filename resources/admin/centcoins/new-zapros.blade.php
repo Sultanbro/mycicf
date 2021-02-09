@@ -20,7 +20,7 @@
 <div class="container" id="app">
     @include('layouts.header')
     <main role="main">
-        <centcoin-new-req></centcoin-new-req>
+        <centcoin-list></centcoin-list>
     </main>
 </div>
 </body>
