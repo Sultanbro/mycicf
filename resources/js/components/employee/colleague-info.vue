@@ -107,27 +107,31 @@
                 this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
             },
 
+            fetchLiked(response) {
+                if(response.success === true) {
+                    this.post.isLiked = 1;
+                }
+                else {
+                    this.post.isLiked = 0;
+                }
+            },
+
             score: function (type) {
                 switch (type) {
                     case 'like':
                         if(this.isLiked === 1 || this.isLiked === '1') {
-                            this.isLiked = false;
+                            this.isLiked = 0;
                             this.likes--;
                         }
                         else {
-                            this.isLiked = true;
+                            this.isLiked = 1;
                             this.likes++;
                         }
 
                         this.axios.post('/addScore', {user_isn: this.isn, type: type})
                             .then(response => {
-                                if(response.success === true) {
-                                    this.isLiked = 1;
-                                }
-                                else {
-                                    this.isLiked = 0;
-                                }
-                            })
+                                this.fetchLiked(response.data);
+                            });
                         break;
                     case 'dislike':
                         if(this.isDisliked === 1 || this.isDisliked === '1') {
@@ -141,13 +145,8 @@
 
                         this.axios.post('/addScore', {user_isn: this.isn, type: type})
                             .then(response => {
-                                if(response.success === true) {
-                                    this.isDisliked = 1;
-                                }
-                                else {
-                                    this.isDisliked = 0;
-                                }
-                            })
+                                this.fetchLiked(response.data);
+                            });
                         break;
                     default:
                         break;

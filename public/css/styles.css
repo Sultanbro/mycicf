@@ -1072,7 +1072,7 @@ ul{
     text-align: center;
     color: white;
     position: absolute;
-    top: 5px;
+    top: 14px;
     font-size: 22px;
     width: 100%;
 }
@@ -1085,10 +1085,7 @@ ul{
     cursor: pointer;
 }
 .sticker-block .sticker-like {
-    width: 54px;
-    height: 54px;
-    left: 0px;
-    bottom: -9px;
+
 }
 .sticker-block .sticker-dislike {
     width: 56px;
@@ -1097,7 +1094,11 @@ ul{
     bottom: -9px;
 }
 .sticker-like{
-    background-image: url("/images/icons/cup.png");
+    width: 64px;
+    height: 64px;
+    left: 0px;
+    bottom: -12px;
+    background-image: url("/images/icons/heart.png");
 }
 .sticker-dislike{
     width: 30px;
