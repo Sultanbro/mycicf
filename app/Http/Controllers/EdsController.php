@@ -36,20 +36,26 @@ class EdsController extends Controller
        if(count($rv) > 0){
             $save = $kias->saveDocument($request->classISN,$request->emplISN,'',$rv,[]);
             if(isset($save->error)){
-                $success = 'fasle';
+                $success = false;
                 $error = (string)$save->error->text;
             } else {
                 if(isset($save->DocISN)){
-                    foreach($request->data as $info) {
-                        $refund = Refund::find($info['id']);
-                        if($info['confirmed'] == 1) {
-                            $refund->confirmed = 1;
-                            $refund->main_doc_isn = $save->DocISN;
-                        } else {
-                            $refund->iin_fail = 1;
-                        }
-                        if($refund->save()){
-                            $success = true;
+                    $buttonClick = $kias->buttonClick(intval($save->DocISN),'BUTTON1');
+                    if(isset($buttonClick->error)){
+                        $success = false;
+                        $error = (string)$buttonClick->error->text;
+                    } else {
+                        foreach ($request->data as $info) {
+                            $refund = Refund::find($info['id']);
+                            if ($info['confirmed'] == 1) {
+                                $refund->confirmed = 1;
+                                $refund->main_doc_isn = $save->DocISN;
+                            } else {
+                                $refund->iin_fail = 1;
+                            }
+                            if ($refund->save()) {
+                                $success = true;
+                            }
                         }
                     }
                 }
