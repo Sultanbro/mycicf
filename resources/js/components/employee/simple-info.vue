@@ -83,6 +83,10 @@
             reverseCaret: function () {
                 this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
             },
+
+            showNumStick: function(){
+
+            },
         },
 
     }
