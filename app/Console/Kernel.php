@@ -32,6 +32,8 @@ class Kernel extends ConsoleKernel
             $schedule->command('kias:branches')
                 ->dailyAt('03:00')
                 ->timezone('Asia/Almaty');
+            $schedule->command('update:refunds')
+                ->everyFiveMinutes();
 //            $schedule->command('update:fullConstructor')
 //                ->dailyAt('03:00')
 //                ->timezone('Asia/Almaty');
