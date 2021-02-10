@@ -37,7 +37,29 @@ class CentcoinsController extends Controller
     }
     //Заявка в Админ
     public function getCoinReqView(){
-        return view('centcoins.new-zapros');
+        return view('centcoins.newzapros');
+    }
+
+    public function getNewZapros(Request $request){
+        $result = [];
+        foreach(StoreItem::all() as $data){
+            array_push($result, [
+                'id' => $data->id,
+                'name' => (new User)->getFullName($data->user_isn),
+                'name_item' => $data->name,
+                'price'=> $data->price,
+                /*'updated' => date('d.m.Y H:i:s', strtotime($data->updated_at)),*/
+            ]);
+        }
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'result' => $result
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
     }
 
     public function getUserList(Request $request){

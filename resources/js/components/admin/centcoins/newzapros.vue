@@ -14,7 +14,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in list">
+            <tr v-for="item in newzapros">
                 <td>{{item.id}}</td>
                 <td>{{item.name}}</td>
                 <td>{{item.updated}}</td>
@@ -34,14 +34,14 @@
         name: "newrequest",
         data () {
             return {
-                list : [],
+                newrequest : [],
             }
         },
         mounted() {
-            this.getUserList()
+            this.getNewZapros()
         },
         methods : {
-            getUserList() {
+            getNewZapros() {
                 this.axios.post('/centcoins/userList', {})
                     .then(
                         response => {

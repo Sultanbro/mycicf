@@ -36,7 +36,7 @@ Vue.component('centcoin-history', require('./components/admin/centcoins/history.
 Vue.component('centcoin-spend', require('./components/admin/centcoins/spend.vue').default);
 Vue.component('centcoin-replenish', require('./components/admin/centcoins/relpenish.vue').default);
 Vue.component('centcoin-items', require('./components/admin/centcoins/items.vue').default);
-Vue.component('centcoin-new-zapros', require('./components/admin/centcoins/new-zapros.vue').default);//выпадающая вкладка "заявка" в админке
+Vue.component('centcoin-newzapros', require('./components/admin/centcoins/newzapros.vue').default);//выпадающая вкладка "заявка" в админке
 
 Vue.component('org-structure', require('./components/admin/documentation/org-structure.vue').default);
 Vue.component('svg-load', require('./components/admin/documentation/svg-load.vue').default);

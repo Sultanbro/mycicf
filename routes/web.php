@@ -74,7 +74,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('/centcoins/history', 'Admin\CentcoinsController@getHistoryView')->name('centcoins.history');
             Route::get('/centcoins/items', 'Admin\CentcoinsController@getItemsView')->name('centcoins.items');
             Route::get('/centcoins/report', 'Admin\CentcoinsController@getReport')->name('centcoins.report');
-            Route::get('/centcoins/new-zapros', 'Admin\CentcoinsController@getCoinReqView');
+            Route::get('/centcoins/newzapros', 'Admin\CentcoinsController@getCoinReqView')->name('centcoins.newzapros');
 
 
             Route::post('/centcoins/userList', 'Admin\CentcoinsController@getUserList');
@@ -82,6 +82,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
+            Route::post('/centcoins/newzapros', 'Admin\CentcoinsController@getNewZapros');
 
         });
 
