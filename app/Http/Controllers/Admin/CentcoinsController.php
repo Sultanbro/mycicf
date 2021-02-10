@@ -42,13 +42,17 @@ class CentcoinsController extends Controller
 
     public function getNewZapros(Request $request){
         $result = [];
-        foreach(StoreItem::all() as $data){
+        foreach(Centcoin::all() as $data){
             array_push($result, [
                 'id' => $data->id,
                 'name' => (new User)->getFullName($data->user_isn),
-                'name_item' => $data->name,
-                'price'=> $data->price,
-                /*'updated' => date('d.m.Y H:i:s', strtotime($data->updated_at)),*/
+                'updated' => date('d.m.Y H:i:s', strtotime($data->updated_at)),
+                'coins' => $data->centcoins,
+                'total' => $data->total,
+                'item' => (new StoreItem)->getItemName(),
+                'status' => 'status',
+                'updated' => date('d.m.Y H:i:s', strtotime($data->updated_at)),
+
             ]);
         }
         return response()
@@ -61,6 +65,7 @@ class CentcoinsController extends Controller
                 $request->input('callback')
             );
     }
+
 
     public function getUserList(Request $request){
         $result = [];

@@ -82,7 +82,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
-            Route::post('/centcoins/newzapros', 'Admin\CentcoinsController@getNewZapros');
+            Route::post('/centcoins/newZapros', 'Admin\CentcoinsController@getNewZapros');
 
         });
 
