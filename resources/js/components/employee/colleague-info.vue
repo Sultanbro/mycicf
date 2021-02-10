@@ -68,8 +68,8 @@
                 imageUrl : null,
                 likes: 0,
                 dislikes: 0,
-                isLiked: 0,
                 isDisLiked: 0,
+                isLiked: 0
             }
         },
         props: {
@@ -98,7 +98,7 @@
                     this.likes = information.Likes;
                     this.dislikes = information.Dislikes;
                     this.isLiked = information.isLiked;
-                    this.isDisLiked = information.isDisliked;
+                    this.isDisLiked = information.isDisLiked;
                 }else{
                     alert(response.error);
                 }
@@ -115,6 +115,7 @@
                     this.post.isLiked = 0;
                 }
             },
+
 
             score: function (type) {
                 switch (type) {
@@ -134,18 +135,23 @@
                             });
                         break;
                     case 'dislike':
-                        if(this.isDisliked === 1 || this.isDisliked === '1') {
-                            this.isDisliked = 0;
+                        if(this.isDisLiked === 1 || this.isDisLiked === '1') {
+                            this.isDisLiked = 0;
                             this.dislikes--;
                         }
                         else {
-                            this.isDisliked = 1;
+                            this.isDisLiked = 1;
                             this.dislikes++;
                         }
 
                         this.axios.post('/addScore', {user_isn: this.isn, type: type})
                             .then(response => {
-                                this.fetchLiked(response.data);
+                                if(response.success === true) {
+                                    this.post.isDisLiked = 1;
+                                }
+                                else {
+                                    this.post.isDisLiked = 0;
+                                }
                             });
                         break;
                     default:
