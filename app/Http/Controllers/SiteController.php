@@ -576,9 +576,9 @@ class SiteController extends Controller
         $vin = $request->vin ?? '';
         $milage = $request->milage ?? '';
 
-        foreach ($request->all() as $key => $value){
-            $$key = $value;
-        }
+//        foreach ($request->all() as $key => $value){
+//            $$key = $value;
+//        }
         $model = KolesaPrices::where('mark_id', $mark_id)
             ->whereNotNull('mark_id')
             ->where('model_id', $model_id)
