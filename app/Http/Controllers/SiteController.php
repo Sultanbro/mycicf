@@ -562,19 +562,19 @@ class SiteController extends Controller
      */
     public function getPriceByData(Request $request){
         $result = [];
-        $mark_id = $request->mark_id;
-        $model_id = $request->model_id;
-        $year = $request->year;
-        $city = $request->city;
-        $body = $request->body;
-        $volume = $request->volume;
-        $transmission = $request->transmission;
-        $wheel = $request->wheel;
-        $color = $request->color;
-        $drive = $request->drive;
-        $inkz = $request->inkz;
-        $vin = $request->vin;
-        $milage = $request->milage;
+        $mark_id = $request->mark_id ?? '';
+        $model_id = $request->model_id ?? '';
+        $year = $request->year ?? '';
+        $city = $request->city ?? '';
+        $body = $request->body ?? '';
+        $volume = $request->volume ?? '';
+        $transmission = $request->transmission ?? '';
+        $wheel = $request->wheel ?? '';
+        $color = $request->color ?? '';
+        $drive = $request->drive ?? '';
+        $inkz = $request->inkz ?? '';
+        $vin = $request->vin ?? '';
+        $milage = $request->milage ?? '';
 
         foreach ($request->all() as $key => $value){
             $$key = $value;
