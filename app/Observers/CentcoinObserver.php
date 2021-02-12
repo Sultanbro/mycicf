@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use App\CentcoinApply;
 use App\CentcoinHistory;
+use Illuminate\Support\Facades\DB;
 
 class CentcoinObserver
 {
@@ -14,11 +16,28 @@ class CentcoinObserver
      */
     public function created(CentcoinHistory $centcoinHistory)
     {
-/*        $type[] = $centcoinHistory->isDirty('Оплата');
-        $buyItem [] = $centcoinHistory->isDirty('description');*/
+        DB::beginTransaction();
+        if ($newTotal = CentcoinHistory::where('total','type','description',  $centcoinHistory)->first()) {
+            $newTotal = new CentcoinHistory();
+            $newTotal = $centcoinHistory->type;
+            $newTotal = $centcoinHistory->total;
+            $newTotal = $centcoinHistory->description;
+        }
+        $total = new CentcoinApply();
+        $total->balance = $newTotal->total;
+        $total->status = $newTotal->type;
+        $total->user_buy_product = $newTotal->description;
+
+        try{
+            $newTotal->save();
+            $total->save();
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            abort(500, 'Произошла ошибка при записи сенткоинов');
+        }
 
     }
-
     /**
      * Handle the centcoin history "updated" event.
      *
@@ -27,13 +46,13 @@ class CentcoinObserver
      */
     public function updating(CentcoinHistory $centcoinHistory)
     {
-        if($centcoinHistory->isDirty('total')){
+/*        if($centcoinHistory->isDirty('total')){
             // email has changed
             $new_email = $centcoinHistory->total;
             $old_email = $centcoinHistory->getOriginal('total');
             dd($new_email);
             dd($old_email);
-        }
+        }*/
     }
 
     /**

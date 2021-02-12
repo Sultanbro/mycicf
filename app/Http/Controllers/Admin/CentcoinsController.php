@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Branch;
 use App\Centcoin;
+use App\CentcoinApply;
 use App\CentcoinHistory;
 use App\Observers\CentcoinObserver;
 use App\StoreItem;
@@ -43,19 +44,19 @@ class CentcoinsController extends Controller
 
     public function getNewZapros(Request $request){
         $result = [];
-        foreach(Centcoin::all() as $data){
+        foreach(CentcoinApply::all() as $data){
             array_push($result, [
                 'id' => $data->id,
                 'name' => (new User)->getFullName($data->user_isn),
                 'updated' => date('d.m.Y H:i:s', strtotime($data->updated_at)),
                 'coins' => $data->centcoins,
                 'total' => $data->total,
-                'item' => (new StoreItem)->getItemName(),
                 'status' => 'status',
-                'updated' => date('d.m.Y H:i:s', strtotime($data->updated_at)),
 
             ]);
         }
+        dd($result);
+
         return response()
             ->json([
                 'success' => true,
