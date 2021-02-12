@@ -25,9 +25,9 @@ class BookingController extends Controller
         $req['data']['author'] = Auth::user()->ISN;
         $booking->data = json_encode($req);
         $booking->author = Auth::user()->ISN;
+        $booking->title = $req['data']['title'];
         $booking->to = date('Y-m-d H:i:s', strtotime($req['to']));
         $booking->from = date('Y-m-d H:i:s', strtotime($req['from']));
-        $booking->title = $req['data']['title'];
         $booking->office = $req['data']['office'];
         $booking->description = $req['data']['description'];
         if(!$booking->save()){
