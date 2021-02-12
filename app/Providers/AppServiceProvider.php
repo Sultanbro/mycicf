@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\CentcoinHistory;
+use App\Observers\CentcoinObserver;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
         if(!env('APP_DEBUG')){
             URL::forceScheme('https');
         }
+
+        CentcoinHistory::observe(CentcoinObserver::class);
     }
 }

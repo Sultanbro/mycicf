@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Branch;
 use App\Centcoin;
 use App\CentcoinHistory;
+use App\Observers\CentcoinObserver;
 use App\StoreItem;
 use App\User;
 use Illuminate\Http\Request;
@@ -239,4 +240,5 @@ class CentcoinsController extends Controller
                 $request->input('callback')
             );
     }
+
 }
