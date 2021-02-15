@@ -344,7 +344,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
         //Application
         Route::get('document/management', 'DocumentManagementController@index')->name('document.index');
-        Route::get('document/{id}/{isn}', 'DocumentManagementController@show')->name('document.show');
+        Route::post('document/getUserInfo', 'DocumentManagementController@getUserInfo')->name('document.get.user.info');
+        Route::get('document/{isn}', 'DocumentManagementController@show')->name('document.show');
         Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
         Route::get('document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
         Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Date;
 use App\Http\Controllers\SiteController;
 use DB;
 use mysql_xdevapi\Result;
+use App\Branch;
 
 class DocumentManagementController extends Controller
 {
@@ -48,34 +49,37 @@ class DocumentManagementController extends Controller
 
     public function show(Request $request, KiasServiceInterface $kias)
     {
+        //date_default_timezone_set('UTC');
         $today = date('d.m.Y');
-        $documents = $kias->getMySZ(3130947, '17.01.2021', $today, '2516');
-
+//        dd($today);
+        $documents = $kias->getMySZ(auth()->user()->ISN, '17.01.2021', $today, '2516'); //2516 - в работе
+//        dd($documents);
         $itens = [];
         if(isset($documents->SZ->row)) {
             foreach ($documents->SZ->row as $iten) {
-                if ($iten->classisn == '1440571') {
+                if ($iten->classisn == $request->isn) {
                     $itens = $iten;
                 }
             }
         }
         if(isset($documents->Zayav->row)){
             foreach($documents->Zayav->row as $iten) {
-                if($iten->classisn == '1440571'){
+                if($iten->classisn == $request->isn){
                     $itens = $iten;
                 }
             }
         }
         $show = $kias->request('User_CicGetDocRowAttr', [
-            'CLASSISN' => $itens->classisn,
-            'DOCISN' => $itens->docisn,
+            'CLASSISN' => $request->isn,
+            'DOCISN' => '',
         ]);
+//        dd($show);
         $result = [];
 
         array_push($result, [
             'fullname' => empty((string)$show->Doc->row->SUBJNAME) ? 'Контрагент' : $show->Doc->row->SUBJNAME,
             'value' => empty((string)$show->Doc->row->SUBJNAME) ? '' : $show->Doc->row->SUBJNAME,
-            'subjisn' => $show->DocParams->row->ISN,
+            'subjisn' => $show->DocParams->row->ISN ? '' : $show->DocParams->row->val,
         ]);
 
         foreach($show->DocParams->row as $item) {
@@ -90,17 +94,31 @@ class DocumentManagementController extends Controller
         $docrows = [];
         if(isset($show->DocRow->row)){
             foreach($show->DocRow->row as $docrow){
-                array_push($docrows, [
-                    'val' => $docrow->val,
-                    'value' => $docrow->value,
-                ]);
+                $docrows[] = [
+                    'orderno' => empty($docrow->orderno) ? null : get_object_vars($docrow->orderno)[0],
+                    'fieldname' => empty($docrow->fieldname) ? null : get_object_vars($docrow->fieldname)[0],
+                    'code' => empty($docrow->code) ? null : get_object_vars($docrow->code)[0],
+                    'classisn' => empty($docrow->classisn) ? null : get_object_vars($docrow->classisn)[0],
+                    'rowisn' => empty($docrow->rowisn) ? null : get_object_vars($docrow->rowisn)[0],
+                    'val' => empty($docrow->val) ? null : get_object_vars($docrow->val)[0],
+                    'value' => empty(get_object_vars($docrow->value)) ? null : $docrow->value,
+                    'value_name' => empty(get_object_vars($docrow->value_name)) ? null : $docrow->value_name,
+                ];
             }
         }
+//        dd($docrows);
+
+        $className = get_object_vars($show->Doc->row->CLASSNAME);
+        $docdate = isset($itens->docdate) ? get_object_vars($itens->docdate) : $today;
+        $docdate = isset($itens->docdate) ? date('m.d.Y',strtotime($docdate[0])) : $docdate;
+        $emplisn = get_object_vars($show->Doc->row->EMPLISN);
+//dd($docdate);
+        //dd($className[0]);
         $results = array_merge([
-            'id' => $request->id,
             'classisn' => $request->isn,
-            'emplisn' => $show->Doc->row->EMPLISN,
-            'docdate' => $itens->docdate,
+            'emplisn' => $emplisn[0],
+            'docdate' => $docdate ?? $today,
+            'className' => $className[0],
         ], [
             'result' => $result
         ], [
@@ -163,6 +181,7 @@ class DocumentManagementController extends Controller
 
     public function getSearchChild($headData){
         $result = [];
+
         $data = Dicti::where('parent_isn', $headData['isn'])->get();
 
         foreach($data as $branchData){
@@ -182,6 +201,18 @@ class DocumentManagementController extends Controller
         $documents = $this->kiasService->getDocument($docIsn, $classIsn);
         dd($documents);
 
+    }
+
+    public function getUserInfo(Request $request){
+        $users = Branch::where('has_child',0)->get();
+        $result = [];
+        foreach($users as $user){
+            $user['dept'] = isset($user->getParent->fullname) ? $user->getParent->fullname : '';
+            $result[$user->kias_id] = $user;
+        }
+        return response()->json([
+            'usersInfo' => $result
+        ]);
     }
 
     public function saveDocument(Request $request, KiasServiceInterface $kias)
@@ -207,20 +238,20 @@ class DocumentManagementController extends Controller
                 ];
             }
         }
-        //dd($request->docrows);
         $docrows = [];
+        $docs = [];
         if(isset($request->docrows)){
             foreach($request->docrows as $docrow) {
                 $docrows[] = [
-                    $docrow['val']['0'] => $docrow['value'][0] ?? null,
+                    $docrow['val'] => $docrow['value'] ?? null,
                 ];
             }
         }
-        //dd($docrows);
-        //print $request->result[0]['fullname'];exit();
-
-
-        $document = $kias->userCicSaveDocument($request->classisn, $request->emplisn[0], $request->docdate[0], $request->result[0]['subjisn'], $row, $docrows);
+        for($i=0; $i<count($docrows); $i++){
+            $docs = array_merge($docs, $docrows[$i]);
+        }
+//        dd($docs);
+        $document = $kias->userCicSaveDocument($request->classisn, $request->emplisn, $request->docdate, $request->result[0]['subjisn'][0] ?? $row[0]['VAL'], $row, $docs);
         dd($document);
 //        $show = $kias->request('userCicSaveDocument', [
 //            'CLASSISN' => $itens->classisn,

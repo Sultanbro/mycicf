@@ -281,8 +281,10 @@ class SiteController extends Controller
             array_push($result, [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
+                'duty' => $headData->duty,
             ]);
         }
+
         $responseData = [
             'result' => $result,
             'value' => Auth::user()->ISN,
@@ -329,6 +331,7 @@ class SiteController extends Controller
                 array_push($result, [
                     'id' => $branchData->kias_id,
                     'label' => $branchData->fullname,
+                    'duty' => $branchData->duty
                 ]);
             }
         }

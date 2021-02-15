@@ -219,6 +219,16 @@ body {
     font-size: 1.3em;
 }
 
+.btn-block2 {
+    background-color: rgba(83, 49, 206, 0.801);
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
+    outline: none !important;
+    transition: 0.4s ease;
+    color: #FFF;
+    font-size: 1.3em;
+}
+
 .btn-block:hover {
     background-color: rgba(72, 37, 212, 1);
     transition: 0.4s ease;

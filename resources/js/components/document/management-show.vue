@@ -2,10 +2,10 @@
     <div class="news-tape-bg radius-4px mt-3 pb-2">
         <ManagementSearch :results="results"></ManagementSearch>
 <!--        <form id="object-form" @submit.prevent="saveDocument">-->
-            <ManagementApplication v-if="results.id==2"></ManagementApplication>
-            <ManagementBusinessTrip v-if="results.id==3" :id="results.id"></ManagementBusinessTrip>
-            <ApplicationNotAdministrativeDay v-if="results.id==4"></ApplicationNotAdministrativeDay>
-            <ApprovalSheet v-if="results.id==5" :results="results"></ApprovalSheet>
+<!--            <ManagementApplication v-if="results.id==2"></ManagementApplication>-->
+<!--            <ManagementBusinessTrip v-if="results.id==3" :id="results.id"></ManagementBusinessTrip>-->
+            <ApplicationNotAdministrativeDay v-if="results.isn==1440571"></ApplicationNotAdministrativeDay>
+            <ApprovalSheet v-else :results="results"></ApprovalSheet>
             <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
                 <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument" @click="saveDocument">
                     Сохранитьasdasdsa

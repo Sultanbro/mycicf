@@ -316,8 +316,8 @@ interface KiasServiceInterface
      * @param $docDate
      * @param $subjIsn
      * @param $row
-     * @param $docrows
+     * @param $docs
      * @return mixed
      */
-    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docrows);
+    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs);
 }

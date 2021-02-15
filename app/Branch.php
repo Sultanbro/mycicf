@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Branch
- * @property $fullname string
+ * @property $fullname stringchilds
  * @property $kias_id int
  * @property $kias_parent_id int
  * @property $has_child int

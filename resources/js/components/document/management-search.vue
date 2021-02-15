@@ -3,14 +3,14 @@
         <div class="pt-4">
             <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                 <div class="col-md-8 col-center-block flex-row jc-sb mt-3 mb-3">
-                    <div>
+                    <div class="col-md-3">
                         <button class="btn btn-success d-inline-flex align-items-center padding-block"
                                 data-toggle="modal" data-target="#createDocument"
                                 @click="createDocument()">
                             Создать <i class="fa fa-angle-down down"></i>
                         </button>
                     </div>
-                    <div>
+                    <div class="col-md-3">
                         <button class="btn btn-primary d-inline-flex align-items-center padding-block"
                                 @click="searchDocument()">
                             Поиск <i class="fa fa-search search"></i>
@@ -31,7 +31,7 @@
                                 <div class="document-title pointer" @click="reverseCaret(index)"
                                      data-toggle="collapse" :data-target="`#document-kind-${index}`"
                                      aria-expanded="true">
-                                    <span class="" :class="dataId == index ? caretColor : ''">{{document.fullname}}</span>
+                                    <span :class="dataId == index ? caretColor : ''">{{document.fullname}}</span>
                                     <span class="caret">
                                         <i class="fas "
                                            :class="dataId == index ? caretClass+ ' ' +caretColor : 'fa-chevron-down color-black'"
@@ -40,7 +40,7 @@
                                 </div>
                                 <ul :id="`document-kind-${index}`" class="document-kinds pl-5 pr-5 collapse in">
                                     <li v-for="(item, index) in document.children" :key="index">
-                                        <button class="color-black" @click="isnShow(item.isn, index)">{{ item.fullname }}</button>
+                                        <button class="btn" @click="isnShow(item.isn, index)">{{ item.fullname }}</button>
                                     </li>
                                 </ul>
                             </div>
@@ -73,9 +73,8 @@
         methods: {
             isnShow(isn, id) {
                 console.log(isn);
-                console.log(id);
-                this.axios.get(`/document/${id}/${isn}`).then(response => {
-                    location.href = `/document/${id}/${isn}`
+                this.axios.get(`/document/${isn}`).then(response => {
+                    location.href = `/document/${isn}`
                     console.log(response)
                 })
             },

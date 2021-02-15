@@ -730,7 +730,7 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docrows) {
+    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs) {
         return $this->request('User_CicSAVEDOCUMENT', [
             'CLASSISN' => $class_isn,
             'EMPLISN' => $emplIsn,
@@ -744,6 +744,9 @@ class Kias implements KiasServiceInterface
 //                        'VAL' => $val, //Значение
 //                        'VALUE' => $value, //Значение атрибута
 //                ]
+            ],
+            'DocRow' => [
+                'row' => $docs
             ],
 //            'DocRow' => [
 //                'row' => [
