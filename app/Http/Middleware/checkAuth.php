@@ -39,7 +39,10 @@ class checkAuth
             $kias->initSystem();
         });
 
-        (new User)->getUserData($kias);
+        Debugbar::measure('Get user data from Kias', function () use ($kias) {
+            (new User)->getUserData($kias);
+        });
+
 
         return $next($request);
     }
