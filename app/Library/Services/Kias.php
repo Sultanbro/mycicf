@@ -77,9 +77,10 @@ class Kias implements KiasServiceInterface
     }
 
     private function execProc($name, $params = []) {
-        return $this->client->ExecProc([
+        $response = $this->client->ExecProc([
             'pData' => $this->createRequestData($name, $params),
-        ])->ExecProcResult->any;
+        ]);
+        return $response->ExecProcResult->any;
     }
 
     public function request($name, $params = [])
@@ -88,8 +89,9 @@ class Kias implements KiasServiceInterface
             switch ($name) {
                 case 'Auth':
                     $key = 'kias::Auth::' . $name . '::' . serialize($params) . '::';
+                    $ttl = now()->addMinutes(config('kias.cache.lifetime'));
                     \Debugbar::startMeasure('Authenticate in Kias');
-                    $execResponse = cache()->remember($key, 10, function () use ($name, $params) {
+                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
                         return $this->execProc($name, $params);
                     });
                     \Debugbar::stopMeasure('Authenticate in Kias');
@@ -115,12 +117,15 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
+
+                // TODO Use Storage::disk instead
                 file_put_contents(
                     storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
                     $xml->asXml()
                 );
             }
         }
+
         if (isset($xml->error)) {
             if (isset($xml->error->code) && $xml->error->code == '001') {
                 $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);

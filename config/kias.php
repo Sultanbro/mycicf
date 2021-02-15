@@ -8,4 +8,8 @@ return [
         'login' => env('KIAS_LOGIN'),
         'password' => env('KIAS_PASSWORD')
     ],
+
+    'cache' => [
+        'lifetime' => 10
+    ]
 ];
