@@ -37,17 +37,20 @@ class checkSession
         return $next($request);
     }
 
-    public function reAuthenticate(){
+    public function reAuthenticate() {
         $kias = $this->kias;
-        $response = $kias->authenticate(Auth::user()->username, Auth::user()->password_hash);
-        if($response->error){
+        $user = Auth::user();
+        $response = $kias->authenticate($user->username, $user->password_hash);
+
+        if($response->error) {
             Auth::logout();
             return false;
         }
-        $User = Auth::user();
-        $User->session_id = $response->Sid;
+
+        $user->session_id = $response->Sid;
         $kias->_sid= $response->Sid;
-        $User->save();
+        $user->save();
+
         return true;
     }
 }
