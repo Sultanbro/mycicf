@@ -86,11 +86,26 @@ class Kias implements KiasServiceInterface
     public function request($name, $params = [])
     {
         try {
+            switch ($name) {
+                case 'Auth':
+                    $key = 'kias::Auth::' . $name . '::' . serialize($params);
+                    \Debugbar::startMeasure('Authenticate in Kias');
+                    $execResponse = cache()->remember($key, 10, function () use ($name, $params) {
+                        return $this->client->ExecProc([
+                            'pData' => $this->createRequestData($name, $params),
+                        ])->ExecProcResult->any;
+                    });
+                    \Debugbar::stopMeasure('Authenticate in Kias');
+                    break;
+
+                default:
+                    $execResponse = $this->client->ExecProc([
+                        'pData' => $this->createRequestData($name, $params),
+                    ])->ExecProcResult->any;
+            }
+
             $xml = new SimpleXMLElement(
-                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-                .$this->client->ExecProc([
-                    'pData' => $this->createRequestData($name, $params),
-                ])->ExecProcResult->any
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . $execResponse
             );
 
         } catch (\SoapFault $exception) {
