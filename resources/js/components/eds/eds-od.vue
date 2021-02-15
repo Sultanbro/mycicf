@@ -122,7 +122,7 @@
                             }
                         } else {
                             //self.loader(false);
-                            self.checkContinue(doc_index+1);
+                            //self.checkContinue(doc_index+1);
                         }
                     } else {
                         alert(response.data.error);

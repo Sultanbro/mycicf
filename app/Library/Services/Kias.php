@@ -719,6 +719,13 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function buttonClick($docISN,$button){
+        return $this->request('User_CicButtonClick',[
+            'DOCISN' => $docISN,
+            'BUTTON' => $button
+        ]);
+    }
+
     /**
      * @param $class_isn
      * @param $doc_isn
