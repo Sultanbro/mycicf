@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mock' => env('MOCK_KIAS', false),
+    'mock' => env('KIAS_MOCK', false),
 
     'url' => env('KIAS_URL'),
     'auth' => [
