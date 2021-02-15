@@ -65,11 +65,10 @@ class Kias implements KiasServiceInterface
         $password = config('kias.auth.password');
         $passwordHash = hash('sha512', $password);
 
-        $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
-        $systemData = cache()->remember($key, 10, function () use ($username, $passwordHash) {
-            return $this->authenticate($username, $passwordHash);
-        });
-
+        // $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
+        \Debugbar::startMeasure('Authenticate in Kias');
+        $systemData = $this->authenticate($username, $passwordHash);
+        \Debugbar::stopMeasure('Authenticate in Kias');
         $this->_sId = $systemData->Sid;
     }
 
