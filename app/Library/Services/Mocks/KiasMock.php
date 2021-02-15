@@ -49,6 +49,7 @@ class KiasMock implements KiasServiceInterface {
     /** Get kias by system credentials
      */
     public function initSystem() {
+        sleep(1); // sleep здесь для имитации задержки
         $this->url = config('kias.url');
 
         $username = config('kias.auth.login');
@@ -161,6 +162,7 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getEmplInfo($ISN, $dateBeg, $dateEnd) {
+        sleep(1); // sleep здесь для имитации задержки
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
         <Mail>mail1@mail.com mail2@mail.com</Mail>

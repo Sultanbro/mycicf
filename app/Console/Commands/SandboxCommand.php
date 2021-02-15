@@ -3,7 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Library\Services\KiasServiceInterface;
+use App\Mail\Email;
+use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Mail\Mailable;
+use SebastianBergmann\Comparator\Book;
+use function Deployer\isVeryVerbose;
 
 class SandboxCommand extends Command {
     protected $signature = 'sandbox';
@@ -11,9 +16,6 @@ class SandboxCommand extends Command {
     protected $description = 'Command description';
 
     public function handle() {
-        $res = \Cache::remember('test', 10, function () {
-            return 'string';
-        });
-        dd($res);
+
     }
 }
