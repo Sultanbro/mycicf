@@ -56,6 +56,12 @@ class Permissions extends Model
 
     }
 
+    /**
+     * TODO Метод лучше сделать статическим
+     *
+     * @param $roles
+     * @return bool
+     */
     public function checkUser($roles){
         array_push($roles, Permissions::ROLE_SUPERADMIN);
         $data = Permissions::whereIn('permission_id', $roles)

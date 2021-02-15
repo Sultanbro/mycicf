@@ -115,6 +115,14 @@ class User extends Authenticatable
         return $model === null ? 'DELETED' : $model->fullname;
     }
 
+    /**
+     * TODO @serabass Этот метод лучше перенести в сервис (можно в Kias)
+     *   или сделать его статическим в этой модели
+     *
+     * @param KiasServiceInterface $kias
+     * @return mixed
+     * @throws \Exception
+     */
     public function getUserData(KiasServiceInterface $kias) {
         $ISN = Auth::user()->ISN;
         $dateBeg = date('01.m.Y');
