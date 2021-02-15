@@ -16,10 +16,13 @@ class CentcoinObserver
      */
     public function created(CentcoinHistory $centcoinHistory)
     {
-        $centcoinHistory = new CentcoinApply();
-
-        $centcoinHistory->save();
-
+        $total = new CentcoinApply();
+        $total->type = $centcoinHistory->type;
+        $total->description = $centcoinHistory->description;// Какой продукт купили ****
+        $total->full_name = $centcoinHistory->changed_user_isn; // ФИО
+        $total->wasted_centcoins = $centcoinHistory->quantity;
+        $total->balance = $centcoinHistory->total; // Остаток на счете
+        $total->save();
     }
 
     /**

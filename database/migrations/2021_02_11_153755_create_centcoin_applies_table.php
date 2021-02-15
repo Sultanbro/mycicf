@@ -14,14 +14,13 @@ class CreateCentcoinAppliesTable extends Migration
     public function up()
     {
         Schema::create('centcoin_applies', function (Blueprint $table) {
-            $table->bigIncrements('id')->nullable();
+            $table->bigIncrements('id');
+            $table->string('type')->nullable()->comment('Только оплата');
+            $table->string('description')->nullable()->comment('Требуемая услуга или товар');
             $table->string('full_name')->nullable();
-            $table->date('created_apply')->nullable();
-            $table->integer('wasted_centcoins')->nullable();
-            $table->integer('balance');
-            $table->string('user_buy_product')->nullable();
-            $table->string('status')->nullable();
-            $table->date('edited_apply')->nullable();
+            $table->integer('wasted_centcoins')->nullable()->comment('потраченные сенткоины (c таблицы store_item[price])');
+            $table->integer('balance')->nullable()->comment('Остаток на счете centcoin_history[total]');
+            $table->enum('status',['Ожидает','Исполнено','Отказано'])->default('Ожидает');
             $table->timestamps();
         });
     }

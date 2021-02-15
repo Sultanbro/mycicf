@@ -2,6 +2,7 @@
 
 namespace App;
 
+use http\Env\Request;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,5 +15,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class StoreItem extends Model
 {
-//
+  public function getPrice(Request $request)
+  {
+      $price = StoreItem::where('price',$request);
+      return response($price);
+  }
 }

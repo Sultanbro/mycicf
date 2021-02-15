@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-center pt-4 pb-4">
             <select v-model="itemIndex" class="custom-select w-25">
                 <option :value="null" selected disabled hidden>Выберите товар</option>
-                <option :value="index" v-for="(item, index) in itemsStorage" :disabled="centcoins < item.price">{{item.name}} - {{item.price}}₵</option>
+                <option :value="index" v-for="(item, index) in itemsStorage"> {{item.name}} - {{item.price}}₵</option>
             </select>
         </div>
 
@@ -15,7 +15,7 @@
                 <button type="button"
                         class="buy-btn"
                         @click="buyItem"
-                        :disabled="centcoins < price">Купить</button>
+                        >Купить</button>
             </div>
         </div>
 
@@ -86,7 +86,7 @@
             },
 
             fetchBuyItem: function() {
-                location.replace('/centcoins')
+                /*location.replace('/centcoins')*/
             },
 
             getCentcoins: function () {

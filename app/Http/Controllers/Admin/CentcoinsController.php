@@ -47,13 +47,13 @@ class CentcoinsController extends Controller
         foreach(CentcoinApply::all() as $data){
             array_push($result, [
                 'id' => $data->id,
-                'full_name' => $data->full_name,
-                'created_apply' => $data->created_apply,
+                'full_name' => (new User)->getFullName($data->full_name),
+                'created_at' => $data->created_at->format('d-m-Y'),
                 'wasted_centcoins' =>$data->wasted_centcoins,
                 'balance' =>$data->balance,
-                'user_buy_product'=>$data->user_buy_product,
+                'description'=>$data->description,
                 'status' =>$data->status,
-                'edited_apply'=>$data->edited_apply
+                'updated_at'=>$data->updated_at->format('d-m-Y')
             ]);
         }
 

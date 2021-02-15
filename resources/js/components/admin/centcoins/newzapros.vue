@@ -16,13 +16,13 @@
             <tbody>
             <tr v-for="item in newzapros">
                 <td>{{item.id}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.updated}}</td>
-                <td>{{item.coins}}</td>
-                <td>{{item.total}}</td>
-                <td>{{item.item}}</td>
+                <td>{{item.full_name}}</td>
+                <td>{{item.created_at}}</td>
+                <td>{{item.wasted_centcoins}}</td>
+                <td>{{item.balance}}</td>
+                <td>{{item.description}}</td>
                 <td>{{item.status}}</td>
-                <td>{{item.updated}}</td>
+                <td>{{item.updated_at}}</td>
             </tr>
             </tbody>
         </table>
