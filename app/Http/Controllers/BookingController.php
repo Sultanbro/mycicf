@@ -13,27 +13,51 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $booking = Booking::orderBy('data', 'desc')
-            ->take(100)
-            ->get();
+        $booking = Booking::orderBy('from', 'desc')->get();
+            //->take(100)
         return view('booking', compact('booking'));
     }
     public function set(Request $request) {
+        $success = true;
         $booking = new Booking();
         $req = $request['payload'];
-        $req['data']['id'] = $booking->id;
-        $req['data']['author'] = Auth::user()->ISN;
-        $booking->data = json_encode($req);
-        $booking->author = Auth::user()->ISN;
-        $booking->to = date('Y-m-d H:i:s', strtotime($req['to']));
-        $booking->from = date('Y-m-d H:i:s', strtotime($req['from']));
-        $booking->title = $req['data']['title'];
-        $booking->office = $req['data']['office'];
-        $booking->description = $req['data']['description'];
-        if(!$booking->save()){
-            response()->json(['success'=>false]);
+        $office = $req['data']['office'];
+        $from = date('Y-m-d H:i:s', strtotime($req['from']));
+        $to = date('Y-m-d H:i:s', strtotime($req['to']));
+        $notFree['status'] = false;
+        $records = Booking::where('office',$office)
+            ->whereBetween('from', array(date('Y-m-d',strtotime($req['from'])).' 00:00:01', date('Y-m-d',strtotime($req['to'])).' 23:59:59'))
+            ->get();
+
+        if($records){
+            foreach($records as $recod){
+                if(strtotime($from) >= strtotime($recod->from) && strtotime($from) <= strtotime($recod->to)){
+                    $notFree['status'] = true;
+                    $notFree['data'] = $recod;
+                } elseif(strtotime($to) >= strtotime($recod->from) && strtotime($to) <= strtotime($recod->to)){
+                    $notFree['status'] = true;
+                    $notFree['data'] = $recod;
+                }
+            }
         }
-        return response()->json(['success'=>true, 'data' => $booking]);
+        if($notFree['status']){
+            $success = false;
+            $error = 'Зал уже занят на это время.Забронировал '.$notFree['data']['title'];
+        } else {
+            $req['data']['id'] = $booking->id;
+            $req['data']['author'] = Auth::user()->ISN;
+            $booking->data = json_encode($req);
+            $booking->author = Auth::user()->ISN;
+            $booking->to = $to;
+            $booking->from = $from;
+            $booking->title = $req['data']['title'];
+            $booking->office = $office;
+            $booking->description = $req['data']['description'];
+            if(!$booking->save()){
+                response()->json(['success'=>false]);
+            }
+        }
+        return response()->json(['success'=>$success, 'data' => $booking, 'error' => isset($error) ? $error : '']);
     }
     public function delete(Request $request){
         if($request['data']['author']!== Auth::user()->ISN) {

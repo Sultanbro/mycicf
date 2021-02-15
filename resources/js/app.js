@@ -89,6 +89,8 @@ Vue.component('user-image', require('./components/employee/userImage.vue').defau
 
 Vue.component('edslogin', require('./components/eds/edslogin').default);
 
+Vue.component('eds-od', require('./components/eds/eds-od').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);

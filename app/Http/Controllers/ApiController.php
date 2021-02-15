@@ -27,6 +27,7 @@ class ApiController extends Controller
         $bookings = Booking::whereBetween('to', [$dateStart, $dateEnd])
                     ->where('office', $office)
                     ->get();
+        $result = [];
         foreach ($bookings as $booking){
             if(!isset($result[$booking->office])){
                 $result[$booking->office] = [];
@@ -35,6 +36,7 @@ class ApiController extends Controller
                 $result[$booking->office][date('d.m.Y', strtotime($booking->to))] = [];
             }
             array_push($result[$booking->office][date('d.m.Y', strtotime($booking->to))], [
+                'id' => $booking->id,
                 'to' => $booking->to,
                 'from' => $booking->from,
                 'author' => $booking->author,

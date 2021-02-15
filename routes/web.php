@@ -176,6 +176,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays');
 
+    Route::get('eds/od', 'EdsController@edsOD');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('test/eds', 'SiteController@testEds');
@@ -266,6 +267,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
         Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
         Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
+        Route::post('/addScore', 'ScoreController@addScore');
+
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');
@@ -387,6 +390,8 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
+Route::post('/save_document', 'EdsController@saveDocument');
+Route::post('/save_fail_status', 'EdsController@saveFailStatus');
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
