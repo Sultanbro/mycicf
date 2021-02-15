@@ -83,6 +83,12 @@ class Kias implements KiasServiceInterface
         return $this->client;
     }
 
+    private function execProc($name, $params = []) {
+        return $this->client->ExecProc([
+            'pData' => $this->createRequestData($name, $params),
+        ])->ExecProcResult->any;
+    }
+
     public function request($name, $params = [])
     {
         try {
@@ -91,17 +97,13 @@ class Kias implements KiasServiceInterface
                     $key = 'kias::Auth::' . $name . '::' . serialize($params);
                     \Debugbar::startMeasure('Authenticate in Kias');
                     $execResponse = cache()->remember($key, 10, function () use ($name, $params) {
-                        return $this->client->ExecProc([
-                            'pData' => $this->createRequestData($name, $params),
-                        ])->ExecProcResult->any;
+                        return $this->execProc($name, $params);
                     });
                     \Debugbar::stopMeasure('Authenticate in Kias');
                     break;
 
                 default:
-                    $execResponse = $this->client->ExecProc([
-                        'pData' => $this->createRequestData($name, $params),
-                    ])->ExecProcResult->any;
+                    $execResponse = $this->execProc($name, $params);
             }
 
             $xml = new SimpleXMLElement(
