@@ -213,7 +213,7 @@
                 id: Number,
                 calendar_settings: {
                     view_type: 'week',
-                    cell_height: 10,
+                    cell_height: 30,
                     scrollToNow: false,
                     start_day: getCurrentDay(),
                     military_time: false,
