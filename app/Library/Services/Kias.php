@@ -3,16 +3,9 @@
 namespace App\Library\Services;
 
 use Exception;
-use Faker\Guesser\Name;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use SoapClient;
 use SimpleXMLElement;
-use App\Library\Services\KiasServiceInterface;
-
 
 class Kias implements KiasServiceInterface
 {
@@ -94,7 +87,7 @@ class Kias implements KiasServiceInterface
         try {
             switch ($name) {
                 case 'Auth':
-                    $key = 'kias::Auth::' . $name . '::' . serialize($params);
+                    $key = 'kias::Auth::' . $name . '::' . serialize($params) . '::';
                     \Debugbar::startMeasure('Authenticate in Kias');
                     $execResponse = cache()->remember($key, 10, function () use ($name, $params) {
                         return $this->execProc($name, $params);
