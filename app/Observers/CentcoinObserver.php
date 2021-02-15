@@ -16,28 +16,12 @@ class CentcoinObserver
      */
     public function created(CentcoinHistory $centcoinHistory)
     {
-        DB::beginTransaction();
-        if ($newTotal = CentcoinHistory::where('total','type','description',  $centcoinHistory)->first()) {
-            $newTotal = new CentcoinHistory();
-            $newTotal = $centcoinHistory->type;
-            $newTotal = $centcoinHistory->total;
-            $newTotal = $centcoinHistory->description;
-        }
-        $total = new CentcoinApply();
-        $total->balance = $newTotal->total;
-        $total->status = $newTotal->type;
-        $total->user_buy_product = $newTotal->description;
+        $centcoinHistory = new CentcoinApply();
 
-        try{
-            $newTotal->save();
-            $total->save();
-            DB::commit();
-        }catch (\Exception $exception){
-            DB::rollBack();
-            abort(500, 'Произошла ошибка при записи сенткоинов');
-        }
+        $centcoinHistory->save();
 
     }
+
     /**
      * Handle the centcoin history "updated" event.
      *

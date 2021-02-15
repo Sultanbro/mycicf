@@ -14,14 +14,14 @@ class CreateCentcoinAppliesTable extends Migration
     public function up()
     {
         Schema::create('centcoin_applies', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('full_name');
-            $table->date('created_apply');
-            $table->integer('wasted_centcoins');
+            $table->bigIncrements('id')->nullable();
+            $table->string('full_name')->nullable();
+            $table->date('created_apply')->nullable();
+            $table->integer('wasted_centcoins')->nullable();
             $table->integer('balance');
-            $table->string('user_buy_product');
-            $table->string('status');
-            $table->date('edited_apply');
+            $table->string('user_buy_product')->nullable();
+            $table->string('status')->nullable();
+            $table->date('edited_apply')->nullable();
             $table->timestamps();
         });
     }
