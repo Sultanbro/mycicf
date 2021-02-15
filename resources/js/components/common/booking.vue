@@ -22,22 +22,20 @@
     export default {
         created() {
             for (const key in this.booking){
-                let parsed = JSON.parse(this.booking[key].data)
-                if(parsed != null) {
-                    if(parsed.data != undefined) {
-                        parsed.data.id = parseInt(this.booking[key].id);
+                if(this.booking[key].data != null && this.booking[key].data != '') {
+                    let parsed = JSON.parse(this.booking[key].data);
+                    parsed.data.id = parseInt(this.booking[key].id);
+                    if (parsed.data.office === 'conf') {
+                        this.conf[0].push(parsed)
+                    } else if (parsed.data.office === 'reception') {
+                        this.reception[0].push(parsed)
+                    } else if (parsed.data.office === 'drr') {
+                        this.drr[0].push(parsed)
+                    } else if (parsed.data.office === 'dsv') {
+                        this.dsv[0].push(parsed)
+                    } else if (parsed.data.office === 'dps') {
+                        this.dps[0].push(parsed)
                     }
-                }
-                if(parsed.data.office === 'conf') {
-                    this.conf[0].push(parsed)
-                } else if (parsed.data.office === 'reception') {
-                    this.reception[0].push(parsed)
-                } else if (parsed.data.office === 'drr') {
-                    this.drr[0].push(parsed)
-                } else if (parsed.data.office === 'dsv') {
-                    this.dsv[0].push(parsed)
-                } else if (parsed.data.office === 'dps') {
-                    this.dps[0].push(parsed)
                 }
             }
             if(this.office === 'conf') {
