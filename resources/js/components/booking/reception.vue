@@ -39,7 +39,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addManually">Сохранить</button>
+                        <button type="button" class="btn btn-primary"  @click="addManually">Сохранить</button>
                     </div>
                 </div>
             </div>
@@ -51,9 +51,9 @@
                 slot-scope="{ event_information }"
                 class="details-card"
         >
-            <h4 class="appointment-title">
+            <h6 class="appointment-title">
                 {{ event_information.data.title }} <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-            </h4>
+            </h6>
             <small>
                 {{ event_information.data.description }}
             </small>
@@ -210,6 +210,7 @@
                 toTime: '',
                 loading: false,
                 reception: [],
+                id: Number,
                 calendar_settings: {
                     view_type: 'week',
                     cell_height: 10,
@@ -262,34 +263,41 @@
                 };
             },
             addManually() {
-                this.loading = true;
-                let title = this.title;
-                let description = this.description;
-                let from = `${this.day}T${this.fromTime}:00+06:00`;
-                let to = `${this.day}T${this.toTime}:00+06:00`;
-                let payload = {
-                    data: {
-                        title,
-                        description,
-                        office: 'reception',
-                        id: null,
-                        author: null,
-                    },
-                    author: this.isn,
-                    from,
-                    to,
-                };
-                this.axios.post('/booking/set', {payload}).then(response => {
-                    if(response.data.success){
-                        payload = JSON.parse(response.data.data.data)
-                        this.$kalendar.addNewEvent(payload);
-                        this.title = '';
-                        this.description = '';
-                        this.from = '';
-                        this.to = '';
-                        this.loading = false
-                    }
-                });
+                if(this.title == '' || this.description == '' || this.day == '' || this.fromTime == '' || this.toTime == ''){
+                    alert('Заполните пожалуйста все поля')
+                } else {
+                    this.loading = true;
+                    let title = this.title;
+                    let description = this.description;
+                    let from = `${this.day}T${this.fromTime}:00+06:00`;
+                    let to = `${this.day}T${this.toTime}:00+06:00`;
+                    let payload = {
+                        data: {
+                            title,
+                            description,
+                            office: 'reception',
+                            id: null,
+                            author: null,
+                        },
+                        author: this.isn,
+                        from,
+                        to,
+                    };
+                    this.axios.post('/booking/set', {payload}).then(response => {
+                        if (response.data.success) {
+                            $('#basicModal').modal('hide');
+                            payload = JSON.parse(response.data.data.data)
+                            this.$kalendar.addNewEvent(payload);
+                            this.title = '';
+                            this.description = '';
+                            this.from = '';
+                            this.to = '';
+                            this.loading = false
+                        } else {
+                            alert(response.data.error);
+                        }
+                    });
+                }
             },
             removeEvent(kalendarEvent) {
                 this.loading = true
