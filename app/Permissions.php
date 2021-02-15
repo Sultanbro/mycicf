@@ -59,6 +59,9 @@ class Permissions extends Model
     /**
      * TODO Метод лучше сделать статическим
      *
+     * Пользователя можно передавать аргументом с дефолтным значением null ($user = null).
+     * В этом случае использовать Auth::user()
+     *
      * @param $roles
      * @return bool
      */
