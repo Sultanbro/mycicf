@@ -138,6 +138,12 @@ class NewsController extends Controller
         return $response;
     }
 
+    /**
+     * TODO @serabass Оптимизировать этот метод, 52 запроса за один раз это плохо
+     *
+     * @param Request $request
+     * @return array
+     */
     public function getPosts(Request $request) {
         $user_isn = Auth::user()->ISN;
         $last_index = $request->lastIndex;
