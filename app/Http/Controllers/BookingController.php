@@ -13,9 +13,8 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $booking = Booking::orderBy('from', 'desc')
-            ->take(100)
-            ->get();
+        $booking = Booking::orderBy('from', 'desc')->get();
+            //->take(100)
         return view('booking', compact('booking'));
     }
     public function set(Request $request) {
