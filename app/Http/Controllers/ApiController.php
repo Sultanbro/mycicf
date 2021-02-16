@@ -57,6 +57,7 @@ class ApiController extends Controller
             $booking->title = $request->title;
             $booking->office = $request->office;
             $booking->description = null;
+            $booking->createData();
             $booking->save();
             return response()->json([
                 'success' => true
