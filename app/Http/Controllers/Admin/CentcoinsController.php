@@ -47,6 +47,7 @@ class CentcoinsController extends Controller
         foreach(CentcoinApply::all() as $data){
             array_push($result, [
                 'id' => $data->id,
+                'type'=> $data->type,
                 'full_name' => (new User)->getFullName($data->full_name),
                 'created_at' => $data->created_at->format('d-m-Y'),
                 'wasted_centcoins' =>$data->wasted_centcoins,
@@ -66,6 +67,28 @@ class CentcoinsController extends Controller
             ->withCallback(
                 $request->input('callback')
             );
+    }
+
+    public function getStatusAccept(Request $request)
+    {
+        $accept = CentcoinApply::findOrFail($request->id);
+        if ($accept){
+        $accept->status = 'Исполнено';
+        $accept->save();
+        }
+
+        return response()->json(['success'=> true,
+            'message' => "Заявка Исполнена успешно"]);
+    }
+
+    public function getStatusDenied(Request $request)
+    {
+        $denied = CentcoinApply::findOrFail($request->id);
+        $denied->status = 'Отказано';
+        $denied->save();
+
+        return response()->json(['success'=> true,
+            'message' => "К сожалению вам Отказано"]);
     }
 
 
@@ -168,7 +191,7 @@ class CentcoinsController extends Controller
         $description = $request->description;
         try{
             $history = new CentcoinHistory();
-            $history->type = 'Оплата';
+            $history->type = 'Списание';
             $history->description = $description;
             $history->quantity = $count;
             $history->operation_type = CentcoinHistory::OPERATION_TYPE_SPEND;

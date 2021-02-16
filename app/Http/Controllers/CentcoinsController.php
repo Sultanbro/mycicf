@@ -69,6 +69,7 @@ class CentcoinsController extends Controller
     }
 
     public function buyItem(Request $request) {
+        $success = false;
 
         $price = StoreItem::where('id', $request->itemId)->first();
         $model = new CentcoinHistory();
@@ -79,9 +80,11 @@ class CentcoinsController extends Controller
         $model->user_isn = $request->isn;
         $model->changed_user_isn = $request->isn;
         $model->save();
+        $success = true;
 
-
-
+        return response()->json([
+            'success' => $success
+        ]);
     }
 
     public function getView() {

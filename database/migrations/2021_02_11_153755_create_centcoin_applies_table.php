@@ -23,6 +23,18 @@ class CreateCentcoinAppliesTable extends Migration
             $table->enum('status',['Ожидает','Исполнено','Отказано'])->default('Ожидает');
             $table->timestamps();
         });
+/*
+        $accepts = \App\CentcoinApply::all();
+        foreach ($accepts as $accept){
+            $accept->status = 'Исполнено';
+            $accept->save();
+        }
+
+        $denieds = \App\CentcoinApply::all();
+        foreach ($denieds as $denied){
+            $denied->status = 'Отказано';
+            $denied->save();
+        }*/
     }
 
     /**
@@ -33,5 +45,7 @@ class CreateCentcoinAppliesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('centcoin_applies');
+
+        $table-> dropColumn('status');
     }
 }
