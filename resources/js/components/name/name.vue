@@ -274,13 +274,15 @@
             pushUrl(id,meth, url){
                 let newParams = (new URL(document.location)).searchParams;
                 let param = '';
-                if(meth == 'one'){
-                    param = '?parentId='+id;
-                } else {
-                    param = '?parentId='+newParams.get("parentId")+'&childId='+id;
+                if(id != 'NaN' && id != NaN && id != undefined) {
+                    if (meth == 'one') {
+                        param = '?parentId=' + id;
+                    } else {
+                        param = '?parentId=' + newParams.get("parentId") + '&childId=' + id;
+                    }
+                    let newUrl = window.location.protocol + '//' + window.location.hostname+':8002' + '/name' + param; //window.location.href+'?parentId='+id;  window.location.pathname
+                    window.history.pushState({}, null, newUrl);
                 }
-                let newUrl = window.location.protocol + '//' + window.location.hostname + window.location.pathname+param; //window.location.href+'?parentId='+id;
-                window.history.pushState({}, null, newUrl);
             }
         },
     }
