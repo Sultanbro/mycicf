@@ -7,7 +7,10 @@
                class="to-top-btn"
                @click="goToTop()"><i class="fas fa-chevron-up fa-3x"></i></a>
             <div class="tripplebar">
-                <div class="tripplebar-btn col-md-3" v-on:click="recruitingTabs = 1" v-bind:class="{tripplebar_btn_active: recruitingTabs == 1}">
+                <div class="tripplebar-btn col-md-3"
+                     @click="firstTabClick"
+                     v-on:click="recruitingTabs = 1"
+                     v-bind:class="{tripplebar_btn_active: recruitingTabs == 1}">
                     <div>
                         <i class="fas fa-search"></i>
                     </div>
@@ -15,7 +18,10 @@
                         Заявка на поиск кандидата (ГО и Регионы)
                     </div>
                 </div>
-                <div class="tripplebar-btn col-md-3" v-on:click="recruitingTabs = 2" v-bind:class="{tripplebar_btn_active: recruitingTabs == 2}">
+                <div class="tripplebar-btn col-md-3"
+                     @click="secondTabClick"
+                     v-on:click="recruitingTabs = 2"
+                     v-bind:class="{tripplebar_btn_active: recruitingTabs == 2}">
                     <div>
                         <i class="far fa-comments"></i>
                     </div>
@@ -23,7 +29,10 @@
                         Интервью руководителей с кандидатами
                     </div>
                 </div>
-                <div class="tripplebar-btn col-md-3" v-on:click="recruitingTabs = 3" v-bind:class="{tripplebar_btn_active: recruitingTabs == 3}">
+                <div class="tripplebar-btn col-md-3"
+                     @click="thirdTabClick"
+                     v-on:click="recruitingTabs = 3"
+                     v-bind:class="{tripplebar_btn_active: recruitingTabs == 3}">
                     <div>
                         <i class="far fa-address-book"></i>
                     </div>
@@ -33,6 +42,13 @@
                 </div>
             </div>
             <div v-if="recruitingTabs == 1" class="recruiting-container">
+                <input type="search"
+                       class="colleagues-section__search-input pl-2"
+                       placeholder="Поиск"
+                       v-model="searchText">
+                <treeselect class='w-50' :multiple="false" :options="options" v-model="candidat.cityAdressSelect" />
+                <button @click="searchUser()"
+                        class="colleagues-section__btn border-0 bg-color-blue color-white pl-3 pr-3 pt-1 pb-1"><i class="fas fa-search"></i></button>
                 <div class="recruiting-header">
                     <div class="recruiting-header-tab">
                         <div class="recruiting-header-tab-inner rec-active">
@@ -40,15 +56,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-4">
+                    <div class="colleagues-section__body">
+                        <colleagues-info
+                            v-for="(user, index) in usersList"
+                            :key="index"
+                            :info="user"
+                        ></colleagues-info>
+                    </div>
+                </div>
                 <div class="recruiting-body">
                     <div>
                         <div class="recruiting-select-header">
-                            Наимененование структурного подразделения (укажите город и адрес филиала)
+                            Наименование структурного подразделения (укажите город и адрес филиала)
                         </div>
                         <div>
                             <select class="recruiting-select" v-model="candidat.cityAdressSelect">
                                 <option value="selected" class="none"></option>
-                                <option v-for="cities in cityAdress">{{cities}}</option>
+                                <option v-for="unit in dicti.structuralUnitAndCity" :value="unit.Value[0]">{{unit.Label[0]}}</option>
                             </select>
                         </div>
                     </div>
@@ -60,8 +85,8 @@
                             <div>
                                 <select class="recruiting-select" v-model="candidat.nameOfPostSelect">
                                     <option value="selected" class="none"></option>
-                                    <option v-for="inner in nameOfPost">{{inner}}</option>
-                                </select>
+                                    <option v-for="name in dicti.nameOfPost" :value="name.Value[0]">{{name.Label[0]}}</option>
+                                </select>n
                             </div>
                         </div>
                         <div class="recruiting-double-block col-md-5">
@@ -80,7 +105,7 @@
                         <div>
                             <select class="recruiting-select" v-model="candidat.ReasonToRecruitingSelect">
                                 <option class="none"></option>
-                                <option v-for="inner in ReasonToRecruiting" selected>{{inner}}</option>
+                                <option v-for="reason in dicti.reason" :value="reason.Value[0]">{{reason.Label[0]}}</option>
                             </select>
                         </div>
                     </div>
@@ -91,7 +116,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.desiredAgeSelect">
-                                    <option v-for="inner in desiredAge">{{inner}}</option>
+                                    <option v-for="age in dicti.desiredAge" :value="age.Value[0]">{{age.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -101,7 +126,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.sexSelect">
-                                    <option v-for="inner in sex">{{inner}}</option>
+                                    <option v-for="sex in dicti.sex" :value="sex.Value[0]">{{sex.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -111,7 +136,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.educationSelect">
-                                    <option v-for="inner in education">{{inner}}</option>
+                                    <option v-for="education in dicti.education" :value="education.Value[0]">{{education.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -133,7 +158,7 @@
                                 </div>
                                 <div>
                                     <select class="recruiting-select" v-model="candidat.workExpirienceSelect">
-                                        <option v-for="inner in workExpirience">{{inner}}</option>
+                                        <option v-for="work in dicti.workExpirience" :value="work.Value[0]">{{work.Label[0]}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -143,7 +168,7 @@
                                 </div>
                                 <div>
                                     <select v-model="candidat.isHeWasBossSelect" class="recruiting-select">
-                                        <option v-for="inner in isHeWasBoss">{{inner}}</option>
+                                        <option v-for="worker in dicti.isHeWasBoss" :value="worker.Value[0]">{{worker.Label[0]}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -153,7 +178,7 @@
                                 </div>
                                 <div>
                                     <select v-model="candidat.typeOfHireSelect" class="recruiting-select">
-                                        <option v-for="inner in typeOfHire">{{inner}}</option>
+                                        <option v-for="type in dicti.typeOfHire" :value="type.Value[0]">{{type.Label[0]}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -174,7 +199,7 @@
                         </div>
                         <div>
                             <select v-model="candidat.perspectiveToCandidatSelect" class="recruiting-select">
-                                <option v-for="inner in perspectiveToCandidat">{{inner}}</option>
+                                <option v-for="perspective in dicti.connect" :value="perspective.Value[0]">{{perspective.Label[0]}}</option>
                             </select>
                         </div>
                     </div>
@@ -184,7 +209,7 @@
                         </div>
                         <div>
                             <select class="recruiting-select" v-model="candidat.computerKnowingSelect">
-                                <option v-for="inner in computerKnowing">{{inner}}</option>
+                                <option v-for="knowing in dicti.computerKnowing" :value="knowing.Value[0]">{{knowing.Label[0]}}</option>
                             </select>
                         </div>
                     </div>
@@ -195,8 +220,8 @@
                             <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>
                             <div class="recruiting-tripple-block col-md-4">
                                 <select class="recruiting-select" v-model="newLanguageBlock.language">
-                                    <option v-for="(language, key) in newLanguageBlock.languages" :value="language" :key="key">
-                                        {{language}}
+                                    <option v-for="language in dicti.language" :value="language.Value[0]">
+                                        {{language.Label[0]}}
                                     </option>
                                 </select>
                             </div>
@@ -240,7 +265,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.motivationSelect">
-                                    <option v-for="inner in motivation">{{inner}}</option>
+                                    <option v-for="motivation in dicti.motivation" :value="motivation.Value[0]">{{motivation.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -250,7 +275,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.jobChartSelect">
-                                    <option v-for="inner in jobChart">{{inner}}</option>
+                                    <option v-for="time in dicti.jobTime" :value="time.Value[0]">{{time.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -262,7 +287,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.haveCarSelect">
-                                    <option v-for="inner in haveCar">{{inner}}</option>
+                                    <option v-for="havecar in dicti.haveCar" :value="havecar.Value[0]">{{havecar.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -272,7 +297,7 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.driverCategorySelect">
-                                    <option v-for="inner in driverCategory">{{inner}}</option>
+                                    <option v-for="card in dicti.driverCard" :value="card.Value[0]">{{card.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -282,8 +307,8 @@
                             <div class="recruiting-tripple-block-center col-md-4">Социальный пакет</div>
                             <div class="recruiting-tripple-block col-md-4">
                                 <select class="recruiting-select" v-model="newSocialpacketBlock.packet">
-                                    <option v-for="(packet, key) in newSocialpacketBlock.packets" :value="packet" :key="key">
-                                        {{packet}}
+                                    <option v-for="packet in dicti.socPacket" :value="packet.Value[0]">
+                                        {{packet.Label[0]}}
                                     </option>
                                 </select>
                             </div>
@@ -418,10 +443,10 @@
                             <div class="modal-header">
                                 <div class="modal-header-general">
                                     <div class="color-blue">ФИО кандидата</div>
-                                    <div>{{candidatsData.manualFullname}}</div>
-                                    <div>{{candidatsData.manualIIN}}</div>
-                                    <div>{{candidatsData.manualPhoneNumber}}</div>
-                                    <strong v-if="manualSearchIIN == false">{{candidatsFIOModal}}</strong>
+<!--                                    <div>{{candidatsData.manualFullname}}</div>-->
+<!--                                    <div>{{candidatsData.manualIIN}}</div>-->
+<!--                                    <div>{{candidatsData.manualPhoneNumber}}</div>-->
+                                    <strong v-if="manualSearchIIN == false && candidatsPersonalData">{{candidatsPersonalData.fullname}}</strong>
                                     <input v-if="manualSearchIIN" type="text" class="recruiting-modal-general" v-model="candidatsData.manualFullname">
                                 </div>
                             </div>
@@ -433,15 +458,19 @@
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">ИИН:</div>
                                     <div class="col-md-6">
-                                        <input v-if="manualSearchIIN == false" type="number" onclick="this.select()" class="recruiting-modal-general" v-model="IINModal">
+<!--                                        candidatBackward.manualIIN-->
+
+<!--                                        v-if="manualSearchIIN == false && candidatsPersonalData"-->
+                                        <input v-if="manualSearchIIN == false" type="number" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidateBase.IIN">
                                         <input v-if="manualSearchIIN" type="number" class="recruiting-modal-general" v-model="candidatsData.manualIIN">
-                                        <i class="far fa-edit pointer" @click="candidatWithoutIIN"></i>
+                                        <i v-if="showEditBtn" class="far fa-edit pointer" @click="candidatWithoutIIN"></i>
                                     </div>
                                 </div>
                                 <div class="modal-cell-general">
                                     <div class="col-md-6 color-blue">Контактный номер кандидата:</div>
                                     <div class="col-md-6">
-                                        <input v-if="manualSearchIIN == false" type="number" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidatsPhoneNumber">
+<!--                                        v-if="manualSearchIIN == false && candidatsPersonalData"-->
+                                        <input v-if="manualSearchIIN == false" type="number" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidateBase.phone">
                                         <input v-if="manualSearchIIN" type="number" class="recruiting-modal-general" v-model="candidatsData.manualPhoneNumber">
                                     </div>
                                 </div>
@@ -484,10 +513,10 @@
                                         <div class="recruiting-savebtn-container">
 <!--                                            candidatsResumeModalSend Функция отправки резюме-->
 <!--                                            savedSuccess-->
-                                            <div class="recruiting-btn" @click="sendCandidatsData">
+                                            <div class="recruiting-btn" @click="sendCandidatsData" v-bind:class="{
+                                                disabledBtnRecruiting : isActiveCandidatsBase}">
                                                 Сохранить
                                             </div>
-                                            <div @click="clickertest">click</div>
                                         </div>
                                     </div>
                                 </div>
@@ -512,13 +541,14 @@
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Время собеседования:</div>
                                         <div class="col-md-6">
-                                            <input type="time" value="09:00" min="09:00" max="18:00" v-model="candidatsData.interviewTimeModal" class="recruiting-modal-general">
+                                            <input type="time" value="09:00" min="09:00" max="18:00" v-model="recruitingData.interviewTime" class="recruiting-modal-general">
                                         </div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Результат итогового интервью кандидата с руководителем(ответ в течение дня):</div>
                                         <div class="col-md-6">
-                                            <select v-model="interviewMainResultModalSelect" :class="modalSelectCheckSelect()" @change="interviewResultCheck" class="recruiting-modal-general recruiting-modal-general">
+<!--                                            interviewMainResultModalSelect-->
+                                            <select v-model="recruitingData.interviewResult" :class="modalSelectCheckSelect()" @change="interviewResultCheck" class="recruiting-modal-general recruiting-modal-general">
                                                 <option :class="modalSelectCheck(inner)" v-for="inner in interviewMainResultModal">{{inner.label}}</option>
                                             </select>
                                         </div>
@@ -527,20 +557,20 @@
                                 <div v-if="resultCheckCounter == 'success'">
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата выхода кандидата на стажировку (с указанием даты окончания стажировки, но не более 5 дней):</div>
-                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="candidatsDateInternshipModal"></div>
+                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="recruitingData.dateOfInternship"></div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата заключения ДОУ (ответ в течение 5 дней (с даты выхода кандидата на стажировку)):</div>
-                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="dateOfTheDOUContractModal"></div>
+                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="recruitingData.dateOfConclusionDOU"></div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата заключения ТД (принят в штат):</div>
-                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="dateOfTheStateContractModal"></div>
+                                        <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="recruitingData.dateOfConclusionTD"></div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Комментарий:</div>
                                         <div class="col-md-6">
-                                            <textarea cols="30" rows="4" v-model="commentModal" class="recruiting-modal-general">Текст</textarea>
+                                            <textarea cols="30" rows="4" v-model="recruitingData.commentary" class="recruiting-modal-general">Текст</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -575,13 +605,23 @@
 <!--                            <td :class="modalSelectCheck(inner)">{{inner.label}}</td>-->
 <!--                        </tr>-->
 
-                        <tr v-for="(person, index) in candidatDataLocal">
-                            <td scope="row">{{index + 1}}</td>
-                            <td>{{person.candidats_fullname}}</td>
-                            <td></td>
-                            <td></td>
-                            <td :class="modalSelectCheck(person)"></td>
+
+<!--                        <div>{{candidateInterviewTable}}</div>-->
+                        <tr v-for="inner in candidateInterviewTable">
+                            <td scope="row">{{inner.id}}</td>
+                            <td>{{inner.fullname}}</td>
+                            <td>{{inner.unit_structural_name_and_city}}</td>
+                            <td>{{ inner.interview_date }}</td>
+                            <td :class="modalSelectCheck(inner)">{{ inner.interview_result }} </td>
                         </tr>
+<!--Последняя рабочая версия-->
+<!--<tr v-for="(person, index) in candidatDataLocal">-->
+<!--    <td scope="row">{{index + 1}}</td>-->
+<!--    <td>{{person.candidate_fullname}}</td>-->
+<!--    <td></td>-->
+<!--    <td></td>-->
+<!--    <td :class="modalSelectCheck(person)"></td>-->
+<!--</tr>-->
 
                     </tbody>
                 </table>
@@ -617,8 +657,11 @@
                             class="pointer"
                             data-toggle="modal"
                             data-target="#interviewModalApplicationData"
-                            @click="showModal(index)"
+                            @click="showModalMain(index)"
                         >
+<!--                            showModal(index)-->
+
+<!--                            {{ person.id }}-->
                             <td scope="row">{{ person.id }}</td>
                             <td>{{ person.chiefs_fullname }}</td>
                             <td>{{ person.chiefs_duty }}</td>
@@ -903,7 +946,7 @@
                             </textarea>
                                     </div>
                                 </div>
-                                <button type="button" class="recruiting-add-btn" data-toggle="modal" data-target="#interviewModal">
+                                <button @click="addCandidateBtn" type="button" class="recruiting-add-btn" data-toggle="modal" data-target="#interviewModal">
                                     <span>Добавить кандидата</span>
                                     <span><i class="fas fa-plus-circle"></i></span>
                                 </button>
@@ -925,37 +968,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td scope="row">1</td>
-                        <td>Иванов Иван Иванович</td>
-                        <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
-                        <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Филимонова Е.</td>
-                        <td>01.02.2020</td>
-                    </tr>
-                    <tr>
-                        <td scope="row">2</td>
-                        <td>Иванов Иван Иванович</td>
-                        <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
-                        <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Филимонова Е.</td>
-                        <td>01.02.2020</td>
-                    </tr>
-                    <tr>
-                        <td scope="row">3</td>
-                        <td>Иванов Иван Иванович</td>
-                        <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
-                        <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Филимонова Е.</td>
-                        <td>01.02.2020</td>
-                    </tr>
-                    <tr>
-                        <td scope="row">4</td>
-                        <td>Иванов Иван Иванович</td>
-                        <td>Департамент развития партнерских отношений/Туленов Ж./Менеджер</td>
-                        <td class="recruiting-center">Закрыта</td>
-                        <td class="recruiting-center">Филимонова Е.</td>
-                        <td>01.02.2020</td>
+<!--                    <tr>-->
+<!--                        <td scope="row">1</td>-->
+<!--                        <td>Елена</td>-->
+<!--                        <td>HR управление / Рекрутер</td>-->
+<!--                        <td class="recruiting-center">Открыта</td>-->
+<!--                        <td class="recruiting-center">Филимонова Е.</td>-->
+<!--                        <td>01.01.2020</td>-->
+<!--                    </tr>-->
+                    <tr v-for="inner in candidateResultRequest">
+                        <td scope="row">{{inner.id}}</td>
+                        <td>{{inner.chiefs_fullname}}</td>
+                        <td>{{inner.chiefs_duty}}</td>
+                        <td>{{inner.application_status}}</td>
+                        <td>{{inner.fullname}}</td>
+                        <td>{{inner.date_of_conclusion_dou}}</td>
+<!--                        <td>{{inner.date_of_conclusion_dou}}</td>-->
                     </tr>
                     </tbody>
                 </table>
@@ -970,9 +998,65 @@
         name: "recruiting",
         data() {
             return {
+                showEditBtn: false,
+                dicti: {
+                    structuralUnitAndCity: {},
+                    nameOfPost: {},
+                    reason: {},
+                    desiredAge: {},
+                    sex: {},
+                    education: {},
+                    workExpirience: {},
+                    isHeWasBoss: {},
+                    typeOfHire: {},
+                    connect: {},
+                    computerKnowing: {},
+                    language: {},
+                    motivation: {},
+                    jobTime: {},
+                    haveCar: {},
+                    driverCard: {},
+                    socPacket: {},
+                },
+                candidat: {
+                    chiefsDuty: '',
+                    chiefsFullname: '',
+                    userAuthDepartment: '',
+                    cityAdressSelect: '',
+                    nameOfPostSelect: '',
+                    quantityPeople: 1,
+                    ReasonToRecruitingSelect: '',
+                    desiredAgeSelect: '',
+                    sexSelect: '',
+                    educationSelect: '',
+                    functionalResponsobilities: '',
+                    workExpirienceSelect: '',
+                    isHeWasBossSelect: '',
+                    typeOfHireSelect: '',
+                    requestToCandidat: '',
+                    perspectiveToCandidatSelect: '',
+                    computerKnowingSelect: '',
+                    salary: '120000',
+                    motivationSelect: '',
+                    jobChartSelect: '',
+                    haveCarSelect: '',
+                    driverCategorySelect: '',
+                    candidatsTrait: 'Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)',
+                    interviewStage: '',
+                    manualFullname: '',
+                    manualIIN: '',
+                    manualPhoneNumber: '',
+                    status: 'Открыта',
+                },
                 recruitingData: {
                     id: '',
                     interviewDate: '',
+                    interviewTime: '',
+                    interviewResult: '',
+                    dateOfInternship: '',
+                    dateOfConclusionDOU: '',
+                    dateOfConclusionTD: '',
+                    commentary: '',
                 },
                 showToTopBtn: false,
                 bottomOfWindow: 0,
@@ -1094,35 +1178,6 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                candidat: {
-                    chiefsDuty: '',
-                    chiefsFullname: '',
-                    userAuthDepartment: '',
-                    cityAdressSelect: '',
-                    nameOfPostSelect: '',
-                    quantityPeople: 1,
-                    ReasonToRecruitingSelect: '',
-                    desiredAgeSelect: '',
-                    sexSelect: '',
-                    educationSelect: '',
-                    functionalResponsobilities: '',
-                    workExpirienceSelect: '',
-                    isHeWasBossSelect: '',
-                    typeOfHireSelect: '',
-                    requestToCandidat: '',
-                    perspectiveToCandidatSelect: '',
-                    computerKnowingSelect: '',
-                    salary: '120000',
-                    motivationSelect: '',
-                    jobChartSelect: '',
-                    haveCarSelect: '',
-                    driverCategorySelect: '',
-                    candidatsTrait: 'Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)',
-                    interviewStage: '',
-                    manualFullname: '',
-                    manualIIN: '',
-                    manualPhoneNumber: '',
-                },
                 recruitingTabs: 2,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
@@ -1141,12 +1196,12 @@
                 interviewMainResultModalSelect: '',
                 interviewMainResultModal: [
                     {
-                        value : 2,
-                        label : 'Успешно прошел собеседование'
-                    },
-                    {
                         value: 1,
                         label: 'В ожидании собеседования'
+                    },
+                    {
+                        value : 2,
+                        label : 'Успешно прошел собеседование'
                     },
                     {
                         value : 0,
@@ -1257,6 +1312,13 @@
                     manualFullname: '',
                     manualIIN: '',
                     manualPhoneNumber: '',
+                    interviewDate: '',
+                    interviewTime: '',
+                    interviewResult: '',
+                    dateOfInternship: '',
+                    dateOfConclusionDOU: '',
+                    dateOfConclusionTD: '',
+                    commentary: '',
                 },
                 languageAndLvlBackward:
                     [{
@@ -1286,6 +1348,7 @@
                 }],
                 chiefsDuty: '',
                 person: null,
+                candidatsPersonalData: null,
                 chiefsDataLocal: this.ChiefsData,
                 manualSearchIIN: false,
                 candidatsData: {
@@ -1296,8 +1359,27 @@
                     dateOfInterview: '',
                     timeOfInterview: '',
                     cityAdress: '',
+                    recruiterFullname: '',
                 },
                 candidatDataLocal: this.candidatData,
+                candidateInterviewTable: [],
+                candidateManualDataLocal: [],
+                candidateResultRequest: {},
+                candidateResultInterviewDate: '',
+                driverCardOptionFirst: [],
+                driverCardOptionSecond: [],
+                driverCardOptionRewrite: [],
+                options: null,
+                parentId: 50,
+                usersList : [],
+                searchText: '',
+                candidateBase: {
+                    IIN: '',
+                    phone: '',
+                },
+                candidateStorage: {},
+                candidatePerson: null,
+                isActiveCandidatsBase: false,
             }
         },
         props: {
@@ -1310,14 +1392,47 @@
         },
         mounted() {
             //this.getFaqData();
-            // this.getRequests();
-            this.getChiefsRequest();
             this.getCandidatsDataRequest();
+            this.getResultRequest();
+            this.getCandidatsDataManualRequest();
             // this.applicationDataOutput();
+            this.getDicti();
+            this.getChiefsRequest();
+            this.getBranchData();
         },
+        // this.getRequests();
+
+        // v-for="item in dicti.socPacket"
+
+        // item.Value[0]
+
         computed: {
         },
         methods: {
+            isActiveCandidatsSaveBtn(){
+              if (this.candidateBase.IIN && this.candidateBase.phone){
+                   this.isActiveCandidatsBase = true;
+              }
+            },
+            getBranchData() {
+                this.axios.post('/getSearchBranch', {}).then(response => {
+                    this.options = response.data.result;
+                })
+            },
+            searchUser() {
+                var vm = this
+                this.axios.post('/colleagues/search', {
+                    parentId : this.parentId
+                }).then(response => {
+                    if(response.data.success){
+                        vm.usersList = response.data.list
+                    }else{
+                        alert(response.data.error)
+                    }
+                }).catch(error => {
+                    alert(error)
+                })
+            },
             clickertest: function(){
                 this.axios.post('/recruiting/test21',{candidatsData: this.candidatsData, index})
             },
@@ -1345,6 +1460,11 @@
             recruitingDataSavedSuccess: function(){
                 //  Отправка данных на поиск кандидата
                 this.recruitingData.id = this.candidatBackward.id;
+                if(this.recruitingData.dateOfConclusionTD !== '' && this.recruitingData.dateOfConclusionTD !== null){
+                    this.recruitingData.status = 'Закрыта';
+                    console.log('Обновлен статус заявки');
+                    console.log(this.recruitingData.status);
+                }
                 this.axios.post('/recruiting/saveRecruitingData',{recruitingData: this.recruitingData})
                     .then(response => {
                         this.recruitingDataAfterSavedSuccess(response);
@@ -1372,10 +1492,11 @@
                 //  Отправка данных на поиск кандидата
                 this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
                 this.candidatsData.recruitingId =  this.candidatBackward.id;
+                this.candidatsData.recruiterFullname = this.user.branch.fullname;
                 this.axios.post('/recruiting/saveCandidatsData',{candidatsData: this.candidatsData})
-                    .then(response => {
-                        this.candidatsDataAfterSavedSuccess(response);
-                    });
+                .then(response => {
+                    this.candidatsDataAfterSavedSuccess(response);
+                });
             },
             candidatsDataAfterSavedSuccess(response){
                 if (response.data.success){
@@ -1396,7 +1517,7 @@
                 this.candidatsDataSavedSuccess();
             },
             checkLengthIIN: function(){
-                this.manualIIN.length <= 12;
+                this.manualIIN.length <= 13;
             },
             candidatWithoutIIN: function(){
                 if (this.manualSearchIIN == true){
@@ -1428,10 +1549,23 @@
                     });
                 }
             },
-
+            showModalMain: function(index){
+              this.isActiveCandidatsSaveBtn();
+              this.showModal(index);
+            },
             showModal: function(index){
                 // this.person =  this.recruitingInterviewCluster[index];
                this.person =  this.chiefsDataLocal[index];
+               this.candidatePerson = this.candidateStorage[index] != undefined ? this.candidateStorage[index] : '';
+               this.candidateBase.IIN = this.candidatePerson.candidate_iin == undefined ? '' : this.candidatePerson.candidate_iin;
+               this.candidateBase.phone = this.candidatePerson.candidate_phone_number == undefined ? '' : this.candidatePerson.candidate_phone_number;
+               // if(this.candidateBase.IIN == undefined){
+               //     this.candidateBase.IIN = 'Отсутствуют данные';
+               // }
+               // if(this.candidateBase.phone == undefined){
+               //     this.candidateBase.phone = 'Отсутствуют данные';
+               // }
+               this.candidatsPersonalData = this.candidatDataLocal[index];
                this.candidatBackward.id =  this.person.id;
                this.candidatBackward.cityAdressSelect = this.person.unit_structural_name_and_city;
                this.candidatBackward.nameOfPostSelect = this.person.name_of_post;
@@ -1440,23 +1574,53 @@
                this.candidatBackward.desiredAgeSelect = this.person.desired_age;
                this.candidatBackward.sexSelect = this.person.sex;
                this.candidatBackward.educationSelect = this.person.education;
-               this.candidatBackward.functionalResponsobilities = this.person.functional_responsobilities;
-               this.candidatBackward.workExpirienceSelect = this.person.work_expirience;
+               this.candidatBackward.functionalResponsobilities = this.person.functional_responsibilities;
+               this.candidatBackward.workExpirienceSelect = this.person.work_experience;
                this.candidatBackward.isHeWasBossSelect = this.person.is_he_was_boss;
                this.candidatBackward.typeOfHireSelect = this.person.type_of_hire;
-               this.candidatBackward.request_to_candidat = this.person.request_to_candidat;
-               this.candidatBackward.perspectiveToCandidatSelect = this.person.perspective_to_candidat;
+               this.candidatBackward.requestToCandidat = this.person.request_to_candidate;
+               this.candidatBackward.perspectiveToCandidatSelect = this.person.perspective_to_candidate;
                this.candidatBackward.computerKnowingSelect = this.person.computer_knowing;
                this.candidatBackward.salary = this.person.salary;
                this.candidatBackward.motivationSelect = this.person.motivation;
                this.candidatBackward.jobChartSelect = this.person.job_chart;
                this.candidatBackward.haveCarSelect = this.person.have_car;
                this.candidatBackward.driverCategorySelect = this.person.driver_category;
-               this.candidatBackward.candidatsTrait = this.person.candidats_trait;
+               this.candidatBackward.candidatsTrait = this.person.candidates_trait;
                this.candidatBackward.interviewStage = this.person.interview_stage;
-               this.candidatBackward.manualFullname = this.person.candidats_fullname;
-               this.candidatBackward.manualIIN = this.person.candidats_iin;
-               this.candidatBackward.manualPhoneNumber = this.person.candidats_phone_number;
+               this.candidatBackward.manualFullname = this.candidateManualDataLocal.candidate_fullname;
+               this.candidatBackward.manualIIN = this.candidateManualDataLocal.candidate_iin;
+               this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
+               this.recruitingData.interviewDate = this.person.interview_date;
+               this.recruitingData.interviewTime = this.person.interview_time;
+               this.recruitingData.interviewResult = this.person.interview_result;
+               this.recruitingData.dateOfInternship = this.person.date_of_internship;
+               this.recruitingData.dateOfConclusionDOU = this.person.date_of_conclusion_dou;
+               this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
+               this.recruitingData.commentary = this.person.commentary;
+               // console.log(this.candidateBase);
+               // console.log(this.candidateManualDataLocal.candidate_iin);
+               // this.candidateBase.IIN = this.candidateManualDataLocal.candidate_iin;
+               // console.log(this.candidateBase);
+               // console.log(this.candidateManualDataLocal.candidate_iin);
+               //  сюда
+               // candidateBase: {
+                //     IIN: '',
+                //         phone: '',
+                // },
+            },
+            addCandidateBtn() {
+                console.log(this.candidateBase.phone);
+                console.log(this.candidateBase.IIN);
+                // Если еще нет ИИН и номера, заявка только создана, то сразу покажет поля для ввода
+                // if(this.candidateBase.phone == null || this.candidateBase.phone == '' || this.candidateBase.IIN == null || this.candidateBase.IIN == ''){
+                //     this.manualSearchIIN = true;
+                // }
+                if(this.candidateBase.phone == null || this.candidateBase.phone == '' || this.candidateBase.IIN == null || this.candidateBase.IIN == ''){
+                    this.showEditBtn = true;
+                }
+                console.log(this.candidateBase.phone);
+                console.log(this.candidateBase.IIN);
             },
             // getRequests: function(){
             //     this.axios.post('/recruiting/getRequests')
@@ -1471,11 +1635,198 @@
             //         alert('Сорян, нет данных');
             //     }
             // },
+
+            getDicti(){
+                if (this.recruitingTabs == 1) {
+                    let dataIsn = {
+                        'structuralUnitAndCity': 3994439,
+                        // 3994439
+                        'nameOfPost': 822411,
+                        'reason': 1764941,
+                        'desiredAge': 1764881,
+                        'sex': 750461,
+                        'education': 47,
+                        'workExpirience': 1777411,
+                        'isHeWasBoss': 482281,
+                        'typeOfHire': 1765371,
+                        'connect': 1765281,
+                        'computerKnowing': 1764851,
+                        'language': 67,
+                        'motivation': 482281,
+                        'jobTime': 815141,
+                        'haveCar': 482281,
+                        'driverCard': 1765001,
+                        'socPacket': 1765311,
+                    }
+
+                    this.axios.post("/getDictiList", dataIsn)
+                        .then(response => {
+                            if (response.data.success) {
+                                this.preloader(true);
+                                this.dicti.structuralUnitAndCity = response.data.structuralUnitAndCity;
+                                this.dicti.nameOfPost = response.data.nameOfPost;
+                                this.dicti.reason = response.data.reason;
+                                this.dicti.desiredAge = response.data.desiredAge;
+                                this.dicti.sex = response.data.sex;
+                                this.dicti.education = response.data.education;
+                                this.dicti.workExpirience = response.data.workExpirience;
+                                this.dicti.isHeWasBoss = response.data.isHeWasBoss;
+                                this.dicti.typeOfHire = response.data.typeOfHire;
+                                this.dicti.connect = response.data.connect;
+                                this.dicti.computerKnowing = response.data.computerKnowing;
+                                this.dicti.language = response.data.language;
+                                this.dicti.motivation = response.data.motivation;
+                                this.dicti.jobTime = response.data.jobTime;
+                                this.dicti.haveCar = response.data.haveCar;
+                                this.dicti.driverCard = response.data.driverCard;
+                                this.dicti.socPacket = response.data.socPacket;
+                                // console.log(this.dicti.driverCard[0].Label[0]);
+
+                                // this.driverCardOption = this.dicti.driverCard[0].Label[0];
+
+                                // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+                                // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+
+                                // this.driverCardOptionRewrite = this.driverCardOption;
+                                // console.log(this.driverCardOptionRewrite);
+
+                                // Array.prototype.push.apply(this.driverCardOption, this.driverCardOptionRewrite);
+
+                                // console.log(this.driverCardOption); // ['пастернак', 'картошка', 'сельдерей', 'свёкла']
+
+                                // this.driverCardOptionRewrite = this.driverCardOption.push({'this.dicti.driverCard[1].Label[0]'});
+                                // console.log(this.driverCardOptionRewrite);
+
+                                // console.log(this.driverCardOption);
+
+
+                                // Разбивает все элементы массива по 1, не подходит
+                                this.driverCardOptionFirst = this.dicti.driverCard[1].Label[0];
+                                this.driverCardOptionSecond = this.dicti.driverCard[3].Label[0];
+
+                                this.driverCardOptionRewrite = this.driverCardOptionFirst.concat(this.driverCardOptionSecond);
+                                console.log(this.driverCardOptionRewrite);
+                                this.cityAdress = this.driverCardOptionRewrite;
+                                this.preloader(false);
+                            }
+                        })
+                        .catch(error => {
+                            alert("Ошибка на стороне сервера");
+                            this.preloader(false);
+                        });
+                }
+            },
+            getDictiOnClick(){
+                // Проверка на пустоту объекта, если данных нет, они будут подгружаться
+                if (this.dicti.workExpirience == ''
+                    || this.dicti.workExpirience == null
+                    || Object.keys(this.dicti.workExpirience).length == 0) {
+                    this.preloader(true);
+                    let dataIsn = {
+                        'structuralUnitAndCity': 3994439,
+                        // 3994439
+                        'nameOfPost': 822411,
+                        'reason': 1764941,
+                        'desiredAge': 1764881,
+                        'sex': 750461,
+                        'education': 47,
+                        'workExpirience': 1777411,
+                        'isHeWasBoss': 482281,
+                        'typeOfHire': 1765371,
+                        'connect': 1765281,
+                        'computerKnowing': 1764851,
+                        'language': 67,
+                        'motivation': 482281,
+                        'jobTime': 815141,
+                        'haveCar': 482281,
+                        'driverCard': 1765001,
+                        'socPacket': 1765311,
+                    }
+
+                    this.axios.post("/getDictiList", dataIsn)
+                        .then(response => {
+                            if (response.data.success) {
+                                this.dicti.structuralUnitAndCity = response.data.structuralUnitAndCity;
+                                this.dicti.nameOfPost = response.data.nameOfPost;
+                                this.dicti.reason = response.data.reason;
+                                this.dicti.desiredAge = response.data.desiredAge;
+                                this.dicti.sex = response.data.sex;
+                                this.dicti.education = response.data.education;
+                                this.dicti.workExpirience = response.data.workExpirience;
+                                this.dicti.isHeWasBoss = response.data.isHeWasBoss;
+                                this.dicti.typeOfHire = response.data.typeOfHire;
+                                this.dicti.connect = response.data.connect;
+                                this.dicti.computerKnowing = response.data.computerKnowing;
+                                this.dicti.language = response.data.language;
+                                this.dicti.motivation = response.data.motivation;
+                                this.dicti.jobTime = response.data.jobTime;
+                                this.dicti.haveCar = response.data.haveCar;
+                                this.dicti.driverCard = response.data.driverCard;
+                                this.dicti.socPacket = response.data.socPacket;
+                                // console.log(this.dicti.driverCard[0].Label[0]);
+
+                                // this.driverCardOption = this.dicti.driverCard[0].Label[0];
+
+                                // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+                                // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+
+                                // this.driverCardOptionRewrite = this.driverCardOption;
+                                // console.log(this.driverCardOptionRewrite);
+
+                                // Array.prototype.push.apply(this.driverCardOption, this.driverCardOptionRewrite);
+
+                                // console.log(this.driverCardOption); // ['пастернак', 'картошка', 'сельдерей', 'свёкла']
+
+                                // this.driverCardOptionRewrite = this.driverCardOption.push({'this.dicti.driverCard[1].Label[0]'});
+                                // console.log(this.driverCardOptionRewrite);
+
+                                // console.log(this.driverCardOption);
+
+
+                                // Разбивает все элементы массива по 1, не подходит
+                                this.driverCardOptionFirst = this.dicti.driverCard[1].Label[0];
+                                this.driverCardOptionSecond = this.dicti.driverCard[3].Label[0];
+
+                                this.driverCardOptionRewrite = this.driverCardOptionFirst.concat(this.driverCardOptionSecond);
+                                console.log(this.driverCardOptionRewrite);
+                                this.cityAdress = this.driverCardOptionRewrite;
+                                this.preloader(false);
+                            }
+                        })
+                        .catch(error => {
+                            alert("Ошибка на стороне сервера");
+                            this.preloader(false);
+                        });
+                }
+            },
+            // При загрузке вызывает данные на фронт, если Изначально страница загружается на 2 вкладке
             getChiefsRequest(){
-                this.axios.post('/recruiting/getChiefsRequest')
-                    .then(response => {
-                        this.afterChiefsRequest(response.data);
-                    });
+                if (this.recruitingTabs == 2){
+                    this.preloader(true);
+                    this.axios.post('/recruiting/getChiefsRequest')
+                        .then(response => {
+                            if (response.data.success) {
+                                this.afterChiefsRequest(response.data);
+                                this.preloader(false);
+                            }
+                        })
+                        .catch(error => {
+                            alert("Ошибка на стороне сервера");
+                            this.preloader(false);
+                        });
+                }
+            },
+            getChiefsRequestOnClick(){
+                if (this.chiefsDataLocal == '' || this.chiefsDataLocal == null || this.chiefsDataLocal == undefined){
+                    this.preloader(true);
+                    this.axios.post('/recruiting/getChiefsRequest')
+                        .then(response => {
+                            this.afterChiefsRequest(response.data);
+                        })
+                        .catch(error => {
+                            alert("Ошибка на стороне сервера");
+                        });
+                }
             },
             afterChiefsRequest(data){
                 if(data.success){
@@ -1485,28 +1836,134 @@
                 }
             },
             getCandidatsDataRequest(){
-                this.axios.post('/recruiting/getCandidatsDataRequest')
-                    .then(response => {
-                        this.afterCandidatsDataRequest(response.data);
-                    });
+                if (this.recruitingTabs == 2) {
+                    this.axios.post('/recruiting/getCandidatsDataRequest')
+                        .then(response => {
+                            this.afterCandidatsDataRequest(response.data);
+                        });
+                }
+            },
+            getCandidatsDataRequestOnClick(){
+                if (this.chiefsDataLocal == ''
+                    || this.chiefsDataLocal == null
+                    || Object.keys(this.chiefsDataLocal).length == 0) {
+                    this.axios.post('/recruiting/getCandidatsDataRequest')
+                        .then(response => {
+                            this.afterCandidatsDataRequest(response.data);
+                            this.preloader(false);
+                        });
+                }
             },
             afterCandidatsDataRequest(data){
+                //console.log(data);
+                //this.candidateInterviewTable = data.result;
+                //console.log(this.candidateInterviewTable);
+
                 if(data.success){
+                    this.candidateInterviewTable = data.result;
                     this.candidatDataLocal = data.result;
                 }  else{
                     alert('Ошибка, нет данных');
                 }
             },
+            afterCandidatsDataRequestOnClick(data){
+                if(data.success){
+                    this.candidateInterviewTable = data.result;
+                    this.candidatDataLocal = data.result;
+                }  else{
+                    alert('Ошибка, нет данных');
+                }
+            },
+            getCandidatsDataManualRequest(){
+                if (this.recruitingTabs == 2) {
+                    this.axios.post('/recruiting/getCandidatsDataManualRequest')
+                        .then(response => {
+                            this.afterCandidatsDataManualRequest(response.data);
+                        });
+                    //console.log(this.candidateManualDataLocal)
+                }
+            },
+            getCandidatsDataManualRequestOnClick(){
+                if (this.chiefsDataLocal == ''
+                    || this.chiefsDataLocal == null
+                    || this.chiefsDataLocal == undefined
+                    || Object.keys(this.chiefsDataLocal).length == 0){
+                    this.axios.post('/recruiting/getCandidatsDataManualRequest')
+                        .then(response => {
+                            this.afterCandidatsDataManualRequest(response.data);
+                        });
+                    //console.log(this.candidateManualDataLocal)
+                }
+
+            },
+            afterCandidatsDataManualRequest(data){
+                //console.log(data);
+                //this.candidateInterviewTable = data.result;
+                //console.log(this.candidateInterviewTable);
+                    if(data.success){
+                        this.candidateManualDataLocal = data.result;
+                        this.candidateStorage = data.result;
+                        // this.candidatDataLocal = data.result;
+                    }  else{
+                        alert('Ошибка, нет данных');
+                    }
+            },
+            getResultRequest(){
+                if (this.recruitingTabs == 3) {
+                    this.preloader(true);
+                    this.axios.post('/recruiting/getResultRequest')
+                        .then(response => {
+                            this.aftergetResultRequest(response.data);
+                            this.preloader(false);
+                        });
+                }
+            },
+            getResultRequestOnClick(){
+                if (this.candidateResultRequest == ''
+                    || this.candidateResultRequest == null
+                    || Object.keys(this.candidateResultRequest).length == 0) {
+                    this.preloader(true);
+                    this.axios.post('/recruiting/getResultRequest')
+                        .then(response => {
+                            this.aftergetResultRequest(response.data);
+                            this.preloader(false);
+                        });
+                }
+            },
+            aftergetResultRequest(data){
+                //console.log(data);
+                //this.candidateInterviewTable = data.result;
+                //console.log(this.candidateInterviewTable);
+
+                if(data.success){
+                    this.candidateResultRequest = data.result;
+                    console.log(this.candidateResultRequest);
+                    // this.candidatDataLocal = data.result;
+                }  else{
+                    alert('Ошибка, нет данных');
+                }
+            },
+            firstTabClick(){
+                this.getDictiOnClick();
+            },
+            secondTabClick(){
+                this.getChiefsRequestOnClick();
+                this.getCandidatsDataRequestOnClick();
+                this.getCandidatsDataManualRequestOnClick();
+            },
+            thirdTabClick(){
+                this.getResultRequestOnClick();
+            },
             interviewResultCheck: function(){
-                if (this.interviewMainResultModalSelect == 'Успешно прошел собеседование'){
+                if (this.recruitingData.interviewResult == 'Успешно прошел собеседование'){
                     this.resultCheckCounter = 'success';
                     this.numberOfUnitsModal = 0;
                 }
-                if (this.interviewMainResultModalSelect == 'В ожидании собеседования'){
+                if (this.recruitingData.interviewResult == 'В ожидании собеседования'){
                     this.resultCheckCounter = 'pending';
                     this.numberOfUnitsModal = 1;
                 }
-                else if (this.interviewMainResultModalSelect == 'Провалил собеседование'){
+                else if (this.recruitingData.interviewResult == 'Провалил собеседование'){
                     this.resultCheckCounter = 'failed';
                     this.numberOfUnitsModal = 2;
                 }
@@ -1566,15 +2023,22 @@
                 } else if(inner.label == 'В ожидании собеседования') {
                     return 'colororange';
                 }
+                if (inner.interview_result == 'Успешно прошел собеседование'){
+                    return 'forestgreen';
+                } else if(inner.interview_result == 'Провалил собеседование'){
+                    return 'colorRedImportant';
+                } else if(inner.interview_result == 'В ожидании собеседования'){
+                    return 'colororange';
+                }
             },
             modalSelectCheckSelect: function() {
-                if (this.interviewMainResultModalSelect == 'Успешно прошел собеседование'){
+                if (this.recruitingData.interviewResult == 'Успешно прошел собеседование'){
                     return 'forestgreen';
                 }
-                else if (this.interviewMainResultModalSelect == 'Провалил собеседование'){
+                else if (this.recruitingData.interviewResult == 'Провалил собеседование'){
                     return 'colorRedImportant';
                 }
-                else if(this.interviewMainResultModalSelect == 'В ожидании собеседования') {
+                else if(this.recruitingData.interviewResult == 'В ожидании собеседования') {
                     return 'colororange';
                 }
             },

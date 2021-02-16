@@ -241,8 +241,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', '127.0.0.1')], function () {
         Route::post('/recruiting/saveRecruitingData', 'RecruitingController@saveRecruitingData');
         Route::post('/recruiting/getCandidatsDataRequest', 'RecruitingController@getCandidatsDataRequest');
         Route::post('/recruiting/getResumeRecruiting', 'RecruitingController@getResumeRecruiting');
+        Route::post('/recruiting/getCandidatsDataManualRequest', 'RecruitingController@getCandidatsDataManualRequest');
+        Route::post('/recruiting/getResultRequest', 'RecruitingController@getResultRequest');
         Route::get('/getTestKiasDima', 'RecruitingController@testKiasDima');
-        Route::post('/recruiting/test21  ', 'RecruitingController@testt1');
+        Route::post('/recruiting/addResume', 'RecruitingController@addResume');
+        Route::post('/recruiting/test21', 'RecruitingController@testt1');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');

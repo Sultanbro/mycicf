@@ -6,7 +6,7 @@ use App\DocumentationStructure;
 use App\Item;
 use App\Library\Services\KiasServiceInterface;
 use App\Recruiting;
-use App\CandidatsData;
+use App\RecruitingCandidatesData;
 use Illuminate\Http\Request;
 use App\Branch;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +45,7 @@ class RecruitingController extends Controller
             'result' => $requests
         ]);
     }
-    public function  getChiefsRequest(Request $request){
+     public function  getChiefsRequest(Request $request){
         $requests = Recruiting::all();
         return response()->json([
             'success' => $requests ? true : false,
@@ -191,16 +191,17 @@ class RecruitingController extends Controller
     }
 //    Отправка данных кандидата
     public function saveCandidatsData(Request $request,KiasServiceInterface $kias){
-        $candidats_data = CandidatsData::where('recruiting_id',$request->candidatsData['recruitingId']);
+        $candidats_data = RecruitingCandidatesData::where('recruiting_id',$request->candidatsData['recruitingId']);
         if(!isset($candidats_data->id)) {
-            $candidats_data = new CandidatsData();
+            $candidats_data = new RecruitingCandidatesData();
         }
 
-        $candidats_data->manualPhoneNumber = $request->candidatsData['cityAdress'];
+//        $candidats_data->candidats_phone_number = $request->candidatsData['cityAdress'];
         $candidats_data->recruiting_id = $request->candidatsData['recruitingId'];
-        $candidats_data->candidats_fullname = $request->candidatsData['manualFullname'];
-        $candidats_data->candidats_iin = $request->candidatsData['manualIIN'];
-//        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
+        $candidats_data->candidate_fullname = $request->candidatsData['manualFullname'];
+        $candidats_data->candidate_iin = $request->candidatsData['manualIIN'];
+        $candidats_data->candidate_phone_number = $request->candidatsData['manualPhoneNumber'];
+        $candidats_data->responsible_recruiter = $request->candidatsData['recruiterFullname'];
         if(!$candidats_data->save()){
             return response()->json([
                 'success' => false,
@@ -213,9 +214,16 @@ class RecruitingController extends Controller
     }
 
     public function saveRecruitingData(Request $request,KiasServiceInterface $kias){
-        $rec_data = Recruiting::where('id',$request->recruitingData['id'])->first();
+        $rec_data = Recruiting::where('id',  $request->recruitingData['id'])->first();
 
-        $rec_data->interview_stage = $request->recruitingData['interviewDate'];
+        $rec_data->interview_date = $request->recruitingData['interviewDate'];
+        $rec_data->interview_time = $request->recruitingData['interviewTime'];
+        $rec_data->interview_result = $request->recruitingData['interviewResult'];
+        $rec_data->date_of_internship = $request->recruitingData['dateOfInternship'];
+        $rec_data->date_of_conclusion_dou = $request->recruitingData['dateOfConclusionDOU'];
+        $rec_data->date_of_conclusion_td = $request->recruitingData['dateOfConclusionTD'];
+        $rec_data->commentary = $request->recruitingData['commentary'];
+        $rec_data->application_status = $request->recruitingData['status'];
 //        $rec_data->recruiting_id = $request->recruitingData['recruitingId'];
 //        $rec_data->candidats_fullname = $request->recruitingData['manualFullname'];
 //        $rec_data->candidats_iin = $request->recruitingData['manualIIN'];
@@ -248,21 +256,70 @@ class RecruitingController extends Controller
         ]);
     }
     public function  getCandidatsDataRequest(Request $request){
-        $requests = CandidatsData::all();
+        $result = RecruitingCandidatesData::pluck('recruiting_id', 'candidate_fullname')->toArray();
+
+        $response = [];
+
+        foreach ($result as $key => $value) {
+            $data = Recruiting::where('id', $value)->first();
+
+            array_push($response, [
+                'fullname' => $key,
+                'id' => $data->id,
+                'unit_structural_name_and_city' => $data->unit_structural_name_and_city,
+                'interview_date' => $data->interview_date,
+                'interview_result' => $data->interview_result,
+            ]);
+        }
+
         return response()->json([
-            'success' => $requests ? true : false,
-            'result' => $requests
+            'success' => $result ? true : false,
+            'result' => $response
+        ]);
+    }
+    public function  getResultRequest(Request $request){
+        $result = RecruitingCandidatesData::pluck('responsible_recruiter', 'recruiting_id')->toArray();
+
+        $response = [];
+
+        foreach ($result as $key => $value) {
+            $data = Recruiting::where('id', $key)->first();
+
+            array_push($response, [
+                'fullname' => $value,
+                'chiefs_fullname' => $data->chiefs_fullname,
+                'chiefs_duty' => $data->chiefs_duty,
+                'interview_result' => $data->interview_result,
+                'application_status' => $data->application_status,
+                'date_of_conclusion_dou' => $data->date_of_conclusion_dou,
+            ]);
+        }
+
+        return response()->json([
+            'success' => $result ? true : false,
+            'result' => $response
         ]);
     }
 //    Тут должно быть сохранение резюме
     public function getResumeRecruiting(Request $request){
         dd($request->all());
 
-        $requests = CandidatsData::all();
+        $requests = RecruitingCandidatesData::all();
 
         return response()->json([
             'success' => $requests ? true : false,
             'result' => $requests
+        ]);
+    }
+    public function getCandidatsDataManualRequest(Request $request){
+//        $result = RecruitingCandidatesData::pluck('recruiting_id', 'candidate_fullname')->toArray();
+
+//        $req = RecruitingCandidatesData::all();
+
+        $result = RecruitingCandidatesData::all();
+        return response()->json([
+            'success' => $result ? true : false,
+            'result' => $result
         ]);
     }
     public function testKiasDima(Request $request, KiasServiceInterface $kias){
@@ -289,24 +346,25 @@ class RecruitingController extends Controller
         $recruiting->desired_age = $request->candidat['desiredAgeSelect'];
         $recruiting->sex = $request->candidat['sexSelect'];
         $recruiting->education = $request->candidat['educationSelect'];
-        $recruiting->functional_responsobilities = $request->candidat['functionalResponsobilities'];
-        $recruiting->work_expirience = $request->candidat['workExpirienceSelect'];
+        $recruiting->functional_responsibilities = $request->candidat['functionalResponsobilities'];
+        $recruiting->work_experience = $request->candidat['workExpirienceSelect'];
         $recruiting->is_he_was_boss = $request->candidat['isHeWasBossSelect'];
         $recruiting->type_of_hire = $request->candidat['typeOfHireSelect'];
-        $recruiting->request_to_candidat = $request->candidat['requestToCandidat'];
-        $recruiting->perspective_to_candidat = $request->candidat['perspectiveToCandidatSelect'];
+        $recruiting->request_to_candidate = $request->candidat['requestToCandidat'];
+        $recruiting->perspective_to_candidate = $request->candidat['perspectiveToCandidatSelect'];
         $recruiting->computer_knowing = $request->candidat['computerKnowingSelect'];
         $recruiting->salary = $request->candidat['salary'];
         $recruiting->motivation = $request->candidat['motivationSelect'];
         $recruiting->job_chart = $request->candidat['jobChartSelect'];
         $recruiting->have_car = $request->candidat['haveCarSelect'];
         $recruiting->driver_category = $request->candidat['driverCategorySelect'];
-        $recruiting->candidats_trait = $request->candidat['candidatsTrait'];
+        $recruiting->candidates_trait = $request->candidat['candidatsTrait'];
         $recruiting->interview_stage = $request->candidat['interviewStage'];
+        $recruiting->application_status = $request->candidat['status'];
 
-        $recruiting->candidats_fullname = $request->candidat['manualFullname'];
-        $recruiting->candidats_iin = $request->candidat['manualIIN'];
-        $recruiting->candidats_phone_number = $request->candidat['manualPhoneNumber'];
+//        $recruiting->candidates_fullname = $request->candidat['manualFullname'];
+//        $recruiting->candidates_iin = $request->candidat['manualIIN'];
+//        $recruiting->candidates_phone_number = $request->candidat['manualPhoneNumber'];
         if(!$recruiting->save()){
             return response()->json([
                 'success' => false,

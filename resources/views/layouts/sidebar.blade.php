@@ -10,7 +10,7 @@
         <ul class="flex-column mr-3 ml-3">
 {{--            Auth::user()->branch->duty || --}}
             {{--            (Auth::user()->branch->duty == 'Рекрутер' || in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts() || Auth::user()->isn == СВОЙ ИСН)--}}
-            @if(auth()->user()->branch->duty == 'Ведущий Web-программист' || auth()->user()->branch->duty == 'Рекрутер' || auth()->user()->branch->duty == 'Председатель Правления')
+            @if(auth()->user()->branch->duty == 'Ведущий Web-программист' || auth()->user()->branch->duty == 'Рекрутер')
             <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('recruiting')}}">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-male"></i>
