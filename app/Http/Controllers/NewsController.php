@@ -24,6 +24,9 @@ use Illuminate\Support\Facades\Storage;
 class NewsController extends Controller
 {
     public function addPost(Request $request) {
+
+        cache()->clear();
+
         $isPoll = (boolean)$request->poll;
         if($isPoll) {
             $question = $request->question;
@@ -136,6 +139,7 @@ class NewsController extends Controller
             'post' => $response,
             'type' => Post::NEW_POST
         ]));
+
         return $response;
     }
 
@@ -200,6 +204,7 @@ class NewsController extends Controller
 
             return $response;
         });
+
         \Debugbar::stopMeasure('NewsController@getPosts');
         return $response;
     }
@@ -214,6 +219,8 @@ class NewsController extends Controller
             ],
             'type' => Post::DELETED_POST
         ]));
+        cache()->clear();
+
         return [
             'success' => true,
         ];
@@ -275,6 +282,8 @@ class NewsController extends Controller
             'type' => Post::LIKED_POST
         ]));
 
+        cache()->clear();
+
         return $response;
     }
 
@@ -300,6 +309,8 @@ class NewsController extends Controller
             'type' => Post::EDITED_POST
         ]));
 
+        cache()->clear();
+
         return $response;
     }
 
@@ -319,6 +330,8 @@ class NewsController extends Controller
             'fullname' => Auth::user()->full_name,
         ];
 
+        cache()->clear();
+
         return $response;
 
     }
@@ -329,6 +342,8 @@ class NewsController extends Controller
         $response = [
             'success' => true,
         ];
+
+        cache()->clear();
 
         return $response;
     }
@@ -361,6 +376,8 @@ class NewsController extends Controller
 //            'type' => Post::EDITED_COMMENT
 //        ]));
 
+        cache()->clear();
+
         return $response;
     }
 
@@ -391,6 +408,8 @@ class NewsController extends Controller
             'success' => $success,
         ];
 
+        cache()->clear();
+
         return $response;
     }
 
@@ -409,6 +428,9 @@ class NewsController extends Controller
                 $userAnswer->save();
             }
         }
+
+        cache()->clear();
+
         return response()->json([
             'success' => true
         ]);
