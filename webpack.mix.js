@@ -26,9 +26,10 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
 
 if (!mix.inProduction()) {
-    mix.browserSync({
-        proxy: env.APP_URL,
-    });
-
-    mix.sourceMaps().disableNotifications();
+    mix
+        .browserSync({
+            proxy: env.APP_URL,
+        })
+        .sourceMaps()
+        .disableNotifications();
 }
