@@ -16,13 +16,13 @@ class AddColumnsToKolesaPrices extends Migration
         Schema::table('kolesa_prices', function (Blueprint $table) {
             $table->integer('ofprice')->index()->nullable();
             $table->string('city')->index()->nullable();
-            $table->integer('body')->nullable();
+            $table->string('body')->nullable();
             $table->string('volume')->nullable();
-            $table->date('transmission')->nullable();
-            $table->integer('wheel')->nullable();
-            $table->integer('color')->nullable();
+            $table->string('transmission')->nullable();
+            $table->string('wheel')->nullable();
+            $table->string('color')->nullable();
             $table->string('drive')->nullable();
-            $table->integer('inkz')->nullable();
+            $table->string('inkz')->nullable();
             $table->string('vin')->nullable();
             $table->string('milage')->nullable();
         });
