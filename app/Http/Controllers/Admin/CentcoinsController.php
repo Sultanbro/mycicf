@@ -38,11 +38,11 @@ class CentcoinsController extends Controller
         return view('centcoins.items');
     }
     //Заявка в Админ
-    public function getCoinReqView(){
-        return view('centcoins.newzapros');
+    public function getApplyView(){
+        return view('centcoins.apply');
     }
 
-    public function getNewZapros(Request $request){
+    public function getApply(Request $request){
         $result = [];
         foreach(CentcoinApply::all() as $data){
             array_push($result, [

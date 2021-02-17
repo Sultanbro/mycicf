@@ -3,19 +3,19 @@
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" v-if="newzapros.length">
+                <div class="modal-content" v-if="apply.length">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{newzapros[currentIndex].full_name}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{apply[currentIndex].full_name}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        {{newzapros[currentIndex].description}}
+                        {{apply[currentIndex].description}}
                     </div>
                     <div class="modal-footer">
-                        <button @click="denied(newzapros[currentIndex].id),newzapros.splice(currentIndex, 1)" data-dismiss="modal" type="button" class="btn btn-danger">Отказать</button>
-                        <button @click="accept(newzapros[currentIndex].id),newzapros.splice(currentIndex, 1)"  type="button" class="btn btn-success">Исполнить</button>
+                        <button @click="denied(apply[currentIndex].id),apply.splice(currentIndex, 1)" data-dismiss="modal" type="button" class="btn btn-danger">Отказать</button>
+                        <button @click="accept(apply[currentIndex].id),apply.splice(currentIndex, 1)"  type="button" class="btn btn-success">Исполнить</button>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             <tbody>
             <tr
                 @click="handleSetIndexClick(index)"
-                v-for="(item, index) in newzapros"
+                v-for="(item, index) in apply"
                 :key="index" data-toggle="modal" data-target="#exampleModal"
                 v-if="item.status === 'Ожидает' && item.type !== 'Поступление' && item.type !=='Списание'"
             >
@@ -56,22 +56,22 @@
 
 <script>
     export default {
-        name: "newzapros",
+        name: "apply",
         data () {
             return {
-                newzapros : [],
+                apply : [],
                 currentIndex: 0,
             }
         },
         mounted() {
-            this.getNewZapros()
+            this.getApply()
         },
         methods : {
             handleSetIndexClick(index){
                 this.currentIndex = index
             },
             denied(currentIndex){
-              axios.post('/newzapros/denied',{
+              axios.post('/apply/denied',{
                   id : currentIndex
               }).then(response => {
                   console.log(response);
@@ -79,19 +79,19 @@
             },
 
             accept(currentIndex){
-                axios.post('/newzapros/accept',{
+                axios.post('/apply/accept',{
                     id : currentIndex
                 }).then(response => {
                     console.log(response);
                 });
             },
 
-            getNewZapros() {
-                this.axios.post('/centcoins/newzapros', {})
+            getApply() {
+                this.axios.post('/centcoins/apply', {})
                     .then(
                         response => {
                             if(response.data.success){
-                                this.newzapros = response.data.result
+                                this.apply = response.data.result
                             }else{
                                 alert(response.data.error)
                             }
