@@ -280,7 +280,7 @@
                     } else {
                         param = '?parentId=' + newParams.get("parentId") + '&childId=' + id;
                     }
-                    let newUrl = window.location.protocol + '//' + window.location.hostname+':8002' + '/name' + param; //window.location.href+'?parentId='+id;  window.location.pathname
+                    let newUrl = window.location.protocol + '//' + window.location.hostname + '/name' + param; //window.location.href+'?parentId='+id;  window.location.pathname
                     window.history.pushState({}, null, newUrl);
                 }
             }
