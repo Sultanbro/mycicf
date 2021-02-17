@@ -15,9 +15,11 @@
                 <span @click="score('like')" class="sticker sticker-like hidden">
                     <span class="sticker-num">{{likes}}</span>
                 </span>
-                <span @click="score('dislike')" class="sticker sticker-dislike hidden">
+
+<!--                <span @click="score('dislike')" class="sticker sticker-dislike hidden">
                     <span class="sticker-num">{{dislikes}}</span>
-                </span>
+                </span>-->
+
             </div>
 
         </div>
@@ -67,8 +69,8 @@
                 fakeImage: false,
                 imageUrl : null,
                 likes: 0,
-                dislikes: 0,
-                isDisLiked: 0,
+/*                dislikes: 0,
+                isDisLiked: 0,*/
                 isLiked: 0
             }
         },
@@ -134,7 +136,7 @@
                                 this.fetchLiked(response.data);
                             });
                         break;
-                    case 'dislike':
+ /*                   case 'dislike':
                         if(this.isDisLiked === 1 || this.isDisLiked === '1') {
                             this.isDisLiked = 0;
                             this.dislikes--;
@@ -153,7 +155,7 @@
                                     this.post.isDisLiked = 0;
                                 }
                             });
-                        break;
+                        break;*/
                     default:
                         break;
                 }
