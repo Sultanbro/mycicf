@@ -6,6 +6,7 @@ use App\XML\Kias\GetAttachmentDataResult;
 use App\XML\Kias\GetBranchesResult;
 use App\XML\Kias\GetEmplInfoResult;
 use App\XML\Kias\GetUpperLevelResult;
+use App\XML\Kias\MyCoordinationListResult;
 
 /**
  * Interface KiasServiceInterface
@@ -71,7 +72,7 @@ interface KiasServiceInterface
      *
      * @param $ISN
      *
-     * @return mixed
+     * @return MyCoordinationListResult
      */
     public function myCoordinationList($ISN);
 

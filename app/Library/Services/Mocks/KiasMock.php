@@ -286,6 +286,10 @@ class KiasMock implements KiasServiceInterface {
         ');
     }
 
+    /**
+     * @param $ISN
+     * @return \App\XML\Kias\MyCoordinationListResult|SimpleXMLElement
+     */
     public function myCoordinationList($ISN) {
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
             <data>

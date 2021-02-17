@@ -5,6 +5,7 @@ namespace App\Library\Services;
 use App\Library\Services\Mocks\KiasMock;
 use App\XML\Kias\AuthenticateResult;
 use App\XML\Kias\GetUpperLevelResult;
+use App\XML\Kias\MyCoordinationListResult;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use SoapClient;
@@ -256,6 +257,9 @@ class Kias implements KiasServiceInterface
 
     public function authBySystem()
     {
+        /**
+         * @var $response AuthenticateResult
+         */
         $response = $this->request('Auth', [
             'Name' => env('KIAS_LOGIN'),
             'Pwd'  => hash('sha512', env('KIAS_PASSWORD')),
@@ -318,6 +322,10 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $ISN
+     * @return MyCoordinationListResult|SimpleXMLElement
+     */
     public function myCoordinationList($ISN)
     {
         return $this->request('User_CicMyCoordinationList', [
