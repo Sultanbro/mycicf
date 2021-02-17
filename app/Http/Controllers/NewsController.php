@@ -43,7 +43,14 @@ class NewsController extends Controller
             ];
         }
 
-        if($request->postText === null && isset($request->postFiles) && sizeof($request->postFiles) === 0 && isset($request->postVideos) && sizeof($request->postVideos) === 0 && isset($request->postDocuments) && sizeof($request->postDocuments) === 0){
+        if ($request->postText === null
+            && isset($request->postFiles)
+            && sizeof($request->postFiles) === 0
+            && isset($request->postVideos)
+            && sizeof($request->postVideos) === 0
+            && isset($request->postDocuments)
+            && sizeof($request->postDocuments) === 0) {
+
             $error = 'Заполните поле или добавьте вложения';
             $success = false;
             return [
