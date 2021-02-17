@@ -75,7 +75,8 @@ class KiasMock implements KiasServiceInterface {
         $this->initialized = true;
     }
 
-    /** Get kias by system credentials
+    /**
+     * Get kias by system credentials
      */
     public function initSystem() {
         if ($this->systemInitialized) {
@@ -156,8 +157,13 @@ class KiasMock implements KiasServiceInterface {
         return $xml->result ?? $xml;
     }
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @return \App\XML\Kias\AuthenticateResult
+     */
     public function authenticate($username, $password) {
-        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+        return new \App\XML\Kias\AuthenticateResult('<?xml version="1.0" encoding="utf-8"?>
     <data>
         <Sid>1</Sid>
         <UserDetails>
@@ -172,6 +178,9 @@ class KiasMock implements KiasServiceInterface {
         $this->_sId = 1;
     }
 
+    /**
+     * @return \App\XML\Kias\GetBranchesResult|SimpleXMLElement
+     */
     public function getBranches() {
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -189,6 +198,10 @@ class KiasMock implements KiasServiceInterface {
 ');
     }
 
+    /**
+     * @param $ISN
+     * @return \App\XML\Kias\GetUpperLevelResult|SimpleXMLElement
+     */
     public function getUpperLevel($ISN) {
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -197,6 +210,12 @@ class KiasMock implements KiasServiceInterface {
 ');
     }
 
+    /**
+     * @param $ISN
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return \App\XML\Kias\GetEmplInfoResult|SimpleXMLElement
+     */
     public function getEmplInfo($ISN, $dateBeg, $dateEnd) {
         //sleep(1); // sleep здесь для имитации задержки
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
@@ -253,6 +272,12 @@ class KiasMock implements KiasServiceInterface {
 ');
     }
 
+    /**
+     * @param $refisn
+     * @param $isn
+     * @param $pictType
+     * @return \App\XML\Kias\GetAttachmentDataResult|SimpleXMLElement
+     */
     public function getAttachmentData($refisn, $isn, $pictType) {
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
             <data>

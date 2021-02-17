@@ -3,6 +3,8 @@
 namespace App\Library\Services;
 
 use App\Library\Services\Mocks\KiasMock;
+use App\XML\Kias\AuthenticateResult;
+use App\XML\Kias\GetUpperLevelResult;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use SoapClient;
@@ -242,7 +244,7 @@ class Kias implements KiasServiceInterface
      *
      * @param string $username
      * @param string $password
-     * @return mixed|SimpleXMLElement
+     * @return mixed|AuthenticateResult
      */
     public function authenticate($username, $password)
     {
@@ -265,6 +267,9 @@ class Kias implements KiasServiceInterface
         $this->_sId = $response->Sid;
     }
 
+    /**
+     * @return \App\XML\Kias\GetBranchesResult|SimpleXMLElement
+     */
     public function getBranches()
     {
         return $this->request('User_CicGetUserList', [
@@ -272,6 +277,10 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $ISN
+     * @return GetUpperLevelResult|SimpleXMLElement
+     */
     public function getUpperLevel($ISN)
     {
         return $this->request('User_CicGetUserLVL', [
@@ -279,6 +288,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $ISN
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return \App\XML\Kias\GetEmplInfoResult|SimpleXMLElement
+     */
     public function getEmplInfo($ISN, $dateBeg, $dateEnd)
     {
         return $this->request('User_CicGetEmplInfo', [
@@ -288,6 +303,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $refisn
+     * @param $isn
+     * @param $pictType
+     * @return \App\XML\Kias\GetAttachmentDataResult|SimpleXMLElement
+     */
     public function getAttachmentData($refisn, $isn, $pictType)
     {
         return $this->request('GETATTACHMENTDATA', [

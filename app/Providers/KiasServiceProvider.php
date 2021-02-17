@@ -19,6 +19,7 @@ class KiasServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(KiasServiceInterface::class, function ($app) {
+            \Debugbar::startMeasure('KiasServiceInterface initialization');
             $session = null;
             if(Auth::check()){
                 $session = Auth::user()->session_id;
@@ -32,6 +33,7 @@ class KiasServiceProvider extends ServiceProvider
                 $kias = Kias::instance();
             }
             $kias->init($session);
+            \Debugbar::stopMeasure('KiasServiceInterface initialization');
             return $kias;
         });
     }
