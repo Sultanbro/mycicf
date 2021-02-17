@@ -7,6 +7,7 @@ use App\Centcoin;
 use App\CentcoinHistory;
 use App\Comment;
 use App\Events\NewPost;
+use App\Http\Requests\NewsGetPostsRequest;
 use App\Library\Services\KiasServiceInterface;
 use App\Like;
 use App\Mail\Email;
@@ -144,12 +145,14 @@ class NewsController extends Controller
      * @param Request $request
      * @return array
      */
-    public function getPosts(Request $request) {
+    public function getPosts(NewsGetPostsRequest $request) {
         \Debugbar::startMeasure('NewsController@getPosts');
         $user_isn = Auth::user()->ISN;
-        $last_index = $request->lastIndex;
+        $last_index = $request->get('lastIndex');
+
         $ttl = now()->addMinutes(10);
         $key = 'NewsController@getPosts::' . $last_index . '::' . $user_isn;
+
         $response = cache()->remember($key, $ttl, function () use ($last_index, $user_isn) {
             $response = [];
 
