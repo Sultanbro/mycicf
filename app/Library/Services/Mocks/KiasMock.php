@@ -11,6 +11,18 @@ use SimpleXMLElement;
 class KiasMock implements KiasServiceInterface {
     use WithFaker;
 
+    /**
+     * @var KiasMock
+     */
+    private static $instance;
+    public static function instance() {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     const APP_ID = 868281;
     const ACTIVE = 'Y';
 
@@ -36,18 +48,40 @@ class KiasMock implements KiasServiceInterface {
      */
     public $url;
 
+    /**
+     * @var bool
+     */
+    private $initialized = false;
+
+    /**
+     * @var bool
+     */
+    private $systemInitialized = false;
+
     public function __construct() {
         // sleep(1); // sleep здесь для имитации задержки
+
+        \Debugbar::log('Kias::Mock Construct');
     }
 
     public function init($session) {
+        if ($this->initialized) {
+            return;
+        }
+        \Debugbar::log('Kias::Mock Init');
         $this->url = config('kias.url');
         $this->_sId = $session;
+
+        $this->initialized = true;
     }
 
     /** Get kias by system credentials
      */
     public function initSystem() {
+        if ($this->systemInitialized) {
+            return;
+        }
+        \Debugbar::log('Kias::Mock Init System');
         // sleep(1); // sleep здесь для имитации задержки
         $this->url = config('kias.url');
 
@@ -58,6 +92,8 @@ class KiasMock implements KiasServiceInterface {
         $systemData = $this->authenticate($username, $passwordHash);
 
         $this->_sId = $systemData->Sid;
+
+        $this->systemInitialized = true;
     }
 
     /**
@@ -69,6 +105,7 @@ class KiasMock implements KiasServiceInterface {
      * @deprecated
      */
     public function request($name, $params = []) {
+        \Debugbar::log('Kias::Mock Request [' . $name . ' :: ' . json_encode($params) . ']');
         if ($name === 'User_CicHelloSvc') {
             return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
                 <data>

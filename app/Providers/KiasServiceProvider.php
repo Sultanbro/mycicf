@@ -25,9 +25,9 @@ class KiasServiceProvider extends ServiceProvider
             }
 
             if (config('kias.mock')) {
-                $kias = new KiasMock();
+                $kias = KiasMock::instance();
             } else {
-                $kias = new Kias();
+                $kias = Kias::instance();
             }
             $kias->init($session);
             return $kias;

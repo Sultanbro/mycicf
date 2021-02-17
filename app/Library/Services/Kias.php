@@ -2,6 +2,7 @@
 
 namespace App\Library\Services;
 
+use App\Library\Services\Mocks\KiasMock;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use SoapClient;
@@ -9,6 +10,18 @@ use SimpleXMLElement;
 
 class Kias implements KiasServiceInterface
 {
+    /**
+     * @var KiasMock
+     */
+    private static $instance;
+    public static function instance() {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     const APP_ID = 868281;
     const ACTIVE = 'Y';
 
@@ -31,6 +44,12 @@ class Kias implements KiasServiceInterface
      * @var string Ссылка на сервис
      */
     public $url;
+
+    public function __construct() {
+        // sleep(1); // sleep здесь для имитации задержки
+
+        \Debugbar::log('Kias::Construct');
+    }
 
 
     public function init($session)

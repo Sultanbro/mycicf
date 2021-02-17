@@ -35,11 +35,11 @@ class checkAuth
 
         $kias = app(KiasServiceInterface::class);
 
-        Debugbar::measure('Init Kias in middleware', function () use ($kias) {
+        Debugbar::measure('Kias::Init in middleware', function () use ($kias) {
             $kias->initSystem();
         });
 
-        Debugbar::measure('Get user data from Kias', function () use ($kias) {
+        Debugbar::measure('Kias::Get user data', function () use ($kias) {
             (new User)->getUserData($kias);
         });
 
