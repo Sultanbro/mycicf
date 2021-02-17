@@ -45,6 +45,16 @@ class Kias implements KiasServiceInterface
      */
     public $url;
 
+    /**
+     * @var bool
+     */
+    private $initialized = false;
+
+    /**
+     * @var bool
+     */
+    private $systemInitialized = false;
+
     public function __construct() {
         // sleep(1); // sleep здесь для имитации задержки
 
@@ -54,9 +64,14 @@ class Kias implements KiasServiceInterface
 
     public function init($session)
     {
+        if ($this->initialized) {
+            return;
+        }
+        \Debugbar::log('Kias::Init');
         $this->url = config('kias.url');
         $this->getClient();
         $this->_sId = $session;
+        $this->initialized = true;
     }
 
     /**
@@ -64,6 +79,10 @@ class Kias implements KiasServiceInterface
      */
     public function initSystem()
     {
+        if ($this->systemInitialized) {
+            return;
+        }
+        \Debugbar::log('Kias::Mock Init System');
         $this->url = config('kias.url');
         $this->getClient();
 
@@ -76,6 +95,7 @@ class Kias implements KiasServiceInterface
         $systemData = $this->authenticate($username, $passwordHash);
         \Debugbar::stopMeasure('Authenticate in Kias');
         $this->_sId = $systemData->Sid;
+        $this->systemInitialized = true;
     }
 
     /**
@@ -104,6 +124,7 @@ class Kias implements KiasServiceInterface
 
     public function request($name, $params = [])
     {
+        \Debugbar::log('Kias::Mock Request [' . $name . ' :: ' . json_encode($params) . ']');
         try {
             switch ($name) {
                 case 'Auth':

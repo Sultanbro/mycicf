@@ -25,8 +25,10 @@ class KiasServiceProvider extends ServiceProvider
             }
 
             if (config('kias.mock')) {
+                \Debugbar::info('Using mocked Kias Service');
                 $kias = KiasMock::instance();
             } else {
+                \Debugbar::info('Using real Kias Service');
                 $kias = Kias::instance();
             }
             $kias->init($session);
