@@ -114,6 +114,8 @@ class User extends Authenticatable
 
     public function getUserData(KiasServiceInterface $kias){
         $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
+        $likes = Score::where('user_isn', Auth::user()->ISN)->where('type','like')->get()->count();
+        $dislikes = Score::where('user_isn',Auth::user()->ISN)->where('type','dislike')->get()->count();
         $users_data = [
             'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
             'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
@@ -124,6 +126,8 @@ class User extends Authenticatable
             'City' => (string)$response->City == "0" ? '' : (string)$response->City,
             'Avarcom' => (string)$response->Avarcom,
             'MyDZ' => (string)$response->MyDZ,
+            'Likes' => $likes,
+            'Dislikes' => $dislikes,
         ];
         return $users_data;
     }

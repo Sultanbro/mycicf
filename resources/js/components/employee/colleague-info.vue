@@ -68,8 +68,8 @@
                 imageUrl : null,
                 likes: 0,
                 dislikes: 0,
-                isLiked: 0,
                 isDisLiked: 0,
+                isLiked: 0
             }
         },
         props: {
@@ -98,7 +98,7 @@
                     this.likes = information.Likes;
                     this.dislikes = information.Dislikes;
                     this.isLiked = information.isLiked;
-                    this.isDisLiked = information.isDisliked;
+                    this.isDisLiked = information.isDisLiked;
                 }else{
                     alert(response.error);
                 }
@@ -107,47 +107,52 @@
                 this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
             },
 
+            fetchLiked(response) {
+                if(response.success === true) {
+                    this.post.isLiked = 1;
+                }
+                else {
+                    this.post.isLiked = 0;
+                }
+            },
+
+
             score: function (type) {
                 switch (type) {
                     case 'like':
                         if(this.isLiked === 1 || this.isLiked === '1') {
-                            this.isLiked = false;
+                            this.isLiked = 0;
                             this.likes--;
                         }
                         else {
-                            this.isLiked = true;
+                            this.isLiked = 1;
                             this.likes++;
                         }
 
                         this.axios.post('/addScore', {user_isn: this.isn, type: type})
                             .then(response => {
-                                if(response.success === true) {
-                                    this.isLiked = 1;
-                                }
-                                else {
-                                    this.isLiked = 0;
-                                }
-                            })
+                                this.fetchLiked(response.data);
+                            });
                         break;
                     case 'dislike':
-                        if(this.isDisliked === 1 || this.isDisliked === '1') {
-                            this.isDisliked = 0;
+                        if(this.isDisLiked === 1 || this.isDisLiked === '1') {
+                            this.isDisLiked = 0;
                             this.dislikes--;
                         }
                         else {
-                            this.isDisliked = 1;
+                            this.isDisLiked = 1;
                             this.dislikes++;
                         }
 
                         this.axios.post('/addScore', {user_isn: this.isn, type: type})
                             .then(response => {
                                 if(response.success === true) {
-                                    this.isDisliked = 1;
+                                    this.post.isDisLiked = 1;
                                 }
                                 else {
-                                    this.isDisliked = 0;
+                                    this.post.isDisLiked = 0;
                                 }
-                            })
+                            });
                         break;
                     default:
                         break;
