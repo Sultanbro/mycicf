@@ -4,12 +4,12 @@
             <img src="/images/avatar.png" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
             <div class="sticker-block">
-                <span @click="score('like')" class="sticker sticker-like hidden">
+                <span @click="score('like')" class="sticker sticker-like hidden" style="cursor: default;">
                     <span class="sticker-num">{{likes}}</span>
                 </span>
-                <span @click="score('dislike')" class="sticker sticker-dislike hidden">
+<!--                <span @click="score('dislike')" class="sticker sticker-dislike hidden">
                     <span class="sticker-num">{{dislikes}}</span>
-                </span>
+                </span>-->
             </div>
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
@@ -59,7 +59,7 @@
                 fakeImage: false,
                 imageUrl : null,
                 likes: 0,
-                dislikes: 0,
+                /*dislikes: 0,*/
             }
         },
         props: {
