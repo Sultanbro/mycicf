@@ -43,6 +43,7 @@ class NewsController extends Controller
             ];
         }
 
+        // TODO Создать FormRequest для этого действия и заложить эти проверки в валидацию
         if ($request->postText === null
             && isset($request->postFiles)
             && sizeof($request->postFiles) === 0
