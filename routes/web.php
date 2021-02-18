@@ -271,7 +271,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
 
         //TestQR
-        Route::get('/testqr', 'TestqrController@index')->name('testqr');
+        Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
 
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
