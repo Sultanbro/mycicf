@@ -11,12 +11,13 @@ class TestqrController extends Controller
 {
     public function getQR(KiasServiceInterface $kias, Request $request)
     {
+        $success = true;
         $username = $request->username;
         $password = $request->password;
         $qr = $request->qr;
 
         $response = $kias->authenticate($username, hash('sha512', $password));
-
+        dd($response);
         if($response->error)
         {
             $success = false;
@@ -24,17 +25,15 @@ class TestqrController extends Controller
         }
         if($success && $response)
         {
-            $isn = User::where('ISN', $response->ISN);
-            $session = User::where('ISN', $response->Sid);
+            $result = $kias->request('User_CicCreateAVOTbyQR',[
+                'SubjISN' => $response->ISN,
+                'QR'=> $qr,
+                'Sid'=>$response->Sid
+            ]);
         }
 
-        $result = $kias->request('User_CicCreateAVOTbyQR',[
-            'SubjISN' => $isn,
-            'QR'=> $qr,
-            'Sid'=>$session
-        ]);
-
         return response()->json($result)->withCallback($request->input('callback'));
+
     }
 }
 
