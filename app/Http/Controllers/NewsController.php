@@ -101,11 +101,11 @@ class NewsController extends Controller
                     $answersModel->value = $answer;
                     $answersModel->question_id = $poll->id;
                     $answersModel->save();
-                    array_push($post_answers, [
+                    $post_answers[] = [
                         "answer_id" => $answersModel->id,
                         "answer_title" => $answersModel->value = $answer,
                         "answer_votes" => 0,
-                    ]);
+                    ];
                     $post_poll = [
                         "question_id" => $poll->id,
                         "question_title" => $poll->question = $question,
