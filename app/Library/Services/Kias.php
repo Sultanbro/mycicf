@@ -2,7 +2,6 @@
 
 namespace App\Library\Services;
 
-use App\Library\Services\Mocks\KiasMock;
 use App\XML\Kias\AuthenticateResult;
 use App\XML\Kias\GetUpperLevelResult;
 use App\XML\Kias\MyCoordinationListResult;
@@ -14,7 +13,7 @@ use SimpleXMLElement;
 class Kias implements KiasServiceInterface
 {
     /**
-     * @var KiasMock
+     * @var Kias
      */
     private static $instance;
     public static function instance() {
@@ -138,6 +137,16 @@ class Kias implements KiasServiceInterface
                         return $this->execProc($name, $params);
                     });
                     \Debugbar::stopMeasure('Authenticate in Kias');
+                    break;
+
+                case 'User_CicHelloSvc':
+                    $key = 'kias::User_CicHelloSvc::' . $name . '::' . serialize($params) . '::';
+                    $ttl = now()->addMinutes(config('kias.cache.lifetime'));
+                    \Debugbar::startMeasure('User_CicHelloSvc in Kias');
+                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
+                        return $this->execProc($name, $params);
+                    });
+                    \Debugbar::stopMeasure('User_CicHelloSvc in Kias');
                     break;
 
                 default:
