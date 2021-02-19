@@ -3,19 +3,19 @@
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content" v-if="apply.length">
+                <div class="modal-content" v-if="currentUser !== null">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">{{apply[currentIndex].full_name}}</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{currentUser.full_name}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        {{apply[currentIndex].description}}
+                            {{currentUser.description}}
                     </div>
                     <div class="modal-footer">
-                        <button @click="denied(apply[currentIndex].id),apply.splice(currentIndex, 1)" data-dismiss="modal" type="button" class="btn btn-danger">Отказать</button>
-                        <button @click="accept(apply[currentIndex].id),apply.splice(currentIndex, 1)"  type="button" class="btn btn-success">Исполнить</button>
+                        <button @click="denied(apply[currentIndex].id)" type="button" class="btn btn-danger">Отказать</button>
+                        <button @click="accept(apply[currentIndex].id)"   type="button" class="btn btn-success">Исполнить</button>
                     </div>
                 </div>
             </div>
@@ -61,6 +61,7 @@
             return {
                 apply : [],
                 currentIndex: 0,
+                currentUser: null,
             }
         },
         mounted() {
@@ -68,13 +69,16 @@
         },
         methods : {
             handleSetIndexClick(index){
-                this.currentIndex = index
+                this.currentIndex = index;
+                this.currentUser = this.apply[index];
             },
             denied(currentIndex){
               axios.post('/apply/denied',{
                   id : currentIndex
               }).then(response => {
-                  console.log(response);
+                  // console.log(response);
+                  this.apply.splice(this.currentIndex, 1);
+                  $('#exampleModal').modal('hide');
               });
             },
 
@@ -82,8 +86,15 @@
                 axios.post('/apply/accept',{
                     id : currentIndex
                 }).then(response => {
-                    console.log(response);
-                });
+                    // console.log(response);
+                    this.apply.splice(this.currentIndex, 1);
+                    $('#exampleModal').modal('hide');
+                }).catch(
+                    error => {
+                        alert(error);
+                    }
+                );
+
             },
 
             getApply() {
@@ -91,9 +102,9 @@
                     .then(
                         response => {
                             if(response.data.success){
-                                this.apply = response.data.result
+                                this.apply = response.data.result;
                             }else{
-                                alert(response.data.error)
+                                alert(response.data.error);
                             }
                         }
                     )
