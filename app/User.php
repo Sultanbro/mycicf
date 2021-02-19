@@ -25,6 +25,7 @@ class User extends Authenticatable
 {
     const SENATE_ISN = 999999999;
     const READING_CLUB_ISN = 999999998;
+    const BOSS_ISN = 1472004;
     const DIRECTOR_LABEL = "Председатель Правления";
     use Notifiable;
 
