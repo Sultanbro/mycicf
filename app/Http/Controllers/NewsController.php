@@ -3,22 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Answer;
-use App\Centcoin;
-use App\CentcoinHistory;
 use App\Comment;
 use App\Events\NewPost;
 use App\Http\Requests\NewsGetPostsRequest;
-use App\Library\Services\KiasServiceInterface;
 use App\Library\Services\PostsService;
 use App\Like;
-use App\Mail\Email;
 use App\Post;
 use App\Question;
-use App\User;
 use App\UserAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
