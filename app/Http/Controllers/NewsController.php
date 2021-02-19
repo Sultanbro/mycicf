@@ -128,6 +128,8 @@ class NewsController extends Controller
             ];
         }
         DB::commit();
+
+        // TODO Придумать как перенести это в PostsService
         $response = [
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
             'edited' => false,
