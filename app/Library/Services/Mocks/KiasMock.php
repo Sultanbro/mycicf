@@ -66,6 +66,7 @@ class KiasMock implements KiasServiceInterface {
 
     public function init($session) {
         if ($this->initialized) {
+            \Debugbar::log('Kias::Mock Tried to initialize it second time');
             return;
         }
         \Debugbar::log('Kias::Mock Init');
@@ -80,6 +81,7 @@ class KiasMock implements KiasServiceInterface {
      */
     public function initSystem() {
         if ($this->systemInitialized) {
+            \Debugbar::log('Kias::Mock Tried to initialize the system second time');
             return;
         }
         \Debugbar::log('Kias::Mock Init System');
