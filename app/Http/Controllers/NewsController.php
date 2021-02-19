@@ -428,45 +428,14 @@ class NewsController extends Controller
         return view('boss-says');
     }
 
-    public function getBossPosts(Request $request) {
-        $response = [];
-        $last_index = $request->lastIndex;
+    public function getBossPosts(Request $request, PostsService $postsService) {
+        \Debugbar::startMeasure('NewsController@getPosts');
+        $user_isn = Auth::user()->ISN;
+        $last_index = $request->get('lastIndex');
 
-        if($last_index == null){
-            $model = Post::orderBy('id', 'DESC')
-                ->where('user_isn', 1472004)
-                ->limit(5)
-                ->get();
-        }
-        else {
-            $model = Post::orderBy('id', 'DESC')
-                ->where('id', '<', $last_index)
-                ->where('user_isn', 1472004)
-                ->limit(5)
-                ->get();
-        }
-        foreach ($model as $item) {
-            array_push($response, [
-                'isn' => $item->user_isn,
-                'fullname' => (new User())->getFullName($item->user_isn),
-                'postText' => $item->getText(),
-                'pinned' => $item->pinned,
-                'postId' => $item->id,
-                'edited' => (new Post())->getIsEdited($item->id),
-                'likes' => (new Like())->getLikes($item->id),
-                'isLiked' => (new Like())->getIsLiked($item->id, Auth::user()->ISN),
-                'date' => date('d.m.Y H:i', strtotime($item->created_at)),
-                'userISN' => $item->user_isn,
-                'comments' => $item->getComments(),
-                'image' => $item->getImage(),
-                'documents' => $item->getDocuments(),
-                'youtube' => $item->getVideo(),
-                'videos' => $item->getVideoUrl(),
-                'post_poll' => $item->getPoll($item->id),
-                'isVoted' => $item->getIsVoted(Auth::user()->ISN, $item->id),
-            ]);
-        }
+        $response = $postsService->getPosts($last_index, $user_isn, true);
 
+        \Debugbar::stopMeasure('NewsController@getPosts');
         return $response;
     }
 }
