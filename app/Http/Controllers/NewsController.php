@@ -9,6 +9,7 @@ use App\Comment;
 use App\Events\NewPost;
 use App\Http\Requests\NewsGetPostsRequest;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\PostsService;
 use App\Like;
 use App\Mail\Email;
 use App\Post;
@@ -154,64 +155,16 @@ class NewsController extends Controller
     /**
      * TODO @serabass Оптимизировать этот метод, 52 запроса за один раз это плохо
      *
-     * @param Request $request
+     * @param NewsGetPostsRequest $request
+     * @param PostsService $postsService
      * @return array
      */
-    public function getPosts(NewsGetPostsRequest $request) {
+    public function getPosts(NewsGetPostsRequest $request, PostsService $postsService) {
         \Debugbar::startMeasure('NewsController@getPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
 
-        $ttl = now()->addMinutes(10);
-        $key = 'NewsController@getPosts::' . $last_index . '::' . $user_isn;
-
-        $response = cache()->remember($key, $ttl, function () use ($last_index, $user_isn) {
-            $response = [];
-
-            if($last_index == null){
-                $model = Post::orderBy('id', 'DESC')
-                    ->limit(5)
-                    ->get();
-            }
-            else {
-                $model = Post::orderBy('id', 'DESC')
-                    ->where('id', '<', $last_index)
-                    ->limit(5)
-                    ->get();
-            }
-
-            // TODO Оптимизировать этот блок тоже
-            foreach ($model as $item) {
-                $response[] = [
-                    'isn' => $item->user_isn,
-                    'fullname' => (new User())->getFullName($item->user_isn),
-                    'postText' => $item->getText(),
-                    'pinned' => $item->pinned,
-                    'postId' => $item->id,
-                    'edited' => (new Post())->getIsEdited($item->id),
-                    'likes' => (new Like())->getLikes($item->id),
-                    'isLiked' => (new Like())->getIsLiked($item->id, $user_isn),
-                    'date' => date('d.m.Y H:i', strtotime($item->created_at)),
-                    'userISN' => $item->user_isn,
-                    'comments' => $item->getComments(),
-                    'image' => $item->getImage(),
-                    'documents' => $item->getDocuments(),
-                    'youtube' => $item->getVideo(),
-                    'videos' => $item->getVideoUrl(),
-                    'post_poll' => $item->getPoll($item->id),
-                    'isVoted' => $item->getIsVoted($user_isn, $item->id),
-                ];
-            }
-
-
-//        $result = [
-//            'success' => $success,
-//            'error' => $error,
-//            'post' => $response
-//        ];
-
-            return $response;
-        });
+        $response = $postsService->getPosts($last_index, $user_isn);
 
         \Debugbar::stopMeasure('NewsController@getPosts');
         return $response;
