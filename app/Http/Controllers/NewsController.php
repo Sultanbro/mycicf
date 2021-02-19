@@ -24,6 +24,16 @@ use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
+    /**
+     * @var PostsService
+     */
+    private $postsService;
+
+    public function __construct(PostsService $postsService)
+    {
+        $this->postsService = $postsService;
+    }
+
     public function addPost(Request $request) {
 
         cache()->clear();
@@ -153,18 +163,16 @@ class NewsController extends Controller
     }
 
     /**
-     * TODO @serabass Оптимизировать этот метод, 52 запроса за один раз это плохо
-     *
      * @param NewsGetPostsRequest $request
      * @param PostsService $postsService
      * @return array
      */
-    public function getPosts(NewsGetPostsRequest $request, PostsService $postsService) {
+    public function getPosts(NewsGetPostsRequest $request) {
         \Debugbar::startMeasure('NewsController@getPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
 
-        $response = $postsService->getPosts($last_index, $user_isn);
+        $response = $this->postsService->getPosts($last_index, $user_isn);
 
         \Debugbar::stopMeasure('NewsController@getPosts');
         return $response;
@@ -198,6 +206,9 @@ class NewsController extends Controller
             'type' => Post::PINNED_POST
         ]));
         $post->setPinned();
+
+        $this->postsService->forget($id);
+
     }
 
     public function unsetPinned(Request $request){
@@ -209,6 +220,7 @@ class NewsController extends Controller
             ],
             'type' => Post::PINNED_POST
         ]));
+
         return 'true';
     }
 
@@ -243,7 +255,7 @@ class NewsController extends Controller
             'type' => Post::LIKED_POST
         ]));
 
-        cache()->clear();
+        $this->postsService->forget($post_id);
 
         return $response;
     }
@@ -270,15 +282,16 @@ class NewsController extends Controller
             'type' => Post::EDITED_POST
         ]));
 
-        cache()->clear();
+        $this->postsService->forget($post_id);
 
         return $response;
     }
 
     public function addComment(Request $request) {
+        $postId = $request->postId;
         $new_comment = new Comment();
         $new_comment->text = $request->commentText;
-        $new_comment->post_id = $request->postId;
+        $new_comment->post_id = $postId;
         $new_comment->user_isn = $request->isn;
         $new_comment->save();
 
@@ -291,7 +304,7 @@ class NewsController extends Controller
             'fullname' => Auth::user()->full_name,
         ];
 
-        cache()->clear();
+        $this->postsService->forget($postId);
 
         return $response;
 
