@@ -9,6 +9,10 @@ use Illuminate\Support\Collection;
 
 class PostsService
 {
+    public function getResponseKey(int $postId) {
+        return 'getPosts::postResponse::' . $postId;
+    }
+
     public function getPosts($last_index, string $user_isn, $boss = false, $limit = 5)
     {
         $response = [];
@@ -33,7 +37,7 @@ class PostsService
          */
         foreach ($model as $item) {
             $ttl = now()->addMinutes(10);
-            $key = 'getPosts::postResponse::' . $item->id;
+            $key = $this->getResponseKey($item->id);
             \Debugbar::startMeasure($key);
             // Пока что реализовал вот так. Позже сделаю через relations
             $response[] = cache()->remember($key, $ttl, function () use ($item, $user_isn) {
@@ -79,5 +83,9 @@ class PostsService
             'post_poll' => $item->getPoll($item->id),
             'isVoted' => $item->getIsVoted($user_isn, $item->id),
         ];
+    }
+
+    public function forget($id) {
+        cache()->forget($this->getResponseKey($id)); // or delete();
     }
 }
