@@ -130,7 +130,8 @@ class User extends Authenticatable
 
         $key = 'userData::' . $ISN . '::' . $dateBeg . '::' . $dateEnd;
 
-        return cache()->remember($key, 10, function () use ($kias, $ISN, $dateBeg, $dateEnd) {
+        $ttl = now()->addMinutes(10);
+        return cache()->remember($key, $ttl, function () use ($kias, $ISN, $dateBeg, $dateEnd) {
             $response = $kias->getEmplInfo($ISN, $dateBeg, $dateEnd);
             return [
                 'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
