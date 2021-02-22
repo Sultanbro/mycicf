@@ -3,7 +3,13 @@
         <div class="d-flex justify-content-center pt-4 pb-4">
             <select v-model="itemIndex" class="custom-select w-25">
                 <option :value="null" selected disabled hidden>Выберите товар</option>
-                <option :value="index" v-for="(item, index) in itemsStorage" :disabled="centcoins < item.price">{{item.name}} - {{item.price}}₵</option>
+                <option
+                    :value="index"
+                    v-for="(item, index) in itemsStorage"
+                    :disabled="centcoins < item.price"
+                >
+                    {{item.name}} - {{item.price}}₵
+                </option>
             </select>
         </div>
 
@@ -74,19 +80,20 @@
 
             buyItem: function() {
                 this.axios.post('/buyItem', {isn: this.isn, itemId: this.itemId}).then(response => {
-                    this.fetchBuyItem(response.data);
-                    this.flashMessage.error({
-                        title: "Ошибка",
-                        message: "Ошибка на стороне сервера",
-                        time: 5000
-                    });
-                }).catch(error => {
-
-                })
+                    if (response.data.success) {
+                        this.fetchBuyItem(response.data);
+                    } else {
+                        this.flashMessage.error({
+                            title: "Ошибка",
+                            message: "Ошибка на стороне сервера",
+                            time: 5000
+                        });
+                    }
+                }).catch(error => {})
             },
 
             fetchBuyItem: function() {
-                location.replace('/centcoins')
+                window.location.replace('/centcoins')
             },
 
             getCentcoins: function () {

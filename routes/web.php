@@ -74,6 +74,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('/centcoins/history', 'Admin\CentcoinsController@getHistoryView')->name('centcoins.history');
             Route::get('/centcoins/items', 'Admin\CentcoinsController@getItemsView')->name('centcoins.items');
             Route::get('/centcoins/report', 'Admin\CentcoinsController@getReport')->name('centcoins.report');
+            Route::get('/centcoins/apply', 'Admin\CentcoinsController@getApplyView')->name('centcoins.apply');
 
 
             Route::post('/centcoins/userList', 'Admin\CentcoinsController@getUserList');
@@ -81,7 +82,9 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
-
+            Route::post('/centcoins/apply', 'Admin\CentcoinsController@getApply');
+            Route::post('/apply/accept', 'Admin\CentcoinsController@getStatusAccept');
+            Route::post('/apply/denied', 'Admin\CentcoinsController@getStatusDenied');
         });
 
         Route::group(['middleware' => 'wndAdmin'], function () {
