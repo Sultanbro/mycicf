@@ -27,6 +27,7 @@ class VerifyCsrfToken extends Middleware
         '/kolesa/getPrice',
         '/setToken',
         '/serviceCenter/notify',
-        '/api/*'
+        '/api/*',
+        '/testqr'
     ];
 }
