@@ -2,22 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Library\Services\Kias;
 use Illuminate\Http\Request;
 use App\Library\Services\KiasServiceInterface;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+use function Psy\debug;
+
 class TestqrController extends Controller
 {
-    public function getQR(KiasServiceInterface $kias, Request $request)
+    public function getQR(Request $request)
     {
+        $kias = new Kias();
+        $kias = initSystem();
+        Log:debug($request->all());
         $success = true;
+        // на входе логин пароль и qr
         $username = $request->username;
         $password = $request->password;
         $qr = $request->qr;
 
+        $result = '';
         $response = $kias->authenticate($username, hash('sha512', $password));
-        dd($response);
         if($response->error)
         {
             $success = false;
@@ -25,6 +33,7 @@ class TestqrController extends Controller
         }
         if($success && $response)
         {
+            // на выходе qr и сессион_id , если все норм получаю SubjISN
             $result = $kias->request('User_CicCreateAVOTbyQR',[
                 'SubjISN' => $response->ISN,
                 'QR'=> $qr,
@@ -36,7 +45,3 @@ class TestqrController extends Controller
 
     }
 }
-
-// на входе логин пароль и qr
-
-// на выходе qr и сессион_id , если все норм получаю SubjISN
