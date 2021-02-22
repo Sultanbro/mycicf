@@ -239,7 +239,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/booking/remove', 'BookingController@delete');
         Route::post('/addPost', 'NewsController@addPost')->name('news.addPost'); // TODO use grouping
         Route::post('/news-birthday', 'NewsController@birthday');
-        Route::post('/getPosts', 'NewsController@getPosts');
+        Route::post('/getPosts', 'NewsController@getPosts')->name('news.getPosts');
         Route::post('/deletePost', 'NewsController@deletePost');
         Route::post('/setPinned', 'NewsController@setPinned');
         Route::post('/unsetPinned', 'NewsController@unsetPinned');

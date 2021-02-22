@@ -15,10 +15,6 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
         $response = $this->get('/');
-
-        var_dump($response->dumpHeaders());
-        die;
-
         $response->assertStatus(200);
     }
 }

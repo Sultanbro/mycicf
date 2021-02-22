@@ -31,10 +31,10 @@ class NewsController extends Controller
     }
 
     public function addPost(AddPostRequest $request) {
-        $isPoll = (boolean)$request->poll;
+        $isPoll = (boolean)$request->get('poll');
         if($isPoll) {
-            $question = $request->question;
-            $answers = $request->answers;
+            $question = $request->get('question');
+            $answers = $request->get('answers');
         }
         DB::beginTransaction();
 

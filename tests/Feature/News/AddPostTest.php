@@ -2,17 +2,15 @@
 
 namespace Tests\Feature\News;
 
-use App\Post;
-use App\User;
 use DB;
-use Hash;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Storage;
 use Tests\TestCase;
+use Tests\WithUser;
 
 class AddPostTest extends TestCase {
-    use WithFaker;
+    use WithFaker, WithUser;
 
     public const ISN = '5565';
 
@@ -22,27 +20,6 @@ class AddPostTest extends TestCase {
         parent::__construct($name, $data, $dataName);
 
         $this->route = route('news.addPost');
-    }
-
-    private function getUser($ISN = self::ISN) {
-        $user = User::where('isn', '=', $ISN)->first();
-
-        if ($user) {
-            return $user;
-        }
-
-        $user = new User();
-        $user->ISN = $ISN;
-        $user->username = 'Test user';
-        $user->password_hash = Hash::make('password');
-        $user->level = 0;
-        $user->short_name = 'test';
-        $user->full_name = 'test';
-        $user->session_id = 1;
-        $user->dept_isn = '1';
-        $user->save();
-
-        return $user;
     }
 
     public function testAddPostWithNoAuth() {

@@ -8,11 +8,10 @@ class AddPostRequest extends FormRequest {
   public function rules() {
     return [
       'isn' => 'numeric',
-      'poll' => 'string',
+      'poll' => 'numeric',
       'question' => 'string',
       'answers' => 'string',
       'postText' => 'string',
-
     ];
   }
 
