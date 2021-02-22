@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Answer;
 use App\Comment;
 use App\Events\NewPost;
-use App\Http\Requests\NewsGetPostsRequest;
+use App\Http\Requests\News\AddPostRequest;
+use App\Http\Requests\News\NewsGetPostsRequest;
 use App\Library\Services\PostsService;
 use App\Like;
 use App\Post;
 use App\Question;
 use App\UserAnswer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -28,10 +30,7 @@ class NewsController extends Controller
         $this->postsService = $postsService;
     }
 
-    public function addPost(Request $request) {
-
-        cache()->clear();
-
+    public function addPost(AddPostRequest $request) {
         $isPoll = (boolean)$request->poll;
         if($isPoll) {
             $question = $request->question;
@@ -40,7 +39,7 @@ class NewsController extends Controller
         DB::beginTransaction();
 
         if(!Auth::check()) {
-            $error = 'Пожалуста авторизуйтесь заново';
+            $error = 'Пожалуйста авторизуйтесь заново';
             $success = false;
             return [
                 'error' => $error,
@@ -72,13 +71,19 @@ class NewsController extends Controller
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
+
             if(isset($request->postFiles)) {
-                foreach ($request->postFiles as $file) {
+                /**
+                 * @var $postFiles File[]
+                 */
+                $postFiles = $request->postFiles;
+                foreach ($postFiles as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
                     Storage::disk('local')->put("public/post_files/$new_post->id/images/$fileName", $content);
                 }
             }
+
             if(isset($request->postDocuments)) {
                 foreach($request->postDocuments as $file) {
                     $fileName = $file->getClientOriginalName();
@@ -86,6 +91,7 @@ class NewsController extends Controller
                     Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
                 }
             }
+
             if(isset($request->postVideos)) {
                 foreach ($request->postVideos as $file) {
                     $fileName = $file->getClientOriginalName();
@@ -93,6 +99,7 @@ class NewsController extends Controller
                     Storage::disk('local')->put("public/post_files/$new_post->id/videos/$fileName", $content);
                 }
             }
+
             if($isPoll) {
                 $poll = new Question();
                 $poll->question = $question;
@@ -100,6 +107,7 @@ class NewsController extends Controller
                 $poll->save();
                 $post_poll = [];
                 $post_answers = [];
+
                 foreach ($answers as $answer) {
                     $answersModel = new Answer();
                     $answersModel->value = $answer;
@@ -155,12 +163,12 @@ class NewsController extends Controller
             'type' => Post::NEW_POST
         ]));
 
+        cache()->clear();
         return $response;
     }
 
     /**
      * @param NewsGetPostsRequest $request
-     * @param PostsService $postsService
      * @return array
      */
     public function getPosts(NewsGetPostsRequest $request) {
@@ -438,13 +446,13 @@ class NewsController extends Controller
     }
 
     public function getBossPosts(Request $request, PostsService $postsService) {
-        \Debugbar::startMeasure('NewsController@getPosts');
+        \Debugbar::startMeasure('NewsController@getBossPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
 
         $response = $postsService->getPosts($last_index, $user_isn, true);
 
-        \Debugbar::stopMeasure('NewsController@getPosts');
+        \Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;
     }
 }

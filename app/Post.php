@@ -3,11 +3,41 @@
 namespace App;
 
 use App\Http\Controllers\NotificationController;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * App\Post
+ *
+ * @property int $id
+ * @property int $user_isn
+ * @property string $post_text
+ * @property int $pinned
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $from_kias
+ * @method static bool|null forceDelete()
+ * @method static Builder|Post newModelQuery()
+ * @method static Builder|Post newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Post onlyTrashed()
+ * @method static Builder|Post query()
+ * @method static bool|null restore()
+ * @method static Builder|Post whereCreatedAt($value)
+ * @method static Builder|Post whereDeletedAt($value)
+ * @method static Builder|Post whereFromKias($value)
+ * @method static Builder|Post whereId($value)
+ * @method static Builder|Post wherePinned($value)
+ * @method static Builder|Post wherePostText($value)
+ * @method static Builder|Post whereUpdatedAt($value)
+ * @method static Builder|Post whereUserIsn($value)
+ * @method static \Illuminate\Database\Query\Builder|Post withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Post withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Post extends Model
 {
     use SoftDeletes;

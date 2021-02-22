@@ -237,7 +237,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/booking', 'BookingController@index')->name('booking');
         Route::post('/booking/set', 'BookingController@set');
         Route::post('/booking/remove', 'BookingController@delete');
-        Route::post('/addPost', 'NewsController@addPost');
+        Route::post('/addPost', 'NewsController@addPost')->name('news.addPost'); // TODO use grouping
         Route::post('/news-birthday', 'NewsController@birthday');
         Route::post('/getPosts', 'NewsController@getPosts');
         Route::post('/deletePost', 'NewsController@deletePost');
@@ -408,7 +408,3 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
-
-
-
-
