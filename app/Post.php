@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Storage;
  * @method static Builder|Post whereUserIsn($value)
  * @method static \Illuminate\Database\Query\Builder|Post withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Post withoutTrashed()
+ *
  * @mixin \Eloquent
  */
 class Post extends Model
@@ -115,6 +116,13 @@ class Post extends Model
         }
     }
 
+    /**
+     * TODO Плохая практика. Лучше использовать relation и with()
+     *
+     * @return array
+     *
+     * @deprecated
+     */
     public function getComments(){
         $comments = [];
 
