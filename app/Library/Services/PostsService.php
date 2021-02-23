@@ -47,6 +47,8 @@ class PostsService
             $query = $query->where('user_isn', User::BOSS_ISN);
         }
 
+        $query = $query->withCount('likes');
+
         if ($last_index === null) {
             $model = $query
                 ->get();
@@ -64,9 +66,13 @@ class PostsService
             $key = $this->getResponseKey($item->id);
             Debugbar::startMeasure($key);
             // Пока что реализовал вот так. Позже сделаю через relations
-            $response[] = cache()->remember($key, $ttl, function () use ($item, $user_isn) {
-                return $this->buildPostResponse($item, $user_isn);
-            });
+            $row = $this->buildPostResponse($item);
+
+            $row['isLiked'] = (new Like())->getIsLiked($item->id, $user_isn);
+            $row['isVoted'] = $item->getIsVoted($user_isn, $item->id);
+
+            $response[] = $row;
+
             Debugbar::stopMeasure($key);
         }
 
@@ -88,19 +94,17 @@ class PostsService
      * TODO Метод неоптимальный, крайне желательно его оптимизировать. Пока что за это отвечает кэш
      *
      * @param Post $item
-     * @param string $user_isn
      * @return array
      */
-    private function buildPostResponse(Post $item, string $user_isn) {
+    private function buildPostResponse(Post $item) {
         return [
             'isn' => $item->user_isn,
             'fullname' => (new User())->getFullName($item->user_isn),
             'postText' => $item->getText(),
             'pinned' => $item->pinned,
             'postId' => $item->id,
-            'edited' => (new Post())->getIsEdited($item->id),
-            'likes' => (new Like())->getLikes($item->id),
-            'isLiked' => (new Like())->getIsLiked($item->id, $user_isn),
+            'edited' => $item->is_edited,
+            'likes' => $item->likes_count,
             'date' => date('d.m.Y H:i', strtotime($item->created_at)),
             'userISN' => $item->user_isn,
             'comments' => $item->getComments(),
@@ -109,7 +113,6 @@ class PostsService
             'youtube' => $item->getVideo(),
             'videos' => $item->getVideoUrl(),
             'post_poll' => $item->getPoll($item->id),
-            'isVoted' => $item->getIsVoted($user_isn, $item->id),
         ];
     }
 
@@ -117,9 +120,8 @@ class PostsService
      * Убиваем кэш только для указанного поста
      *
      * @param $id
-     * @throws Exception
      */
     public function forget($id) {
-        cache()->forget($this->getResponseKey($id)); // or delete();
+        // cache()->forget($this->getResponseKey($id)); // or delete();
     }
 }

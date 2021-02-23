@@ -20,6 +20,10 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property int $from_kias
+ *
+ * @property int $likes_count
+ * @property bool $is_edited
+ *
  * @method static bool|null forceDelete()
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
@@ -49,6 +53,10 @@ class Post extends Model
     const PINNED_POST = 'pinned';
     const DELETED_POST = 'deleted';
     const COMMENDTED_POST = 'commented';
+
+    public function likes() {
+        return $this->hasMany(Like::class);
+    }
 
     public function getPoll($post_id) {
         $question = Question::where('post_id', $post_id)->first();
@@ -107,6 +115,16 @@ class Post extends Model
         $this->save();
     }
 
+    public function getIsEditedAttribute() {
+        return $this->created_at != $this->updated_at;
+    }
+
+    /**
+     * @param $post_id
+     * @return bool
+     *
+     * @deprecated Use $this->is_edited instead
+     */
     public function getIsEdited($post_id) {
         $model = self::where('id', $post_id)
                 ->first();
@@ -231,6 +249,14 @@ class Post extends Model
         }
     }
 
+    /**
+     * TODO Возможно здесь лучше использовать события Eloquent
+     *
+     * https://laravel.com/docs/8.x/eloquent#events
+     *
+     * @param array $options
+     * @return bool|void
+     */
     public function save(array $options = []){
         parent::save();
         (new NotificationController())->sendNewPostNotify($this);
