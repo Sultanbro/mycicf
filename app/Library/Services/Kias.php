@@ -52,8 +52,10 @@ class Kias implements KiasServiceInterface
 
     /** Get kias by system credentials
      */
-    public function initSystem()
+    public function initSystem($name = null, $pwd = null)
     {
+        $login = $name == null ? env('KIAS_LOGIN') : $name;
+        $pass = $pwd == null ? env('KIAS_PASSWORD') : $pwd;
         $this->url = env('KIAS_URL');
         $this->getClient();
         $systemData = $this->authenticate(env('KIAS_LOGIN'), hash('sha512', env('KIAS_PASSWORD')));

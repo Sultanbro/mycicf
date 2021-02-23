@@ -16,14 +16,11 @@ class TestqrController extends Controller
     public function getQR(Request $request)
     {
         $kias = new Kias();
-        $kias = initSystem();
         Log:debug($request->all());
         $success = true;
-        // на входе логин пароль и qr
         $username = $request->username;
         $password = $request->password;
         $qr = $request->qr;
-
         $result = '';
         $response = $kias->authenticate($username, hash('sha512', $password));
         if($response->error)
@@ -33,7 +30,6 @@ class TestqrController extends Controller
         }
         if($success && $response)
         {
-            // на выходе qr и сессион_id , если все норм получаю SubjISN
             $result = $kias->request('User_CicCreateAVOTbyQR',[
                 'SubjISN' => $response->ISN,
                 'QR'=> $qr,
