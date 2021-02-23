@@ -5,15 +5,33 @@ namespace App\Library\Services;
 use App\Like;
 use App\Post;
 use App\User;
+use Debugbar;
+use Exception;
 use Illuminate\Support\Collection;
 
 class PostsService
 {
-    public function getResponseKey(int $postId) {
-        return 'getPosts::postResponse::' . $postId;
+    /**
+     * Генерируем ключ кэша для конкретного поста по его айди
+     *
+     * @param int $postId
+     * @return string
+     */
+    private function getResponseKey(int $postId) {
+        return 'Posts::response::' . $postId;
     }
 
-    public function getPosts($last_index, string $user_isn, $boss = false, $limit = 5)
+    /**
+     * Получаем посты, начиная с указанного, либо сначала, если last_index не указан
+     *
+     * @param string $user_isn
+     * @param $last_index
+     * @param bool $boss
+     * @param int $limit
+     * @return array
+     * @throws Exception
+     */
+    public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5)
     {
         $response = [];
 
@@ -38,12 +56,12 @@ class PostsService
         foreach ($model as $item) {
             $ttl = now()->addMinutes(10);
             $key = $this->getResponseKey($item->id);
-            \Debugbar::startMeasure($key);
+            Debugbar::startMeasure($key);
             // Пока что реализовал вот так. Позже сделаю через relations
             $response[] = cache()->remember($key, $ttl, function () use ($item, $user_isn) {
                 return $this->buildPostResponse($item, $user_isn);
             });
-            \Debugbar::stopMeasure($key);
+            Debugbar::stopMeasure($key);
         }
 
 
@@ -59,11 +77,15 @@ class PostsService
     }
 
     /**
+     * Формируем ответ для поста
+     *
+     * TODO Метод неоптимальный, крайне желательно его оптимизировать. Пока что за это отвечает кэш
+     *
      * @param Post $item
      * @param string $user_isn
      * @return array
      */
-    private function buildPostResponse($item, $user_isn) {
+    private function buildPostResponse(Post $item, string $user_isn) {
         return [
             'isn' => $item->user_isn,
             'fullname' => (new User())->getFullName($item->user_isn),
@@ -85,6 +107,12 @@ class PostsService
         ];
     }
 
+    /**
+     * Убиваем кэш только для указанного поста
+     *
+     * @param $id
+     * @throws Exception
+     */
     public function forget($id) {
         cache()->forget($this->getResponseKey($id)); // or delete();
     }

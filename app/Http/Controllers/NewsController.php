@@ -177,7 +177,7 @@ class NewsController extends Controller
         $last_index = $request->get('lastIndex');
 
         Debugbar::startMeasure('getPosts');
-        $response = $this->postsService->getPosts($last_index, $user_isn);
+        $response = $this->postsService->getPosts($user_isn, $last_index);
         Debugbar::stopMeasure('getPosts');
         return $response;
     }
@@ -450,7 +450,7 @@ class NewsController extends Controller
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
 
-        $response = $postsService->getPosts($last_index, $user_isn, true);
+        $response = $postsService->getPosts($user_isn, $last_index, true);
 
         Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;
