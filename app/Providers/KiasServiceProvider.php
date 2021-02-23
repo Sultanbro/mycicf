@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use App\Library\Services\KiasServiceInterface;
 
-
 class KiasServiceProvider extends ServiceProvider
 {
     /**
@@ -25,13 +24,14 @@ class KiasServiceProvider extends ServiceProvider
                 $session = Auth::user()->session_id;
             }
 
-            if (config('kias.mock')) {
+            if (config('kias.mock.enabled')) {
                 \Debugbar::info('Using mocked Kias Service');
                 $kias = KiasMock::instance();
             } else {
                 \Debugbar::info('Using real Kias Service');
                 $kias = Kias::instance();
             }
+
             $kias->init($session);
             \Debugbar::stopMeasure('KiasServiceInterface initialization');
             return $kias;
