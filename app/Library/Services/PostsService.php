@@ -9,6 +9,13 @@ use Debugbar;
 use Exception;
 use Illuminate\Support\Collection;
 
+/**+
+ * Class PostsService
+ *
+ * Сервис для работы с постами
+ *
+ * @package App\Library\Services
+ */
 class PostsService
 {
     /**
