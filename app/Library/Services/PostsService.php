@@ -29,7 +29,6 @@ class PostsService
      * @param bool $boss
      * @param int $limit
      * @return array
-     * @throws Exception
      */
     public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5)
     {
