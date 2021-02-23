@@ -3,6 +3,7 @@
 namespace App\Library\Services\Mocks;
 
 use App\Library\Services\KiasServiceInterface;
+use Debugbar;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use SoapClient;
@@ -63,23 +64,23 @@ class KiasMock implements KiasServiceInterface {
     public function __construct() {
         // sleep(1); // sleep здесь для имитации задержки
 
-        \Debugbar::log('Kias::Mock Construct');
+        Debugbar::log('KiasMock::Construct');
         $this->delay = config('kias.mock.delay');
     }
 
     private function delay() {
         if ($this->delay > 0) {
             sleep($this->delay);
+            Debugbar::info('KiasMock::delay');
         }
     }
 
     public function init($session) {
-        $this->delay();
         if ($this->initialized) {
-            \Debugbar::log('Kias::Mock Tried to initialize it second time');
+            Debugbar::log('KiasMock - Tried to initialize it second time');
             return;
         }
-        \Debugbar::log('Kias::Mock Init');
+        Debugbar::log('KiasMock -  Init');
         $this->url = config('kias.url');
         $this->_sId = $session;
 
@@ -92,10 +93,10 @@ class KiasMock implements KiasServiceInterface {
     public function initSystem() {
         $this->delay();
         if ($this->systemInitialized) {
-            \Debugbar::log('Kias::Mock Tried to initialize the system second time');
+            Debugbar::log('KiasMock - Tried to initialize the system second time');
             return;
         }
-        \Debugbar::log('Kias::Mock Init System');
+        Debugbar::log('KiasMock - Init System');
         // sleep(1); // sleep здесь для имитации задержки
         $this->url = config('kias.url');
 
@@ -120,7 +121,7 @@ class KiasMock implements KiasServiceInterface {
      */
     public function request($name, $params = []) {
         $this->delay();
-        \Debugbar::log('Kias::Mock Request [' . $name . ' :: ' . json_encode($params) . ']');
+        Debugbar::log('KiasMock::Request [' . $name . ' :: ' . json_encode($params) . ']');
         if ($name === 'User_CicHelloSvc') {
             return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
                 <data>
