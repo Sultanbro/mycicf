@@ -12,6 +12,7 @@ use App\Like;
 use App\Post;
 use App\Question;
 use App\UserAnswer;
+use Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Auth;
@@ -172,13 +173,12 @@ class NewsController extends Controller
      * @return array
      */
     public function getPosts(NewsGetPostsRequest $request) {
-        \Debugbar::startMeasure('NewsController@getPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
 
+        Debugbar::startMeasure('getPosts');
         $response = $this->postsService->getPosts($last_index, $user_isn);
-
-        \Debugbar::stopMeasure('NewsController@getPosts');
+        Debugbar::stopMeasure('getPosts');
         return $response;
     }
 
@@ -446,13 +446,13 @@ class NewsController extends Controller
     }
 
     public function getBossPosts(Request $request, PostsService $postsService) {
-        \Debugbar::startMeasure('NewsController@getBossPosts');
+        Debugbar::startMeasure('NewsController@getBossPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
 
         $response = $postsService->getPosts($last_index, $user_isn, true);
 
-        \Debugbar::stopMeasure('NewsController@getBossPosts');
+        Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;
     }
 }

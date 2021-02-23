@@ -565,16 +565,19 @@ class SiteController extends Controller
     }
 
     public function getModerators(){
+        \Debugbar::startMeasure('SiteController@getModerators');
         $moderators = [];
         foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_MODERATOR])->get() as $users){
             array_push($moderators,
                 $users->user_isn
             );
         }
+        \Debugbar::stopMeasure('SiteController@getModerators');
         return response()->json(['moderators' => $moderators]);
     }
 
     public function getBirthdays(){
+        \Debugbar::startMeasure('getBirthdays');
         $birthdays = Branch::whereNotNull('birthday')
             ->whereDay('birthday', '>=', date('d', time()))
             ->whereMonth('birthday', date('m', time()))
@@ -614,6 +617,7 @@ class SiteController extends Controller
                 $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
             }
         }
+        \Debugbar::stopMeasure('getBirthdays');
         return response()->json(['birthdays' => $result]);
     }
 

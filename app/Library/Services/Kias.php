@@ -5,6 +5,7 @@ namespace App\Library\Services;
 use App\XML\Kias\AuthenticateResult;
 use App\XML\Kias\GetUpperLevelResult;
 use App\XML\Kias\MyCoordinationListResult;
+use Debugbar;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use SoapClient;
@@ -60,7 +61,7 @@ class Kias implements KiasServiceInterface
     public function __construct() {
         // sleep(1); // sleep здесь для имитации задержки
 
-        \Debugbar::log('Kias::Construct');
+        Debugbar::log('Kias::Construct');
     }
 
 
@@ -69,7 +70,7 @@ class Kias implements KiasServiceInterface
         if ($this->initialized) {
             return;
         }
-        \Debugbar::log('Kias::Init');
+        Debugbar::log('Kias::Init');
         $this->url = config('kias.url');
         $this->getClient();
         $this->_sId = $session;
@@ -84,7 +85,7 @@ class Kias implements KiasServiceInterface
         if ($this->systemInitialized) {
             return;
         }
-        \Debugbar::log('Kias::Mock Init System');
+        Debugbar::log('Kias::Mock Init System');
         $this->url = config('kias.url');
         $this->getClient();
 
@@ -93,9 +94,9 @@ class Kias implements KiasServiceInterface
         $passwordHash = hash('sha512', $password);
 
         // $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
-        \Debugbar::startMeasure('Authenticate in Kias');
+        Debugbar::startMeasure('Authenticate in Kias');
         $systemData = $this->authenticate($username, $passwordHash);
-        \Debugbar::stopMeasure('Authenticate in Kias');
+        Debugbar::stopMeasure('Authenticate in Kias');
         $this->_sId = $systemData->Sid;
         $this->systemInitialized = true;
     }
@@ -126,27 +127,27 @@ class Kias implements KiasServiceInterface
 
     public function request($name, $params = [])
     {
-        \Debugbar::log('Kias::Mock Request [' . $name . ' :: ' . json_encode($params) . ']');
+        Debugbar::log('Kias::Mock Request [' . $name . ' :: ' . json_encode($params) . ']');
         try {
             switch ($name) {
                 case 'Auth':
                     $key = 'kias::Auth::' . $name . '::' . serialize($params) . '::';
                     $ttl = now()->addMinutes(config('kias.cache.lifetime'));
-                    \Debugbar::startMeasure('Authenticate in Kias');
+                    Debugbar::startMeasure('Authenticate in Kias');
                     $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
                         return $this->execProc($name, $params);
                     });
-                    \Debugbar::stopMeasure('Authenticate in Kias');
+                    Debugbar::stopMeasure('Authenticate in Kias');
                     break;
 
                 case 'User_CicHelloSvc':
                     $key = 'kias::User_CicHelloSvc::' . $name . '::' . serialize($params) . '::';
                     $ttl = now()->addMinutes(config('kias.cache.lifetime'));
-                    \Debugbar::startMeasure('User_CicHelloSvc in Kias');
+                    Debugbar::startMeasure('User_CicHelloSvc in Kias');
                     $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
                         return $this->execProc($name, $params);
                     });
-                    \Debugbar::stopMeasure('User_CicHelloSvc in Kias');
+                    Debugbar::stopMeasure('User_CicHelloSvc in Kias');
                     break;
 
                 default:
