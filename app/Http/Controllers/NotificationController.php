@@ -98,7 +98,7 @@ class NotificationController extends Controller
             curl_close($ch);
             echo $response;
         }else{
-            echo 'ERROR';
+            // echo 'ERROR';
         }
     }
 }
