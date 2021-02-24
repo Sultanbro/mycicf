@@ -164,7 +164,7 @@ class NewsController extends Controller
             'type' => Post::NEW_POST
         ]));
 
-        cache()->clear();
+        // cache()->clear();
         return $response;
     }
 
@@ -192,7 +192,7 @@ class NewsController extends Controller
             ],
             'type' => Post::DELETED_POST
         ]));
-        cache()->clear();
+        // cache()->clear();
 
         return [
             'success' => true,
@@ -211,7 +211,7 @@ class NewsController extends Controller
         ]));
         $post->setPinned();
 
-        $this->postsService->forget($id);
+        // $this->postsService->forget($id);
 
     }
 
@@ -259,7 +259,7 @@ class NewsController extends Controller
             'type' => Post::LIKED_POST
         ]));
 
-        $this->postsService->forget($post_id);
+        // $this->postsService->forget($post_id);
 
         return $response;
     }
@@ -286,7 +286,7 @@ class NewsController extends Controller
             'type' => Post::EDITED_POST
         ]));
 
-        $this->postsService->forget($post_id);
+        // $this->postsService->forget($post_id);
 
         return $response;
     }
@@ -308,7 +308,7 @@ class NewsController extends Controller
             'fullname' => Auth::user()->full_name,
         ];
 
-        $this->postsService->forget($postId);
+        // $this->postsService->forget($postId);
 
         return $response;
 
@@ -321,7 +321,7 @@ class NewsController extends Controller
             'success' => true,
         ];
 
-        cache()->clear();
+        // cache()->clear();
 
         return $response;
     }
@@ -354,7 +354,7 @@ class NewsController extends Controller
 //            'type' => Post::EDITED_COMMENT
 //        ]));
 
-        cache()->clear();
+        // cache()->clear();
 
         return $response;
     }
@@ -386,7 +386,7 @@ class NewsController extends Controller
             'success' => $success,
         ];
 
-        cache()->clear();
+        // cache()->clear();
 
         return $response;
     }
@@ -407,7 +407,7 @@ class NewsController extends Controller
             }
         }
 
-        cache()->clear();
+        // cache()->clear();
 
         return response()->json([
             'success' => true
