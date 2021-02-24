@@ -274,8 +274,8 @@ class Kias implements KiasServiceInterface
          * @var $response AuthenticateResult
          */
         $response = $this->request('Auth', [
-            'Name' => env('KIAS_LOGIN'),
-            'Pwd'  => hash('sha512', env('KIAS_PASSWORD')),
+            'Name' => config('kias.auth.login'),
+            'Pwd'  => hash('sha512', config('kias.auth.password')),
         ]);
         if ($response->error) {
             throw new Exception('Authentication failed', '419');
