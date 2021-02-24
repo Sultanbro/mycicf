@@ -64,9 +64,10 @@ class PostsService
             $key = $this->getResponseKey($item->id);
             Debugbar::startMeasure($key);
             // Пока что реализовал вот так. Позже сделаю через relations
-            $response[] = cache()->remember($key, $ttl, function () use ($item, $user_isn) {
-                return $this->buildPostResponse($item, $user_isn);
-            });
+            // $response[] = cache()->remember($key, $ttl, function () use ($item, $user_isn) {
+            //     return $this->buildPostResponse($item, $user_isn);
+            // });
+            $response[] = $this->buildPostResponse($item, $user_isn);
             Debugbar::stopMeasure($key);
         }
 
