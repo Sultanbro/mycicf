@@ -21,6 +21,7 @@ class TestqrController extends Controller
         $username = $request->username;
         $password = $request->password;
         $qr = $request->qr;
+        $kias->initSystem($username,$password);
         $result = '';
         $response = $kias->authenticate($username, hash('sha512', $password));
         if($response->error)
