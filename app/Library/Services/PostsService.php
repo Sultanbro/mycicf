@@ -41,7 +41,9 @@ class PostsService
     {
         $response = [];
 
-        $query = Post::orderBy('id', 'DESC')->limit($limit);
+        $query = Post::orderBy('id', 'DESC')
+            ->withCount('likes')
+            ->limit($limit);
 
         if ($boss) {
             $query = $query->where('user_isn', User::BOSS_ISN);
@@ -100,7 +102,7 @@ class PostsService
             'pinned' => $item->pinned,
             'postId' => $item->id,
             'edited' => (new Post())->getIsEdited($item->id),
-            'likes' => (new Like())->getLikes($item->id),
+            'likes' => $item->likes_count,
             'isLiked' => (new Like())->getIsLiked($item->id, $user_isn),
             'date' => date('d.m.Y H:i', strtotime($item->created_at)),
             'userISN' => $item->user_isn,

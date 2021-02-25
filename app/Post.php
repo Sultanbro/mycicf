@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 /**
  * App\Post
  *
+ * TODO Add toJson method
+ *
  * @property int $id
  * @property int $user_isn
  * @property string $post_text
@@ -229,6 +231,10 @@ class Post extends Model
             default :
                 return 'fa-file-o';
         }
+    }
+
+    public function likes() {
+        return $this->hasMany(Like::class);
     }
 
     public function save(array $options = []){
