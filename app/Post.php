@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property int $from_kias
+ * @property int $likes_count
  * @method static bool|null forceDelete()
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
@@ -109,6 +110,14 @@ class Post extends Model
         $this->save();
     }
 
+    /**
+     * TODO Использовать аттрибут вместо этого запроса
+     *
+     * @param $post_id
+     * @return bool
+     *
+     * @deprecated
+     */
     public function getIsEdited($post_id) {
         $model = self::where('id', $post_id)
                 ->first();
