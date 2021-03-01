@@ -238,14 +238,14 @@
                                                   class="resize modal-note width100" maxlength="2000"></textarea>
                                     </div>
 
-                                    <edslogin
+                                    <eds
                                             v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
                                             ref="eds"
                                             :sendSolution="sendSolution"
                                             :coordination="coordination"
                                             :doc_row_list_inner_other="doc_row_list_inner_other"
                                             show-view="sign">
-                                    </edslogin>
+                                    </eds>
 
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
@@ -350,24 +350,25 @@
                  this.$refs.eds.getToken('coordination',solution)
             },
             sendSolution: function (Solution) {
-                if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
-                    this.preloader(true);
-                    this.axios.post("/setCoordination", {
-                        DocISN: this.coordination.ISN,
-                        ISN: this.isn,
-                        Solution: Solution,
-                        Remark: this.Remark,
-                        Resolution : this.resolution
-                    }).then((response) => {
-                        if (!response.data.success) {
-                            this.preloader(false);
-                            alert(response.data.error);
-                        } else {
-                            this.preloader(false);
-                            location.reload();
-                        }
-                    });
-                }
+                console.log('send solution');
+                // if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                //     this.preloader(true);
+                //     this.axios.post("/setCoordination", {
+                //         DocISN: this.coordination.ISN,
+                //         ISN: this.isn,
+                //         Solution: Solution,
+                //         Remark: this.Remark,
+                //         Resolution : this.resolution
+                //     }).then((response) => {
+                //         if (!response.data.success) {
+                //             this.preloader(false);
+                //             alert(response.data.error);
+                //         } else {
+                //             this.preloader(false);
+                //             location.reload();
+                //         }
+                //     });
+                // }
             },
             sendEdsSolution(){
                 if(this.$refs.eds.edsConfirmed){
