@@ -50,6 +50,10 @@ class Post extends Model
     const DELETED_POST = 'deleted';
     const COMMENDTED_POST = 'commented';
 
+    public function likes() {
+        return $this->hasMany(Like::class);
+    }
+
     public function getPoll($post_id) {
         $question = Question::where('post_id', $post_id)->first();
         $question_id = $question['id'];
@@ -114,6 +118,10 @@ class Post extends Model
         if($model !== null) {
             return $model->created_at != $model->updated_at;
         }
+    }
+
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 
     /**
