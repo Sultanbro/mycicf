@@ -18,12 +18,16 @@
                 <div class="text-center relative">
                     <div>
                         <div class="absolute height100 zi-3">
-                            <div class="pr-2 pl-2 pt-2 pb-2 height100 pointer d-flex vertical-middle events-arrow-bg"  v-on:click="prev()" v-if="index !== 0">
+                            <div class="pr-2 pl-2 pt-2 pb-2 height100 pointer d-flex vertical-middle events-arrow-bg"
+                                 @click="prev"
+                                 v-if="index !== 0">
                                 <i class="fa fa-long-arrow-alt-left color-blue" aria-hidden="true"></i>
                             </div>
                         </div>
                         <div class="absolute height100 absolute-right-0 zi-3">
-                            <div class="pt-2 pr-2 pb-2 pl-2 height100 pointer d-flex vertical-middle events-arrow-bg" v-on:click="next()" v-if="index < birthdays.length-1">
+                            <div class="pt-2 pr-2 pb-2 pl-2 height100 pointer d-flex vertical-middle events-arrow-bg"
+                                 @click="next"
+                                 v-if="index < birthdays.length - 1">
                                 <i class="fa fa-long-arrow-alt-right color-blue" aria-hidden="true"></i>
                             </div>
                         </div>
@@ -59,7 +63,7 @@
         data() {
             return {
                 birthdays: [],
-                index : 0,
+                index: 0,
                 today: new Date().getDate(),
                 month: new Date().getMonth() + 1,
                 monthNames: {
@@ -92,10 +96,24 @@
                     });
             },
             next(){
-                this.index++;
+                let year = new Date().getFullYear()
+                let month = new Date().getMonth() + 1
+                let lastDay = new Date(year, month, 0).getDate()
+
+                if(this.birthdays[this.index].birthday.slice(0, 2) == lastDay) {
+                    return;
+                }
+                else {
+                    this.index++;
+                }
             },
-            prev(){
-                this.index--;
+            prev() {
+                if(this.today == 1) {
+                    return;
+                }
+                else {
+                    this.index--;
+                }
             }
         }
     }
