@@ -392,7 +392,7 @@ class NewsController extends Controller
             'success' => $success,
         ];
 
-        $this->postsService->forget($post_id);
+        // $this->postsService->forget($post_id);
 
         return $response;
     }
