@@ -7,6 +7,7 @@ use App\Like;
 use App\Post;
 use App\User;
 use Debugbar;
+use Exception;
 use Illuminate\Support\Collection;
 
 /**+
@@ -41,8 +42,7 @@ class PostsService
     {
         $response = [];
 
-        $query = Post::orderBy('id', 'DESC')
-            ->withCount('likes')
+        $query = Post::withCount('likes')->orderBy('id', 'DESC')
             ->with('comments')
             ->limit($limit);
 
@@ -63,13 +63,8 @@ class PostsService
          * @var Post[]|Collection $model
          */
         foreach ($model as $item) {
-            $ttl = now()->addMinutes(10);
             $key = $this->getResponseKey($item->id);
             Debugbar::startMeasure($key);
-            // Пока что реализовал вот так. Позже сделаю через relations
-            // $response[] = cache()->remember($key, $ttl, function () use ($item, $user_isn) {
-            //     return $this->buildPostResponse($item, $user_isn);
-            // });
             $response[] = $this->buildPostResponse($item, $user_isn);
             Debugbar::stopMeasure($key);
         }
@@ -95,7 +90,7 @@ class PostsService
      * @param string $user_isn
      * @return array
      */
-    private function buildPostResponse(Post $item, $user_isn) {
+    private function buildPostResponse(Post $item, string $user_isn) {
         return [
             'isn' => $item->user_isn,
             'fullname' => (new User())->getFullName($item->user_isn),
@@ -129,6 +124,7 @@ class PostsService
      * Убиваем кэш только для указанного поста
      *
      * @param $id
+     * @throws Exception
      */
     public function forget($id) {
         cache()->forget($this->getResponseKey($id)); // or delete();
