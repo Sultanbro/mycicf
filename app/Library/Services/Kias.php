@@ -64,6 +64,9 @@ class Kias implements KiasServiceInterface
         Debugbar::log('Kias::Construct');
     }
 
+    private function getLifetime() {
+        return now()->addMinutes(config('kias.cache.lifetime'));
+    }
 
     public function init($session)
     {
@@ -132,7 +135,7 @@ class Kias implements KiasServiceInterface
             switch ($name) {
                 case 'Auth':
                     $key = 'kias::Auth::' . $name . '::' . serialize($params) . '::';
-                    $ttl = now()->addMinutes(config('kias.cache.lifetime'));
+                    $ttl = $this->getLifetime();
                     Debugbar::startMeasure('Authenticate in Kias');
                     $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
                         return $this->execProc($name, $params);
@@ -142,7 +145,7 @@ class Kias implements KiasServiceInterface
 
                 case 'User_CicHelloSvc':
                     $key = 'kias::User_CicHelloSvc::' . $name . '::' . serialize($params) . '::';
-                    $ttl = now()->addMinutes(config('kias.cache.lifetime'));
+                    $ttl = $this->getLifetime();
                     Debugbar::startMeasure('User_CicHelloSvc in Kias');
                     $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
                         return $this->execProc($name, $params);
@@ -271,8 +274,8 @@ class Kias implements KiasServiceInterface
          * @var $response AuthenticateResult
          */
         $response = $this->request('Auth', [
-            'Name' => env('KIAS_LOGIN'),
-            'Pwd'  => hash('sha512', env('KIAS_PASSWORD')),
+            'Name' => config('kias.auth.login'),
+            'Pwd'  => hash('sha512', config('kias.auth.password')),
         ]);
         if ($response->error) {
             throw new Exception('Authentication failed', '419');

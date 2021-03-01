@@ -76,6 +76,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Branch', 'kias_id', 'ISN');
     }
 
+    /**
+     * TODO Метод не используется
+     *
+     * @return bool
+     *
+     * @deprecated
+     */
     public function checkSession(){
         $kias = new Kias();
         $response = $kias->request('User_CicHelloSvc', []);
@@ -85,6 +92,13 @@ class User extends Authenticatable
         return true;
     }
 
+    /**
+     * TODO Метод не используется
+     *
+     * @return bool
+     *
+     * @deprecated
+     */
     public function reAuthenticate(){
         $kias = new Kias();
         $kias->init(null);

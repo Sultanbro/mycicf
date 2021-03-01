@@ -7,7 +7,6 @@ use App\Like;
 use App\Post;
 use App\User;
 use Debugbar;
-use Exception;
 use Illuminate\Support\Collection;
 
 /**+
@@ -96,7 +95,7 @@ class PostsService
      * @param string $user_isn
      * @return array
      */
-    private function buildPostResponse(Post $item, string $user_isn) {
+    private function buildPostResponse(Post $item, $user_isn) {
         return [
             'isn' => $item->user_isn,
             'fullname' => (new User())->getFullName($item->user_isn),
@@ -130,7 +129,6 @@ class PostsService
      * Убиваем кэш только для указанного поста
      *
      * @param $id
-     * @throws Exception
      */
     public function forget($id) {
         cache()->forget($this->getResponseKey($id)); // or delete();

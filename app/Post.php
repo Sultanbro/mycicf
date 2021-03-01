@@ -116,15 +116,14 @@ class Post extends Model
     }
 
     public function getIsEditedAttribute() {
-        return !$this->created_at->eq($this->updated_at);
+        return $this->created_at != $this->updated_at;
     }
-
 
     /**
      * @param $post_id
      * @return bool
      *
-     * @deprecated
+     * @deprecated Use $this->is_edited instead
      */
     public function getIsEdited($post_id) {
         $model = self::where('id', $post_id)
@@ -254,6 +253,14 @@ class Post extends Model
         }
     }
 
+    /**
+     * TODO Возможно здесь лучше использовать события Eloquent
+     *
+     * https://laravel.com/docs/8.x/eloquent#events
+     *
+     * @param array $options
+     * @return bool|void
+     */
     public function save(array $options = []){
         parent::save();
         (new NotificationController())->sendNewPostNotify($this);
