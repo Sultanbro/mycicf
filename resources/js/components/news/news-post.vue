@@ -137,13 +137,13 @@
                 <transition name="transition-textarea-height">
                     <textarea v-model="post.postText"
                               v-if="editMode"
-                              maxlength="8000"
+                              maxlength="12000"
                               :class="{'textarea-height': editMode}"
                               class="custom-input w-100 pr-5"></textarea>
                 </transition>
-                <div v-if="post.postText.length > 1950">
+                <div v-if="post.postText.length > 9500">
                     <span>
-                        <small>Отслаось символов: {{2000 - post.postText.length > 0 ? 2000 - post.postText.length : 0}}</small>
+                        <small>Отслаось символов: {{10000 - post.postText.length > 0 ? 10000 - post.postText.length : 0}}</small>
                     </span>
                 </div>
                 <emoji-component v-if="editMode" :type="EDIT_POST_TEXTAREA"></emoji-component>
