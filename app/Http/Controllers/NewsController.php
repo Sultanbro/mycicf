@@ -13,6 +13,7 @@ use App\Post;
 use App\Question;
 use App\UserAnswer;
 use Debugbar;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Auth;
@@ -51,11 +52,11 @@ class NewsController extends Controller
         // TODO Создать FormRequest для этого действия и заложить эти проверки в валидацию
         if ($request->postText === null
             && isset($request->postFiles)
-            && sizeof($request->postFiles) === 0
+            && count($request->postFiles) === 0
             && isset($request->postVideos)
-            && sizeof($request->postVideos) === 0
+            && count($request->postVideos) === 0
             && isset($request->postDocuments)
-            && sizeof($request->postDocuments) === 0) {
+            && count($request->postDocuments) === 0) {
 
             $error = 'Заполните поле или добавьте вложения';
             $success = false;
@@ -127,7 +128,7 @@ class NewsController extends Controller
                     ];
                 }
             }
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             DB::rollBack();
             $error = $e->getMessage();
             $success = false;
@@ -237,7 +238,7 @@ class NewsController extends Controller
         $model = Like::where('post_id', $post_id)
             ->where('user_isn', $user_isn);
 
-        if(sizeof($model->get()) === 0) {
+        if(count($model->get()) === 0) {
             $like = new Like();
             $like->user_isn = $user_isn;
             $like->post_id = $post_id;
@@ -374,7 +375,7 @@ class NewsController extends Controller
             ->where('answer_id', $answer_id)
             ->where('user_isn', $user_isn);
 
-        if(sizeof($model->get()) === 0) {
+        if(count($model->get()) === 0) {
             $vote = new UserAnswer();
             $vote->user_isn = $user_isn;
             $vote->question_id = $question_id;
