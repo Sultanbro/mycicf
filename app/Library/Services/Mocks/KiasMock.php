@@ -91,7 +91,6 @@ class KiasMock implements KiasServiceInterface {
      * Get kias by system credentials
      */
     public function initSystem() {
-        $this->delay();
         if ($this->systemInitialized) {
             Debugbar::log('KiasMock - Tried to initialize the system second time');
             return;
