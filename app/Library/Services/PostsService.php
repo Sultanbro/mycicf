@@ -2,6 +2,7 @@
 
 namespace App\Library\Services;
 
+use App\Comment;
 use App\Like;
 use App\Post;
 use App\User;
@@ -102,12 +103,12 @@ class PostsService
             'postText' => $item->getText(),
             'pinned' => $item->pinned,
             'postId' => $item->id,
-            'edited' => (new Post())->getIsEdited($item->id),
+            'edited' => $item->is_edited,
             'likes' => $item->likes_count,
             'isLiked' => (new Like())->getIsLiked($item->id, $user_isn),
             'date' => date('d.m.Y H:i', strtotime($item->created_at)),
             'userISN' => $item->user_isn,
-            'comments' => $item->comments->map(function (\App\Comment $comment) {
+            'comments' => $item->comments->map(function (Comment $comment) {
                 return [
                     'commentText' => $comment->text,
                     'userISN' => $comment->user_isn,
