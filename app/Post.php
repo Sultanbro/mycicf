@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property int $from_kias
+ * @property bool $is_edited
+ * @property int $likes_count
+ * @property Collection|Comment[] $comments
  * @method static bool|null forceDelete()
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
@@ -111,6 +115,17 @@ class Post extends Model
         $this->save();
     }
 
+    public function getIsEditedAttribute() {
+        return !$this->created_at->eq($this->updated_at);
+    }
+
+
+    /**
+     * @param $post_id
+     * @return bool
+     *
+     * @deprecated
+     */
     public function getIsEdited($post_id) {
         $model = self::where('id', $post_id)
                 ->first();
