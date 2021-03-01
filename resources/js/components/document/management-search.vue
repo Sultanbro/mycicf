@@ -23,7 +23,7 @@
         <!-- MODAL -->
         <div class="modal fade" id="createDocument" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="document">
@@ -71,8 +71,7 @@
             isn: Number,
         },
         methods: {
-            isnShow(isn, id) {
-                console.log(isn);
+            isnShow(isn, index) {
                 this.axios.get(`/document/${isn}`).then(response => {
                     location.href = `/document/${isn}`
                     console.log(response)
@@ -130,6 +129,10 @@
 
     .caret {
         float: right;
+    }
+
+    .btn:hover {
+        font-size: larger; /* blue */
     }
 
     .color-blue {

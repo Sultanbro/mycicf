@@ -780,4 +780,11 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function userCicChangeDocCoordination($emplIsn, $command, $emplIsn1) {
+        return $this->request(User_CicChangeDocCoordination, [
+            'EMPLISN' => $emplIsn,
+            'COMMAND' => $command,
+            'EMPLISN1' => $emplIsn1
+        ]);
+    }
 }

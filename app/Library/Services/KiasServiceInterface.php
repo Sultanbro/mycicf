@@ -320,4 +320,12 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs);
+
+    /**
+     * @param $emplIsn
+     * @param $command
+     * @param $emplIsn1
+     * @return mixed
+     */
+    public function userCicChangeDocCoordination($emplIsn, $command, $emplIsn1);
 }

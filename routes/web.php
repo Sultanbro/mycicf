@@ -352,8 +352,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
         Route::get('document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
         Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
-        //Route::get('/document/saveDocument', 'DocumentManagementController@saveDocument');
+        Route::post('/document/saveDocument', 'DocumentManagementController@saveDocument');
+        Route::post('/document/buttonClick', 'DocumentManagementController@buttonClick');
         Route::get('documents', 'DocumentManagementController@documents')->name('document.documents');
+        Route::post('/sendOut', 'DocumentManagementController@getOrSetDocs');
+        Route::post('/changeDocCoordination', 'DocumentManagementController@changeDocCoordination');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
@@ -414,7 +417,7 @@ Route::get('test3', function () {
 });
 
 Route::post('/check-test', 'DocumentManagementController@checkTest');
-Route::post('/document/saveDocument', 'DocumentManagementController@saveDocument');
+
 
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');

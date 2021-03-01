@@ -224,6 +224,7 @@ class CoordinationController extends Controller
                     foreach ($value->row as $coordination) {
                         array_push($coordinations, [
                             'FullName' => (string)$coordination->SubjNAME,
+                            'SubjISN' => (int)$coordination->SubjISN,
                             'Duty' => (string)$coordination->DutyName,
                             'Dept' => (string)$coordination->DeptName,
                             'Solution' => (string)$coordination->Solution,
