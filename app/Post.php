@@ -66,12 +66,12 @@ class Post extends Model
 
         $post_answers = [];
         foreach ($answers as $answer) {
-            array_push($post_answers, [
+            $post_answers[] = [
                 "answer_id" => $answer['id'],
                 "answer_title" => $answer['value'],
                 "answer_votes" => $this->getAnswerVotes($answer['id']),
                 "checked" => false
-            ]);
+            ];
         }
         $post_poll = [
             "question_id" => $question_id,
@@ -151,13 +151,13 @@ class Post extends Model
         $model = Comment::where('post_id', $this->id)->get();
 
         foreach ($model as $comment) {
-            array_push($comments, [
+            $comments[] = [
                 'commentText' => $comment->text,
                 'userISN' => $comment->user_isn,
                 'commentId' => $comment->id,
                 'fullname' => (new User)->getFullName($comment->user_isn),
                 'date' => date('d.m.Y H:i', strtotime($comment->created_at)),
-            ]);
+            ];
         }
         return $comments;
     }
@@ -187,13 +187,13 @@ class Post extends Model
     public function getText(){
         if($this->getVideo() === null){
             return $this->post_text;
-        }else{
-            $start = strpos($this->post_text, '<iframe');
-            $end = strpos($this->post_text, '</iframe>');
-            $text = substr($this->post_text, 0, $start);
-            $text .= substr($this->post_text, $end+9);
-            return $text;
         }
+
+        $start = strpos($this->post_text, '<iframe');
+        $end = strpos($this->post_text, '</iframe>');
+        $text = substr($this->post_text, 0, $start);
+        $text .= substr($this->post_text, $end+9);
+        return $text;
     }
 
     public function getVideo(){
@@ -209,7 +209,7 @@ class Post extends Model
         $file = Storage::disk('local')->files("public/post_files/$this->id/videos");
         $result = [];
         foreach ($file as $key => $item){
-                array_push($result, "/storage".substr($item,6));
+            $result[] = "/storage" . substr($item, 6);
         }
         return $result;
     }
