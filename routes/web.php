@@ -246,6 +246,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', '127.0.0.1')], function () {
         Route::get('/getTestKiasDima', 'RecruitingController@testKiasDima');
         Route::post('/recruiting/addResume', 'RecruitingController@addResume');
         Route::post('/recruiting/test21', 'RecruitingController@testt1');
+        Route::post('/recruiting/sendRecruitingNotify', 'NotificationController@sendRecruitingNotify');
+        Route::post('/recruiting/upload-recruiting-file', 'RecruitingController@sendRecruitingNotify');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
@@ -327,6 +329,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', '127.0.0.1')], function () {
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
 
         Route::post('recruiting/save', 'RecruitingController@saveCandidat');
+
+        Route::post('/getNameByIsnBranch', 'SiteController@getNameByIsnBranch');
     });
 });
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\Answer;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\NotificationController;
 
 class RecruitingController extends Controller
 {
@@ -45,8 +47,32 @@ class RecruitingController extends Controller
             'result' => $requests
         ]);
     }
-     public function  getChiefsRequest(Request $request){
+     public function  getChiefsRequest(Request $request, KiasServiceInterface $kiasService){
+//         (new NotificationController())->sendRecruitingNotify(506791);
+//
+//         return response()->json([
+//             'success' => false,
+//             'result' => []
+//         ]);
+
         $requests = Recruiting::all();
+        foreach ($requests as $req){
+            $req->unit_structural_name_and_city = $req->getBranchName($req->unit_structural_name_and_city);
+            $req->name_of_post = $req->getBranchNameByIsn($req->name_of_post, $kiasService);
+            $req->reason_to_recruiting = $req->getBranchNameByIsn($req->reason_to_recruiting, $kiasService);
+            $req->desired_age = $req->getBranchNameByIsn($req->desired_age, $kiasService);
+            $req->sex = $req->getBranchNameByIsn($req->sex, $kiasService);
+            $req->education = $req->getBranchNameByIsn($req->education, $kiasService);
+            $req->work_experience = $req->getBranchNameByIsn($req->work_experience, $kiasService);
+            $req->is_he_was_boss = $req->getBranchNameByIsn($req->is_he_was_boss, $kiasService);
+            $req->type_of_hire = $req->getBranchNameByIsn($req->type_of_hire, $kiasService);
+            $req->perspective_to_candidate = $req->getBranchNameByIsn($req->perspective_to_candidate, $kiasService);
+            $req->computer_knowing = $req->getBranchNameByIsn($req->computer_knowing, $kiasService);
+            $req->motivation = $req->getBranchNameByIsn($req->motivation, $kiasService);
+            $req->job_chart = $req->getBranchNameByIsn($req->job_chart, $kiasService);
+            $req->have_car = $req->getBranchNameByIsn($req->have_car, $kiasService);
+            $req->driver_category = $req->getBranchNameByIsn($req->driver_category, $kiasService);
+        }
         return response()->json([
             'success' => $requests ? true : false,
             'result' => $requests
@@ -88,7 +114,7 @@ class RecruitingController extends Controller
     }
     public function sendRequest(){
         $success = false;
-        $result = Recruiting::get();
+        $result = Recruiting::all();
         if ($result){
             $success = true;
         }
@@ -191,22 +217,39 @@ class RecruitingController extends Controller
     }
 //    Отправка данных кандидата
     public function saveCandidatsData(Request $request,KiasServiceInterface $kias){
-        $candidats_data = RecruitingCandidatesData::where('recruiting_id',$request->candidatsData['recruitingId']);
+        $cData = json_decode($request->candidatsData);
+        if($cData->manualFullname == '' || $cData->manualPhoneNumber == '' || $cData->manualIIN == '' || $request->postDocuments == null || !isset($request->postDocuments) || isset($request->postDocuments) && sizeof($request->postDocuments) === 0){
+            $error = 'Добавьте вложение';
+            $success = false;
+            return [
+                'error' => $error,
+                'success' => $success
+            ];
+        }
+        $candidats_data = RecruitingCandidatesData::where('recruiting_id',$cData->recruitingId)->first();
         if(!isset($candidats_data->id)) {
             $candidats_data = new RecruitingCandidatesData();
         }
-
 //        $candidats_data->candidats_phone_number = $request->candidatsData['cityAdress'];
-        $candidats_data->recruiting_id = $request->candidatsData['recruitingId'];
-        $candidats_data->candidate_fullname = $request->candidatsData['manualFullname'];
-        $candidats_data->candidate_iin = $request->candidatsData['manualIIN'];
-        $candidats_data->candidate_phone_number = $request->candidatsData['manualPhoneNumber'];
-        $candidats_data->responsible_recruiter = $request->candidatsData['recruiterFullname'];
+        $candidats_data->recruiting_id = $cData->recruitingId;
+        $candidats_data->candidate_fullname = $cData->manualFullname;
+        $candidats_data->candidate_iin = $cData->manualIIN;
+        $candidats_data->candidate_phone_number = $cData->manualPhoneNumber;
+        $candidats_data->responsible_recruiter = $cData->recruiterFullname;
+
         if(!$candidats_data->save()){
             return response()->json([
                 'success' => false,
                 'error' => 'Ошибка'
             ]);
+        } else {
+            if(isset($request->postDocuments)) {
+                foreach($request->postDocuments as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/candidate_data/$candidats_data->id/$fileName", $content);
+                }
+            }
         }
         return response()->json([
             'success' => true,
@@ -255,13 +298,14 @@ class RecruitingController extends Controller
             'success' => true,
         ]);
     }
-    public function  getCandidatsDataRequest(Request $request){
+    public function getCandidatsDataRequest(Request $request){
         $result = RecruitingCandidatesData::pluck('recruiting_id', 'candidate_fullname')->toArray();
 
         $response = [];
 
         foreach ($result as $key => $value) {
             $data = Recruiting::where('id', $value)->first();
+            $data->unit_structural_name_and_city = $data->getBranchName($data->unit_structural_name_and_city);
 
             array_push($response, [
                 'fullname' => $key,
@@ -312,13 +356,16 @@ class RecruitingController extends Controller
         ]);
     }
     public function getCandidatsDataManualRequest(Request $request){
-//        $result = RecruitingCandidatesData::pluck('recruiting_id', 'candidate_fullname')->toArray();
-
-//        $req = RecruitingCandidatesData::all();
-
-        $result = RecruitingCandidatesData::all();
+        $results = [];
+        $result = RecruitingCandidatesData::get();
+        if($result){
+            foreach($result as $res){
+                $res['documents'] = $res->getDocuments();
+                array_push($results,$res);
+            }
+        }
         return response()->json([
-            'success' => $result ? true : false,
+            'success' => $results ? true : false,
             'result' => $result
         ]);
     }

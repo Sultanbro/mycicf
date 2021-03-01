@@ -42,13 +42,13 @@
                 </div>
             </div>
             <div v-if="recruitingTabs == 1" class="recruiting-container">
-                <input type="search"
-                       class="colleagues-section__search-input pl-2"
-                       placeholder="Поиск"
-                       v-model="searchText">
-                <treeselect class='w-50' :multiple="false" :options="options" v-model="candidat.cityAdressSelect" />
-                <button @click="searchUser()"
-                        class="colleagues-section__btn border-0 bg-color-blue color-white pl-3 pr-3 pt-1 pb-1"><i class="fas fa-search"></i></button>
+<!--                <input type="search"-->
+<!--                       class="colleagues-section__search-input pl-2"-->
+<!--                       placeholder="Поиск"-->
+<!--                       v-model="searchText">-->
+<!--                <treeselect class='w-50' :multiple="false" :options="options" v-model="candidat.cityAdressSelect" />-->
+<!--                <button @click="searchUser()"-->
+<!--                        class="colleagues-section__btn border-0 bg-color-blue color-white pl-3 pr-3 pt-1 pb-1"><i class="fas fa-search"></i></button>-->
                 <div class="recruiting-header">
                     <div class="recruiting-header-tab">
                         <div class="recruiting-header-tab-inner rec-active">
@@ -56,25 +56,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-4">
-                    <div class="colleagues-section__body">
-                        <colleagues-info
-                            v-for="(user, index) in usersList"
-                            :key="index"
-                            :info="user"
-                        ></colleagues-info>
-                    </div>
-                </div>
+<!--                <div class="p-4">-->
+<!--                    <div class="colleagues-section__body">-->
+<!--                        <colleagues-info-->
+<!--                            v-for="(user, index) in usersList"-->
+<!--                            :key="index"-->
+<!--                            :info="user"-->
+<!--                        ></colleagues-info>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="recruiting-body">
                     <div>
                         <div class="recruiting-select-header">
                             Наименование структурного подразделения (укажите город и адрес филиала)
                         </div>
                         <div>
-                            <select class="recruiting-select" v-model="candidat.cityAdressSelect">
-                                <option value="selected" class="none"></option>
-                                <option v-for="unit in dicti.structuralUnitAndCity" :value="unit.Value[0]">{{unit.Label[0]}}</option>
-                            </select>
+                            <treeselect class='w-100 treeSelectRecruiting' placeholder="qwe" :multiple="false" :options="options" v-model="candidat.cityAdressSelect" />
                         </div>
                     </div>
                     <div class="d-flex jc-sb mt-2">
@@ -86,7 +83,7 @@
                                 <select class="recruiting-select" v-model="candidat.nameOfPostSelect">
                                     <option value="selected" class="none"></option>
                                     <option v-for="name in dicti.nameOfPost" :value="name.Value[0]">{{name.Label[0]}}</option>
-                                </select>n
+                                </select>
                             </div>
                         </div>
                         <div class="recruiting-double-block col-md-5">
@@ -485,7 +482,7 @@
                                             <input type="file" class="recruiting-upload-general typeFile" id="file-upload" value="Файл 1" @change="fileUpload">
                                         </div>
                                         <div>
-                                            <div v-for="(document, index) in documents"
+                                            <div v-for="(document, index) in candidateBase.documents"
                                                  class="d-flex justify-content-between bg-white pl-3 pr-3">
                                                 <div class="d-flex align-items-center">
                                                     <div v-if="document.type === 'application/msword' || document.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
@@ -503,7 +500,7 @@
                                                     <div v-if="document.type === 'application/vnd.rar' || document.type === 'application/zip'">
                                                         <i class="fas fa-file-archive text-info fs-1_2"></i>
                                                     </div>
-                                                    <div class="p-2">{{document.name}}</div>
+                                                    <div class="p-2"><a target="_blank" :href="document.link">{{document.name}}</a></div>
                                                 </div>
                                                 <button class="border-0 bg-transparent button-delete" @click="deleteFile(index)">
                                                     <i class="fas fa-times"></i>
@@ -513,8 +510,12 @@
                                         <div class="recruiting-savebtn-container">
 <!--                                            candidatsResumeModalSend Функция отправки резюме-->
 <!--                                            savedSuccess-->
-                                            <div class="recruiting-btn" @click="sendCandidatsData" v-bind:class="{
-                                                disabledBtnRecruiting : isActiveCandidatsBase}">
+                                            <div class="recruiting-btn"
+                                                 @click="sendCandidatsData"
+                                                 v-bind:class="{
+                                                 disabledBtnRecruiting : isActiveCandidatsBase}"
+                                                 :disabled="isActiveCandidatsBase"
+                                                >
                                                 Сохранить
                                             </div>
                                         </div>
@@ -525,7 +526,7 @@
                                 <div class="recruiting-modal-borderbot">
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Вакансия:</div>
-                                        <div class="col-md-6">{{candidatBackward.nameOfPostSelect}}</div>
+                                        <div class="col-md-6">{{candidatBackward.nameOfPostSelect[0]}}</div>
                                     </div>
                                     <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Количество единиц:</div>
@@ -687,13 +688,12 @@
                                         Заявка на поиск кандидата
                                     </div>
                                     <div class="recruiting-select-header">
-                                        Наимененование структурного подразделения (укажите город и адрес филиала)
+                                        Наименование структурного подразделения (укажите город и адрес филиала)
                                     </div>
+<!--                                    <button @click="qwer">candidatBackward.nameOfPostSelect</button>-->
+<!--                                    <button @click="qwer1">candidatBackward.nameOfPostSelect[0]</button>-->
                                     <div>
-                                        <select class="recruiting-select" v-model="candidatBackward.cityAdressSelect" disabled>
-                                            <option value="selected" class="none"></option>
-                                            <option v-for="cities in cityAdress">{{cities}}</option>
-                                        </select>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.cityAdressSelect}}</div>
                                     </div>
                                 </div>
                                 <div class="d-flex jc-sb mt-2">
@@ -702,10 +702,7 @@
                                             Наименование вакантной должности
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.nameOfPostSelect" disabled>
-                                                <option value="selected" class="none"></option>
-                                                <option v-for="inner in nameOfPost">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.nameOfPostSelect[0]}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-double-block col-md-5">
@@ -713,7 +710,7 @@
                                             Количество
                                         </div>
                                         <div>
-                                            <input type="number" onclick="this.select()" v-model="candidatBackward.quantityPeople" class="recruiting-select" disabled>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.quantityPeople}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -722,10 +719,7 @@
                                         Причина возникновения вакансии
                                     </div>
                                     <div>
-                                        <select class="recruiting-select" v-model="candidatBackward.ReasonToRecruitingSelect" disabled>
-                                            <option class="none"></option>
-                                            <option v-for="inner in ReasonToRecruiting" selected>{{inner}}</option>
-                                        </select>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.ReasonToRecruitingSelect[0]}}</div>
                                     </div>
                                 </div>
                                 <div class="recruiting-tripple-block-container">
@@ -734,9 +728,7 @@
                                             Желаемый возраст
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.desiredAgeSelect" disabled>
-                                                <option v-for="inner in desiredAge">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.desiredAgeSelect[0]}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-tripple-block col-md-4">
@@ -744,9 +736,7 @@
                                             Пол
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.sexSelect" disabled>
-                                                <option v-for="inner in sex">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.sexSelect[0]}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-tripple-block col-md-4">
@@ -754,9 +744,7 @@
                                             Образование
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.educationSelect" disabled>
-                                                <option v-for="inner in education">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.educationSelect[0]}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -776,9 +764,7 @@
                                                 Опыт работы
                                             </div>
                                             <div>
-                                                <select class="recruiting-select" v-model="candidatBackward.workExpirienceSelect" disabled>
-                                                    <option v-for="inner in workExpirience">{{inner}}</option>
-                                                </select>
+                                                <div class="recruiting-div-like-select">{{candidatBackward.workExpirienceSelect[0]}}</div>
                                             </div>
                                         </div>
                                         <div class="recruiting-tripple-block col-md-4">
@@ -786,9 +772,7 @@
                                                 Наличие подчиненных
                                             </div>
                                             <div>
-                                                <select v-model="candidatBackward.isHeWasBossSelect" class="recruiting-select" disabled>
-                                                    <option v-for="inner in isHeWasBoss">{{inner}}</option>
-                                                </select>
+                                                <div class="recruiting-div-like-select">{{candidatBackward.isHeWasBossSelect[0]}}</div>
                                             </div>
                                         </div>
                                         <div class="recruiting-tripple-block col-md-4">
@@ -796,9 +780,7 @@
                                                 Форма найма
                                             </div>
                                             <div>
-                                                <select v-model="candidatBackward.typeOfHireSelect" class="recruiting-select" disabled>
-                                                    <option v-for="inner in typeOfHire">{{inner}}</option>
-                                                </select>
+                                                <div class="recruiting-div-like-select">{{candidatBackward.typeOfHireSelect[0]}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -817,9 +799,7 @@
                                         Возможности и перспективы для кандидата
                                     </div>
                                     <div>
-                                        <select v-model="candidatBackward.perspectiveToCandidatSelect" class="recruiting-select" disabled>
-                                            <option v-for="inner in perspectiveToCandidat">{{inner}}</option>
-                                        </select>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.perspectiveToCandidatSelect[0]}}</div>
                                     </div>
                                 </div>
                                 <div>
@@ -827,9 +807,7 @@
                                         Уровень владения компьютерными программами
                                     </div>
                                     <div>
-                                        <select class="recruiting-select" v-model="candidatBackward.computerKnowingSelect" disabled>
-                                            <option v-for="inner in computerKnowing">{{inner}}</option>
-                                        </select>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.computerKnowingSelect[0]}}</div>
                                     </div>
                                 </div>
 
@@ -870,9 +848,7 @@
                                             Наличие дополнительной мотивации (бонусов)
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.motivationSelect" disabled>
-                                                <option v-for="inner in motivation">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.motivationSelect[0]}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-double-block col-md-5">
@@ -880,9 +856,7 @@
                                             График работы
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.jobChartSelect" disabled>
-                                                <option v-for="inner in jobChart">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.jobChartSelect[0]}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -892,9 +866,7 @@
                                             Наличие автомобиля
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.haveCarSelect" disabled>
-                                                <option v-for="inner in haveCar">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.haveCarSelect[0]}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-double-block col-md-5">
@@ -902,9 +874,7 @@
                                             Категория вод. удостоверения
                                         </div>
                                         <div>
-                                            <select class="recruiting-select" v-model="candidatBackward.driverCategorySelect" disabled>
-                                                <option v-for="inner in driverCategory">{{inner}}</option>
-                                            </select>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.driverCategorySelect[0]}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1057,6 +1027,7 @@
                     dateOfConclusionDOU: '',
                     dateOfConclusionTD: '',
                     commentary: '',
+                    status: '',
                 },
                 showToTopBtn: false,
                 bottomOfWindow: 0,
@@ -1376,6 +1347,7 @@
                 candidateBase: {
                     IIN: '',
                     phone: '',
+                    documents: []
                 },
                 candidateStorage: {},
                 candidatePerson: null,
@@ -1409,15 +1381,40 @@
         computed: {
         },
         methods: {
+            qwer: function() {
+                // console.log(this.candidatBackward.nameOfPostSelect);
+                console.log(this.candidatBackward)
+            },
+            qwer1: function() {
+                console.log(this.candidatBackward.nameOfPostSelect[0]);
+            },
             isActiveCandidatsSaveBtn(){
               if (this.candidateBase.IIN && this.candidateBase.phone){
                    this.isActiveCandidatsBase = true;
               }
+              else if(this.candidateBase.IIN == false && this.candidateBase.phone == false){
+                  this.isActiveCandidatsBase = false;
+              }
             },
             getBranchData() {
-                this.axios.post('/getSearchBranch', {}).then(response => {
-                    this.options = response.data.result;
-                })
+                if (this.recruitingTabs == 1){
+                    this.axios.post('/getSearchBranch', {}).then(response => {
+                        console.log(this.options);
+                        this.options = response.data.result;
+                        console.log(this.options);
+                    })
+                }
+            },
+            getBranchDataClick() {
+                if (this.dicti.workExpirience == ''
+                    || this.dicti.workExpirience == null
+                    || Object.keys(this.dicti.workExpirience).length == 0) {
+                    this.axios.post('/getSearchBranch', {}).then(response => {
+                        console.log(this.options);
+                        this.options = response.data.result;
+                        console.log(this.options);
+                    })
+                }
             },
             searchUser() {
                 var vm = this
@@ -1460,8 +1457,11 @@
             recruitingDataSavedSuccess: function(){
                 //  Отправка данных на поиск кандидата
                 this.recruitingData.id = this.candidatBackward.id;
+                console.log('norm');
                 if(this.recruitingData.dateOfConclusionTD !== '' && this.recruitingData.dateOfConclusionTD !== null){
+                    console.log('norm');
                     this.recruitingData.status = 'Закрыта';
+                    console.log('norm');
                     console.log('Обновлен статус заявки');
                     console.log(this.recruitingData.status);
                 }
@@ -1486,14 +1486,10 @@
                 }
             },
 
-
-
             candidatsDataSavedSuccess: function(){
                 //  Отправка данных на поиск кандидата
-                this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
-                this.candidatsData.recruitingId =  this.candidatBackward.id;
-                this.candidatsData.recruiterFullname = this.user.branch.fullname;
-                this.axios.post('/recruiting/saveCandidatsData',{candidatsData: this.candidatsData})
+                this.getFormData();
+                this.axios.post('/recruiting/saveCandidatsData',this.getFormData())
                 .then(response => {
                     this.candidatsDataAfterSavedSuccess(response);
                 });
@@ -1505,6 +1501,12 @@
                         message: 'Кандидат успешно сохранен',
                         time: 5000
                     });
+                    // ***
+                    this.axios.post('/recruiting/sendRecruitingNotify',{candidatsData: this.candidatsData})
+                        .then(response => {
+                            this.candidatsDataAfterSavedSuccess(response);
+                        });
+                    this.isActiveCandidatsBase = true;
                 } else {
                     this.flashMessage.error({
                         title: "Ошибка",
@@ -1550,15 +1552,36 @@
                 }
             },
             showModalMain: function(index){
-              this.isActiveCandidatsSaveBtn();
+              this.candidateBase.IIN = '';
+              this.candidateBase.phone = '';
+              this.candidateBase.documents = '',
+              // console.log(this.candidateBase.IIN);
+              // console.log(this.candidateBase.phone);
               this.showModal(index);
+                // console.log(this.candidateBase.IIN);
+                // console.log(this.candidateBase.phone);
+              this.isActiveCandidatsSaveBtn();
             },
             showModal: function(index){
                 // this.person =  this.recruitingInterviewCluster[index];
                this.person =  this.chiefsDataLocal[index];
-               this.candidatePerson = this.candidateStorage[index] != undefined ? this.candidateStorage[index] : '';
-               this.candidateBase.IIN = this.candidatePerson.candidate_iin == undefined ? '' : this.candidatePerson.candidate_iin;
-               this.candidateBase.phone = this.candidatePerson.candidate_phone_number == undefined ? '' : this.candidatePerson.candidate_phone_number;
+               this.candidateBase.IIN = '';
+               this.candidateBase.phone = '';
+               this.candidatePerson = '';
+
+               let self = this;
+               this.candidateStorage.filter(function(el) {
+                   console.log(el.recruiting_id+'==='+self.chiefsDataLocal[index].id);
+                   //let indexx = index+1;
+                   if(el.recruiting_id == self.chiefsDataLocal[index].id){
+                       self.candidatePerson = el;
+                       self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
+                       self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
+                       self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                    }
+                });
+
+
                // if(this.candidateBase.IIN == undefined){
                //     this.candidateBase.IIN = 'Отсутствуют данные';
                // }
@@ -1598,6 +1621,7 @@
                this.recruitingData.dateOfConclusionDOU = this.person.date_of_conclusion_dou;
                this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                this.recruitingData.commentary = this.person.commentary;
+               this.recruitingData.status = this.person.application_status;
                // console.log(this.candidateBase);
                // console.log(this.candidateManualDataLocal.candidate_iin);
                // this.candidateBase.IIN = this.candidateManualDataLocal.candidate_iin;
@@ -1610,8 +1634,7 @@
                 // },
             },
             addCandidateBtn() {
-                console.log(this.candidateBase.phone);
-                console.log(this.candidateBase.IIN);
+                this.showEditBtn = false;
                 // Если еще нет ИИН и номера, заявка только создана, то сразу покажет поля для ввода
                 // if(this.candidateBase.phone == null || this.candidateBase.phone == '' || this.candidateBase.IIN == null || this.candidateBase.IIN == ''){
                 //     this.manualSearchIIN = true;
@@ -1619,8 +1642,7 @@
                 if(this.candidateBase.phone == null || this.candidateBase.phone == '' || this.candidateBase.IIN == null || this.candidateBase.IIN == ''){
                     this.showEditBtn = true;
                 }
-                console.log(this.candidateBase.phone);
-                console.log(this.candidateBase.IIN);
+                //this.candidatsData.id = this.candidatBackward.id;
             },
             // getRequests: function(){
             //     this.axios.post('/recruiting/getRequests')
@@ -1635,7 +1657,6 @@
             //         alert('Сорян, нет данных');
             //     }
             // },
-
             getDicti(){
                 if (this.recruitingTabs == 1) {
                     let dataIsn = {
@@ -1715,6 +1736,84 @@
                             this.preloader(false);
                         });
                 }
+                // else if (this.recruitingTabs == 2){
+                //     let secondDataIsn = {
+                //         'structuralUnitAndCity': 3994439,
+                //         // 3994439
+                //         'nameOfPost': 822411,
+                //         'reason': 1764941,
+                //         'desiredAge': 1764881,
+                //         'sex': 750461,
+                //         'education': 47,
+                //         'workExpirience': 1777411,
+                //         'isHeWasBoss': 482281,
+                //         'typeOfHire': 1765371,
+                //         'connect': 1765281,
+                //         'computerKnowing': 1764851,
+                //         'language': 67,
+                //         'motivation': 482281,
+                //         'jobTime': 815141,
+                //         'haveCar': 482281,
+                //         'driverCard': 1765001,
+                //         'socPacket': 1765311,
+                //     }
+                // }
+                // this.axios.post("/getDictiList", secondDataIsn)
+                //     .then(response => {
+                //         if (response.data.success) {
+                //             this.preloader(true);
+                //             this.dicti.structuralUnitAndCity = response.data.structuralUnitAndCity;
+                //             this.dicti.nameOfPost = response.data.nameOfPost;
+                //             this.dicti.reason = response.data.reason;
+                //             this.dicti.desiredAge = response.data.desiredAge;
+                //             this.dicti.sex = response.data.sex;
+                //             this.dicti.education = response.data.education;
+                //             this.dicti.workExpirience = response.data.workExpirience;
+                //             this.dicti.isHeWasBoss = response.data.isHeWasBoss;
+                //             this.dicti.typeOfHire = response.data.typeOfHire;
+                //             this.dicti.connect = response.data.connect;
+                //             this.dicti.computerKnowing = response.data.computerKnowing;
+                //             this.dicti.language = response.data.language;
+                //             this.dicti.motivation = response.data.motivation;
+                //             this.dicti.jobTime = response.data.jobTime;
+                //             this.dicti.haveCar = response.data.haveCar;
+                //             this.dicti.driverCard = response.data.driverCard;
+                //             this.dicti.socPacket = response.data.socPacket;
+                //             // console.log(this.dicti.driverCard[0].Label[0]);
+                //
+                //             // this.driverCardOption = this.dicti.driverCard[0].Label[0];
+                //
+                //             // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+                //             // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+                //
+                //             // this.driverCardOptionRewrite = this.driverCardOption;
+                //             // console.log(this.driverCardOptionRewrite);
+                //
+                //             // Array.prototype.push.apply(this.driverCardOption, this.driverCardOptionRewrite);
+                //
+                //             // console.log(this.driverCardOption); // ['пастернак', 'картошка', 'сельдерей', 'свёкла']
+                //
+                //             // this.driverCardOptionRewrite = this.driverCardOption.push({'this.dicti.driverCard[1].Label[0]'});
+                //             // console.log(this.driverCardOptionRewrite);
+                //
+                //             // console.log(this.driverCardOption);
+                //
+                //
+                //             // Разбивает все элементы массива по 1, не подходит
+                //             this.driverCardOptionFirst = this.dicti.driverCard[1].Label[0];
+                //             this.driverCardOptionSecond = this.dicti.driverCard[3].Label[0];
+                //
+                //             this.driverCardOptionRewrite = this.driverCardOptionFirst.concat(this.driverCardOptionSecond);
+                //             console.log(this.driverCardOptionRewrite);
+                //             this.cityAdress = this.driverCardOptionRewrite;
+                //             this.preloader(false);
+                //         }
+                //     })
+                //     .catch(error => {
+                //         alert("Ошибка на стороне сервера");
+                //         this.preloader(false);
+                //     });
+                // the end
             },
             getDictiOnClick(){
                 // Проверка на пустоту объекта, если данных нет, они будут подгружаться
@@ -1799,6 +1898,88 @@
                         });
                 }
             },
+            // getDictiSecondTabOnClick(){
+            //     // Проверка на пустоту объекта, если данных нет, они будут подгружаться
+            //     if (this.dicti.workExpirience == ''
+            //         || this.dicti.workExpirience == null
+            //         || Object.keys(this.dicti.workExpirience).length == 0) {
+            //         this.preloader(true);
+            //         let dataIsn = {
+            //             // 3994439
+            //             'nameOfPost': 822411,
+            //             'reason': 1764941,
+            //             'desiredAge': 1764881,
+            //             'sex': 750461,
+            //             'education': 47,
+            //             'workExpirience': 1777411,
+            //             'isHeWasBoss': 482281,
+            //             'typeOfHire': 1765371,
+            //             'connect': 1765281,
+            //             'computerKnowing': 1764851,
+            //             'language': 67,
+            //             'motivation': 482281,
+            //             'jobTime': 815141,
+            //             'haveCar': 482281,
+            //             'driverCard': 1765001,
+            //             'socPacket': 1765311,
+            //         }
+            //
+            //         this.axios.post("/getDictiList", dataIsn)
+            //             .then(response => {
+            //                 if (response.data.success) {
+            //                     this.dicti.structuralUnitAndCity = response.data.structuralUnitAndCity;
+            //                     this.dicti.nameOfPost = response.data.nameOfPost;
+            //                     this.dicti.reason = response.data.reason;
+            //                     this.dicti.desiredAge = response.data.desiredAge;
+            //                     this.dicti.sex = response.data.sex;
+            //                     this.dicti.education = response.data.education;
+            //                     this.dicti.workExpirience = response.data.workExpirience;
+            //                     this.dicti.isHeWasBoss = response.data.isHeWasBoss;
+            //                     this.dicti.typeOfHire = response.data.typeOfHire;
+            //                     this.dicti.connect = response.data.connect;
+            //                     this.dicti.computerKnowing = response.data.computerKnowing;
+            //                     this.dicti.language = response.data.language;
+            //                     this.dicti.motivation = response.data.motivation;
+            //                     this.dicti.jobTime = response.data.jobTime;
+            //                     this.dicti.haveCar = response.data.haveCar;
+            //                     this.dicti.driverCard = response.data.driverCard;
+            //                     this.dicti.socPacket = response.data.socPacket;
+            //                     // console.log(this.dicti.driverCard[0].Label[0]);
+            //
+            //                     // this.driverCardOption = this.dicti.driverCard[0].Label[0];
+            //
+            //                     // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+            //                     // this.driverCardOption.push(this.dicti.driverCard[1].Label[0]);
+            //
+            //                     // this.driverCardOptionRewrite = this.driverCardOption;
+            //                     // console.log(this.driverCardOptionRewrite);
+            //
+            //                     // Array.prototype.push.apply(this.driverCardOption, this.driverCardOptionRewrite);
+            //
+            //                     // console.log(this.driverCardOption); // ['пастернак', 'картошка', 'сельдерей', 'свёкла']
+            //
+            //                     // this.driverCardOptionRewrite = this.driverCardOption.push({'this.dicti.driverCard[1].Label[0]'});
+            //                     // console.log(this.driverCardOptionRewrite);
+            //
+            //                     // console.log(this.driverCardOption);
+            //
+            //
+            //                     // Разбивает все элементы массива по 1, не подходит
+            //                     this.driverCardOptionFirst = this.dicti.driverCard[1].Label[0];
+            //                     this.driverCardOptionSecond = this.dicti.driverCard[3].Label[0];
+            //
+            //                     this.driverCardOptionRewrite = this.driverCardOptionFirst.concat(this.driverCardOptionSecond);
+            //                     console.log(this.driverCardOptionRewrite);
+            //                     this.cityAdress = this.driverCardOptionRewrite;
+            //                     this.preloader(false);
+            //                 }
+            //             })
+            //             .catch(error => {
+            //                 alert("Ошибка на стороне сервера");
+            //                 this.preloader(false);
+            //             });
+            //     }
+            // },
             // При загрузке вызывает данные на фронт, если Изначально страница загружается на 2 вкладке
             getChiefsRequest(){
                 if (this.recruitingTabs == 2){
@@ -1945,6 +2126,7 @@
             },
             firstTabClick(){
                 this.getDictiOnClick();
+                this.getBranchDataClick();
             },
             secondTabClick(){
                 this.getChiefsRequestOnClick();
@@ -1971,7 +2153,6 @@
             fileUpload(e) {
                 const documents = e.target.files;
                 const vm = this;
-
                 if(documents.length <= this.docMaxNumber) {
                     Array.from(documents).forEach(document => {
                         if(document.size > this.docMaxSize) {
@@ -1995,6 +2176,31 @@
                 const vm = this;
                 vm.documents.splice(index, 1);
             },
+
+            // uploadFile(candidateId) {
+            //     this.preloader(true);
+            //     this.axios.post("/upload-recruiting-file", this.getFormData(candidateId)).then(response => {
+            //         //...
+            //     }).catch(error => {
+            //         alert("Ошибка на стороне сервера");
+            //     });
+            // },
+
+            getFormData() {
+                const formData = new FormData;
+                this.documents.forEach(document => {
+                    formData.append('postDocuments[]', document, document.name);
+                });
+                this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
+                this.candidatsData.recruitingId =  this.candidatBackward.id;
+                this.candidatsData.documents =  this.candidatBackward.documents;
+                this.candidatsData.recruiterFullname = this.user.branch.fullname;
+                formData.append("candidatsData", JSON.stringify(this.candidatsData));
+                return formData;
+            },
+
+
+
             // Поиск в таблице
             tableSearch: function () {
                 var phrase = document.getElementById('interwiewWithCandidatesSearch');
@@ -2201,6 +2407,9 @@
 
             }
         },
+            // created(){
+            //     alert('Димон ты че курить ушел чтоль???');
+            // }
     }
 </script>
 

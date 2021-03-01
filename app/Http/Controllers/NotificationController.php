@@ -50,7 +50,35 @@ class NotificationController extends Controller
         foreach (UserToken::all() as $token){
             array_push($tokens, $token->token);
         }
+        $this->sendNotify($tokens, $title, $body, 'http://127.0.0.1:8000/news');
+    }
+
+    /**
+     * @param $post Post
+     */
+    public function sendRecruitingNotify($isn){
+//        $isn
+        $title = "Рекрутинг | Найден кандидат";
+        $body = "Рекрутер добавил данные кандидата";
+        $tokens = [];
+        foreach (UserToken::where('ISN', $isn)->get() as $token){
+            array_push($tokens, $token->token);
+        }
         $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/news');
+    }
+    /**
+     * @param $post Post
+     */
+    public function sendRecruitingNotifyRefreshedData(Request $request){
+//        $isn
+        $isn = $request->isn;
+        $title = "Рекрутинг | Обновлены данные";
+        $body = "В заявке на поиск кандидата обновлены данные";
+        $tokens = [];
+        foreach (UserToken::where('ISN', $isn)->get() as $token){
+            array_push($tokens, $token->token);
+        }
+        $this->sendNotify($tokens, $title, $body, 'http://127.0.0.1/recruiting');
     }
 
     /**

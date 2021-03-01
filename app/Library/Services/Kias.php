@@ -361,6 +361,15 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getDictiData($current)
+    {
+        return $this->request('GETDICTILIST', [
+            'DictiISN' => $current,
+            'Mode' => 1
+        ]);
+    }
+
+
     public function getRegions($parent){
         return $this->request('User_CicGetRegionsAndCity', [
             'region' => $parent

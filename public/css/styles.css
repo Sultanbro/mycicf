@@ -2775,3 +2775,14 @@ textarea::-webkit-scrollbar-thumb {
 .z-9999{
     z-index: 9999 !important;
 }
+.treeSelectRecruiting div{
+    background: #f0f3f6;
+}
+.recruiting-div-like-select{
+    background: #f0f3f6;
+    padding: 0.3rem 1rem;
+    width: auto;
+    height: auto;
+    border: 1px solid #d5d5d5;
+    border-radius: 0.4rem;
+}

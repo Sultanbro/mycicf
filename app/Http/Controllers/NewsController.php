@@ -127,7 +127,7 @@ class NewsController extends Controller
             'youtube' => $new_post->getVideo(),
             'videos' => $new_post->getVideoUrl(),
             'comments' => [],
-            "post_poll" => $post_poll,
+            "post_poll" => '',
             "isVoted" => 0,
         ];
 

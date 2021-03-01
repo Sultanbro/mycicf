@@ -1150,4 +1150,18 @@ class SiteController extends Controller
             echo "Пароль введен неверно";
         }
     }
+
+    public function getNameByIsnBranch(Request $request){
+        $isn = $request->ISN;
+        $data = Branch::where('kias_id', $isn)->first();
+        if($data === null){
+            return response()->json([
+                'success' => false,
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'fullname' => $data->fullname
+        ]);
+    }
 }
