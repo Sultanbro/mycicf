@@ -324,6 +324,7 @@
                 AD: null,
                 RV: null,
                 VC: null,
+                agreedAC: null,
                 other: null,
                 none: false,
                 coordination: {},
@@ -361,6 +362,7 @@
                     this.AD = response.result.AD;
                     this.RV = response.result.RV;
                     this.VC = response.result.VC;
+                    this.agreedAC = responce.agreedAC;
                     this.other = response.result.other;
                 }else{
                     alert(response.error);
