@@ -270,10 +270,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
         Route::post('/addScore', 'ScoreController@addScore');
 
-
-        //TestQR
-        Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
-
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');
@@ -420,6 +416,9 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
+
+//TestQR
+Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
 
 
 
