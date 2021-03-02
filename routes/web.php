@@ -418,8 +418,11 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     });
 });
 
-//TestQR
-Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+    Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
+    Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
+    Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+});
 
 
 
