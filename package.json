@@ -24,18 +24,18 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@riophae/vue-treeselect": "^0.3.0",
     "@smartweb/vue-flash-message": "^0.5.3",
+    "apexcharts": "^3.22.2",
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
     "laravel-echo": "^1.9.0",
-    "apexcharts": "^3.22.2",
     "luxon": "^1.25.0",
     "portal-vue": "^2.1.7",
     "pusher-js": "^5.1.1",
     "v-click-outside": "^3.1.2",
     "v-tooltip": "^2.0.3",
     "vue": "^2.6.12",
-    "vue-axios": "^2.1.5",
     "vue-apexcharts": "^1.6.0",
+    "vue-axios": "^2.1.5",
     "vue-dplayer": "0.0.10",
     "vue-emoji-picker": "^1.0.1",
     "vue-google-charts": "^0.3.3",
@@ -46,6 +46,7 @@
     "vue-the-mask": "^0.11.1",
     "vue-toastr": "^2.1.2",
     "vue-upload-multiple-image": "^1.1.6",
-    "vuejs-countdown": "^0.2.1"
+    "vuejs-countdown": "^0.2.1",
+    "vuejs-datepicker": "^1.6.2"
   }
 }
