@@ -38,7 +38,7 @@
             return {
                 input: '',
                 search: '',
-                maxLength: [255, 2000],
+                maxLength: [255, 8000],
             }
         },
         props: {
