@@ -292,35 +292,6 @@
                 </div>
             </div>
         </div>
-        <div class="ml-2 mr-2" v-show="other !== null">
-            <div class="border-radius15 bg-white mt-2">
-                <div class="ml-3 pt-2 pb-2">
-                    <strong>Прочие документы на согласование</strong>
-                </div>
-                <div>
-                    <table class="dosier-table table text-align-center">
-                        <thead>
-                        <tr class="header color-white">
-                            <th scope="col">Номер документа</th>
-                            <th scope="col" class="thead-border">Тип документа</th>
-                            <th scope="col" class="thead-border">Инициатор</th>
-                            <th scope="col" class="thead-border">Подразделение</th>
-                            <th scope="col">Дата</th>
-                        </tr>
-                        </thead>
-                        <tbody class="date-color">
-                        <tr v-for="(info, index) in other" :key="info.ISN">
-                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'OTHER', info)">{{info.id}}</td>
-                            <td scope="col" class="thead-border">{{info.type}}</td>
-                            <td scope="col" class="thead-border">{{info.curator}}</td>
-                            <td scope="col" class="thead-border">{{info.DeptName}}</td>
-                            <td scope="col">{{info.docdate}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
         <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
 
         <coordination-modal
