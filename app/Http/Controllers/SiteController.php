@@ -449,6 +449,17 @@ class SiteController extends Controller
         $model->mark_id = $request->mark_id;
         $model->model_id = $request->model_id;
         $model->year = $request->year;
+        $model->ofprice = $request->ofprice ?? '';
+        $model->city = $request->city ?? '';
+        $model->body = $request->body ?? '';
+        $model->volume = $request->volume ?? '';
+        $model->transmission = $request->transmission;
+        $model->wheel = $request->wheel ?? '';
+        $model->color = $request->color ?? '';
+        $model->drive = $request->drive ?? '';
+        $model->inkz = $request->inkz ?? '';
+        $model->vin = $request->vin ?? '';
+        $model->milage = $request->milage ?? '';
         try{
             $model->save();
             return response()
@@ -542,8 +553,17 @@ class SiteController extends Controller
                 'model_id' => $item->model_id,
                 'year' => $item->year,
                 'price' => $item->price,
-                'created_at' => $item->created_at,
-                'updated_at' => $item->updated_at,
+                'ofprice' => $item->ofprice,
+                'city' => $item->city,
+                'body' => $item->body,
+                'volume' => $item->volume,
+                'transmission' => $item->transmission,
+                'wheel' => $item->wheel,
+                'color' => $item->color,
+                'drive' => $item->drive,
+                'inkz' => $item->inkz,
+                'vin' => $item->vin,
+                'milage' => $item->milage,
             ]);
         }
         return response()->json($result);
@@ -561,12 +581,36 @@ class SiteController extends Controller
      */
     public function getPriceByData(Request $request){
         $result = [];
-        foreach ($request->all() as $key => $value){
-            $$key = $value;
-        }
+        $mark_id = $request->mark_id ?? '';
+        $model_id = $request->model_id ?? '';
+        $year = $request->year ?? '';
+        $city = $request->city ?? '';
+        $body = $request->body ?? '';
+        $volume = $request->volume ?? '';
+        $transmission = $request->transmission ?? '';
+        $wheel = $request->wheel ?? '';
+        $color = $request->color ?? '';
+        $drive = $request->drive ?? '';
+        $inkz = $request->inkz ?? '';
+        $vin = $request->vin ?? '';
+        $milage = $request->milage ?? '';
+
+//        foreach ($request->all() as $key => $value){
+//            $$key = $value;
+//        }
         $model = KolesaPrices::where('mark_id', $mark_id)
             ->where('model_id', $model_id)
             ->where('year', $year)
+            ->where('city', $city)
+            ->where('body', $body)
+            ->where('volume', $volume)
+            ->where('transmission', $transmission)
+            ->where('wheel', $wheel)
+            ->where('color', $color)
+            ->where('drive', $drive)
+            ->where('inkz', $inkz)
+            ->where('vin', $vin)
+            ->where('milage', $milage)
             ->latest()
             ->first();
         if($model === null){
@@ -577,7 +621,7 @@ class SiteController extends Controller
         }
         return response()->json([
             'code' => 200,
-            'price' => $model->price
+            'price' => $model->offprice
         ]);
     }
 
