@@ -10,7 +10,7 @@ abstract class AddPostTestBase extends FeatureTestBase {
 
     public const ISN = '5565';
 
-    public function getRoute() {
-        return route('news.addPost');
+    public function getRouteName() {
+        return 'news.addPost';
     }
 }

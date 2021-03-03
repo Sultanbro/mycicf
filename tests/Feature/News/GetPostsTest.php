@@ -15,8 +15,8 @@ class GetPostsTest extends FeatureTestBase {
 
     public const ISN = '5565';
 
-    public function getRoute() {
-        return route('news.getPosts');
+    public function getRouteName() {
+        return 'news.getPosts';
     }
 
     public function getMeasureName() {
