@@ -233,14 +233,22 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 //            Route::get('/getVersion', 'Controller@getVersion');
 //        });
         //NEWS
-        Route::get('/news', 'NewsController@getView')->name('news');
         Route::get('/booking', 'BookingController@index')->name('booking');
         Route::post('/booking/set', 'BookingController@set');
         Route::post('/booking/remove', 'BookingController@delete');
-        Route::post('/addPost', 'NewsController@addPost')->name('news.addPost'); // TODO use grouping
+
+        Route::group([
+            'prefix' => '/',
+            'as' => 'news',
+        ], function () {
+            // TODO Постепенно перенести сюда все роуты связанные с этой группой
+            Route::get('/news', 'NewsController@getView')->name('news');
+            Route::post('/addPost', 'NewsController@addPost')->name('.addPost'); // TODO use grouping
+            Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
+            Route::post('/deletePost', 'NewsController@deletePost')->name('.deletePost');
+        });
+
         Route::post('/news-birthday', 'NewsController@birthday');
-        Route::post('/getPosts', 'NewsController@getPosts')->name('news.getPosts');
-        Route::post('/deletePost', 'NewsController@deletePost');
         Route::post('/setPinned', 'NewsController@setPinned');
         Route::post('/unsetPinned', 'NewsController@unsetPinned');
         Route::post('/likePost', 'NewsController@likePost');
