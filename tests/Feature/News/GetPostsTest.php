@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\News;
 
+use App\Like;
 use App\Post;
+use App\Question;
 use DB;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
@@ -14,6 +16,10 @@ class GetPostsTest extends FeatureTestBase {
     protected $description = 'Получаем список постов';
 
     public const ISN = '5565';
+    /**
+     * @var Post
+     */
+    private $post;
 
     public function getRouteName() {
         return 'news.getPosts';
@@ -30,27 +36,55 @@ class GetPostsTest extends FeatureTestBase {
         $post->pinned = true;
         $post->save();
 
+        $like = new Like();
+        $like->user_isn = $this->getUser()->ISN;
+        $like->post_id = $post->id;
+        $like->save();
+
+        $like = new Like();
+        $like->user_isn = '99991';
+        $like->post_id = $post->id;
+        $like->save();
+
+        $question = new Question();
+        $question->post_id = $post->id;
+        $question->question = 'Question!';
+        $question->save();
+
         return $post;
+    }
+
+    protected function prepare() {
+        $this->post = $this->generatePost();
     }
 
     public function handle() {
         $this->actingAs($this->getUser());
 
-        $post = $this->generatePost();
-
         $response = $this->post($this->route);
 
-        // $post->delete();
-        DB::delete('DELETE FROM posts WHERE id = ?', [$post->id]);
+        $response->assertStatus(200);
 
         $postsResponse = collect(json_decode($response->content(), true));
 
-        $newPost = $postsResponse->first(function ($foundPost) use ($post) {
-            return $foundPost['postId'] === $post->id;
+        $newPost = $postsResponse->first(function ($foundPost) {
+            return $foundPost['postId'] === $this->post->id;
         });
 
-        $this->assertEquals($newPost['postText'], $post->post_text);
+        $this->assertEquals($newPost['postText'], $this->post->post_text);
 
         $response->assertStatus(200);
+    }
+
+    public function cleanup() {
+        $likes = $this->post->likes->pluck('id');
+        DB::delete('DELETE FROM likes WHERE id IN (?)', $likes->toArray());
+
+        $poll = $this->post->poll->pluck('id');
+        DB::delete('DELETE FROM questions WHERE id IN (?)', $poll->toArray());
+
+        // $post->delete();
+        DB::delete('DELETE FROM posts WHERE id = ?', [$this->post->id]);
+
     }
 }
