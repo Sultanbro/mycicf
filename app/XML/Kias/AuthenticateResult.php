@@ -8,7 +8,7 @@ use App\XML\Kias\AuthenticateResult\UserDetails;
  * Class AuthenticateResult
  * @package App\XML\Kias
  *
- * @property string $error
+ * @property string|mixed $error
  * @property string $Sid
  * @property UserDetails $UserDetails
  */

@@ -10,6 +10,8 @@ namespace App\XML\Kias\AuthenticateResult;
  *
  * @property string $ISN
  * @property string $DeptISN
+ * @property string $FullName
+ * @property string $ShortName
  */
 class UserDetails extends \SimpleXMLElement
 {
