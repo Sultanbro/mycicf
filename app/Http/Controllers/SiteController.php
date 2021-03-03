@@ -9,7 +9,6 @@ use App\KolesaPrices;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Permissions;
-use App\Providers\KiasServiceProvider;
 use App\User;
 use App\Dicti;
 use App\Region;
@@ -17,7 +16,6 @@ use App\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
@@ -112,7 +110,7 @@ class SiteController extends Controller
 
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        $days = (string)$response->MyDays ?? 0;
+        $days = (string)($response->MyDays ?? 0);
         $carier = $vacation = $admins = $sick = $thanks = $mission = null;
         if($success && $response->CARIER->row[0]->datebeg != 0)
         {
