@@ -2,12 +2,14 @@
 
 namespace App\Library\Services;
 
+use App\Answer;
 use App\Comment;
-use App\Like;
 use App\Post;
+use App\Question;
 use App\User;
 use Debugbar;
 use Exception;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**+
@@ -17,8 +19,7 @@ use Illuminate\Support\Collection;
  *
  * @package App\Library\Services
  */
-class PostsService
-{
+class PostsService {
     /**
      * Генерируем ключ кэша для конкретного поста по его айди
      *
@@ -38,12 +39,22 @@ class PostsService
      * @param int $limit
      * @return array
      */
-    public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5)
-    {
+    public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5) {
         $response = [];
         $cacheTTL = now()->addMinutes(1);
 
         $query = Post::withCount('likes')
+            ->with([
+                'likes',
+                'poll' => function (HasMany $builder) {
+                    $builder->with([
+                        'answers' => function (HasMany $builder) {
+                            $builder->withCount('userAnswers');
+                        }
+                    ])
+                        ->withCount('userAnswers');
+                }
+            ])
             ->orderBy('id', 'DESC')
             ->with('comments')
             ->limit($limit);
@@ -96,32 +107,48 @@ class PostsService
      * @return array
      */
     private function buildPostResponse(Post $item, string $user_isn) {
+        $poll = $item->poll->map(function (Question $question) {
+            return [
+                "question_id"    => $question->id,
+                "question_title" => $question->question,
+                "total_votes"    => $question->user_answers_count,
+                "answers"        => $question->answers->map(function (Answer $answer) {
+                    return [
+                        "answer_id"    => $answer->id,
+                        "answer_title" => $answer->value,
+                        "answer_votes" => $answer->user_answers_count,
+                        "checked"      => false
+                    ];
+                }),
+            ];
+        });
+
         return [
-            'isn' => $item->user_isn,
-            'fullname' => (new User())->getFullName($item->user_isn),
-            'postText' => $item->getText(),
-            'pinned' => $item->pinned,
-            'postId' => $item->id,
-            'edited' => $item->is_edited,
-            'likes' => $item->likes_count,
-            'isLiked' => (new Like())->getIsLiked($item->id, $user_isn),
-            'date' => date('d.m.Y H:i', strtotime($item->created_at)),
-            'userISN' => $item->user_isn,
-            'comments' => $item->comments->map(function (Comment $comment) {
+            'isn'        => $item->user_isn,
+            'fullname'   => (new User())->getFullName($item->user_isn),
+            'postText'   => $item->getText(),
+            'pinned'     => $item->pinned,
+            'postId'     => $item->id,
+            'edited'     => $item->is_edited,
+            'likes'      => $item->likes_count,
+            'isLiked'    => $item->likes->where('user_isn', '=', $user_isn)->count() > 0,
+            'date'       => date('d.m.Y H:i', strtotime($item->created_at)),
+            'userISN'    => $item->user_isn,
+            'comments'   => $item->comments->map(function (Comment $comment) {
                 return [
                     'commentText' => $comment->text,
-                    'userISN' => $comment->user_isn,
-                    'commentId' => $comment->id,
-                    'fullname' => (new User)->getFullName($comment->user_isn),
-                    'date' => date('d.m.Y H:i', strtotime($comment->created_at)),
+                    'userISN'     => $comment->user_isn,
+                    'commentId'   => $comment->id,
+                    'fullname'    => (new User)->getFullName($comment->user_isn),
+                    'date'        => date('d.m.Y H:i', strtotime($comment->created_at)),
                 ];
             }),
-            'image' => $item->getImage(),
-            'documents' => $item->getDocuments(),
-            'youtube' => $item->getVideo(),
-            'videos' => $item->getVideoUrl(),
-            'post_poll' => $item->getPoll($item->id),
-            'isVoted' => $item->getIsVoted($user_isn, $item->id),
+            'image'      => $item->getImage(),
+            'documents'  => $item->getDocuments(),
+            'youtube'    => $item->getVideo(),
+            'videos'     => $item->getVideoUrl(),
+            'post_poll'  => $poll,
+            'isVoted'    => $item->getIsVoted($user_isn, $item->id),
         ];
     }
 
