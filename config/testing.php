@@ -3,7 +3,9 @@
 return [
     'debugbar' => [
         'collect' => [
-            'db' => true,
+            'queries' => true,
+            'models' => true,
+            'events' => false,
         ]
     ]
 ];
