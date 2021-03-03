@@ -1,0 +1,25 @@
+
+0.js
+1.js
+2.js
+
+/js/admin.js
+/js/app.js
+/js/login.js
+/js/mobile.js
+
+/js/documentation/index.js
+/js/documentation/login.js
+
+/css/app.css
+/css/documentation/style.css
+
+/fonts/vendor/@fortawesome
+
+# TODO Пересмотреть
+/fonts/euclidflex_regular.ttf
+/fonts/euclidflex_regular.woff
+/fonts/euclidflex_regular.woff2
+/fonts/rubik_regular.eot
+/fonts/rubik_regular.ttf
+/fonts/rubik_regular.woff
