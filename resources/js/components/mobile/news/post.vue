@@ -322,8 +322,10 @@
 
             getPosts () {
                 this.preloader(true);
+                console.time('getPosts');
                 this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
-                    this.setPosts(response.data)
+                    this.setPosts(response.data);
+                    console.timeEnd('getPosts');
                 });
             },
 
@@ -377,8 +379,10 @@
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
                 if (this.bottomOfWindow && !this.allPostShown) {
                     this.preloader(true);
+                    console.time('getPosts');
                     this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
-                        this.setPosts(response.data)
+                        this.setPosts(response.data);
+                        console.timeEnd('getPosts');
                     });
                 }
             },
