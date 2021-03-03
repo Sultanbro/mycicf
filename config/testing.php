@@ -8,6 +8,7 @@ return [
             'events' => false,
             'auth' => true,
             'route' => true,
+            'cache' => true,
         ]
     ]
 ];

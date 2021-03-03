@@ -116,15 +116,14 @@ abstract class FeatureTestBase extends TestCase {
 
             $uri = ltrim($uri, '/');
 
-            $result .= sprintf("[%s /%s] as %s\n\t=> %s (%s)\n\n\t%s\n\n",
+            $result .= sprintf("[%s /%s] as %s (%s)\n\t=> %s\n\n\t%s\n\n",
                 $this->cliBold($this->cliColor($methods, self::CLI_COLOR_RED)),
                 $this->cliColor($uri, self::CLI_COLOR_BLUE),
                 $this->cliColor($routes['as'], self::CLI_COLOR_BLUE),
-                $this->cliColor($this->cliBold($routes['controller']), self::CLI_COLOR_RED),
                 $this->cliColor($routes['middleware'], self::CLI_COLOR_YELLOW),
+                $this->cliColor($this->cliBold($routes['controller']), self::CLI_COLOR_RED),
                 $this->cliUnderlined($this->cliColor($name, self::CLI_COLOR_YELLOW))
             );
-
         }
 
         // $result .= sprintf("\t%s:\t\t%s\n",
@@ -217,6 +216,24 @@ abstract class FeatureTestBase extends TestCase {
             }
 
             $result .= "\n\n";
+        }
+
+        if ($collector->enabled('cache')) {
+            $cache = $collector->getCache();
+
+            $result .= sprintf("\t%s: %s (%s)\n",
+                $this->cliLabel('Кэш'),
+                $this->cliInt(count($cache['measures'])),
+                $this->cliTime($cache['duration_str'])
+            );
+
+            foreach ($cache['measures'] as $measure) {
+                $result .= sprintf("\t\t%s: (%s)\n",
+                    $this->cliLabel($measure['label']),
+                    $this->cliTime($measure['duration_str'])
+                );
+            }
+
         }
 
         if ($collector->enabled('auth')) {
