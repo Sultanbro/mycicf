@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\News\AddPost;
 
-use RuntimeException;
 use Tests\WithUser;
 
 class AddPostWithPollTest extends AddPostTestBase {

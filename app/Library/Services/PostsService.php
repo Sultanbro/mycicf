@@ -21,7 +21,7 @@ use Illuminate\Support\Collection;
  */
 class PostsService {
     /**
-     * Генерируем ключ кэша для конкретного поста по его айди
+     * Генерируем ключ кэша для конкретного поста по его ID
      *
      * @param int $postId
      * @return string
@@ -38,10 +38,11 @@ class PostsService {
      * @param bool $boss
      * @param int $limit
      * @return array
+     * @throws Exception
      */
     public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5) {
         $response = [];
-        $cacheTTL = now()->addMinutes(1);
+        $cacheTTL = now()->addMinutes(2);
 
         $query = Post::withCount('likes')
             ->with([
@@ -50,7 +51,8 @@ class PostsService {
                     $builder->with([
                         'answers' => function (HasMany $builder) {
                             $builder->withCount('userAnswers');
-                        }
+                        },
+                        'userAnswers'
                     ])
                         ->withCount('userAnswers');
                 }
@@ -98,13 +100,24 @@ class PostsService {
     }
 
     /**
+     * @param $isn
+     * @return mixed
+     * @throws Exception
+     */
+    private function getFullName($isn) {
+        $ttl = now()->addMinutes(10);
+        return cache()->remember('PostService@fullName::' . $isn, $ttl, function () use ($isn) {
+            return (new User())->getFullName($isn);
+        });
+    }
+
+    /**
      * Формируем ответ для поста
-     *
-     * TODO Метод неоптимальный, крайне желательно его оптимизировать. Пока что за это отвечает кэш
      *
      * @param Post $item
      * @param string $user_isn
      * @return array
+     * @throws Exception
      */
     private function buildPostResponse(Post $item, string $user_isn) {
         $poll = $item->poll->map(function (Question $question) {
@@ -125,22 +138,22 @@ class PostsService {
 
         return [
             'isn'        => $item->user_isn,
-            'fullname'   => (new User())->getFullName($item->user_isn),
+            'fullname'   => $this->getFullName($item->user_isn),
             'postText'   => $item->getText(),
             'pinned'     => $item->pinned,
             'postId'     => $item->id,
             'edited'     => $item->is_edited,
             'likes'      => $item->likes_count,
             'isLiked'    => $item->likes->where('user_isn', '=', $user_isn)->count() > 0,
-            'date'       => date('d.m.Y H:i', strtotime($item->created_at)),
+            'date'       => $item->created_at->format('d.m.Y H:i'),
             'userISN'    => $item->user_isn,
             'comments'   => $item->comments->map(function (Comment $comment) {
                 return [
                     'commentText' => $comment->text,
                     'userISN'     => $comment->user_isn,
                     'commentId'   => $comment->id,
-                    'fullname'    => (new User)->getFullName($comment->user_isn),
-                    'date'        => date('d.m.Y H:i', strtotime($comment->created_at)),
+                    'fullname'    => $this->getFullName($comment->user_isn),
+                    'date'       => $comment->created_at->format('d.m.Y H:i'),
                 ];
             }),
             'image'      => $item->getImage(),
