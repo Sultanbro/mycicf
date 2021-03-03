@@ -576,13 +576,15 @@ class SiteController extends Controller
         return response()->json(['moderators' => $moderators]);
     }
 
-    public function getBirthdays(){
+    public function getBirthdays(Request $request) {
         \Debugbar::startMeasure('getBirthdays');
+        $d = $request->get('d', date('d', time()));
+        $m = $request->get('m', date('m', time()));
         $birthdays = Branch::whereNotNull('birthday')
-            ->whereDay('birthday', '>=', date('d', time()))
-            ->whereMonth('birthday', date('m', time()))
+            ->whereDay('birthday', '>=', $d)
+            ->whereMonth('birthday', $m)
             ->orWhereNotNull('birthday')
-            ->whereMonth('birthday', '>', date('m', time()))
+            ->whereMonth('birthday', '>', $m)
             ->orderByRaw('MONTH(birthday)')
             ->orderByRaw('DAY(birthday)')
             ->limit(10)
