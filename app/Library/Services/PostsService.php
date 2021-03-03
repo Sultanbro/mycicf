@@ -41,8 +41,10 @@ class PostsService
     public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5)
     {
         $response = [];
+        $cacheTTL = now()->addMinutes(1);
 
-        $query = Post::withCount('likes')->orderBy('id', 'DESC')
+        $query = Post::withCount('likes')
+            ->orderBy('id', 'DESC')
             ->with('comments')
             ->limit($limit);
 
@@ -64,8 +66,11 @@ class PostsService
          */
         foreach ($model as $item) {
             $key = $this->getResponseKey($item->id);
+            $cacheKey = $key . '::user-' . $user_isn;
             Debugbar::startMeasure($key);
-            $response[] = $this->buildPostResponse($item, $user_isn);
+            $response[] = cache()->remember($cacheKey, $cacheTTL, function () use ($item, $user_isn) {
+                return $this->buildPostResponse($item, $user_isn);
+            });
             Debugbar::stopMeasure($key);
         }
 
