@@ -29,4 +29,9 @@ class Recruiting extends Model
         $fullname = $res ? $res->fullname : $isn;
         return $fullname;
     }
+    public function getChiefsDicti($isn){
+        $res = Dicti::where('isn',$isn)->first();
+        $fullname = $res ? $res->fullname : $isn;
+        return $fullname;
+    }
 }

@@ -702,7 +702,7 @@
                                             Наименование вакантной должности
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.nameOfPostSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.nameOfPostSelect}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-double-block col-md-5">
@@ -719,7 +719,7 @@
                                         Причина возникновения вакансии
                                     </div>
                                     <div>
-                                        <div class="recruiting-div-like-select">{{candidatBackward.ReasonToRecruitingSelect[0]}}</div>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.ReasonToRecruitingSelect}}</div>
                                     </div>
                                 </div>
                                 <div class="recruiting-tripple-block-container">
@@ -728,7 +728,7 @@
                                             Желаемый возраст
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.desiredAgeSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.desiredAgeSelect}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-tripple-block col-md-4">
@@ -736,7 +736,7 @@
                                             Пол
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.sexSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.sexSelect}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-tripple-block col-md-4">
@@ -744,7 +744,7 @@
                                             Образование
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.educationSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.educationSelect}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -764,7 +764,7 @@
                                                 Опыт работы
                                             </div>
                                             <div>
-                                                <div class="recruiting-div-like-select">{{candidatBackward.workExpirienceSelect[0]}}</div>
+                                                <div class="recruiting-div-like-select">{{candidatBackward.workExpirienceSelect}}</div>
                                             </div>
                                         </div>
                                         <div class="recruiting-tripple-block col-md-4">
@@ -772,7 +772,7 @@
                                                 Наличие подчиненных
                                             </div>
                                             <div>
-                                                <div class="recruiting-div-like-select">{{candidatBackward.isHeWasBossSelect[0]}}</div>
+                                                <div class="recruiting-div-like-select">{{candidatBackward.isHeWasBossSelect}}</div>
                                             </div>
                                         </div>
                                         <div class="recruiting-tripple-block col-md-4">
@@ -780,7 +780,7 @@
                                                 Форма найма
                                             </div>
                                             <div>
-                                                <div class="recruiting-div-like-select">{{candidatBackward.typeOfHireSelect[0]}}</div>
+                                                <div class="recruiting-div-like-select">{{candidatBackward.typeOfHireSelect}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -799,7 +799,7 @@
                                         Возможности и перспективы для кандидата
                                     </div>
                                     <div>
-                                        <div class="recruiting-div-like-select">{{candidatBackward.perspectiveToCandidatSelect[0]}}</div>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.perspectiveToCandidatSelect}}</div>
                                     </div>
                                 </div>
                                 <div>
@@ -807,7 +807,7 @@
                                         Уровень владения компьютерными программами
                                     </div>
                                     <div>
-                                        <div class="recruiting-div-like-select">{{candidatBackward.computerKnowingSelect[0]}}</div>
+                                        <div class="recruiting-div-like-select">{{candidatBackward.computerKnowingSelect}}</div>
                                     </div>
                                 </div>
 
@@ -848,7 +848,7 @@
                                             Наличие дополнительной мотивации (бонусов)
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.motivationSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.motivationSelect}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-double-block col-md-5">
@@ -856,7 +856,7 @@
                                             График работы
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.jobChartSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.jobChartSelect}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -866,7 +866,7 @@
                                             Наличие автомобиля
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.haveCarSelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.haveCarSelect}}</div>
                                         </div>
                                     </div>
                                     <div class="recruiting-double-block col-md-5">
@@ -874,7 +874,7 @@
                                             Категория вод. удостоверения
                                         </div>
                                         <div>
-                                            <div class="recruiting-div-like-select">{{candidatBackward.driverCategorySelect[0]}}</div>
+                                            <div class="recruiting-div-like-select">{{candidatBackward.driverCategorySelect}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2247,6 +2247,7 @@
                 else if(this.recruitingData.interviewResult == 'В ожидании собеседования') {
                     return 'colororange';
                 }
+
             },
             // Ошибка сохранения
             sendCandidatsApplication(){
