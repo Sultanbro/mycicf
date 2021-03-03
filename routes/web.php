@@ -417,8 +417,5 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     });
 });
 
-//TestQR
-Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
-
 
 
