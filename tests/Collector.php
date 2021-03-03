@@ -4,7 +4,9 @@ namespace Tests;
 
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\ModelsCollector;
+use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
+use Barryvdh\Debugbar\DataCollector\RouteCollector;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use DebugBar\DataCollector\TimeDataCollector;
 
@@ -53,6 +55,16 @@ class Collector {
             $this->collectors['events'] = true;
         }
 
+        if (config('testing.debugbar.collect.auth')) {
+            $this->debugbar->shouldCollect('auth');
+            $this->collectors['auth'] = true;
+        }
+
+        if (config('testing.debugbar.collect.route')) {
+            $this->debugbar->shouldCollect('route');
+            $this->collectors['route'] = true;
+        }
+
         $this->debugbar->enable();
     }
 
@@ -91,6 +103,25 @@ class Collector {
          * @var $collector EventCollector;
          */
         $collector = $this->debugbar->getCollector('event');
+
+        return $collector->collect();
+    }
+
+    public function getAuth() {
+
+        /**
+         * @var $collector MultiAuthCollector;
+         */
+        $collector = $this->debugbar->getCollector('auth');
+
+        return $collector->collect();
+    }
+
+    public function getRoutes() {
+        /**
+         * @var $collector RouteCollector;
+         */
+        $collector = $this->debugbar->getCollector('route');
 
         return $collector->collect();
     }

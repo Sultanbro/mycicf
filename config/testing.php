@@ -6,6 +6,8 @@ return [
             'queries' => true,
             'models' => true,
             'events' => false,
+            'auth' => true,
+            'route' => true,
         ]
     ]
 ];

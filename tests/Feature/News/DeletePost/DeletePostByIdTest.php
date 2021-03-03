@@ -8,7 +8,7 @@ use Tests\WithUser;
 class DeletePostByIdTest extends DeletePostTestBase {
     use WithUser;
 
-    protected $description = 'Удаляем пост по Айди';
+    protected $description = 'Удаляем пост по ID';
 
     /**
      * @var Post
