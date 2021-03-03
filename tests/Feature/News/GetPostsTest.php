@@ -5,20 +5,20 @@ namespace Tests\Feature\News;
 use App\Post;
 use DB;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\Feature\FeatureTestBase;
 use Tests\WithUser;
 
-class GetPostsTest extends TestCase {
+class GetPostsTest extends FeatureTestBase {
     use WithFaker, WithUser;
-
-    private $route;
 
     public const ISN = '5565';
 
-    public function __construct($name = null, array $data = [], $dataName = '') {
-        parent::__construct($name, $data, $dataName);
+    public function getRoute() {
+        return route('news.getPosts');
+    }
 
-        $this->route = route('news.getPosts');
+    public function getMeasureName() {
+        return 'Get Posts Test';
     }
 
     private function generatePost() {
@@ -31,7 +31,7 @@ class GetPostsTest extends TestCase {
         return $post;
     }
 
-    public function testBasic() {
+    public function handle() {
         $this->actingAs($this->getUser());
 
         $post = $this->generatePost();
@@ -41,13 +41,13 @@ class GetPostsTest extends TestCase {
         // $post->delete();
         DB::delete('DELETE FROM posts WHERE id = ?', [$post->id]);
 
-        $postsResponse = collect(json_decode($response->content()));
+        $postsResponse = collect(json_decode($response->content(), true));
 
         $newPost = $postsResponse->first(function ($foundPost) use ($post) {
-            return $foundPost->postId === $post->id;
+            return $foundPost['postId'] === $post->id;
         });
 
-        $this->assertEquals($newPost->postText, $post->post_text);
+        $this->assertEquals($newPost['postText'], $post->post_text);
 
         $response->assertStatus(200);
     }
