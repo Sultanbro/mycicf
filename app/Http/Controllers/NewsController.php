@@ -19,6 +19,7 @@ use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class NewsController extends Controller
 {
@@ -185,6 +186,16 @@ class NewsController extends Controller
 
     public function deletePost(Request $request) {
         $postId = $request->postId;
+
+        /**
+         * @var $post Post
+         */
+        $post = Post::where('id', $postId)->first();
+
+        if ($post->user_isn !== auth()->user()->ISN) {
+            throw new AccessDeniedHttpException();
+        }
+
         Post::where('id', $postId)->delete();
 
         broadcast(new NewPost([
