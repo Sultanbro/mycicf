@@ -7,6 +7,8 @@ use Tests\WithUser;
 class AddPostWithNoAuthTest extends AddPostTestBase {
     use WithUser;
 
+    protected $description = 'Пытаемся создать пост без авторизации';
+
     public function getMeasureName() {
         return 'Add post with no auth';
     }

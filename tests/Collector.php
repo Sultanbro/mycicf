@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use DebugBar\DataCollector\TimeDataCollector;
 
@@ -28,17 +29,18 @@ class Collector {
     }
 
     public function init() {
-        if (config('testing.debugbar.collect.queries')) {
+        if (config('testing.debugbar.collect.db')) {
             $this->debugbar = app(LaravelDebugbar::class);
-            $this->debugbar->shouldCollect('db');
-            $this->debugbar->enable();
+            $this->debugbar->shouldCollect('queries');
         }
+        $this->debugbar->shouldCollect('events');
+        $this->debugbar->enable();
     }
 
     public function collect() {
         $result = [];
 
-        if (config('testing.debugbar.collect.queries')) {
+        if (config('testing.debugbar.collect.db')) {
             $result['queries'] = collect($this->debugbar->getCollector('queries')->collect()['statements'])
                 ->map(function ($row) {
                     return $row['sql'];
@@ -55,7 +57,16 @@ class Collector {
         $collector = $this->debugbar->getCollector('time');
 
         return collect($collector->getMeasures())->first(function ($row) use ($message) {
-            return $row['label'] == $message;
+            return $row['label'] === $message;
         });
+    }
+
+    public function getQueries() {
+        /**
+         * @var QueryCollector $collector
+         */
+        $collector = $this->debugbar->getCollector('queries');
+
+        return $collector->collect()['statements'];
     }
 }

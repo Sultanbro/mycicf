@@ -7,10 +7,10 @@ use Illuminate\Http\UploadedFile;
 use Storage;
 use Tests\WithUser;
 
-class AddPostWithPostFiles extends AddPostTestBase {
+class AddPostWithPostFilesTest extends AddPostTestBase {
     use WithUser;
 
-    public const ISN = '5565';
+    protected $description = 'Создаём пост с загруженными файлами';
 
     public function handle() {
         // TODO Сделать аналогичные тесты для postVideos, postDocuments

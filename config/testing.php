@@ -3,7 +3,7 @@
 return [
     'debugbar' => [
         'collect' => [
-            'queries' => true,
+            'db' => true,
         ]
     ]
 ];

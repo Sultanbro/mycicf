@@ -1,14 +1,19 @@
 <?php
 
-
 namespace Tests;
-
 
 use App\User;
 use Hash;
 
 trait WithUser {
-    private function getUser($ISN = '5565') {
+    /**
+     * @param $ISN
+     * @return User
+     */
+    private function getUser($ISN = self::ISN) {
+        /**
+         * @var $user User
+         */
         $user = User::where('isn', '=', $ISN)->first();
 
         if ($user) {

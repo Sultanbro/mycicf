@@ -7,6 +7,8 @@ use Tests\WithUser;
 class AddPostWithNoDataTest extends AddPostTestBase {
     use WithUser;
 
+    protected $description = 'Пытаемся создать пост без данных';
+
     public const ISN = '5565';
 
     public function handle() {
@@ -14,7 +16,9 @@ class AddPostWithNoDataTest extends AddPostTestBase {
         $response = $this->post($this->route, [
 
         ]);
-        $response->assertJson([]);
+        $response->assertJson([
+            'success' => false,
+        ]);
     }
 
     public function getMeasureName() {

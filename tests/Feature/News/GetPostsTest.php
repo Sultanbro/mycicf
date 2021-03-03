@@ -11,6 +11,8 @@ use Tests\WithUser;
 class GetPostsTest extends FeatureTestBase {
     use WithFaker, WithUser;
 
+    protected $description = 'Получаем список постов';
+
     public const ISN = '5565';
 
     public function getRoute() {
