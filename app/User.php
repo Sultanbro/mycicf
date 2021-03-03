@@ -4,10 +4,10 @@ namespace App;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use Exception;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 /**
  * Class User
@@ -65,9 +65,8 @@ class User extends Authenticatable
             }
             $kias = app(KiasServiceInterface::class);
             $kias->init($session);
-            $count = (string)$kias->getCoordinationCount(Auth::user()->ISN)->MyCoord;
-            return $count;
-        }catch (\Exception $ex){
+            return (string)$kias->getCoordinationCount(Auth::user()->ISN)->MyCoord;
+        }catch (Exception $ex){
             return 0;
         }
     }
@@ -118,7 +117,7 @@ class User extends Authenticatable
     }
 
     public function getFullName($user_isn){
-        if($user_isn === User::SENATE_ISN){
+        if($user_isn === self::SENATE_ISN){
             return 'Сенат';
         }
 
@@ -126,6 +125,9 @@ class User extends Authenticatable
             return 'Читательский клуб';
         }
 
+        /**
+         * @var $model Branch
+         */
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
     }
@@ -136,7 +138,7 @@ class User extends Authenticatable
      *
      * @param KiasServiceInterface $kias
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getUserData(KiasServiceInterface $kias) {
         $ISN = Auth::user()->ISN;
@@ -240,7 +242,7 @@ class User extends Authenticatable
             if(count($value->childs)){
                 array_merge($result, $this->getChildElements($value->kias_id));
             }else{
-                array_push($result, $value->kias_id);
+                $result[] = $value->kias_id;
             }
         }
         return $result;
