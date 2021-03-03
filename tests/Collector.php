@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Barryvdh\Debugbar\DataCollector\EventCollector;
+use Barryvdh\Debugbar\DataCollector\ModelsCollector;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Barryvdh\Debugbar\LaravelDebugbar;
 use DebugBar\DataCollector\TimeDataCollector;
@@ -17,6 +19,8 @@ class Collector {
      */
     public $debugbar;
 
+    public $collectors = [];
+
     public static function instance() {
         if (empty(self::$instance)) {
             self::$instance = app(self::class);
@@ -28,26 +32,28 @@ class Collector {
     public function __construct() {
     }
 
-    public function init() {
-        if (config('testing.debugbar.collect.db')) {
-            $this->debugbar = app(LaravelDebugbar::class);
-            $this->debugbar->shouldCollect('queries');
-        }
-        $this->debugbar->shouldCollect('events');
-        $this->debugbar->enable();
+    public function enabled(string $name) {
+        return isset($this->collectors[$name]) && $this->collectors[$name] === true;
     }
 
-    public function collect() {
-        $result = [];
-
-        if (config('testing.debugbar.collect.db')) {
-            $result['queries'] = collect($this->debugbar->getCollector('queries')->collect()['statements'])
-                ->map(function ($row) {
-                    return $row['sql'];
-                });
+    public function init() {
+        $this->debugbar = app(LaravelDebugbar::class);
+        if (config('testing.debugbar.collect.queries')) {
+            $this->debugbar->shouldCollect('queries');
+            $this->collectors['queries'] = true;
         }
 
-        return $result;
+        if (config('testing.debugbar.collect.models')) {
+            $this->debugbar->shouldCollect('models');
+            $this->collectors['models'] = true;
+        }
+
+        if (config('testing.debugbar.collect.events')) {
+            $this->debugbar->shouldCollect('events');
+            $this->collectors['events'] = true;
+        }
+
+        $this->debugbar->enable();
     }
 
     public function getTime($message) {
@@ -68,5 +74,24 @@ class Collector {
         $collector = $this->debugbar->getCollector('queries');
 
         return $collector->collect()['statements'];
+    }
+
+    public function getModels() {
+        /**
+         * @var ModelsCollector $collector
+         */
+        $collector = $this->debugbar->getCollector('models');
+
+        return $collector->collect();
+    }
+
+    public function getEvents() {
+
+        /**
+         * @var $collector EventCollector;
+         */
+        $collector = $this->debugbar->getCollector('event');
+
+        return $collector->collect();
     }
 }
