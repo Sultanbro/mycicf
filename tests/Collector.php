@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Barryvdh\Debugbar\DataCollector\CacheCollector;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\ModelsCollector;
 use Barryvdh\Debugbar\DataCollector\MultiAuthCollector;
@@ -65,6 +66,11 @@ class Collector {
             $this->collectors['route'] = true;
         }
 
+        if (config('testing.debugbar.collect.cache')) {
+            $this->debugbar->shouldCollect('cache');
+            $this->collectors['cache'] = true;
+        }
+
         $this->debugbar->enable();
     }
 
@@ -122,6 +128,15 @@ class Collector {
          * @var $collector RouteCollector;
          */
         $collector = $this->debugbar->getCollector('route');
+
+        return $collector->collect();
+    }
+
+    public function getCache() {
+        /**
+         * @var $collector CacheCollector;
+         */
+        $collector = $this->debugbar->getCollector('cache');
 
         return $collector->collect();
     }
