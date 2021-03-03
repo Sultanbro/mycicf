@@ -7,13 +7,6 @@ use Tests\Collector;
 use Tests\TestCase;
 
 abstract class FeatureTestBase extends TestCase {
-    // https://misc.flogisoft.com/bash/tip_colors_and_formatting
-    private const CLI_STYLE_BOLD = 1;
-    private const CLI_STYLE_UNDERLINED = 4;
-    private const CLI_COLOR_RED = 31;
-    private const CLI_COLOR_GREEN = 32;
-    private const CLI_COLOR_YELLOW = 33;
-    private const CLI_COLOR_BLUE = 34;
 
     /**
      * @var string|null
@@ -29,7 +22,10 @@ abstract class FeatureTestBase extends TestCase {
      */
     protected $methods;
 
-    protected $enableColors = true;
+    /**
+     * @var CLI
+     */
+    protected $cli;
 
     private $reflection;
 
@@ -42,6 +38,7 @@ abstract class FeatureTestBase extends TestCase {
         $this->methods = $route->methods();
 
         $this->reflection = new \ReflectionClass(static::class);
+        $this->cli = CLI::instance();
     }
 
     /**
@@ -59,34 +56,6 @@ abstract class FeatureTestBase extends TestCase {
     }
 
     protected function cleanup() {
-    }
-
-    private function cliColor(string $string, int $color) {
-        // https://misc.flogisoft.com/bash/tip_colors_and_formatting
-        if (! $this->enableColors) {
-            return $string;
-        }
-        return "\e[${color}m${string}\e[0m";
-    }
-
-    private function cliTime($value) {
-        return $this->cliColor($value, self::CLI_COLOR_BLUE);
-    }
-
-    private function cliLabel($value) {
-        return $this->cliColor($value, self::CLI_COLOR_GREEN);
-    }
-
-    private function cliInt($value) {
-        return $this->cliColor($value, self::CLI_COLOR_RED);
-    }
-
-    private function cliBold($value) {
-        return $this->cliColor($value, self::CLI_STYLE_BOLD);
-    }
-
-    private function cliUnderlined($value) {
-        return $this->cliColor($value, self::CLI_STYLE_UNDERLINED);
     }
 
     public function testRun() {
@@ -114,13 +83,13 @@ abstract class FeatureTestBase extends TestCase {
 
             $uri = ltrim($uri, '/');
 
-            $result .= sprintf("[%s /%s] as %s (%s)\n\t=> %s\n\n\t%s\n\n",
-                $this->cliBold($this->cliColor($methods, self::CLI_COLOR_RED)),
-                $this->cliColor($uri, self::CLI_COLOR_BLUE),
-                $this->cliColor($routes['as'], self::CLI_COLOR_BLUE),
-                $this->cliColor($routes['middleware'], self::CLI_COLOR_YELLOW),
-                $this->cliColor($this->cliBold($routes['controller']), self::CLI_COLOR_RED),
-                $this->cliUnderlined($this->cliColor($name, self::CLI_COLOR_YELLOW))
+            $result .= sprintf("[%s /%s] as %s uses (%s)\n\t=> %s\n\n\t%s\n\n",
+                $this->cli->cliBold($this->cli->cliColor($methods, CLI::CLI_COLOR_RED)),
+                $this->cli->cliColor($uri, CLI::CLI_COLOR_BLUE),
+                $this->cli->cliColor($routes['as'], CLI::CLI_COLOR_BLUE),
+                $this->cli->cliColor($routes['middleware'], CLI::CLI_COLOR_YELLOW),
+                $this->cli->cliColor($this->cli->cliBold($routes['controller']), CLI::CLI_COLOR_RED),
+                $this->cli->cliUnderlined($this->cli->cliColor($name, CLI::CLI_COLOR_YELLOW))
             );
         }
 
@@ -134,8 +103,8 @@ abstract class FeatureTestBase extends TestCase {
             $duration_str = $time['duration_str'];
 
             $result .= sprintf("\t%s:\t\t\t%s\n",
-                $this->cliLabel('Время'),
-                $this->cliTime($duration_str));
+                $this->cli->cliLabel('Время'),
+                $this->cli->cliTime($duration_str));
 
             foreach ($time['measures'] as $measure) {
                 $result .= sprintf("\t\t%s:\t%s\n", $measure['label'], $measure['duration_str']);
@@ -161,23 +130,23 @@ abstract class FeatureTestBase extends TestCase {
             });
 
             $result .= sprintf("\t%s (%s):\t%s\n",
-                $this->cliLabel('SQL-запросы'),
-                $this->cliTime($col->formatDuration($allQueriesDuration)),
-                $this->cliColor(count($queries), self::CLI_COLOR_RED)
+                $this->cli->cliLabel('SQL-запросы'),
+                $this->cli->cliTime($col->formatDuration($allQueriesDuration)),
+                $this->cli->cliColor(count($queries), CLI::CLI_COLOR_RED)
             );
 
             foreach ($queries as $query) {
                 switch ($query['type']) {
                     case 'query':
                         $result .= sprintf("\t\t%' 6s %s\n",
-                            $this->cliTime('[' . $query['duration_str'] . ']'),
+                            $this->cli->cliTime('[' . $query['duration_str'] . ']'),
                             $query['sql']
                         );
                         break;
 
                     case 'transaction':
                         $result .= sprintf("\t\t%s\n",
-                            $this->cliLabel($query['sql'])
+                            $this->cli->cliLabel($query['sql'])
                         );
                         break;
 
@@ -192,14 +161,14 @@ abstract class FeatureTestBase extends TestCase {
         if ($collector->enabled('models')) {
             $models = $collector->getModels();
             $result .= sprintf("\t%s: %s\n",
-                $this->cliLabel('Обращения к моделям'),
-                $this->cliInt($models['count'])
+                $this->cli->cliLabel('Обращения к моделям'),
+                $this->cli->cliInt($models['count'])
             );
 
             foreach ($models['data'] as $modelName => $count) {
                 $result .= sprintf("\t\t%s:\t%s\n",
-                    $this->cliLabel($modelName),
-                    $this->cliInt($count)
+                    $this->cli->cliLabel($modelName),
+                    $this->cli->cliInt($count)
                 );
             }
 
@@ -210,9 +179,9 @@ abstract class FeatureTestBase extends TestCase {
             $events = $collector->getEvents();
 
             $result .= sprintf("\t%s:\t%s\t%s\n",
-                $this->cliColor('События', self::CLI_COLOR_GREEN),
-                $this->cliInt(count($events['measures'])),
-                $this->cliColor($events['duration_str'], self::CLI_COLOR_BLUE)
+                $this->cli->cliColor('События', CLI::CLI_COLOR_GREEN),
+                $this->cli->cliInt(count($events['measures'])),
+                $this->cli->cliColor($events['duration_str'], CLI::CLI_COLOR_BLUE)
             );
 
             $maxEventNameLength = collect($events['measures'])->max(function ($event) {
@@ -221,8 +190,8 @@ abstract class FeatureTestBase extends TestCase {
 
             foreach ($events['measures'] as $event) {
                 $result .= sprintf("\t\t%s:\t%s\n",
-                    $this->cliLabel($event['label']),
-                    $this->cliTime($event['duration_str'])
+                    $this->cli->cliLabel($event['label']),
+                    $this->cli->cliTime($event['duration_str'])
                 );
             }
 
@@ -233,15 +202,15 @@ abstract class FeatureTestBase extends TestCase {
             $cache = $collector->getCache();
 
             $result .= sprintf("\t%s: %s (%s)\n",
-                $this->cliLabel('Кэш'),
-                $this->cliInt(count($cache['measures'])),
-                $this->cliTime($cache['duration_str'])
+                $this->cli->cliLabel('Кэш'),
+                $this->cli->cliInt(count($cache['measures'])),
+                $this->cli->cliTime($cache['duration_str'])
             );
 
             foreach ($cache['measures'] as $measure) {
                 $result .= sprintf("\t\t%s: (%s)\n",
-                    $this->cliLabel($measure['label']),
-                    $this->cliTime($measure['duration_str'])
+                    $this->cli->cliLabel($measure['label']),
+                    $this->cli->cliTime($measure['duration_str'])
                 );
             }
 
@@ -252,7 +221,7 @@ abstract class FeatureTestBase extends TestCase {
 
             $user = auth()->user();
             $result .= sprintf("\n\t%s:\t%s (#%d)",
-                $this->cliLabel('Авторизация'),
+                $this->cli->cliLabel('Авторизация'),
                 $auth['names'],
                 (isset($user) ? $user->id : '')
             ); // TODO Не совсем верно
