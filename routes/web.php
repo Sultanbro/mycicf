@@ -194,7 +194,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
         //COORIDNATION
-        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
+        Route::get('/coordination', 'CoordinationController@index')->name('coordination')->withoutMiddleware(['middleware'=>'duty']);
         Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
         Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
@@ -420,7 +420,3 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
-
-
-
-
