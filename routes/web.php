@@ -179,7 +179,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
     Route::get('eds/od', 'EdsController@edsOD');
 
-    Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
+    Route::group(['middleware' => ['checkAuth', 'checkSession','duty']], function () {
         Route::get('test/eds', 'SiteController@testEds');
         Route::get('/getEDS', 'SiteController@getEds');
         Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
@@ -194,12 +194,12 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
         //COORIDNATION
-        Route::get('/coordination', 'CoordinationController@index')->name('coordination')->withoutMiddleware(['middleware'=>'duty']);
-        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
-        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
-        Route::post('/setCoordination', 'CoordinationController@setCoordination');
-        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
-        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
+        Route::get('/coordination', 'CoordinationController@index')->name('coordination')->withoutMiddleware('duty');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList')->withoutMiddleware('duty');
+        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo')->withoutMiddleware('duty');
+        Route::post('/setCoordination', 'CoordinationController@setCoordination')->withoutMiddleware('duty');
+        Route::post('/getDocRowList', 'CoordinationController@getDocRowList')->withoutMiddleware('duty');
+        Route::post('/getAttachmentList', 'CoordinationController@getAttachments')->withoutMiddleware('duty');
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
         Route::post('/documentation/save', 'DocumentationController@save');
