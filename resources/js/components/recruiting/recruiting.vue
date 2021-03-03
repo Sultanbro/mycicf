@@ -1570,16 +1570,18 @@
                this.candidatePerson = '';
 
                let self = this;
-               this.candidateStorage.filter(function(el) {
-                   console.log(el.recruiting_id+'==='+self.chiefsDataLocal[index].id);
-                   //let indexx = index+1;
-                   if(el.recruiting_id == self.chiefsDataLocal[index].id){
-                       self.candidatePerson = el;
-                       self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
-                       self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
-                       self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
-                    }
-                });
+               if(Object.keys(this.candidateStorage).length > 0) {
+                   this.candidateStorage.filter(function (el) {
+                       console.log(el.recruiting_id + '===' + self.chiefsDataLocal[index].id);
+                       //let indexx = index+1;
+                       if (el.recruiting_id == self.chiefsDataLocal[index].id) {
+                           self.candidatePerson = el;
+                           self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
+                           self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
+                           self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                       }
+                   });
+               }
 
 
                // if(this.candidateBase.IIN == undefined){
