@@ -172,7 +172,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin');
     Route::get('getModerators', 'SiteController@getModerators');
-    Route::post('/getBirthdays', 'SiteController@getBirthdays');
+    Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
 
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
