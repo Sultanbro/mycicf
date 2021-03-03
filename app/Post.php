@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Http\Controllers\NotificationController;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -43,11 +45,12 @@ use Illuminate\Support\Facades\Storage;
  * @method static \Illuminate\Database\Query\Builder|Post withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Post withoutTrashed()
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Post extends Model
 {
     use SoftDeletes;
+    use HasTimestamps;
 
     const NEW_POST = 'new';
     const EDITED_POST = 'edit';
@@ -85,13 +88,12 @@ class Post extends Model
                 "checked" => false
             ];
         }
-        $post_poll = [
+        return [
             "question_id" => $question_id,
             "question_title" => $question_value,
             "total_votes" => $this->getTotalVotes($question_id),
             "answers" => $post_answers,
         ];
-        return $post_poll;
     }
 
     /**
@@ -116,18 +118,22 @@ class Post extends Model
         return $count;
     }
 
+    /**
+     * @param $isn
+     * @param $post_id
+     * @return bool
+     */
     public function getIsVoted($isn, $post_id) {
-        $question_id = Question::where('post_id', $post_id)
-            ->first();
-        $model = UserAnswer::where('question_id', $question_id['id'])
-            ->where('user_isn', $isn)->first();
-        if($model === null) {
-            $is_voted = 0;
+        /**
+         * @var $question Question
+         */
+        $question = $this->poll->first();
+
+        if ($question === null) {
+            return false;
         }
-        else {
-            $is_voted = 1;
-        }
-        return $is_voted;
+
+        return !$question->userAnswers->where('user_isn', '=', $isn)->isEmpty();
     }
 
     public function setPinned(){
