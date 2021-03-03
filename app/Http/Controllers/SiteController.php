@@ -26,7 +26,7 @@ class SiteController extends Controller
     {
         if(Auth::check())
         {
-            return redirect(route('news'));
+            return redirect(route('news.index'));
         }
         else
         {

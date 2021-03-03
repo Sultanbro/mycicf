@@ -242,7 +242,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             'as' => 'news',
         ], function () {
             // TODO Постепенно перенести сюда все роуты связанные с этой группой
-            Route::get('/news', 'NewsController@getView')->name('news');
+            Route::get('/news', 'NewsController@getView')->name('.index');
             Route::post('/addPost', 'NewsController@addPost')->name('.addPost'); // TODO use grouping
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
             Route::post('/deletePost', 'NewsController@deletePost')->name('.deletePost');
@@ -358,7 +358,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //My results page
         Route::get('rating', 'RatingController@ratingIndex')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
-        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+        // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
