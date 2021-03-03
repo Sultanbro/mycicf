@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Storage;
  * @property Carbon|null $deleted_at
  * @property int $from_kias
  * @property bool $is_edited
+ * @property Like[]|Collection $likes
+ * @property Question[]|Collection $poll
  * @property int $likes_count
  * @property Collection|Comment[] $comments
  * @method static bool|null forceDelete()
@@ -58,6 +60,16 @@ class Post extends Model
         return $this->hasMany(Like::class);
     }
 
+    public function poll() {
+        return $this->hasMany(Question::class, 'post_id');
+    }
+
+    /**
+     * @param $post_id
+     * @return array
+     *
+     * @deprecated
+     */
     public function getPoll($post_id) {
         $question = Question::where('post_id', $post_id)->first();
         $question_id = $question['id'];
@@ -82,12 +94,23 @@ class Post extends Model
         return $post_poll;
     }
 
-
+    /**
+     * @param $answer_id
+     * @return int
+     *
+     * @deprecated
+     */
     private function getAnswerVotes($answer_id) {
         $count = UserAnswer::where('answer_id', $answer_id)->count();
         return $count;
     }
 
+    /**
+     * @param $question_id
+     * @return int
+     *
+     * @deprecated
+     */
     private function getTotalVotes($question_id) {
         $count = UserAnswer::where('question_id', $question_id)->count();
         return $count;
