@@ -7,7 +7,10 @@
                 </label>
             </div>
             <div>
-                <treeselect v-model="employee_isn" :options="treeOptions" :multiple="false"></treeselect>
+                <treeselect v-model="employee_isn"
+                            :options="treeOptions"
+                            :multiple="false">
+                </treeselect>
             </div>
             <div class="rating-search-btn" @click="getRating">
                 <span>Показать</span>
@@ -124,6 +127,7 @@
         props: {
             isn: Number,
             begin: String,
+
         },
         methods: {
             getTreeOptions() {
