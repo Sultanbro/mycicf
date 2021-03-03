@@ -66,7 +66,7 @@ class PostsService
          */
         foreach ($model as $item) {
             $key = $this->getResponseKey($item->id);
-            $cacheKey = $key . '::user-' . $user_isn;
+            $cacheKey = sprintf("%s::user-%s", $key, $user_isn);
             Debugbar::startMeasure($key);
             $response[] = cache()->remember($cacheKey, $cacheTTL, function () use ($item, $user_isn) {
                 return $this->buildPostResponse($item, $user_isn);
