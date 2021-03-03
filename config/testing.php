@@ -9,6 +9,7 @@ return [
             'auth' => true,
             'route' => true,
             'cache' => true,
+            'time' => true,
         ]
     ]
 ];

@@ -71,6 +71,11 @@ class Collector {
             $this->collectors['cache'] = true;
         }
 
+        if (config('testing.debugbar.collect.time')) {
+            $this->debugbar->shouldCollect('time');
+            $this->collectors['time'] = true;
+        }
+
         $this->debugbar->enable();
     }
 
@@ -80,9 +85,7 @@ class Collector {
          */
         $collector = $this->debugbar->getCollector('time');
 
-        return collect($collector->getMeasures())->first(function ($row) use ($message) {
-            return $row['label'] === $message;
-        });
+        return $collector->collect();
     }
 
     public function getQueries() {

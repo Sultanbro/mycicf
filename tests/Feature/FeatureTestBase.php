@@ -103,8 +103,6 @@ abstract class FeatureTestBase extends TestCase {
 
         $collector->debugbar->stopMeasure($measureName);
 
-        $duration_str = $collector->getTime($measureName)['duration_str'];
-
         $name = $this->description ?? static::class;
 
         $result = '';
@@ -130,9 +128,22 @@ abstract class FeatureTestBase extends TestCase {
         //     $this->cliLabel('Проверок'),
         //     $this->cliInt($this->getNumAssertions()));
 
-        $result .= sprintf("\t%s:\t\t\t%s\n\n",
-            $this->cliLabel('Время'),
-            $this->cliTime($duration_str));
+        if ($collector->enabled('time')) {
+            $time = $collector->getTime($measureName);
+
+            $duration_str = $time['duration_str'];
+
+            $result .= sprintf("\t%s:\t\t\t%s\n",
+                $this->cliLabel('Время'),
+                $this->cliTime($duration_str));
+
+            foreach ($time['measures'] as $measure) {
+                $result .= sprintf("\t\t%s:\t%s\n", $measure['label'], $measure['duration_str']);
+            }
+
+            $result .= "\n";
+
+        }
 
         if ($collector->enabled('queries')) {
             $queries = $collector->getQueries();
@@ -240,7 +251,7 @@ abstract class FeatureTestBase extends TestCase {
             $auth = $collector->getAuth();
 
             $user = auth()->user();
-            $result .= sprintf("\t%s:\t%s (#%d)",
+            $result .= sprintf("\n\t%s:\t%s (#%d)",
                 $this->cliLabel('Авторизация'),
                 $auth['names'],
                 (isset($user) ? $user->id : '')
