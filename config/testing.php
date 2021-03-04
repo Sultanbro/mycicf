@@ -10,6 +10,12 @@ return [
             'route' => true,
             'cache' => true,
             'time' => true,
+            'kias' => true,
+        ],
+        'collectors' => [
+            'queries' => [
+                'backtrace' => true
+            ]
         ]
     ]
 ];
