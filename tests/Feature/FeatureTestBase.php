@@ -159,6 +159,11 @@ abstract class FeatureTestBase extends TestCase {
                 'tests' => 0,
                 'vendor' => 0
             ];
+            $counts = [
+                'app' => 0,
+                'tests' => 0,
+                'vendor' => 0
+            ];
 
             foreach ($queries as $index => $query) {
                 $backtraceZero = $query['backtrace'][0];
@@ -169,28 +174,38 @@ abstract class FeatureTestBase extends TestCase {
                         'query' => $query
                     ];
                     $timings['tests'] += $query['duration'];
+                    $counts['tests']++;
                 } else if (Str::startsWith($source, '\\app')) {
                     $preparedQueries[] = [
                         'type'  => 'app',
                         'query' => $query
                     ];
                     $timings['app'] += $query['duration'];
+                    $counts['app']++;
                 } else if (Str::startsWith($source, '\\vendor')) {
                     $preparedQueries[] = [
                         'type'  => 'vendor',
                         'query' => $query
                     ];
                     $timings['vendor'] += $query['duration'];
+                    $counts['vendor']++;
                 } else {
                     dd(123312);
                 }
             }
 
-            $result .= sprintf("\t%s ([app]: %s, [tests]: %s, [vendor]: %s):\t%s\n",
+            $result .= sprintf("\t%s ([tests]: %s %s, [app]: %s %s, [vendor]: %s %s):\t%s\n",
                 $cli->label('SQL queries'),
-                $cli->time($col->getDataFormatter()->formatDuration($timings['app'])),
+
+                $cli->int($counts['tests']),
                 $cli->time($col->getDataFormatter()->formatDuration($timings['tests'])),
+
+                $cli->int($counts['app']),
+                $cli->time($col->getDataFormatter()->formatDuration($timings['app'])),
+
+                $cli->int($counts['vendor']),
                 $cli->time($col->getDataFormatter()->formatDuration($timings['vendor'])),
+
                 $cli->color(count($queries), CLI::CLI_COLOR_RED)
             );
 
@@ -228,7 +243,7 @@ abstract class FeatureTestBase extends TestCase {
                         if (config('testing.debugbar.collectors.queries.backtrace', false)) {
                             foreach ($query['query']['backtrace'] as $backtrace) {
                                 $result .= sprintf("\t\t\t\tTRACE: %s:%s:%s\n",
-                                    base_path($backtrace->name),
+                                    base_path(ltrim($backtrace->name, '\\/')),
                                     $backtrace->line,
                                     $backtrace->index
                                 );
