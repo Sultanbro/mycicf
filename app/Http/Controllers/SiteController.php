@@ -579,6 +579,7 @@ class SiteController extends Controller
         $d = $request->get('d', date('d', time()));
         $m = $request->get('m', date('m', time()));
         $birthdays = Branch::whereNotNull('birthday')
+            ->with('getParent')
             ->whereDay('birthday', '>=', $d)
             ->whereMonth('birthday', $m)
             ->orWhereNotNull('birthday')
@@ -590,30 +591,31 @@ class SiteController extends Controller
         $result = [];
         $lbDate[0] = $lbDate[1] = null;
         $similarKey = null;
+
         foreach ($birthdays as $key => $birthday){
             $bDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
 
             if($lbDate[0] == $bDate[0] && $lbDate[1] == $bDate[1]){
-                array_push($result[$similarKey]['similar'], [
-                    "fullname" => $birthday->fullname,
-                    "ISN" => $birthday->kias_id,
-                    "birthday" => date('d.m.Y', strtotime($birthday->birthday)),
-                    "fakeImage" => !Branch::checkImageExists($birthday->kias_id),
-                    "duty" => $birthday->duty,
-                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
-                    'similar' => []
-                ]);
+                $result[$similarKey]['similar'][] = [
+                    "fullname"  => $birthday->fullname,
+                    "ISN"       => $birthday->kias_id,
+                    "birthday"  => date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage" => ! Branch::checkImageExists($birthday->kias_id),
+                    "duty"      => $birthday->duty,
+                    "dept"      => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
+                    'similar'   => []
+                ];
             } else {
                 $similarKey = count($result);
-                array_push($result, [
-                    "fullname"=> $birthday->fullname,
-                    "ISN"=>$birthday->kias_id,
-                    "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
-                    "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
-                    "duty" => $birthday->duty,
-                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
-                    'similar' => []
-                ]);
+                $result[] = [
+                    "fullname"  => $birthday->fullname,
+                    "ISN"       => $birthday->kias_id,
+                    "birthday"  => date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage" => ! Branch::checkImageExists($birthday->kias_id),
+                    "duty"      => $birthday->duty,
+                    "dept"      => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
+                    'similar'   => []
+                ];
                 $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
             }
         }
