@@ -20,12 +20,12 @@ class DeletePostOfAnotherUserTest extends DeletePostTestBase {
         $post->post_text = $this->faker->text(30);
         $post->save();
 
-        $this->assertEquals(1, Post::whereId($post->id)->count());
+        self::assertTrue(Post::whereId($post->id)->exists());
         $response = $this->post($this->route, [
             'postId' => $post->id,
         ]);
         $response->assertStatus(403);
-        $this->assertEquals(1, Post::whereId($post->id)->count());
+        self::assertTrue(Post::whereId($post->id)->exists());
     }
 
     public function getMeasureName() {

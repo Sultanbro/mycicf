@@ -3,6 +3,7 @@
 namespace Tests\Feature\News\AddComment;
 
 use App\Post;
+use DB;
 use Tests\WithUser;
 
 class AddCommentToPostTest extends AddCommentTestBase {
@@ -48,7 +49,7 @@ class AddCommentToPostTest extends AddCommentTestBase {
     }
 
     public function cleanup() {
-        \DB::delete('DELETE FROM comments WHERE id = ?', [$this->createdCommentId]);
+        DB::delete('DELETE FROM comments WHERE id = ?', [$this->createdCommentId]);
         $this->post->delete();
     }
 

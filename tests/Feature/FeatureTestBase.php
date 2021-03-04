@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
+use Psy\Util\Str;
 use Tests\Collector;
 use Tests\TestCase;
 
@@ -34,7 +35,6 @@ abstract class FeatureTestBase extends TestCase {
 
         $routeName = $this->getRouteName();
         $this->route = route($routeName);
-        $route = \Route::getRoutes()->getByName($routeName);
 
         $this->reflection = new \ReflectionClass(static::class);
         $this->cli = CLI::instance();
@@ -52,6 +52,12 @@ abstract class FeatureTestBase extends TestCase {
     abstract public function handle();
 
     protected function prepare() {
+    }
+
+    protected function getFullPath($file) {
+        [$path, $lines] = explode(':', $file);
+        $path = ltrim($path, '/\\');
+        return implode(':', [base_path($path), $lines]);
     }
 
     public function testRun() {
@@ -85,7 +91,7 @@ abstract class FeatureTestBase extends TestCase {
                 $cli->color($uri, CLI::CLI_COLOR_BLUE),
                 $cli->color($routes['as'], CLI::CLI_COLOR_BLUE),
                 $cli->color($routes['middleware'], CLI::CLI_COLOR_YELLOW),
-                $cli->color($cli->bold($routes['file']), CLI::CLI_COLOR_RED),
+                $cli->color($cli->bold($this->getFullPath($routes['file'])), CLI::CLI_COLOR_RED),
                 $cli->underlined($cli->color($name, CLI::CLI_COLOR_YELLOW))
             );
         }
@@ -132,14 +138,25 @@ abstract class FeatureTestBase extends TestCase {
 
             $result .= sprintf("\t%s (%s):\t%s\n",
                 $cli->label('SQL-запросы'),
-                $cli->time($col->formatDuration($allQueriesDuration)),
+                $cli->time($col->getDataFormatter()->formatDuration($allQueriesDuration)),
                 $cli->color(count($queries), CLI::CLI_COLOR_RED)
             );
 
             foreach ($queries as $query) {
                 switch ($query['type']) {
                     case 'query':
-                        $result .= sprintf("\t\t%' 6s %s\n",
+                        $source = $query['backtrace'][0]->name;
+                        if (\Illuminate\Support\Str::startsWith($source, '\\tests')) {
+                            $type = ' [tests] ';
+                        } else if (\Illuminate\Support\Str::startsWith($source, '\\app')) {
+                            $type = '   [app] ';
+                        } else if (\Illuminate\Support\Str::startsWith($source, '\\vendor')) {
+                            $type = '[vendor] ';
+                        } else {
+                            dd(123312);
+                        }
+                        $result .= sprintf("\t\t%s %s %s\n",
+                            $cli->color($type, CLI::CLI_COLOR_YELLOW),
                             $cli->time('[' . $query['duration_str'] . ']'),
                             $query['sql']
                         );

@@ -12,7 +12,7 @@ class AddPostWithPollTest extends AddPostTestBase {
     public const ISN = '1144';
 
     public function handle() {
-        $this->markTestSkipped('TODO: Complete this test.');
+        self::markTestSkipped('TODO: Complete this test.');
     }
 
     public function getMeasureName() {

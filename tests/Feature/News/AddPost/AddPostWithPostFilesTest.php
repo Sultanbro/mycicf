@@ -57,12 +57,12 @@ class AddPostWithPostFilesTest extends AddPostTestBase {
 
         $this->postId = $response->json('postId');
 
-        $this->assertGreaterThan(0, $this->postId);
+        self::assertGreaterThan(0, $this->postId);
         $response->assertStatus(200);
         $this->postPath = "public/post_files/$this->postId";
         $this->path = "$this->postPath/images/$fileName";
-        $this->assertTrue($this->storage->exists($this->postPath));
-        $this->assertTrue($this->storage->exists($this->path));
+        self::assertTrue($this->storage->exists($this->postPath));
+        self::assertTrue($this->storage->exists($this->path));
     }
 
     protected function cleanup() {

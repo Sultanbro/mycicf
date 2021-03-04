@@ -35,7 +35,7 @@ class AddCommentToPostWithNoAuthTest extends AddCommentTestBase {
 
         $response->assertStatus(302);
 
-        $this->assertEquals($commentsCount, Comment::count());
+        self::assertEquals($commentsCount, Comment::count());
     }
 
     public function cleanup() {

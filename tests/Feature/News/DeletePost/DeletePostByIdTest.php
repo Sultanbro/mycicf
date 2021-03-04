@@ -28,12 +28,12 @@ class DeletePostByIdTest extends DeletePostTestBase {
         $user = $this->getUser();
         $this->actingAs($user);
 
-        $this->assertEquals(1, Post::whereId($this->post->id)->count());
+        self::assertEquals(1, Post::whereId($this->post->id)->count());
         $response = $this->post($this->route, [
             'postId' => $this->post->id,
         ]);
         $response->assertStatus(200);
-        $this->assertEquals(0, Post::whereId($this->post->id)->count());
+        self::assertEquals(0, Post::whereId($this->post->id)->count());
     }
 
     public function getMeasureName() {

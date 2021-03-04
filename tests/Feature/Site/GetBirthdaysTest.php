@@ -45,6 +45,7 @@ class GetBirthdaysTest extends FeatureTestBase {
     }
 
     protected function prepare() {
+        $this->getUser();
         $this->branch = new Branch();
         $this->branch->fullname = 'Test user';
         $this->branch->kias_id = self::ISN;
@@ -63,13 +64,15 @@ class GetBirthdaysTest extends FeatureTestBase {
         ]);
         $array = collect($response->json('birthdays'));
         $user = $array->first(function ($entry) {
-            return $entry['ISN'] == self::ISN;
+            return $entry['ISN'] === self::ISN;
         });
+
+        dd($user);
 
         // TODO Обработать данные
 
         $response->assertStatus(200);
-        $this->assertGreaterThan(0, $array->count());
+        self::assertGreaterThan(0, $array->count());
     }
 
     public function cleanup() {
