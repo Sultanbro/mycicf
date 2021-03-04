@@ -191,7 +191,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
         //COORIDNATION
         Route::get('/coordination', 'CoordinationController@index')->name('coordination');
-        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList')->name('coordination.getList');
         Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
         Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
