@@ -2,6 +2,7 @@
 
 namespace App\Library\Services\Mocks;
 
+use App\Debug\KiasRequestCollector;
 use App\Library\Services\KiasServiceInterface;
 use Debugbar;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -61,9 +62,15 @@ class KiasMock implements KiasServiceInterface {
 
     private $delay;
 
+    /**
+     * @var KiasRequestCollector
+     */
+    private $collector;
+
     public function __construct() {
         Debugbar::log('KiasMock::Construct');
         $this->delay = (float)config('kias.mock.delay');
+        $this->collector = \Debugbar::getCollector('kias');
     }
 
     private function delay() {
@@ -179,6 +186,10 @@ class KiasMock implements KiasServiceInterface {
      * @return \App\XML\Kias\AuthenticateResult
      */
     public function authenticate($username, $password) {
+        $this->collector->push([
+            'method' => 'authenticate',
+            'args' => collect('username'),
+        ]);
         $this->delay();
         return new \App\XML\Kias\AuthenticateResult('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -200,6 +211,9 @@ class KiasMock implements KiasServiceInterface {
      * @return \App\XML\Kias\GetBranchesResult|SimpleXMLElement
      */
     public function getBranches() {
+        $this->collector->push([
+            'method' => 'getBranches',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -222,6 +236,9 @@ class KiasMock implements KiasServiceInterface {
      * @return \App\XML\Kias\GetUpperLevelResult|SimpleXMLElement
      */
     public function getUpperLevel($ISN) {
+        $this->collector->push([
+            'method' => 'getUpperLevel',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -237,6 +254,9 @@ class KiasMock implements KiasServiceInterface {
      * @return \App\XML\Kias\GetEmplInfoResult|SimpleXMLElement
      */
     public function getEmplInfo($ISN, $dateBeg, $dateEnd) {
+        $this->collector->push([
+            'method' => 'getEmplInfo',
+        ]);
         $this->delay();
         //sleep(1); // sleep здесь для имитации задержки
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
@@ -300,6 +320,9 @@ class KiasMock implements KiasServiceInterface {
      * @return \App\XML\Kias\GetAttachmentDataResult|SimpleXMLElement
      */
     public function getAttachmentData($refisn, $isn, $pictType) {
+        $this->collector->push([
+            'method' => 'getAttachmentData',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
             <data>
@@ -313,6 +336,10 @@ class KiasMock implements KiasServiceInterface {
      * @return \App\XML\Kias\MyCoordinationListResult|SimpleXMLElement
      */
     public function myCoordinationList($ISN) {
+        $this->collector->push([
+            'method' => 'myCoordinationList',
+            'ISN' => $ISN,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
             <data>
@@ -417,6 +444,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getCoordination($docIsn) {
+        $this->collector->push([
+            'method' => 'getCoordination',
+            'docIsn' => $docIsn,
+        ]);
         $this->delay();
         // post
         return $this->request('User_CicGetCoordinationList', [
@@ -425,6 +456,14 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function setCoordination($DocISN, $EmplISN, $Solution, $Remark, $Resolution) {
+        $this->collector->push([
+            'method' => 'setCoordination',
+            'DocISN' => $DocISN,
+            'EmplISN' => $EmplISN,
+            'Solution' => $Solution,
+            'Remark' => $Remark,
+            'Resolution' => $Resolution,
+        ]);
         $this->delay();
         // post
         return $this->request('User_CicSetCoordinationList', [
@@ -437,6 +476,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getAttachmentsList($docIsn) {
+        $this->collector->push([
+            'method' => 'getAttachmentsList',
+            'docIsn' => $docIsn,
+        ]);
         $this->delay();
         // post
         return $this->request('User_CicGetAttachmentList', [
@@ -445,6 +488,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getEmplImagesByDate($date) {
+        $this->collector->push([
+            'method' => 'getEmplImagesByDate',
+            'date' => $date,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -463,6 +510,11 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getEmplMotivation($isn, $begin) {
+        $this->collector->push([
+            'method' => 'getEmplMotivation',
+            'isn' => $isn,
+            'begin' => $begin,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -484,6 +536,12 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function GetInfoUser($dateBeg, $dateEnd, $emplIsn) {
+        $this->collector->push([
+            'method' => 'GetInfoUser',
+            'dateBeg' => $dateBeg,
+            'dateEnd' => $dateEnd,
+            'emplIsn' => $emplIsn,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -492,6 +550,11 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getEmplRating($user_isn, $begin_date) {
+        $this->collector->push([
+            'method' => 'getEmplRating',
+            'user_isn' => $user_isn,
+            'begin_date' => $begin_date,
+        ]);
         $this->delay();
         // not used
         return $this->request('User_CicGetEmplRating', [
@@ -502,6 +565,12 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getPrintableDocument($isn, $template, $classId) {
+        $this->collector->push([
+            'method' => 'getPrintableDocument',
+            'isn' => $isn,
+            'template' => $template,
+            'classId' => $classId,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
     <data>
@@ -512,6 +581,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getExpressAttributes($product) {
+        $this->collector->push([
+            'method' => 'getExpressAttributes',
+            'product' => $product,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -528,6 +601,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getFullObject($product) {
+        $this->collector->push([
+            'method' => 'getFullObject',
+            'product' => $product,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -576,6 +653,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getDictiList($parent) {
+        $this->collector->push([
+            'method' => 'getDictiList',
+            'parent' => $parent,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -592,6 +673,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getRegions($parent) {
+        $this->collector->push([
+            'method' => 'getRegions',
+            'parent' => $parent,
+        ]);
         $this->delay();
         // not used
         return $this->request('User_CicGetRegionsAndCity', [
@@ -600,6 +685,13 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getSubject($firstName, $lastName, $patronymic, $iin) {
+        $this->collector->push([
+            'method' => 'getSubject',
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'patronymic' => $patronymic,
+            'iin' => $iin,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -630,6 +722,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function saveSubject($participant) {
+        $this->collector->push([
+            'method' => 'saveSubject',
+            'participant' => $participant,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -638,6 +734,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function setSubject($participant) {
+        $this->collector->push([
+            'method' => 'setSubject',
+            'participant' => $participant,
+        ]);
         $this->delay();
         // not used
         return $this->request('User_CicSetSubject', array_merge($participant, [
@@ -648,6 +748,13 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb) {
+        $this->collector->push([
+            'method' => 'expressCalculator',
+            'ISN' => $ISN,
+            'SubjISN' => $SubjISN,
+            'addAttr' => $addAttr,
+            'nshb' => $nshb,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -657,6 +764,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function CreateAgrByAgrcalc($isn) {
+        $this->collector->push([
+            'method' => 'CreateAgrByAgrcalc',
+            'isn' => $isn,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -666,6 +777,11 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getAgreementCalc($isn, $product_id) {
+        $this->collector->push([
+            'method' => 'getAgreementCalc',
+            'isn' => $isn,
+            'product_id' => $product_id,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -688,6 +804,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function calcFull($order) {
+        $this->collector->push([
+            'method' => 'calcFull',
+            'order' => $order,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -701,6 +821,12 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function sendtoExpertSakta($isn, $dateTime, $address) {
+        $this->collector->push([
+            'method' => 'sendtoExpertSakta',
+            'isn' => $isn,
+            'dateTime' => $dateTime,
+            'address' => $address,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>OK</data>
@@ -708,6 +834,12 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function sendtoExpert($isn, $dateTime, $address) {
+        $this->collector->push([
+            'method' => 'sendtoExpert',
+            'isn' => $isn,
+            'dateTime' => $dateTime,
+            'address' => $address,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>OK</data>
@@ -715,6 +847,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function createAgrFromAgrCalc($agrCalcIsn) {
+        $this->collector->push([
+            'method' => 'createAgrFromAgrCalc',
+            'agrCalcIsn' => $agrCalcIsn,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -725,6 +861,14 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getVehicle($vin = null, $engine = null, $tfNumber = null, $srts = null, $searchTFESBD = null) {
+        $this->collector->push([
+            'method' => 'getVehicle',
+            'vin' => $vin,
+            'engine' => $engine,
+            'tfNumber' => $tfNumber,
+            'srts' => $srts,
+            'searchTFESBD' => $searchTFESBD,
+        ]);
         $this->delay();
         // not used
         $kiasMethod = $searchTFESBD == null ? 'User_CicSearchVehiclesESBD' : 'User_CicSearchTFESBD';
@@ -742,6 +886,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function saveVehicle($data) {
+        $this->collector->push([
+            'method' => 'saveVehicle',
+            'data' => $data,
+        ]);
         $this->delay();
         // not used
         $data['DATERELEASE'] = '01.01.' . $data['DATERELEASE'];
@@ -784,6 +932,10 @@ class KiasMock implements KiasServiceInterface {
 //    }
 
     public function getPrintableDocumentList($contract_number) {
+        $this->collector->push([
+            'method' => 'getPrintableDocumentList',
+            'contract_number' => $contract_number,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -797,6 +949,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getAgrStatus($ISN) {
+        $this->collector->push([
+            'method' => 'getAgrStatus',
+            'ISN' => $ISN,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -808,6 +964,12 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getOrSetDocs($doc_isn, $type, $status) {
+        $this->collector->push([
+            'method' => 'getOrSetDocs',
+            'doc_isn' => $doc_isn,
+            'type' => $type,
+            'status' => $status,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -817,6 +979,10 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getCoordinationCount($ISN) {
+        $this->collector->push([
+            'method' => 'getCoordinationCount',
+            'ISN' => $ISN,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -832,6 +998,13 @@ class KiasMock implements KiasServiceInterface {
      * @return mixed|SimpleXMLElement
      */
     public function getInsuranceInspectionList($isn, $status, $DateBeg, $DateEnd) {
+        $this->collector->push([
+            'method' => 'getInsuranceInspectionList',
+            'isn' => $isn,
+            'status' => $status,
+            'DateBeg' => $DateBeg,
+            'DateEnd' => $DateEnd,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -849,6 +1022,13 @@ class KiasMock implements KiasServiceInterface {
      * @return mixed|SimpleXMLElement
      */
     public function getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $docIsn) {
+        $this->collector->push([
+            'method' => 'getInsuranceInspectionInfo',
+            'agrisn' => $agrisn,
+            'agrcalcisn' => $agrcalcisn,
+            'isn' => $isn,
+            'docIsn' => $docIsn,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -881,6 +1061,12 @@ class KiasMock implements KiasServiceInterface {
      * @return mixed|SimpleXMLElement
      */
     public function setInsuranceInspectionInfo($docIsn, $dremark, $data) {
+        $this->collector->push([
+            'method' => 'setInsuranceInspectionInfo',
+            'docIsn' => $docIsn,
+            'dremark' => $dremark,
+            'data' => $data,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -899,6 +1085,13 @@ class KiasMock implements KiasServiceInterface {
      * @return mixed|SimpleXMLElement
      */
     public function setAppointmentOperator($emplIsn, $docIsn, $statusIsn, $remark) {
+        $this->collector->push([
+            'method' => 'setAppointmentOperator',
+            'emplIsn' => $emplIsn,
+            'docIsn' => $docIsn,
+            'statusIsn' => $statusIsn,
+            'remark' => $remark,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -907,6 +1100,15 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getAttachmentPath($type, $refID, $format, $docClass, $refISN, $ISN) {
+        $this->collector->push([
+            'method' => 'getAttachmentPath',
+            'type' => $type,
+            'refID' => $refID,
+            'format' => $format,
+            'docClass' => $docClass,
+            'refISN' => $refISN,
+            'ISN' => $ISN,
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -921,6 +1123,9 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function cicSaveEDS($RefISN, $isn, $iin, $signer, $signerisn, $signeddate, $keyperiod, $remark) {
+        $this->collector->push([
+            'method' => 'cicSaveEDS',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -937,6 +1142,9 @@ class KiasMock implements KiasServiceInterface {
      * @return SimpleXMLElement
      */
     public function getDictList($dictiISN, $mode) {
+        $this->collector->push([
+            'method' => 'getDictList',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -961,6 +1169,9 @@ class KiasMock implements KiasServiceInterface {
      */
 
     public function getDictiProducts($ISN) {
+        $this->collector->push([
+            'method' => 'getDictiProducts',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -987,6 +1198,9 @@ class KiasMock implements KiasServiceInterface {
      * @return SimpleXMLElement
      */
     public function saveAttachment($refisn, $name, $file, $type = 'J') {
+        $this->collector->push([
+            'method' => 'saveAttachment',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -1000,6 +1214,9 @@ class KiasMock implements KiasServiceInterface {
      * @return mixed|SimpleXMLElement
      */
     public function getAvarkomByDept($deptIsn) {
+        $this->collector->push([
+            'method' => 'getAvarkomByDept',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -1010,6 +1227,9 @@ class KiasMock implements KiasServiceInterface {
 
 
     public function getUnderReport($productInfo, $emplIsn, $dateBeg, $dateEnd) {
+        $this->collector->push([
+            'method' => 'getUnderReport',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -1050,6 +1270,9 @@ class KiasMock implements KiasServiceInterface {
      * @return mixed|SimpleXMLElement
      */
     public function getDocRowAttr($class_isn, $doc_isn) {
+        $this->collector->push([
+            'method' => 'getDocRowAttr',
+        ]);
         $this->delay();
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
 <data>
@@ -1058,6 +1281,9 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function getDocRating($class_isn) {
+        $this->collector->push([
+            'method' => 'getDocRating',
+        ]);
         $this->delay();
         // not used
         return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
