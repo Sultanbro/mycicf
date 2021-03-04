@@ -435,6 +435,7 @@ class SiteController extends Controller
         $model->body = $request->body ?? '';
         $model->volume = $request->volume ?? '';
         $model->transmission = $request->transmission;
+        $model->link = $request->link;
         $model->wheel = $request->wheel ?? '';
         $model->color = $request->color ?? '';
         $model->drive = $request->drive ?? '';
@@ -562,36 +563,7 @@ class SiteController extends Controller
      */
     public function getPriceByData(Request $request){
         $result = [];
-        $mark_id = $request->mark_id ?? '';
-        $model_id = $request->model_id ?? '';
-        $year = $request->year ?? '';
-        $city = $request->city ?? '';
-        $body = $request->body ?? '';
-        $volume = $request->volume ?? '';
-        $transmission = $request->transmission ?? '';
-        $wheel = $request->wheel ?? '';
-        $color = $request->color ?? '';
-        $drive = $request->drive ?? '';
-        $inkz = $request->inkz ?? '';
-        $vin = $request->vin ?? '';
-        $milage = $request->milage ?? '';
-
-//        foreach ($request->all() as $key => $value){
-//            $$key = $value;
-//        }
-        $model = KolesaPrices::where('mark_id', $mark_id)
-            ->where('model_id', $model_id)
-            ->where('year', $year)
-            ->where('city', $city)
-            ->where('body', $body)
-            ->where('volume', $volume)
-            ->where('transmission', $transmission)
-            ->where('wheel', $wheel)
-            ->where('color', $color)
-            ->where('drive', $drive)
-            ->where('inkz', $inkz)
-            ->where('vin', $vin)
-            ->where('milage', $milage)
+        $model = KolesaPrices::where('link', $request->link)
             ->latest()
             ->first();
         if($model === null){
