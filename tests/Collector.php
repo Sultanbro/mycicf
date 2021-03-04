@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Debug\KiasRequestCollector;
 use Barryvdh\Debugbar\DataCollector\CacheCollector;
 use Barryvdh\Debugbar\DataCollector\EventCollector;
 use Barryvdh\Debugbar\DataCollector\ModelsCollector;
@@ -76,6 +77,11 @@ class Collector {
             $this->collectors['time'] = true;
         }
 
+        if (config('testing.debugbar.collect.kias')) {
+            $this->debugbar->shouldCollect('kias');
+            $this->collectors['kias'] = true;
+        }
+
         $this->debugbar->enable();
     }
 
@@ -140,6 +146,15 @@ class Collector {
          * @var $collector CacheCollector;
          */
         $collector = $this->debugbar->getCollector('cache');
+
+        return $collector->collect();
+    }
+
+    public function getKias() {
+        /**
+         * @var $collector KiasRequestCollector;
+         */
+        $collector = $this->debugbar->getCollector('kias');
 
         return $collector->collect();
     }

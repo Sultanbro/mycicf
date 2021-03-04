@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Debug\GitDataCollector;
+use App\Debug\KiasRequestCollector;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        \Debugbar::addCollector(new GitDataCollector('git'));
+        \Debugbar::addCollector(new KiasRequestCollector('kias'));
     }
 
     /**
