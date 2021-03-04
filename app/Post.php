@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Storage;
  * @property Like[]|Collection $likes
  * @property Question[]|Collection $poll
  * @property int $likes_count
+ * @property bool $is_mine
  * @property Collection|Comment[] $comments
  * @method static bool|null forceDelete()
  * @method static Builder|Post newModelQuery()
@@ -280,6 +281,10 @@ class Post extends Model
             default :
                 return 'fa-file-o';
         }
+    }
+
+    public function getIsMineAttribute() {
+        return $this->user_isn === auth()->user()->ISN;
     }
 
     /**

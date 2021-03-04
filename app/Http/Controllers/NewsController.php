@@ -192,7 +192,7 @@ class NewsController extends Controller
          */
         $post = Post::where('id', $postId)->first();
 
-        if ($post->user_isn !== auth()->user()->ISN) {
+        if (!$post->is_mine) {
             throw new AccessDeniedHttpException();
         }
 
