@@ -67,8 +67,6 @@ class GetBirthdaysTest extends FeatureTestBase {
             return $entry['ISN'] === self::ISN;
         });
 
-        dd($user);
-
         // TODO Обработать данные
 
         $response->assertStatus(200);

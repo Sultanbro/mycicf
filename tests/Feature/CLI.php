@@ -5,11 +5,15 @@ namespace Tests\Feature;
 class CLI {
     // https://misc.flogisoft.com/bash/tip_colors_and_formatting
     public const CLI_STYLE_BOLD = 1;
+    public const CLI_STYLE_DIM = 2;
     public const CLI_STYLE_UNDERLINED = 4;
     public const CLI_COLOR_RED = 31;
     public const CLI_COLOR_GREEN = 32;
     public const CLI_COLOR_YELLOW = 33;
     public const CLI_COLOR_BLUE = 34;
+    public const CLI_COLOR_DARK_GRAY = 90;
+    public const CLI_COLOR_LIGHT_YELLOW = 93;
+    public const CLI_COLOR_LIGHT_CYAN = 96;
 
     protected $enableColors = true;
 
@@ -38,7 +42,7 @@ class CLI {
     }
 
     public function time($value) {
-        return $this->color($value, self::CLI_COLOR_BLUE);
+        return $this->color($value, self::CLI_COLOR_LIGHT_CYAN);
     }
 
     public function label($value) {
@@ -55,5 +59,9 @@ class CLI {
 
     public function underlined($value) {
         return $this->color($value, self::CLI_STYLE_UNDERLINED);
+    }
+
+    public function dim($value) {
+        return "\e[2m{$value}\e[22m";
     }
 }

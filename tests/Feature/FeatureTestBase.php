@@ -3,10 +3,16 @@
 namespace Tests\Feature;
 
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
-use Psy\Util\Str;
+use Illuminate\Support\Str;
 use Tests\Collector;
 use Tests\TestCase;
 
+/**
+ * Class FeatureTestBase
+ * @package Tests\Feature
+ *
+ * Этот класс будет перенесён в отдельный пакет
+ */
 abstract class FeatureTestBase extends TestCase {
 
     /**
@@ -86,11 +92,14 @@ abstract class FeatureTestBase extends TestCase {
 
             $uri = ltrim($uri, '/');
 
-            $result .= sprintf("[%s /%s] as %s uses (%s)\n\tin %s\n\n\t%s\n\n",
+            [$controller, $action] = explode('@', $routes['controller']);
+
+            $result .= sprintf("[%s /%s] as %s uses (%s)\n\tAction '%s' in %s\n\n\t%s\n\n",
                 $cli->bold($cli->color($methods, CLI::CLI_COLOR_RED)),
-                $cli->color($uri, CLI::CLI_COLOR_BLUE),
-                $cli->color($routes['as'], CLI::CLI_COLOR_BLUE),
+                $cli->color($uri, CLI::CLI_COLOR_LIGHT_YELLOW),
+                $cli->color($routes['as'], CLI::CLI_COLOR_LIGHT_YELLOW),
                 $cli->color($routes['middleware'], CLI::CLI_COLOR_YELLOW),
+                $cli->color($cli->bold($action), CLI::CLI_COLOR_RED),
                 $cli->color($cli->bold($this->getFullPath($routes['file'])), CLI::CLI_COLOR_RED),
                 $cli->underlined($cli->color($name, CLI::CLI_COLOR_YELLOW))
             );
@@ -106,7 +115,7 @@ abstract class FeatureTestBase extends TestCase {
             $duration_str = $time['duration_str'];
 
             $result .= sprintf("\t%s:\t\t\t%s\n",
-                $cli->label('Время'),
+                $cli->label('Timing'),
                 $cli->time($duration_str));
 
             $maxMeasureNameLength = collect($time['measures'])->max(function ($measure) {
@@ -137,7 +146,7 @@ abstract class FeatureTestBase extends TestCase {
             });
 
             $result .= sprintf("\t%s (%s):\t%s\n",
-                $cli->label('SQL-запросы'),
+                $cli->label('SQL queries'),
                 $cli->time($col->getDataFormatter()->formatDuration($allQueriesDuration)),
                 $cli->color(count($queries), CLI::CLI_COLOR_RED)
             );
@@ -146,19 +155,33 @@ abstract class FeatureTestBase extends TestCase {
                 switch ($query['type']) {
                     case 'query':
                         $source = $query['backtrace'][0]->name;
-                        if (\Illuminate\Support\Str::startsWith($source, '\\tests')) {
-                            $type = ' [tests] ';
-                        } else if (\Illuminate\Support\Str::startsWith($source, '\\app')) {
-                            $type = '   [app] ';
-                        } else if (\Illuminate\Support\Str::startsWith($source, '\\vendor')) {
-                            $type = '[vendor] ';
+                        if (Str::startsWith($source, '\\tests')) {
+                            $type = $cli->color(' [tests]', CLI::CLI_COLOR_DARK_GRAY);
+                            $typeKey = 'tests';
+                        } else if (Str::startsWith($source, '\\app')) {
+                            $type = $cli->color('   [app]', CLI::CLI_COLOR_YELLOW);
+                            $typeKey = 'app';
+                        } else if (Str::startsWith($source, '\\vendor')) {
+                            $type = $cli->color('[vendor]', CLI::CLI_COLOR_DARK_GRAY);
+                            $typeKey = 'vendor';
                         } else {
                             dd(123312);
                         }
+
+                        switch ($typeKey) {
+                            case 'tests':
+                            case 'vendor':
+                                $sql = $cli->color($query['sql'], CLI::CLI_COLOR_DARK_GRAY);
+                            break;
+
+                            default:
+                                $sql = $query['sql'];
+                        }
+
                         $result .= sprintf("\t\t%s %s %s\n",
-                            $cli->color($type, CLI::CLI_COLOR_YELLOW),
+                            $type,
                             $cli->time('[' . $query['duration_str'] . ']'),
-                            $query['sql']
+                            $sql
                         );
                         break;
 
@@ -180,7 +203,7 @@ abstract class FeatureTestBase extends TestCase {
             $models = $collector->getModels();
 
             $result .= sprintf("\t%s: %s\n",
-                $cli->label('Обращения к моделям'),
+                $cli->label('Models interaction'),
                 $cli->int($models['count'])
             );
 
@@ -198,7 +221,7 @@ abstract class FeatureTestBase extends TestCase {
             $events = $collector->getEvents();
 
             $result .= sprintf("\t%s:\t%s\t%s\n",
-                $cli->label('События'),
+                $cli->label('Events'),
                 $cli->int(count($events['measures'])),
                 $cli->time($events['duration_str'])
             );
@@ -222,7 +245,7 @@ abstract class FeatureTestBase extends TestCase {
             $cache = $collector->getCache();
 
             $result .= sprintf("\t%s: %s (%s)\n",
-                $cli->label('Кэш'),
+                $cli->label('Cache'),
                 $cli->int(count($cache['measures'])),
                 $cli->time($cache['duration_str'])
             );
@@ -241,7 +264,7 @@ abstract class FeatureTestBase extends TestCase {
 
             $user = auth()->user();
             $result .= sprintf("\n\t%s:\t%s (#%d)",
-                $cli->label('Авторизация'),
+                $cli->label('Auth'),
                 $auth['names'],
                 (isset($user) ? $user->id : '')
             ); // TODO Не совсем верно
