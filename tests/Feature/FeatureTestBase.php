@@ -66,7 +66,7 @@ abstract class FeatureTestBase extends TestCase {
         return implode(':', [base_path($path), $lines]);
     }
 
-    public function testRun() {
+    public function testExecute() {
         $cli = $this->cli;
         $measureName = $this->getMeasureName();
 
@@ -123,9 +123,17 @@ abstract class FeatureTestBase extends TestCase {
             });
 
             foreach ($time['measures'] as $measure) {
-                $paddedLabel = str_pad($measure['label'],$maxMeasureNameLength + 1);
+
+                $paddedLabel = str_pad($measure['label'], $maxMeasureNameLength + 1);
+
+                if ($measure['label'] === $this->getMeasureName()) {
+                    $label = $cli->color($paddedLabel, CLI::CLI_COLOR_RED);
+                } else {
+                    $label = $cli->label($paddedLabel);
+                }
+
                 $result .= sprintf("\t\t%s:\t%s\n",
-                    $cli->label($paddedLabel),
+                    $label,
                     $cli->time($measure['duration_str'])
                 );
             }
@@ -145,52 +153,86 @@ abstract class FeatureTestBase extends TestCase {
                 return $query['duration'];
             });
 
-            $result .= sprintf("\t%s (%s):\t%s\n",
+            $preparedQueries = [];
+            $timings = [
+                'app' => 0,
+                'tests' => 0,
+                'vendor' => 0
+            ];
+
+            foreach ($queries as $index => $query) {
+                $backtraceZero = $query['backtrace'][0];
+                $source = $backtraceZero->name;
+                if (Str::startsWith($source, '\\tests')) {
+                    $preparedQueries[] = [
+                        'type'  => 'tests',
+                        'query' => $query
+                    ];
+                    $timings['tests'] += $query['duration'];
+                } else if (Str::startsWith($source, '\\app')) {
+                    $preparedQueries[] = [
+                        'type'  => 'app',
+                        'query' => $query
+                    ];
+                    $timings['app'] += $query['duration'];
+                } else if (Str::startsWith($source, '\\vendor')) {
+                    $preparedQueries[] = [
+                        'type'  => 'vendor',
+                        'query' => $query
+                    ];
+                    $timings['vendor'] += $query['duration'];
+                } else {
+                    dd(123312);
+                }
+            }
+
+            $result .= sprintf("\t%s ([app]: %s, [tests]: %s, [vendor]: %s):\t%s\n",
                 $cli->label('SQL queries'),
-                $cli->time($col->getDataFormatter()->formatDuration($allQueriesDuration)),
+                $cli->time($col->getDataFormatter()->formatDuration($timings['app'])),
+                $cli->time($col->getDataFormatter()->formatDuration($timings['tests'])),
+                $cli->time($col->getDataFormatter()->formatDuration($timings['vendor'])),
                 $cli->color(count($queries), CLI::CLI_COLOR_RED)
             );
 
-            foreach ($queries as $index => $query) {
-                switch ($query['type']) {
+            foreach ($preparedQueries as $index => $query) {
+                switch ($query['query']['type']) {
                     case 'query':
-                        $backtraceZero = $query['backtrace'][0];
+                        $backtraceZero = $query['query']['backtrace'][0];
                         $source = $backtraceZero->name;
-                        if (Str::startsWith($source, '\\tests')) {
+                        if ($query['type'] === 'tests') {
                             $type = $cli->color(' [tests]', CLI::CLI_COLOR_DARK_GRAY);
-                            $typeKey = 'tests';
-                        } else if (Str::startsWith($source, '\\app')) {
+                        } else if ($query['type'] === 'app') {
                             $type = $cli->color('   [app]', CLI::CLI_COLOR_YELLOW);
-                            $typeKey = 'app';
-                        } else if (Str::startsWith($source, '\\vendor')) {
+                        } else if ($query['type'] === 'vendor') {
                             $type = $cli->color('[vendor]', CLI::CLI_COLOR_DARK_GRAY);
-                            $typeKey = 'vendor';
                         } else {
                             dd(123312);
                         }
 
-                        switch ($typeKey) {
+                        switch ($query['type']) {
                             case 'tests':
                             case 'vendor':
-                                $sql = $cli->color($query['sql'], CLI::CLI_COLOR_DARK_GRAY);
-                            break;
+                                $sql = $cli->color($query['query']['sql'], CLI::CLI_COLOR_DARK_GRAY);
+                                break;
 
                             default:
-                                $sql = $query['sql'];
+                                $sql = $query['query']['sql'];
                         }
 
                         $result .= sprintf("\t\t%s %s %s\n",
                             $type,
-                            $cli->time('[' . $query['duration_str'] . ']'),
+                            $cli->time('[' . $query['query']['duration_str'] . ']'),
                             $sql
                         );
 
-                        foreach ($query['backtrace'] as $backtrace) {
-                            $result .= sprintf("\t\t\t\tTRACE: %s:%s:%s\n",
-                                base_path($backtrace->name),
-                                $backtrace->line,
-                                $backtrace->index,
-                            );
+                        if (config('testing.debugbar.collectors.queries.backtrace', false)) {
+                            foreach ($query['query']['backtrace'] as $backtrace) {
+                                $result .= sprintf("\t\t\t\tTRACE: %s:%s:%s\n",
+                                    base_path($backtrace->name),
+                                    $backtrace->line,
+                                    $backtrace->index
+                                );
+                            }
                         }
 
                         $result .= "\n";
@@ -199,7 +241,7 @@ abstract class FeatureTestBase extends TestCase {
 
                     case 'transaction':
                         $result .= sprintf("\t\t%s\n",
-                            $cli->label($query['sql'])
+                            $cli->label($query['query']['sql'])
                         );
                         break;
 
@@ -243,7 +285,7 @@ abstract class FeatureTestBase extends TestCase {
             });
 
             foreach ($events['measures'] as $event) {
-                $paddedLabel = str_pad($event['label'],$maxMeasureNameLength + 1);
+                $paddedLabel = str_pad($event['label'], $maxMeasureNameLength + 1);
                 $result .= sprintf("\t\t%s:\t%s\n",
                     $cli->label($paddedLabel),
                     $cli->time($event['duration_str'])
@@ -267,6 +309,20 @@ abstract class FeatureTestBase extends TestCase {
                     $cli->label($measure['label']),
                     $cli->time($measure['duration_str'])
                 );
+            }
+
+        }
+
+        if ($collector->enabled('kias')) {
+            $kias = $collector->getKias();
+
+            $result .= sprintf("\n\t%s: %s\n",
+                $cli->label('Kias'),
+                $cli->int(count($kias))
+            );
+
+            foreach ($kias as $row) {
+                $result .= sprintf("\t\t%s\n", $cli->label($row['method']));
             }
 
         }
