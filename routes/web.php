@@ -170,7 +170,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  */
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/', 'SiteController@getIndex')->name('index');
-    Route::post('/login', 'SiteController@postLogin');
+    Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
 
@@ -299,7 +299,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
         Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
-        Route::post('/getUsersData', 'SiteController@getUserData');
+        Route::post('/getUsersData', 'SiteController@getUserData')->name('getUsersData');
         Route::post('/getColleagueData', 'SiteController@getColleagueData');
 
         Route::get('/motivation', 'MotivationController@motivation')->name('motivation');
