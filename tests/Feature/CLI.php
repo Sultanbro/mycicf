@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use Tests\Collector;
+
 class CLI {
     // https://misc.flogisoft.com/bash/tip_colors_and_formatting
     public const CLI_STYLE_BOLD = 1;
@@ -23,6 +25,11 @@ class CLI {
     private static $instance;
 
     /**
+     * @var Collector
+     */
+    private $col;
+
+    /**
      * @return CLI
      */
     public static function instance() {
@@ -31,6 +38,10 @@ class CLI {
         }
 
         return self::$instance;
+    }
+
+    public function __construct() {
+        $this->col = Collector::instance()->init()->debugbar->getCollector('queries');
     }
 
     public function color(string $string, int $color) {
@@ -42,7 +53,19 @@ class CLI {
     }
 
     public function time($value) {
-        return $this->color($value, self::CLI_COLOR_LIGHT_CYAN);
+        $formattedValue = $this->col->getDataFormatter()->formatDuration($value);
+
+        if (preg_match('/\ds/imu', $formattedValue)) {
+            $color = self::CLI_COLOR_RED;
+        } else if (preg_match('/\dms/imu', $formattedValue)) {
+            $color = self::CLI_COLOR_YELLOW;
+        } else if (preg_match('/\dμs/imu', $formattedValue)) {
+            $color = self::CLI_COLOR_GREEN;
+        } else {
+            dd(123);
+        }
+
+        return $this->color($formattedValue, $color);
     }
 
     public function label($value) {

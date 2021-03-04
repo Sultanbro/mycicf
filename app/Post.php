@@ -65,7 +65,7 @@ class Post extends Model
     }
 
     public function poll() {
-        return $this->hasMany(Question::class, 'post_id');
+        return $this->hasOne(Question::class, 'post_id');
     }
 
     /**
@@ -128,7 +128,7 @@ class Post extends Model
         /**
          * @var $question Question
          */
-        $question = $this->poll->first();
+        $question = $this->poll;
 
         if ($question === null) {
             return false;
@@ -214,6 +214,11 @@ class Post extends Model
         return $file;
     }
 
+    /**
+     * TODO Полагаю, что здесь лучше использовать регулярки
+     *
+     * @return string
+     */
     public function getText(){
         if($this->getVideo() === null){
             return $this->post_text;

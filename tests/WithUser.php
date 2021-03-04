@@ -10,7 +10,7 @@ trait WithUser {
      * @param $ISN
      * @return User
      */
-    private function getUser($ISN = self::ISN) {
+    protected function getUser($ISN = self::ISN) {
         /**
          * @var $user User
          */

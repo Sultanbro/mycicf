@@ -10,6 +10,7 @@ use App\User;
 use Debugbar;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
 /**+
@@ -47,7 +48,7 @@ class PostsService {
         $query = Post::withCount('likes')
             ->with([
                 'likes',
-                'poll' => function (HasMany $builder) {
+                'poll' => function (HasOne $builder) {
                     $builder->with([
                         'answers' => function (HasMany $builder) {
                             $builder->withCount('userAnswers');
@@ -120,12 +121,12 @@ class PostsService {
      * @throws Exception
      */
     private function buildPostResponse(Post $item, string $user_isn) {
-        $poll = $item->poll->map(function (Question $question) {
-            return [
-                "question_id"    => $question->id,
-                "question_title" => $question->question,
-                "total_votes"    => $question->user_answers_count,
-                "answers"        => $question->answers->map(function (Answer $answer) {
+        if (isset($item->poll)) {
+            $poll = [
+                "question_id"    => $item->poll->id,
+                "question_title" => $item->poll->question,
+                "total_votes"    => $item->poll->user_answers_count,
+                "answers"        => $item->poll->answers->map(function (Answer $answer) {
                     return [
                         "answer_id"    => $answer->id,
                         "answer_title" => $answer->value,
@@ -134,7 +135,14 @@ class PostsService {
                     ];
                 }),
             ];
-        });
+        } else {
+            $poll = [
+                "question_id"    => null,
+                "question_title" => null,
+                "total_votes"    => null,
+                "answers"        => null
+            ];
+        }
 
         return [
             'isn'        => $item->user_isn,

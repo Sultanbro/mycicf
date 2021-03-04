@@ -203,6 +203,9 @@ class KiasMock implements KiasServiceInterface {
     }
 
     public function authBySystem() {
+        $this->collector->push([
+            'method' => 'authBySystem',
+        ]);
         $this->delay();
         $this->_sId = 1;
     }

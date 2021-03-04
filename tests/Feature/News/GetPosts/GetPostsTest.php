@@ -1,18 +1,14 @@
 <?php
 
-namespace Tests\Feature\News;
+namespace Tests\Feature\News\GetPosts;
 
 use App\Like;
 use App\Post;
 use App\Question;
 use DB;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\Feature\FeatureTestBase;
-use Tests\WithUser;
+use Schema;
 
-class GetPostsTest extends FeatureTestBase {
-    use WithFaker, WithUser;
-
+class GetPostsTest extends GetPostsTestBase {
     protected $description = 'Получаем список постов';
 
     public const ISN = '1144';
@@ -23,10 +19,6 @@ class GetPostsTest extends FeatureTestBase {
 
     public function getRouteName() {
         return 'news.getPosts';
-    }
-
-    public function getMeasureName() {
-        return 'Get Posts Test';
     }
 
     private function generatePost() {
@@ -77,14 +69,19 @@ class GetPostsTest extends FeatureTestBase {
     }
 
     public function cleanup() {
-        $likes = $this->post->likes->pluck('id');
-        DB::delete('DELETE FROM likes WHERE id IN (?)', $likes->toArray());
+        Schema::disableForeignKeyConstraints();
 
-        $poll = $this->post->poll->pluck('id');
-        DB::delete('DELETE FROM questions WHERE id IN (?)', $poll->toArray());
+        {
+            $likes = $this->post->likes->pluck('id');
+            DB::delete('DELETE FROM likes WHERE id IN (?)', $likes->toArray());
 
-        // $post->delete();
-        DB::delete('DELETE FROM posts WHERE id = ?', [$this->post->id]);
+            $poll = $this->post->poll->pluck('id');
+            DB::delete('DELETE FROM questions WHERE id IN (?)', $poll->toArray());
 
+            // $post->delete();
+            DB::delete('DELETE FROM posts WHERE id = ?', [$this->post->id]);
+        }
+
+        Schema::enableForeignKeyConstraints();
     }
 }

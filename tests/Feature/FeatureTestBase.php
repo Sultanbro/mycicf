@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Illuminate\Support\Str;
+use ReflectionClass;
 use Tests\Collector;
 use Tests\TestCase;
 
@@ -14,7 +15,6 @@ use Tests\TestCase;
  * Этот класс будет перенесён в отдельный пакет
  */
 abstract class FeatureTestBase extends TestCase {
-
     /**
      * @var string|null
      */
@@ -34,6 +34,9 @@ abstract class FeatureTestBase extends TestCase {
      */
     protected $cli;
 
+    /**
+     * @var ReflectionClass
+     */
     private $reflection;
 
     public function __construct($name = null, array $data = [], $dataName = '') {
@@ -42,7 +45,7 @@ abstract class FeatureTestBase extends TestCase {
         $routeName = $this->getRouteName();
         $this->route = route($routeName);
 
-        $this->reflection = new \ReflectionClass(static::class);
+        $this->reflection = new ReflectionClass(static::class);
         $this->cli = CLI::instance();
     }
 
@@ -53,9 +56,11 @@ abstract class FeatureTestBase extends TestCase {
     // abstract public function getRoute();
     abstract public function getRouteName();
 
-    abstract public function getMeasureName();
-
     abstract public function handle();
+
+    public function getMeasureName() {
+        return static::class;
+    }
 
     protected function prepare() {
     }
@@ -68,7 +73,7 @@ abstract class FeatureTestBase extends TestCase {
 
     public function testExecute() {
         $cli = $this->cli;
-        $measureName = $this->getMeasureName();
+        $measureName = sprintf("[Test]: %s", $this->getMeasureName());
 
         $this->prepare();
 
@@ -112,11 +117,9 @@ abstract class FeatureTestBase extends TestCase {
         if ($collector->enabled('time')) {
             $time = $collector->getTime($measureName);
 
-            $duration_str = $time['duration_str'];
-
             $result .= sprintf("\t%s:\t\t\t%s\n",
                 $cli->label('Timing'),
-                $cli->time($duration_str));
+                $cli->time($time['duration']));
 
             $maxMeasureNameLength = collect($time['measures'])->max(function ($measure) {
                 return strlen($measure['label']);
@@ -134,7 +137,7 @@ abstract class FeatureTestBase extends TestCase {
 
                 $result .= sprintf("\t\t%s:\t%s\n",
                     $label,
-                    $cli->time($measure['duration_str'])
+                    $cli->time($measure['duration'])
                 );
             }
 
@@ -155,12 +158,16 @@ abstract class FeatureTestBase extends TestCase {
 
             $preparedQueries = [];
             $timings = [
-                'app' => 0,
+                'app.services' => 0,
+                'app.controllers' => 0,
+                'app.other' => 0,
                 'tests' => 0,
                 'vendor' => 0
             ];
             $counts = [
-                'app' => 0,
+                'app.services' => 0,
+                'app.controllers' => 0,
+                'app.other' => 0,
                 'tests' => 0,
                 'vendor' => 0
             ];
@@ -176,12 +183,19 @@ abstract class FeatureTestBase extends TestCase {
                     $timings['tests'] += $query['duration'];
                     $counts['tests']++;
                 } else if (Str::startsWith($source, '\\app')) {
+                    if (Str::startsWith($source, '\\app\\Library\\Services')) {
+                        $key = 'app.services';
+                    } else if (Str::startsWith($source, '\\app\\Http\\Controllers')) {
+                        $key = 'app.controllers';
+                    } else {
+                        $key = 'app.other';
+                    }
                     $preparedQueries[] = [
-                        'type'  => 'app',
+                        'type'  => $key,
                         'query' => $query
                     ];
-                    $timings['app'] += $query['duration'];
-                    $counts['app']++;
+                    $timings[$key] += $query['duration'];
+                    $counts[$key]++;
                 } else if (Str::startsWith($source, '\\vendor')) {
                     $preparedQueries[] = [
                         'type'  => 'vendor',
@@ -194,19 +208,25 @@ abstract class FeatureTestBase extends TestCase {
                 }
             }
 
-            $result .= sprintf("\t%s ([tests]: %s %s, [app]: %s %s, [vendor]: %s %s):\t%s\n",
+            $result .= sprintf("\t%s:\t\t  %s\n\t\ttests           : %s %s\n\t\tapp.services    : %s %s\n\t\tapp.controllers : %s %s\n\t\tapp.other       : %s %s\n\t\tvendor          : %s %s\n\n",
                 $cli->label('SQL queries'),
 
-                $cli->int($counts['tests']),
-                $cli->time($col->getDataFormatter()->formatDuration($timings['tests'])),
+                $cli->color(count($queries), CLI::CLI_COLOR_RED),
 
-                $cli->int($counts['app']),
-                $cli->time($col->getDataFormatter()->formatDuration($timings['app'])),
+                $cli->int($counts['tests']),
+                $cli->time($timings['tests']),
+
+                $cli->int($counts['app.services']),
+                $cli->time($timings['app.services']),
+
+                $cli->int($counts['app.controllers']),
+                $cli->time($timings['app.controllers']),
+
+                $cli->int($counts['app.other']),
+                $cli->time($timings['app.other']),
 
                 $cli->int($counts['vendor']),
-                $cli->time($col->getDataFormatter()->formatDuration($timings['vendor'])),
-
-                $cli->color(count($queries), CLI::CLI_COLOR_RED)
+                $cli->time($timings['vendor'])
             );
 
             foreach ($preparedQueries as $index => $query) {
@@ -216,8 +236,12 @@ abstract class FeatureTestBase extends TestCase {
                         $source = $backtraceZero->name;
                         if ($query['type'] === 'tests') {
                             $type = $cli->color(' [tests]', CLI::CLI_COLOR_DARK_GRAY);
-                        } else if ($query['type'] === 'app') {
-                            $type = $cli->color('   [app]', CLI::CLI_COLOR_YELLOW);
+                        } else if ($query['type'] === 'app.services') {
+                            $type = $cli->color('   [app.services]', CLI::CLI_COLOR_YELLOW);
+                        } else if ($query['type'] === 'app.controllers') {
+                            $type = $cli->color('   [app.controllers]', CLI::CLI_COLOR_YELLOW);
+                        } else if ($query['type'] === 'app.other') {
+                            $type = $cli->color('   [app.other]', CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'vendor') {
                             $type = $cli->color('[vendor]', CLI::CLI_COLOR_DARK_GRAY);
                         } else {
@@ -236,7 +260,7 @@ abstract class FeatureTestBase extends TestCase {
 
                         $result .= sprintf("\t\t%s %s %s\n",
                             $type,
-                            $cli->time('[' . $query['query']['duration_str'] . ']'),
+                            $cli->time($query['query']['duration']),
                             $sql
                         );
 
@@ -292,7 +316,7 @@ abstract class FeatureTestBase extends TestCase {
             $result .= sprintf("\t%s:\t%s\t%s\n",
                 $cli->label('Events'),
                 $cli->int(count($events['measures'])),
-                $cli->time($events['duration_str'])
+                $cli->time($events['duration'])
             );
 
             $maxMeasureNameLength = collect($events['measures'])->max(function ($event) {
@@ -303,7 +327,7 @@ abstract class FeatureTestBase extends TestCase {
                 $paddedLabel = str_pad($event['label'], $maxMeasureNameLength + 1);
                 $result .= sprintf("\t\t%s:\t%s\n",
                     $cli->label($paddedLabel),
-                    $cli->time($event['duration_str'])
+                    $cli->time($event['duration'])
                 );
             }
 
@@ -316,13 +340,13 @@ abstract class FeatureTestBase extends TestCase {
             $result .= sprintf("\t%s: %s (%s)\n",
                 $cli->label('Cache'),
                 $cli->int(count($cache['measures'])),
-                $cli->time($cache['duration_str'])
+                $cli->time($cache['duration'])
             );
 
             foreach ($cache['measures'] as $measure) {
                 $result .= sprintf("\t\t%s: (%s)\n",
                     $cli->label($measure['label']),
-                    $cli->time($measure['duration_str'])
+                    $cli->time($measure['duration'])
                 );
             }
 

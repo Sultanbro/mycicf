@@ -83,6 +83,8 @@ class Collector {
         }
 
         $this->debugbar->enable();
+
+        return $this;
     }
 
     public function getTime($message) {

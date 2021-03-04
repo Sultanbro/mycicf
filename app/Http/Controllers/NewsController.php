@@ -173,6 +173,8 @@ class NewsController extends Controller
     /**
      * @param NewsGetPostsRequest $request
      * @return array
+     *
+     * @throws Exception
      */
     public function getPosts(NewsGetPostsRequest $request) {
         $user_isn = Auth::user()->ISN;
@@ -180,6 +182,7 @@ class NewsController extends Controller
 
         Debugbar::startMeasure('getPosts');
         $response = $this->postsService->getPosts($user_isn, $last_index);
+
         Debugbar::stopMeasure('getPosts');
         return $response;
     }
