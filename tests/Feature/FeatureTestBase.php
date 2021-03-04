@@ -35,7 +35,6 @@ abstract class FeatureTestBase extends TestCase {
         $routeName = $this->getRouteName();
         $this->route = route($routeName);
         $route = \Route::getRoutes()->getByName($routeName);
-        $this->methods = $route->methods();
 
         $this->reflection = new \ReflectionClass(static::class);
         $this->cli = CLI::instance();
@@ -55,10 +54,8 @@ abstract class FeatureTestBase extends TestCase {
     protected function prepare() {
     }
 
-    protected function cleanup() {
-    }
-
     public function testRun() {
+        $cli = $this->cli;
         $measureName = $this->getMeasureName();
 
         $this->prepare();
@@ -83,13 +80,13 @@ abstract class FeatureTestBase extends TestCase {
 
             $uri = ltrim($uri, '/');
 
-            $result .= sprintf("[%s /%s] as %s uses (%s)\n\t=> %s\n\n\t%s\n\n",
-                $this->cli->cliBold($this->cli->cliColor($methods, CLI::CLI_COLOR_RED)),
-                $this->cli->cliColor($uri, CLI::CLI_COLOR_BLUE),
-                $this->cli->cliColor($routes['as'], CLI::CLI_COLOR_BLUE),
-                $this->cli->cliColor($routes['middleware'], CLI::CLI_COLOR_YELLOW),
-                $this->cli->cliColor($this->cli->cliBold($routes['controller']), CLI::CLI_COLOR_RED),
-                $this->cli->cliUnderlined($this->cli->cliColor($name, CLI::CLI_COLOR_YELLOW))
+            $result .= sprintf("[%s /%s] as %s uses (%s)\n\tin %s\n\n\t%s\n\n",
+                $cli->bold($cli->color($methods, CLI::CLI_COLOR_RED)),
+                $cli->color($uri, CLI::CLI_COLOR_BLUE),
+                $cli->color($routes['as'], CLI::CLI_COLOR_BLUE),
+                $cli->color($routes['middleware'], CLI::CLI_COLOR_YELLOW),
+                $cli->color($cli->bold($routes['file']), CLI::CLI_COLOR_RED),
+                $cli->underlined($cli->color($name, CLI::CLI_COLOR_YELLOW))
             );
         }
 
@@ -103,50 +100,54 @@ abstract class FeatureTestBase extends TestCase {
             $duration_str = $time['duration_str'];
 
             $result .= sprintf("\t%s:\t\t\t%s\n",
-                $this->cli->cliLabel('Время'),
-                $this->cli->cliTime($duration_str));
+                $cli->label('Время'),
+                $cli->time($duration_str));
+
+            $maxMeasureNameLength = collect($time['measures'])->max(function ($measure) {
+                return strlen($measure['label']);
+            });
 
             foreach ($time['measures'] as $measure) {
-                $result .= sprintf("\t\t%s:\t%s\n", $measure['label'], $measure['duration_str']);
+                $paddedLabel = str_pad($measure['label'],$maxMeasureNameLength + 1);
+                $result .= sprintf("\t\t%s:\t%s\n",
+                    $cli->label($paddedLabel),
+                    $cli->time($measure['duration_str'])
+                );
             }
 
             $result .= "\n";
-
         }
 
         if ($collector->enabled('queries')) {
             $queries = $collector->getQueries();
-
 
             /**
              * @var QueryCollector $col
              */
             $col = $collector->debugbar->getCollector('queries');
 
-            //
-
             $allQueriesDuration = collect($queries)->sum(function ($query) {
                 return $query['duration'];
             });
 
             $result .= sprintf("\t%s (%s):\t%s\n",
-                $this->cli->cliLabel('SQL-запросы'),
-                $this->cli->cliTime($col->formatDuration($allQueriesDuration)),
-                $this->cli->cliColor(count($queries), CLI::CLI_COLOR_RED)
+                $cli->label('SQL-запросы'),
+                $cli->time($col->formatDuration($allQueriesDuration)),
+                $cli->color(count($queries), CLI::CLI_COLOR_RED)
             );
 
             foreach ($queries as $query) {
                 switch ($query['type']) {
                     case 'query':
                         $result .= sprintf("\t\t%' 6s %s\n",
-                            $this->cli->cliTime('[' . $query['duration_str'] . ']'),
+                            $cli->time('[' . $query['duration_str'] . ']'),
                             $query['sql']
                         );
                         break;
 
                     case 'transaction':
                         $result .= sprintf("\t\t%s\n",
-                            $this->cli->cliLabel($query['sql'])
+                            $cli->label($query['sql'])
                         );
                         break;
 
@@ -160,15 +161,16 @@ abstract class FeatureTestBase extends TestCase {
 
         if ($collector->enabled('models')) {
             $models = $collector->getModels();
+
             $result .= sprintf("\t%s: %s\n",
-                $this->cli->cliLabel('Обращения к моделям'),
-                $this->cli->cliInt($models['count'])
+                $cli->label('Обращения к моделям'),
+                $cli->int($models['count'])
             );
 
             foreach ($models['data'] as $modelName => $count) {
                 $result .= sprintf("\t\t%s:\t%s\n",
-                    $this->cli->cliLabel($modelName),
-                    $this->cli->cliInt($count)
+                    $cli->label($modelName),
+                    $cli->int($count)
                 );
             }
 
@@ -179,19 +181,20 @@ abstract class FeatureTestBase extends TestCase {
             $events = $collector->getEvents();
 
             $result .= sprintf("\t%s:\t%s\t%s\n",
-                $this->cli->cliColor('События', CLI::CLI_COLOR_GREEN),
-                $this->cli->cliInt(count($events['measures'])),
-                $this->cli->cliColor($events['duration_str'], CLI::CLI_COLOR_BLUE)
+                $cli->label('События'),
+                $cli->int(count($events['measures'])),
+                $cli->time($events['duration_str'])
             );
 
-            $maxEventNameLength = collect($events['measures'])->max(function ($event) {
+            $maxMeasureNameLength = collect($events['measures'])->max(function ($event) {
                 return strlen($event['label']);
             });
 
             foreach ($events['measures'] as $event) {
+                $paddedLabel = str_pad($event['label'],$maxMeasureNameLength + 1);
                 $result .= sprintf("\t\t%s:\t%s\n",
-                    $this->cli->cliLabel($event['label']),
-                    $this->cli->cliTime($event['duration_str'])
+                    $cli->label($paddedLabel),
+                    $cli->time($event['duration_str'])
                 );
             }
 
@@ -202,15 +205,15 @@ abstract class FeatureTestBase extends TestCase {
             $cache = $collector->getCache();
 
             $result .= sprintf("\t%s: %s (%s)\n",
-                $this->cli->cliLabel('Кэш'),
-                $this->cli->cliInt(count($cache['measures'])),
-                $this->cli->cliTime($cache['duration_str'])
+                $cli->label('Кэш'),
+                $cli->int(count($cache['measures'])),
+                $cli->time($cache['duration_str'])
             );
 
             foreach ($cache['measures'] as $measure) {
                 $result .= sprintf("\t\t%s: (%s)\n",
-                    $this->cli->cliLabel($measure['label']),
-                    $this->cli->cliTime($measure['duration_str'])
+                    $cli->label($measure['label']),
+                    $cli->time($measure['duration_str'])
                 );
             }
 
@@ -221,7 +224,7 @@ abstract class FeatureTestBase extends TestCase {
 
             $user = auth()->user();
             $result .= sprintf("\n\t%s:\t%s (#%d)",
-                $this->cli->cliLabel('Авторизация'),
+                $cli->label('Авторизация'),
                 $auth['names'],
                 (isset($user) ? $user->id : '')
             ); // TODO Не совсем верно
@@ -238,5 +241,8 @@ abstract class FeatureTestBase extends TestCase {
 
         $this->cleanup();
 
+    }
+
+    protected function cleanup() {
     }
 }

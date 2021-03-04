@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
         \App\User::truncate();
 
         $user = new \App\User();
-        $user->ISN = '5565';
+        $user->ISN = '1144';
         $user->username = 'Developer';
         $user->password_hash = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // password
         $user->level = '55';

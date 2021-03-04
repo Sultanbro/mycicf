@@ -5,7 +5,7 @@ return [
         'collect' => [
             'queries' => true,
             'models' => true,
-            'events' => false,
+            'events' => true,
             'auth' => true,
             'route' => true,
             'cache' => true,

@@ -8,7 +8,7 @@ use Tests\Feature\FeatureTestBase;
 abstract class AddCommentTestBase extends FeatureTestBase {
     use WithFaker;
 
-    public const ISN = '5565';
+    public const ISN = '1144';
 
     public function getRouteName() {
         return 'news.addComment';

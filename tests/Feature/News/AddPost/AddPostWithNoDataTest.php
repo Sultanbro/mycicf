@@ -9,7 +9,7 @@ class AddPostWithNoDataTest extends AddPostTestBase {
 
     protected $description = 'Пытаемся создать пост без данных';
 
-    public const ISN = '5565';
+    public const ISN = '1144';
 
     public function handle() {
         $this->actingAs($this->getUser());

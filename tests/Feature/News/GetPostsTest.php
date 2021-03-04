@@ -15,7 +15,7 @@ class GetPostsTest extends FeatureTestBase {
 
     protected $description = 'Получаем список постов';
 
-    public const ISN = '5565';
+    public const ISN = '1144';
     /**
      * @var Post
      */

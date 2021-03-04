@@ -14,7 +14,7 @@ class GetBirthdaysTest extends FeatureTestBase {
 
     protected $description = 'Получаем список дней рождения';
 
-    public const ISN = '5565';
+    public const ISN = '1144';
     /**
      * @var Post
      */

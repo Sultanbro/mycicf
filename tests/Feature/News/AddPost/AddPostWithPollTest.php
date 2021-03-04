@@ -9,7 +9,7 @@ class AddPostWithPollTest extends AddPostTestBase {
 
     protected $description = 'Создаём пост с опросом';
 
-    public const ISN = '5565';
+    public const ISN = '1144';
 
     public function handle() {
         $this->markTestSkipped('TODO: Complete this test.');

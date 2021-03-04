@@ -29,7 +29,7 @@ class CLI {
         return self::$instance;
     }
 
-    public function cliColor(string $string, int $color) {
+    public function color(string $string, int $color) {
         // https://misc.flogisoft.com/bash/tip_colors_and_formatting
         if (! $this->enableColors) {
             return $string;
@@ -37,23 +37,23 @@ class CLI {
         return "\e[${color}m${string}\e[0m";
     }
 
-    public function cliTime($value) {
-        return $this->cliColor($value, self::CLI_COLOR_BLUE);
+    public function time($value) {
+        return $this->color($value, self::CLI_COLOR_BLUE);
     }
 
-    public function cliLabel($value) {
-        return $this->cliColor($value, self::CLI_COLOR_GREEN);
+    public function label($value) {
+        return $this->color($value, self::CLI_COLOR_GREEN);
     }
 
-    public function cliInt($value) {
-        return $this->cliColor($value, self::CLI_COLOR_RED);
+    public function int($value) {
+        return $this->color($value, self::CLI_COLOR_RED);
     }
 
-    public function cliBold($value) {
-        return $this->cliColor($value, self::CLI_STYLE_BOLD);
+    public function bold($value) {
+        return $this->color($value, self::CLI_STYLE_BOLD);
     }
 
-    public function cliUnderlined($value) {
-        return $this->cliColor($value, self::CLI_STYLE_UNDERLINED);
+    public function underlined($value) {
+        return $this->color($value, self::CLI_STYLE_UNDERLINED);
     }
 }
