@@ -62,15 +62,13 @@ class KiasMock implements KiasServiceInterface {
     private $delay;
 
     public function __construct() {
-        // sleep(1); // sleep здесь для имитации задержки
-
         Debugbar::log('KiasMock::Construct');
-        $this->delay = config('kias.mock.delay');
+        $this->delay = (float)config('kias.mock.delay');
     }
 
     private function delay() {
         if ($this->delay > 0) {
-            sleep($this->delay);
+            usleep($this->delay * 1000000);
             Debugbar::info('KiasMock::delay');
         }
     }
@@ -80,6 +78,9 @@ class KiasMock implements KiasServiceInterface {
             Debugbar::log('KiasMock - Tried to initialize it second time');
             return;
         }
+
+        $this->delay();
+
         Debugbar::log('KiasMock -  Init');
         $this->url = config('kias.url');
         $this->_sId = $session;
@@ -95,6 +96,7 @@ class KiasMock implements KiasServiceInterface {
             Debugbar::log('KiasMock - Tried to initialize the system second time');
             return;
         }
+
         Debugbar::log('KiasMock - Init System');
         // sleep(1); // sleep здесь для имитации задержки
         $this->url = config('kias.url');
