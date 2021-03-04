@@ -92,7 +92,7 @@ abstract class FeatureTestBase extends TestCase {
 
             $uri = ltrim($uri, '/');
 
-            [$controller, $action] = explode('@', $routes['controller']);
+            [, $action] = explode('@', $routes['controller']);
 
             $result .= sprintf("[%s /%s] as %s uses (%s)\n\tAction '%s' in %s\n\n\t%s\n\n",
                 $cli->bold($cli->color($methods, CLI::CLI_COLOR_RED)),
@@ -101,7 +101,7 @@ abstract class FeatureTestBase extends TestCase {
                 $cli->color($routes['middleware'], CLI::CLI_COLOR_YELLOW),
                 $cli->color($cli->bold($action), CLI::CLI_COLOR_RED),
                 $cli->color($cli->bold($this->getFullPath($routes['file'])), CLI::CLI_COLOR_RED),
-                $cli->underlined($cli->color($name, CLI::CLI_COLOR_YELLOW))
+                '[ ' . $cli->underlined($cli->color($name, CLI::CLI_COLOR_YELLOW)) . ' ]'
             );
         }
 
@@ -151,10 +151,11 @@ abstract class FeatureTestBase extends TestCase {
                 $cli->color(count($queries), CLI::CLI_COLOR_RED)
             );
 
-            foreach ($queries as $query) {
+            foreach ($queries as $index => $query) {
                 switch ($query['type']) {
                     case 'query':
-                        $source = $query['backtrace'][0]->name;
+                        $backtraceZero = $query['backtrace'][0];
+                        $source = $backtraceZero->name;
                         if (Str::startsWith($source, '\\tests')) {
                             $type = $cli->color(' [tests]', CLI::CLI_COLOR_DARK_GRAY);
                             $typeKey = 'tests';
@@ -183,6 +184,17 @@ abstract class FeatureTestBase extends TestCase {
                             $cli->time('[' . $query['duration_str'] . ']'),
                             $sql
                         );
+
+                        foreach ($query['backtrace'] as $backtrace) {
+                            $result .= sprintf("\t\t\t\tTRACE: %s:%s:%s\n",
+                                base_path($backtrace->name),
+                                $backtrace->line,
+                                $backtrace->index,
+                            );
+                        }
+
+                        $result .= "\n";
+
                         break;
 
                     case 'transaction':
@@ -273,7 +285,7 @@ abstract class FeatureTestBase extends TestCase {
 
         $classPath = $this->reflection->getFileName();
 
-        $result .= sprintf("\nКласс: %s\n\n", $classPath);
+        $result .= sprintf("\nClass: %s\n\n", $classPath);
 
         $result .= " ================================= \n\n";
 
