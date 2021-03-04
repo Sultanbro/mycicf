@@ -49,9 +49,6 @@ class Branch extends Model
 
     public function duty(){
         return $this->duty === 'Сотрудник Коммеск';
+        //return $this->duty === 'Web - программист'; //для теста
     }
 }
-
-/*public function verified(){
-    return Auth::user()->branch->verified;
-}*/

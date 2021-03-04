@@ -18,11 +18,14 @@ class KommeskUsers
      */
     public function handle($request, Closure $next)
     {
-        $user = Auth::user()->branch;
-        /*dd($user);*/
-        if($user->duty() || $user->id === 100389){
+
+
+        if(Auth::user()->branch->duty()){
             return redirect()->route('coordination');
         }
+
+/*       $user = Auth::user();
+        dd($user);*/
         return $next($request);
     }
 }

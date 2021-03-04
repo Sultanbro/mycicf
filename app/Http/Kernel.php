@@ -75,7 +75,7 @@ class Kernel extends HttpKernel
         'cors' => \App\Http\Middleware\cors::class,
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
         'ratingPermission' => \App\Http\Middleware\RatingPermission::class,
-        'duty' => \App\Http\Middleware\KommeskUsers::class
+        'duty'=> \App\Http\Middleware\KommeskUsers::class,
     ];
 
     /**
