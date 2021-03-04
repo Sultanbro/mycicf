@@ -29,6 +29,7 @@ class checkAuth
      */
     public function handle($request, Closure $next)
     {
+        Debugbar::startMeasure('checkAuth middleware');
         if($this->user === null){
             return redirect('/');
         }
@@ -43,7 +44,7 @@ class checkAuth
             (new User)->getUserData($kias);
         });
 
-
+        Debugbar::stopMeasure('checkAuth middleware');
         return $next($request);
     }
 }
