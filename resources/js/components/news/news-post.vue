@@ -61,15 +61,15 @@
             <div v-for="(answer, index) in post.post_poll.answers"
                  @click="vote(answer)"
                  class="progress mb-2 progress-bar-hover d-flex"
-                 :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
+                 :class="post.isVoted ? 'progress-bar-hover-disabled' : ''"
                  style="height: 40px;">
                 <div class="progress-bar"
                      role="progressbar"
-                     :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
+                     :style="{width: post.isVoted ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
                      aria-valuemin="0"
                      aria-valuemax="100">
                     <div class="p-2">
-                        <span class="fs-1 color-black">{{post.isVoted === 1 ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
+                        <span class="fs-1 color-black">{{post.isVoted ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
                     </div>
                 </div>
                 <!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
@@ -295,6 +295,7 @@
         },
 
         mounted() {
+            debugger;
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
             if(this.post.videos.length>0){
@@ -456,13 +457,13 @@
             },
 
             vote(object) {
-                if(this.post.isVoted === 1 || this.post.isVoted === '1') {
+                if(this.post.isVoted) {
                     return;
                 }
                 else {
                     object.answer_votes++;
                     this.post.post_poll.total_votes++;
-                    this.post.isVoted = 1;
+                    this.post.isVoted = true;
                     this.axios.post('/vote', {
                         postId: this.postId,
                         isn: this.isn,
@@ -477,10 +478,10 @@
             },
             fetchVote(response) {
                 if(response.success === true) {
-                    this.post.isVoted = 1;
+                    this.post.isVoted = true;
                 }
                 else {
-                    this.post.isVoted = 0;
+                    this.post.isVoted = false;
                 }
             }
         },
