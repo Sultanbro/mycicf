@@ -26,10 +26,8 @@ class SiteController extends Controller
         {
             return redirect(route('news.index'));
         }
-        else
-        {
-            return view('login');
-        }
+
+        return view('login');
     }
 
     public function postLogin(KiasServiceInterface $kias, Request $request)
