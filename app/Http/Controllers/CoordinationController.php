@@ -6,6 +6,7 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Notification;
 use App\Providers\KiasServiceProvider;
+use Debugbar;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Comment;
@@ -26,7 +27,11 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
         $response = $kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
