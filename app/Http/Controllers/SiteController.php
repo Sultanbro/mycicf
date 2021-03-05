@@ -113,12 +113,12 @@ class SiteController extends Controller
         {
             $carier = array();
             foreach ($response->CARIER->row as $row){
-                array_push($carier, [
+                $carier[] = [
                     'Dept' => (string)$row->Dept,
                     'DateBeg' => (string)$row->datebeg,
                     'DateEnd' => (string)$row->dateend,
                     'DutyName' => (string)$row->fullname
-                ]);
+                ];
             }
         }
 
@@ -126,13 +126,13 @@ class SiteController extends Controller
         {
             $vacation = array();
             foreach ($response->VACATION->row as $row){
-                array_push($vacation, [
+                $vacation[] = [
                     'Fullname' => (string)$row->fullname,
                     'Period' => (string)$row->period,
                     'Duration' => (string)$row->duration,
                     'Date' => (string)$row->periodvac,
                     'Rest' => (string)$row->rest,
-                ]);
+                ];
             }
         }
 
@@ -140,11 +140,11 @@ class SiteController extends Controller
         {
             $sick = array();
             foreach ($response->SICK->row as $row){
-                array_push($sick, [
+                $sick[] = [
                     'Duration' => (string)$row->duration,
                     'Period' => (string)$row->period,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -152,11 +152,11 @@ class SiteController extends Controller
         {
             $admins = array();
             foreach ($response->ADMINS->row as $row){
-                array_push($admins, [
+                $admins[] = [
                     'Duration' => (string)$row->duration,
                     'Period' => (string)$row->period,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -164,12 +164,12 @@ class SiteController extends Controller
         {
             $thanks= array();
             foreach ($response->THANKS->row as $row){
-                array_push($thanks, [
+                $thanks[] = [
                     'FullName' => (string)$row->fullname,
                     'DocDate' => (string)$row->docdate,
                     'ExtraPay' => (string)$row->extrapay,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -177,11 +177,11 @@ class SiteController extends Controller
         {
             $mission = array();
             foreach ($response->MISSION->row as $row){
-                array_push($mission, [
+                $mission[] = [
                     'City' => (string)$row->CityName,
                     'Period' => (string)$row->period,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
