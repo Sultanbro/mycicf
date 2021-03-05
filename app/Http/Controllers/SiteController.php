@@ -85,11 +85,10 @@ class SiteController extends Controller
         {
             return 1000;
         }
-        else
-        {
-            $response = $kias->getUpperLevel($ISN);
-            return $response->ISN ?? $ISN;
-        }
+
+        $response = $kias->getUpperLevel($ISN);
+        return $response->ISN ?? $ISN;
+
     }
 
     public function postEmplInfo(KiasServiceInterface $kias, Request $request)
