@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App;
 use App\Debug\GitDataCollector;
 use App\Debug\KiasRequestCollector;
 use Illuminate\Support\Facades\URL;
@@ -27,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(!config('app.debug')){
+        if(!App::isLocal()){
             URL::forceScheme('https');
         }
     }
