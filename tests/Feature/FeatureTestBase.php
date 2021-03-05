@@ -71,9 +71,13 @@ abstract class FeatureTestBase extends TestCase {
         return implode(':', [base_path($path), $lines]);
     }
 
+    private function setPrefixToMeasureName() {
+        return sprintf("[Test]: %s", $this->getMeasureName());
+    }
+
     public function testExecute() {
         $cli = $this->cli;
-        $measureName = sprintf("[Test]: %s", $this->getMeasureName());
+        $measureName = $this->setPrefixToMeasureName();
 
         $this->prepare();
 
@@ -129,7 +133,7 @@ abstract class FeatureTestBase extends TestCase {
 
                 $paddedLabel = str_pad($measure['label'], $maxMeasureNameLength + 1);
 
-                if ($measure['label'] === $this->getMeasureName()) {
+                if ($measure['label'] === $this->setPrefixToMeasureName()) {
                     $label = $cli->color($paddedLabel, CLI::CLI_COLOR_RED);
                 } else {
                     $label = $cli->label($paddedLabel);
