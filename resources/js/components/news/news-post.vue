@@ -156,7 +156,7 @@
                              @click="likePost">
                         <span>
                             <i class="fa-thumbs-up color-red"
-                               :class="post.isLiked === 0 ? 'far' : 'fas'"></i>
+                               :class="!post.isLiked ? 'far' : 'fas'"></i>
                         </span>
                             <span>{{post.likes}}</span>
                             <span>Нравится</span>
@@ -367,12 +367,12 @@
             },
 
             likePost() {
-                if(this.post.isLiked === 1 || this.post.isLiked === '1') {
-                    this.post.isLiked = 0;
+                if(this.post.isLiked) {
+                    this.post.isLiked = false;
                     this.post.likes--;
                 }
                 else {
-                    this.post.isLiked = 1;
+                    this.post.isLiked = true;
                     this.post.likes++;
                 }
                 this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
@@ -384,10 +384,10 @@
 
             fetchLiked(response) {
                 if(response.success === true) {
-                    this.post.isLiked = 1;
+                    this.post.isLiked = true;
                 }
                 else {
-                    this.post.isLiked = 0;
+                    this.post.isLiked = false;
                 }
             },
 
