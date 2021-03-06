@@ -121,7 +121,7 @@ abstract class FeatureTestBase extends TestCase {
             $annotations = $this->getAnnotations();
 
             $class = $annotations['class'];
-            if (!empty($class)) {
+            if (! empty($class)) {
                 $package = $class['package'] ?? [];
                 $covers = $class['covers'] ?? [];
 

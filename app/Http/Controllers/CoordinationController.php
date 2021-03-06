@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Notification;
+use Debugbar;
 use Illuminate\Http\Request;
 use App\Events\NewPost;
 use App\Post;
