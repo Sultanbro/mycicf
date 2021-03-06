@@ -11,6 +11,6 @@ abstract class DeletePostTestBase extends FeatureTestBase {
     public const ISN = '1144';
 
     public function getRouteName() {
-        return 'news.deletePost';
+        return 'news.my.deletePost';
     }
 }

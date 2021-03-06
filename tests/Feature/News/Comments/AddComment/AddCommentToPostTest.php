@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\News\AddComment;
+namespace Tests\Feature\News\Comments\AddComment;
 
 use App\Post;
 use DB;
