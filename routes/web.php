@@ -238,25 +238,47 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/booking/remove', 'BookingController@delete');
 
         Route::group([
-            'prefix' => '/',
-            'as' => 'news',
+            'prefix' => '/news',
+            'as'     => 'news',
         ], function () {
-            // TODO Постепенно перенести сюда все роуты связанные с этой группой
-            Route::get('/news', 'NewsController@getView')->name('.index');
-            Route::post('/addPost', 'NewsController@addPost')->name('.addPost'); // TODO use grouping
+// TODO Постепенно перенести сюда все роуты связанные с этой группой
+            Route::get('/', 'News\\PostsController@getView')->name('.index');
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
-            Route::post('/deletePost', 'NewsController@deletePost')->name('.deletePost');
-        });
+            Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
+            Route::post('/likePost', 'News\\PostsController@likePost')->name('.likePost');
+            Route::post('/news-birthday', 'NewsController@birthday');
+            Route::post('/editPost', 'NewsController@editPost')->middleware('checkPostAccess');
+            Route::post('/vote', 'News\\PostsController@vote')->name('.votePost');
 
-        Route::post('/news-birthday', 'NewsController@birthday');
-        Route::post('/setPinned', 'NewsController@setPinned');
-        Route::post('/unsetPinned', 'NewsController@unsetPinned');
-        Route::post('/likePost', 'NewsController@likePost');
-        Route::post('/editPost', 'NewsController@editPost');
-        Route::post('/addComment', 'NewsController@addComment')->name('news.addComment');
-        Route::post('/deleteComment', 'NewsController@deleteComment');
-        Route::post('/editComment', 'NewsController@editComment');
-        Route::post('/vote', 'NewsController@vote');
+            Route::group([
+                'prefix'     => 'my',
+                'as'         => '.my',
+                'middleware' => ['checkPostAccess']
+            ], function () {
+                Route::post('/deletePost', 'News\\MyPostsController@deletePost')->name('.deletePost')->middleware('checkPostAccess');
+                Route::post('/editPost', 'News\\MyPostsController@editPost')->name('.editPost')->middleware('checkPostAccess');
+                Route::post('/setPinned', 'News\\MyPostsController@setPinned')->name('.setPinned')->middleware('checkPostAccess');
+                Route::post('/unsetPinned', 'News\\MyPostsController@unsetPinned')->name('.unsetPinned')->middleware('checkPostAccess');
+            });
+
+            Route::group([
+                'prefix' => '/comments',
+                'as' => '.comments',
+            ], function () {
+                Route::post('/addComment', 'News\\Comments\\PostCommentsController@addComment')->name('.add');
+                Route::post('/deleteComment', 'News\\Comments\\PostCommentsController@deleteComment')->name('.delete');
+                Route::post('/editComment', 'News\\Comments\\PostCommentsController@editComment')->name('.edit');
+            });
+
+            Route::group([
+                'prefix' => '/pin',
+                'as' => '.pin',
+            ], function () {
+                Route::post('/setPinned', 'NewsController@setPinned')->middleware('checkPostAccess');
+                Route::post('/unsetPinned', 'NewsController@unsetPinned')->middleware('checkPostAccess');
+            });
+
+        });
 
         Route::post('/setSenateVote', 'NewsController@senateVote');
 //        //RATING
