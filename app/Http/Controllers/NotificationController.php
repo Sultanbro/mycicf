@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Centcoin;
 use App\CentcoinHistory;
+use App\Library\Services\NotificationServiceInterface;
 use App\Post;
 use App\User;
 use App\UserToken;
@@ -12,6 +13,15 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
+    /**
+     * @var NotificationServiceInterface
+     */
+    private $notificationService;
+
+    public function __construct(NotificationServiceInterface $notificationService) {
+        $this->notificationService = $notificationService;
+    }
+
     public function setToken(Request $request){
         $requestKey = null;
         foreach($request->all() as $key => $value){
@@ -50,7 +60,7 @@ class NotificationController extends Controller
         foreach (UserToken::all() as $token){
             array_push($tokens, $token->token);
         }
-        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/news');
+        $this->notificationService->sendNotify($tokens, $title, $body, 'https://my.cic.kz/news');
     }
 
     /**
@@ -63,42 +73,18 @@ class NotificationController extends Controller
         if(!$tokens){
             return;
         }
-        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
+        $this->notificationService->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
     }
 
-    public function sendNotify($tokens, $title, $messageText, $action){
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $YOUR_API_KEY = env('SERVER_KEY'); // Server key
-        if($tokens) {
-            $request_body = [
-                'notification' => [
-                    'title' => $title,
-                    'body' => $messageText,
-                    'icon' => "https://kupipolis.kz/images/new-logo-centras.png",
-                    'click_action' => $action,
-                ],
-                'registration_ids' => $tokens
-            ];
-
-            $fields = json_encode($request_body);
-            $request_headers = [
-                'Content-Type: application/json',
-                'Authorization: key=' . $YOUR_API_KEY,
-            ];
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            $response = curl_exec($ch);
-            curl_close($ch);
-            echo $response;
-        }else{
-            // echo 'ERROR';
-        }
+    /**
+     * @param $tokens
+     * @param $title
+     * @param $messageText
+     * @param $action
+     *
+     * @deprecated
+     */
+    public function sendNotify($tokens, $title, $messageText, $action) {
+        $this->notificationService->sendNotify($tokens, $title, $messageText, $action);
     }
 }
