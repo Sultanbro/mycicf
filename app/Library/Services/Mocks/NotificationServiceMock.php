@@ -2,7 +2,9 @@
 
 namespace App\Library\Services\Mocks;
 
-class NotificationServiceMock {
+use App\Library\Services\NotificationServiceInterface;
+
+class NotificationServiceMock implements NotificationServiceInterface {
     public function sendNotify($tokens, $title, $messageText, $action) {
 
     }
