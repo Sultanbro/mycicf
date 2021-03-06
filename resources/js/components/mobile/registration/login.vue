@@ -3,13 +3,13 @@
         <div class="input-container d-flex">
             <div class="input-container__background width100">
 <!--                               <i class="fa fa-user-o fa-input mobile-input-icons" aria-hidden="true"></i>-->
-                <input type="text" name="username" v-model="username" class="input-field width100 mobile-input-login color-white mobile-input pl-4 pr-0" placeholder="Логин">
+                <input type="text" name="username" v-model="username" id="username" class="input-field width100 mobile-input-login color-white mobile-input pl-4 pr-0" placeholder="Логин">
             </div>
         </div>
         <div class="input-container d-flex">
             <div class="input-container__background width100 flex-row">
 <!--                                 <i class="fa fa-lock fa-input mobile-input-icons" aria-hidden="true"></i>-->
-                <input :type="passwordType" v-model="password" @keydown.enter="login" class="width100 mobile-input-password input-field color-white mobile-input pl-4 pr-0" placeholder="Пароль">
+                <input :type="passwordType" v-model="password" id="password" @keydown.enter="login" class="width100 mobile-input-password input-field color-white mobile-input pl-4 pr-0" placeholder="Пароль">
                 <button type="button" class="show-btn color-white mobile-input-password-icon pl-3 pr-3" @click="checkType">
                     <i class="fa fa-eye" aria-hidden="true" id="icon"></i>
                 </button>
