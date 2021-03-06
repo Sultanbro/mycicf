@@ -88,8 +88,8 @@
             <div class="pl-3 pr-3 pt-2 pb-2 d-flex">
                 <button class="mr-2 comment-section-btn" @click="likePost">
                     <i class="fa-thumbs-up text-danger"
-                       :class="post.isLiked === 1 ? 'fas ' : 'far'"></i>
-                    <span :class="post.isLiked === 1 ? 'color-black' : ''">{{post.likes}}</span>
+                       :class="post.isLiked ? 'fas ' : 'far'"></i>
+                    <span :class="post.isLiked ? 'color-black' : ''">{{post.likes}}</span>
                 </button>
                 <button @click="openCommentsSection"
                         class="comment-section-btn">
@@ -185,10 +185,10 @@
 
             fetchLiked: function (response) {
                 if(response.success === true) {
-                    this.post.isLiked = 1;
+                    this.post.isLiked = true;
                 }
                 else {
-                    this.post.isLiked = 0;
+                    this.post.isLiked = false;
                 }
             },
 

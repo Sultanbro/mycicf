@@ -22,7 +22,11 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
         $response = $kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
