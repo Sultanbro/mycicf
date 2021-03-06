@@ -60,6 +60,10 @@ class Post extends Model
     const DELETED_POST = 'deleted';
     const COMMENDTED_POST = 'commented';
 
+    protected $casts = [
+        'pinned' => 'bool'
+    ];
+
     public function likes() {
         return $this->hasMany(Like::class);
     }
