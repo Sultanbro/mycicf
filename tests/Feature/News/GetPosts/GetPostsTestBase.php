@@ -2,8 +2,12 @@
 
 namespace Tests\Feature\News\GetPosts;
 
+use App\Like;
 use App\Post;
+use App\Question;
+use DB;
 use Illuminate\Foundation\Testing\WithFaker;
+use Schema;
 use Tests\Feature\FeatureTestBase;
 use Tests\WithUser;
 
@@ -14,30 +18,55 @@ class GetPostsTestBase extends FeatureTestBase {
     /**
      * @var Post
      */
-    private $post;
+    protected $post;
+
+    protected function generatePost() {
+        $post = new Post();
+        $post->user_isn = self::ISN;
+        $post->post_text = $this->faker->text();
+        $post->pinned = true;
+        $post->save();
+
+        $like = new Like();
+        $like->user_isn = $this->getUser()->ISN;
+        $like->post_id = $post->id;
+        $like->save();
+
+        $like = new Like();
+        $like->user_isn = '99991';
+        $like->post_id = $post->id;
+        $like->save();
+
+        $question = new Question();
+        $question->post_id = $post->id;
+        $question->question = 'Question!';
+        $question->save();
+
+        return $post;
+    }
 
     public function getRouteName() {
         return 'news.getPosts';
     }
 
     protected function prepare() {
+        $this->post = $this->generatePost();
     }
 
-    public function testExecute() {
-        $this->actingAs($this->getUser());
+    public function cleanup() {
+        Schema::disableForeignKeyConstraints();
 
-        $response = $this->post($this->route);
+        {
+            $likes = $this->post->likes->pluck('id');
+            DB::delete('DELETE FROM likes WHERE id IN (?)', $likes->toArray());
 
-        $response->assertStatus(200);
+            $poll = $this->post->poll->pluck('id');
+            DB::delete('DELETE FROM questions WHERE id IN (?)', $poll->toArray());
 
-        $postsResponse = collect(json_decode($response->content(), true));
+            // $post->delete();
+            DB::delete('DELETE FROM posts WHERE id = ?', [$this->post->id]);
+        }
 
-        $newPost = $postsResponse->first(function ($foundPost) {
-            return $foundPost['postId'] === $this->post->id;
-        });
-
-        $this->assertEquals($newPost['postText'], $this->post->post_text);
-
-        $response->assertStatus(200);
+        Schema::enableForeignKeyConstraints();
     }
 }
