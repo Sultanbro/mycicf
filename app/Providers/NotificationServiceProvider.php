@@ -2,15 +2,11 @@
 
 namespace App\Providers;
 
-use App\Library\Services\Kias;
-use App\Library\Services\Mocks\KiasMock;
 use App\Library\Services\Mocks\NotificationServiceMock;
 use App\Library\Services\NotificationService;
 use App\Library\Services\NotificationServiceInterface;
 use Debugbar;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
-use App\Library\Services\KiasServiceInterface;
 
 class NotificationServiceProvider extends ServiceProvider {
     /**

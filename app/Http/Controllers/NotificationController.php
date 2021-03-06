@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\CentcoinHistory;
 use App\Library\Services\NotificationServiceInterface;
 use App\Post;
-use App\User;
 use App\UserToken;
 use Illuminate\Http\Request;
 
@@ -50,31 +49,20 @@ class NotificationController extends Controller {
 
     /**
      * @param $post Post
+     *
+     * @deprecated
      */
     public function sendNewPostNotify(Post $post) {
-        $title = "Новости";
-        $author = (new User())->getFullName($post->user_isn);
-        $body = "Опубликован новый пост от {$author}";
-        $tokens = [];
-        foreach (UserToken::all() as $token) {
-            $tokens[] = $token->token;
-        }
-        $this->notificationService->sendNotify($tokens, $title, $body, 'https://my.cic.kz/news');
+        $this->notificationService->sendNewPostNotify($post);
     }
 
     /**
      * @param $centcoin CentcoinHistory
+     *
+     * @deprecated
      */
     public function sendCentcoinNotify(CentcoinHistory $centcoin) {
-        $title = "Сенткоин";
-        $body = "Пополнение счета на {$centcoin->quantity} ₵";
-        $tokens = UserToken::getToken($centcoin->changed_user_isn);
-
-        if (! $tokens) {
-            return;
-        }
-
-        $this->notificationService->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
+        $this->notificationService->sendCentcoinNotify($centcoin);
     }
 
     /**

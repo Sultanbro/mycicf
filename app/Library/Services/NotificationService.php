@@ -2,6 +2,11 @@
 
 namespace App\Library\Services;
 
+use App\CentcoinHistory;
+use App\Post;
+use App\User;
+use App\UserToken;
+
 class NotificationService implements NotificationServiceInterface {
     /**
      * @param mixed $tokens
@@ -9,7 +14,7 @@ class NotificationService implements NotificationServiceInterface {
      * @param mixed $messageText
      * @param mixed $action
      */
-    public function sendNotify($tokens, $title, $messageText, $action) {
+    public function sendNotify($tokens, $title, $messageText, $action): void {
         $url = config('notifications.url');
         $YOUR_API_KEY = config('notifications.server_key');
         if ($tokens) {
@@ -45,5 +50,28 @@ class NotificationService implements NotificationServiceInterface {
         } else {
             // echo 'ERROR';
         }
+    }
+
+    public function sendNewPostNotify(Post $post): void {
+        $title = "Новости";
+        $author = (new User())->getFullName($post->user_isn);
+        $body = "Опубликован новый пост от {$author}";
+        $tokens = [];
+        foreach (UserToken::all() as $token) {
+            $tokens[] = $token->token;
+        }
+        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/news');
+    }
+
+    public function sendCentcoinNotify(CentcoinHistory $centcoin): void {
+        $title = "Сенткоин";
+        $body = "Пополнение счета на {$centcoin->quantity} ₵";
+        $tokens = UserToken::getToken($centcoin->changed_user_isn);
+
+        if (! $tokens) {
+            return;
+        }
+
+        $this->sendNotify($tokens, $title, $body, 'https://my.cic.kz/centcoins');
     }
 }

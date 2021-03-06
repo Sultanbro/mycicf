@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\NotificationServiceInterface;
 use App\Notification;
 use Debugbar;
 use Illuminate\Http\Request;
@@ -478,7 +479,7 @@ class CoordinationController extends Controller
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
-        (new NotificationController())->sendCoordinationNotify($users);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
                 continue;

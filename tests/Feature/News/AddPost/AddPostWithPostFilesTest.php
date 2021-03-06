@@ -18,18 +18,22 @@ class AddPostWithPostFilesTest extends AddPostTestBase {
      * @var User
      */
     protected $user;
+
     /**
      * @var Filesystem
      */
     private $storage;
+
     /**
      * @var mixed
      */
     private $postId;
+
     /**
      * @var string
      */
     private $path;
+
     /**
      * @var string
      */

@@ -97,6 +97,10 @@ abstract class FeatureTestBase extends TestCase {
 
         $result = '';
 
+        $count = $this->count();
+        $plural = Str::pluralStudly('assertion', $count);
+        $result .= sprintf("Test case %s. Passed %d %s\n\n", self::class, $count, $plural);
+
         if ($this->collector->enabled('route')) {
             $routes = $this->collector->getRoutes();
 

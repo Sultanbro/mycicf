@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Controllers\NotificationController;
+use App\Library\Services\NotificationServiceInterface;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
@@ -306,6 +307,6 @@ class Post extends Model
      */
     public function save(array $options = []){
         parent::save();
-        (new NotificationController())->sendNewPostNotify($this);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendNewPostNotify($this);
     }
 }
