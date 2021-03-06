@@ -11,7 +11,7 @@ class DeleteCommentToPostTest extends DeleteCommentTestBase {
 
     protected $description = 'Добавляем комментарий к посту';
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
         $response = $this->post($this->route, [
             'commentId' => $this->comment->id,

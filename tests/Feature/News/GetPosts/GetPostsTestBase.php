@@ -23,7 +23,7 @@ class GetPostsTestBase extends FeatureTestBase {
     protected function prepare() {
     }
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
 
         $response = $this->post($this->route);

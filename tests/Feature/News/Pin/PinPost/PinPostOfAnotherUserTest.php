@@ -1,14 +1,19 @@
 <?php
 
-namespace Tests\Feature\News\UnpinPost;
+namespace Tests\Feature\News\Pin\PinPost;
 
 use App\Post;
 use Tests\WithUser;
 
-class UnpinPostOfAnotherUserTest extends UnpinPostTestBase {
+/**
+ * Class PinPostTestBase
+ * @package \Tests\Feature\News\Pin\UnpinPost
+ * @covers \App\Http\Controllers\News\MyPostsController::setPinned
+ */
+class PinPostOfAnotherUserTest extends PinPostTestBase {
     use WithUser;
 
-    protected $description = 'Пытаемся удалить пост другого юзера';
+    protected $description = 'Пытаемся закрепить пост другого юзера';
 
     protected function prepare() {
         $this->post = new Post();
@@ -18,7 +23,7 @@ class UnpinPostOfAnotherUserTest extends UnpinPostTestBase {
         $this->post->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $user = $this->getUser();
         $this->actingAs($user);
 

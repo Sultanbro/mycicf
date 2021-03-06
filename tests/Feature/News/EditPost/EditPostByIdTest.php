@@ -8,7 +8,7 @@ class EditPostByIdTest extends EditPostTestBase {
 
     protected $description = 'Правим пост по ID';
 
-    public function handle() {
+    public function testExecute() {
         $user = $this->getUser();
         $this->actingAs($user);
 

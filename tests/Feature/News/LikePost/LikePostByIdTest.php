@@ -16,7 +16,7 @@ class LikePostByIdTest extends LikePostTestBase {
             ->forceDelete();
     }
 
-    public function handle() {
+    public function testExecute() {
         $user = $this->getUser();
         $this->actingAs($user);
 

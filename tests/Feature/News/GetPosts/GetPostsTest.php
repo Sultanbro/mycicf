@@ -50,7 +50,7 @@ class GetPostsTest extends GetPostsTestBase {
         $this->post = $this->generatePost();
     }
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
 
         $response = $this->post($this->route);

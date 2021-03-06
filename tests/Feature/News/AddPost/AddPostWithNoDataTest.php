@@ -12,7 +12,7 @@ class AddPostWithNoDataTest extends AddPostTestBase {
 
     public const ISN = '1144';
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
         $count = Post::count();
         $response = $this->post($this->route, [

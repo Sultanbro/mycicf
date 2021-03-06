@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Illuminate\Support\Str;
+use PHPUnit\Runner\BaseTestRunner;
 use ReflectionClass;
 use Tests\Collector;
 use Tests\TestCase;
@@ -39,7 +40,7 @@ abstract class FeatureTestBase extends TestCase {
      */
     private $reflection;
     /**
-     * @var \Illuminate\Contracts\Foundation\Application|mixed|Collector
+     * @var Collector
      */
     private $collector;
     /**
@@ -56,7 +57,7 @@ abstract class FeatureTestBase extends TestCase {
         $this->reflection = new ReflectionClass(static::class);
         $this->cli = CLI::instance();
         $this->collector = Collector::instance();
-        $this->measureName = sprintf("[Test]: %s", $this->getMeasureName());
+        $this->measureName = sprintf("[TestCase]: %s", $this->getMeasureName());
 
     }
 
@@ -66,8 +67,6 @@ abstract class FeatureTestBase extends TestCase {
      */
     // abstract public function getRoute();
     abstract public function getRouteName();
-
-    abstract public function handle();
 
     public function getMeasureName() {
         return static::class;
@@ -85,16 +84,11 @@ abstract class FeatureTestBase extends TestCase {
     protected function setUp(): void {
         parent::setUp();
         $this->prepare();
-    }
 
-    public function testExecute() {
         $this->collector->init();
 
         $this->collector->debugbar->startMeasure($this->measureName);
 
-        $this->handle();
-
-        $this->collector->debugbar->stopMeasure($this->measureName);
     }
 
     protected function printReport() {
@@ -123,6 +117,35 @@ abstract class FeatureTestBase extends TestCase {
             );
         }
 
+        {
+            $annotations = $this->getAnnotations();
+
+            $class = $annotations['class'];
+            if (!empty($class)) {
+                $package = $class['package'] ?? [];
+                $covers = $class['covers'] ?? [];
+
+                $result .= sprintf("\t%s:\n", $this->cli->label('Annotations'));
+                $result .= "\n";
+                foreach ($package as $row) {
+                    $result .= sprintf("%s %s\n",
+                        $this->cli->color("\t\t@package", CLI::CLI_COLOR_GREEN),
+                        $row
+                    );
+                }
+
+                $result .= "\n";
+                foreach ($covers as $row) {
+                    $result .= sprintf("%s %s\n",
+                        $this->cli->color("\t\t@covers", CLI::CLI_COLOR_GREEN),
+                        $row
+                    );
+                }
+
+                $result .= "\n\n";
+            }
+        }
+
         // $result .= sprintf("\t%s:\t\t%s\n",
         //     $this->cliLabel('Проверок'),
         //     $this->cliInt($this->getNumAssertions()));
@@ -142,8 +165,8 @@ abstract class FeatureTestBase extends TestCase {
 
                 $paddedLabel = str_pad($measure['label'], $maxMeasureNameLength + 1);
 
-                if ($measure['label'] === $this->getMeasureName()) {
-                    $label = $this->cli->color($paddedLabel, CLI::CLI_COLOR_RED);
+                if ($measure['label'] === $this->measureName) {
+                    $label = $this->cli->color($paddedLabel, CLI::CLI_COLOR_BLUE);
                 } else {
                     $label = $this->cli->label($paddedLabel);
                 }
@@ -171,20 +194,20 @@ abstract class FeatureTestBase extends TestCase {
 
             $preparedQueries = [];
             $timings = [
-                'app.services' => 0,
+                'app.services'    => 0,
                 'app.controllers' => 0,
-                'app.middleware' => 0,
-                'app.other' => 0,
-                'tests' => 0,
-                'vendor' => 0
+                'app.middleware'  => 0,
+                'app.other'       => 0,
+                'tests'           => 0,
+                'vendor'          => 0
             ];
             $counts = [
-                'app.services' => 0,
+                'app.services'    => 0,
                 'app.controllers' => 0,
-                'app.middleware' => 0,
-                'app.other' => 0,
-                'tests' => 0,
-                'vendor' => 0
+                'app.middleware'  => 0,
+                'app.other'       => 0,
+                'tests'           => 0,
+                'vendor'          => 0
             ];
 
             foreach ($queries as $index => $query) {
@@ -230,23 +253,38 @@ abstract class FeatureTestBase extends TestCase {
                 }
             }
 
-            $result .= sprintf("\t%s:\t\t  %s\n\t\ttests           : %s %s\n\t\tapp.services    : %s %s\n\t\tapp.controllers : %s %s\n\t\tapp.other       : %s %s\n\t\tvendor          : %s %s\n\n",
+
+            $result .= sprintf("\t%s:\t\t  %s\n",
                 $this->cli->label('SQL queries'),
+                $this->cli->color(count($queries), CLI::CLI_COLOR_RED)
+            );
 
-                $this->cli->color(count($queries), CLI::CLI_COLOR_RED),
-
+            $result .= sprintf("\t\ttests           : %s %s\n",
                 $this->cli->int($counts['tests']),
-                $this->cli->time($timings['tests']),
+                $this->cli->time($timings['tests'])
+            );
 
+            $result .= sprintf("\t\tapp.services    : %s %s\n",
                 $this->cli->int($counts['app.services']),
-                $this->cli->time($timings['app.services']),
+                $this->cli->time($timings['app.services'])
+            );
 
+            $result .= sprintf("\t\tapp.middleware  : %s %s\n",
+                $this->cli->int($counts['app.middleware']),
+                $this->cli->time($timings['app.middleware'])
+            );
+
+            $result .= sprintf("\t\tapp.controllers : %s %s\n",
                 $this->cli->int($counts['app.controllers']),
-                $this->cli->time($timings['app.controllers']),
+                $this->cli->time($timings['app.controllers'])
+            );
 
+            $result .= sprintf("\t\tapp.other       : %s %s\n",
                 $this->cli->int($counts['app.other']),
-                $this->cli->time($timings['app.other']),
+                $this->cli->time($timings['app.other'])
+            );
 
+            $result .= sprintf("\t\tvendor          : %s %s\n",
                 $this->cli->int($counts['vendor']),
                 $this->cli->time($timings['vendor'])
             );
@@ -405,7 +443,6 @@ abstract class FeatureTestBase extends TestCase {
         $classPath = $this->reflection->getFileName();
 
         $result .= sprintf("\nClass: %s\n\n", $classPath);
-
         $result .= " ================================= \n\n";
 
         echo $result;
@@ -415,8 +452,13 @@ abstract class FeatureTestBase extends TestCase {
     }
 
     protected function tearDown(): void {
+        $this->collector->debugbar->stopMeasure($this->measureName);
         $this->cleanup();
-        $this->printReport();
+
+        if ($this->getStatus() === BaseTestRunner::STATUS_PASSED) {
+            $this->printReport();
+        }
+
         parent::tearDown();
     }
 }

@@ -1,16 +1,21 @@
 <?php
 
-namespace Tests\Feature\News\PinPost;
+namespace Tests\Feature\News\Pin\PinPost;
 
 use App\Post;
 use Tests\WithUser;
 
+/**
+ * Class PinPostTestBase
+ * @package \Tests\Feature\News\Pin\UnpinPost
+ * @covers \App\Http\Controllers\News\MyPostsController::setPinned
+ */
 class PinPostWithNoAuthTest extends PinPostTestBase {
     use WithUser;
 
     protected $description = 'Пытаемся закрепить пост без авторизации';
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route, [
             'postId' => $this->post->id,
         ]);

@@ -23,7 +23,7 @@ class UnlikePostByIdTest extends LikePostTestBase {
         $this->like->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $user = $this->getUser();
         $this->actingAs($user);
 

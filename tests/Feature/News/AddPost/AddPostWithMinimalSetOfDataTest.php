@@ -9,7 +9,7 @@ class AddPostWithMinimalSetOfDataTest extends AddPostTestBase {
 
     protected $description = 'Создаём пост с минимальным набором данных';
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
         $response = $this->post($this->route, []);
         $response->assertStatus(200);

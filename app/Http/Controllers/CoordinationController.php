@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Notification;
-use App\Providers\KiasServiceProvider;
-use http\Env\Response;
 use Illuminate\Http\Request;
-use App\Comment;
 use App\Events\NewPost;
-use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 

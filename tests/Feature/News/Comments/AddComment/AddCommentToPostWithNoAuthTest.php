@@ -24,7 +24,7 @@ class AddCommentToPostWithNoAuthTest extends AddCommentTestBase {
         $this->post->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $commentText = 'Hello';
         $commentsCount = Comment::count();
         $response = $this->post($this->route, [

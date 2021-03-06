@@ -14,7 +14,7 @@ class DeleteCommentToPostWithNoAuthTest extends DeleteCommentTestBase {
      */
     protected $post;
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route, [
             'commentId' => $this->comment->id,
         ]);

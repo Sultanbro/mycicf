@@ -28,7 +28,7 @@ class GetCoordinationListTest extends FeatureTestBase {
 
     }
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
         $response = $this->post($this->route, [
             'isn' => self::ISN

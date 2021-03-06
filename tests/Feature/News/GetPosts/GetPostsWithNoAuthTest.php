@@ -15,7 +15,7 @@ class GetPostsWithNoAuthTest extends GetPostsTestBase {
         return 'Get Posts Test (no auth)';
     }
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route);
         $response->assertStatus(302);
     }

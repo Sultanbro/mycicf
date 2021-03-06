@@ -23,7 +23,7 @@ class EditPostOfAnotherUserTest extends DeletePostTestBase {
         $this->post->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $user = $this->getUser();
         $this->actingAs($user);
 

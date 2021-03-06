@@ -1,14 +1,19 @@
 <?php
 
-namespace Tests\Feature\News\UnpinPost;
+namespace Tests\Feature\News\Pin\UnpinPost;
 
 use App\Post;
 
+/**
+ * Class UnpinPostByIdTest
+ * @package Tests\Feature\News\Pin\UnpinPost
+ * @covers \App\Http\Controllers\News\MyPostsController::unsetPinned
+ */
 class UnpinPostByIdTest extends UnpinPostTestBase {
 
-    protected $description = 'Закрепляем пост по ID';
+    protected $description = 'Открепляем пост по ID';
 
-    public function handle() {
+    public function testExecute() {
         $user = $this->getUser();
         $this->actingAs($user);
 

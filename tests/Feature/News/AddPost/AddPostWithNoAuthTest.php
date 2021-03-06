@@ -13,7 +13,7 @@ class AddPostWithNoAuthTest extends AddPostTestBase {
         return 'Add post with no auth';
     }
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route, []);
         $response->assertStatus(302);
     }

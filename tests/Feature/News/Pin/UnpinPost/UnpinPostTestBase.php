@@ -1,12 +1,17 @@
 <?php
 
-namespace Tests\Feature\News\UnpinPost;
+namespace Tests\Feature\News\Pin\UnpinPost;
 
 use App\Post;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
 use Tests\WithUser;
 
+/**
+ * Class UnpinPostTestBase
+ * @package \Tests\Feature\News\Pin\UnpinPost
+ * @covers \App\Http\Controllers\News\MyPostsController::unsetPinned
+ */
 abstract class UnpinPostTestBase extends FeatureTestBase {
     use WithFaker, WithUser;
 

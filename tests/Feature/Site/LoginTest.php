@@ -37,7 +37,7 @@ class LoginTest extends FeatureTestBase {
         $this->user->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route, [
             'username' => '',
             'password' => '',

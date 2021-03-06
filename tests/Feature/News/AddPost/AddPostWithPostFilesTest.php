@@ -39,7 +39,7 @@ class AddPostWithPostFilesTest extends AddPostTestBase {
         $this->user = $this->getUser();
     }
 
-    public function handle() {
+    public function testExecute() {
         // TODO Сделать аналогичные тесты для postVideos, postDocuments
 
         $this->storage = Storage::fake('local');

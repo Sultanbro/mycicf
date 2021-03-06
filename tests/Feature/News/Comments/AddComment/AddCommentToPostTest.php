@@ -29,7 +29,7 @@ class AddCommentToPostTest extends AddCommentTestBase {
         $this->post->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
         $commentText = 'Hello';
         $response = $this->post($this->route, [
