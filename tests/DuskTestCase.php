@@ -19,8 +19,8 @@ abstract class DuskTestCase extends BaseTestCase {
      */
     public static function prepare() {
         // https://coderoad.ru/48070169/PhpStorm-Laravel-%D0%A1%D1%83%D0%BC%D0%B5%D1%80%D0%BA%D0%B8-w-%D1%82%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D0%B0%D1%8F-%D0%B1%D0%B0%D0%B7%D0%B0-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85
-        copy(self::basePath('.env'), self::basePath('.env.backup'));
-        copy(self::basePath('.env.dusk.local'), self::basePath('.env'));
+        copy(static::basePath('.env'), static::basePath('.env.backup'));
+        copy(static::basePath('.env.dusk.local'), static::basePath('.env'));
         $dotenv = Dotenv::create(base_path());
         $dotenv->overload();
 
@@ -30,8 +30,8 @@ abstract class DuskTestCase extends BaseTestCase {
     }
 
     public static function closeAll() {
-        copy(self::basePath('.env.backup'), self::basePath('.env'));
-        unlink(self::basePath('.env.backup'));
+        copy(static::basePath('.env.backup'), static::basePath('.env'));
+        unlink(static::basePath('.env.backup'));
         $dotenv = Dotenv::create(base_path());
         $dotenv->overload();
         parent::closeAll();

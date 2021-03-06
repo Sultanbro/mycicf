@@ -53,6 +53,6 @@ class NewsPageTest extends DuskTestCase {
     }
 
     protected function tearDown(): void {
-        $this->post->forceDelete();
+        // $this->post->forceDelete();
     }
 }
