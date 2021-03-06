@@ -26,7 +26,8 @@ Route::get('/sendNotification', 'NotificationController@sendNotify');
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/', 'Admin\SiteController@showLoginForm');
-    Route::post('/login', 'Admin\SiteController@checkLogin');
+    Route::post('/login', 'Admin\SiteController@checkLogin')->name('login');
+    Route::post('/login', 'Admin\SiteController@checkLogin')->name('dusk.login');
     Route::group(['middleware' => ['checkAuth', 'checkSession', 'checkAdminAuth']], function () {
         Route::get('index', 'Admin\SiteController@index');
         Route::get('/logout', 'SiteController@logout');
