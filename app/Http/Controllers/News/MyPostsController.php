@@ -16,6 +16,12 @@ class MyPostsController extends Controller
      */
     private $postsService;
 
+    /**
+     * MyPostsController constructor.
+     * @param PostsService $postsService
+     *
+     * @codeCoverageIgnore
+     */
     public function __construct(PostsService $postsService)
     {
         $this->postsService = $postsService;
