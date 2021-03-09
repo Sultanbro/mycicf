@@ -36,6 +36,7 @@ class ApiController extends Controller
                 $result[$booking->office][date('d.m.Y', strtotime($booking->to))] = [];
             }
             array_push($result[$booking->office][date('d.m.Y', strtotime($booking->to))], [
+                'id' => $booking->id,
                 'to' => $booking->to,
                 'from' => $booking->from,
                 'author' => $booking->author,
@@ -56,6 +57,7 @@ class ApiController extends Controller
             $booking->title = $request->title;
             $booking->office = $request->office;
             $booking->description = null;
+            $booking->createData();
             $booking->save();
             return response()->json([
                 'success' => true

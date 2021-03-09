@@ -827,6 +827,28 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function saveDocument($classISN,$emplISN,$subjISN,$docRow, $docParams){
+        return $this->request('User_CicSAVEDOCUMENT', [
+            'CLASSISN' => $classISN,
+            'EMPLISN' => $emplISN,
+            'DOCDATE' => date('d.m.Y'),
+            'SUBJISN' => $subjISN,
+            'DocParams' => [
+                'row' => $docParams
+            ],
+            'DocRow' => [
+                'row' => $docRow
+            ]
+        ]);
+    }
+
+    public function buttonClick($docISN,$button){
+        return $this->request('User_CicButtonClick',[
+            'DOCISN' => $docISN,
+            'BUTTON' => $button
+        ]);
+    }
+
     /**
      * @param $class_isn
      * @param $doc_isn

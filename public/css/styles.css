@@ -993,7 +993,119 @@ ul{
 }
 .avatar-menu-size{
 	height: 100%;
+    position: relative;
 }
+.avatar-menu-size:hover .sticker-block{
+    display: block;
+}
+
+/*Ava-border
+    Gold > 300
+    Silver > 200
+    Bronze > 100
+*/
+.ava-bord-bronze {
+    border: 2px solid #cd7f32;
+    padding: 2px;
+}
+.ava-bord-silver {
+    border: 2px solid #c0c0c0;
+    padding: 2px;
+}
+.ava-bord-gold {
+    border: 2px solid #ffd700;
+    padding: 2px;
+}
+
+.avatar-circle {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+}
+/*Crown
+    Gold > 300
+    Silver > 200
+    Bronze > 100
+*/
+
+.crown {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+}
+
+.crown-bronze {
+    color: #cd7f32;
+    text-shadow: 0 0 5px #cd7f32;
+}
+.crown-silver {
+    color: #c0c0c0;
+    text-shadow: 0 0 5px #c0c0c0;
+}
+.crown-gold {
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700;
+}
+
+.avatar-circle {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+}
+
+/*Sticker Coin vs Tomato*/
+.sticker-block{
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 20%;
+    display: none;
+    color: white;
+}
+.sticker-num {
+    text-align: center;
+    color: white;
+    position: absolute;
+    top: 5px;
+    font-size: 22px;
+    width: 100%;
+}
+.sticker {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    z-index: 10;
+    cursor: pointer;
+}
+.sticker-block .sticker-like {
+
+}
+.sticker-block .sticker-dislike {
+    width: 56px;
+    height: 56px;
+    right: -5px;
+    bottom: -9px;
+}
+.sticker-like{
+    width: 64px;
+    height: 64px;
+    left: -5px;
+    bottom: -10px;
+    background-image: url("/images/icons/cup.png");
+}
+/*.sticker-dislike{
+    width: 30px;
+    height: 30px;
+    background-image: url("/images/icons/sticker-tomato.png");
+}*/
+
 .radius-4px{
 	border-radius: 4px;
 }

@@ -435,6 +435,41 @@ class CoordinationController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias){
+        $ISN = $request->ISN;
+
+        $results = $kias->request('User_CicGetAgreedCoordinationList', array(
+            'EmplISN' => $ISN
+        ));
+
+        if(!isset($results->error)) {
+            $agreedAC = [];
+            foreach ($results->AgreedAC->row as $result){
+                array_push($agreedAC, [
+                    'ISN'=> (string)$result->ISN,
+                    'type'=>(string)$result->type,
+                    'curator'=>(string)$result->curator,
+                    'DeptName'=>(string)$result->DeptName,
+                    'id'=>(string)$result->id,
+                    'docdate'=>(string)$result->docdate,
+                    'ClassPovestka'=>(string)$result->ClassPovestka,
+                    'Povestka'=>(string)$result->Povestka
+                ]);
+            }
+
+            return response()->json([
+                'agreedAC' => $agreedAC,
+                'success' => true
+            ]);
+        }
+        else {
+            return response()->json([
+                'success' => false
+            ]);
+        }
+    }
+
+
     public function saveAttachment(Request $request, KiasServiceInterface $kias){
         try{
             $success = true;

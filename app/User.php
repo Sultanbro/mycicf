@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class User
@@ -146,6 +147,8 @@ class User extends Authenticatable
         $dateEnd = date('d.m.Y', strtotime('today'));
 
         $key = 'userData::' . $ISN . '::' . $dateBeg . '::' . $dateEnd;
+        $likes = Score::where('user_isn', Auth::user()->ISN)->where('type','like')->get()->count();
+        $dislikes = Score::where('user_isn',Auth::user()->ISN)->where('type','dislike')->get()->count();
 
         $ttl = now()->addMinutes(10);
         return cache()->remember($key, $ttl, function () use ($kias, $ISN, $dateBeg, $dateEnd) {
@@ -160,6 +163,8 @@ class User extends Authenticatable
                 'City' => (string)$response->City == "0" ? '' : (string)$response->City,
                 'Avarcom' => (string)$response->Avarcom,
                 'MyDZ' => (string)$response->MyDZ,
+                'Likes' => $likes,
+                'Dislikes' => $dislikes,
             ];
         });
     }

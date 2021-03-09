@@ -1,8 +1,40 @@
 <template>
     <div class="news-tape-bg radius-4px mt-3 pb-2">
+        <div class="p-2" >
+            <button @click="getAgreedCoordinationList" class="btn btn-primary">Список согласованных документов АС</button>
+        </div>
         <div class="ml-2 mr-2" v-if="none">
             <div class="coordination-none-text">
                 Нет документов на согласовании
+            </div>
+        </div>
+        <div class="ml-2 mr-2" v-show="agreedAC !== null">
+            <div class="border-radius15 bg-white mt-2">
+                <div class="ml-3 pt-2 pb-2">
+                    <strong>Согласованые документы АС</strong>
+                </div>
+                <div>
+                    <table class="dosier-table table text-align-center">
+                        <thead>
+                        <tr class="header color-white">
+                            <th scope="col">Номер документа</th>
+                            <th scope="col" class="thead-border">Тип документа</th>
+                            <th scope="col" class="thead-border">Инициатор</th>
+                            <th scope="col" class="thead-border">Подразделение</th>
+                            <th scope="col">Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody class="date-color">
+                        <tr v-for="(info, index) in agreedAC" :key="info.isn">
+                            <td class="pointer" scope="col" @click="openModal(info.ISN)">{{info.id}}</td>
+                            <td scope="col" class="thead-border">{{info.type}}</td>
+                            <td scope="col" class="thead-border">{{info.curator}}</td>
+                            <td scope="col" class="thead-border">{{info.DeptName}}</td>
+                            <td scope="col">{{info.docdate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="ml-2 mr-2" v-show="SZ !== null">
@@ -23,7 +55,7 @@
                         </thead>
                         <tbody class="date-color">
                         <tr v-for="(info, index) in SZ" :key="info.ISN">
-                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'SZ', info)">{{info.id}}</td>
+                            <td class="pointer" scope="col" @click="openModal(info.ISN, 'SZ', info, index)">{{info.id}}</td>
                             <td scope="col" class="thead-border">{{info.type}}</td>
                             <td scope="col" class="thead-border">{{info.curator}}</td>
                             <td scope="col" class="thead-border">{{info.DeptName}}</td>
@@ -291,6 +323,7 @@
                 AD: null,
                 RV: null,
                 VC: null,
+                agreedAC: null,
                 other: null,
                 none: false,
                 coordination: {},
@@ -313,7 +346,7 @@
         },
         methods: {
             getTables: function(){
-                this.preloader(true);
+                //this.preloader(true);
                 this.axios.post("/getCoordinationList", {isn: this.isn}).then((response) => {
                     this.fetchResponse(response.data)
                 })
@@ -337,16 +370,16 @@
                 }
                 this.preloader(false);
             },
-            openModal (ISN, type = null, data = null) {
+            openModal (ISN, type = null, data = null, index = null) {
                 this.doc_row_list = {};
                 this.doc_row_inner = {};
                 this.doc_row_list_other = {};
                 this.doc_row_list_inner_other = {};
 
-                this.preloader(true);
+                //this.preloader(true);
                 if(type === 'SZ' && data !== null) {
                     this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
-                        this.setModalData(response.data);
+                        this.setModalData(response.data, index, type);
                     });
                     this.getDocRowList(data, type);
                 }
@@ -370,9 +403,14 @@
                     });
                 }
             },
-            setModalData: function (response) {
+            setModalData: function (response,index = null, type = null) {
                 if(response.success){
                     this.coordination = response.response;
+                    if(type === 'SZ' && index != null  && index != undefined){
+                        this.coordination.sz_class_isn = this.SZ[index].sz_class_isn;
+                        this.coordination.sz_type = this.SZ[index].type;
+                    }
+
                     this.getAttachments();
                     this.$refs.modalButton.click();
                 }
@@ -426,7 +464,7 @@
                         if (response.data.success) {
                             this.setDocRowList(response.data, type);
                         } else {
-                            alert(response.data.message);
+                            //alert(response.data.message);
                             this.preloader(false);
                         }
                     } else {
@@ -462,7 +500,14 @@
                 {
                     document.getElementById('preloader').style.display = 'none';
                 }
-            }
+            },
+            getAgreedCoordinationList() {
+                this.axios.post("/getAgreedCoordination", {ISN: this.isn}).then((response) => {
+                    if(response.data.success) {
+                        this.agreedAC = response.data.agreedAC
+                    }
+                })
+            },
         },
 
     }

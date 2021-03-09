@@ -75,6 +75,7 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('/centcoins/history', 'Admin\CentcoinsController@getHistoryView')->name('centcoins.history');
             Route::get('/centcoins/items', 'Admin\CentcoinsController@getItemsView')->name('centcoins.items');
             Route::get('/centcoins/report', 'Admin\CentcoinsController@getReport')->name('centcoins.report');
+            Route::get('/centcoins/apply', 'Admin\CentcoinsController@getApplyView')->name('centcoins.apply');
 
 
             Route::post('/centcoins/userList', 'Admin\CentcoinsController@getUserList');
@@ -82,7 +83,9 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
-
+            Route::post('/centcoins/apply', 'Admin\CentcoinsController@getApply');
+            Route::post('/apply/accept', 'Admin\CentcoinsController@getStatusAccept');
+            Route::post('/apply/denied', 'Admin\CentcoinsController@getStatusDenied');
         });
 
         Route::group(['middleware' => 'wndAdmin'], function () {
@@ -175,6 +178,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
 
+    Route::get('eds/od', 'EdsController@edsOD');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('test/eds', 'SiteController@testEds');
@@ -197,6 +201,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
         Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
         Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
+        Route::post('/getAgreedCoordination', 'CoordinationController@getAgreedCoordination');
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
         Route::post('/documentation/save', 'DocumentationController@save');
@@ -295,6 +300,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
         Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
         Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
+        Route::post('/addScore', 'ScoreController@addScore');
+
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');
@@ -381,7 +388,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //My results page
         Route::get('rating', 'RatingController@ratingIndex')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
-        // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
@@ -407,6 +414,8 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
+Route::post('/save_document', 'EdsController@saveDocument');
+Route::post('/save_fail_status', 'EdsController@saveFailStatus');
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
@@ -438,4 +447,10 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::post('/main/create', 'Documentation\DocumentationController@create');
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
+});
+
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+    Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
+    Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
+    Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
 });
