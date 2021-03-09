@@ -228,7 +228,7 @@ abstract class FeatureTestBase extends TestCase {
 
             $timings = [
                 'app.services'    => 0,
-                'app.models'    => 0,
+                'app.models'      => 0,
                 'app.controllers' => 0,
                 'app.middleware'  => 0,
                 'app.other'       => 0,
@@ -237,7 +237,7 @@ abstract class FeatureTestBase extends TestCase {
             ];
             $counts = [
                 'app.services'    => 0,
-                'app.models'    => 0,
+                'app.models'      => 0,
                 'app.controllers' => 0,
                 'app.middleware'  => 0,
                 'app.other'       => 0,
@@ -406,6 +406,10 @@ abstract class FeatureTestBase extends TestCase {
 
         $result = '';
 
+        $result .= sprintf("%s\n\n",
+            $this->cli->underlined($this->cli->color($name, CLI::CLI_COLOR_YELLOW))
+        );
+
         if (isset($reportData['routes'])) {
             $routes = $reportData['routes'];
 
@@ -417,14 +421,10 @@ abstract class FeatureTestBase extends TestCase {
 
             $result .= sprintf("\tAction %s %s\n",
                 $this->cli->color($this->cli->bold($routes['action']), CLI::CLI_COLOR_RED),
-            isset($routes['controller']['location']) ? '(' . $routes['controller']['location']['count'] .' lines)' : '');
+                isset($routes['controller']['location']) ? '(' . $routes['controller']['location']['count'] . ' lines)' : '');
 
             $result .= sprintf("\t\t%s\n\n",
                 $this->cli->color($this->cli->bold($this->getFullPath($routes['routes']['file'])), CLI::CLI_COLOR_RED),
-            );
-
-            $result .= sprintf("\t%s\n\n",
-                '[ ' . $this->cli->underlined($this->cli->color($name, CLI::CLI_COLOR_YELLOW)) . ' ]'
             );
 
             $count = $this->count();
@@ -569,25 +569,36 @@ abstract class FeatureTestBase extends TestCase {
 
             $result .= "\n";
 
+            $maxQueryTypeLength = collect($preparedQueries)
+                ->max(function ($query) {
+                    return strlen($query['type']);
+                }) + 2;
+
             foreach ($preparedQueries as $index => $query) {
+
                 switch ($query['query']['type']) {
                     case 'query':
-                        $backtraceZero = $query['query']['backtrace'][0];
-                        $source = $backtraceZero->name;
                         if ($query['type'] === 'tests') {
-                            $type = $this->cli->color(' [tests]', CLI::CLI_COLOR_DARK_GRAY);
+                            $type = str_pad('[tests]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_DARK_GRAY);
                         } else if ($query['type'] === 'app.services') {
-                            $type = $this->cli->color('   [app.services]', CLI::CLI_COLOR_YELLOW);
+                            $type = str_pad('[app.services]', $maxQueryTypeLength,' ',  STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'app.models') {
-                            $type = $this->cli->color('   [app.models]', CLI::CLI_COLOR_BLUE);
+                            $type = str_pad('[app.models]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_BLUE);
                         } else if ($query['type'] === 'app.controllers') {
-                            $type = $this->cli->color('   [app.controllers]', CLI::CLI_COLOR_YELLOW);
+                            $type = str_pad('[app.controllers]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'app.middleware') {
-                            $type = $this->cli->color('   [app.middleware]', CLI::CLI_COLOR_YELLOW);
+                            $type = str_pad('[app.middleware]', $maxQueryTypeLength,' ',  STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'app.other') {
-                            $type = $this->cli->color('   [app.other]', CLI::CLI_COLOR_YELLOW);
+                            $type = str_pad('[app.other]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'vendor') {
-                            $type = $this->cli->color('[vendor]', CLI::CLI_COLOR_DARK_GRAY);
+                            $type = str_pad('[vendor]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
+                            $type = $this->cli->color($type, CLI::CLI_COLOR_DARK_GRAY);
                         } else {
                             dd(111222);
                         }
@@ -602,9 +613,10 @@ abstract class FeatureTestBase extends TestCase {
                                 $sql = $query['query']['sql'];
                         }
 
+                        $duration = $query['query']['duration'];
                         $result .= sprintf("\t\t%s %s %s\n",
                             $type,
-                            $this->cli->time($query['query']['duration']),
+                            $this->cli->time($duration),
                             $sql
                         );
 
