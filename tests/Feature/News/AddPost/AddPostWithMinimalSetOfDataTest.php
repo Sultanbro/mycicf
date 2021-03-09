@@ -4,6 +4,11 @@ namespace Tests\Feature\News\AddPost;
 
 use Tests\WithUser;
 
+/**
+ * Class AddPostWithMinimalSetOfDataTest
+ * @package Tests\Feature\News\AddPost
+ * @covers \App\Http\Controllers\News\PostsController::addPost
+ */
 class AddPostWithMinimalSetOfDataTest extends AddPostTestBase {
     use WithUser;
 

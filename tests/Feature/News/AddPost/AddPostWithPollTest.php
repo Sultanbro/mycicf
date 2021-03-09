@@ -4,6 +4,11 @@ namespace Tests\Feature\News\AddPost;
 
 use Tests\WithUser;
 
+/**
+ * Class AddPostWithPollTest
+ * @package Tests\Feature\News\AddPost
+ * @covers \App\Http\Controllers\News\PostsController::addPost
+ */
 class AddPostWithPollTest extends AddPostTestBase {
     use WithUser;
 
