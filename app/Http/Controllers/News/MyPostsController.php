@@ -2,25 +2,12 @@
 
 namespace App\Http\Controllers\News;
 
-use App\Answer;
-use App\Comment;
 use App\Events\NewPost;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\News\AddPostRequest;
-use App\Http\Requests\News\NewsGetPostsRequest;
 use App\Library\Services\PostsService;
-use App\Like;
 use App\Post;
-use App\Question;
-use App\UserAnswer;
-use Debugbar;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Testing\File;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class MyPostsController extends Controller
 {
