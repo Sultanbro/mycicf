@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Kernel;
 use Barryvdh\Debugbar\DataCollector\QueryCollector;
 use Illuminate\Support\Str;
 use PHPUnit\Runner\BaseTestRunner;
@@ -119,6 +120,46 @@ abstract class FeatureTestBase extends TestCase {
                 $this->cli->color($this->cli->bold($this->getFullPath($routes['file'])), CLI::CLI_COLOR_RED),
                 '[ ' . $this->cli->underlined($this->cli->color($name, CLI::CLI_COLOR_YELLOW)) . ' ]'
             );
+
+            $kernel = app(Kernel::class);
+            $routeMiddleware = $kernel->getRouteMiddleware();
+
+            $middleware = collect(explode(',', $routes['middleware']))
+                ->keyBy(function ($name) {
+                    return trim($name);
+                })
+                ->map(function ($mw) {
+                    return trim($mw);
+                })
+                ->map(function ($mw) use ($routeMiddleware) {
+                    return $routeMiddleware[$mw] ?? '';
+                })
+                ->map(function ($cls) {
+                    if (empty($cls)) {
+                        return '';
+                    }
+                    $reflectionClass = new ReflectionClass($cls);
+                    $method = $reflectionClass->getMethod('handle');
+                    return [
+                        'file' => $reflectionClass->getFileName(),
+                        'line' => $method->getStartLine()
+                    ];
+                });
+
+            $result .= sprintf("\t%s:\t %s\n",
+                $this->cli->label("Middlewares"),
+                $this->cli->int(count($middleware))
+            );
+
+            foreach ($middleware as $name => $mw) {
+                if (empty($mw)) {
+                    $result .= sprintf("\t\t%s: \n", $this->cli->label($name));
+                } else {
+                    $result .= sprintf("\t\t%s: %s:%s\n", $this->cli->label($name), $mw['file'], $mw['line']);
+                }
+            }
+
+            $result .= "\n";
         }
 
         {
