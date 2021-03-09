@@ -194,7 +194,12 @@ class PostsController extends Controller
             'youtube' => $new_post->getVideo(),
             'videos' => $new_post->getVideoUrl(),
             'comments' => [],
-            "post_poll" => !empty($post_poll) ? $post_poll : [],
+            "post_poll" => !empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
+                "question_id"    => null,
+                "question_title" => null,
+                "total_votes"    => null,
+                "answers"        => null
+            ],
             "isVoted" => false,
         ];
 
