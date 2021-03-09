@@ -295,7 +295,6 @@
         },
 
         mounted() {
-            debugger;
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
             if(this.post.videos.length>0){
@@ -345,7 +344,7 @@
             },
 
             deletePost() {
-                this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/deletePost', {postId: this.post.postId}).then(response => {
                     return;
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -361,7 +360,7 @@
                     });
                 }
                 else {
-                    this.axios.post('/unsetPinned', {postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/unsetPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(-1)
                     });
                 }
@@ -376,7 +375,7 @@
                     this.post.isLiked = true;
                     this.post.likes++;
                 }
-                this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
+                this.axios.post('/news/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -400,7 +399,7 @@
                     this.post.postText = this.oldText;
                 }
                 if(this.post.postText !== this.oldText) {
-                    this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
@@ -411,7 +410,7 @@
 
             saveEdited() {
                 this.editMode = !this.editMode;
-                this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     this.fetchSaved(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -428,7 +427,7 @@
             },
 
             addComment() {
-                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/comments/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
                     this.setComments(response.data);
                 });
                 this.commentText = '';
@@ -449,7 +448,7 @@
 
             deleteComment(index) {
                 var vm = this;
-                this.axios.post('/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
+                this.axios.post('/news/comments/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
                     if(response.data.success) {
                         vm.post.comments.splice(index, 1);
                     }
@@ -464,7 +463,7 @@
                     object.answer_votes++;
                     this.post.post_poll.total_votes++;
                     this.post.isVoted = true;
-                    this.axios.post('/vote', {
+                    this.axios.post('/news/vote', {
                         postId: this.postId,
                         isn: this.isn,
                         answerId: object.answer_id,
