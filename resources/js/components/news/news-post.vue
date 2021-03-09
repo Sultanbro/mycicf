@@ -27,7 +27,7 @@
                         class="custom-button mr-1"
                         :disabled="editMode"
                         v-if="moderators.includes(isn)"
-                        :class="{pinned: post.pinned === 1}">
+                        :class="{pinned: !!post.pinned}">
                     <i class="fas fa-thumbtack"></i>
                 </button>
                 <button type="button"
@@ -352,7 +352,7 @@
             },
 
             setPinned() {
-                if(this.post.pinned === 0) {
+                if(!this.post.pinned) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
                     }).catch(error => {

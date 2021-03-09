@@ -232,7 +232,7 @@
             },
 
             setPinned: function () {
-                if(this.post.pinned === 0) {
+                if(!this.post.pinned) {
                     this.axios.post('/news/my/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
                     }).catch(error => {
