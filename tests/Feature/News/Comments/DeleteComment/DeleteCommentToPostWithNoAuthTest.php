@@ -23,7 +23,9 @@ class DeleteCommentToPostWithNoAuthTest extends DeleteCommentTestBase {
     }
 
     public function cleanup() {
+        \Schema::disableForeignKeyConstraints();
         $this->post->forceDelete();
+        \Schema::enableForeignKeyConstraints();
     }
 
     public function getMeasureName() {

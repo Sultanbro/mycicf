@@ -234,6 +234,11 @@ class SiteController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    /**
+     * TODO Вынести в сервис
+     *
+     * @return int[]
+     */
     public function getTesters()
     {
         return array(

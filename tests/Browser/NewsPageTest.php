@@ -45,10 +45,13 @@ class NewsPageTest extends DuskTestCase {
                 ->press('.login-form .btn-block')
                 ->waitForReload()
                 ->assertPathIs('/news');
+
             $logo = $browser->element('.header-img-width a img');
             $this->assertNotNull($logo);
             $logoSrc = $logo->getAttribute('src');
             $this->assertStringEndsWith('/images/mycic-horizontal-logo.png', $logoSrc);
+
+            $browser->screenshot('news');
         });
     }
 

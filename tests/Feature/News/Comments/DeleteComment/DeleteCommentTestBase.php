@@ -42,6 +42,7 @@ abstract class DeleteCommentTestBase extends FeatureTestBase {
     }
 
     public function cleanup() {
+        \Schema::disableForeignKeyConstraints();
         $commentId = $this->comment->id;
         $this->comment->forceDelete();
 
@@ -51,6 +52,7 @@ abstract class DeleteCommentTestBase extends FeatureTestBase {
         $this->post->forceDelete();
 
         $this->assertFalse(Post::whereId($postId)->exists());
+        \Schema::enableForeignKeyConstraints();
 
     }
 }
