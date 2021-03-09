@@ -141,9 +141,9 @@
                               :class="{'textarea-height': editMode}"
                               class="custom-input w-100 pr-5"></textarea>
                 </transition>
-                <div v-if="post.postText.length > 1950">
+                <div v-if="post.postText.length > 7800">
                     <span>
-                        <small>Отслаось символов: {{2000 - post.postText.length > 0 ? 2000 - post.postText.length : 0}}</small>
+                        <small>Осталось символов: {{8000 - post.postText.length > 0 ? 8000 - post.postText.length : 0}}</small>
                     </span>
                 </div>
                 <emoji-component v-if="editMode" :type="EDIT_POST_TEXTAREA"></emoji-component>

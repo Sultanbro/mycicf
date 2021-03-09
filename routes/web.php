@@ -180,12 +180,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('eds/od', 'EdsController@edsOD');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
-        Route::group(['middleware' => 'duty'], function () {//middleware
         Route::get('test/eds', 'SiteController@testEds');
         Route::get('/getEDS', 'SiteController@getEds');
         Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
-        Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
-        Route::post('/coordinationSaveAttachment', 'CoordinationController@saveAttachment');
+        Route::post('/save_eds_info','SiteController@saveEdsInfo');
+        Route::post('/coordinationSaveAttachment','CoordinationController@saveAttachment');
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
@@ -194,7 +193,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //DOSSIER
         Route::post('/emplInfo', 'SiteController@postEmplInfo');
         Route::get('/dossier', 'SiteController@dossier')->name('dossier');
-
+        //COORIDNATION
+        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
+        Route::post('/setCoordination', 'CoordinationController@setCoordination');
+        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
+        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
+        Route::post('/getAgreedCoordination', 'CoordinationController@getAgreedCoordination');
         //DOCUMENTATION ADMIN MIDDLEWARE
         Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
         Route::post('/documentation/save', 'DocumentationController@save');
@@ -265,10 +271,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
         Route::post('/addScore', 'ScoreController@addScore');
 
-
-        //TestQR
-        Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
-
         //UNTITLED
         Route::get('/name', 'NameController@getView')->name('documentation');
         Route::post('/getItemsList', 'NameController@getItemsList');
@@ -284,6 +286,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/getBranchProdData', 'StatisticsController@postBranchProdData');
         Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
 
+        Route::get('/logout', 'SiteController@logout');
         //MOTIVATION
         Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
         // MOBILE
@@ -317,9 +320,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full/getFullData', 'ProductsController@getFullData');
         Route::post('/full/send-docs', 'ProductsController@sendDocs');
         Route::post('/full/create-agr', 'ProductsController@createAgr');
-        Route::post('/full/getPrintableFormList', 'ProductsController@getPrintableFormList');
-        Route::get('/full/getPrintableForm', 'ProductsController@getPrintableForm');
-        Route::post('/full/getFullBranch', 'SiteController@getFullBranch');
+        Route::post('/full/getPrintableFormList','ProductsController@getPrintableFormList');
+        Route::get('/full/getPrintableForm','ProductsController@getPrintableForm');
+        Route::post('/full/getFullBranch','SiteController@getFullBranch');
 
         Route::post('/getDictiList', 'SiteController@getDicti');
         Route::post('/getDictiListFromBase', 'SiteController@getDictiFromBase');
@@ -331,7 +334,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/full/calculate', 'ProductsController@fullCalc');
 
         Route::post('/getVehicle', 'VehicleController@getVehicle');
-        Route::post('/saveVehicle', 'VehicleController@saveVehicle');
+        Route::post('/saveVehicle','VehicleController@saveVehicle');
 
         Route::post('/setToken', 'NotificationController@setToken');
         //PreInsuranceInspection
@@ -359,15 +362,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
         Route::post('my-results/getRating', 'RatingController@getRating');
-        });
-        Route::get('/logout', 'SiteController@logout');
-        //COORIDNATION
-        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
-        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
-        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
-        Route::post('/setCoordination', 'CoordinationController@setCoordination');
-        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
-        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
     });
 
     Route::post('api/booking/get', 'ApiController@getBookingData');
@@ -423,3 +417,13 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
+
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+    Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
+    Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
+    Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+});
+
+
+
+

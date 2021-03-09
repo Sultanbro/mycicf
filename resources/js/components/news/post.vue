@@ -7,9 +7,9 @@
                     <span class="bold">Создайте публикацию</span>
                 </div>
                 <transition name="transition-opacity">
-                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 1950">
+                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 7800">
                         <span>Осталось символов:</span>
-                        <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
+                        <span :class="8000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{8000 - postText.length > 0 ? 8000 - postText.length : 0}}</span>
                     </div>
                 </transition>
             </div>
