@@ -154,9 +154,9 @@ abstract class FeatureTestBase extends TestCase {
             foreach ($middleware as $name => $mw) {
                 $nameColored = $this->cli->color($name, CLI::CLI_COLOR_LIGHT_YELLOW);
                 if (empty($mw)) {
-                    $result .= sprintf("\t\t%s: \n", $nameColored);
+                    $result .= sprintf("\t\t%s \n", $nameColored);
                 } else {
-                    $result .= sprintf("\t\t%s: %s:%s\n", $nameColored, $mw['file'], $mw['line']);
+                    $result .= sprintf("\t\t%s (%s:%s)\n", $nameColored, $mw['file'], $mw['line']);
                 }
             }
 
