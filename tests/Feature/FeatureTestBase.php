@@ -152,10 +152,11 @@ abstract class FeatureTestBase extends TestCase {
             );
 
             foreach ($middleware as $name => $mw) {
+                $nameColored = $this->cli->color($name, CLI::CLI_COLOR_LIGHT_YELLOW);
                 if (empty($mw)) {
-                    $result .= sprintf("\t\t%s: \n", $this->cli->label($name));
+                    $result .= sprintf("\t\t%s: \n", $nameColored);
                 } else {
-                    $result .= sprintf("\t\t%s: %s:%s\n", $this->cli->label($name), $mw['file'], $mw['line']);
+                    $result .= sprintf("\t\t%s: %s:%s\n", $nameColored, $mw['file'], $mw['line']);
                 }
             }
 
@@ -298,10 +299,10 @@ abstract class FeatureTestBase extends TestCase {
                 }
             }
 
-
-            $result .= sprintf("\t%s:\t\t  %s\n",
+            $result .= sprintf("\t%s:\t\t  %s %s\n\n",
                 $this->cli->label('SQL queries'),
-                $this->cli->color(count($queries), CLI::CLI_COLOR_RED)
+                $this->cli->color(count($queries), CLI::CLI_COLOR_RED),
+                $this->cli->time($allQueriesDuration)
             );
 
             $result .= sprintf("\t\ttests           : %s %s\n",
