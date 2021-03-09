@@ -49,6 +49,5 @@ class Branch extends Model
 
     public function duty(){
         return $this->duty === 'Сотрудник Коммеск';
-        //return $this->duty === 'Web - программист'; //для теста
     }
 }

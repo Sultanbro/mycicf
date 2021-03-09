@@ -18,14 +18,11 @@ class KommeskUsers
      */
     public function handle($request, Closure $next)
     {
-
-
-        if(Auth::user()->branch->duty()){
+        if(Auth::user()->branch->duty() &&
+            Auth::user()->branch->kias_id != 1445744 &&
+            Auth::user()->branch->kias_id != 3951884){
             return redirect()->route('coordination');
         }
-
-/*       $user = Auth::user();
-        dd($user);*/
         return $next($request);
     }
 }
