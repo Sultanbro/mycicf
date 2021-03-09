@@ -182,11 +182,11 @@ class PostsController extends Controller
             'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
             'edited' => false,
             'fullname' => Auth::user()->full_name,
-            'isLiked' => 0,
+            'isLiked' => false,
             'isn' => $new_post->user_isn,
             'userISN' => $new_post->user_isn,
             'likes' => 0,
-            'pinned' => 0,
+            'pinned' => false,
             'postText' => $new_post->getText(),
             'postId' => $new_post->id,
             'image' => $new_post->getImage(),
@@ -195,7 +195,7 @@ class PostsController extends Controller
             'videos' => $new_post->getVideoUrl(),
             'comments' => [],
             "post_poll" => !empty($post_poll) ? $post_poll : [],
-            "isVoted" => 0,
+            "isVoted" => false,
         ];
 
         broadcast(new NewPost([
