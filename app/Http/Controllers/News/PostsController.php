@@ -120,7 +120,12 @@ class PostsController extends Controller
                 foreach ($postFiles as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
-                    Storage::disk('local')->put("public/post_files/$new_post->id/images/$fileName", $content);
+                    $path = "public/post_files/$new_post->id/images";
+                    $disk = Storage::disk('local');
+                    if (!$disk->exists($path)) {
+                        $disk->makeDirectory($path);
+                    }
+                    Storage::disk('local')->put("{$path}/$fileName", $content);
                 }
             }
 
@@ -128,7 +133,12 @@ class PostsController extends Controller
                 foreach($request->postDocuments as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
-                    Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
+                    $path = "public/post_files/$new_post->id/documents";
+                    $disk = Storage::disk('local');
+                    if (!$disk->exists($path)) {
+                        $disk->makeDirectory($path);
+                    }
+                    Storage::disk('local')->put("{$path}/$fileName", $content);
                 }
             }
 
