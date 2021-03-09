@@ -151,7 +151,7 @@ class User extends Authenticatable
         $dislikes = Score::where('user_isn',Auth::user()->ISN)->where('type','dislike')->get()->count();
 
         $ttl = now()->addMinutes(10);
-        return cache()->remember($key, $ttl, function () use ($kias, $ISN, $dateBeg, $dateEnd) {
+        return cache()->remember($key, $ttl, function () use ($kias, $ISN, $dateBeg, $dateEnd, $likes, $dislikes) {
             $response = $kias->getEmplInfo($ISN, $dateBeg, $dateEnd);
             return [
                 'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
