@@ -399,7 +399,7 @@
                     this.post.postText = this.oldText;
                 }
                 if(this.post.postText !== this.oldText) {
-                    this.axios.post('/news/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
@@ -410,7 +410,7 @@
 
             saveEdited() {
                 this.editMode = !this.editMode;
-                this.axios.post('/news/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     this.fetchSaved(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');

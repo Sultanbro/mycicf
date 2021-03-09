@@ -129,7 +129,8 @@ class MyPostsController extends Controller
             'type' => Post::EDITED_POST
         ]));
 
-        $this->postsService->forget($post_id);
+        cache()->clear();
+        // $this->postsService->forget($post_id);
 
         return $response;
     }

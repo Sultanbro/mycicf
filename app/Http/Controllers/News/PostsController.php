@@ -203,7 +203,7 @@ class PostsController extends Controller
             'type' => Post::NEW_POST
         ]));
 
-        // cache()->clear();
+        cache()->clear();
         return $response;
     }
 
