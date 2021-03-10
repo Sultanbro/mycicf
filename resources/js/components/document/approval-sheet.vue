@@ -385,11 +385,21 @@
                         </button>
                     </div>
                     <div class="col-md-4">
+                        <i v-if="extraLoading" class="fas fa-spinner fa-spin"></i>
                         <button v-if="addChange" class="btn btn-danger btn-block2" @click="addChangeForm()">
                             Внести изменения в СЗ
                         </button>
+                        <button v-if="!addChange && annul" class="btn btn-danger btn-block2" @click="annulSz()">
+                            Аннулировать СЗ
+                        </button>
                     </div>
                     <div v-show="loading" class="loading-ellipsis">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div v-show="extraLoading" class="loading-ellipsis">
                         <div></div>
                         <div></div>
                         <div></div>
@@ -435,6 +445,12 @@
                                         {{listDocIsn}}</div>
 <!--                                        <input type="text" v-model="listDocIsn"-->
 <!--                                               class="form-control" :disabled="addChange" :readonly="listDocIsn === '' || listDocIsn === null">-->
+                                    </div>
+                                </div>
+                                <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
+                                    <div>
+                                        <input type="text" v-model="result.val"
+                                               class="form-control" :disabled="addChange">
                                     </div>
                                 </div>
                                 <div v-else>
@@ -489,7 +505,9 @@
                 userList : [],
                 isLoading: false,
                 loading: false,
+                extraLoading: false,
                 addChange: false,
+                annul: false,
                 res: {},
                 usersInfo: [],
                 duty : "",
@@ -502,7 +520,7 @@
                 result: null,
                 listDocIsn: null,
                 coordination: {},
-                saveDoc: false,
+                saveDoc: true,
                 required: false,
                 sendOutForm: false,
                 type: 1,
@@ -524,7 +542,7 @@
             // if(this.results.result[0].subjISN != 'null'){
             //     this.contragent = this.results.result[0].subjISN;
             // }
-            this.docDate = new Date(moment(this.results.docdate));
+            this.docDate = new Date(moment(this.results.docdate)).toLocaleDateString();
         },
         methods: {
             customFormatter(date) {
@@ -554,10 +572,47 @@
                     this.options = response.data.result;
                 })
             },
+            annulSz(){
+                if(this.results.resDop[1].val === ''){
+                    this.flashMessage.warning({
+                        title: "!",
+                        message: 'Укажите причину аннулирования служебной записки в доп.атрибутах документа',
+                        time: 5000
+                    });
+                }
+                this.extra = true;
+                this.annul = true;
+                this.addChange = false;
+                let data = {
+                    results: this.results,
+                    docIsn: this.docIsn,
+                    status: '2515',
+                }
+                this.axios.post('/document/saveDocument', data)
+                    .then((response) => {
+                        if(response.data.success) {
+                            this.status = response.data.status;
+                            this.stage = response.data.stage;
+                            this.extraLoading = false;
+                            this.addChange = false;
+                            this.sendOutForm = false;
+                            this.annul = false;
+                            this.agrList = false;
+                            this.toForm = false;
+                            this.fillIn = false;
+                            this.saveDoc = false;
+                        } else {
+                            this.addChange = false;
+                            this.annul = true;
+                            this.extraLoading = false;
+                        }
+                    });
+                this.addChange = false;
+                this.extraLoading = false;
+            },
             saveDocument(){
                 this.loading = false;
                 // console.log(this.results.result1[0].val);
-                // console.log(this.results.result1[1].val);
                 // console.log(this.results.docdate);
                 if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
                     this.flashMessage.warning({
@@ -565,21 +620,27 @@
                         message: 'Пожалуйста заполните все обязательные поля',
                         time: 5000
                     });
-                    setTimeout(() => {
-                        location.reload();
-                    }, 5000);
-                    return;
+                    // setTimeout(() => {
+                    //     location.reload();
+                    // }, 5000);
+                    // return;
                 }
                 this.loading = true;
-                this.results.docdate = moment(this.results.docDate).format('DD.MM.YYYY');
-                this.axios.post('/document/saveDocument', this.results)
+                // this.results.docdate = moment(this.results.docDate).format('DD.MM.YYYY');
+                let data = {
+                    results: this.results,
+                    docIsn: this.docIsn,
+                }
+                this.axios.post('/document/saveDocument', data)
                     .then((response) => {
                         if(response.data.success) {
                             this.loading = false;
-                            this.docIsn = response.data.docIsn;
+                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
                             this.addChange = true;
                             this.toForm = true;
                             this.fillIn =true;
+                            this.saveDoc = false;
+                            this.annul = false;
                         } else {
                             this.addChange = false;
                             this.loading = false;
@@ -592,7 +653,7 @@
                     });
             },
             addChangeForm() {
-                this.loading = true;
+                this.extraLoading = true;
                 let data = {
                     docIsn: this.docIsn,
                     button: 'BUTTON3',
@@ -603,13 +664,15 @@
                             this.status = response.data.status;
                             this.stage = response.data.stage;
                             this.listDocIsn = response.data.DOCISN
-                            this.loading = false;
+                            this.extraLoading = false;
                             this.sendOutForm = false;
                             this.addChange = false;
                             this.toForm = false;
+                            this.annul = true;
+                            this.saveDoc = true;
                         } else {
                             this.addChange = true;
-                            this.loading = false;
+                            this.extraLoading = false;
                         }
                     })
             },
@@ -642,6 +705,7 @@
                             this.sendOutForm = false;
                             this.fillIn = true;
                             this.toForm = true;
+                            this.saveDoc = false;
                         } else {
                             this.addChange = false;
                         }
@@ -656,7 +720,6 @@
                 this.loading = true;
                 let data = {
                     docIsn: this.docIsn,
-                    // result: this.results,
                     button: 'BUTTON2',
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -667,6 +730,7 @@
                             this.fillIn = false;
                             this.listDocIsn = response.data.DOCISN
                             this.result = response.data.error
+                            this.saveDoc = false;
                         } else {
                             this.addChange = false;
                         }
@@ -680,7 +744,7 @@
             sendOut(){
                 this.loading = true;
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.listDocIsn,
                     type: this.type,
                     status: 2522,
                 }
@@ -692,6 +756,7 @@
                             this.loading = false;
                             this.addChange = true;
                             this.sendOutForm = false;
+                            this.saveDoc = false;
                         } else {
                             this.addChange = false;
                             this.loading = false;
@@ -708,6 +773,12 @@
                 this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
                     if(response.data.success){
                         this.coordination = response.data.response;
+                        // this.coordinator = response.data.response.Coordinations;
+
+                        // for(const item in response.data.response.Coordinations) {
+                        //     this.coordinator = item.SubjISN;
+                        // }
+
                         this.preloader(false);
                         this.$refs.modalButton.click();
                     }else{
@@ -716,16 +787,12 @@
                 });
             },
             preloader(show){
-                if(show)
-                {
+                if(show){
                     document.getElementById('preloader').style.display = 'flex';
-                }
-                else
-                {
+                }else{
                     document.getElementById('preloader').style.display = 'none';
                 }
             },
-
             successNotify(title = 'Success notification', text = 'Some long description at search begin'){
                 this.$parent.notify('success', title, text);
             },
@@ -748,7 +815,6 @@
         },
     }
 </script>
-
 <style scoped>
     .vdp-datepicker input {
         background: none;

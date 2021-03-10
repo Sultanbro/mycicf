@@ -200,7 +200,7 @@ Vue.component('management-show', require('./components/document/management-show'
 
 Vue.component('management-employee', require('./components/document/management-employee').default);
 
-// Vue.component('management-application', require('./components/document/management-application').default);
+Vue.component('management-application', require('./components/document/management-application').default);
 
 window.onload = function(){
     var app = new Vue({

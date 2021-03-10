@@ -311,6 +311,8 @@ interface KiasServiceInterface
     public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status);
 
     /**
+     * @param $isns
+     * @param $status_isn
      * @param $class_isn
      * @param $emplIsn
      * @param $docDate
@@ -319,13 +321,11 @@ interface KiasServiceInterface
      * @param $docs
      * @return mixed
      */
-    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs);
+    public function userCicSaveDocument($isns, $status_isn, $class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs);
 
     /**
-     * @param $emplIsn
-     * @param $command
-     * @param $emplIsn1
+     * @param $row
      * @return mixed
      */
-    public function userCicChangeDocCoordination($emplIsn, $command, $emplIsn1);
+    public function userCicChangeDocCoordination($row);
 }

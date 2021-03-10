@@ -706,8 +706,9 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function saveDocument($classISN,$emplISN,$subjISN,$docRow, $docParams){
+    public function saveDocument($isns,$classISN,$emplISN,$subjISN,$docRow, $docParams){
         return $this->request('User_CicSAVEDOCUMENT', [
+            'ISN' => $isns,
             'CLASSISN' => $classISN,
             'EMPLISN' => $emplISN,
             'DOCDATE' => date('d.m.Y'),
@@ -754,8 +755,10 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function userCicSaveDocument($class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs) {
+    public function userCicSaveDocument($isns, $status_isn, $class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs) {
         return $this->request('User_CicSAVEDOCUMENT', [
+            'ISN' => $isns,
+            'STATUSISN' => $status_isn,
             'CLASSISN' => $class_isn,
             'EMPLISN' => $emplIsn,
             'DOCDATE' => $docDate,
@@ -782,11 +785,9 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function userCicChangeDocCoordination($emplIsn, $command, $emplIsn1) {
-        return $this->request(User_CicChangeDocCoordination, [
-            'EMPLISN' => $emplIsn,
-            'COMMAND' => $command,
-            'EMPLISN1' => $emplIsn1
+    public function userCicChangeDocCoordination($row) {
+        return $this->request('User_CicChangeDocCoordination', [
+            'row' => $row,
         ]);
     }
 }

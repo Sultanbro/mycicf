@@ -11,7 +11,6 @@
 
 @section('content')
 {{--    {{print_r($arReturn)}}--}}
-{{--    @foreach ($arReturn as $item)--}}
        <br>
         <div class="col-md-10" id="management-show">
             <management-show
@@ -20,5 +19,4 @@
             >
             </management-show>
         </div>
-{{--    @endforeach--}}
 @stop

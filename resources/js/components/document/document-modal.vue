@@ -98,26 +98,16 @@
                                                     <td>{{attribute.Name}}</td>
                                                     <td>{{attribute.Value}}</td>
                                                 </tr>
-<!--                                                <tr v-for="(coordinate, index ) in coordination.Coordinations"-->
-<!--                                                    v-if="!changeMatch.status" :key="index"-->
-<!--                                                >-->
-<!--                                                        <td>Согласующий {{ index + 1}} </td>-->
-<!--                                                        <td>{{coordinate.FullName}}</td>-->
-<!--                                                </tr>-->
-                                                <tr v-for="(coordinate, index) in coordinator" :key="index"
+                                                <tr v-if="coordination.Coordinations.length > 0" v-for="(coordinate, index) in coordination.Coordinations" :key="index"
                                                 >
                                                         <td>Согласующий {{ index + 1}} </td>
                                                         <td>
                                                             <treeselect
-                                                                v-model="coordinate[index].SubjISN" :disabled="!changeMatch.status"
+                                                                v-model="coordinate.SubjISN" :disabled="!changeMatch.status"
                                                                 :multiple="false"
                                                                 :options="userList"
                                                                 :disable-branch-nodes="true"/></td>
                                                 </tr>
-<!--                                            <tr v-if="coordination.DocClass === '1010031'">-->
-<!--                                                <td>Куратор документа</td>-->
-<!--                                                <td>{{coordination.Curator}}</td>-->
-<!--                                            </tr>-->
                                             </tbody>
                                         </table>
                                     </div>
@@ -128,24 +118,24 @@
                                 </div>
                                 <div class="offset-md-4 col-md-4">
                                     <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                                    <button v-if="!changeMatch.status" class="btn btn-danger btn-block2" @click="makeChange()">
+                                    <button v-if="!changeMatch.status" class="btn btn-warning btn-block2" @click="makeChange()">
                                         Внести изменение
                                     </button>
-                                    <button v-if="changeMatch.status" class="btn btn-danger btn-block2" @click="changeMatching()">
+                                    <button v-if="changeMatch.status" class="btn btn-primary btn-block2" @click="changeMatching()">
                                         Изменить Согласующих
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <div class="bg-blue-standart">
-                                <div class="pl-5 pt-4 pb-4 pr-5">
-                                    <div class="flex-row color-white vertical-middle">
-                                        <span class="ml-1">Примечание</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div>-->
+<!--                            <div class="bg-blue-standart">-->
+<!--                                <div class="pl-5 pt-4 pb-4 pr-5">-->
+<!--                                    <div class="flex-row color-white vertical-middle">-->
+<!--                                        <span class="ml-1">Примечание</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -163,7 +153,8 @@
                 modalHide: '',
                 loading: false,
                 userList : [],
-                coordinator: [],
+                coordinator: {},
+                coordinationSubjISN: [],
             }
         },
         created() {
@@ -175,9 +166,9 @@
             coordination: Object,
             isn: String,
         },
-        // mounted() {
-        //     console.log(coordination)
-        // },
+        mounted() {
+            //...
+        },
         methods: {
             // beforeSendSolution(solution){
             //     this.$refs.eds.getToken('coordination',solution)
@@ -197,15 +188,26 @@
                     // console.log(response)
                 });
             },
+            setCoordinator() {
+
+            },
             makeChange() {
               this.changeMatch.status = true;
               this.loading = false;
+              let i = 0;
+              for(i=0; i < this.coordination.Coordinations.length; i++){
+                  this.coordinator[i] = this.coordination.Coordinations[i].SubjISN;
+              }
             },
             changeMatching() {
                 this.loading = true;
+                this.changeMatch.status = false;
+                for(let i=0; i< this.coordination.Coordinations.length; i++){
+                    this.coordinationSubjISN[i] = this.coordination.Coordinations[i].SubjISN;
+                }
                 let data = {
-                    coordination: this.coordination.Coordinations,
                     coordinator: this.coordinator,
+                    coordinationSubjISN: this.coordinationSubjISN,
                 }
                 this.axios.post('/changeDocCoordination', data)
                     .then((response) => {
@@ -213,8 +215,16 @@
                             // this.status = response.data.status;
                             this.loading = false;
                             this.changeMatch.status = false;
+                            if(alert('Успешно изменено')){
+                                preloader(show)
+                            }
+                            // alert('Успешно изменено')
+
+                            // if(confirm('Успешно изменено')){
+                            //     window.close();
+                            // }
                         } else {
-                            this.changeMatch.status = true;
+                            this.changeMatch.status = false;
                             this.loading = false;
                         }
                     })
@@ -270,11 +280,11 @@
                 }
             }
         },
-        watch: {
-            coordination:function(val){
-                this.coordinator = this.coordination.Coordinations;
-            }
-        }
+        // watch: {
+        //     coordination:function(val){
+        //         this.coordinator = this.coordination.Coordinations;
+        //     }
+        // }
         // computed: {
         //     coordination.Coordinations.Fullname.pop();
         // }

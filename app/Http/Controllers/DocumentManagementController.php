@@ -13,6 +13,7 @@ use App\Http\Controllers\SiteController;
 use DB;
 use mysql_xdevapi\Result;
 use App\Branch;
+use function GuzzleHttp\default_ca_bundle;
 
 class DocumentManagementController extends Controller
 {
@@ -69,6 +70,7 @@ class DocumentManagementController extends Controller
                 }
             }
         }
+//        dd($request->isn);
         $show = $kias->request('User_CicGetDocRowAttr', [
             'CLASSISN' => $request->isn,
             'DOCISN' => '',
@@ -80,7 +82,6 @@ class DocumentManagementController extends Controller
             'value' => empty((string)$show->Doc->row->SUBJNAME) ? '' : $show->Doc->row->SUBJNAME,
             'subjisn' => $show->Doc->row->SUBJISN ? '' : $show->Doc->row->SUBJISN,
         ];
-
         foreach($show->DocParams->row as $item) {
             array_push($result, [
                 'attrisn' => (string)$item->ATTRISN,
@@ -124,6 +125,7 @@ class DocumentManagementController extends Controller
 //        dd($statusName);
         $results = array_merge([
             'classisn' => $request->isn,
+            'parentClass' => $request->Parentclass,
             'emplisn' => $emplisn,
             'docdate' => $docdate ?? $today,
             'className' => $className,
@@ -140,6 +142,7 @@ class DocumentManagementController extends Controller
             'contragent' => $contragent,
             ]
         );
+//        dd($results);
 
         return view('document.management.show', compact('results'));
     }
@@ -168,11 +171,12 @@ class DocumentManagementController extends Controller
 //        $dicti['statements'] = (new SiteController())->getDictiList(1007381);
 //        $dicti['admDayApp'] = (new SiteController())->getDictiList(820621);
 //        dd($dicti);
-        $isns = ['800701', '1760341', '1760331', '1007381', '820621'];
+        $isns = ['800701', '1760341', '1760331', '1007381'];
+//        $isns = ['800691', '777441'];
         $result = [];
         foreach($isns as $isn) {
-            $headData = Dicti::where('isn', $isn)->where('code', '0')->first();
-
+            $headData = Dicti::where('isn', $isn)->first();
+//->where('code', '0')
             array_push($result, [
                 'isn' => $headData['isn'],
                 'fullname' => $headData['fullname'],
@@ -230,11 +234,12 @@ class DocumentManagementController extends Controller
 
     public function saveDocument(Request $request, KiasServiceInterface $kias)
     {
+        $error = "";
         $request->result = [];
-        foreach ($request->result1 as $result1){
+        foreach ($request->results["result1"] as $result1){
             $request->result[] = $result1;
         }
-        foreach ($request->resDop as $result2){
+        foreach ($request->results["resDop"] as $result2){
             $request->result[] = $result2;
         }
         if(!empty($request->result)){
@@ -243,12 +248,10 @@ class DocumentManagementController extends Controller
                     if(!isset($item['remark'])){
                         $item['remark'] = null;
                     }
-
                     if(!isset($item['val'])){
                         $item['val'] = null;
                     }
-
-                    if(!isset($item['val'])){
+                    if(!isset($item['value'])){
                         $item['value'] = null;
                     }
                     $row[] = [
@@ -262,52 +265,64 @@ class DocumentManagementController extends Controller
         } else {
             $row = [];
         }
-
         $docrows = [];
-        $docs = [];
-        if(isset($request->docrows)){
-            foreach($request->docrows as $docrow) {
+        if(isset($request->results["docrows"])){
+            foreach($request->results["docrows"] as $docrow) {
                 $docrows[] = [
                     $docrow['val'] => $docrow['value'] ?? null,
                 ];
             }
         }
+        $isn = '0'; //update isn='$isn' delete='0'
+        $delete = '0'; //delete isn='$isn' delete='1'
+        $docs = ['isn' => $isn, 'delete' => $delete];
         for($i=0; $i<count($docrows); $i++){
             $docs = array_merge($docs, $docrows[$i]);
         }
-        $document = $kias->userCicSaveDocument($request->classisn, $request->emplisn, $request->docdate, $request->contragent['value'], $row, $docs);
-//        dd($document);
-        $docIsn = get_object_vars($document)['DocISN'];
-        return response()->json([
-            'request' => $request,
-            'docIsn' => $docIsn,
-            'success' => true,
-        ]);//response.data.resultDoc
-
-//        $show = $kias->request('userCicSaveDocument', [
-//            'CLASSISN' => $itens->classisn,
-//            'DOCISN' => $itens->docisn,
-//            'EMPLISN' => $emplIsn,
-//            'DOCDATE' => $docDate,
-//            'SUBJISN' => $subjIsn,
-//            'DocParams' => [
-//                'row' => [
-//                    'ATTRISN' => $attrIsn,
-//                    'REMARK' => $remark,
-//                    'VAL' => $val, //Значение
-//                    'VALUE' => $value, //Значение атрибута
-//                ]
-//            ],
-//        ]);
-//        try {
-//            $inspections = $this->kiasService->userCicSaveDocument($formRequest['docIsn'], $formRequest['dremark'], $data);
-//            $response    = Helper::simpleXmlToArray($inspections);
-//        } catch (\Exception $e) {
-//            return response()->json([
-//                'success' => false,
-//                'error'   => $e->getMessage(),
-//            ]);
-//        }
+        $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs];
+        if(!isset($request->status)){
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
+            if(!empty($document->DocISN)){
+                $docIsn = get_object_vars($document)['DocISN'];
+            }else{
+                if($document->error){
+                    $success = false;
+                    $error .= (string)$document->error->text;
+                    $result = [
+                        'success' => $success,
+                        'error' => (string)$error
+                    ];
+                    return response()->json($result)->withCallback($request->input('callback'));
+                };
+            }
+            return response()->json([
+                'request' => $request,
+                'DocISN' => $docIsn,
+                'success' => true,
+            ]);
+        } else {
+//            dd($request->status);
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
+            if(!empty($document->DocISN)){
+                $docIsn = get_object_vars($document)['DocISN'];
+            }else{
+                if($document->error){
+                    $success = false;
+                    $error .= (string)$document->error->text;
+                    $result = [
+                        'success' => $success,
+                        'error' => (string)$error
+                    ];
+                    return response()->json($result)->withCallback($request->input('callback'));
+                }
+            }
+                return response()->json([
+                    'DocISN' => $docIsn,
+                    'status' => 'Аннулирован',
+                    'stage' => 'Аннулирован',
+                    'success' => true,
+                ]);
+            }
     }
     public function buttonClick(Request $request, KiasServiceInterface $kias)
     {
@@ -332,7 +347,6 @@ class DocumentManagementController extends Controller
             } else {
                 $listDocIsn = '';
             }
-//            dd($listDocIsn);
             return response()->json([
                 'DOCISN' => $listDocIsn,
                 'success' => true,
@@ -365,24 +379,31 @@ class DocumentManagementController extends Controller
     }
 
     public function getOrSetDocs(Request $request, KiasServiceInterface $kias){
+        $error = "";
         $status1 = [
-            'В работе' => '2516', 'на подписи' => '2522', 'подписан' => '2518', 'оплачен' => '2517', 'Аннулирован' => '2515',
+            'В работе' => '2516', 'На подписи' => '2522', 'Подписан' => '2518', 'Оплачен' => '2517', 'Аннулирован' => '2515',
         ];
 //        dd($request);
         $docs = $kias->getOrSetDocs($request->docIsn, 1, $request->status);
-
-//        if(isset($docs->error)){
-//            $error = (string)$docs->error->text;
-//        } else {
-//            $docs->subjname
-//        }
 //        dd($docs);
+            if($docs->error){
+                $success = false;
+                $error .= (string)$docs->error->text;
+                $result = [
+                    'success' => $success,
+                    'error' => (string)$error
+                ];
+                return response()->json($result)->withCallback($request->input('callback'));
+            }
         $status2 = [
-            '2516' => 'В работе', '2522' => 'на подписи', 'подписан' => '2518', 'оплачен' => '2517', 'Аннулирован' => '2515',
+            '2516' => 'В работе', '2522' => 'На подписи', '2518' => 'Подписан', '2517' => 'Оплачен', '2515' => 'Аннулирован',
         ];
-        $status = $status2[get_object_vars($docs)['Status']];
-        $stage = get_object_vars($docs)['Stage'];
-//        dd($status);
+        $stage = ['221661' => 'В работе', '221662' => 'На подписи', '221664' => 'Подписан', '824701' => 'На согласовании у адресата', '805151' => 'На согласовании у адресата',
+            '805141' => 'На согласовании', '850371' => 'На согласовании ()', '805161' => 'Исполнена', '2515' => 'Аннулирован'];
+        if(isset($docs->Status)){
+            $status = $status2[get_object_vars($docs)['Status']];
+        }
+        $stage = $stage[get_object_vars($docs)['Stage']];
         return response()->json([
             'status' => $status,
             'stage' => $stage,
@@ -391,8 +412,50 @@ class DocumentManagementController extends Controller
     }
 
     public function changeDocCoordination(Request $request, KiasServiceInterface $kias) {
-        dd($request);
         $success = true;
         $error = "";
+//        if(isset($request->coordinationSubjISN)){
+            for($i=0; $i < count($request->coordinationSubjISN); $i++) {
+//                dd($request->coordinator);
+                if($request->coordinationSubjISN[$i] === null && $request->coordinator[$i] !== null){
+                    $row[$i] = [
+                        'EMPLISN' => $request->coordinator[$i],
+                        'COMMAND' => 'D',
+                        'EMPLISN1' => $request->coordinator[$i],
+                    ];
+                }
+                elseif(count($request->coordinationSubjISN) > count($request->coordinator) || !isset($request->coordinator[$i])){
+                    $row[$i] = [
+                        'EMPLISN' => $request->coordinationSubjISN[$i],
+                        'COMMAND' => 'I',
+                        'EMPLISN1' => '',
+                    ];
+                }
+                elseif($request->coordinationSubjISN[$i] !== $request->coordinator[$i]){
+                    $row[$i] = [
+                        'EMPLISN' => $request->coordinator[$i],
+                        'COMMAND' => 'U',
+                        'EMPLISN1' => $request->coordinationSubjISN[$i],
+                    ];
+                }
+            }
+//            dd($row);
+            $changeCoordination = $kias->userCicChangeDocCoordination($row);
+//            dd($changeCoordination);
+            if($changeCoordination->error){
+                $success = false;
+                $error .= (string)$changeCoordination->error->text;
+                $result = [
+                    'success' => $success,
+                    'error' => (string)$error
+                ];
+                return response()->json($result)->withCallback($request->input('callback'));
+            }
+            return response()->json([
+                'result' => $changeCoordination,
+                'success' => true,
+            ]);
+//        }
+
     }
 }
