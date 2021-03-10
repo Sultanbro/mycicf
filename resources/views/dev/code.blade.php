@@ -14,7 +14,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <tbody>
                 @foreach ($counts as $type => $count)
                     <tr>
@@ -31,22 +31,24 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
                 <tbody>
                 @foreach ($rows as $row)
                     <tr>
                         <td>{{ $row['class'] }}</td>
                         <td>{{ $row['type'] }}</td>
-                        <td>{{ $row['location']['size'] }} lines </td>
+                        <td><b>{{ $row['location']['size'] }}</b> lines </td>
                         <td>
                             <b>{{ count($row['methods']) }}</b> methods
-                            <select style="width: 100%">
-                                @foreach ($row['methods'] as $method)
-                                    <option>
-                                        {{ $method['name'] }} ({{$method['location']['size']}} lines)
-                                    </option>
-                                @endforeach
-                            </select>
+                            @if(count($row['methods']))
+                                <select style="width: 100%">
+                                    @foreach ($row['methods'] as $method)
+                                        <option>
+                                            {{ $method['name'] }} <b>({{$method['location']['size']}} lines)</b>
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
