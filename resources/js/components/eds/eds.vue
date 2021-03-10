@@ -36,6 +36,18 @@
 </template>
 
 <script>
+    const getBase64FromUrl = async (url) => {
+        const data = await fetch(url);
+        const blob = await data.blob();
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = function() {
+                const base64data = reader.result;
+                resolve(base64data);
+            }
+        });
+    };
     const axios = require('axios');
     export default {
         name: "eds",
@@ -334,11 +346,14 @@
                                     //} else {
                                         self.signedFileInfo = result.responseObjects;
                                     //}
-                                    if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
-                                        self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
-                                    } else {
-                                        self.loader(false);
-                                    }
+
+                                    getBase64FromUrl(url).then(console.log)
+
+                                    // if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
+                                    //     self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
+                                    // } else {
+                                    //     self.loader(false);
+                                    // }
                                 }
                             } else {
                                 alert(result.message);
