@@ -351,7 +351,7 @@
                         <div class="recruiting-btn" @click="savedSuccess" v-bind:class="{
                             disabledBtnRecruiting : candidat.cityAdressSelect == '' ||
                                                     candidat.nameOfPostSelect == '' ||
-                                                    candidat.quantityPeopleSelect == '' ||
+                                                    candidat.quantityPeople == '' ||
                                                     candidat.ReasonToRecruitingSelect == '' ||
                                                     candidat.desiredAgeSelect == '' ||
                                                     candidat.sexSelect == '' ||
@@ -571,6 +571,15 @@
                                         <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="recruitingData.dateOfInternship"></div>
                                     </div>
                                     <div class="modal-cell-general">
+                                        <div class="col-md-6 color-blue">Результат прохождения стажировки:</div>
+                                        <div class="col-md-6">
+                                            <!--                                            interviewMainResultModalSelect-->
+                                            <select v-model="recruitingData.internshipResult" :class="modalResultInternshipColor()" @change="interviewResultCheck" class="recruiting-modal-general recruiting-modal-general">
+                                                <option :class="modalSelectCheck(inner)" v-for="inner in internshipResult">{{inner.label}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-cell-general">
                                         <div class="col-md-6 color-blue">Дата заключения ДОУ (ответ в течение 5 дней (с даты выхода кандидата на стажировку)):</div>
                                         <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="recruitingData.dateOfConclusionDOU"></div>
                                     </div>
@@ -623,6 +632,7 @@
                         <tr v-for="(inner, index) in candidateInterviewTable"
                             data-toggle="modal"
                             data-target="#interviewModalApplicationData"
+                            class="pointer"
                             @click="showTopModalMain(index,inner.id)">
                             <td scope="row">{{inner.id}}</td>
                             <td>{{inner.fullname}}</td>
@@ -984,6 +994,7 @@
         name: "recruiting",
         data() {
             return {
+                internshipResultCheckCounter: '',
                 filesInfo: [],
                 topTableId: {},
                 fileNameArr: [],
@@ -1045,6 +1056,7 @@
                     interviewTime: '',
                     interviewResult: '',
                     dateOfInternship: '',
+                    internshipResult: '',
                     dateOfConclusionDOU: '',
                     dateOfConclusionTD: '',
                     commentary: '',
@@ -1198,6 +1210,16 @@
                     {
                         value : 0,
                         label : 'Провалил собеседование'
+                    }
+                ],
+                internshipResult: [
+                    {
+                        value: 1,
+                        label: 'Успешно прошел стажировку'
+                    },
+                    {
+                        value: 0,
+                        label: 'Не прошел стажировку'
                     }
                 ],
                 candidatsDateInternshipModal: '02.01.2020',
@@ -1356,9 +1378,7 @@
                 candidatDataLocal: this.candidatData,
                 candidateInterviewTable: [],
                 candidateManualDataLocal: [],
-                candidateResultRequest: {
-                    thirdTableIndex: 0,
-                },
+                candidateResultRequest: {},
                 candidateResultInterviewDate: '',
                 driverCardOptionFirst: [],
                 driverCardOptionSecond: [],
@@ -1486,7 +1506,12 @@
             recruitingDataSavedSuccess: function(){
                 //  Отправка данных на поиск кандидата
                 this.recruitingData.id = this.candidatBackward.id;
-                if(this.recruitingData.dateOfConclusionTD !== '' && this.recruitingData.dateOfConclusionTD !== null){
+                // if(this.recruitingData.dateOfConclusionTD !== '' && this.recruitingData.dateOfConclusionTD !== null){
+                //     this.recruitingData.status = 'Закрыта';
+                //     console.log('Обновлен статус заявки');
+                // }
+                if (this.recruitingData.internshipResult == 'Успешно прошел стажировку' && this.recruitingData.internshipResult !== null){
+                    this.candidatBackward.quantityPeople = 0;
                     this.recruitingData.status = 'Закрыта';
                     console.log('Обновлен статус заявки');
                 }
@@ -1581,8 +1606,9 @@
               this.candidateBase.phone = '';
               this.candidateBase.documents = '';
               this.recruitingData.interviewResult = '';
+              this.recruitingData.internshipResult = '';
               this.resultCheckCounter = '';
-              this.filesInfo = [],
+              this.filesInfo = [];
               // console.log(this.candidateBase.IIN);
               // console.log(this.candidateBase.phone);
               this.showModal(index);
@@ -1596,8 +1622,13 @@
                 this.candidateBase.IIN = '';
                 this.candidateBase.phone = '';
                 this.candidateBase.documents = '';
+                this.recruitingData.interviewResult = '';
+                this.recruitingData.internshipResult = '';
+                this.resultCheckCounter = '';
+                this.filesInfo = [];
                 this.showTopModal(index,id);
                 this.isActiveCandidatsSaveBtn();
+                this.showInterviewBlock();
             },
             showTopModal: function(index,id){
                 this.candidateBase.IIN = '';
@@ -1664,6 +1695,7 @@
                 this.recruitingData.interviewTime = this.person.interview_time;
                 this.recruitingData.interviewResult = this.person.interview_result;
                 this.recruitingData.dateOfInternship = this.person.date_of_internship;
+                this.recruitingData.internshipResult = this.person.staging_internship;
                 this.recruitingData.dateOfConclusionDOU = this.person.date_of_conclusion_dou;
                 this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                 this.recruitingData.commentary = this.person.commentary;
@@ -1747,6 +1779,7 @@
                this.recruitingData.interviewTime = this.person.interview_time;
                this.recruitingData.interviewResult = this.person.interview_result;
                this.recruitingData.dateOfInternship = this.person.date_of_internship;
+               this.recruitingData.internshipResult = this.person.staging_internship;
                this.recruitingData.dateOfConclusionDOU = this.person.date_of_conclusion_dou;
                this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                this.recruitingData.commentary = this.person.commentary;
@@ -2267,15 +2300,22 @@
             interviewResultCheck: function(){
                 if (this.recruitingData.interviewResult == 'Успешно прошел собеседование'){
                     this.resultCheckCounter = 'success';
-                    this.numberOfUnitsModal = 0;
                 }
-                if (this.recruitingData.interviewResult == 'В ожидании собеседования'){
+                else if (this.recruitingData.interviewResult == 'В ожидании собеседования'){
                     this.resultCheckCounter = 'pending';
                     this.numberOfUnitsModal = 1;
                 }
                 else if (this.recruitingData.interviewResult == 'Провалил собеседование'){
                     this.resultCheckCounter = 'failed';
                     this.numberOfUnitsModal = 2;
+                }
+                if (this.recruitingData.internshipResult == 'Успешно прошел стажировку'){
+                    this.internshipResultCheckCounter = 'success';
+                    this.numberOfUnitsModal = 0;
+                }
+                else if (this.recruitingData.internshipResult == 'Не прошел стажировку'){
+                    this.internshipResultCheckCounter = 'failed';
+                    this.numberOfUnitsModal = 0;
                 }
             },
             fileUpload(e) {
@@ -2369,6 +2409,11 @@
                 } else if(inner.interview_result == 'В ожидании собеседования'){
                     return 'colororange';
                 }
+                if (inner.label == 'Успешно прошел стажировку'){
+                    return 'forestgreen';
+                } else if(inner.label == 'Не прошел стажировку') {
+                    return 'colorRedImportant';
+                }
             },
             modalSelectCheckSelect: function() {
                 if (this.recruitingData.interviewResult == 'Успешно прошел собеседование'){
@@ -2380,7 +2425,14 @@
                 else if(this.recruitingData.interviewResult == 'В ожидании собеседования') {
                     return 'colororange';
                 }
-
+            },
+            modalResultInternshipColor: function(){
+                if (this.recruitingData.internshipResult == 'Успешно прошел стажировку'){
+                    return 'forestgreen';
+                }
+                else if (this.recruitingData.internshipResult == 'Не прошел стажировку'){
+                    return 'colorRedImportant';
+                }
             },
             // Ошибка сохранения
             sendCandidatsApplication(){

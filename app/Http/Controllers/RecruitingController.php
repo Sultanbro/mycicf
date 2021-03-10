@@ -277,6 +277,7 @@ class RecruitingController extends Controller
         $rec_data->interview_time = $request->recruitingData['interviewTime'];
         $rec_data->interview_result = $request->recruitingData['interviewResult'];
         $rec_data->date_of_internship = $request->recruitingData['dateOfInternship'];
+        $rec_data->staging_internship = $request->recruitingData['internshipResult'];
         $rec_data->date_of_conclusion_dou = $request->recruitingData['dateOfConclusionDOU'];
         $rec_data->date_of_conclusion_td = $request->recruitingData['dateOfConclusionTD'];
         $rec_data->commentary = $request->recruitingData['commentary'];
