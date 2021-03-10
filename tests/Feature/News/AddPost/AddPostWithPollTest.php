@@ -17,6 +17,7 @@ class AddPostWithPollTest extends AddPostTestBase {
     public const ISN = '1144';
 
     public function testExecute() {
+        // https://phpunit.readthedocs.io/ru/latest/incomplete-and-skipped-tests.html#incomplete-and-skipped-tests-incomplete-tests
         self::markTestSkipped('TODO: Complete this test.');
     }
 

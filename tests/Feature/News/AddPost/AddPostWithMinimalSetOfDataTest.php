@@ -21,6 +21,7 @@ class AddPostWithMinimalSetOfDataTest extends AddPostTestBase {
             'postText' => 'post #1',
             'isn' => $user->ISN,
         ]);
+
         $response->assertStatus(200);
         self::assertArrayHasKey('postId', $response->json());
         self::assertEquals('integer', gettype($response->json('postId')));

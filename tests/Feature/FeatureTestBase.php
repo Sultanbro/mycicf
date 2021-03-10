@@ -23,6 +23,9 @@ abstract class FeatureTestBase extends TestCase {
      */
     protected $description;
 
+    /**
+     * @var string
+     */
     protected $route;
 
     /**
@@ -41,10 +44,12 @@ abstract class FeatureTestBase extends TestCase {
      * @var ReflectionClass
      */
     private $reflection;
+
     /**
      * @var Collector
      */
     private $collector;
+
     /**
      * @var string
      */
@@ -420,7 +425,7 @@ abstract class FeatureTestBase extends TestCase {
             );
 
             $result .= sprintf("\tAction %s %s\n",
-                $this->cli->color($this->cli->bold($routes['action']), CLI::CLI_COLOR_RED),
+                $this->cli->color($this->cli->bold($routes['routes']['controller']), CLI::CLI_COLOR_RED),
                 isset($routes['controller']['location']) ? '(' . $routes['controller']['location']['count'] . ' lines)' : '');
 
             $result .= sprintf("\t\t%s\n\n",
