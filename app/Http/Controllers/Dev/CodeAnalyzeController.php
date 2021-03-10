@@ -15,16 +15,15 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
-class CodeAnalyzeController extends Controller
-{
-    private function getDirContents($dir, &$results = array())
-    {
+class CodeAnalyzeController extends Controller {
+    private function getDirContents($dir, &$results = array()) {
         $files = scandir($dir);
 
         foreach ($files as $key => $value) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
-            if (!is_dir($path)) {
+            if (! is_dir($path)) {
                 $results[] = $path;
             } else if ($value !== "." && $value !== "..") {
                 $this->getDirContents($path, $results);
@@ -40,13 +39,15 @@ class CodeAnalyzeController extends Controller
      * @return string[]
      * @throws ReflectionException
      */
-    private function processClass(string $name)
-    {
-        $row = [
-            'class' => $name
-        ];
-
+    private function processClass(string $name) {
         $reflection = new ReflectionClass($name);
+        $fileName = $reflection->getFileName();
+
+        $row = [
+            'class'        => $name,
+            'file'         => $fileName,
+            'phpstormLink' => $this->phpStormLink($fileName, $reflection->getStartLine()),
+        ];
 
         if ($reflection->isSubclassOf(Eloquent::class)) {
             $row['type'] = 'model';
@@ -62,6 +63,8 @@ class CodeAnalyzeController extends Controller
             $row['type'] = 'form-request';
         } elseif ($reflection->isSubclassOf(DataCollector::class)) {
             $row['type'] = 'data-collector';
+        } elseif ($reflection->isSubclassOf(\SimpleXMLElement::class)) {
+            $row['type'] = 'xml';
         } elseif (Str::startsWith($name, 'App\Library\Services')) {
             $row['type'] = 'service';
         } elseif (Str::startsWith($name, 'App\Observers')) {
@@ -75,26 +78,28 @@ class CodeAnalyzeController extends Controller
         } elseif (Str::startsWith($name, 'App\Exports')) {
             $row['type'] = 'export';
         } else {
-
-
             $row['type'] = 'other';
         }
 
-        $methods = collect($reflection->getMethods())->filter(function (ReflectionMethod $method) use ($reflection) {
-            return $method->getDeclaringClass()->name === $reflection->name;
-        })->map(function (ReflectionMethod $method) {
-            $startLine = $method->getStartLine();
-            $endLine = $method->getEndLine();
-            $size = $endLine - $startLine;
-            return [
-                'name' => $method->getName(),
-                'location' => [
-                    'start' => $startLine,
-                    'end' => $endLine,
-                    'size' => $size,
-                ]
-            ];
-        })
+        $methods = collect($reflection->getMethods())
+            ->filter(function (ReflectionMethod $method) use ($reflection, $fileName) {
+                return $method->getDeclaringClass()->name === $reflection->name;
+            })
+            ->map(function (ReflectionMethod $method) use ($fileName) {
+                $startLine = $method->getStartLine();
+                $endLine = $method->getEndLine();
+                $size = $endLine - $startLine;
+
+                return [
+                    'name'         => $method->getName(),
+                    'phpstormLink' => $this->phpStormLink($fileName, $startLine),
+                    'location'     => [
+                        'start' => $startLine,
+                        'end'   => $endLine,
+                        'size'  => $size,
+                    ]
+                ];
+            })
             ->sort(function ($a, $b) {
                 return $b['location']['size'] - $a['location']['size'];
             })
@@ -108,17 +113,20 @@ class CodeAnalyzeController extends Controller
 
         $row['location'] = [
             'start' => $startLine,
-            'end' => $endLine,
-            'size' => $size,
+            'end'   => $endLine,
+            'size'  => $size,
         ];
 
         return $row;
     }
 
-    public function index(Request $request)
-    {
-        if ($_SERVER['SERVER_NAME'] !== '127.0.0.1') {
-            return redirect('/');
+    private function phpStormLink($file, $line) {
+        return sprintf('phpstorm://open?file=%s&line=%d', urlencode($file), $line);
+    }
+
+    public function index(Request $request) {
+        if (! \App::isLocal()) {
+            throw new AccessDeniedException('Access denied');
         }
 
         $a = $this->getDirContents(app_path());
@@ -152,7 +160,7 @@ class CodeAnalyzeController extends Controller
         });
 
         return view('dev.code', [
-            'rows' => $rows,
+            'rows'   => $rows,
             'counts' => $counts,
         ]);
     }
