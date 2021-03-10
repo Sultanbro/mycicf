@@ -454,3 +454,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
 });
+
+Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
+    Route::get('code', 'Dev\CodeAnalyzeController@index');
+});
