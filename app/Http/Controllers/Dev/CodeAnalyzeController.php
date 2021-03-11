@@ -204,16 +204,26 @@ class CodeAnalyzeController extends Controller {
                     $access[] = 'final';
                 }
 
+                $action = [
+                    'found' => false,
+                ];
+
                 if ($row['type'] === 'Controllers') {
-                    $isAction = ! empty($this->routes->getByAction("{$method->class}@{$method->name}"));
+                    $route = $this->routes->getByAction("{$method->class}@{$method->name}");
+
+                    if (!empty($route)) {
+                        $action['found'] = true;
+                        $action['uri'] = $route->uri;
+                    }
+
                 } else {
-                    $isAction = null;
+                    $actionFound = null;
                 }
 
                 return [
                     'name'         => $method->getName(),
                     'access'       => $access,
-                    'isAction'     => $isAction,
+                    'action'     => $action,
                     'phpstormLink' => $this->phpStormLink($fileName, $startLine),
                     'location'     => [
                         'start' => $startLine,
@@ -229,10 +239,10 @@ class CodeAnalyzeController extends Controller {
 
         $row['methods'] = $methods;
         $row['methodsCount'] = collect($methods)->filter(function ($method) {
-            return ! $method['isAction'];
+            return ! isset($method['action']['found']);
         })->count();
         $row['actionsCount'] = collect($methods)->filter(function ($method) {
-            return $method['isAction'];
+            return isset($method['action']['found']);
         })->count();
 
         $startLine = $reflection->getStartLine();
@@ -312,5 +322,11 @@ class CodeAnalyzeController extends Controller {
         return view('dev.tests', [
             'data' => $data,
         ]);
+    }
+
+    public function routes() {
+        $routes = \Route::getRoutes()->getRoutes();
+
+        return view('dev.routes', compact('routes'));
     }
 }
