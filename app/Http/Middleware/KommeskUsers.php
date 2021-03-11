@@ -16,11 +16,22 @@ class KommeskUsers
      * @param  \Closure  $next
      * @return mixed
      */
+    static function getKommeskAccess()
+    {
+        return array(
+            1445744 => 1445744,
+            3951884 => 3951884,
+            4828704 => 4828704,
+            4828702 => 4828702,
+            1287408 => 1287408
+        );
+    }
+
     public function handle($request, Closure $next)
     {
+
         if(Auth::user()->branch->duty() &&
-            Auth::user()->branch->kias_id != 1445744 &&
-            Auth::user()->branch->kias_id != 3951884){
+            Auth::user()->branch->kias_id != array_key_exists(Auth::user()->ISN,$this->getKommeskAccess())){
             return redirect()->route('coordination');
         }
         return $next($request);
