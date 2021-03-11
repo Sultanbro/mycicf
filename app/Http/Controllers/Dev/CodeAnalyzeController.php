@@ -163,6 +163,10 @@ class CodeAnalyzeController extends Controller {
     }
 
     public function tests() {
+        if (! \App::isLocal()) {
+            throw new AccessDeniedException('Access denied');
+        }
+
         $filePath = base_path('tests/Feature/report.json');
 
         if (! file_exists($filePath)) {

@@ -97,6 +97,10 @@ abstract class FeatureTestBase extends TestCase {
 
     }
 
+    private function phpStormLink($file, $line) {
+        return sprintf('phpstorm://open?file=%s&line=%d', urlencode($file), $line);
+    }
+
     protected function printHTMLReport() {
         $name = $this->description ?? static::class;
 
@@ -142,9 +146,12 @@ abstract class FeatureTestBase extends TestCase {
                     }
                     $reflectionClass = new ReflectionClass($cls);
                     $method = $reflectionClass->getMethod('handle');
+                    $fileName = $reflectionClass->getFileName();
+                    $startLine = $method->getStartLine();
                     return [
-                        'file' => $reflectionClass->getFileName(),
-                        'line' => $method->getStartLine()
+                        'file' => $fileName,
+                        'line' => $startLine,
+                        'phpstormLink' => $this->phpStormLink($fileName, $startLine),
                     ];
                 });
 

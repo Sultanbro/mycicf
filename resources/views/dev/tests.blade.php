@@ -37,14 +37,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         @php($id = Str::slug($testName))
-                        <h2 data-bs-toggle="collapse" data-bs-target="#{{ $id }}">
+                        <h2 class="test-header" data-bs-toggle="collapse" data-bs-target="#{{ $id }}">
                             {{ $testName }}
                         </h2>
                         <div class="collapse multi-collapse p-left" id="{{ $id }}">
                             <h3>{{ $info['name'] }}</h3>
 
-                            <p>[{{ $info['routes']['methods'] }} /{{$info['routes']['uri']}}]
-                                as {{$info['routes']['routes']['as']}}</p>
+                            <p class="route">
+                                [<span class="methods">{{ $info['routes']['methods'] }}</span>
+                                <span class="url">/{{$info['routes']['uri']}}</span>]
+                                as <span class="alias">{{$info['routes']['routes']['as']}}</span></p>
 
                             <p>
                                 Passed {{ $info['assertionCount'] }} {{ \Str::pluralStudly('assertion', $info['assertionCount']) }}</p>
@@ -55,7 +57,7 @@
                                 @foreach($info['routes']['middleware'] as $name => $mw)
                                     <li>
                                         {{ $name }}
-                                        @if(!empty($mw)) {{$mw['file']}}:{{$mw['line']}} @endif
+                                        @if(!empty($mw)) <a href="{{ $mw['phpstormLink'] }}">{{$mw['file']}}:{{$mw['line']}} </a>@endif
                                     </li>
                                 @endforeach
                             </ul>
@@ -93,14 +95,14 @@
                             <table class="table table-striped table-hover">
                                 <tbody>
                                 @foreach ($info['queries']['preparedQueries'] as $queryKey => $query)
-                                    <tr class="query-row">
+                                    @php($querySlug = Str::slug('query' . $queryKey . '_' . $query['query']['sql']))
+                                    <tr>
                                         <td>{{$query['type']}}</td>
                                         <td>
                                             <span class="duration" data-value="{{$query['query']['duration']}}"></span>
                                         </td>
-                                        @php($querySlug = Str::slug('query' . $queryKey . '_' . $query['query']['sql']))
-                                        <td data-bs-toggle="collapse" data-bs-target="#{{$querySlug}}">
-                                            <pre><code class="sql">{{$query['query']['sql']}}</code></pre>
+                                        <td>
+                                            <pre  class="query-row" data-bs-toggle="collapse" data-bs-target="#{{$querySlug}}"><code class="sql">{{$query['query']['sql']}}</code></pre>
                                             <div class="collapse multi-collapse" id="{{$querySlug}}">
                                                 <ul>
                                                     @foreach ($query['query']['backtrace'] as $item)
@@ -197,6 +199,24 @@
     .p-left {
         padding-left: 30px;
     }
+
+
+    .route {}
+
+    .route .methods {
+        // color: #198754;
+        font-weight: bold;
+    }
+
+    .route .url {
+        // color: #ffc107;
+        font-style: italic;
+    }
+
+    .route .alias {
+        // color: #0d6efd;
+        font-style: italic;
+    }
 </style>
 
 <script>
@@ -243,6 +263,8 @@
         let str = timeStr(val);
         $this.text(str.value).addClass(str.className);
     });
+
+    $('.test-header').first().click();
 
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('pre code').forEach((block) => {
