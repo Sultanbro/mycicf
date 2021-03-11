@@ -9,7 +9,7 @@
         }
 
         .report-table .report-class {
-            width: 500px;
+            width: 350px;
         }
 
         .report-table .report-size {
@@ -107,6 +107,9 @@
                                                                     {{ implode(' ', $method['access']) }}
                                                                     <b>{{ $method['name'] }}</b>
                                                                 </a>
+                                                            </td>
+                                                            <td>
+                                                                <b>{{$method['numParams']}}</b> params
                                                             </td>
                                                             <td>
                                                                 <b>{{$method['location']['size']}} lines</b>

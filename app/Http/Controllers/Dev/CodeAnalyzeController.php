@@ -25,6 +25,35 @@ class CodeAnalyzeController extends Controller {
      */
     private $routes;
 
+    private function collectModelRelationships($modelClass) {
+
+        $model = new $modelClass;
+
+        $relationships = [];
+
+        foreach((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
+        {
+            // if ($method->class != get_class($model) ||
+            //     !empty($method->getParameters()) ||
+            //     $method->getName() == __FUNCTION__) {
+            //     continue;
+            // }
+//
+            // try {
+            //     $return = $method->invoke($model);
+//
+            //     if ($return instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
+            //         $relationships[$method->getName()] = [
+            //             'type' => (new ReflectionClass($return))->getShortName(),
+            //             'model' => (new ReflectionClass($return->getRelated()))->getName()
+            //         ];
+            //     }
+            // } catch(\Throwable $e) {}
+        }
+
+        return $relationships;
+    }
+
     private function getDirContents($dir, &$results = array()) {
         $files = scandir($dir);
 
@@ -141,6 +170,9 @@ class CodeAnalyzeController extends Controller {
                 break;
 
             case 'Models':
+                // $rel = $this->collectModelRelationships($row['class']);
+
+                // dump($row['class'], $rel);
                 $row['shortName'] = str_replace('App\\', '', $row['class']);
                 $row['shortName'] = str_replace('App\\Models\\', '', $row['shortName']);
                 break;
@@ -222,6 +254,7 @@ class CodeAnalyzeController extends Controller {
 
                 return [
                     'name'         => $method->getName(),
+                    'numParams'    => $method->getNumberOfParameters(),
                     'access'       => $access,
                     'action'     => $action,
                     'phpstormLink' => $this->phpStormLink($fileName, $startLine),
