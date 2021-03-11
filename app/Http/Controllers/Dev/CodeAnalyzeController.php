@@ -238,11 +238,9 @@ class CodeAnalyzeController extends Controller {
             ->toArray();
 
         $row['methods'] = $methods;
-        $row['methodsCount'] = collect($methods)->filter(function ($method) {
-            return ! isset($method['action']['found']);
-        })->count();
+        $row['methodsCount'] = collect($methods)->count();
         $row['actionsCount'] = collect($methods)->filter(function ($method) {
-            return isset($method['action']['found']);
+            return !empty($method['action']['found']);
         })->count();
 
         $startLine = $reflection->getStartLine();

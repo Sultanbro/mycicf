@@ -80,10 +80,12 @@
                                             <div class="text-center">
                                                 <a data-bs-toggle="collapse" href="#{{$classSlug}}" role="button"
                                                    aria-expanded="false" aria-controls="collapseExample">
-                                                    <b>{{ $row['methodsCount'] + $row['actionsCount'] }}</b> methods
+                                                    <b>{{ $row['methodsCount'] }}</b> methods
                                                     @if ($row['type'] === 'Controllers')
-                                                        + <b>{{ $row['actionsCount'] }}</b> actions
-                                                        = <b>{{ $row['methodsCount'] + $row['actionsCount'] }}</b>
+                                                        (
+                                                        <b>{{ $row['actionsCount'] }}</b> actions +
+                                                        <b>{{ $row['methodsCount'] - $row['actionsCount'] }}</b> non-actions
+                                                        )
                                                     @endif
                                                 </a>
                                             </div>
