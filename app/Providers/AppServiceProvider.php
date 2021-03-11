@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        \Debugbar::addCollector(new GitDataCollector('git'));
+        // \Debugbar::addCollector(new GitDataCollector('git'));
         \Debugbar::addCollector(new KiasRequestCollector('kias'));
     }
 
