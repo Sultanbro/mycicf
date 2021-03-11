@@ -76,6 +76,7 @@ class Kernel extends HttpKernel
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
         'ratingPermission' => \App\Http\Middleware\RatingPermission::class,
         'checkPostAccess' => \App\Http\Middleware\News\CheckPostAccess::class,
+        'duty'=> \App\Http\Middleware\KommeskUsers::class,
     ];
 
     /**
