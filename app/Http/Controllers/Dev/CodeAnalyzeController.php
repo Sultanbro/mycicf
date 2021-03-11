@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Http\Controllers\Controller;
+use App\Http\Kernel;
 use DebugBar\DataCollector\DataCollector;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Http\FormRequest;
@@ -114,6 +115,25 @@ class CodeAnalyzeController extends Controller {
 
             case 'Middlewares':
                 $row['shortName'] = str_replace('App\Http\Middleware\\', '', $row['class']);
+
+                $kernel = app(Kernel::class);
+                $routeMiddleware = $kernel->getRouteMiddleware();
+
+                $key = null;
+                $foundClass = null;
+
+                foreach ($routeMiddleware as $k => $className) {
+                    if ($row['class'] === $className) {
+                        $key = $k;
+                        $foundClass = $className;
+                        break;
+                    }
+                }
+
+                if (!empty($key)) {
+                    $row['middlewareKey'] = $key;
+                }
+
                 break;
 
             case 'Form Requests':

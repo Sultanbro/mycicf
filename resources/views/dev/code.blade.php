@@ -35,7 +35,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped">
                 <tbody>
                 @foreach ($counts as $type => $count)
                     <tr>
@@ -59,14 +59,21 @@
                     <h2>
                         {{ $type }} ({{ count($entry) }})
                     </h2>
-                    <table class="table table-striped table-hover report-table">
+                    <table class="table table-striped report-table">
                         <tbody>
                         @foreach ($entry as $row)
                             <tr>
                                 <td class="report-class">
-                                    <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip" title="{{ $row['class'] }}">
+
+                                    <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled" title="{{ $row['class'] }}">
                                         {{ $row['shortName'] }}
                                     </a>
+
+                                    @if ($row['type'] === 'Middlewares')
+                                        @if (!empty($row['middlewareKey']))
+                                            as '{{ $row['middlewareKey'] }}'
+                                        @endif
+                                    @endif
                                 </td>
                                 <td class="report-size">
                                     <b>{{ $row['location']['size'] }}</b> lines
@@ -85,7 +92,7 @@
                                             </a>
                                         </div>
                                         <div class="collapse" id="{{$classSlug}}">
-                                            <table class="table table-striped table-hover">
+                                            <table class="table table-striped">
                                                 <tbody>
                                                 @foreach ($row['methods'] as $method)
                                                     <tr>
