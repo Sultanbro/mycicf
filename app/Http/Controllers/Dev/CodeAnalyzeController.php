@@ -82,8 +82,11 @@ class CodeAnalyzeController extends Controller {
         $row = [
             'class'        => $name,
             'file'         => $fileName,
+            'traitNames'   => $reflection->getTraitNames(),
             'phpstormLink' => $this->phpStormLink($fileName, $reflection->getStartLine()),
         ];
+
+
 
         if ($reflection->isSubclassOf(Eloquent::class)) {
             $row['type'] = 'Models';

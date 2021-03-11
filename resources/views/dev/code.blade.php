@@ -68,6 +68,10 @@
                                             {{ $row['shortName'] }}
                                         </a>
 
+                                        @if (count($row['traitNames']))
+                                            uses {{ count($row['traitNames']) }} traits
+                                        @endif
+
                                         @if ($row['type'] === 'Middlewares')
                                             @if (!empty($row['middlewareKey']))
                                                 as '{{ $row['middlewareKey'] }}'
@@ -106,10 +110,8 @@
                                                                 <a href="{{ $method['phpstormLink'] }}">
                                                                     {{ implode(' ', $method['access']) }}
                                                                     <b>{{ $method['name'] }}</b>
+                                                                    (<b>{{$method['numParams']}}</b> params)
                                                                 </a>
-                                                            </td>
-                                                            <td>
-                                                                <b>{{$method['numParams']}}</b> params
                                                             </td>
                                                             <td>
                                                                 <b>{{$method['location']['size']}} lines</b>
