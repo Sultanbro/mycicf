@@ -25,7 +25,7 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/documentation/style.scss', 'public/css/documentation')
     .sass('resources/sass/app.scss', 'public/css');
 
-if (!mix.inProduction()) {
+if (env && !mix.inProduction()) {
     mix
         .browserSync({
             proxy: env.APP_URL,
