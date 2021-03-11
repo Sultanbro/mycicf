@@ -94,6 +94,7 @@ abstract class FeatureTestBase extends TestCase {
 
     protected function printReport() {
 
+        return;
         $name = $this->description ?? static::class;
 
         $result = '';
