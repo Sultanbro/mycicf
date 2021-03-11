@@ -37,9 +37,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         @php($id = Str::slug($testName))
-                        <h2 class="test-header" data-bs-toggle="collapse" data-bs-target="#{{ $id }}">
-                            {{ $testName }}
-                        </h2>
+                        <hr>
+                        <h4 class="test-header" data-bs-toggle="collapse" data-bs-target="#{{ $id }}">
+                            [{{ $info['assertionCount'] }} {{ \Str::pluralStudly('assertion', $info['assertionCount']) }}
+                            ] {{ $testName }}
+                        </h4>
                         <div class="collapse multi-collapse p-left" id="{{ $id }}">
                             <h3>{{ $info['name'] }}</h3>
 
@@ -56,8 +58,12 @@
                             <ul>
                                 @foreach($info['routes']['middleware'] as $name => $mw)
                                     <li>
-                                        {{ $name }}
-                                        @if(!empty($mw)) <a href="{{ $mw['phpstormLink'] }}">{{$mw['file']}}:{{$mw['line']}} </a>@endif
+                                        @if(!empty($mw))
+                                            <a href="{{ $mw['phpstormLink'] }}">{{ $name }} </a>
+
+                                        @else
+                                            {{ $name }}
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>
@@ -102,7 +108,9 @@
                                             <span class="duration" data-value="{{$query['query']['duration']}}"></span>
                                         </td>
                                         <td>
-                                            <pre  class="query-row" data-bs-toggle="collapse" data-bs-target="#{{$querySlug}}"><code class="sql">{{$query['query']['sql']}}</code></pre>
+                                            <pre class="query-row" data-bs-toggle="collapse"
+                                                 data-bs-target="#{{$querySlug}}"><code
+                                                    class="sql">{{$query['query']['sql']}}</code></pre>
                                             <div class="collapse multi-collapse" id="{{$querySlug}}">
                                                 <ul>
                                                     @foreach ($query['query']['backtrace'] as $item)
@@ -201,20 +209,21 @@
     }
 
 
-    .route {}
+    .route {
+    }
 
     .route .methods {
-        // color: #198754;
+    / / color: #198754;
         font-weight: bold;
     }
 
     .route .url {
-        // color: #ffc107;
+    / / color: #ffc107;
         font-style: italic;
     }
 
     .route .alias {
-        // color: #0d6efd;
+    / / color: #0d6efd;
         font-style: italic;
     }
 </style>
@@ -225,7 +234,7 @@
         if (val >= 1) {
             return {
                 className: ['badge', 'bg-danger'],
-                value: (val) + 's'
+                value: Math.round(val * 100) / 100 + 's'
             }
         }
 
@@ -245,8 +254,8 @@
 
         if (val === 0) {
             return {
-                className: [],
-                value: '0'
+                className: ['badge', 'bg-success'],
+                value: '0s'
             }
         }
 

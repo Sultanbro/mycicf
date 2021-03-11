@@ -47,16 +47,23 @@
                         <td>{{ $row['type'] }}</td>
                         <td><b>{{ $row['location']['size'] }}</b> lines</td>
                         <td>
+                            @php($classSlug = Str::slug($row['class']))
                             @if(count($row['methods']))
-                                <b>{{ count($row['methods']) }}</b> methods
-                                <select style="width: 100%">
-                                    @foreach ($row['methods'] as $method)
-                                        <option>
-                                            {{$loop->index + 1}}. {{ $method['name'] }}
-                                            <b>({{$method['location']['size']}} lines)</b>
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <a  data-bs-toggle="collapse" href="#{{$classSlug}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                    <b>{{ count($row['methods']) }}</b> methods
+                                </a>
+                                <div class="collapse" id="{{$classSlug}}">
+                                    <ul>
+                                        @foreach ($row['methods'] as $method)
+                                            <li>
+                                                {{$loop->index + 1}}. {{ $method['name'] }}
+                                                <b>({{$method['location']['size']}} lines)</b>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @else
+                                No methods
                             @endif
                         </td>
                     </tr>

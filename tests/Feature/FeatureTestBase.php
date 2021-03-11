@@ -200,6 +200,7 @@ abstract class FeatureTestBase extends TestCase {
 
         if ($this->collector->enabled('time')) {
             $time = $this->collector->getTime($this->measureName);
+
             $result['time'] = [
                 'measures' => [],
                 'duration' => $time['duration']
