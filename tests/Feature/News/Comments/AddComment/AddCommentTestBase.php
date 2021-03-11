@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\News\AddComment;
+namespace Tests\Feature\News\Comments\AddComment;
 
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
@@ -11,6 +11,6 @@ abstract class AddCommentTestBase extends FeatureTestBase {
     public const ISN = '1144';
 
     public function getRouteName() {
-        return 'news.addComment';
+        return 'news.comments.add';
     }
 }

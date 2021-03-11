@@ -18,18 +18,22 @@ class AddPostWithPostFilesTest extends AddPostTestBase {
      * @var User
      */
     protected $user;
+
     /**
      * @var Filesystem
      */
     private $storage;
+
     /**
      * @var mixed
      */
     private $postId;
+
     /**
      * @var string
      */
     private $path;
+
     /**
      * @var string
      */
@@ -39,7 +43,7 @@ class AddPostWithPostFilesTest extends AddPostTestBase {
         $this->user = $this->getUser();
     }
 
-    public function handle() {
+    public function testExecute() {
         // TODO Сделать аналогичные тесты для postVideos, postDocuments
 
         $this->storage = Storage::fake('local');

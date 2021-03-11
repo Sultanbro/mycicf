@@ -27,7 +27,7 @@ class GetUserDataWithNoAuthTest extends FeatureTestBase {
     protected function prepare() {
     }
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route);
 
         // TODO Обработать данные

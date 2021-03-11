@@ -57,7 +57,7 @@ class GetBirthdaysTest extends FeatureTestBase {
         $this->branch->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route, [
             'd' => $this->date->day,
             'm' => $this->date->month,

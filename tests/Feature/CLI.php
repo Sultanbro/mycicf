@@ -55,14 +55,15 @@ class CLI {
     public function time($value) {
         $formattedValue = $this->col->getDataFormatter()->formatDuration($value);
 
-        if (preg_match('/\ds/imu', $formattedValue)) {
+        if ($value >= 1.0) {
+            // Если значение в секундах, подсветить красным
             $color = self::CLI_COLOR_RED;
-        } else if (preg_match('/\dms/imu', $formattedValue)) {
+        } else if ($value >= 1.0 / 1000) {
+            // Если значение в миллисекундах, подсветить жёлтым
             $color = self::CLI_COLOR_YELLOW;
-        } else if (preg_match('/\dμs/imu', $formattedValue)) {
-            $color = self::CLI_COLOR_GREEN;
         } else {
-            dd(123);
+            // Если значение в микросекундах, подсветить зелёным
+            $color = self::CLI_COLOR_GREEN;
         }
 
         return $this->color($formattedValue, $color);

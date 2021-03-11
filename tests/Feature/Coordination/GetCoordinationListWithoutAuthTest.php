@@ -2,9 +2,6 @@
 
 namespace Tests\Feature\Coordination;
 
-use App\Branch;
-use App\Post;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
 use Tests\WithUser;
@@ -28,7 +25,7 @@ class GetCoordinationListWithoutAuthTest extends FeatureTestBase {
 
     }
 
-    public function handle() {
+    public function testExecute() {
         $response = $this->post($this->route, [
             'isn' => self::ISN
         ]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\News\AddComment;
+namespace Tests\Feature\News\Comments\AddComment;
 
 use App\Comment;
 use App\Post;
@@ -24,7 +24,7 @@ class AddCommentToPostWithNoAuthTest extends AddCommentTestBase {
         $this->post->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $commentText = 'Hello';
         $commentsCount = Comment::count();
         $response = $this->post($this->route, [

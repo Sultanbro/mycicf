@@ -17,4 +17,26 @@ class Booking extends Model
 //
 //        return Booking::where('begDate', $start)->where('endDate', $end_date);
 //    }
+
+    public function createData()
+    {
+        $result = [];
+        $result["to"] = $this->formatDate($this->to);
+        $result["from"] = $this->formatDate($this->from);
+        $result["data"] = [
+            "id" => null,
+            "title" => $this->title,
+            "author" => $this->author,
+            "office" => $this->office,
+            "description" => $this->title
+        ];
+        $this->data = json_encode($result);
+    }
+
+    public function formatDate($date){
+        $dateString = (string)$date;
+        $dateString = substr_replace($dateString, 'T', 10, 1);
+        $dateString.="+06:00";
+        return $dateString;
+    }
 }

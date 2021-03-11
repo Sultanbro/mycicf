@@ -99,24 +99,26 @@
                 if(this.pinned_id !== 0) {
                     this.getLevelOne(this.pinned_id, null);
                 }
+
+                let params = (new URL(document.location)).searchParams;
+                if(params.get("parentId") != undefined){
+                    console.log('qwe 1');
+                    vm.getLevelOne(parseInt(params.get("parentId")),'',parseInt(params.get("childId")));
+                }
             },
 
-            getLevelOne: function(id, url) {
+            getLevelOne: function(id, url,childId) {
                 this.levelOnePinned = id;
                 var vm = this;
-
                 if(url !== null && url !== '') {
                     location.replace('/documentation/'+url);
                     return 0;
                 }
-
                 for(var i = 0; i < vm.itemsLevelZero.length; i++) {
                     if(vm.itemsLevelZero[i].id === id && vm.itemsLevelZero[i].opened === false) {
-
                         this.preloader(true);
-
                         this.axios.post('/getItemsList', {parentId: id}).then(response => {
-                           vm.fetchLevelOne(response.data, id);
+                           vm.fetchLevelOne(response.data, id, childId);
                         });
 
                         vm.itemsLevelZero[i].opened = true;
@@ -153,9 +155,10 @@
                         }
                     }
                 }
+                vm.pushUrl(id,'one',url);
            },
 
-            fetchLevelOne: function(response, id) {
+            fetchLevelOne: function(response, id, childId) {
                 var vm = this;
 
                 if(response.length === 0) return 0;
@@ -180,7 +183,9 @@
                 this.isOpened = true;
 
                 this.preloader(false);
-
+                if(childId != undefined){
+                    vm.getLevelTwo(parseInt(childId),'');
+                }
             },
 
             getLevelTwo: function(id, url) {
@@ -223,9 +228,9 @@
                             this.levelOneOpened = true;
                             break;
                         }
-
                     }
                 }
+                vm.pushUrl(id,'two',url);
             },
             fetchLevelTwo: function(response, id) {
                 var vm = this;
@@ -265,8 +270,20 @@
                 {
                     document.getElementById('preloader').style.display = 'none';
                 }
+            },
+            pushUrl(id,meth, url){
+                let newParams = (new URL(document.location)).searchParams;
+                let param = '';
+                if(id != 'NaN' && id != NaN && id != undefined) {
+                    if (meth == 'one') {
+                        param = '?parentId=' + id;
+                    } else {
+                        param = '?parentId=' + newParams.get("parentId") + '&childId=' + id;
+                    }
+                    let newUrl = window.location.protocol + '//' + window.location.hostname + '/name' + param; //window.location.href+'?parentId='+id;  window.location.pathname
+                    window.history.pushState({}, null, newUrl);
+                }
             }
-
         },
     }
 </script>

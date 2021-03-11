@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
 use Tests\WithUser;
+use function Deployer\isVeryVerbose;
 
 class GetCoordinationListTest extends FeatureTestBase {
     use WithFaker, WithUser;
@@ -28,7 +29,7 @@ class GetCoordinationListTest extends FeatureTestBase {
 
     }
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
         $response = $this->post($this->route, [
             'isn' => self::ISN

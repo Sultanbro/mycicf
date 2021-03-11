@@ -4,8 +4,23 @@
         <div class="d-flex pl-4 pr-4 pt-3 pb-3">
             <div>
                 <div class="small-avatar-circle-width">
-                    <img src="/images/avatar.png" class="small-avatar-circle small-avatar-circle-width" v-if="fakeImage">
-                    <img :src="imageUrl" @error="fakeImage = true" class="small-avatar-circle small-avatar-circle-width" v-else>
+                    <img src="/images/avatar.png"
+                         class="small-avatar-circle small-avatar-circle-width"
+                         :class="post.score_likes < 100
+                         ? '' : post.score_likes >= 100 && post.score_likes  < 200
+                         ? 'ava-bord-bronze' : post.score_likes  >= 200 && post.score_likes  < 300
+                         ? 'ava-bord-silver' : post.score_likes  >= 300
+                         ? 'ava-bord-gold' : 'ava-bord-gold'"
+                         v-if="fakeImage">
+
+                    <img :src="imageUrl"
+                         :class="post.score_likes < 100
+                         ? '' : post.score_likes >= 100 && post.score_likes  < 200
+                         ? 'ava-bord-bronze' : post.score_likes  >= 200 && post.score_likes  < 300
+                         ? 'ava-bord-silver' : post.score_likes  >= 300
+                         ? 'ava-bord-gold' : 'ava-bord-gold'"
+                         @error="fakeImage = true"
+                         class="small-avatar-circle small-avatar-circle-width" v-else>
                 </div>
             </div>
             <div class="flex-column ml-2">
@@ -27,7 +42,7 @@
                         class="custom-button mr-1"
                         :disabled="editMode"
                         v-if="moderators.includes(isn)"
-                        :class="{pinned: post.pinned === 1}">
+                        :class="{pinned: !!post.pinned}">
                     <i class="fas fa-thumbtack"></i>
                 </button>
                 <button type="button"
@@ -126,9 +141,9 @@
                               :class="{'textarea-height': editMode}"
                               class="custom-input w-100 pr-5"></textarea>
                 </transition>
-                <div v-if="post.postText.length > 1950">
+                <div v-if="post.postText.length > 7800">
                     <span>
-                        <small>Отслаось символов: {{2000 - post.postText.length > 0 ? 2000 - post.postText.length : 0}}</small>
+                        <small>Осталось символов: {{8000 - post.postText.length > 0 ? 8000 - post.postText.length : 0}}</small>
                     </span>
                 </div>
                 <emoji-component v-if="editMode" :type="EDIT_POST_TEXTAREA"></emoji-component>
@@ -295,7 +310,6 @@
         },
 
         mounted() {
-            debugger;
             this.imageUrl = "/storage/images/employee/" + this.post.userISN + ".png";
             this.MainImageUrl = "/storage/images/employee/" + this.isn + ".png";
             if(this.post.videos.length>0){
@@ -345,7 +359,7 @@
             },
 
             deletePost() {
-                this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/deletePost', {postId: this.post.postId}).then(response => {
                     return;
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -353,7 +367,7 @@
             },
 
             setPinned() {
-                if(this.post.pinned === 0) {
+                if(!this.post.pinned) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
                     }).catch(error => {
@@ -361,7 +375,7 @@
                     });
                 }
                 else {
-                    this.axios.post('/unsetPinned', {postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/unsetPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(-1)
                     });
                 }
@@ -376,7 +390,7 @@
                     this.post.isLiked = true;
                     this.post.likes++;
                 }
-                this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
+                this.axios.post('/news/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -400,7 +414,7 @@
                     this.post.postText = this.oldText;
                 }
                 if(this.post.postText !== this.oldText) {
-                    this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
@@ -411,7 +425,7 @@
 
             saveEdited() {
                 this.editMode = !this.editMode;
-                this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     this.fetchSaved(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -428,7 +442,7 @@
             },
 
             addComment() {
-                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/comments/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
                     this.setComments(response.data);
                 });
                 this.commentText = '';
@@ -449,7 +463,7 @@
 
             deleteComment(index) {
                 var vm = this;
-                this.axios.post('/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
+                this.axios.post('/news/comments/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
                     if(response.data.success) {
                         vm.post.comments.splice(index, 1);
                     }
@@ -464,7 +478,7 @@
                     object.answer_votes++;
                     this.post.post_poll.total_votes++;
                     this.post.isVoted = true;
-                    this.axios.post('/vote', {
+                    this.axios.post('/news/vote', {
                         postId: this.postId,
                         isn: this.isn,
                         answerId: object.answer_id,

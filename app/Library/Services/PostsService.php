@@ -180,6 +180,7 @@ class PostsService {
      * @throws Exception
      */
     public function forget($id) {
-        cache()->forget($this->getResponseKey($id)); // or delete();
+        cache()->flush();
+        // cache()->delete($this->getResponseKey($id)); // or delete();
     }
 }

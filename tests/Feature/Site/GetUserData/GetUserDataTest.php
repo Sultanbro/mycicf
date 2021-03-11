@@ -40,7 +40,7 @@ class GetUserDataTest extends FeatureTestBase {
         $this->user->save();
     }
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->user);
         $response = $this->post($this->route);
 

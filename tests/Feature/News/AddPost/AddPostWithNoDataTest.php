@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\News\AddPost;
 
+use App\Post;
 use Tests\WithUser;
 
 class AddPostWithNoDataTest extends AddPostTestBase {
@@ -11,14 +12,16 @@ class AddPostWithNoDataTest extends AddPostTestBase {
 
     public const ISN = '1144';
 
-    public function handle() {
+    public function testExecute() {
         $this->actingAs($this->getUser());
+        $count = Post::count();
         $response = $this->post($this->route, [
 
         ]);
         $response->assertJson([
             'success' => false,
         ]);
+        self::assertEquals($count, Post::count());
     }
 
     public function getMeasureName() {

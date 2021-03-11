@@ -5,6 +5,8 @@ namespace App\Providers;
 use App;
 use App\Debug\GitDataCollector;
 use App\Debug\KiasRequestCollector;
+use App\CentcoinHistory;
+use App\Observers\CentcoinObserver;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,5 +33,7 @@ class AppServiceProvider extends ServiceProvider
         if(!App::isLocal()){
             URL::forceScheme('https');
         }
+
+        CentcoinHistory::observe(CentcoinObserver::class);
     }
 }

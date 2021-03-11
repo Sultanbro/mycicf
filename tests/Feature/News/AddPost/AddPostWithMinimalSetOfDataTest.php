@@ -9,10 +9,30 @@ class AddPostWithMinimalSetOfDataTest extends AddPostTestBase {
 
     protected $description = 'Создаём пост с минимальным набором данных';
 
-    public function handle() {
-        $this->actingAs($this->getUser());
-        $response = $this->post($this->route, []);
+    public function testExecute() {
+        $user = $this->getUser();
+        $this->actingAs($user);
+        $response = $this->post($this->route, [
+            'postText' => 'post #1',
+            'isn' => $user->ISN,
+        ]);
         $response->assertStatus(200);
+        self::assertArrayHasKey('postId', $response->json());
+        self::assertEquals('integer', gettype($response->json('postId')));
+        self::assertEquals('boolean', gettype($response->json('pinned')));
+        self::assertEquals('boolean', gettype($response->json('isLiked')));
+        self::assertEquals('boolean', gettype($response->json('isVoted')));
+        self::assertEquals('boolean', gettype($response->json('edited')));
+
+        $postId = $response->json('postId');
+
+        $getPosts = $this->post(route('news.getPosts'));
+
+        $post = collect($getPosts->json())->first(function ($entry) use ($postId) {
+            return $entry['postId'] == $postId;
+        });
+
+        self::assertNotNull($post);
     }
 
     public function getMeasureName() {

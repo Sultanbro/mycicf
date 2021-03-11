@@ -176,7 +176,7 @@
 
         methods: {
             likePost: function () {
-                this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
+                this.axios.post('/news/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -213,7 +213,7 @@
             },
 
             addComment: function () {
-                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/comments/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
                     this.setComments(response.data);
                 });
                 this.commentText = '';
@@ -224,7 +224,7 @@
                 vm.post.comments.push(response);
             },
             deletePost: function () {
-                this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/deletePost', {postId: this.post.postId}).then(response => {
                     return;
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -232,15 +232,15 @@
             },
 
             setPinned: function () {
-                if(this.post.pinned === 0) {
-                    this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
+                if(!this.post.pinned) {
+                    this.axios.post('/news/my/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
                 }
                 else {
-                    this.axios.post('/unsetPinned', {postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/unsetPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(-1)
                     });
                 }

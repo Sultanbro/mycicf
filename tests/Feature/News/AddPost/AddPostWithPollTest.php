@@ -11,7 +11,7 @@ class AddPostWithPollTest extends AddPostTestBase {
 
     public const ISN = '1144';
 
-    public function handle() {
+    public function testExecute() {
         self::markTestSkipped('TODO: Complete this test.');
     }
 
