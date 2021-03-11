@@ -404,10 +404,25 @@ abstract class FeatureTestBase extends TestCase {
         return $result;
     }
 
+    private function saveReport($reportData, $className) {
+        $filePath = base_path('tests/Feature/report.json');
+        $data = [];
+
+        if (file_exists($filePath)) {
+            $data = json_decode(file_get_contents($filePath), true);
+        }
+
+        $data[$className] = $reportData;
+
+        file_put_contents($filePath, json_encode($data));
+    }
+
     protected function printReport() {
         $name = $this->description ?? static::class;
 
         $reportData = $this->collectReportData();
+
+        $this->saveReport($reportData, static::class);
 
         $result = '';
 
@@ -575,9 +590,9 @@ abstract class FeatureTestBase extends TestCase {
             $result .= "\n";
 
             $maxQueryTypeLength = collect($preparedQueries)
-                ->max(function ($query) {
-                    return strlen($query['type']);
-                }) + 2;
+                    ->max(function ($query) {
+                        return strlen($query['type']);
+                    }) + 2;
 
             foreach ($preparedQueries as $index => $query) {
 
@@ -587,7 +602,7 @@ abstract class FeatureTestBase extends TestCase {
                             $type = str_pad('[tests]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
                             $type = $this->cli->color($type, CLI::CLI_COLOR_DARK_GRAY);
                         } else if ($query['type'] === 'app.services') {
-                            $type = str_pad('[app.services]', $maxQueryTypeLength,' ',  STR_PAD_LEFT);
+                            $type = str_pad('[app.services]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
                             $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'app.models') {
                             $type = str_pad('[app.models]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
@@ -596,7 +611,7 @@ abstract class FeatureTestBase extends TestCase {
                             $type = str_pad('[app.controllers]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
                             $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'app.middleware') {
-                            $type = str_pad('[app.middleware]', $maxQueryTypeLength,' ',  STR_PAD_LEFT);
+                            $type = str_pad('[app.middleware]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);
                             $type = $this->cli->color($type, CLI::CLI_COLOR_YELLOW);
                         } else if ($query['type'] === 'app.other') {
                             $type = str_pad('[app.other]', $maxQueryTypeLength, ' ', STR_PAD_LEFT);

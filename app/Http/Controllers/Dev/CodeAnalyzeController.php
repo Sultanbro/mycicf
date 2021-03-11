@@ -159,9 +159,20 @@ class CodeAnalyzeController extends Controller {
             return $row['type'];
         });
 
-        return view('dev.code', [
-            'rows'   => $rows,
-            'counts' => $counts,
+        return view('dev.code', compact('rows', 'counts'));
+    }
+
+    public function tests() {
+        $filePath = base_path('tests/Feature/report.json');
+
+        if (! file_exists($filePath)) {
+            return;
+        }
+
+        $data = json_decode(file_get_contents($filePath), true);
+
+        return view('dev.tests', [
+            'data' => $data,
         ]);
     }
 }

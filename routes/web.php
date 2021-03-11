@@ -457,4 +457,5 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
 Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('code', 'Dev\CodeAnalyzeController@index');
+    Route::get('tests', 'Dev\CodeAnalyzeController@tests');
 });
