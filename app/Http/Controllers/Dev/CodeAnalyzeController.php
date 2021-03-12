@@ -262,9 +262,22 @@ class CodeAnalyzeController extends Controller {
                     $actionFound = null;
                 }
 
+                $docComment = $method->getDocComment();
+
+                if (!empty($docComment)) {
+                    $docComment = collect(preg_split('%[\r\n]+%', $docComment))->map(function ($line) {
+                        return trim($line);
+                    })->map(function ($line, $index) {
+                        if ($index === 0) {
+                            return $line;
+                        }
+                        return ' ' . $line;
+                    })->join("\n");
+                }
+
                 return [
                     'name'         => $method->getName(),
-                    'doc'          => $method->getDocComment(),
+                    'doc'          => $docComment,
                     'numParams'    => $method->getNumberOfParameters(),
                     'access'       => $access,
                     'action'       => $action,
@@ -290,7 +303,6 @@ class CodeAnalyzeController extends Controller {
         $row['documentedMethodsCount'] = collect($methods)->filter(function ($method) {
             return (bool)$method['doc'];
         })->count();
-
 
         $startLine = $class->getStartLine();
         $endLine = $class->getEndLine();
@@ -319,8 +331,6 @@ class CodeAnalyzeController extends Controller {
         $this->routes = Route::getRoutes();
         $a = $this->getDirContents(app_path());
         $rows = collect();
-        $limit = 10;
-        $i = 0;
 
         Debugbar::startMeasure('Process all classes');
         foreach ($a as $entry) {
@@ -337,10 +347,6 @@ class CodeAnalyzeController extends Controller {
             });
 
             $rows->push($row);
-
-            if ($i >= $limit) {
-                break;
-            }
         }
         Debugbar::stopMeasure('Process all classes');
 
@@ -355,9 +361,24 @@ class CodeAnalyzeController extends Controller {
             ->sort()
             ->reverse();
 
+        $classesCount = $rows->count();
+        $methodsCount = $rows->sum(function ($class) {
+            return $class['methodsCount'];
+        });
+
+        $tooLargeClassesCount = $rows->filter(function ($class) {
+            return $class['location']['isTooLarge'];
+        })->count();
+
+        $tooLargeMethodsCount = $rows->sum(function ($class) {
+            return collect($class['methods'])->filter(function ($method) {
+                return $method['location']['isTooLarge'];
+            })->count();
+        });
+
         $rows = $rows->groupBy('type');
 
-        return view('dev.code', compact('rows', 'counts'));
+        return view('dev.code', compact('rows', 'counts', 'classesCount', 'methodsCount', 'tooLargeClassesCount', 'tooLargeMethodsCount'));
     }
 
     public function tests() {

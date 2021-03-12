@@ -17,6 +17,7 @@
         }
 
         .report-table .report-methods {
+            width: 680px;
         }
 
         .showdoc-link {
@@ -28,6 +29,9 @@
             color: red;
         }
 
+        .doc-comment {
+            color: green;
+        }
     </style>
 
 
@@ -42,6 +46,20 @@
                             <td><b>{{ $count }}</b></td>
                         </tr>
                     @endforeach
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <td>Total</td>
+                        <td><b>{{ $classesCount }}</b> classes | <b>{{ $methodsCount }}</b> methods</td>
+                    </tr>
+                    <tr>
+                        <td>Too large classes</td>
+                        <td><b>{{ $tooLargeClassesCount }}</b></td>
+                    </tr>
+                    <tr>
+                        <td>Too large methods</td>
+                        <td><b>{{ $tooLargeMethodsCount }}</b></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -66,7 +84,8 @@
                                         {{ $loop->index + 1 }}
                                     </td>
                                     <td class="class-lines-count">
-                                        [<b class="{{ $row['location']['isTooLarge'] ? 'too-large' : '' }}">{{ $row['location']['size'] }}</b> lines]
+                                        [<b class="{{ $row['location']['isTooLarge'] ? 'too-large' : '' }}">{{ $row['location']['size'] }}</b>
+                                        lines]
 
                                     </td>
                                     <td class="report-class">
@@ -74,7 +93,7 @@
                                         <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled"
                                            title="{{ $row['class'] }}">
                                             <b>{{ $row['shortName'] }}</b>
-                                        @if ($row['parent'])
+                                            @if ($row['parent'])
                                                 <i>extends {{ $row['parent'] }}</i>
                                             @endif
                                         </a>
@@ -103,8 +122,8 @@
                                                         non-actions
                                                         )
 
-                                                        <b>{{ $row['documentedMethodsCount'] }}</b> documented
                                                     @endif
+                                                    <b>{{ $row['documentedMethodsCount'] }}</b> documented
                                                 </a>
                                             </div>
                                             <div class="collapse" id="{{$classSlug}}">
@@ -121,7 +140,8 @@
                                                             <td>
                                                                 @if ($method['action']['found'])
                                                                     <span title="{{$method['action']['uri']}}">
-                                                                        <a href="{{url($method['action']['uri'])}}" target="_blank">
+                                                                        <a href="{{url($method['action']['uri'])}}"
+                                                                           target="_blank">
                                                                             {{ $method['action']['uri'] }}
                                                                         </a>
                                                                     </span>
@@ -129,19 +149,10 @@
                                                             </td>
                                                             <td>
                                                                 @if($method['doc'])
-                                                                    <div>
-                                                                        <a data-bs-toggle="collapse"
-                                                                           href="#doc__{{ $classSlug }}__{{$method['name']}}"
-                                                                           role="button"
-                                                                           class="showdoc-link"
-                                                                           aria-expanded="false"
-                                                                           aria-controls="collapseExample">
-                                                                            Показать документацию
-                                                                        </a>
-                                                                        <div class="collapse"
-                                                                             id="doc__{{ $classSlug }}__{{$method['name']}}">
-                                                                            <pre>   {{ $method['doc'] }}</pre>
-                                                                        </div>
+                                                                    <div
+                                                                        id="doc__{{ $classSlug }}__{{$method['name']}}">
+                                                                        <pre
+                                                                            class="doc-comment">{{ $method['doc'] }}</pre>
                                                                     </div>
                                                                 @endif
                                                                 <a href="{{ $method['phpstormLink'] }}">
@@ -151,7 +162,8 @@
                                                                 </a>
                                                             </td>
                                                             <td>
-                                                                <b class="{{ $method['location']['isTooLarge'] ? 'too-large' : '' }}">{{$method['location']['size']}}</b> lines
+                                                                <b class="{{ $method['location']['isTooLarge'] ? 'too-large' : '' }}">{{$method['location']['size']}}</b>
+                                                                lines
                                                             </td>
                                                         </tr>
                                                     @endforeach
