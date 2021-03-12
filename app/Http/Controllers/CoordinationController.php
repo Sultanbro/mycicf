@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\NotificationServiceInterface;
 use App\Notification;
-use App\Providers\KiasServiceProvider;
-use http\Env\Response;
+use Debugbar;
 use Illuminate\Http\Request;
-use App\Comment;
 use App\Events\NewPost;
-use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +24,11 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
         $response = $kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
@@ -512,7 +514,7 @@ class CoordinationController extends Controller
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
-        (new NotificationController())->sendCoordinationNotify($users);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
                 continue;

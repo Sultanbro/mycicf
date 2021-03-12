@@ -1,32 +1,38 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: IAkbergen
- * Date: 12.04.2019
- * Time: 17:14
- */
 
 namespace App\Library\Services;
 
+use App\XML\Kias\AuthenticateResult;
+use App\XML\Kias\GetUpperLevelResult;
+use App\XML\Kias\MyCoordinationListResult;
+use Debugbar;
 use Exception;
-use Faker\Guesser\Name;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use SoapClient;
 use SimpleXMLElement;
-use App\Library\Services\KiasServiceInterface;
-
 
 class Kias implements KiasServiceInterface
 {
+    /**
+     * @var Kias
+     */
+    private static $instance;
+    public static function instance() {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     const APP_ID = 868281;
     const ACTIVE = 'Y';
 
     public $username;
     public $password;
+    /**
+     * @var SoapClient
+     */
     public $client;
     public $request;
     public $_sId;
@@ -42,27 +48,60 @@ class Kias implements KiasServiceInterface
      */
     public $url;
 
+    /**
+     * @var bool
+     */
+    private $initialized = false;
+
+    /**
+     * @var bool
+     */
+    private $systemInitialized = false;
+
+    public function __construct() {
+        // sleep(1); // sleep здесь для имитации задержки
+
+        Debugbar::log('Kias::Construct');
+    }
+
+    private function getLifetime() {
+        return now()->addMinutes(config('kias.cache.lifetime'));
+    }
 
     public function init($session)
     {
-        $this->url = env('KIAS_URL');
+        if ($this->initialized) {
+            return;
+        }
+        Debugbar::log('Kias::Init');
+        $this->url = config('kias.url');
         $this->getClient();
         $this->_sId = $session;
+        $this->initialized = true;
     }
 
-    /** Get kias by system credentials
+    /**
+     * Get kias by system credentials
      */
-    public function initSystem($name = null, $pwd = null)
+    public function initSystem()
     {
-        $login = $name == null ? env('KIAS_LOGIN') : $name;
-        $pass = $pwd == null ? env('KIAS_PASSWORD') : $pwd;
-        $this->url = env('KIAS_URL');
-        $this->getClient();
-        $systemData = $this->authenticate($login, hash('sha512', $pass));
-        $this->_sId = $systemData->Sid;
-        if($name != null){
-            return $systemData;
+        if ($this->systemInitialized) {
+            return;
         }
+        Debugbar::log('Kias::Mock Init System');
+        $this->url = config('kias.url');
+        $this->getClient();
+
+        $username = config('kias.auth.login');
+        $password = config('kias.auth.password');
+        $passwordHash = hash('sha512', $password);
+
+        // $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
+        Debugbar::startMeasure('Authenticate in Kias');
+        $systemData = $this->authenticate($username, $passwordHash);
+        Debugbar::stopMeasure('Authenticate in Kias');
+        $this->_sId = $systemData->Sid;
+        $this->systemInitialized = true;
     }
 
     /**
@@ -82,15 +121,56 @@ class Kias implements KiasServiceInterface
         return $this->client;
     }
 
+    private function execProc($name, $params = []) {
+        $response = $this->client->ExecProc([
+            'pData' => $this->createRequestData($name, $params),
+        ]);
+        return $response->ExecProcResult->any;
+    }
+
     public function request($name, $params = [])
     {
+        Debugbar::log('Kias::Mock Request [' . $name . ' :: ' . json_encode($params) . ']');
         try {
+            switch ($name) { // Кешируем некоторые запросы
+                case 'Auth':
+                    $key = 'kias::Auth::' . $name . '::' . serialize($params) . '::';
+                    $ttl = $this->getLifetime();
+                    Debugbar::startMeasure('Authenticate in Kias');
+                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
+                        return $this->execProc($name, $params);
+                    });
+                    Debugbar::stopMeasure('Authenticate in Kias');
+                    break;
+
+                case 'User_CicHelloSvc':
+                    $key = 'kias::User_CicHelloSvc::' . $name . '::' . serialize($params) . '::';
+                    $ttl = $this->getLifetime();
+                    Debugbar::startMeasure('User_CicHelloSvc in Kias');
+                    $execResponse = $this->execProc($name, $params);
+                    Debugbar::stopMeasure('User_CicHelloSvc in Kias');
+                    break;
+
+                case 'User_CicMyCoordinationList':
+                    $key = 'kias::User_CicMyCoordinationList::' . $name . '::' . serialize($params) . '::';
+                    $ttl = $this->getLifetime();
+                    Debugbar::startMeasure('User_CicMyCoordinationList in Kias');
+                    $execResponse = $this->execProc($name, $params);
+                    // $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
+                    //     return $this->execProc($name, $params);
+                    // });
+                    Debugbar::stopMeasure('User_CicMyCoordinationList in Kias');
+                    break;
+
+
+                default:
+                    $execResponse = $this->execProc($name, $params);
+            }
+
             $xml = new SimpleXMLElement(
-                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-                .$this->client->ExecProc([
-                    'pData' => $this->createRequestData($name, $params),
-                ])->ExecProcResult->any
+                '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . $execResponse
             );
+
         } catch (\SoapFault $exception) {
             return $this->request($name, $params);
         }
@@ -103,12 +183,15 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
+
+                // TODO Use Storage::disk instead
                 file_put_contents(
                     storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
                     $xml->asXml()
                 );
             }
         }
+
         if (isset($xml->error)) {
             if (isset($xml->error->code) && $xml->error->code == '001') {
                 $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);
@@ -179,6 +262,14 @@ class Kias implements KiasServiceInterface
         }
     }
 
+    /**
+     * Этот метод вешает всю систему, т.к. вызывается в Middleware на большом количестве
+     * роутов
+     *
+     * @param string $username
+     * @param string $password
+     * @return mixed|AuthenticateResult
+     */
     public function authenticate($username, $password)
     {
         return $this->request('Auth', [
@@ -189,9 +280,12 @@ class Kias implements KiasServiceInterface
 
     public function authBySystem()
     {
+        /**
+         * @var $response AuthenticateResult
+         */
         $response = $this->request('Auth', [
-            'Name' => env('KIAS_LOGIN'),
-            'Pwd'  => hash('sha512', env('KIAS_PASSWORD')),
+            'Name' => config('kias.auth.login'),
+            'Pwd'  => hash('sha512', config('kias.auth.password')),
         ]);
         if ($response->error) {
             throw new Exception('Authentication failed', '419');
@@ -200,6 +294,9 @@ class Kias implements KiasServiceInterface
         $this->_sId = $response->Sid;
     }
 
+    /**
+     * @return \App\XML\Kias\GetBranchesResult|SimpleXMLElement
+     */
     public function getBranches()
     {
         return $this->request('User_CicGetUserList', [
@@ -207,6 +304,10 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $ISN
+     * @return GetUpperLevelResult|SimpleXMLElement
+     */
     public function getUpperLevel($ISN)
     {
         return $this->request('User_CicGetUserLVL', [
@@ -214,6 +315,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $ISN
+     * @param $dateBeg
+     * @param $dateEnd
+     * @return \App\XML\Kias\GetEmplInfoResult|SimpleXMLElement
+     */
     public function getEmplInfo($ISN, $dateBeg, $dateEnd)
     {
         return $this->request('User_CicGetEmplInfo', [
@@ -223,6 +330,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $refisn
+     * @param $isn
+     * @param $pictType
+     * @return \App\XML\Kias\GetAttachmentDataResult|SimpleXMLElement
+     */
     public function getAttachmentData($refisn, $isn, $pictType)
     {
         return $this->request('GETATTACHMENTDATA', [
@@ -232,6 +345,10 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    /**
+     * @param $ISN
+     * @return MyCoordinationListResult|SimpleXMLElement
+     */
     public function myCoordinationList($ISN)
     {
         return $this->request('User_CicMyCoordinationList', [

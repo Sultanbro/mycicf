@@ -134,7 +134,7 @@
         methods: {
             deleteComment: function () {
                 var vm = this;
-                this.axios.post('/deleteComment', {commentId: this.comment.commentId}).then(response => {
+                this.axios.post('/news/comments/deleteComment', {commentId: this.comment.commentId}).then(response => {
                     if(response.data.success){
                         vm.$parent.post.comments.splice(vm.index, 1);
                     }
@@ -171,7 +171,7 @@
 
             saveEdited: function () {
                 this.editMode = !this.editMode;
-                this.axios.post('/editComment', {commentText: this.comment.commentText, commentId: this.comment.commentId}).then(response => {
+                this.axios.post('/news/comments/editComment', {commentText: this.comment.commentText, commentId: this.comment.commentId}).then(response => {
                     this.fetchSaveEdited(response.data);
                 }).catch(error => {
                     alert(error);

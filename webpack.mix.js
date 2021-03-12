@@ -1,4 +1,8 @@
 const mix = require('laravel-mix');
+const dotenv = require("dotenv");
+
+let env = dotenv.config().parsed;
+
 
 /*
  |--------------------------------------------------------------------------
@@ -20,3 +24,12 @@ mix.js('resources/js/app.js', 'public/js')
     //.js('resources/js/agreement.js', 'public/js')
     .sass('resources/sass/documentation/style.scss', 'public/css/documentation')
     .sass('resources/sass/app.scss', 'public/css');
+
+if (env && !mix.inProduction()) {
+    mix
+        .browserSync({
+            proxy: env.APP_URL,
+        })
+        .sourceMaps()
+        .disableNotifications();
+}

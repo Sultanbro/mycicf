@@ -169,7 +169,7 @@
                     vm.itemsLevelZero.push(data);
                 })
                 this.preloader(false);
-                if(this.pinned_id !== 0) {
+                if(this.pinned_id != false) {
                     this.getLevelOne(this.pinned_id, null);
                 }
             },
