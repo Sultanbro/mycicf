@@ -92,13 +92,9 @@
 
                                         <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled"
                                            title="{{ $row['class'] }}">
-                                            <b>{{ $row['shortName'] }}</b>
-                                            @if ($row['parent'])
+                                            <b>{{ $row['shortName'] }}</b>@if ($row['parent'])
                                                 <i>extends {{ $row['parent'] }}</i>
-                                            @endif
-                                        </a>
-
-                                        @if (count($row['traitNames']))
+                                            @endif</a>@if (count($row['traitNames']))
                                             uses {{ count($row['traitNames']) }} {{ \Str::plural('trait', count($row['traitNames'])) }}
                                         @endif
 
