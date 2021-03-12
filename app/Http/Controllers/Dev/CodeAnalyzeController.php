@@ -76,33 +76,32 @@ class CodeAnalyzeController extends Controller {
      * @throws ReflectionException
      */
     private function processClass(string $name) {
-        $reflection = new ReflectionClass($name);
-        $fileName = $reflection->getFileName();
+        $class = new ReflectionClass($name);
+        $fileName = $class->getFileName();
 
         $row = [
             'class'        => $name,
+            'parent'       => $class->getParentClass() ? $class->getParentClass()->getShortName() : null,
             'file'         => $fileName,
-            'traitNames'   => $reflection->getTraitNames(),
-            'phpstormLink' => $this->phpStormLink($fileName, $reflection->getStartLine()),
+            'traitNames'   => $class->getTraitNames(),
+            'phpstormLink' => $this->phpStormLink($fileName, $class->getStartLine()),
         ];
 
-
-
-        if ($reflection->isSubclassOf(Eloquent::class)) {
+        if ($class->isSubclassOf(Eloquent::class)) {
             $row['type'] = 'Models';
-        } elseif ($reflection->isSubclassOf(Controller::class)) {
+        } elseif ($class->isSubclassOf(Controller::class)) {
             $row['type'] = 'Controllers';
-        } elseif ($reflection->isSubclassOf(Command::class)) {
+        } elseif ($class->isSubclassOf(Command::class)) {
             $row['type'] = 'Commands';
-        } elseif ($reflection->isSubclassOf(Mailable::class)) {
+        } elseif ($class->isSubclassOf(Mailable::class)) {
             $row['type'] = 'Mail';
-        } elseif ($reflection->isSubclassOf(ServiceProvider::class)) {
+        } elseif ($class->isSubclassOf(ServiceProvider::class)) {
             $row['type'] = 'Service Providers';
-        } elseif ($reflection->isSubclassOf(FormRequest::class)) {
+        } elseif ($class->isSubclassOf(FormRequest::class)) {
             $row['type'] = 'Form Requests';
-        } elseif ($reflection->isSubclassOf(DataCollector::class)) {
+        } elseif ($class->isSubclassOf(DataCollector::class)) {
             $row['type'] = 'Data Collectors';
-        } elseif ($reflection->isSubclassOf(\SimpleXMLElement::class)) {
+        } elseif ($class->isSubclassOf(\SimpleXMLElement::class)) {
             $row['type'] = 'XML';
         } elseif (Str::startsWith($name, 'App\Library\Services')) {
             $row['type'] = 'Services';
@@ -204,9 +203,9 @@ class CodeAnalyzeController extends Controller {
                 dd($row['type'], $row['class']);
         }
 
-        $methods = collect($reflection->getMethods())
-            ->filter(function (ReflectionMethod $method) use ($reflection, $fileName) {
-                return $method->getDeclaringClass()->name === $reflection->name;
+        $methods = collect($class->getMethods())
+            ->filter(function (ReflectionMethod $method) use ($class, $fileName) {
+                return $method->getDeclaringClass()->name === $class->name;
             })
             ->map(function (ReflectionMethod $method) use ($fileName, $row) {
                 $startLine = $method->getStartLine();
@@ -248,6 +247,7 @@ class CodeAnalyzeController extends Controller {
 
                     if (!empty($route)) {
                         $action['found'] = true;
+                        $action['methods'] = implode('|', $route->methods());
                         $action['uri'] = $route->uri;
                     }
 
@@ -257,9 +257,10 @@ class CodeAnalyzeController extends Controller {
 
                 return [
                     'name'         => $method->getName(),
+                    'doc'          => $method->getDocComment(),
                     'numParams'    => $method->getNumberOfParameters(),
                     'access'       => $access,
-                    'action'     => $action,
+                    'action'       => $action,
                     'phpstormLink' => $this->phpStormLink($fileName, $startLine),
                     'location'     => [
                         'start' => $startLine,
@@ -278,9 +279,13 @@ class CodeAnalyzeController extends Controller {
         $row['actionsCount'] = collect($methods)->filter(function ($method) {
             return !empty($method['action']['found']);
         })->count();
+        $row['documentedMethodsCount'] = collect($methods)->filter(function ($method) {
+            return (bool)$method['doc'];
+        })->count();
 
-        $startLine = $reflection->getStartLine();
-        $endLine = $reflection->getEndLine();
+
+        $startLine = $class->getStartLine();
+        $endLine = $class->getEndLine();
         $size = $endLine - $startLine;
 
         $row['location'] = [
@@ -316,7 +321,10 @@ class CodeAnalyzeController extends Controller {
                 continue;
             }
 
-            $row = $this->processClass($name);
+            $row = \Debugbar::measure(sprintf("Processing class %s", $name), function () use ($name) {
+                return $this->processClass($name);
+            });
+
             $rows->push($row);
 
             if ($i >= $limit) {

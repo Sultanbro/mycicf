@@ -19,6 +19,10 @@
         .report-table .report-methods {
         }
 
+        .showdoc-link {
+            text-decoration: none;
+            border-bottom: dashed 1px;
+        }
 
     </style>
 
@@ -65,11 +69,14 @@
 
                                         <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled"
                                            title="{{ $row['class'] }}">
-                                            {{ $row['shortName'] }}
+                                            <b>{{ $row['shortName'] }}</b>
+                                        @if ($row['parent'])
+                                                <i>extends {{ $row['parent'] }}</i>
+                                            @endif
                                         </a>
 
                                         @if (count($row['traitNames']))
-                                            uses {{ count($row['traitNames']) }} traits
+                                            uses {{ count($row['traitNames']) }} {{ \Str::plural('trait', count($row['traitNames'])) }}
                                         @endif
 
                                         @if ($row['type'] === 'Middlewares')
@@ -88,8 +95,11 @@
                                                     @if ($row['type'] === 'Controllers')
                                                         (
                                                         <b>{{ $row['actionsCount'] }}</b> actions +
-                                                        <b>{{ $row['methodsCount'] - $row['actionsCount'] }}</b> non-actions
+                                                        <b>{{ $row['methodsCount'] - $row['actionsCount'] }}</b>
+                                                        non-actions
                                                         )
+
+                                                        <b>{{ $row['documentedMethodsCount'] }}</b> documented
                                                     @endif
                                                 </a>
                                             </div>
@@ -101,12 +111,35 @@
                                                             <td>{{$loop->index + 1}}.</td>
                                                             <td>
                                                                 @if ($method['action']['found'])
-                                                                    <span title="{{$method['action']['uri']}}">
-                                                                    {{ $method['action']['uri'] }}
-                                                                </span>
+                                                                    <b>{{ $method['action']['methods'] }}</b>
                                                                 @endif
                                                             </td>
                                                             <td>
+                                                                @if ($method['action']['found'])
+                                                                    <span title="{{$method['action']['uri']}}">
+                                                                        <a href="{{url($method['action']['uri'])}}" target="_blank">
+                                                                            {{ $method['action']['uri'] }}
+                                                                        </a>
+                                                                    </span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if($method['doc'])
+                                                                    <div>
+                                                                        <a data-bs-toggle="collapse"
+                                                                           href="#doc__{{ $classSlug }}__{{$method['name']}}"
+                                                                           role="button"
+                                                                           class="showdoc-link"
+                                                                           aria-expanded="false"
+                                                                           aria-controls="collapseExample">
+                                                                            Показать документацию
+                                                                        </a>
+                                                                        <div class="collapse"
+                                                                             id="doc__{{ $classSlug }}__{{$method['name']}}">
+                                                                            <pre>   {{ $method['doc'] }}</pre>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
                                                                 <a href="{{ $method['phpstormLink'] }}">
                                                                     {{ implode(' ', $method['access']) }}
                                                                     <b>{{ $method['name'] }}</b>
