@@ -21,6 +21,10 @@
                             <td>
                                 @if (gettype($route->action['uses']) === 'string')
                                     {{ $route->action['uses'] }}
+                                @elseif (gettype($route->action['uses']) === 'object' && $route->action['uses'] instanceof Closure)
+                                    <i> {Closure}</i>
+                                @else
+                                    {{ gettype($route->action['uses']) }}
                                 @endif
                             </td>
                         </tr>

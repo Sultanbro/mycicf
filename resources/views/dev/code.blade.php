@@ -24,6 +24,10 @@
             border-bottom: dashed 1px;
         }
 
+        .too-large {
+            color: red;
+        }
+
     </style>
 
 
@@ -62,7 +66,7 @@
                                         {{ $loop->index + 1 }}
                                     </td>
                                     <td class="class-lines-count">
-                                        [<b>{{ $row['location']['size'] }}</b> lines]
+                                        [<b class="{{ $row['location']['isTooLarge'] ? 'too-large' : '' }}">{{ $row['location']['size'] }}</b> lines]
 
                                     </td>
                                     <td class="report-class">
@@ -147,7 +151,7 @@
                                                                 </a>
                                                             </td>
                                                             <td>
-                                                                <b>{{$method['location']['size']}} lines</b>
+                                                                <b class="{{ $method['location']['isTooLarge'] ? 'too-large' : '' }}">{{$method['location']['size']}}</b> lines
                                                             </td>
                                                         </tr>
                                                     @endforeach

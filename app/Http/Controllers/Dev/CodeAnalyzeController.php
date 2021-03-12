@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Dev;
 
+use App;
 use App\Http\Controllers\Controller;
 use App\Http\Kernel;
+use Debugbar;
 use DebugBar\DataCollector\DataCollector;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,38 +19,43 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use Route;
+use SimpleXMLElement;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class CodeAnalyzeController extends Controller {
+
+    private const CLASS_MAX_LINES = 500;
+    private const METHOD_MAX_LINES = 100;
+
     /**
      * @var RouteCollection
      */
     private $routes;
 
     private function collectModelRelationships($modelClass) {
-
         $model = new $modelClass;
-
         $relationships = [];
+        $methods = (new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC);
 
-        foreach((new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC) as $method)
+        foreach ($methods as $method)
         {
-            // if ($method->class != get_class($model) ||
-            //     !empty($method->getParameters()) ||
-            //     $method->getName() == __FUNCTION__) {
-            //     continue;
-            // }
-//
-            // try {
-            //     $return = $method->invoke($model);
-//
-            //     if ($return instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
-            //         $relationships[$method->getName()] = [
-            //             'type' => (new ReflectionClass($return))->getShortName(),
-            //             'model' => (new ReflectionClass($return->getRelated()))->getName()
-            //         ];
-            //     }
-            // } catch(\Throwable $e) {}
+             if ($method->class !== get_class($model) ||
+                 !empty($method->getParameters()) ||
+                 $method->getName() === __FUNCTION__) {
+                 continue;
+             }
+
+             try {
+                 $return = $method->invoke($model);
+
+                 if ($return instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
+                     $relationships[$method->getName()] = [
+                         'type' => (new ReflectionClass($return))->getShortName(),
+                         'model' => (new ReflectionClass($return->getRelated()))->getName()
+                     ];
+                 }
+             } catch(\Throwable $e) {}
         }
 
         return $relationships;
@@ -101,7 +108,7 @@ class CodeAnalyzeController extends Controller {
             $row['type'] = 'Form Requests';
         } elseif ($class->isSubclassOf(DataCollector::class)) {
             $row['type'] = 'Data Collectors';
-        } elseif ($class->isSubclassOf(\SimpleXMLElement::class)) {
+        } elseif ($class->isSubclassOf(SimpleXMLElement::class)) {
             $row['type'] = 'XML';
         } elseif (Str::startsWith($name, 'App\Library\Services')) {
             $row['type'] = 'Services';
@@ -266,6 +273,7 @@ class CodeAnalyzeController extends Controller {
                         'start' => $startLine,
                         'end'   => $endLine,
                         'size'  => $size,
+                        'isTooLarge' => $size > self::METHOD_MAX_LINES,
                     ]
                 ];
             })
@@ -287,11 +295,13 @@ class CodeAnalyzeController extends Controller {
         $startLine = $class->getStartLine();
         $endLine = $class->getEndLine();
         $size = $endLine - $startLine;
+        $isTooLarge = $size > self::CLASS_MAX_LINES;
 
         $row['location'] = [
             'start' => $startLine,
             'end'   => $endLine,
             'size'  => $size,
+            'isTooLarge' => $isTooLarge
         ];
 
         return $row;
@@ -302,16 +312,17 @@ class CodeAnalyzeController extends Controller {
     }
 
     public function index(Request $request) {
-        if (! \App::isLocal()) {
+        if (! App::isLocal()) {
             throw new AccessDeniedException('Access denied');
         }
 
-        $this->routes = \Route::getRoutes();
+        $this->routes = Route::getRoutes();
         $a = $this->getDirContents(app_path());
         $rows = collect();
         $limit = 10;
         $i = 0;
 
+        Debugbar::startMeasure('Process all classes');
         foreach ($a as $entry) {
             $entry = str_replace(app_path(), '', $entry);
             $entry = preg_replace('%\\.php$%', '', $entry);
@@ -321,7 +332,7 @@ class CodeAnalyzeController extends Controller {
                 continue;
             }
 
-            $row = \Debugbar::measure(sprintf("Processing class %s", $name), function () use ($name) {
+            $row = Debugbar::measure(sprintf("Processing class %s", $name), function () use ($name) {
                 return $this->processClass($name);
             });
 
@@ -331,6 +342,7 @@ class CodeAnalyzeController extends Controller {
                 break;
             }
         }
+        Debugbar::stopMeasure('Process all classes');
 
         $rows = $rows->sort(function ($a, $b) {
             return $b['location']['size'] - $a['location']['size'];
@@ -349,7 +361,7 @@ class CodeAnalyzeController extends Controller {
     }
 
     public function tests() {
-        if (! \App::isLocal()) {
+        if (! App::isLocal()) {
             throw new AccessDeniedException('Access denied');
         }
 
@@ -367,7 +379,7 @@ class CodeAnalyzeController extends Controller {
     }
 
     public function routes() {
-        $routes = \Route::getRoutes()->getRoutes();
+        $routes = Route::getRoutes()->getRoutes();
 
         return view('dev.routes', compact('routes'));
     }
