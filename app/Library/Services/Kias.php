@@ -147,9 +147,7 @@ class Kias implements KiasServiceInterface
                     $key = 'kias::User_CicHelloSvc::' . $name . '::' . serialize($params) . '::';
                     $ttl = $this->getLifetime();
                     Debugbar::startMeasure('User_CicHelloSvc in Kias');
-                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
-                        return $this->execProc($name, $params);
-                    });
+                    $execResponse = $this->execProc($name, $params);
                     Debugbar::stopMeasure('User_CicHelloSvc in Kias');
                     break;
 
@@ -157,9 +155,10 @@ class Kias implements KiasServiceInterface
                     $key = 'kias::User_CicMyCoordinationList::' . $name . '::' . serialize($params) . '::';
                     $ttl = $this->getLifetime();
                     Debugbar::startMeasure('User_CicMyCoordinationList in Kias');
-                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
-                        return $this->execProc($name, $params);
-                    });
+                    $execResponse = $this->execProc($name, $params);
+                    // $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
+                    //     return $this->execProc($name, $params);
+                    // });
                     Debugbar::stopMeasure('User_CicMyCoordinationList in Kias');
                     break;
 
