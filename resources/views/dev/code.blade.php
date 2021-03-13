@@ -1,8 +1,6 @@
 @extends('dev.layout')
 
 @section('body')
-
-
     <style>
         .report-table {
 
@@ -37,28 +35,34 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4 offset-4">
                 <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th style="width: 210px;"></th>
+                    </tr>
+                    </thead>
                     <tbody>
                     @foreach ($counts as $type => $count)
                         <tr>
                             <td> {{ $type }}</td>
-                            <td><b>{{ $count }}</b></td>
+                            <td style="text-align: center;"><b>{{ $count }}</b></td>
                         </tr>
                     @endforeach
                     </tbody>
                     <tbody>
                     <tr>
                         <td>Total</td>
-                        <td><b>{{ $classesCount }}</b> classes | <b>{{ $methodsCount }}</b> methods</td>
+                        <td style="text-align: center;"><b>{{ $classesCount }}</b> classes | <b>{{ $methodsCount }}</b> methods</td>
                     </tr>
                     <tr>
                         <td>Too large classes</td>
-                        <td><b>{{ $tooLargeClassesCount }}</b></td>
+                        <td style="text-align: center;"><b>{{ $tooLargeClassesCount }}</b></td>
                     </tr>
                     <tr>
                         <td>Too large methods</td>
-                        <td><b>{{ $tooLargeMethodsCount }}</b></td>
+                        <td style="text-align: center;"><b>{{ $tooLargeMethodsCount }}</b></td>
                     </tr>
                     </tbody>
                 </table>

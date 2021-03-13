@@ -23,6 +23,12 @@ use Route;
 use SimpleXMLElement;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
+/**
+ * Class CodeAnalyzeController
+ * @package App\Http\Controllers\Dev
+ *
+ * @codeCoverageIgnore
+ */
 class CodeAnalyzeController extends Controller {
 
     private const CLASS_MAX_LINES = 500;
@@ -378,7 +384,13 @@ class CodeAnalyzeController extends Controller {
 
         $rows = $rows->groupBy('type');
 
-        return view('dev.code', compact('rows', 'counts', 'classesCount', 'methodsCount', 'tooLargeClassesCount', 'tooLargeMethodsCount'));
+        return view('dev.code', compact(
+            'rows',
+            'counts',
+            'classesCount',
+            'methodsCount',
+            'tooLargeClassesCount',
+            'tooLargeMethodsCount'));
     }
 
     public function tests() {
