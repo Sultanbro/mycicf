@@ -19,7 +19,6 @@ class VendorController extends Controller {
         }
 
         $packages = $this->getComposerPackages();
-        ksort($packages);
 
         $result = [];
 
@@ -35,6 +34,10 @@ class VendorController extends Controller {
                 $item['url'] = sprintf("https://packagist.org/packages/%s", $name);
             }
         }
+
+        $result = collect($result)->sort(function ($a, $b) {
+            return strcmp($b['type'], $a['type']);
+        });
 
         return view('dev.vendor', compact('result'));
     }

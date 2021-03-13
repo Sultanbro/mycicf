@@ -47,14 +47,39 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-striped">
+                <table class="table table-striped routes-table">
                     <thead>
                     <tr>
-                        <th>Method</th>
-                        <th>Domain</th>
-                        <th>URI</th>
-                        <th>Name</th>
-                        <th>Action</th>
+                        <th>
+                            <input type="text"
+                                   class="form-control search-method"
+                                   placeholder="Method"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   class="form-control search-domain"
+                                   placeholder="Domain"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   class="form-control search-uri"
+                                   placeholder="URI"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   class="form-control search-name"
+                                   placeholder="Name"
+                            />
+                        </th>
+                        <th>
+                            <input type="text"
+                                   class="form-control search-action"
+                                   placeholder="Action"
+                            />
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,7 +97,7 @@
                                     {{ $route->domain() }}
                                 @endempty
                             </td>
-                            <td>
+                            <td data-uri="{{ $route->uri }}" class="uri">
                                 <div>
                                     @if (strpos($route->uri, '/') === false)
                                         <i class="no-group">{{ $route->uri }}</i>
@@ -84,7 +109,7 @@
                                     @json($route->parameterNames())
                                 </div>
                             </td>
-                            <td>
+                            <td data-name="{{ $route->getName() ?? '' }}" class="name">
                                 @if($route->getName())
                                     {{ $route->getName() }}
                                 @else
@@ -123,4 +148,30 @@
             color: red;
         }
     </style>
+
+    <script>
+        $(function () {
+            $(document).on('keyup', '.search-uri', function () {
+                let query = $(this).val();
+                $('.routes-table tbody tr')
+                    .hide()
+                    .filter(function () {
+                        let uri = $('td.uri', this).data('uri');
+                        return uri.toLowerCase().includes(query.toLowerCase());
+                    })
+                    .show();
+            });
+
+            $(document).on('keyup', '.search-name', function () {
+                let query = $(this).val();
+                $('.routes-table tbody tr')
+                    .hide()
+                    .filter(function () {
+                        let name = $('td.name', this).data('name');
+                        return name.toLowerCase().includes(query.toLowerCase());
+                    })
+                    .show();
+            });
+        });
+    </script>
 @endsection
