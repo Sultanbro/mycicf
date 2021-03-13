@@ -6,6 +6,7 @@ use App;
 use App\Http\Controllers\Controller;
 use App\Http\Kernel;
 use Debugbar;
+use Route;
 use DebugBar\DataCollector\DataCollector;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Http\FormRequest;
@@ -23,15 +24,16 @@ use SimpleXMLElement;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 /**
+ * https://github.com/aik099/PhpStormProtocol
+ *
  * Class CodeAnalyzeController
  * @package App\Http\Controllers\Dev
  *
  * @codeCoverageIgnore
  */
 class CodeAnalyzeController extends Controller {
-
-    private const CLASS_MAX_LINES = 500;
-    private const METHOD_MAX_LINES = 100;
+    private const CLASS_MAX_LINES = 100;
+    private const METHOD_MAX_LINES = 30;
 
     /**
      * @var RouteCollection
@@ -96,7 +98,7 @@ class CodeAnalyzeController extends Controller {
             'parent'       => $class->getParentClass() ? $class->getParentClass()->getShortName() : null,
             'file'         => $fileName,
             'traitNames'   => $class->getTraitNames(),
-            'phpstormLink' => $this->phpStormLink($fileName, $class->getStartLine()),
+            'phpstormLink' => $this->phpStormLink($class),
         ];
 
         if ($class->isSubclassOf(Eloquent::class)) {
@@ -259,10 +261,9 @@ class CodeAnalyzeController extends Controller {
 
                     if (!empty($route)) {
                         $action['found'] = true;
-                        $action['methods'] = implode('|', $route->methods());
+                        $action['methods'] = implode(' ', $route->methods());
                         $action['uri'] = $route->uri;
                     }
-
                 } else {
                     $actionFound = null;
                 }
@@ -286,7 +287,7 @@ class CodeAnalyzeController extends Controller {
                     'numParams'    => $method->getNumberOfParameters(),
                     'access'       => $access,
                     'action'       => $action,
-                    'phpstormLink' => $this->phpStormLink($fileName, $startLine),
+                    'phpstormLink' => $this->phpStormLink($method),
                     'location'     => [
                         'start' => $startLine,
                         'end'   => $endLine,
@@ -324,8 +325,18 @@ class CodeAnalyzeController extends Controller {
         return $row;
     }
 
-    private function phpStormLink($file, $line) {
-        return sprintf('phpstorm://open?file=%s&line=%d', urlencode($file), $line);
+    /**
+     * https://github.com/aik099/PhpStormProtocol
+     *
+     * @param $entity
+     * @return string
+     */
+    private function phpStormLink($entity) {
+        if ($entity instanceof ReflectionClass || $entity instanceof ReflectionMethod) {
+            return sprintf('phpstorm://open?file=%s&line=%d', urlencode($entity->getFileName()), $entity->getStartLine());
+        }
+
+        dd($entity);
     }
 
     public function index(Request $request) {

@@ -14,6 +14,17 @@
                         <td>Routes without names</td>
                         <td>{{ $stats['routes-with-no-name'] }}</td>
                     </tr>
+                    <tr>
+                        <td>Routes are cacheable</td>
+                        <td>
+                            @if($cacheable)
+                                <span class="badge bg-success">yes</span>
+                            @else
+                                <span class="badge bg-danger">no</span>
+                                <b>Reason:</b> <i>{{ $noCacheableReason }}</i>
+                            @endif
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 

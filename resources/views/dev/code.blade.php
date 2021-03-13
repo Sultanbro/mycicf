@@ -54,7 +54,9 @@
                     <tbody>
                     <tr>
                         <td>Total</td>
-                        <td style="text-align: center;"><b>{{ $classesCount }}</b> classes | <b>{{ $methodsCount }}</b> methods</td>
+                        <td style="text-align: center;"><b>{{ $classesCount }}</b> classes | <b>{{ $methodsCount }}</b>
+                            methods
+                        </td>
                     </tr>
                     <tr>
                         <td>Too large classes</td>
@@ -81,6 +83,16 @@
                             {{ $type }} ({{ count($entry) }})
                         </h2>
                         <table class="table table-striped report-table">
+                            <thead>
+                            <tr>
+                                <td>#</td>
+                                <td>Size</td>
+                                <td>
+                                    Name
+                                </td>
+                                <td>Methods</td>
+                            </tr>
+                            </thead>
                             <tbody>
                             @foreach ($entry as $row)
                                 <tr>
@@ -108,23 +120,22 @@
                                         @endif
                                     </td>
                                     <td class="report-methods">
-                                        @php($classSlug = 'modal_' . Str::slug($row['class']))
+                                        @php($classSlug = Str::slug($row['class']))
                                         @if(count($row['methods']))
-                                            <div class="text-center">
-                                                <a data-bs-toggle="modal" href="#" data-bs-target="#{{$classSlug}}" type="button">
-                                                    <b>{{ $row['methodsCount'] }}</b> methods
-                                                    @if ($row['type'] === 'Controllers')
-                                                        (
-                                                        <b>{{ $row['actionsCount'] }}</b> actions +
-                                                        <b>{{ $row['methodsCount'] - $row['actionsCount'] }}</b>
-                                                        non-actions
-                                                        )
+                                            <a data-bs-toggle="modal" href="#" data-bs-target="#modal__{{$classSlug}}"
+                                               type="button">
+                                                <b>{{ $row['methodsCount'] }}</b> methods
+                                                @if ($row['type'] === 'Controllers')
+                                                    (
+                                                    <b>{{ $row['actionsCount'] }}</b> actions +
+                                                    <b>{{ $row['methodsCount'] - $row['actionsCount'] }}</b>
+                                                    non-actions
+                                                    )
 
-                                                    @endif
-                                                    <b>{{ $row['documentedMethodsCount'] }}</b> documented
-                                                </a>
-                                            </div>
-                                            <div class="modal fade" id="{{$classSlug}}" tabindex="-1"
+                                                @endif
+                                                <b>{{ $row['documentedMethodsCount'] }}</b> documented
+                                            </a>
+                                            <div class="modal fade" id="modal__{{$classSlug}}" tabindex="-1"
                                                  aria-labelledby="{{$classSlug}}__head" aria-hidden="true">
                                                 <div class="modal-dialog" style="max-width: 1280px;">
                                                     <div class="modal-content">
@@ -137,6 +148,33 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <table class="table table-striped">
+                                                                <thead>
+                                                                <tr>
+                                                                    <td>#</td>
+                                                                    <td>Method</td>
+                                                                    <td>
+                                                                        <div>
+                                                                            <input type="text"
+                                                                                   class="form-control method-search-uri"
+                                                                                   placeholder="Uri"
+                                                                                   data-class="{{$classSlug}}"
+                                                                                   data-type="uri"
+                                                                            />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div>
+                                                                            <input type="text"
+                                                                                   class="form-control method-search-action"
+                                                                                   placeholder="Action"
+                                                                                   data-class="{{$classSlug}}"
+                                                                                   data-type="action"
+                                                                            />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>Size</td>
+                                                                </tr>
+                                                                </thead>
                                                                 <tbody>
                                                                 @foreach ($row['methods'] as $method)
                                                                     <tr>
@@ -146,7 +184,8 @@
                                                                                 <b>{{ $method['action']['methods'] }}</b>
                                                                             @endif
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="method-uri"
+                                                                            data-name="{{$method['action']['uri'] ?? ''}}">
                                                                             @if ($method['action']['found'])
                                                                                 <span
                                                                                     title="{{$method['action']['uri']}}">
@@ -157,7 +196,8 @@
                                                                     </span>
                                                                             @endif
                                                                         </td>
-                                                                        <td>
+                                                                        <td class="method-name"
+                                                                            data-name="{{$method['name']}}">
                                                                             @if($method['doc'])
                                                                                 <div
                                                                                     id="doc__{{ $classSlug }}__{{$method['name']}}">
@@ -184,9 +224,7 @@
                                                 </div>
                                             </div>
                                         @else
-                                            <div class="text-center">
-                                                No methods
-                                            </div>
+                                            No methods
                                         @endif
                                     </td>
                                 </tr>
@@ -204,5 +242,36 @@
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
+
+        $(function () {
+            $(document).on('keyup', '.method-search-uri', function () {
+                let query = $(this).val();
+                let cls = $(this).data('class');
+                let type = $(this).data('type');
+
+                $('#modal__' + cls + ' table tbody tr')
+                    .hide()
+                    .filter(function () {
+                        let $methodUri = $('.method-uri', this);
+                        let name = $methodUri.data('name');
+                        return name.toLowerCase().includes(query.toLowerCase());
+                    })
+                    .show();
+            });
+            $(document).on('keyup', '.method-search-action', function () {
+                let query = $(this).val();
+                let cls = $(this).data('class');
+                let type = $(this).data('type');
+
+                $('#modal__' + cls + ' table tbody tr')
+                    .hide()
+                    .filter(function () {
+                        let $methodUri = $('.method-name', this);
+                        let name = $methodUri.data('name');
+                        return name.toLowerCase().includes(query.toLowerCase());
+                    })
+                    .show();
+            });
+        });
     </script>
 @endsection
