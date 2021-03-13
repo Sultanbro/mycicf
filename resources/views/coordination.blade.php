@@ -38,9 +38,7 @@
     @include('layouts.header')
     <main class="flex-row"  id="app">
         <div class="main_margin flex-row width100">
-            @if(Session::get('duty',0)) {{--Второй способ--}}{{--@if(Auth::user()->branch->duty()===false);--}}
             @include('layouts.sidebar')
-            @endif
             <div class="col-md-10" id="coordination">
                 <coordination
                     :isn="{{ Auth::user()->ISN }}"
