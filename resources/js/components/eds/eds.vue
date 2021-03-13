@@ -36,18 +36,19 @@
 </template>
 
 <script>
-    const getBase64FromUrl = async (url) => {
-        const data = await fetch(url);
-        const blob = await data.blob();
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = function() {
-                const base64data = reader.result;
-                resolve(base64data);
-            }
-        });
-    };
+    // const getBase64FromUrl = async (url) => {
+    //     const data = await fetch(url);
+    //     const blob = await data.blob();
+    //     return new Promise((resolve) => {
+    //         const reader = new FileReader();
+    //         reader.readAsDataURL(blob);
+    //         reader.onloadend = function() {
+    //             const base64data = reader.result;
+    //             //resolve(base64data);
+    //             console.log(base64data);
+    //         }
+    //     });
+    // };
     const axios = require('axios');
     export default {
         name: "eds",
@@ -80,7 +81,26 @@
             doc_row_list_inner_other: Object,
             coordination: Object
         },
+        created(){
+            //var url = "\\192.168.1.36\FILESKIAS$\D\33\877\D33877881\3860618.sig";
+        },
         methods: {
+            convertFileToBase64(url){
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", url, true);
+                xhr.responseType = "blob";
+                xhr.onload = function (e) {
+                    console.log(this.response);
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        var res = event.target.result;
+                        console.log(res)
+                    }
+                    var file = this.response;
+                    reader.readAsDataURL(file)
+                };
+                xhr.send()
+            },
             connectSocket(check){
                 var vm = this;
                 this.signedFile = '';
@@ -184,14 +204,27 @@
                     //webSocket.close();
                 }
             },
-
-            signing(type, solution){    // Подписание ЛС
+            getToken(signedBase64, agreementISN){
+                this.loader(true);
+                this.signedFile = '';
+                axios.get('/getEDS').then((response) => {
+                    if(response.data.success){
+                        this.sign.token = response.data.result.token;
+                        this.signing(signedBase64, agreementISN);     // подписываем
+                    } else {
+                        alert('Ошибка получения токена. Попробуйте чуть позже');
+                        this.loader(false);
+                    }
+                });
+            },
+            signing(signedBase64, agreementISN){    // Подписание ЛС. Если signedBase64 != undefined значит его подписывают во второй раз
                 let self = this;
                 if(this.selectedECPFile == '' || this.sign.password == ''){
                     alert('Укажите пожалуйста данные ЭЦП ключа');
                     self.loader(false);
                     return false;
                 }
+                let base64 = signedBase64 != undefined ? signedBase64 : self.base64String;
 
                 if(self.sign.token != '') {
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
@@ -202,7 +235,7 @@
                             method: 'signFileAndReturnBase64Api',
                             args: [
                                 self.sign.token,
-                                self.base64String,
+                                base64,
                                 self.selectedECPFile,
                                 self.sign.password,
                                 'PKCS12'
@@ -216,7 +249,7 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
-                                let curr_isn = self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
+                                let curr_isn = agreementISN != undefined ? agreementISN : self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
                                 self.axios.post("/coordinationSaveAttachment", {
                                     isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
                                     //isn: self.$parent.coordination.ISN,
@@ -230,7 +263,9 @@
                                         alert(response.data.error);
                                         self.loader(false);
                                     } else {
-                                        self.getEdsInfo(response.data.result,curr_isn);     // Если подписание прошло и в киасе записалось
+                                        if(signedBase64 == undefined) {
+                                            self.getSignedFile(response.data.result, curr_isn);     // Если подписание прошло и в киасе записалось
+                                        }
                                     }
                                 });
                             } else {
@@ -246,7 +281,7 @@
                     }
                 }
             },
-            getEdsInfo(docIsn,agreementISN){    // docIsn - isn документа   Берем подписанный файл из киаса
+            getSignedFile(docIsn,agreementISN){    // docIsn - isn документа   Берем подписанный файл из киаса
                 let self = this;
                 self.signedFileInfo = [];
                 self.loader(true);
@@ -257,7 +292,7 @@
                         var obj = response.data.result;
                         if(obj.length > 0){
                             for(let index in obj) {
-                                this.checkSignedFile(obj[index].filepath,obj[index].docISN,agreementISN);     // Проверить подписанные файлы (вытаскиваем данные подписи)
+                                this.checkSignedFile(obj[index].filepath,obj[index].signedBase64,obj[index].docISN,agreementISN);     // Проверить подписанные файлы (вытаскиваем данные подписи)
                             }
                         } else {
                             self.loader(false);
@@ -268,18 +303,54 @@
                     }
                 });
             },
-            getToken(type,solution){
-                this.loader(true);
-                this.signedFile = '';
-                axios.get('/getEDS').then((response) => {
-                    if(response.data.success){
-                        this.sign.token = response.data.result.token;
-                        this.signing(type,solution);     // подписываем
-                    } else {
-                        alert('Ошибка получения токена. Попробуйте чуть позже');
-                        this.loader(false);
+            checkSignedFile(url,signedBase64,toKias,agreementISN,edsType){        // Посмотреть подписанный файл (достаем данные подписи)
+                let self = this;
+                self.loader(true);
+                if(url != ''){
+                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                    self.loader(true);
+                    webSocket.onopen = function () {
+                        var responseObj = {
+                            module: 'kz.uchet.signUtil.commonUtils',
+                            lang: 'en',
+                            method: 'checkCMS',
+                            args: [url]
+                        };
+                        webSocket.send(JSON.stringify(responseObj));
+                    };
+
+                    webSocket.onmessage = function (msg) {
+                        var result = JSON.parse(msg.data);
+                        if(result.code) {
+                            if (result.code == 200) {
+                                if(result.responseObjects.length > 0) {
+                                    //if(self.signedFileInfo.length > 0) {
+                                    //    self.signedFileInfo.push(result.responseObjects[0]);
+                                    //} else {
+                                    self.signedFileInfo = result.responseObjects;
+                                    //}
+
+                                    //console.log(self.convertFileToBase64(signedBase64));
+
+                                    if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
+                                        self.sendEdsInfoToKias(toKias,signedBase64, agreementISN,edsType); // Записываем в киас данные из подписанного файла
+                                    } else {
+                                        self.loader(false);
+                                    }
+                                }
+                            } else {
+                                alert(result.message);
+                                self.loader(false);
+                            }
+                        }
                     }
-                });
+                    webSocket.onerror = function (msg) {
+                        self.loader(false);
+                        alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
+                    }
+                } else {
+                    alert('Выберите пожалуйста файл');
+                }
             },
             checkSignedFilessss(){
                 this.signedFileInfo = [];
@@ -320,56 +391,7 @@
                     alert('Выберите пожалуйста файл');
                 }
             },
-            checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл (достаем данные подписи)
-                let self = this;
-                self.loader(true);
-                if(url != ''){
-                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
-                    self.loader(true);
-                    webSocket.onopen = function () {
-                        var responseObj = {
-                            module: 'kz.uchet.signUtil.commonUtils',
-                            lang: 'en',
-                            method: 'checkCMS',
-                            args: [url]
-                        };
-                        webSocket.send(JSON.stringify(responseObj));
-                    };
-
-                    webSocket.onmessage = function (msg) {
-                        var result = JSON.parse(msg.data);
-                        if(result.code) {
-                            if (result.code == 200) {
-                                if(result.responseObjects.length > 0) {
-                                    //if(self.signedFileInfo.length > 0) {
-                                    //    self.signedFileInfo.push(result.responseObjects[0]);
-                                    //} else {
-                                        self.signedFileInfo = result.responseObjects;
-                                    //}
-
-                                    getBase64FromUrl(url).then(console.log)
-
-                                    // if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
-                                    //     self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
-                                    // } else {
-                                    //     self.loader(false);
-                                    // }
-                                }
-                            } else {
-                                alert(result.message);
-                                self.loader(false);
-                            }
-                        }
-                    }
-                    webSocket.onerror = function (msg) {
-                        self.loader(false);
-                        alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
-                    }
-                } else {
-                    alert('Выберите пожалуйста файл');
-                }
-            },
-            sendEdsInfoToKias(docIsn,agreementISN,edsType){ // docIsn - isn документа, self.isn - это исн котировки
+            sendEdsInfoToKias(docIsn, signedBase64, agreementISN, edsType){ // docIsn - isn документа, self.isn - это исн котировки
                 let self = this;
                 let obj = self.signedFileInfo;
                 self.loader(true);
@@ -387,7 +409,7 @@
                                     let self = this;
                                     self.loader(true);
                                     let agrIsn = self.coordination.RefAgrISN;
-                                    axios.post("/eds-by-isn", {
+                                    axios.post("/eds-by-isn", {                     // Берем подписанный файл из киаса
                                         isn: '',
                                         refISN: agrIsn,
                                         type: 'A',
@@ -397,7 +419,7 @@
                                             var obj = response.data.result;
                                             if (obj.length > 0) {
                                                 for (let index in obj) {
-                                                    this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                                    this.checkSignedFile(obj[index].filepath, obj[index].signedBase64, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
                                                 }
                                             } else {
                                                 self.loader(false);
@@ -416,7 +438,7 @@
                                                 let self = this;
                                                 self.loader(true);
                                                 let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
-                                                axios.post("/eds-by-isn", {
+                                                axios.post("/eds-by-isn", {                                 // Берем подписанный файл из киаса
                                                     isn: '',
                                                     refISN: agrIsn,
                                                     type: 'A',
@@ -426,7 +448,7 @@
                                                         var obj = response.data.result;
                                                         if (obj.length > 0) {
                                                             for (let index in obj) {
-                                                                this.checkSignedFile(obj[index].filepath, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
+                                                                this.checkSignedFile(obj[index].filepath, obj[index].signedBase64, obj[index].docISN, agrIsn, 'cms');     // Проверить подписанные файлы
                                                             }
                                                         } else {
                                                             self.loader(false);
@@ -446,6 +468,9 @@
                                 this.edsConfirmed = true;
                                 self.loader(false);
                             } else {
+                                if(agreementISN != undefined && agreementISN != null) {
+                                    self.getToken(signedBase64,agreementISN);
+                                }
                                 this.edsConfirmed = true;
                                 self.loader(false);
                             }

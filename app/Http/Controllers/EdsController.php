@@ -86,4 +86,91 @@ class EdsController extends Controller
             'error' => isset($error) ? $error : ''
         ]);
     }
+
+    public function testEds(){
+        return view('eds');
+    }
+
+    public function getEdsTokenForSign(){
+        $success = false;
+        $curl = curl_init();
+        curl_setopt_array($curl,array(
+            CURLOPT_URL => "http://ncalayer.uchet.kz:8080/getSignToken",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POSTFIELDS => "{\n\t\"company_token\":\"7006cebf-82b9-4dbf-9cca-7d35d2eaf763\"\n}",
+            CURLOPT_HTTPHEADER => array("Content-Type: application/json"),
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $response = json_decode($response);
+
+        //$response = (object)['token' => '82c924e2-83d2-11eb-bb63-000c296105aa'];
+        //$response = json_decode((string)$response);
+        if(isset($response->token)){
+            $success = true;
+        }
+        return response()->json([
+            'success' => $success,
+            'result' => $response
+        ]);
+//        $client = new Client();
+//        $res = $client->get('http://ncalayer.uchet.kz:8080/getSignToken', ['json' => ['company_token'=>'7006cebf-82b9-4dbf-9cca-7d35d2eaf763']]);
+//        echo $res->getBody();
+//        echo $res->getStatusCode();
+    }
+
+    public function edsByIsn(Request $request,KiasServiceInterface $kias){
+        $files = [];
+        $ISN = isset($request->isn) ? $request->isn : '';
+        $type = isset($request->type) ? $request->type : '';
+        $format = isset($request->edsType) ? $request->edsType : '';
+        $refISN = isset($request->refISN) ? $request->refISN : '';
+        $refID = isset($request->refID ) ? $request->refID  : '';
+        $docClass = isset($request->docClass ) ? $request->docClass  : '';
+
+        $sigFiles = $kias->getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN);
+        if(isset($sigFiles->error)){
+            return response()->json([
+                'success' => false,
+                'result' => (string)$sigFiles->error->text
+            ]);
+        } else {
+            foreach ($sigFiles->ROWSET->row as $file) {
+                $signedBase64 = base64_encode(file_get_contents((string)$file->FILEPATH));
+                array_push($files, [
+                    'filepath' => (string)$file->FILEPATH,
+                    'docISN' => (string)$file->ISN,
+                    'signedBase64' => $signedBase64
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'result' => $files
+        ]);
+    }
+
+    public function saveEdsInfo(Request $request,KiasServiceInterface $kias){
+        $data = $request->data;
+        $response = $kias->cicSaveEDS($request->refIsn,$request->isn,$data['iin'],$data['name'],'',$data['tspDate'],$data['certificateValidityPeriod'],'');
+
+        if(isset($response->error)){
+            return response()->json([
+                'success' => false,
+                'result' => (string)$response->error->text
+            ]);
+        }
+        //if(isset($response->result)) {
+        return response()->json([
+            'success' => true
+        ]);
+        //}
+    }
 }
