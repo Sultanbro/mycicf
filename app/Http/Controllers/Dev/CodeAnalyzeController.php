@@ -19,7 +19,6 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use Route;
 use SimpleXMLElement;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
@@ -409,11 +408,5 @@ class CodeAnalyzeController extends Controller {
         return view('dev.tests', [
             'data' => $data,
         ]);
-    }
-
-    public function routes() {
-        $routes = Route::getRoutes()->getRoutes();
-
-        return view('dev.routes', compact('routes'));
     }
 }

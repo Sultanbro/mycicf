@@ -1,8 +1,6 @@
 @extends('dev.layout')
 
 @section('body')
-
-
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -19,8 +17,13 @@
                             @php($id = Str::slug($testName))
                             <hr>
                             <h4 class="test-header" data-bs-toggle="collapse" data-bs-target="#{{ $id }}">
-                                [{{ $info['assertionCount'] }} {{ \Str::pluralStudly('assertion', $info['assertionCount']) }}
-                                ] {{ $testName }}
+                                <b>
+                                    [
+                                    {{ $info['assertionCount'] }}
+                                    {{ \Str::pluralStudly('assertion', $info['assertionCount']) }}
+                                    ]
+                                </b>
+                                {{ $testName }}
                             </h4>
                             <div class="collapse multi-collapse p-left" id="{{ $id }}">
                                 <h3>{{ $info['name'] }}</h3>

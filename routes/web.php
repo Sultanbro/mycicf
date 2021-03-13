@@ -458,6 +458,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('code', 'Dev\CodeAnalyzeController@index')->name('.code');
     Route::get('tests', 'Dev\CodeAnalyzeController@tests')->name('.tests');
-    Route::get('routes', 'Dev\CodeAnalyzeController@routes')->name('.routes');
+    Route::get('routes', 'Dev\RoutesController@index')->name('.routes');
     Route::get('vendor', 'Dev\VendorController@index')->name('.vendor');
 });
