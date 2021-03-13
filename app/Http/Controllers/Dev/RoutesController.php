@@ -29,7 +29,7 @@ class RoutesController extends Controller {
         try {
             \Artisan::call('route:cache');
             $cacheable = true;
-
+            $noCacheableReason = null;
         } catch (\Exception $e) {
             $noCacheableReason = $e->getMessage();
         }

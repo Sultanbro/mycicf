@@ -32,10 +32,9 @@
         }
     </style>
 
-
     <div class="container">
         <div class="row">
-            <div class="col-md-4 offset-4">
+            <div class="col-md-6 offset-3">
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -59,11 +58,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Too large classes</td>
+                        <td>Too large classes (> {{ \App\Http\Controllers\Dev\CodeAnalyzeController::CLASS_MAX_LINES }} lines)</td>
                         <td style="text-align: center;"><b>{{ $tooLargeClassesCount }}</b></td>
                     </tr>
                     <tr>
-                        <td>Too large methods</td>
+                        <td>Too large methods (> {{ \App\Http\Controllers\Dev\CodeAnalyzeController::METHOD_MAX_LINES }} lines)</td>
                         <td style="text-align: center;"><b>{{ $tooLargeMethodsCount }}</b></td>
                     </tr>
                     </tbody>

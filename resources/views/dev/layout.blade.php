@@ -27,6 +27,7 @@
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.tests') }}">Tests</a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.routes') }}">Routes</a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.vendor') }}">Vendor</a>
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.config') }}">Config</a>
             </nav>
         </div>
     </div>

@@ -32,8 +32,8 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
  * @codeCoverageIgnore
  */
 class CodeAnalyzeController extends Controller {
-    private const CLASS_MAX_LINES = 100;
-    private const METHOD_MAX_LINES = 30;
+    public const CLASS_MAX_LINES = 100;
+    public const METHOD_MAX_LINES = 30;
 
     /**
      * @var RouteCollection

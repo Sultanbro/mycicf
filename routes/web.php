@@ -460,4 +460,5 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('tests', 'Dev\CodeAnalyzeController@tests')->name('.tests');
     Route::get('routes', 'Dev\RoutesController@index')->name('.routes');
     Route::get('vendor', 'Dev\VendorController@index')->name('.vendor');
+    Route::get('config', 'Dev\ConfigController@index')->name('.config');
 });
