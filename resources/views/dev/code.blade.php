@@ -89,7 +89,6 @@
 
                                     </td>
                                     <td class="report-class">
-
                                         <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled"
                                            title="{{ $row['class'] }}">
                                             <b>{{ $row['shortName'] }}</b>@if ($row['parent'])
@@ -105,11 +104,10 @@
                                         @endif
                                     </td>
                                     <td class="report-methods">
-                                        @php($classSlug = Str::slug($row['class']))
+                                        @php($classSlug = 'modal_' . Str::slug($row['class']))
                                         @if(count($row['methods']))
                                             <div class="text-center">
-                                                <a data-bs-toggle="collapse" href="#{{$classSlug}}" role="button"
-                                                   aria-expanded="false" aria-controls="collapseExample">
+                                                <a data-bs-toggle="modal" href="#" data-bs-target="#{{$classSlug}}" type="button">
                                                     <b>{{ $row['methodsCount'] }}</b> methods
                                                     @if ($row['type'] === 'Controllers')
                                                         (
@@ -122,49 +120,64 @@
                                                     <b>{{ $row['documentedMethodsCount'] }}</b> documented
                                                 </a>
                                             </div>
-                                            <div class="collapse" id="{{$classSlug}}">
-                                                <table class="table table-striped">
-                                                    <tbody>
-                                                    @foreach ($row['methods'] as $method)
-                                                        <tr>
-                                                            <td>{{$loop->index + 1}}.</td>
-                                                            <td>
-                                                                @if ($method['action']['found'])
-                                                                    <b>{{ $method['action']['methods'] }}</b>
+                                            <div class="modal fade" id="{{$classSlug}}" tabindex="-1"
+                                                 aria-labelledby="{{$classSlug}}__head" aria-hidden="true">
+                                                <div class="modal-dialog" style="max-width: 1280px;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="{{$classSlug}}__head">
+                                                                <b>{{ $row['shortName'] }}</b>@if ($row['parent'])
+                                                                    <i>extends {{ $row['parent'] }}</i>
                                                                 @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($method['action']['found'])
-                                                                    <span title="{{$method['action']['uri']}}">
+                                                            </h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-striped">
+                                                                <tbody>
+                                                                @foreach ($row['methods'] as $method)
+                                                                    <tr>
+                                                                        <td>{{$loop->index + 1}}.</td>
+                                                                        <td>
+                                                                            @if ($method['action']['found'])
+                                                                                <b>{{ $method['action']['methods'] }}</b>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if ($method['action']['found'])
+                                                                                <span
+                                                                                    title="{{$method['action']['uri']}}">
                                                                         <a href="{{url($method['action']['uri'])}}"
                                                                            target="_blank">
                                                                             {{ $method['action']['uri'] }}
                                                                         </a>
                                                                     </span>
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if($method['doc'])
-                                                                    <div
-                                                                        id="doc__{{ $classSlug }}__{{$method['name']}}">
+                                                                            @endif
+                                                                        </td>
+                                                                        <td>
+                                                                            @if($method['doc'])
+                                                                                <div
+                                                                                    id="doc__{{ $classSlug }}__{{$method['name']}}">
                                                                         <pre
                                                                             class="doc-comment">{{ $method['doc'] }}</pre>
-                                                                    </div>
-                                                                @endif
-                                                                <a href="{{ $method['phpstormLink'] }}">
-                                                                    {{ implode(' ', $method['access']) }}
-                                                                    <b>{{ $method['name'] }}</b>
-                                                                    (<b>{{$method['numParams']}}</b> params)
-                                                                </a>
-                                                            </td>
-                                                            <td>
-                                                                <b class="{{ $method['location']['isTooLarge'] ? 'too-large' : '' }}">{{$method['location']['size']}}</b>
-                                                                lines
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                    </tbody>
-                                                </table>
+                                                                                </div>
+                                                                            @endif
+                                                                            <a href="{{ $method['phpstormLink'] }}">
+                                                                                {{ implode(' ', $method['access']) }}
+                                                                                <b>{{ $method['name'] }}</b>
+                                                                                (<b>{{$method['numParams']}}</b> params)
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>
+                                                                            <b class="{{ $method['location']['isTooLarge'] ? 'too-large' : '' }}">{{$method['location']['size']}}</b>
+                                                                            lines
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         @else
                                             <div class="text-center">
