@@ -29,6 +29,7 @@
 
         .doc-comment {
             color: green;
+            margin-bottom: 0;
         }
 
         .class-path {
@@ -225,8 +226,7 @@
                                                                             @if($method['doc'])
                                                                                 <div
                                                                                     id="doc__{{ $classSlug }}__{{$method['name']}}">
-                                                                        <pre
-                                                                            class="doc-comment">{{ $method['doc'] }}</pre>
+                                                                        <pre class="doc-comment">{{ $method['doc'] }}</pre>
                                                                                 </div>
                                                                             @endif
                                                                             <a href="{{ $method['phpstormLink'] }}"

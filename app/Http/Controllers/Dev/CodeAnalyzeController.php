@@ -45,7 +45,8 @@ class CodeAnalyzeController extends Controller {
         $model = new $modelClass;
 
         $relationships = [];
-        $methods = (new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC);
+        $reflectionClass = new ReflectionClass($model);
+        $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
             if ($method->class !== get_class($model) ||
@@ -108,8 +109,8 @@ class CodeAnalyzeController extends Controller {
             $row['type'] = 'Models';
             $row['relations'] = Debugbar::measure('Processing relations for ' . $row['class'], function () use ($row) {
                 $md5 = md5_file($row['file']);
-                $key = 'Model::relations::' . $row['class'] . '::' . $md5;
-                return cache()->remember($key, 10, function () use ($row) {
+                $key = sprintf("Model::relations::%s::%s", $row['class'], $md5);
+                return cache()->rememberForever($key, function () use ($row) {
                     return $this->collectModelRelationships($row);
                 });
             });
