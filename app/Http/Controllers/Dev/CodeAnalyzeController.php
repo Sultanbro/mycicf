@@ -6,6 +6,7 @@ use App;
 use App\Http\Controllers\Controller;
 use App\Http\Kernel;
 use Debugbar;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Route;
 use DebugBar\DataCollector\DataCollector;
 use Illuminate\Console\Command;
@@ -14,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Support\ServiceProvider;
-
 use Eloquent;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -40,29 +40,31 @@ class CodeAnalyzeController extends Controller {
      */
     private $routes;
 
-    private function collectModelRelationships($modelClass) {
+    private function collectModelRelationships($row) {
+        $modelClass = $row['class'];
         $model = new $modelClass;
+
         $relationships = [];
         $methods = (new ReflectionClass($model))->getMethods(ReflectionMethod::IS_PUBLIC);
 
-        foreach ($methods as $method)
-        {
-             if ($method->class !== get_class($model) ||
-                 !empty($method->getParameters()) ||
-                 $method->getName() === __FUNCTION__) {
-                 continue;
-             }
+        foreach ($methods as $method) {
+            if ($method->class !== get_class($model) ||
+                ! empty($method->getParameters()) ||
+                $method->getName() === __FUNCTION__) {
+                continue;
+            }
 
-             try {
-                 $return = $method->invoke($model);
+            try {
+                $result = $method->invoke($model);
 
-                 if ($return instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
-                     $relationships[$method->getName()] = [
-                         'type' => (new ReflectionClass($return))->getShortName(),
-                         'model' => (new ReflectionClass($return->getRelated()))->getName()
-                     ];
-                 }
-             } catch(\Throwable $e) {}
+                if ($result instanceof Relation) {
+                    $relationships[$method->getName()] = [
+                        'type'  => (new ReflectionClass($result))->getShortName(),
+                        'model' => (new ReflectionClass($result->getRelated()))->getName()
+                    ];
+                }
+            } catch (\Throwable $e) {
+            }
         }
 
         return $relationships;
@@ -103,6 +105,14 @@ class CodeAnalyzeController extends Controller {
 
         if ($class->isSubclassOf(Eloquent::class)) {
             $row['type'] = 'Models';
+            $row['relations'] = Debugbar::measure('Processing relations for ' . $row['class'], function () use ($row) {
+                $md5 = md5_file($row['file']);
+                $key = 'Model::relations::' . $row['class'] . '::' . $md5;
+                return cache()->remember($key, 10, function () use ($row) {
+                    return $this->collectModelRelationships($row);
+                });
+            });
+
         } elseif ($class->isSubclassOf(Controller::class)) {
             $row['type'] = 'Controllers';
         } elseif ($class->isSubclassOf(Command::class)) {
@@ -117,6 +127,8 @@ class CodeAnalyzeController extends Controller {
             $row['type'] = 'Data Collectors';
         } elseif ($class->isSubclassOf(SimpleXMLElement::class)) {
             $row['type'] = 'XML';
+        } elseif (Str::startsWith($name, 'App\Library\Services\Mocks')) {
+            $row['type'] = 'Service Mocks';
         } elseif (Str::startsWith($name, 'App\Library\Services')) {
             $row['type'] = 'Services';
         } elseif (Str::startsWith($name, 'App\Observers')) {
@@ -158,6 +170,10 @@ class CodeAnalyzeController extends Controller {
                 $row['shortName'] = str_replace('App\\Library\\Services\\', '', $row['class']);
                 break;
 
+            case 'Service Mocks':
+                $row['shortName'] = str_replace('App\\Library\\Services\\Mocks\\', '', $row['class']);
+                break;
+
             case 'Middlewares':
                 $row['shortName'] = str_replace('App\Http\Middleware\\', '', $row['class']);
 
@@ -175,7 +191,7 @@ class CodeAnalyzeController extends Controller {
                     }
                 }
 
-                if (!empty($key)) {
+                if (! empty($key)) {
                     $row['middlewareKey'] = $key;
                 }
 
@@ -211,7 +227,7 @@ class CodeAnalyzeController extends Controller {
 
             case 'Others':
             case 'Data Collectors':
-            $row['shortName'] = $row['class'];
+                $row['shortName'] = $row['class'];
                 break;
             default:
                 dd($row['type'], $row['class']);
@@ -259,7 +275,7 @@ class CodeAnalyzeController extends Controller {
                 if ($row['type'] === 'Controllers') {
                     $route = $this->routes->getByAction("{$method->class}@{$method->name}");
 
-                    if (!empty($route)) {
+                    if (! empty($route)) {
                         $action['found'] = true;
                         $action['methods'] = implode(' ', $route->methods());
                         $action['uri'] = $route->uri;
@@ -270,7 +286,7 @@ class CodeAnalyzeController extends Controller {
 
                 $docComment = $method->getDocComment();
 
-                if (!empty($docComment)) {
+                if (! empty($docComment)) {
                     $docComment = collect(preg_split('%[\r\n]+%', $docComment))->map(function ($line) {
                         return trim($line);
                     })->map(function ($line, $index) {
@@ -289,9 +305,9 @@ class CodeAnalyzeController extends Controller {
                     'action'       => $action,
                     'phpstormLink' => $this->phpStormLink($method),
                     'location'     => [
-                        'start' => $startLine,
-                        'end'   => $endLine,
-                        'size'  => $size,
+                        'start'      => $startLine,
+                        'end'        => $endLine,
+                        'size'       => $size,
                         'isTooLarge' => $size > self::METHOD_MAX_LINES,
                     ]
                 ];
@@ -304,7 +320,7 @@ class CodeAnalyzeController extends Controller {
         $row['methods'] = $methods;
         $row['methodsCount'] = collect($methods)->count();
         $row['actionsCount'] = collect($methods)->filter(function ($method) {
-            return !empty($method['action']['found']);
+            return ! empty($method['action']['found']);
         })->count();
         $row['documentedMethodsCount'] = collect($methods)->filter(function ($method) {
             return (bool)$method['doc'];
@@ -316,9 +332,9 @@ class CodeAnalyzeController extends Controller {
         $isTooLarge = $size > self::CLASS_MAX_LINES;
 
         $row['location'] = [
-            'start' => $startLine,
-            'end'   => $endLine,
-            'size'  => $size,
+            'start'      => $startLine,
+            'end'        => $endLine,
+            'size'       => $size,
             'isTooLarge' => $isTooLarge
         ];
 
@@ -345,11 +361,11 @@ class CodeAnalyzeController extends Controller {
         }
 
         $this->routes = Route::getRoutes();
-        $a = $this->getDirContents(app_path());
+        $contents = $this->getDirContents(app_path());
         $rows = collect();
 
         Debugbar::startMeasure('Process all classes');
-        foreach ($a as $entry) {
+        foreach ($contents as $entry) {
             $entry = str_replace(app_path(), '', $entry);
             $entry = preg_replace('%\\.php$%', '', $entry);
             $name = 'App' . $entry;

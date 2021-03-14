@@ -45,7 +45,11 @@
                     <tbody>
                     @foreach ($counts as $type => $count)
                         <tr>
-                            <td> {{ $type }}</td>
+                            <td>
+                                <a href="#type__{{ Str::slug($type) }}">
+                                    {{ $type }}
+                                </a>
+                            </td>
                             <td style="text-align: center;"><b>{{ $count }}</b></td>
                         </tr>
                     @endforeach
@@ -79,6 +83,7 @@
                 @foreach ($rows as $type => $entry)
                     <div>
                         <h2>
+                            <a name="type__{{ Str::slug($type) }}"></a>
                             {{ $type }} ({{ count($entry) }})
                         </h2>
                         <table class="table table-striped report-table">
@@ -90,6 +95,9 @@
                                     Name
                                 </td>
                                 <td>Methods</td>
+                                @if ($type === 'Models')
+                                    <td>Relations</td>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -226,6 +234,47 @@
                                             No methods
                                         @endif
                                     </td>
+                                    @if ($type === 'Models')
+                                        <td>
+                                            <!-- Button trigger modal -->
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#relationsmodal__{{$classSlug}}">
+                                                {{ count($row['relations']) }} relations
+                                            </a>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="relationsmodal__{{$classSlug}}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Relations of {{ $row['class'] }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-striped">
+                                                                <tbody>
+                                                                @foreach ($row['relations'] as $name => $relation)
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a href="#">
+                                                                                {{ $name }}
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>{{ $relation['type'] }}</td>
+                                                                        <td>{{ $relation['model'] }}</td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
