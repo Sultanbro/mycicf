@@ -15,6 +15,10 @@
                         <td>{{ $stats['routes-with-no-name'] }}</td>
                     </tr>
                     <tr>
+                        <td>Dead routes</td>
+                        <td>{{ $stats['dead-routes'] }}</td>
+                    </tr>
+                    <tr>
                         <td>Routes are cacheable</td>
                         <td>
                             @if($cacheable)
@@ -25,24 +29,53 @@
                             @endif
                         </td>
                     </tr>
+                    <tr>
+                        <td>Cached routes path</td>
+                        <td>{{ $cachedRoutePath }}</td>
+                    </tr>
                     </tbody>
                 </table>
 
-                <table class="table table-striped">
-                    @foreach ($routesByDomain as $domain => $count)
-                        <tr>
-                            <td>
-                                @empty($domain)
-                                    <i>{No domain}</i>
-                                @else
-                                    {{ $domain }}
-                                @endempty
-                            </td>
-                            <td>{{ $count }}</td>
-                        </tr>
-                        @endforeach
-                        </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Routes by domain</h2>
+
+                        <table class="table table-striped routes-by-domain">
+                            @foreach ($routesByDomain as $domain => $count)
+                                <tr class="{{ empty($domain) ? 'no-domain' : '' }}">
+                                    <td>
+                                        @empty($domain)
+                                            <i>{No domain}</i>
+                                        @else
+                                            {{ $domain }}
+                                        @endempty
+                                    </td>
+                                    <td>{{ $count }}</td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h2>Routes by group</h2>
+
+                        <table class="table table-striped routes-by-group">
+                            @foreach ($routesByGroup as $group => $count)
+                                <tr class="{{ empty($group) ? 'no-group' : '' }}">
+                                    <td>
+                                        @empty($group)
+                                            <i>{No group}</i>
+                                        @else
+                                            {{ $group }}
+                                        @endempty
+                                    </td>
+                                    <td>{{ $count }}</td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -120,7 +153,9 @@
                             </td>
                             <td>
                                 @if (gettype($route->action['uses']) === 'string')
-                                    {{ $route->action['uses'] }}
+                                    <a href="{{ $links[$route->action['uses']] }}">
+                                        {{ $route->action['uses'] }}
+                                    </a>
                                 @elseif (gettype($route->action['uses']) === 'object' && $route->action['uses'] instanceof Closure)
                                     <i class="closure"> {Closure}</i>
                                 @else
@@ -146,6 +181,15 @@
 
         .no-route-name {
             color: red;
+        }
+
+        .routes-by-domain .no-domain {
+            font-weight: bold;
+        }
+
+        .routes-by-group .no-group {
+            color: red !important;
+            font-weight: bold;
         }
     </style>
 

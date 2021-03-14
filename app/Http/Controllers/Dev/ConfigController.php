@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Dev;
 
 use App\Http\Controllers\Controller;
 use Artisan;
-use Barryvdh\Debugbar\LaravelDebugbar;
 
 /**
  * Class ConfigController
@@ -15,14 +14,19 @@ use Barryvdh\Debugbar\LaravelDebugbar;
 class ConfigController extends Controller {
     public function index() {
         $cacheable = false;
+
         try {
             Artisan::call('config:cache');
             $cacheable = true;
             $noCacheableReason = null;
+            Artisan::call('config:clear');
         } catch (\Exception $e) {
             $noCacheableReason = $e->getMessage();
         }
 
-        return view('dev.config', compact('cacheable', 'noCacheableReason'));
+        return view('dev.config', compact(
+            'cacheable',
+            'noCacheableReason'
+        ));
     }
 }
