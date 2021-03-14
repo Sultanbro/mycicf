@@ -141,6 +141,8 @@ class CodeAnalyzeController extends Controller {
             $row['type'] = 'Imports';
         } elseif (Str::startsWith($name, 'App\Exports')) {
             $row['type'] = 'Exports';
+        } elseif (Str::startsWith($name, 'App\Helpers')) {
+            $row['type'] = 'Helpers';
         } else {
             $row['type'] = 'Others';
         }
@@ -223,6 +225,10 @@ class CodeAnalyzeController extends Controller {
 
             case 'XML':
                 $row['shortName'] = str_replace('App\\XML\\', '', $row['class']);
+                break;
+
+            case 'Helpers':
+                $row['shortName'] = str_replace('App\\Helpers\\', '', $row['class']);
                 break;
 
             case 'Others':
