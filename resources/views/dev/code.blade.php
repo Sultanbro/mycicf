@@ -30,6 +30,10 @@
         .doc-comment {
             color: green;
         }
+
+        .class-path {
+            color: #0000003d;
+        }
     </style>
 
     <div class="container">
@@ -114,7 +118,16 @@
                                     <td class="report-class">
                                         <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled"
                                            title="{{ $row['class'] }}">
-                                            <b>{{ $row['shortName'] }}</b>@if ($row['parent'])
+
+                                            @if(!empty($row['classSplitted']))
+                                                @foreach ($row['classSplitted']['path'] as $item)
+                                                    <i class="class-path">{{$item}} \</i>
+                                                @endforeach
+                                                    <b>{{$row['classSplitted']['last']}}</b>
+                                            @else
+                                                <b>{{$row['shortName']}}</b>
+                                            @endif
+                                                @if ($row['parent'])
                                                 <i>extends {{ $row['parent'] }}</i>
                                             @endif</a>@if (count($row['traitNames']))
                                             uses {{ count($row['traitNames']) }} {{ \Str::plural('trait', count($row['traitNames'])) }}

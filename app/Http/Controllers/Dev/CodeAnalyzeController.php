@@ -344,6 +344,16 @@ class CodeAnalyzeController extends Controller {
             'isTooLarge' => $isTooLarge
         ];
 
+        if (Str::contains($row['shortName'], '\\')) {
+            $parts = explode('\\', $row['shortName']);
+            $last = array_pop($parts);
+
+            $row['classSplitted'] = [
+                'path' => $parts,
+                'last' => $last
+            ];
+        }
+
         return $row;
     }
 
