@@ -42,8 +42,9 @@
                                     @foreach($info['routes']['middleware'] as $name => $mw)
                                         <li>
                                             @if(!empty($mw))
-                                                <a href="{{ $mw['phpstormLink'] }}">{{ $name }} </a>
-
+                                                <a href="{{ $mw['phpstormLink'] }}">
+                                                    {{ $name }}
+                                                </a>
                                             @else
                                                 {{ $name }}
                                             @endif
@@ -74,14 +75,19 @@
                                           data-value="{{ $info['queries']['allQueriesDuration'] }}"></span>
                                 </h4>
 
-                                <ul>
-                                    @foreach ($info['queries']['timings'] as $key => $data)
-                                        <li>
-                                            {{ $key }}: {{ $info['queries']['counts'][$key] }} <span class="duration"
-                                                                                                     data-value="{{ $data }}"></span>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                <div class="col-md-6">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                        @foreach ($info['queries']['timings'] as $key => $data)
+                                            <tr>
+                                                <td>{{ $key }}</td>
+                                                <td>{{ $info['queries']['counts'][$key] }}</td>
+                                                <td><span class="duration" data-value="{{ $data }}"></span></td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
 
                                 <table class="table table-striped table-hover">
                                     <tbody>

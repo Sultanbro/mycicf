@@ -60,7 +60,8 @@ class CodeAnalyzeController extends Controller {
                 if ($result instanceof Relation) {
                     $relationships[$method->getName()] = [
                         'type'  => (new ReflectionClass($result))->getShortName(),
-                        'model' => (new ReflectionClass($result->getRelated()))->getName()
+                        'model' => (new ReflectionClass($result->getRelated()))->getName(),
+                        'phpStormLink' => $this->phpStormLink($method),
                     ];
                 }
             } catch (\Throwable $e) {
@@ -285,6 +286,7 @@ class CodeAnalyzeController extends Controller {
                         $action['found'] = true;
                         $action['methods'] = implode(' ', $route->methods());
                         $action['uri'] = $route->uri;
+                        $action['routeName'] = $route->getName();
                     }
                 } else {
                     $actionFound = null;
@@ -303,10 +305,18 @@ class CodeAnalyzeController extends Controller {
                     })->join("\n");
                 }
 
+                $reflectionParameters = collect($method->getParameters())
+                    ->map(function (\ReflectionParameter $param) {
+                        $type = $param->getType()->name ?? '';
+
+                        return $type . '$' . $param->getName();
+                    })->join(", ");
+
                 return [
                     'name'         => $method->getName(),
                     'doc'          => $docComment,
                     'numParams'    => $method->getNumberOfParameters(),
+                    'paramsString' => $reflectionParameters,
                     'access'       => $access,
                     'action'       => $action,
                     'phpstormLink' => $this->phpStormLink($method),

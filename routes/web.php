@@ -462,4 +462,5 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('vendor', 'Dev\VendorController@index')->name('.vendor');
     Route::get('config', 'Dev\ConfigController@index')->name('.config');
     Route::get('git', 'Dev\GitController@index')->name('.git');
+    Route::get('views', 'Dev\ViewsController@index')->name('.views');
 });

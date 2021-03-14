@@ -213,6 +213,10 @@
                                                                            target="_blank">
                                                                             {{ $method['action']['uri'] }}
                                                                         </a>
+
+                                                                        @if (!empty($method['action']['routeName']))
+                                                                            as <b>{{ $method['action']['routeName'] }}</b>
+                                                                        @endif
                                                                     </span>
                                                                             @endif
                                                                         </td>
@@ -225,7 +229,10 @@
                                                                             class="doc-comment">{{ $method['doc'] }}</pre>
                                                                                 </div>
                                                                             @endif
-                                                                            <a href="{{ $method['phpstormLink'] }}">
+                                                                            <a href="{{ $method['phpstormLink'] }}"
+                                                                               data-bs-toggle="tooltip"
+                                                                               data-bs-html="true"
+                                                                               title="{{ $method['paramsString'] }}">
                                                                                 {{ implode(' ', $method['access']) }}
                                                                                 <b>{{ $method['name'] }}</b>
                                                                                 (<b>{{$method['numParams']}}</b> params)
@@ -268,7 +275,7 @@
                                                                 @foreach ($row['relations'] as $name => $relation)
                                                                     <tr>
                                                                         <td>
-                                                                            <a href="#">
+                                                                            <a href="{{ $relation['phpStormLink'] }}">
                                                                                 {{ $name }}
                                                                             </a>
                                                                         </td>

@@ -7,7 +7,7 @@
                 <table class="table table-striped">
                     <tbody>
                     <tr>
-                        <td>URL</td>
+                        <td>Remote URL</td>
                         <td>
                             <a href="{{ $url }}" target="_blank">{{ $url }}</a>
                         </td>
@@ -15,17 +15,18 @@
                     <tr>
                         <td>Branch</td>
                         <td>
-                            <a href="{{ $currentBranchUrl }}" target="_blank">{{ $currentBranch }}</a>
+                            <a href="{{ $currentBranchUrl }}" target="_blank">
+                                {{ $currentBranch }}
+                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td>Last commit</td>
                         <td>
                             <pre>@foreach ($lastCommitMessage['message'] as $line){{ $line . "\n" }}@endforeach</pre>
-
-                                <a href="{{ $lastCommitMessage['url'] }}" target="_blank">
-                                    See the commit
-                                </a>
+                            <a href="{{ $lastCommitMessage['url'] }}" target="_blank">
+                                See the commit
+                            </a>
                         </td>
                     </tr>
                     </tbody>
