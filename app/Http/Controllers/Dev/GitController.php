@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Http\Controllers\Controller;
+use Debugbar;
+use Illuminate\Support\Str;
 
+/**
+ * Class GitController
+ * @package App\Http\Controllers\Dev
+ * @group Dev
+ */
 class GitController extends Controller {
     /**
      * @var string
@@ -20,9 +27,18 @@ class GitController extends Controller {
         $this->url = preg_replace('/\.git$/', '', $this->url);
     }
 
+    /**
+     * Git
+     *
+     * @return \Illuminate\View\View
+     */
     public function index() {
-        $remoteBranches = $this->branches(true);
-        $localBranches = $this->branches();
+        $remoteBranches = Debugbar::measure('get remote branches', function () {
+            return $this->branches(true);
+        });
+        $localBranches = Debugbar::measure('get local branches', function () {
+            return $this->branches();
+        });
         $currentBranch = $this->currentBranch();
         $currentBranchUrl = $this->getBranchUrl($this->currentBranch());
         $lastCommitMessage = $this->getLastCommitMessage();
@@ -39,10 +55,11 @@ class GitController extends Controller {
     }
 
     private function currentBranch() {
-        exec('git branch --show-current', $output);
-        [$branch] = $output;
+        exec('git branch', $output);
 
-        return $branch;
+        return collect($output)->first(function ($line) {
+            return Str::startsWith($line, '*');
+        });
     }
 
     private function branches($remote = false) {
@@ -56,6 +73,7 @@ class GitController extends Controller {
         return collect($remoteBranches)->map(function ($name) {
             $name = trim($name);
             $name = str_replace('origin/', '', $name);
+
             return [
                 'name' => $name,
                 'url'  => $this->getBranchUrl($name)

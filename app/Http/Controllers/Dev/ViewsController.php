@@ -12,8 +12,14 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
  * @package App\Http\Controllers\Dev
  *
  * @codeCoverageIgnore
+ * @group Dev
  */
 class ViewsController extends Controller {
+    /**
+     * Views
+     *
+     * @return \Illuminate\View\View
+     */
     public function index() {
         if (! App::isLocal()) {
             throw new AccessDeniedException('Access denied');

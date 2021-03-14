@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dev;
 
 use App\Http\Controllers\Controller;
+use Artisan;
 use ReflectionClass;
 use Route;
 
@@ -11,8 +12,15 @@ use Route;
  * @package App\Http\Controllers\Dev
  *
  * @codeCoverageIgnore
+ * @group Dev
  */
 class RoutesController extends Controller {
+    /**
+     * Routes
+     *
+     * @return \Illuminate\View\View
+     * @throws \ReflectionException
+     */
     public function index() {
         $routes = Route::getRoutes()->getRoutes();
 
@@ -22,7 +30,7 @@ class RoutesController extends Controller {
 
         $stats = [
             'routes-with-no-name' => 0,
-            'dead-routes' => 0,
+            'dead-routes'         => 0,
         ];
 
         foreach ($routes as $route) {
@@ -37,30 +45,34 @@ class RoutesController extends Controller {
 
         $cacheable = false;
         try {
-            \Artisan::call('route:cache');
+            Artisan::call('route:cache');
             $cacheable = true;
             $noCacheableReason = null;
-            \Artisan::call('route:clear');
+            Artisan::call('route:clear');
         } catch (\Exception $e) {
             $noCacheableReason = $e->getMessage();
         }
 
-        $routesByDomain = collect($routes)->countBy(function (\Illuminate\Routing\Route $route) {
-            return $route->getDomain();
-        })->sortKeys();
+        $routesByDomain = collect($routes)
+            ->countBy(function (\Illuminate\Routing\Route $route) {
+                return $route->getDomain();
+            })
+            ->sortKeys();
 
-        $routesByGroup = collect($routes)->countBy(function (\Illuminate\Routing\Route $route) {
-            $name = $route->getName();
-            if (empty($name)) {
-                return '';
-            }
+        $routesByGroup = collect($routes)
+            ->countBy(function (\Illuminate\Routing\Route $route) {
+                $name = $route->getName();
+                if (empty($name)) {
+                    return '';
+                }
 
-            [$group] = explode('.', $name);
+                [$group] = explode('.', $name);
 
-            return $group;
-        })->sortByDesc(function ($count) {
-            return $count;
-        });
+                return $group;
+            })
+            ->sortByDesc(function ($count) {
+                return $count;
+            });
 
         $links = [];
 

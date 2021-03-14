@@ -30,6 +30,7 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
  * @package App\Http\Controllers\Dev
  *
  * @codeCoverageIgnore
+ * @group Dev
  */
 class CodeAnalyzeController extends Controller {
     public const CLASS_MAX_LINES = 100;
@@ -385,6 +386,12 @@ class CodeAnalyzeController extends Controller {
         dd($entity);
     }
 
+    /**
+     * Code analyze
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function index(Request $request) {
         if (! App::isLocal()) {
             throw new AccessDeniedException('Access denied');
@@ -456,23 +463,5 @@ class CodeAnalyzeController extends Controller {
             'tooLargeMethodsCount',
             'groupedCounts'
         ));
-    }
-
-    public function tests() {
-        if (! App::isLocal()) {
-            throw new AccessDeniedException('Access denied');
-        }
-
-        $filePath = base_path('tests/Feature/report.json');
-
-        if (! file_exists($filePath)) {
-            return;
-        }
-
-        $data = json_decode(file_get_contents($filePath), true);
-
-        return view('dev.tests', [
-            'data' => $data,
-        ]);
     }
 }
