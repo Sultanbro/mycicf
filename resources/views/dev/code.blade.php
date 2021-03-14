@@ -88,7 +88,7 @@
                     <div>
                         <h2>
                             <a name="type__{{ Str::slug($type) }}"></a>
-                            {{ $type }} ({{ count($entry) }})
+                            {{ $type }} ({{ count($entry) }}) | {{ $groupedCounts[$type] }} are grouped
                         </h2>
                         <table class="table table-striped report-table">
                             <thead>
@@ -119,7 +119,7 @@
                                         <a href="{{ $row['phpstormLink'] }}" data-bs-toggle="tooltip-disabled"
                                            title="{{ $row['class'] }}">
 
-                                            @if(!empty($row['classSplitted']))
+                                            @if($row['grouped'])
                                                 @foreach ($row['classSplitted']['path'] as $item)
                                                     <i class="class-path">{{$item}} \</i>
                                                 @endforeach

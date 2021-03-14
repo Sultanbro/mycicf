@@ -344,6 +344,7 @@ class CodeAnalyzeController extends Controller {
             'isTooLarge' => $isTooLarge
         ];
 
+        $row['grouped'] = false;
         if (Str::contains($row['shortName'], '\\')) {
             $parts = explode('\\', $row['shortName']);
             $last = array_pop($parts);
@@ -352,6 +353,8 @@ class CodeAnalyzeController extends Controller {
                 'path' => $parts,
                 'last' => $last
             ];
+
+            $row['grouped'] = true;
         }
 
         return $row;
@@ -426,13 +429,22 @@ class CodeAnalyzeController extends Controller {
 
         $rows = $rows->groupBy('type');
 
+        $groupedCounts = [];
+        foreach ($rows as $type => $item) {
+            $groupedCounts[$type] = $item->filter(function ($item) {
+                return $item['grouped'];
+            })->count();
+        }
+
         return view('dev.code', compact(
             'rows',
             'counts',
             'classesCount',
             'methodsCount',
             'tooLargeClassesCount',
-            'tooLargeMethodsCount'));
+            'tooLargeMethodsCount',
+            'groupedCounts'
+        ));
     }
 
     public function tests() {
