@@ -25,8 +25,6 @@ class ConfigController extends Controller {
             throw new AccessDeniedException('Access denied');
         }
 
-        $cacheable = false;
-
         $all = config()->all();
         $this->plainConfig($all, $result);
 

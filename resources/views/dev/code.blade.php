@@ -232,6 +232,7 @@
                                                                             <a href="{{ $method['phpstormLink'] }}"
                                                                                data-bs-toggle="tooltip"
                                                                                data-bs-html="true"
+                                                                               data-bs-placement="left"
                                                                                title="{{ $method['paramsString'] }}">
                                                                                 {{ implode(' ', $method['access']) }}
                                                                                 <b>{{ $method['name'] }}</b>

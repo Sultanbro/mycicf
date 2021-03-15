@@ -388,7 +388,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         //My results page
         Route::get('rating', 'RatingController@ratingIndex')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
-        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+        // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
@@ -464,4 +464,5 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('git', 'Dev\GitController@index')->name('.git');
     Route::get('views', 'Dev\ViewsController@index')->name('.views');
     Route::get('docs', 'Dev\DocsController@index')->name('.docs');
+    Route::get('caching', 'Dev\CachingController@index')->name('.caching');
 });

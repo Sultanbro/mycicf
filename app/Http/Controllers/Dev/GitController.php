@@ -34,14 +34,30 @@ class GitController extends Controller {
      */
     public function index() {
         $remoteBranches = Debugbar::measure('get remote branches', function () {
-            return $this->branches(true);
+            return cache()->remember('git::remote-branches', 10, function () {
+                return $this->branches(true);
+            });
         });
         $localBranches = Debugbar::measure('get local branches', function () {
-            return $this->branches();
+            return cache()->remember('git::local-branches', 10, function () {
+                return $this->branches();
+            });
         });
-        $currentBranch = $this->currentBranch();
-        $currentBranchUrl = $this->getBranchUrl($this->currentBranch());
-        $lastCommitMessage = $this->getLastCommitMessage();
+        $currentBranch = Debugbar::measure('get current branch', function () {
+            return cache()->remember('git::current-branch', 10, function () {
+                return $this->currentBranch();
+            });
+        });
+        $currentBranchUrl = Debugbar::measure('get current branch url', function () {
+            return cache()->remember('git::current-branch-url', 10, function () {
+                return $this->getBranchUrl($this->currentBranch());
+            });
+        });
+        $lastCommitMessage = Debugbar::measure('get last commit message', function () {
+            return cache()->remember('git::last-commit-message', 1, function () {
+                return $this->getLastCommitMessage();
+            });
+        });
         $url = $this->url;
 
         return view('dev.git', compact(
