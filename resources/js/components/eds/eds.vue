@@ -249,22 +249,26 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
-                                let curr_isn = agreementISN != undefined ? agreementISN : self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
+                                let curr_isn = self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
+                                let ref_isn = agreementISN != undefined ? agreementISN : '';
+                                let ext = agreementISN != undefined ? 'cms' : 'sig';
+                                let requestType = agreementISN != undefined ? 'A' : 'D';
                                 self.axios.post("/coordinationSaveAttachment", {
                                     isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
+                                    refISN: ref_isn,
                                     //isn: self.$parent.coordination.ISN,
                                     //id: self.$parent.coordination.ID,
-                                    requestType: 'D',
+                                    requestType: requestType,
                                     fileType: 'base64',
                                     file: self.signedFile,
-                                    fileExt: 'sig',
+                                    fileExt: ext,
                                 }).then((response) => {
                                     if (!response.data.success) {
                                         alert(response.data.error);
                                         self.loader(false);
                                     } else {
                                         if(signedBase64 == undefined) {
-                                            self.getSignedFile(response.data.result, curr_isn);     // Если подписание прошло и в киасе записалось
+                                            self.getSignedFile(response.data.result, curr_isn, agreementISN);     // Если подписание прошло и в киасе записалось
                                         }
                                     }
                                 });
@@ -281,12 +285,13 @@
                     }
                 }
             },
-            getSignedFile(docIsn,agreementISN){    // docIsn - isn документа   Берем подписанный файл из киаса
+            getSignedFile(docIsn, coordinationISN, agreementISN){    // docIsn - isn документа   Берем подписанный файл из киаса
                 let self = this;
                 self.signedFileInfo = [];
                 self.loader(true);
                 axios.post("/eds-by-isn", {
-                    isn: docIsn
+                    isn: docIsn,
+                    refISN: agreementISN != undefined ? agreementISN : '',
                 }).then((response) => {
                     if(response.data.success) {
                         var obj = response.data.result;

@@ -110,7 +110,7 @@ class EdsController extends Controller
         curl_close($curl);
         $response = json_decode($response);
 
-        //$response = (object)['token' => '82c924e2-83d2-11eb-bb63-000c296105aa'];
+        //$response = (object)['token' => 'c4906463-8544-11eb-bb63-000c296105aa'];
         //$response = json_decode((string)$response);
         if(isset($response->token)){
             $success = true;
@@ -142,11 +142,18 @@ class EdsController extends Controller
             ]);
         } else {
             foreach ($sigFiles->ROWSET->row as $file) {
-                $signedBase64 = base64_encode(file_get_contents((string)$file->FILEPATH));
+                //$signedBase64 = base64_encode('192.168.1.36\FILESKIAS$\D\33\877\D33877881\3860996.sig');
+                if($refISN != '') {
+                    $attachment = $kias->getAttachmentData($refISN, intval($file->ISN), 'A');
+                    if (isset($attachment->FILEDATA, $attachment->FILENAME)) {
+                        $signedBase64 = (string)$attachment->FILEDATA;
+                    }
+                }
+
                 array_push($files, [
                     'filepath' => (string)$file->FILEPATH,
                     'docISN' => (string)$file->ISN,
-                    'signedBase64' => $signedBase64
+                    'signedBase64' => isset($signedBase64) ? $signedBase64 : ''
                 ]);
             }
         }
