@@ -28,7 +28,7 @@
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
                     <input class="form-control mt-1 mb-1" placeholder="Введите пароль" type="password" v-model="sign.password" style="width: 150px;margin: 0 auto;">
                 </div>
-                <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
+                <button class="btn btn-primary mt-2" v-on:click="getToken()">Подписать</button>
             </div>
         </div>
         <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
