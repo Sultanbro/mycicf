@@ -16,6 +16,13 @@
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
+
+    <style>
+        footer {
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
 </head>
 
 <body>
@@ -38,5 +45,12 @@
 </div>
 
 @yield('body')
+
+<footer>
+    <a href="https://github.com/aik099/PhpStormProtocol">
+        aik099/PhpStormProtocol
+    </a>
+</footer>
+
 </body>
 </html>

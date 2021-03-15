@@ -20,6 +20,13 @@
                                     <a href="{{ $dep['url'] }}" target="_blank">
                                         {{ $name }}
                                     </a>
+                                @elseif ($dep['type'] === 'extension')
+                                    @if ($dep['loaded'])
+                                        <span class="badge bg-success">loaded</span>
+                                    @else
+                                        <span class="badge bg-warning">not loaded</span>
+                                    @endif
+                                    {{ $name }}
                                 @else
                                     {{ $name }}
                                 @endif

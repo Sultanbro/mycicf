@@ -28,7 +28,8 @@ class CachingController extends Controller {
         return view('dev.caching', [
             'config' => $this->isConfigCacheable(),
             'routes' => $this->areRoutesCacheable(),
-            'views' => $this->areViewsAreCacheable(),
+            'views' => $this->areViewsCacheable(),
+            'events' => $this->areEventsCacheable(),
         ]);
     }
 
@@ -61,12 +62,25 @@ class CachingController extends Controller {
         return compact('cacheable', 'reason');
     }
 
-    private function areViewsAreCacheable() {
+    private function areViewsCacheable() {
         try {
             Artisan::call('view:cache');
             $cacheable = true;
             $reason = null;
             Artisan::call('view:clear');
+        } catch (\Exception $e) {
+            $reason = $e->getMessage();
+        }
+
+        return compact('cacheable', 'reason');
+    }
+
+    private function areEventsCacheable() {
+        try {
+            Artisan::call('event:cache');
+            $cacheable = true;
+            $reason = null;
+            Artisan::call('event:clear');
         } catch (\Exception $e) {
             $reason = $e->getMessage();
         }

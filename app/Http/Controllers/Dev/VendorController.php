@@ -39,6 +39,11 @@ class VendorController extends Controller {
             if ($item['type'] === 'package') {
                 $item['url'] = sprintf("https://packagist.org/packages/%s", $name);
             }
+
+            if ($item['type'] === 'extension') {
+                $extName = preg_replace('/^ext-/', '', $name);
+                $item['loaded'] = extension_loaded($extName);
+            }
         }
 
         $result = collect($result)->sort(function ($a, $b) {

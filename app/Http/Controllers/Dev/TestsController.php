@@ -32,7 +32,7 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
  * @group Dev
  */
 class TestsController extends Controller {
-    public function tests() {
+    public function index() {
         if (! App::isLocal()) {
             throw new AccessDeniedException('Access denied');
         }

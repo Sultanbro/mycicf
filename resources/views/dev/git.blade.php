@@ -46,6 +46,9 @@
                             <td>{{ $index + 1 }}.</td>
                             <td>
                                 <a href="{{ $branch['url'] }}" target="_blank">
+                                    @if($branch['head'])
+                                        <i>HEAD -></i>
+                                    @endif
                                     {{ $branch['name'] }}
                                 </a>
                             </td>

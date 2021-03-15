@@ -18,7 +18,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Routes is cacheable</td>
+                        <td>Routes are cacheable</td>
                         <td>
                             @if($routes['cacheable'])
                                 <span class="badge bg-success">yes</span>
@@ -29,7 +29,18 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Views is cacheable</td>
+                        <td>Views are cacheable</td>
+                        <td>
+                            @if($views['cacheable'])
+                                <span class="badge bg-success">yes</span>
+                            @else
+                                <span class="badge bg-danger">no</span>
+                                <b>Reason:</b> <i>{{ $views['reason'] }}</i>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Events are cacheable</td>
                         <td>
                             @if($views['cacheable'])
                                 <span class="badge bg-success">yes</span>
