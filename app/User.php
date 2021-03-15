@@ -4,6 +4,7 @@ namespace App;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use Exception;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ class User extends Authenticatable
 {
     const SENATE_ISN = 999999999;
     const READING_CLUB_ISN = 999999998;
+    const BOSS_ISN = 1472004;
     const DIRECTOR_LABEL = "Председатель Правления";
     use Notifiable;
 
@@ -62,11 +64,10 @@ class User extends Authenticatable
             if(Auth::check()){
                 $session = Auth::user()->session_id;
             }
-            $kias = new Kias();
+            $kias = app(KiasServiceInterface::class);
             $kias->init($session);
-            $count = (string)$kias->getCoordinationCount(Auth::user()->ISN)->MyCoord;
-            return $count;
-        }catch (\Exception $ex){
+            return (string)$kias->getCoordinationCount(Auth::user()->ISN)->MyCoord;
+        }catch (Exception $ex){
             return 0;
         }
     }
@@ -75,6 +76,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Branch', 'kias_id', 'ISN');
     }
 
+    /**
+     * TODO Метод не используется
+     *
+     * @return bool
+     *
+     * @deprecated
+     */
     public function checkSession(){
         $kias = new Kias();
         $response = $kias->request('User_CicHelloSvc', []);
@@ -84,6 +92,13 @@ class User extends Authenticatable
         return true;
     }
 
+    /**
+     * TODO Метод не используется
+     *
+     * @return bool
+     *
+     * @deprecated
+     */
     public function reAuthenticate(){
         $kias = new Kias();
         $kias->init(null);
@@ -103,33 +118,55 @@ class User extends Authenticatable
     }
 
     public function getFullName($user_isn){
-        if($user_isn === User::SENATE_ISN){
+        if($user_isn === self::SENATE_ISN){
             return 'Сенат';
-        }else if($user_isn === User::READING_CLUB_ISN){
+        }
+
+        if($user_isn === User::READING_CLUB_ISN){
             return 'Читательский клуб';
         }
+
+        /**
+         * @var $model Branch
+         */
         $model = Branch::where('kias_id', $user_isn)->first();
         return $model === null ? 'DELETED' : $model->fullname;
     }
 
-    public function getUserData(KiasServiceInterface $kias){
-        $response = $kias->getEmplInfo(Auth::user()->ISN, date('01.m.Y'), date('d.m.Y', strtotime('today')));
+    /**
+     * TODO @serabass Этот метод лучше перенести в сервис (можно в Kias)
+     *   или сделать его статическим в этой модели
+     *
+     * @param KiasServiceInterface $kias
+     * @return mixed
+     * @throws Exception
+     */
+    public function getUserData(KiasServiceInterface $kias) {
+        $ISN = Auth::user()->ISN;
+        $dateBeg = date('01.m.Y');
+        $dateEnd = date('d.m.Y', strtotime('today'));
+
+        $key = 'userData::' . $ISN . '::' . $dateBeg . '::' . $dateEnd;
         $likes = Score::where('user_isn', Auth::user()->ISN)->where('type','like')->get()->count();
         $dislikes = Score::where('user_isn',Auth::user()->ISN)->where('type','dislike')->get()->count();
-        $users_data = [
-            'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
-            'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
-            'Birthday' => (string)$response->Birthday == "0" ? '' : (string)$response->Birthday,
-            'Married' => (string)$response->Married == "0" ? '' : (string)$response->Married,
-            'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
-            'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
-            'City' => (string)$response->City == "0" ? '' : (string)$response->City,
-            'Avarcom' => (string)$response->Avarcom,
-            'MyDZ' => (string)$response->MyDZ,
-            'Likes' => $likes,
-            'Dislikes' => $dislikes,
-        ];
-        return $users_data;
+
+        $ttl = now()->addMinutes(10);
+        return cache()->remember($key, $ttl, function () use ($kias, $ISN, $dateBeg, $dateEnd, $likes, $dislikes) {
+            $response = $kias->getEmplInfo($ISN, $dateBeg, $dateEnd);
+            return [
+                'Duty' => (string)$response->Duty == "0" ? 'Не указано' : (string)$response->Duty,
+                'Name' => (string)$response->Name == "0" ? Auth::user()->full_name : (string)$response->Name,
+                'Birthday' => (string)$response->Birthday == "0" ? '' : (string)$response->Birthday,
+                'Married' => (string)$response->Married == "0" ? '' : (string)$response->Married,
+                'Education' => (string)$response->Edu == "0" ? '' : (string)$response->Edu,
+                'Rating' => (string)$response->Rating == "0" ? '' : (string)$response->Rating,
+                'City' => (string)$response->City == "0" ? '' : (string)$response->City,
+                'Avarcom' => (string)$response->Avarcom,
+                'MyDZ' => (string)$response->MyDZ,
+                'Likes' => $likes,
+                'Dislikes' => $dislikes,
+            ];
+        });
     }
 
     public static function isSuperAdmin(){
@@ -210,7 +247,7 @@ class User extends Authenticatable
             if(count($value->childs)){
                 array_merge($result, $this->getChildElements($value->kias_id));
             }else{
-                array_push($result, $value->kias_id);
+                $result[] = $value->kias_id;
             }
         }
         return $result;

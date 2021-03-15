@@ -3,10 +3,12 @@
 namespace App;
 
 use App\Http\Controllers\NotificationController;
+use App\Library\Services\NotificationServiceInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CentcoinHistory
+ *
  * @package App
  * @property string $type
  * @property string $description
@@ -45,7 +47,9 @@ class CentcoinHistory extends Model
             $centcoin->user_isn = $this->changed_user_isn;
             $centcoin->centcoins = 0;
         }
+
         $centcoin->centcoins = $this->total;
+
         $centcoin->save();
     }
 
@@ -53,6 +57,6 @@ class CentcoinHistory extends Model
         $this->getTotal();
         parent::save($options);
         $this->setTotal();
-        (new NotificationController())->sendCentcoinNotify($this);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendCentcoinNotify($this);
     }
 }

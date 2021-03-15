@@ -74,7 +74,9 @@ class Kernel extends HttpKernel
         'kurators' => \App\Http\Middleware\Kurators::class,
         'cors' => \App\Http\Middleware\cors::class,
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
-        'ratingPermission' => \App\Http\Middleware\RatingPermission::class
+        'ratingPermission' => \App\Http\Middleware\RatingPermission::class,
+        'checkPostAccess' => \App\Http\Middleware\News\CheckPostAccess::class,
+        'duty'=> \App\Http\Middleware\KommeskUsers::class,
     ];
 
     /**
@@ -101,5 +103,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\ProductsAdmin::class,
         \App\Http\Middleware\Kurators::class,
         \App\Http\Middleware\parseDomainAuth::class,
+        \App\Http\Middleware\News\CheckPostAccess::class,
     ];
 }

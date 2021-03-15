@@ -42,7 +42,7 @@
                         class="custom-button mr-1"
                         :disabled="editMode"
                         v-if="moderators.includes(isn)"
-                        :class="{pinned: post.pinned === 1}">
+                        :class="{pinned: !!post.pinned}">
                     <i class="fas fa-thumbtack"></i>
                 </button>
                 <button type="button"
@@ -76,15 +76,15 @@
             <div v-for="(answer, index) in post.post_poll.answers"
                  @click="vote(answer)"
                  class="progress mb-2 progress-bar-hover d-flex"
-                 :class="post.isVoted === 1 ? 'progress-bar-hover-disabled' : ''"
+                 :class="post.isVoted ? 'progress-bar-hover-disabled' : ''"
                  style="height: 40px;">
                 <div class="progress-bar"
                      role="progressbar"
-                     :style="{width: post.isVoted === 1 ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
+                     :style="{width: post.isVoted ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
                      aria-valuemin="0"
                      aria-valuemax="100">
                     <div class="p-2">
-                        <span class="fs-1 color-black">{{post.isVoted === 1 ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
+                        <span class="fs-1 color-black">{{post.isVoted ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
                     </div>
                 </div>
                 <!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
@@ -141,9 +141,9 @@
                               :class="{'textarea-height': editMode}"
                               class="custom-input w-100 pr-5"></textarea>
                 </transition>
-                <div v-if="post.postText.length > 9800">
+                <div v-if="post.postText.length > 7800">
                     <span>
-                        <small>Отслаось символов: {{10000 - post.postText.length > 0 ? 10000 - post.postText.length : 0}}</small>
+                        <small>Осталось символов: {{8000 - post.postText.length > 0 ? 8000 - post.postText.length : 0}}</small>
                     </span>
                 </div>
                 <emoji-component v-if="editMode" :type="EDIT_POST_TEXTAREA"></emoji-component>
@@ -171,7 +171,7 @@
                              @click="likePost">
                         <span>
                             <i class="fa-thumbs-up color-red"
-                               :class="post.isLiked === 0 ? 'far' : 'fas'"></i>
+                               :class="!post.isLiked ? 'far' : 'fas'"></i>
                         </span>
                             <span>{{post.likes}}</span>
                             <span>Нравится</span>
@@ -359,7 +359,7 @@
             },
 
             deletePost() {
-                this.axios.post('/deletePost', {postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/deletePost', {postId: this.post.postId}).then(response => {
                     return;
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -367,7 +367,7 @@
             },
 
             setPinned() {
-                if(this.post.pinned === 0) {
+                if(!this.post.pinned) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(this.index);
                     }).catch(error => {
@@ -375,22 +375,22 @@
                     });
                 }
                 else {
-                    this.axios.post('/unsetPinned', {postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/unsetPinned', {postId: this.post.postId}).then(response => {
                         this.$parent.unsetAllPinned(-1)
                     });
                 }
             },
 
             likePost() {
-                if(this.post.isLiked === 1 || this.post.isLiked === '1') {
-                    this.post.isLiked = 0;
+                if(this.post.isLiked) {
+                    this.post.isLiked = false;
                     this.post.likes--;
                 }
                 else {
-                    this.post.isLiked = 1;
+                    this.post.isLiked = true;
                     this.post.likes++;
                 }
-                this.axios.post('/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
+                this.axios.post('/news/likePost', {postId: this.post.postId, isn: this.isn}).then(response => {
                     this.fetchLiked(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -399,10 +399,10 @@
 
             fetchLiked(response) {
                 if(response.success === true) {
-                    this.post.isLiked = 1;
+                    this.post.isLiked = true;
                 }
                 else {
-                    this.post.isLiked = 0;
+                    this.post.isLiked = false;
                 }
             },
 
@@ -414,7 +414,7 @@
                     this.post.postText = this.oldText;
                 }
                 if(this.post.postText !== this.oldText) {
-                    this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                    this.axios.post('/news/my/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
@@ -425,7 +425,7 @@
 
             saveEdited() {
                 this.editMode = !this.editMode;
-                this.axios.post('/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/my/editPost', {postText: this.post.postText, postId: this.post.postId}).then(response => {
                     this.fetchSaved(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -442,7 +442,7 @@
             },
 
             addComment() {
-                this.axios.post('/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
+                this.axios.post('/news/comments/addComment', {isn: this.isn, commentText: this.commentText, postId: this.post.postId}).then(response => {
                     this.setComments(response.data);
                 });
                 this.commentText = '';
@@ -463,7 +463,7 @@
 
             deleteComment(index) {
                 var vm = this;
-                this.axios.post('/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
+                this.axios.post('/news/comments/deleteComment', {commentId: this.post.comments[index].commentId}).then(response => {
                     if(response.data.success) {
                         vm.post.comments.splice(index, 1);
                     }
@@ -471,14 +471,14 @@
             },
 
             vote(object) {
-                if(this.post.isVoted === 1 || this.post.isVoted === '1') {
+                if(this.post.isVoted) {
                     return;
                 }
                 else {
                     object.answer_votes++;
                     this.post.post_poll.total_votes++;
-                    this.post.isVoted = 1;
-                    this.axios.post('/vote', {
+                    this.post.isVoted = true;
+                    this.axios.post('/news/vote', {
                         postId: this.postId,
                         isn: this.isn,
                         answerId: object.answer_id,
@@ -492,10 +492,10 @@
             },
             fetchVote(response) {
                 if(response.success === true) {
-                    this.post.isVoted = 1;
+                    this.post.isVoted = true;
                 }
                 else {
-                    this.post.isVoted = 0;
+                    this.post.isVoted = false;
                 }
             }
         },

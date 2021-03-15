@@ -84,7 +84,7 @@
         methods: {
             deleteComment: function () {
                 var vm = this;
-                this.axios.post('/deleteComment', {commentId: this.comment.commentId}).then(response => {
+                this.axios.post('/news/comments/deleteComment', {commentId: this.comment.commentId}).then(response => {
                     if(response.data.success){
                         vm.$parent.post.comments.splice(vm.index, 1);
                     }

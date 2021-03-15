@@ -46,4 +46,8 @@ class Branch extends Model
     public function getParent() {
         return $this->hasOne('App\Branch','kias_id','kias_parent_id');
     }
+
+    public function duty(){
+        return $this->duty === 'Сотрудник Коммеск';
+    }
 }
