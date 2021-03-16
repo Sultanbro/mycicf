@@ -447,8 +447,14 @@ class CoordinationController extends Controller
 //                $filename = mt_rand(1000000, 9999999).'.'.$extension;
             }
 
+            if(isset($request->refISN) && $request->refISN != '' && $request->fileExt == 'cms'){
+                $isn = $request->refISN;
+            } else {
+                $isn = $request->isn;
+            }
+
             $results = $kias->saveAttachment(
-                $request->isn,
+                $isn,
                 $filename,
                 $file,
                 $request->requestType
