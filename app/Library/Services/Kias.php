@@ -220,6 +220,43 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function setEmplInfo($ISN, $dateBeg, $dateEnd)
+    {
+        return $this->request('User_SetEmployeeInfo', [
+            'wEmplISN' => $dateBeg,
+            'wDeptISN' => $dateEnd,
+            'wVacancyName' => $ISN,
+            'wCount' => $ISN,
+            'wReason' => $ISN,
+            'wAge' => $ISN,
+            'wSex' => $ISN,
+            'wEducation' => $ISN,
+            'wResponsibility' => $ISN,
+            'wWorkexperience' => $ISN,
+            'wSubordinates' => $ISN,
+            'wHiring' => $ISN,
+            'wQualifications' => $ISN,
+            'wPerspective' => $ISN,
+            'wComputer' => $ISN,
+            'wLanguage' => $ISN,
+            'wDegree' => $ISN,
+            'wLanguage2' => $ISN,
+            'wDegree2' => $ISN,
+            'wLanguage3' => $ISN,
+            'wDegree3' => $ISN,
+            'wSalary' => $ISN,
+            'wMotivation' => $ISN,
+            'wWorkSchedule' => $ISN,
+            'wAuto' => $ISN,
+            'wDocCategory' => $ISN,
+            'wSocialPackage' => $ISN,
+            'wSocialPackage2' => $ISN,
+            'wSocialPackage3' => $ISN,
+            'wСompetencies' => $ISN,
+            'wStages' => $ISN
+        ]);
+    }
+
     public function getAttachmentData($refisn, $isn, $pictType)
     {
         return $this->request('GETATTACHMENTDATA', [
@@ -325,6 +362,15 @@ class Kias implements KiasServiceInterface
             'Mode' => 0
         ]);
     }
+
+    public function getDictiData($current)
+    {
+        return $this->request('GETDICTILIST', [
+            'DictiISN' => $current,
+            'Mode' => 1
+        ]);
+    }
+
 
     public function getRegions($parent){
         return $this->request('User_CicGetRegionsAndCity', [

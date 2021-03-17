@@ -116,6 +116,8 @@ Vue.component('report', require('./components/employee/report.vue').default);
 
 Vue.component('cabinet', require('./components/employee/cabinet.vue').default);
 
+Vue.component('recruiting', require('./components/recruiting/recruiting.vue').default);
+
 Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
 
 Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
@@ -220,7 +222,55 @@ window.onload = function(){
         mounted: function () {
             // this.getOptions();
         },
+        created() {
+            //this.getFaq();
+        },
         methods: {
+            getFaq: async function(){
+                await this.request('post', '/faq/getContent', {
+
+                }, this.afterFaqContentResponse);
+            },
+            afterFaqContentResponse(response){
+                if(response.success === true || response.success === 'true'){
+                    console.log(response.result);
+                } else {
+                    //this.items.loading = false;
+                    this.notify('error', 'Возникла ошибка', 'Ошибка записи в БД');  //response.result
+                }
+            },
+            notify (status, title, text) {
+                this.flashMessage.show(
+                    {
+                        status: status,
+                        title: title,
+                        message: text,
+                        flashMessageStyle: this.customStyle.flashMessageStyle,
+                        // iconStyle: this.customStyle.iconStyle
+                    }
+                    // { mounted: showText, destroyed: clearText }
+                );
+            },
+            request (type, url, data = null, callback = null, index = null) {
+                switch(type){
+                    case 'post':
+                        this.axios.post(url, data).then((response) => {
+                            callback(response.data);
+                        }).catch(function (error) {
+                            this.notify('error', 'Ошибка', 'Возникла ошибка на сервере');
+                        });
+                        break;
+
+                    case 'get':
+                        this.axios.get(url, callback).then((response) => {
+                            callback(response);
+                        }).catch(function (error) {
+                            this.notify('error', 'Ошибка', 'Возникла ошибка на сервере');
+                        });
+                        break;
+                }
+
+            },
             getOptions: function () {
                 // this.axios.post('/getBranchData', {}).then((response) => {
                 //     this.options = response.data.result;
@@ -240,6 +290,7 @@ window.onload = function(){
         component: {
             'd-player': VueDPlayer
         }
+
     });
 
     var head = new Vue({

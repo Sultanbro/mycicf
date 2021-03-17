@@ -255,9 +255,29 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/vote', 'NewsController@vote');
 
         Route::post('/setSenateVote', 'NewsController@senateVote');
-//        //RATING
-//        Route::get('/rating', 'RatingController@index')->name('rating');
-//        Route::post('/getRatingList', 'RatingController@getRatingList');
+        //RATING
+        Route::get('/rating', 'RatingController@index')->name('rating');
+        Route::post('/getRatingList', 'RatingController@getRatingList');
+
+        //RECRUITING
+        Route::get('/recruiting', 'RecruitingController@getRecruiting')->name('recruiting');
+        Route::post('/recruiting', 'RecruitingController@getContent');
+        Route::post('/recruiting', 'RecruitingController@getTestData');
+        Route::post('recruiting', 'RecruitingController@sendRequest');
+        Route::post('/recruiting/saveCandidat', 'RecruitingController@saveCandidat');
+        Route::post('/recruiting/getRequests', 'RecruitingController@getRequests');
+        Route::post('/recruiting/getChiefsRequest', 'RecruitingController@getChiefsRequest');
+        Route::post('/recruiting/saveCandidatsData', 'RecruitingController@saveCandidatsData');
+        Route::post('/recruiting/saveRecruitingData', 'RecruitingController@saveRecruitingData');
+        Route::post('/recruiting/getCandidatsDataRequest', 'RecruitingController@getCandidatsDataRequest');
+        Route::post('/recruiting/getResumeRecruiting', 'RecruitingController@getResumeRecruiting');
+        Route::post('/recruiting/getCandidatsDataManualRequest', 'RecruitingController@getCandidatsDataManualRequest');
+        Route::post('/recruiting/getResultRequest', 'RecruitingController@getResultRequest');
+        Route::get('/getTestKiasDima', 'RecruitingController@testKiasDima');
+        Route::post('/recruiting/addResume', 'RecruitingController@addResume');
+        Route::post('/recruiting/test21', 'RecruitingController@testt1');
+        Route::post('/recruiting/sendRecruitingNotify', 'NotificationController@sendRecruitingNotify');
+        Route::post('/recruiting/upload-recruiting-file', 'RecruitingController@sendRecruitingNotify');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');
@@ -346,6 +366,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+
+        Route::post('recruiting/save', 'RecruitingController@saveCandidat');
+
+        Route::post('/getNameByIsnBranch', 'SiteController@getNameByIsnBranch');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
