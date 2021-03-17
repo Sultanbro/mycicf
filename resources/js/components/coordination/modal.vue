@@ -350,25 +350,24 @@
                  this.$refs.eds.getToken('coordination',solution)
             },
             sendSolution: function (Solution) {
-                console.log('send solution');
-                // if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
-                //     this.preloader(true);
-                //     this.axios.post("/setCoordination", {
-                //         DocISN: this.coordination.ISN,
-                //         ISN: this.isn,
-                //         Solution: Solution,
-                //         Remark: this.Remark,
-                //         Resolution : this.resolution
-                //     }).then((response) => {
-                //         if (!response.data.success) {
-                //             this.preloader(false);
-                //             alert(response.data.error);
-                //         } else {
-                //             this.preloader(false);
-                //             location.reload();
-                //         }
-                //     });
-                // }
+                if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
+                    this.preloader(true);
+                    this.axios.post("/setCoordination", {
+                        DocISN: this.coordination.ISN,
+                        ISN: this.isn,
+                        Solution: Solution,
+                        Remark: this.Remark,
+                        Resolution : this.resolution
+                    }).then((response) => {
+                        if (!response.data.success) {
+                            this.preloader(false);
+                            alert(response.data.error);
+                        } else {
+                            this.preloader(false);
+                            location.reload();
+                        }
+                    });
+                }
             },
             sendEdsSolution(){
                 if(this.$refs.eds.edsConfirmed){
