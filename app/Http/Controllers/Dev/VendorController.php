@@ -17,7 +17,7 @@ class VendorController extends Controller {
     /**
      * Vendor
      *
-     * @return |\Illuminate\View\View
+     * @return \Illuminate\View\View
      */
     public function index() {
         if (! App::isLocal()) {
@@ -66,7 +66,7 @@ class VendorController extends Controller {
     }
 
     private function getType(string $name) {
-        if (preg_match('/^[\.\w-]+\/[\.\w-]+$/i', $name)) {
+        if (preg_match('/^[.\w-]+\/[.\w-]+$/', $name)) {
             return 'package';
         }
 
@@ -80,6 +80,10 @@ class VendorController extends Controller {
 
         if ($name === 'php') {
             return 'php';
+        }
+
+        if ($name === 'composer-runtime-api') {
+            return 'composer-runtime-api';
         }
 
         dd($name);

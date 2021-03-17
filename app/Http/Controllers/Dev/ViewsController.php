@@ -37,10 +37,12 @@ class ViewsController extends Controller {
         }
 
         $views = glob(resource_path('views\**\*.blade.php'));
+
         $views = collect($views)->map(function (string $file) {
             return [
                 'file'         => $file,
                 'size'         => filesize($file),
+                'size_human'   => $this->humanizeSize(filesize($file)),
                 'phpStormLink' => $this->phpStormLink($file)
             ];
         });
@@ -59,5 +61,19 @@ class ViewsController extends Controller {
      */
     private function phpStormLink($path) {
         return sprintf('phpstorm://open?file=%s&line=1', urlencode($path));
+    }
+
+    private function humanizeSize(int $filesize, int $precision = 2)
+    {
+        if ($filesize <= 1024) {
+            return round($filesize, $precision) . 'b';
+        }
+        if ($filesize <= 1024 * 1024) {
+            return round($filesize / 1024, $precision) . 'kb';
+        }
+        if ($filesize <= 1024 * 1024 * 1024) {
+            return round($filesize / 1024 / 1024, $precision) . 'mb';
+        }
+        dd($filesize);
     }
 }

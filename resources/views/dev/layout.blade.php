@@ -37,6 +37,7 @@
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.config') }}">Config</a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.git') }}">Git</a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.views') }}">Views</a>
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.kias') }}">Kias</a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.caching') }}">Caching</a>
                 <a class="flex-sm-fill text-sm-center nav-link" href="{{ route('dev.docs') }}">API Docs</a>
             </nav>

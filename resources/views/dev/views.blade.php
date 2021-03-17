@@ -40,7 +40,7 @@
                                 </a>
                             </td>
                             <td>
-                                <b>{{ $view['size'] }} b</b>
+                                <b>{{ $view['size_human'] }}</b>
                             </td>
                         </tr>
                     @endforeach

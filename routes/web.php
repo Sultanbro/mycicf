@@ -379,7 +379,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
 
-        //Dev page route
+        //DevDev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
 
         Route::get('boss-news', 'NewsController@index')->name('boss-news');
@@ -465,4 +465,5 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('views', 'Dev\ViewsController@index')->name('.views');
     Route::get('docs', 'Dev\DocsController@index')->name('.docs');
     Route::get('caching', 'Dev\CachingController@index')->name('.caching');
+    Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });
