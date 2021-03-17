@@ -466,3 +466,6 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('docs', 'Dev\DocsController@index')->name('.docs');
     Route::get('caching', 'Dev\CachingController@index')->name('.caching');
 });
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
