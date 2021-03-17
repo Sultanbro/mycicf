@@ -1,5 +1,5 @@
 @if(!Auth::user()->branch->duty() ||
-    array_key_exists(auth()->user()->ISN, \App\Http\Middleware\KommeskUsers::getKommeskAccess()));
+    in_array(auth()->user()->ISN, \App\Http\Middleware\KommeskUsers::getAcceptedUsers()));
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
     <div id="simple-info">
         <simple-info

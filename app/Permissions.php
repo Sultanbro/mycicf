@@ -31,6 +31,7 @@ class Permissions extends Model
     const ROLE_READING_CLUB = 7;
     const ROLE_PRODUCTS = 7;
     const ROLE_KURATORS = 8;
+    const ROLE_KOMMESK = 10;
 
     public function __construct(array $attributes = [])
     {
@@ -55,7 +56,6 @@ class Permissions extends Model
     public function getSuperUsersArray(){
 
     }
-
     /**
      * TODO Метод лучше сделать статическим
      *
