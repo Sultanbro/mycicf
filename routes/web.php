@@ -278,6 +278,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/recruiting/test21', 'RecruitingController@testt1');
         Route::post('/recruiting/sendRecruitingNotify', 'NotificationController@sendRecruitingNotify');
         Route::post('/recruiting/upload-recruiting-file', 'RecruitingController@sendRecruitingNotify');
+        Route::post('/recruiting/get-recruiting-dicti', 'RecruitingController@getRecruitingDicti');
         //COLLEAGUES
         Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
         Route::post('/colleagues/search', 'ColleaguesController@search');

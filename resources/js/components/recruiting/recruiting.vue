@@ -631,7 +631,7 @@
                         <!--Верхняя таблица-->
                         <tr v-for="(inner, index) in candidateInterviewTable"
                             data-toggle="modal"
-                            data-target="#interviewModalApplicationData"
+                            data-target="#interviewModal"
                             class="pointer"
                             @click="showTopModalMain(index,inner.id)">
                             <td scope="row">{{inner.id}}</td>
@@ -1842,7 +1842,7 @@
                         'socPacket': 1765311,
                     }
 
-                    this.axios.post("/getDictiList", dataIsn)
+                    this.axios.post("/recruiting/get-recruiting-dicti", dataIsn)
                         .then(response => {
                             if (response.data.success) {
                                 this.preloader(true);
@@ -2004,7 +2004,7 @@
                         'socPacket': 1765311,
                     }
 
-                    this.axios.post("/getDictiList", dataIsn)
+                    this.axios.post("/recruiting/get-recruiting-dicti", dataIsn)
                         .then(response => {
                             if (response.data.success) {
                                 this.dicti.structuralUnitAndCity = response.data.structuralUnitAndCity;
