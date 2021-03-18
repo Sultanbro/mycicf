@@ -107,7 +107,9 @@
         },
         props: {
             isn: Number,
-            begin: String
+            begin: String,
+            personIsn: Number,
+            personBegin: String,
         },
         methods: {
             getTreeOptions() {
@@ -117,7 +119,7 @@
                         this.setTreeOptions(response.data);
                     })
                     .then(() => {
-                        this.getMotivation();
+                        this.getMotivation(this.personIsn, this.personBegin);
                     })
                     .catch(error => {
                         alert(error);
@@ -126,13 +128,15 @@
             setTreeOptions(data) {
                 this.treeOptions = data.result;
             },
-            getMotivation() {
+            getMotivation(isn , begin) {
                 this.preloader(true)
                 this.showMotivation = false;
-                this.axios.post('/getMotivationList', {
-                    isn: this.employee_isn,
-                    begin: this.motivation_date,
-                })
+                let data = {
+                    isn: isn ? isn : this.employee_isn,
+                    begin: begin ? begin : this.motivation_date,
+                };
+
+                this.axios.post('/getMotivationList', data)
                     .then(response => {
                         if(response.data.success){
                             this.motivations = response.data.list
