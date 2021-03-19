@@ -135,7 +135,6 @@
                     isn: isn ? isn : this.employee_isn,
                     begin: begin ? begin : this.motivation_date,
                 };
-
                 this.axios.post('/getMotivationList', data)
                     .then(response => {
                         if(response.data.success){
@@ -153,6 +152,8 @@
                             this.motSum = response.data.mot_sum
                             this.setChartData(response.data)
                             this.showMotivation = true
+                            this.employee_isn = this.$parent.personIsn;
+                            this.motivation_date = this.$parent.personBegin;
                         }
                         else{
                             alert(response.data.error)

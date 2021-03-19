@@ -21,10 +21,10 @@
             </div>
         </div>
         <div>
-            <rating v-if="viewType === 'rating'" :isn="isn" :begin="begin"></rating>
+            <rating v-show="viewType === 'rating'" :isn="isn" :begin="begin"></rating>
 <!--            <motivation v-if="viewType === 'motivation'" :isn="isn"></motivation>-->
             <motivation v-if="viewType === 'motivation'" :person-isn="personIsn" :person-begin="personBegin"></motivation>
-            <report v-if="viewType === 'report'" :isn="isn"></report>
+            <report v-show="viewType === 'report'" :isn="isn"></report>
         </div>
     </div>
 </template>
