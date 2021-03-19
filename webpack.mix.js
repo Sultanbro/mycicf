@@ -1,7 +1,39 @@
 const mix = require('laravel-mix');
 const dotenv = require("dotenv");
+var OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin')
 
 let env = dotenv.config().parsed;
+
+
+class OnlyIfChanged {
+    dependencies() {
+        return [];
+    }
+
+    register() {
+        this.config = {};
+    }
+
+    webpackConfig(webpackConfig) {
+        var opts = {
+            rootDir: process.cwd(),
+            devBuild: process.env.NODE_ENV !== 'production',
+        }
+
+        let plugin = new OnlyIfChangedPlugin({
+            cacheDirectory: path.join(opts.rootDir, 'tmp/cache'),
+            cacheIdentifier: opts, // all variable opts/environment should be used in cache key
+        });
+
+        webpackConfig.plugins.push(plugin);
+    }
+
+    babelConfig() {
+        return {};
+    }
+}
+
+mix.extend('onlyIfChanged', new OnlyIfChanged());
 
 
 /*
@@ -23,7 +55,8 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/documentation/login.js', 'js/documentation/login.js')
     //.js('resources/js/agreement.js', 'public/js')
     .sass('resources/sass/documentation/style.scss', 'public/css/documentation')
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .onlyIfChanged();
 
 if (!mix.inProduction()) {
     mix

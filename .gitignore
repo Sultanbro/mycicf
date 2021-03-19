@@ -17,5 +17,9 @@ yarn-error.log
 /public/mix-manifest.json
 /public/docs
 
+/public/js
+/public/**/*.js
+/public/css
+
 /resources/docs
 /resources/views/apidoc
