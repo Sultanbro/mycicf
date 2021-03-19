@@ -1,6 +1,6 @@
 const mix = require('laravel-mix');
 const dotenv = require("dotenv");
-var OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin')
+const OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin')
 
 let env = dotenv.config().parsed;
 
