@@ -1,4 +1,4 @@
-@if(!Auth::user()->branch->duty() ||
+@if(Auth::user()->branch !== null && !Auth::user()->branch->duty() ||
     array_key_exists(auth()->user()->ISN, \App\Http\Middleware\KommeskUsers::getKommeskAccess()));
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
     <div id="simple-info">
@@ -106,5 +106,5 @@
         </ul>
     </div>
 </div>
-@elseif(Auth::user()->branch->duty() === 'Сотрудник Коммеск');
+@elseif(Auth::user()->branch !== null && Auth::user()->branch->duty() === 'Сотрудник Коммеск');
 @endif

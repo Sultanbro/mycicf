@@ -30,7 +30,7 @@ class KommeskUsers
     public function handle($request, Closure $next)
     {
 
-        if(Auth::user()->branch->duty() &&
+        if(Auth::user()->branch !== null && Auth::user()->branch->duty() &&
             Auth::user()->branch->kias_id != array_key_exists(Auth::user()->ISN,$this->getKommeskAccess())){
             return redirect()->route('coordination');
         }
