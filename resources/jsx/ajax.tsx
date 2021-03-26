@@ -10,19 +10,30 @@ interface AjaxProps {
 
 export function Ajax<T>({url, method, q, children}: AjaxProps | any) {
     let [response, setResponse] = useState();
+    let [error, setError] = useState();
 
-    if (!response) {
+    function refetch({method, url, q}) {
         axios.request<T>({
             method,
             url,
         }).then((res) => {
             setResponse(res);
+        }).catch((err) => {
+            setError(err);
         });
+    }
+
+    if (!response) {
+        refetch({method, url, q});
+
+        if (error) {
+            return <div>Error: {error.message}</div>
+        }
 
         return <div>Loading...</div>
     }
 
     return <div>
-            {children(response)}
+            {children({response, refetch})}
         </div>
 }

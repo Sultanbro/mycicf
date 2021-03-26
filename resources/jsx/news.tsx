@@ -14,16 +14,25 @@ export function MyCiCNews({param}) {
     </div>
 }
 
+function Posts() {
+    return <Ajax url="/news/getPosts" method="POST" q={{a: 1}}>
+        {({response, refetch}) => {
+            return <div>
+                <ul>
+                    {response.data.map((post) => <li>Post #{post.postId}: {post.postText}</li>)}
+                </ul>
+                <button onClick={() => {refetch()}}>
+                    Refetch
+                </button>
+            </div>
+        }}
+    </Ajax>;
+}
+
 function Sandbox({param = 10}) {
     return <div>
         Sandbox: <b>{param}</b>
 
-        <Ajax url="/news/getPosts" method="POST" q={{a: 1}}>
-            {({data}) => {
-                return <ul>
-                    {data.map((post) => <li>Post #{post.postId}: {post.postText}</li>)}
-                </ul>
-            }}
-        </Ajax>
+        <Posts />
     </div>
 }
