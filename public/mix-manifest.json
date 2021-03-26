@@ -6,5 +6,6 @@
     "/js/documentation/index.js": "/js/documentation/index.js",
     "/js/documentation/login.js": "/js/documentation/login.js",
     "/js/login.js": "/js/login.js",
-    "/js/mobile.js": "/js/mobile.js"
+    "/js/mobile.js": "/js/mobile.js",
+    "/jsx/app.js": "/jsx/app.js"
 }

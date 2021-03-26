@@ -9,7 +9,6 @@ use App\KolesaPrices;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Permissions;
-use App\Providers\KiasServiceProvider;
 use App\Score;
 use App\User;
 use App\Dicti;
