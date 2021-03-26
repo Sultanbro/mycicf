@@ -6,10 +6,6 @@ namespace App\Library\Services;
 
 use App\Events\NewPost;
 use App\Http\Controllers\NotificationController;
-use App\Library\Services\Kias;
-use App\Library\Services\KiasServiceInterface;
-use App\Library\Services\NotificationServiceInterface;
-use Illuminate\Http\Request;
 use Debugbar;
 use App\Post;
 use App\Notification;
@@ -26,7 +22,7 @@ class CoordinationService
     const AC_ATTRIBUTES_LABEL = 'ACattr';
     const COORDINATIONS_LABEL = 'Coordination';
 
-    public static function CoordinationList($request, $kias){
+    public function CoordinationList($request, $kias){
         $success = true;
         $error = null;
         $ISN = $request->isn;
@@ -194,7 +190,7 @@ class CoordinationService
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
-    public static function CoordinationInfo($request, $kias){
+    public function CoordinationInfo($request, $kias){
         $success = true;
         $error = "";
         $docIsn = $request->docIsn;
@@ -289,7 +285,7 @@ class CoordinationService
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
-    public static function CoordinationService($request){
+    public function CoordinationService($request){
         $success = true;
         $error = '';
         $kias = new Kias();
@@ -313,7 +309,7 @@ class CoordinationService
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
-    public static function DocRowList($request, $kias) {
+    public function DocRowList($request, $kias) {
         try {
             $result = $kias->request('User_CicGetDocRowAttr', [
                 'CLASSISN' => $request->class_isn,
@@ -359,7 +355,7 @@ class CoordinationService
         }
     }
 
-    public static function attributeKeys(){
+    public function attributeKeys(){
         return [
             'AttrDocType' => 'Тип СЗ',
             'AttrDocID' => 'Номер СЗ',
@@ -374,7 +370,7 @@ class CoordinationService
         ];
     }
 
-    public static function getCoordinationAttributes(){
+    public function getCoordinationAttributes(){
         return [
             'ISN',                  //ISN СЗ
             'DocClass',             //ISN типа СЗ
@@ -389,7 +385,7 @@ class CoordinationService
         ];
     }
 
-    public static function getKVAttributes(){
+    public function getKVAttributes(){
         return [
             'dept' => 'Филиал/Подразделение',
             'curator' => 'ФИО куратора',
@@ -419,7 +415,7 @@ class CoordinationService
         ];
     }
 
-    public static function AttachmentsService ($request, $kias){
+    public function AttachmentsService ($request, $kias){
         $response = $kias->getAttachmentsList($request->docIsn);
         $attachments = [];
         if($response->error){
@@ -445,7 +441,7 @@ class CoordinationService
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
-    public static function AgreedCoordination($request, $kias){
+    public function AgreedCoordination($request, $kias){
         $ISN = $request->ISN;
 
         $results = $kias->request('User_CicGetAgreedCoordinationList', array(
@@ -480,7 +476,7 @@ class CoordinationService
     }
 
 
-    public static function saveAttachmentService($request, $kias){
+    public function saveAttachmentService($request, $kias){
         try{
             $success = true;
             if($request->fileType == 'base64'){
@@ -518,7 +514,7 @@ class CoordinationService
         }
     }
 
-    public static function sendNotifyService($request){
+    public function sendNotifyService($request){
         $users = explode(',', $request->users);
         $doc_no = $request->doc_no;
         $doc_type = $request->doc_type;
@@ -550,7 +546,7 @@ class CoordinationService
         return true;
     }
 
-    public static function closeDecadeService($request){
+    public function closeDecadeService($request){
         $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
         $contentT .= $request->postText;
         $isn = 1445725; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
@@ -603,7 +599,7 @@ class CoordinationService
         }
     }
 
-    public static function checkNotificationSended($isn, $no, $type){
+    public function checkNotificationSended($isn, $no, $type){
         $data = Notification::where('user_isn', $isn)
             ->where('doc_no', $no)
             ->where('doc_type', $type)
@@ -612,7 +608,7 @@ class CoordinationService
         return sizeof($data) > 0;
     }
 
-    public static function serviceCenterNotify($request) {
+    public function serviceCenterNotify($request) {
         $data = $request->all();
 
         $users_isn = explode(',', $data['isn']);

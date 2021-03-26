@@ -17,58 +17,69 @@ class CoordinationController extends Controller
         return view('coordination');
     }
 
-    public function getCoordinationList(Request $request, KiasServiceInterface $kias)
+    public function getCoordinationList(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
     {
-        return CoordinationService::coordinationList($request, $kias);
+        return $coordination->coordinationList($request, $kias);
     }
 
-    public function getCoordinationInfo(Request $request, KiasServiceInterface $kias)
+
+    public function getCoordinationInfo(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
     {
-        return CoordinationService::coordinationInfo($request, $kias);
+        return $coordination->coordinationInfo($request, $kias);
     }
 
-    public function getDocRowList(Request $request, KiasServiceInterface $kias)
+
+    public function getDocRowList(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
     {
-        return CoordinationService::DocRowList($request, $kias);
+        return $coordination->docRowList($request, $kias);
     }
 
-    public function getAttachments(Request $request, KiasServiceInterface $kias)
+
+    public function getAttachments(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
     {
-        return CoordinationService::AttachmentsService($request, $kias);
+        return $coordination->attachmentsService($request, $kias);
     }
 
-    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias)
+
+    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
     {
-        return CoordinationService::AgreedCoordination($request, $kias);
+        return $coordination->agreedCoordination($request, $kias);
     }
 
-     public function setCoordination(Request $request)
+
+    public function setCoordination(Request $request, CoordinationService $coordination)
     {
-        return CoordinationService::coordinationService($request);
+        return $coordination->coordinationService($request);
     }
 
-        public function saveAttachment(Request $request, KiasServiceInterface $kias)
+
+    public function saveAttachment(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
     {
-        return CoordinationService::saveAttachmentService($request, $kias);
+        return $coordination->saveAttachmentService($request, $kias);
     }
 
-     public function sendNotify(Request $request)
+
+    public function sendNotify(Request $request, CoordinationService $coordination)
     {
-        return CoordinationService::sendNotifyService($request);
+        return $coordination->sendNotifyService($request);
     }
 
-    public function closeDecade(Request $request)
+
+    public function closeDecade(Request $request, CoordinationService $coordination)
     {
-        return CoordinationService::closeDecadeService($request);
+        return $coordination->closeDecadeService($request);
     }
 
-    public function checkNotificationSended($isn, $no, $type)
+
+    public function checkNotificationSended($isn, $no, $type, CoordinationService $coordination)
     {
-        return CoordinationService::checkNotificationSended($isn, $no, $type);
+        return $coordination->checkNotificationSended($isn, $no, $type);
     }
 
-    public function serviceCenterNotify(Request $request)
+
+    public function serviceCenterNotify(Request $request, CoordinationService $coordination)
     {
-        return CoordinationService::serviceCenterNotify($request);
+        return $coordination->serviceCenterNotify($request);
     }
+
 }
