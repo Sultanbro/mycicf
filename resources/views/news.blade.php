@@ -39,6 +39,12 @@
 </head>
 <body >
 @include('layouts.header')
+<main class="flex-row">
+    <div class="main_margin flex-row width100">
+        <div class="col-md-2-sm-3-lg mt-3" id="jsx-app">
+        </div>
+    </div>
+</main>
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
