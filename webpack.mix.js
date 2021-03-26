@@ -15,13 +15,13 @@ class OnlyIfChanged {
     }
 
     webpackConfig(webpackConfig) {
-        var opts = {
+        let opts = {
             rootDir: process.cwd(),
             devBuild: process.env.NODE_ENV !== 'production',
         }
 
         let plugin = new OnlyIfChangedPlugin({
-            cacheDirectory: path.join(opts.rootDir, 'tmp/cache'),
+            cacheDirectory: path.join(opts.rootDir, '.tmp/cache'),
             cacheIdentifier: opts, // all variable opts/environment should be used in cache key
         });
 
