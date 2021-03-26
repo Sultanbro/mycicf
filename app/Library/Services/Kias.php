@@ -82,18 +82,19 @@ class Kias implements KiasServiceInterface
 
     /**
      * Get kias by system credentials
+     *
+     * @param string|null $name
+     * @param string|null $pwd
+     * @return AuthenticateResult|mixed|SimpleXMLElement
      */
-    public function initSystem()
+    public function initSystem($name = null, $pwd = null)
     {
-        if ($this->systemInitialized) {
-            return;
-        }
         Debugbar::log('Kias::Mock Init System');
         $this->url = config('kias.url');
         $this->getClient();
 
-        $username = config('kias.auth.login');
-        $password = config('kias.auth.password');
+        $username = $name ?? config('kias.auth.login');
+        $password = $pwd ?? config('kias.auth.password');
         $passwordHash = hash('sha512', $password);
 
         // $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
@@ -102,6 +103,9 @@ class Kias implements KiasServiceInterface
         Debugbar::stopMeasure('Authenticate in Kias');
         $this->_sId = $systemData->Sid;
         $this->systemInitialized = true;
+        if ($name != null) {
+            return $systemData;
+        }
     }
 
     /**
