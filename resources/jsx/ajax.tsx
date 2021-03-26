@@ -14,8 +14,10 @@ interface AjaxRefetchArgs {
 export function Ajax<T>({url, method, params, children, headers}: AjaxProps<any> | any) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
+    let [loading, setLoading] = useState(false);
 
     function refetch({method, url, params}: AjaxRefetchArgs) {
+        setLoading(true);
         axios.request<T>({
             method,
             url,
@@ -23,8 +25,10 @@ export function Ajax<T>({url, method, params, children, headers}: AjaxProps<any>
             headers
         }).then((res) => {
             setResponse(res);
+            setLoading(false);
         }).catch((err) => {
             setError(err);
+            setLoading(false);
         });
     }
 
