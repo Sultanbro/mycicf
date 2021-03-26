@@ -1,5 +1,3 @@
-import React from 'react';
-import ReactDOM from "react-dom";
 
 
 require('./bootstrap');
@@ -37,7 +35,6 @@ Vue.use(moment);
 Vue.use(vmodal);
 
 import Toastr from 'vue-toastr'
-import {MyCiCNews} from "../jsx/app";
 
 Vue.use(FlashMessage);
 
@@ -248,10 +245,5 @@ window.onload = function(){
     var head = new Vue({
         el: '#header',
     });
-
-    var jsxAppElement = document.getElementById('jsx-app');
-    let playerElement = React.createElement(MyCiCNews, {param: 100});
-    ReactDOM.render(playerElement, jsxAppElement);
-
 };
 

@@ -4,6 +4,7 @@ const OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin')
 
 let env = dotenv.config().parsed;
 
+require("laravel-mix-react-typescript-extension");
 
 class OnlyIfChanged {
     dependencies() {
@@ -56,7 +57,7 @@ mix.js('resources/js/app.js', 'public/js')
     //.js('resources/js/agreement.js', 'public/js')
     .sass('resources/sass/documentation/style.scss', 'public/css/documentation')
     .sass('resources/sass/app.scss', 'public/css')
-    .react('resources/jsx/app.jsx', 'public/jsx')
+    .reactTypeScript('resources/jsx/app.ts', 'public/jsx')
     .onlyIfChanged();
 
 if (!mix.inProduction()) {
