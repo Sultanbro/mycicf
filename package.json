@@ -32,6 +32,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@riophae/vue-treeselect": "^0.3.0",
     "@smartweb/vue-flash-message": "^0.5.3",
+    "@types/react": "^17.0.3",
     "apexcharts": "^3.22.2",
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",

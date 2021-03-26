@@ -1,21 +1,28 @@
 import React, {useState} from 'react';
-import axios from 'axios'
+import axios, {AxiosResponse} from 'axios'
 
 interface AjaxProps {
     url: string;
     method: "GET" | 'POST';
-    q: { [key: string]: any };
-    children: (res: any) => React.Element;
+    params: { [key: string]: any };
+    children: (res: any) => React.ReactNode;
 }
 
-export function Ajax<T>({url, method, q, children}: AjaxProps | any) {
-    let [response, setResponse] = useState();
-    let [error, setError] = useState();
+interface AjaxRefetchArgs {
+    method: "GET" | 'POST';
+    url: string;
+    params: any;
+}
 
-    function refetch({method, url, q}) {
+export function Ajax<T>({url, method, params, children}: AjaxProps | any) {
+    let [response, setResponse] = useState<AxiosResponse<T>>();
+    let [error, setError] = useState<Error>();
+
+    function refetch({method, url, params}: AjaxRefetchArgs) {
         axios.request<T>({
             method,
             url,
+            params
         }).then((res) => {
             setResponse(res);
         }).catch((err) => {
@@ -24,16 +31,22 @@ export function Ajax<T>({url, method, q, children}: AjaxProps | any) {
     }
 
     if (!response) {
-        refetch({method, url, q});
+        refetch({method, url, params});
 
         if (error) {
             return <div>Error: {error.message}</div>
         }
 
-        return <div>Loading...</div>
+        return <div>
+            <div className="preloader" />
+        </div>
     }
 
     return <div>
-            {children({response, refetch})}
-        </div>
+        {children({response, refetch})}
+    </div>
 }
+
+Ajax.GET = <T extends any>(props: AjaxProps | any) => <Ajax method="GET" {...props} />;
+Ajax.POST = <T extends any>(props: AjaxProps | any) => <Ajax method="POST" {...props} />;
+Ajax.PUT = <T extends any>(props: AjaxProps | any) => <Ajax method="PUT" {...props} />;
