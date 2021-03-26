@@ -5,81 +5,102 @@ namespace App\Http\Controllers;
 use App\Library\Services\KiasServiceInterface;
 use App\Library\Services\CoordinationService;
 use Illuminate\Http\Request;
-
-
+use App\Library\Services\CoordinationServiceInterface;
 /**
  * @var CoordinationService
  */
 
 class CoordinationController extends Controller
 {
+    private $coordinationServiceInterface;
+
+    public function __construct(CoordinationServiceInterface $coordinationServiceInterface)
+    {
+        $this->coordinationServiceInterface = $coordinationServiceInterface;
+    }
+
     public function index(){
         return view('coordination');
     }
 
-    public function getCoordinationList(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
+    public function getCoordinationList(Request $request, KiasServiceInterface $kias)
     {
-        return $coordination->coordinationList($request, $kias);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->coordinationList($param, $kias);
     }
 
 
-    public function getCoordinationInfo(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
+    public function getCoordinationInfo(Request $request, KiasServiceInterface $kias)
     {
-        return $coordination->coordinationInfo($request, $kias);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->coordinationInfo($param, $kias);
     }
 
 
-    public function getDocRowList(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
+    public function getDocRowList(Request $request, KiasServiceInterface $kias)
     {
-        return $coordination->docRowList($request, $kias);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->docRowList($param, $kias);
     }
 
 
-    public function getAttachments(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
+    public function getAttachments(Request $request, KiasServiceInterface $kias)
     {
-        return $coordination->attachmentsService($request, $kias);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->attachmentsService($request, $kias);
     }
 
 
-    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
+    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias)
     {
-        return $coordination->agreedCoordination($request, $kias);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->agreedCoordination($request, $kias);
     }
 
 
-    public function setCoordination(Request $request, CoordinationService $coordination)
+    public function setCoordination(Request $request)
     {
-        return $coordination->coordinationService($request);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->coordinationService($request);
     }
 
 
-    public function saveAttachment(Request $request, KiasServiceInterface $kias, CoordinationService $coordination)
+    public function saveAttachment(Request $request, KiasServiceInterface $kias)
     {
-        return $coordination->saveAttachmentService($request, $kias);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->saveAttachmentService($request, $kias);
     }
 
 
-    public function sendNotify(Request $request, CoordinationService $coordination)
+    public function sendNotify(Request $request)
     {
-        return $coordination->sendNotifyService($request);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->sendNotifyService($request);
     }
 
 
-    public function closeDecade(Request $request, CoordinationService $coordination)
+    public function closeDecade(Request $request)
     {
-        return $coordination->closeDecadeService($request);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->closeDecadeService($request);
     }
 
 
-    public function checkNotificationSended($isn, $no, $type, CoordinationService $coordination)
+    public function checkNotificationSended($isn, $no, $type)
     {
-        return $coordination->checkNotificationSended($isn, $no, $type);
+        $param = ([
+            'isn'=>$isn,
+            'no'=>$no,
+            'type'=>$type
+        ]);
+        return $this->coordinationServiceInterface->checkNotificationSended($param);
     }
 
 
-    public function serviceCenterNotify(Request $request, CoordinationService $coordination)
+    public function serviceCenterNotify(Request $request)
     {
-        return $coordination->serviceCenterNotify($request);
+        $param = $request->get('param');
+        return $this->coordinationServiceInterface->serviceCenterNotify($param);
     }
 
 }

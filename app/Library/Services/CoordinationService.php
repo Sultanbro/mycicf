@@ -9,6 +9,7 @@ use App\Http\Controllers\NotificationController;
 use Debugbar;
 use App\Post;
 use App\Notification;
+use App\Library\Services\KiasServiceInterface;
 /**+
  * Class CoordinationService
  *
@@ -17,7 +18,7 @@ use App\Notification;
  * @package App\Library\Services
  */
 
-class CoordinationService
+class CoordinationService implements CoordinationServiceInterface
 {
     const AC_ATTRIBUTES_LABEL = 'ACattr';
     const COORDINATIONS_LABEL = 'Coordination';
