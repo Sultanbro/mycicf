@@ -1,5 +1,5 @@
 import React from 'react';
-import {Ajax} from "./ajax";
+import {Ajax, PostsAjax} from "./ajax";
 
 export function MyCiCNews({param}: any) {
     return <div>
@@ -15,7 +15,7 @@ export function MyCiCNews({param}: any) {
 }
 
 function Posts() {
-    return <Ajax.POST url="/news/getPosts" q={{lastIndex: null}}>
+    return <PostsAjax lastIndex={null}>
         {({response, refetch}: any) => {
             return <div>
                 <ul>
@@ -26,7 +26,7 @@ function Posts() {
                 </button>
             </div>
         }}
-    </Ajax.POST>;
+    </PostsAjax>;
 }
 
 function Posts2() {

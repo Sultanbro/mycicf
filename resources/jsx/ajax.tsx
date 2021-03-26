@@ -1,11 +1,8 @@
 import React, {useState} from 'react';
-import axios, {AxiosResponse} from 'axios'
+import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
 
-interface AjaxProps {
-    url: string;
-    method: "GET" | 'POST';
-    params: { [key: string]: any };
-    children: (res: any) => React.ReactNode;
+interface AjaxProps<T> extends AxiosRequestConfig {
+    children: (res: any, refetch: T) => React.ReactNode;
 }
 
 interface AjaxRefetchArgs {
@@ -14,7 +11,7 @@ interface AjaxRefetchArgs {
     params: any;
 }
 
-export function Ajax<T>({url, method, params, children}: AjaxProps | any) {
+export function Ajax<T>({url, method, params, children, headers}: AjaxProps<any> | any) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 
@@ -22,7 +19,8 @@ export function Ajax<T>({url, method, params, children}: AjaxProps | any) {
         axios.request<T>({
             method,
             url,
-            params
+            params,
+            headers
         }).then((res) => {
             setResponse(res);
         }).catch((err) => {
@@ -38,7 +36,7 @@ export function Ajax<T>({url, method, params, children}: AjaxProps | any) {
         }
 
         return <div>
-            <div className="preloader" />
+            <div className="preloader"/>
         </div>
     }
 
@@ -47,6 +45,20 @@ export function Ajax<T>({url, method, params, children}: AjaxProps | any) {
     </div>
 }
 
-Ajax.GET = <T extends any>(props: AjaxProps | any) => <Ajax method="GET" {...props} />;
-Ajax.POST = <T extends any>(props: AjaxProps | any) => <Ajax method="POST" {...props} />;
-Ajax.PUT = <T extends any>(props: AjaxProps | any) => <Ajax method="PUT" {...props} />;
+interface PostsAjaxProps {
+    lastIndex: number | null;
+    children: any;
+}
+
+export function PostsAjax({ lastIndex = null, children }: PostsAjaxProps) {
+    return <Ajax.POST url="/news/getPosts" q={{lastIndex}}>
+        {({response, refetch}: any) => {
+            return children({response, refetch});
+        }}
+    </Ajax.POST>;
+}
+
+Ajax.GET = <T extends any>(props: AjaxProps<any> | any) => <Ajax method="GET" {...props} />;
+Ajax.POST = <T extends any>(props: AjaxProps<any> | any) => <Ajax method="POST" {...props} />;
+Ajax.PUT = <T extends any>(props: AjaxProps<any> | any) => <Ajax method="PUT" {...props} />;
+// ...
