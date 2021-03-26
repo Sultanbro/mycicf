@@ -61,5 +61,6 @@
     </div>
 </main>
 {{--FOOTER GOES HERE--}}
+<script src="{{asset('jsx/app.js')}}"></script>
 </body>
 </html>
