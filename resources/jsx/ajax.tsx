@@ -1,20 +1,34 @@
 import React, {useState} from 'react';
-import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
+import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
+
+export interface PostEntity {
+
+}
+
+interface AjaxPropsChildrenArgs<T> {
+    response: AxiosResponse<T>;
+    refetch: any;
+    callback?: any;
+}
 
 interface AjaxProps<T> extends AxiosRequestConfig {
-    children: (res: AxiosResponse<T>, refetch: T) => React.ReactNode;
+    children: ({response, refetch}: AjaxPropsChildrenArgs<T>) => React.ReactNode;
+}
+
+interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
+    lastIndex: number | null;
 }
 
 interface AjaxRefetchArgs {
-    method: "GET" | 'POST';
-    url: string;
+    method?: Method;
+    url?: string;
     params: any;
     data: any;
     previousData?: any;
     callback?: (previousData: any, newData: any) => any;
 }
 
-export function Ajax<T>({url, method, params, data, children, headers}: AjaxProps<any> | any) {
+export function Ajax<T>({url, method, params, data, children, headers}: AjaxProps<T>) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 
@@ -27,7 +41,7 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
             data
         }).then((res) => {
             if (!callback) {
-                callback = (newData: any, previousData: any) => newData;
+                callback = (newData: any) => newData;
             }
             res.data = callback(res.data, previousData);
             setResponse(res);
@@ -51,7 +65,6 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
     return <div>
         {children({
             response,
-            data: response.data,
             refetch: ({params, data, previousData, callback}: any) => {
                 refetch({method, url, params, data, previousData, callback});
             }
@@ -59,20 +72,15 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
     </div>
 }
 
-interface PostsAjaxProps {
-    lastIndex: number | null;
-    children: any;
-}
-
 export function PostsAjax({lastIndex = null, children}: PostsAjaxProps) {
-    return <Ajax.POST url="/news/getPosts" q={{lastIndex}}>
+    return <Ajax.POST<PostEntity> url="/news/getPosts" q={{lastIndex}}>
         {({response, refetch, callback}: any) => {
-            return children({response, data: response.data, refetch, callback});
+            return children({response, callback, refetch});
         }}
     </Ajax.POST>;
 }
 
-Ajax.GET = <T extends any>(props: AjaxProps<any> | any) => <Ajax method="GET" {...props} />;
-Ajax.POST = <T extends any>(props: AjaxProps<any> | any) => <Ajax method="POST" {...props} />;
-Ajax.PUT = <T extends any>(props: AjaxProps<any> | any) => <Ajax method="PUT" {...props} />;
+Ajax.GET = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="GET" {...props} />;
+Ajax.POST = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="POST" {...props} />;
+Ajax.PUT = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="PUT" {...props} />;
 // ...

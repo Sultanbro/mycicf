@@ -147,4 +147,8 @@ class SandboxController extends Controller
     public function action1(PostsService $service) {
         return $service->getPosts('');
     }
+
+    public function react() {
+        return view('testing.sandbox.react');
+    }
 }

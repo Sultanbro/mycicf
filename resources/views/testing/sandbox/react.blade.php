@@ -37,21 +37,12 @@
     <script src="{{asset('js/app.js')}}"></script>
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
-<body >
+<body>
 @include('layouts.header')
-<main class="flex-row"  id="app">
+<main class="flex-row">
     <div class="main_margin flex-row width100">
-        @include('layouts.sidebar')
-        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <post :isn="{{Auth::user()->ISN}}"></post>
+        <div class="col-md-8 offset-2" id="jsx-app">
         </div>
-        <div class="col-md-2-sm-3-lg mt-3">
-            <news-birthday></news-birthday>
-            <div>
-                <Countdown end="December 31, 2021"></Countdown>
-            </div>
-        </div>
-        {{--RIGHT SIDE BAR GOES HERE--}}
     </div>
 </main>
 {{--FOOTER GOES HERE--}}

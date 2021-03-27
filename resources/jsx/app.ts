@@ -3,5 +3,5 @@ import ReactDOM from 'react-dom';
 import {MyCiCNews} from "./news";
 
 let wrapper = document.getElementById('jsx-app');
-let reactAppElement = React.createElement(MyCiCNews, {param: 100});
+let reactAppElement = React.createElement(MyCiCNews);
 ReactDOM.render(reactAppElement, wrapper);
