@@ -29,18 +29,14 @@ export interface PostEntity {
     postText: string;
 }
 
-interface AjaxPropsChildrenArgs<T> {
-    response: AxiosResponse<T>;
+interface AjaxPropsChildrenArgs<TRes> {
+    response: AxiosResponse<TRes>;
     refetch: any;
     callback?: any;
 }
 
-interface AjaxProps<T> extends AxiosRequestConfig {
-    children: ({response, refetch}: AjaxPropsChildrenArgs<T>) => React.ReactNode;
-}
-
-interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
-    lastIndex?: number;
+export interface AjaxProps<TRes> extends AxiosRequestConfig {
+    children: ({response, refetch}: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
 }
 
 interface AjaxRefetchArgs {
@@ -96,29 +92,30 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
     </div>
 }
 
-export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
-    return <Ajax.POST<PostEntity> url="/news/getPosts" q={{lastIndex}}>
-        {({response, refetch, callback}: any) => {
-            return children({response, callback, refetch});
-        }}
-    </Ajax.POST>;
-}
-
-Ajax.GET = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="GET" {...props} />;
-Ajax.POST = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="POST" {...props} />;
-Ajax.PUT = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="PUT" {...props} />;
+Ajax.GET = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="GET" {...props} />;
+Ajax.POST = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="POST" {...props} />;
+Ajax.PUT = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="PUT" {...props} />;
 // ...
 
-Ajax.Button = <TReq extends any, TRes extends any> ({url, data, onSuccess, children, method}: AjaxButtonProps<TReq, TRes>) => {
-    return <Button type="text" onClick={() => {
-        axios.request({
-            url,
-            method,
-            data
-        }).then((res) => {
-            onSuccess(res);
-        });
-    }}>
+Ajax.Button = <TReq, TRes>({url, data, onSuccess, children, method, icon}: AjaxButtonProps<TReq, TRes>) => {
+    let [loading, setLoading] = useState(false);
+    return <Button type={loading ? 'ghost' : 'text'}
+                   loading={loading}
+                   icon={icon}
+                   onClick={() => {
+                       setLoading(true);
+                       axios.request({
+                           url,
+                           method,
+                           data
+                       }).then((res) => {
+                           onSuccess(res);
+                           setLoading(false);
+                       }).catch((err) => {
+                           setLoading(false);
+                       });
+                   }}>
         {children}
     </Button>
 }
+//

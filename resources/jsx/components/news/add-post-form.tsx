@@ -2,9 +2,23 @@ import React, {useState} from 'react';
 import {Avatar, Button, Col, Divider, Input, Row} from 'antd';
 import {BarChartOutlined, FileImageOutlined, FileOutlined, VideoCameraOutlined} from '@ant-design/icons';
 import {PollForm} from './poll-form';
+import {Ajax} from '../../ajax';
 
-export function AddPostForm() {
+export interface AddPostFormProps {
+    onAddPost(data: AddPostData): void;
+}
+
+interface AddPostData {
+    postText: string;
+    poll: any;
+    isn: any;
+}
+
+export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useState(false);
+    let [postText, setPostText] = useState('');
+    let showPublishButton = !!postText;
+
     return <div>
         <Row>
             <Col>
@@ -16,7 +30,9 @@ export function AddPostForm() {
                 <Avatar size={64} src="/images/avatar.png" />
             </Col>
             <Col md={18}>
-                <Input.TextArea placeholder="Что у вас нового?" />
+                <Input.TextArea placeholder="Что у вас нового?" value={postText} onChange={(e) => {
+                    setPostText(e.target.value);
+                }} />
             </Col>
             <Col md={2}>
                 <Button type="text">
@@ -37,6 +53,15 @@ export function AddPostForm() {
                 <Button onClick={() => {
                     setShowPollForm(!showPollForm)
                 }}><BarChartOutlined />Опрос</Button>
+            </Col>
+            <Col>
+                {showPublishButton ? <Ajax.Button<AddPostData, AddPostData> url="/news/addPost" data={{
+                    postText,
+                    poll: 0,
+                    isn: 5565
+                }} method="POST" onSuccess={(response) => {
+                    onAddPost(response.data);
+                }}>Опубликовать</Ajax.Button> : null}
             </Col>
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}} />

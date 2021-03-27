@@ -1,8 +1,19 @@
-
-import {Ajax, PostsAjax} from '../../ajax';
+import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
 import {Button} from 'antd';
 import React from 'react';
+
+interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
+    lastIndex?: number;
+}
+
+export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
+    return <Ajax.POST<PostEntity> url="/news/getPosts" q={{lastIndex}}>
+        {({response, refetch, callback}: any) => {
+            return children({response, callback, refetch});
+        }}
+    </Ajax.POST>;
+}
 
 export function Posts() {
     return <PostsAjax>

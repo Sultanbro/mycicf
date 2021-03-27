@@ -18,10 +18,11 @@ export function PostLike({post}: PostLikeProps) {
     return <Ajax.Button url="/news/likePost"
                         method="POST"
                         data={data}
+                        icon={icon}
                         onSuccess={(res: any) => {
                             setIsLiked(res.data.success);
                             setLikes(res.data.success ? likes + 1 : likes - 1);
                         }}>
-        {icon} {likes} Нравится
+        {likes} Нравится
     </Ajax.Button>;
 }
