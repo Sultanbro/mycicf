@@ -97,9 +97,9 @@ Ajax.POST = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> meth
 Ajax.PUT = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="PUT" {...props} />;
 // ...
 
-Ajax.Button = <TReq, TRes>({url, data, onSuccess, children, method, icon}: AjaxButtonProps<TReq, TRes>) => {
+Ajax.Button = <TReq, TRes>({url, data, onSuccess, children, method, icon, type = 'text'}: AjaxButtonProps<TReq, TRes>) => {
     let [loading, setLoading] = useState(false);
-    return <Button type={loading ? 'ghost' : 'text'}
+    return <Button type={loading ? 'ghost' : type}
                    loading={loading}
                    icon={icon}
                    onClick={() => {

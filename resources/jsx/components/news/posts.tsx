@@ -1,7 +1,8 @@
 import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
-import {Button} from 'antd';
-import React from 'react';
+import {Button, Col, Row} from 'antd';
+import React, {useState} from 'react';
+import {EllipsisOutlined} from '@ant-design/icons';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
     lastIndex?: number;
@@ -16,30 +17,44 @@ export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
 }
 
 export function Posts() {
+    let [loading, setLoading] = useState(false);
     return <PostsAjax>
         {({response, refetch}) => {
             let {data} = response;
             console.log(data.map((post: any) => post.postId));
             let lastIndex = Math.min(...data.map((post: any) => post.postId));
-            return <div>
-                <ul>
-                    {data.map((post: any, i: number) => <Post key={i} post={post} />)}
-                </ul>
-                <Button onClick={() => {
-                    refetch({
-                        previousData: data,
-                        data: {lastIndex}, callback: (newData: any, previousData: any) => {
-                            if (!previousData) {
-                                previousData = [];
-                            }
+            return <>
+                <Row style={{marginBottom: '50px'}}>
+                    <Col md={24}>
+                        <Row>
+                            <Col md={24}>
+                                {data.map((post: any, i: number) => <Post key={i} post={post} />)}
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={24} className="text-center">
+                                <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
+                                    setLoading(true);
+                                    refetch({
+                                        previousData: data,
+                                        data: {lastIndex},
+                                        callback: (newData: any, previousData: any) => {
+                                            if (!previousData) {
+                                                previousData = [];
+                                            }
 
-                            return previousData.concat(newData);
-                        }
-                    })
-                }}>
-                    Больше
-                </Button>
-            </div>
+                                            setLoading(false);
+                                            return previousData.concat(newData);
+                                        }
+                                    })
+                                }}>
+                                    Больше
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </>
         }}
     </PostsAjax>;
 }
