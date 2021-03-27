@@ -1,6 +1,6 @@
-import {Alert, Avatar, Button, Col, Divider, Input, Row} from 'antd';
-import {CommentMenu} from './comment-menu';
 import React, {useState} from 'react';
+import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag} from 'antd';
+import {CommentMenu} from './comment-menu';
 import {Ajax, PostCommentEntity} from '../../ajax';
 
 export interface PostCommentProps {
@@ -54,13 +54,16 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
                         {comment.fullname}
                     </Col>
                     <Col md={2} offset={14}>
-                        {comment.isMine ? <CommentMenu comment={comment}
-                                                       onCommentDeleted={(commentId) => {
-                                                           onCommentDeleted(commentId);
-                                                       }}
-                                                       onShowEditForm={(commentId) => {
-                                                           setShowEditForm(true);
-                                                       }} /> : null}
+                        {
+                            comment.isMine ?
+                                <CommentMenu comment={comment}
+                                             onCommentDeleted={(commentId) => {
+                                                 onCommentDeleted(commentId);
+                                             }}
+                                             onShowEditForm={(commentId) => {
+                                                 setShowEditForm(true);
+                                             }} />
+                                : null}
 
                     </Col>
                 </Row>
@@ -82,8 +85,8 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={6} offset={18}>
-                        {comment.date}
+                    <Col md={8} offset={18}>
+                        <Tag color="green">{comment.date}</Tag>
                     </Col>
                 </Row>
             </Col>

@@ -3,10 +3,10 @@ import 'antd/dist/antd.css';
 import {AddPostForm} from './components/news/add-post-form';
 import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
-import { message } from 'antd';
+import {message} from 'antd';
 
 export function MyCiCNews() {
-    return <Row>
+    return <Row style={{background: '#e9ebee', padding: '20px'}}>
         <Col md={24}>
             <Row>
                 <Col md={24}>

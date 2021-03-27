@@ -1,5 +1,5 @@
 import {Ajax, PostEntity} from '../../ajax';
-import {Button, Col, Divider, Input, Row} from 'antd';
+import {Button, Card, Col, Divider, Input, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
@@ -67,11 +67,19 @@ export function Post({post, onDeleted}: PostProps) {
     let [comments, setComments] = useState(post.comments);
     let [postText, setPostText] = useState(post.postText);
 
-    return <div className="p-2 post-entity" style={{
-        borderRadius: '20px',
-        backgroundColor: '#8080802e',
-        marginBottom: '20px',
-    }}>
+    let buttons = post.isMine ? <div>
+            <Button type="text"
+                    icon={editing ? <EditFilled /> : <EditOutlined />}
+                    onClick={() => {
+                        setEditing(!editing);
+                    }}
+            />
+            <Button type="text" icon={<CloseOutlined />} onClick={() => {
+                onDeleted(post);
+            }} />
+        </div> : null
+
+    return <Card style={{marginBottom: '10px'}}>
         <Row>
             <Col md={4}>
                 <UserAvatar isn={post.isn} />
@@ -79,13 +87,13 @@ export function Post({post, onDeleted}: PostProps) {
             <Col md={16}>
                 <Row>
                     <Col>
-                        {post.fullname}
+                        <Typography.Title level={5}>{post.fullname}</Typography.Title>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        {post.date}
-                        {post.edited ? <span>отредактировано</span> : null}
+                        <Tag color="green">{post.date}</Tag>
+                        {post.edited ? <Tag color="blue">отредактировано</Tag> : null}
                     </Col>
                 </Row>
             </Col>
@@ -165,5 +173,5 @@ export function Post({post, onDeleted}: PostProps) {
             </Col>
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}} />
-    </div>
+    </Card>
 }
