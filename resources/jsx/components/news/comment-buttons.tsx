@@ -1,5 +1,5 @@
-import {Button, Col, Dropdown, Menu, Row} from 'antd';
-import {CloseOutlined, EditOutlined, EllipsisOutlined} from '@ant-design/icons';
+import {Button, Col, Row} from 'antd';
+import {CloseOutlined, EditOutlined} from '@ant-design/icons';
 import React from 'react';
 import {Ajax, PostCommentEntity} from '../../ajax';
 

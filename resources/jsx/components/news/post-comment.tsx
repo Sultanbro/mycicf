@@ -2,7 +2,6 @@ import {Alert, Avatar, Button, Col, Divider, Input, Row} from 'antd';
 import {CommentMenu} from './comment-menu';
 import React, {useState} from 'react';
 import {Ajax, PostCommentEntity} from '../../ajax';
-import {CommentButtons} from './comment-buttons';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
@@ -49,10 +48,10 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
             </Col>
             <Col md={20}>
                 <Row>
-                    <Col md={2}>
+                    <Col md={8}>
                         {comment.fullname}
                     </Col>
-                    <Col md={2} offset={20}>
+                    <Col md={2} offset={14}>
                         {comment.isMine ? <CommentMenu comment={comment}
                                                        onCommentDeleted={(commentId) => {
                                                            onCommentDeleted(commentId);

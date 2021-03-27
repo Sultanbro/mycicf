@@ -1,6 +1,12 @@
 import React, {useState} from 'react';
 import {Avatar, Button, Col, Divider, Input, Row} from 'antd';
-import {BarChartOutlined, FileImageOutlined, FileOutlined, SendOutlined, VideoCameraOutlined} from '@ant-design/icons';
+import {
+    BarChartOutlined,
+    FileImageOutlined,
+    FileOutlined,
+    SendOutlined,
+    VideoCameraOutlined
+} from '@ant-design/icons';
 import {PollForm} from './poll-form';
 import {Ajax} from '../../ajax';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
@@ -22,7 +28,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [postText, setPostText] = useLocalStorage('postText', '');
     let showPublishButton = !!postText;
 
-    let publishBtn = <Ajax.Button<AddPostData, AddPostData>
+    let AjaxButton = ({...props}: any) => <Ajax.Button<any, any> {...props} />;
+
+    let publishBtn = <AjaxButton
         url="/news/addPost"
         data={{
             postText,
@@ -32,12 +40,12 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         type="default"
         icon={<SendOutlined />}
         method="POST"
-        onSuccess={(response) => {
+        onSuccess={(response: any) => {
             onAddPost(response.data);
             setPostText('');
         }}>
         Опубликовать
-    </Ajax.Button>;
+    </AjaxButton>;
 
     return <div>
         <Row>
