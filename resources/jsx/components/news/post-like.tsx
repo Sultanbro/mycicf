@@ -1,4 +1,4 @@
-import {Ajax, PostEntity} from '../../ajax';
+import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
 import React, {useState} from 'react';
 import {LikeOutlined, LikeTwoTone} from '@ant-design/icons';
 
@@ -10,6 +10,7 @@ export interface LikeRequest {
     postId: number;
     isn: any;
 }
+
 export interface LikeResponse {
     success: boolean;
     count: number;
@@ -24,14 +25,17 @@ export function PostLike({post}: PostLikeProps) {
         isn: 5565
     };
 
-    return <Ajax.Button<LikeRequest, LikeResponse> url="/news/likePost"
-                        method="POST"
-                        data={data}
-                        icon={icon}
-                        onSuccess={(res) => {
-                            setIsLiked(res.data.success);
-                            setLikes(res.data.count);
-                        }}>
+    let AjaxButton = ({...props}: AjaxButtonProps<LikeRequest, LikeResponse>) =>
+        <Ajax.Button<LikeRequest, LikeResponse> {...props} />;
+
+    return <AjaxButton url="/news/likePost"
+                   method="POST"
+                   data={data}
+                   icon={icon}
+                   onSuccess={(res) => {
+                       setIsLiked(res.data.success);
+                       setLikes(res.data.count);
+                   }}>
         {likes} Нравится
-    </Ajax.Button>;
+    </AjaxButton>;
 }

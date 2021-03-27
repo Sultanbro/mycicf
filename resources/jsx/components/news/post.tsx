@@ -1,5 +1,5 @@
 import {Ajax, PostEntity} from '../../ajax';
-import { Button, Col, Divider, Input, Row} from 'antd';
+import {Button, Col, Divider, Input, Row} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
@@ -31,15 +31,19 @@ export function EditPostForm({post, onCancel}: EditPostFormProps) {
             </Row>
             <Row>
                 <Col offset={16}>
-                    <Ajax.Button type="default" url="/news/editPost" data={{}} method="POST" onSuccess={() => {
+                    <Ajax.Button type="default"
+                                 url="/news/editPost"
+                                 data={{}}
+                                 method="POST"
+                                 onSuccess={() => {
 
-                    }}>
+                                 }}>
                         Отправить
                     </Ajax.Button>
                 </Col>
                 <Col>
                     <Button onClick={() => {
-                        onCancel()
+                        onCancel();
                     }}>
                         Отмена
                     </Button>
@@ -51,6 +55,8 @@ export function EditPostForm({post, onCancel}: EditPostFormProps) {
 
 export function Post({post}: PostProps) {
     let [editing, setEditing] = useState(false);
+    let [comments, setComments] = useState(post.comments);
+
     return <div className="p-2 post-entity" style={{
         borderRadius: '20px',
         backgroundColor: '#8080802e',
@@ -109,19 +115,23 @@ export function Post({post}: PostProps) {
             </Col>
             <Col>
                 <Button type="text" disabled>
-                    <CommentOutlined /> {post.comments.length} комментарии
+                    <CommentOutlined /> {comments.length} комментарии
                 </Button>
             </Col>
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}} />
         <Row>
             <Col md={22} offset={2}>
-                {post.comments.map((comment: any, i: number) => <PostComment comment={comment} key={i} />)}
+                {comments.map((comment: any, i: number) => <PostComment comment={comment} key={i} />)}
             </Col>
         </Row>
         <Row>
             <Col md={24}>
-                <CommentForm post={post} />
+                <CommentForm post={post}
+                             onCommendAdded={(res) => {
+                                 comments.push(res);
+                                 setComments(comments);
+                             }} />
             </Col>
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}} />

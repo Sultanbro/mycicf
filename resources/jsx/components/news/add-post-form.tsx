@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {Avatar, Button, Col, Divider, Input, Row} from 'antd';
-import {BarChartOutlined, FileImageOutlined, FileOutlined, VideoCameraOutlined} from '@ant-design/icons';
+import {BarChartOutlined, FileImageOutlined, FileOutlined, SendOutlined, VideoCameraOutlined} from '@ant-design/icons';
 import {PollForm} from './poll-form';
 import {Ajax} from '../../ajax';
+import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -14,10 +15,29 @@ interface AddPostData {
     isn: any;
 }
 
+let useLocalStorage = createUseLocalStorage('newpost');
+
 export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useState(false);
-    let [postText, setPostText] = useState('');
+    let [postText, setPostText] = useLocalStorage('postText', '');
     let showPublishButton = !!postText;
+
+    let publishBtn = <Ajax.Button<AddPostData, AddPostData>
+        url="/news/addPost"
+        data={{
+            postText,
+            poll: 0,
+            isn: 5565
+        }}
+        type="default"
+        icon={<SendOutlined />}
+        method="POST"
+        onSuccess={(response) => {
+            onAddPost(response.data);
+            setPostText('');
+        }}>
+        Опубликовать
+    </Ajax.Button>;
 
     return <div>
         <Row>
@@ -57,15 +77,8 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     setShowPollForm(!showPollForm)
                 }} icon={<BarChartOutlined />}>Опрос</Button>
             </Col>
-            <Col>
-                {showPublishButton ? <Ajax.Button<AddPostData, AddPostData> url="/news/addPost" data={{
-                    postText,
-                    poll: 0,
-                    isn: 5565
-                }} method="POST" onSuccess={(response) => {
-                    onAddPost(response.data);
-                    setPostText('');
-                }}>Опубликовать</Ajax.Button> : null}
+            <Col offset={1}>
+                {showPublishButton ? publishBtn : null}
             </Col>
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}} />

@@ -3,7 +3,7 @@ import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
 import {Button} from 'antd';
 import {ButtonProps} from 'antd/lib/button/button';
 
-interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
+export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     url: string;
     data: TReq;
     onSuccess: (res: AxiosResponse<TRes>) => any;
@@ -13,9 +13,10 @@ interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
 
 export interface PostCommentEntity {
     date: string;
+    commentId: number;
     commentText: string;
     fullname: string;
-    userISN: string;
+    userISN: any;
 }
 
 export interface PostEntity {
@@ -92,15 +93,26 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
     </div>
 }
 
-Ajax.GET = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="GET" {...props} />;
-Ajax.POST = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="POST" {...props} />;
-Ajax.PUT = <TRes extends any>(props: AjaxProps<TRes> | any) => <Ajax<TRes> method="PUT" {...props} />;
+Ajax.GET = <TRes extends any>(props: AjaxProps<TRes>) => <Ajax<TRes> method="GET" {...props} />;
+Ajax.POST = <TRes extends any>(props: AjaxProps<TRes>) => <Ajax<TRes> method="POST" {...props} />;
+Ajax.PUT = <TRes extends any>(props: AjaxProps<TRes>) => <Ajax<TRes> method="PUT" {...props} />;
 // ...
 
-Ajax.Button = <TReq, TRes>({url, data, onSuccess, children, method, icon, disabled = false, type = 'text'}: AjaxButtonProps<TReq, TRes>) => {
+Ajax.Button = <TReq, TRes>({
+                               url,
+                               data,
+                               onSuccess,
+                               children,
+                               method,
+                               icon,
+                               disabled = false,
+                               block = false,
+                               type = 'text'
+                           }: AjaxButtonProps<TReq, TRes>) => {
     let [loading, setLoading] = useState(false);
     return <Button type={loading ? 'ghost' : type}
                    loading={loading}
+                   block={block}
                    disabled={disabled}
                    icon={icon}
                    onClick={() => {
