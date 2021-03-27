@@ -53,13 +53,14 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
                         {comment.fullname}
                     </Col>
                     <Col md={2} offset={20}>
-                        <CommentMenu comment={comment}
-                                        onCommentDeleted={(commentId) => {
-                                            onCommentDeleted(commentId);
-                                        }}
-                                        onShowEditForm={(commentId) => {
-                                            setShowEditForm(true);
-                                        }} />
+                        {comment.isMine ? <CommentMenu comment={comment}
+                                                       onCommentDeleted={(commentId) => {
+                                                           onCommentDeleted(commentId);
+                                                       }}
+                                                       onShowEditForm={(commentId) => {
+                                                           setShowEditForm(true);
+                                                       }} /> : null}
+
                     </Col>
                 </Row>
                 <Row>

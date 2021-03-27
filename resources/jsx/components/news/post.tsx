@@ -15,9 +15,10 @@ export interface PostProps {
 export interface EditPostFormProps {
     post: PostEntity;
     onCancel: () => void;
+    onSaved: (post: PostEntity) => void;
 }
 
-export function EditPostForm({post, onCancel}: EditPostFormProps) {
+export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
     let [postText, setPostText] = useState(post.postText);
     return <Row>
         <Col md={24}>
@@ -32,13 +33,17 @@ export function EditPostForm({post, onCancel}: EditPostFormProps) {
             </Row>
             <Row>
                 <Col offset={16}>
-                    <Ajax.Button type="default"
-                                 url="/news/editPost"
-                                 data={{}}
-                                 method="POST"
-                                 onSuccess={() => {
-
-                                 }}>
+                    <Ajax.Button<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
+                        type="default"
+                        url="/news/my/editPost"
+                        data={{postId: post.postId, postText: postText}}
+                        method="POST"
+                        onSuccess={(res) => {
+                            post.postText = postText;
+                            if (res.data.edited) {
+                                onSaved(post);
+                            }
+                        }}>
                         Отправить
                     </Ajax.Button>
                 </Col>
@@ -57,6 +62,7 @@ export function EditPostForm({post, onCancel}: EditPostFormProps) {
 export function Post({post, onDeleted}: PostProps) {
     let [editing, setEditing] = useState(false);
     let [comments, setComments] = useState(post.comments);
+    let [postText, setPostText] = useState(post.postText);
 
     return <div className="p-2 post-entity" style={{
         borderRadius: '20px',
@@ -76,33 +82,41 @@ export function Post({post, onDeleted}: PostProps) {
                 <Row>
                     <Col>
                         {post.date}
+                        {post.edited ? <span>отредактировано</span> : null}
                     </Col>
                 </Row>
             </Col>
             <Col md={4}>
-                <Button type="text"
-                        icon={editing ? <EditFilled /> : <EditOutlined />}
-                        onClick={() => {
-                            setEditing(!editing);
-                        }}
-                />
-                <Button type="text" icon={<CloseOutlined />} onClick={() => {
-                    onDeleted(post);
-                }} />
+                {post.isMine ? <div>
+                    <Button type="text"
+                            icon={editing ? <EditFilled /> : <EditOutlined />}
+                            onClick={() => {
+                                setEditing(!editing);
+                            }}
+                    />
+                    <Button type="text" icon={<CloseOutlined />} onClick={() => {
+                        onDeleted(post);
+                    }} />
+                </div> : null}
             </Col>
         </Row>
         <Row>
             <Col md={24}>
                 {(() => {
                     if (editing) {
-                        return <EditPostForm post={post} onCancel={() => {
-                            setEditing(false);
-                        }} />;
+                        return <EditPostForm post={post}
+                                             onCancel={() => {
+                                                 setEditing(false);
+                                             }}
+                                             onSaved={(post) => {
+                                                 setPostText(post.postText);
+                                                 setEditing(false);
+                                             }} />;
                     }
 
                     return <Row>
                         <Col>
-                            {post.postText}
+                            {postText}
                         </Col>
                     </Row>
                 })()}

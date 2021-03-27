@@ -28,11 +28,12 @@ export function Posts() {
                     <Col md={24}>
                         <Row>
                             <Col md={24}>
-                                {data.map((post: any, i: number) => <Post key={i}
-                                                                          post={post}
-                                                                          onDeleted={(post) => {
+                                {data.map((post: any, i: number) =>
+                                    <Post key={i}
+                                          post={post}
+                                          onDeleted={(post) => {
 
-                                                                          }} />)}
+                                          }} />)}
                             </Col>
                         </Row>
                         <Row>

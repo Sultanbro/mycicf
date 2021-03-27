@@ -7,7 +7,7 @@ export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     url: string;
     data: TReq;
     onSuccess: (res: AxiosResponse<TRes>) => any;
-    children: any;
+    children?: any;
     method: Method;
 }
 
@@ -17,12 +17,15 @@ export interface PostCommentEntity {
     commentText: string;
     fullname: string;
     userISN: any;
+    isMine: boolean;
 }
 
 export interface PostEntity {
     postId: number;
     likes: number;
     isLiked: boolean;
+    isMine: boolean;
+    edited: boolean;
     comments: PostCommentEntity[];
     date: string;
     fullname: string;

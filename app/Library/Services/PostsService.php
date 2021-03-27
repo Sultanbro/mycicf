@@ -150,6 +150,7 @@ class PostsService {
             'postText'   => $item->getText(),
             'pinned'     => $item->pinned,
             'postId'     => $item->id,
+            'isMine'     => $item->is_mine,
             'edited'     => $item->is_edited,
             'likes'      => $item->likes_count,
             'isLiked'    => $item->likes->where('user_isn', '=', $user_isn)->count() > 0,
@@ -158,6 +159,7 @@ class PostsService {
             'comments'   => $item->comments->map(function (Comment $comment) {
                 return [
                     'commentText' => $comment->text,
+                    'isMine'     => $comment->is_mine,
                     'userISN'     => $comment->user_isn,
                     'commentId'   => $comment->id,
                     'fullname'    => $this->getFullName($comment->user_isn),

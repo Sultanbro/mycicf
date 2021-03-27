@@ -65,6 +65,10 @@ class Post extends Model
         'pinned' => 'bool'
     ];
 
+    protected $appends = [
+        'is_mine'
+    ];
+
     public function likes() {
         return $this->hasMany(Like::class);
     }
@@ -294,6 +298,10 @@ class Post extends Model
     }
 
     public function getIsMineAttribute() {
+        if (!auth()->check()) {
+            return false;
+        }
+
         return $this->user_isn === auth()->user()->ISN;
     }
 
