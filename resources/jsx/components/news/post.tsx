@@ -48,6 +48,9 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                     </Ajax.Button>
                 </Col>
                 <Col>
+                    <Divider type="vertical" />
+                </Col>
+                <Col>
                     <Button onClick={() => {
                         onCancel();
                     }}>

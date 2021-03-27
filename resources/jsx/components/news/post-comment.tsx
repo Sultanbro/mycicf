@@ -11,7 +11,7 @@ export interface PostCommentProps {
 export interface CommentEditFormProps {
     comment: PostCommentEntity;
     onCancel: () => void;
-    onSaved: () => void;
+    onSaved: (text: string) => void;
 }
 
 export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormProps) {
@@ -24,10 +24,11 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
         <Ajax.Button<{ commentId: number, commentText: string }, { edited: boolean, success: boolean }>
             url="/news/comments/editComment"
             method="POST"
+            type="default"
             data={{commentId: comment.commentId, commentText: comment.commentText}}
             onSuccess={(res) => {
                 if (res.data.edited) {
-                    onSaved();
+                    onSaved(comment.commentText);
                 }
             }}>
             Сохранить
@@ -41,6 +42,7 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
 
 export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
     let [showEditForm, setShowEditForm] = useState(false);
+    let [text, setText] = useState(comment.commentText);
     return <div>
         <Row>
             <Col md={2}>
@@ -70,9 +72,11 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
                                                  onCancel={() => {
                                                      setShowEditForm(false);
                                                  }}
-                                                 onSaved={() => {
+                                                 onSaved={(text) => {
+                                                     setText(text);
+                                                     setShowEditForm(false);
                                                  }} /> :
-                                <Alert message={comment.commentText} type="info" />
+                                <Alert message={text} type="info" />
                         }
 
                     </Col>

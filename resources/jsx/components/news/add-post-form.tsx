@@ -21,13 +21,12 @@ interface AddPostData {
     isn: any;
 }
 
-let useLocalStorage = createUseLocalStorage('newpost');
+let useLocalStorage = createUseLocalStorage('newPost');
 
 export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useState(false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let showPublishButton = !!postText;
-
     let AjaxButton = ({...props}: any) => <Ajax.Button<any, any> {...props} />;
 
     let publishBtn = <AjaxButton
