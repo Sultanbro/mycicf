@@ -18,14 +18,25 @@ export function MyCiCNews({param}: any) {
 
 function Posts() {
     return <PostsAjax lastIndex={null}>
-        {({response, refetch}: any) => {
-            let lastIndex = Math.max(...response.data.map((post: any) => post.postId));
+        {({data, refetch}: any) => {
+            console.log(data.map((post: any) => post.postId));
+            let lastIndex = Math.min(...data.map((post: any) => post.postId));
             return <div>
                 <ul>
-                    {response.data.map((post: any, i: number) => <li key={i}>Post #{post.postId}: {post.postText}</li>)}
+                    {data.map((post: any, i: number) => <li key={i}>Post #{post.postId}: {post.postText}</li>)}
                 </ul>
                 <Button onClick={() => {
-                    refetch({data: {lastIndex}})
+                    refetch({
+                        previousData: data,
+                        data: {lastIndex}, callback: (newData: any, previousData: any) => {
+                            if (!previousData) {
+                                previousData = [];
+                            }
+
+                            debugger;
+                            return previousData.concat(newData);
+                        }
+                    })
                 }}>
                     Refetch
                 </Button>

@@ -10,13 +10,15 @@ interface AjaxRefetchArgs {
     url: string;
     params: any;
     data: any;
+    previousData?: any;
+    callback?: (previousData: any, newData: any) => any;
 }
 
 export function Ajax<T>({url, method, params, data, children, headers}: AjaxProps<any> | any) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 
-    function refetch({method, url, params, data}: AjaxRefetchArgs) {
+    function refetch({method, url, params, data, previousData, callback}: AjaxRefetchArgs) {
         axios.request<T>({
             method,
             url,
@@ -24,6 +26,10 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
             headers,
             data
         }).then((res) => {
+            if (!callback) {
+                callback = (newData: any, previousData: any) => newData;
+            }
+            res.data = callback(res.data, previousData);
             setResponse(res);
         }).catch((err) => {
             setError(err);
@@ -44,8 +50,10 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
 
     return <div>
         {children({
-            response, refetch: ({params, data}: any) => {
-                refetch({method, url, params, data});
+            response,
+            data: response.data,
+            refetch: ({params, data, previousData, callback}: any) => {
+                refetch({method, url, params, data, previousData, callback});
             }
         })}
     </div>
@@ -58,8 +66,8 @@ interface PostsAjaxProps {
 
 export function PostsAjax({lastIndex = null, children}: PostsAjaxProps) {
     return <Ajax.POST url="/news/getPosts" q={{lastIndex}}>
-        {({response, refetch}: any) => {
-            return children({response, refetch});
+        {({response, refetch, callback}: any) => {
+            return children({response, data: response.data, refetch, callback});
         }}
     </Ajax.POST>;
 }
