@@ -1,5 +1,7 @@
 import React from 'react';
+import {Button} from 'antd';
 import {Ajax, PostsAjax} from "./ajax";
+import 'antd/dist/antd.css';
 
 export function MyCiCNews({param}: any) {
     return <div>
@@ -17,13 +19,16 @@ export function MyCiCNews({param}: any) {
 function Posts() {
     return <PostsAjax lastIndex={null}>
         {({response, refetch}: any) => {
+            let lastIndex = Math.max(...response.data.map((post: any) => post.postId));
             return <div>
                 <ul>
-                    {response.data.map((post: any) => <li>Post #{post.postId}: {post.postText}</li>)}
+                    {response.data.map((post: any, i: number) => <li key={i}>Post #{post.postId}: {post.postText}</li>)}
                 </ul>
-                <button onClick={() => {refetch()}}>
+                <Button onClick={() => {
+                    refetch({data: {lastIndex}})
+                }}>
                     Refetch
-                </button>
+                </Button>
             </div>
         }}
     </PostsAjax>;
@@ -31,23 +36,22 @@ function Posts() {
 
 function Posts2() {
     return <Ajax url="/news/getPosts" method="POST" q={{a: 1}}>
-        {({response, refetch}: any) => {
-            return <div>
+        {({response, refetch}: any) =>
+            <div>
                 <ul>
                     {response.data.map((post: any) => <li>Post #{post.postId}: {post.postText}</li>)}
                 </ul>
-                <button onClick={() => {refetch()}}>
+                <Button onClick={() => {
+                    refetch()
+                }}>
                     Refetch
-                </button>
-            </div>
-        }}
+                </Button>
+            </div>}
     </Ajax>;
 }
 
-function Sandbox({param = 10}) {
+function Post() {
     return <div>
-        Sandbox: <b>{param}</b>
 
-        <Posts2 />
     </div>
 }

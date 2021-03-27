@@ -2,50 +2,52 @@ import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
 
 interface AjaxProps<T> extends AxiosRequestConfig {
-    children: (res: any, refetch: T) => React.ReactNode;
+    children: (res: AxiosResponse<T>, refetch: T) => React.ReactNode;
 }
 
 interface AjaxRefetchArgs {
     method: "GET" | 'POST';
     url: string;
     params: any;
+    data: any;
 }
 
-export function Ajax<T>({url, method, params, children, headers}: AjaxProps<any> | any) {
+export function Ajax<T>({url, method, params, data, children, headers}: AjaxProps<any> | any) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
-    let [loading, setLoading] = useState(false);
 
-    function refetch({method, url, params}: AjaxRefetchArgs) {
-        setLoading(true);
+    function refetch({method, url, params, data}: AjaxRefetchArgs) {
         axios.request<T>({
             method,
             url,
             params,
-            headers
+            headers,
+            data
         }).then((res) => {
             setResponse(res);
-            setLoading(false);
         }).catch((err) => {
             setError(err);
-            setLoading(false);
         });
     }
 
     if (!response) {
-        refetch({method, url, params});
+        refetch({method, url, params, data});
 
         if (error) {
             return <div>Error: {error.message}</div>
         }
 
         return <div>
-            <div className="preloader"/>
+            Loading...
         </div>
     }
 
     return <div>
-        {children({response, refetch})}
+        {children({
+            response, refetch: ({params, data}: any) => {
+                refetch({method, url, params, data});
+            }
+        })}
     </div>
 }
 
@@ -54,7 +56,7 @@ interface PostsAjaxProps {
     children: any;
 }
 
-export function PostsAjax({ lastIndex = null, children }: PostsAjaxProps) {
+export function PostsAjax({lastIndex = null, children}: PostsAjaxProps) {
     return <Ajax.POST url="/news/getPosts" q={{lastIndex}}>
         {({response, refetch}: any) => {
             return children({response, refetch});
