@@ -38,7 +38,7 @@ export function CommentForm({post, onCommendAdded}: CommentFormProps) {
             <Col md={20}>
                 <Input.TextArea placeholder="Напишите комментарий..."
                                 value={commentText}
-                                autoSize
+                                rows={2}
                                 onChange={(e) => {
                                     setCommentText(e.target.value);
                                 }} />

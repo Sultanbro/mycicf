@@ -9,6 +9,7 @@ import {UserAvatar} from '../UserAvatar';
 
 export interface PostProps {
     post: PostEntity;
+    onDeleted: (post: PostEntity) => void;
 }
 
 export interface EditPostFormProps {
@@ -53,7 +54,7 @@ export function EditPostForm({post, onCancel}: EditPostFormProps) {
     </Row>
 }
 
-export function Post({post}: PostProps) {
+export function Post({post, onDeleted}: PostProps) {
     let [editing, setEditing] = useState(false);
     let [comments, setComments] = useState(post.comments);
 
@@ -85,7 +86,9 @@ export function Post({post}: PostProps) {
                             setEditing(!editing);
                         }}
                 />
-                <Button type="text" icon={<CloseOutlined />} />
+                <Button type="text" icon={<CloseOutlined />} onClick={() => {
+                    onDeleted(post);
+                }} />
             </Col>
         </Row>
         <Row>
@@ -114,23 +117,33 @@ export function Post({post}: PostProps) {
                 <Divider type="vertical" />
             </Col>
             <Col>
-                <Button type="text" disabled>
+                <span style={{
+                    height: '32px',
+                    padding: '4px 15px',
+                    lineHeight: 1.5715,
+                    display: 'block'
+                }}>
                     <CommentOutlined /> {comments.length} комментарии
-                </Button>
+                </span>
             </Col>
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}} />
         <Row>
             <Col md={22} offset={2}>
-                {comments.map((comment: any, i: number) => <PostComment comment={comment} key={i} />)}
+                {comments.map((comment: any, i: number) =>
+                    <PostComment comment={comment} key={i}
+                                 onCommentDeleted={(commentId) => {
+                                     setComments((old) => {
+                                         return old.filter((comment) => comment.commentId !== commentId);
+                                     });
+                                 }} />)}
             </Col>
         </Row>
         <Row>
             <Col md={24}>
                 <CommentForm post={post}
                              onCommendAdded={(res) => {
-                                 comments.push(res);
-                                 setComments(comments);
+                                 setComments((old) => [...old, res]);
                              }} />
             </Col>
         </Row>

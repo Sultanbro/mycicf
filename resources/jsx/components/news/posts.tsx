@@ -9,7 +9,7 @@ interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
 }
 
 export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
-    return <Ajax.POST<PostEntity> url="/news/getPosts" q={{lastIndex}}>
+    return <Ajax.POST<PostEntity> url="/news/getPosts" data={{lastIndex}}>
         {({response, refetch, callback}: any) => {
             return children({response, callback, refetch});
         }}
@@ -28,7 +28,11 @@ export function Posts() {
                     <Col md={24}>
                         <Row>
                             <Col md={24}>
-                                {data.map((post: any, i: number) => <Post key={i} post={post} />)}
+                                {data.map((post: any, i: number) => <Post key={i}
+                                                                          post={post}
+                                                                          onDeleted={(post) => {
+
+                                                                          }} />)}
                             </Col>
                         </Row>
                         <Row>

@@ -19,7 +19,7 @@ export interface LikeResponse {
 export function PostLike({post}: PostLikeProps) {
     let [isLiked, setIsLiked] = useState(post.isLiked);
     let [likes, setLikes] = useState(post.likes);
-    let icon = isLiked ? <LikeTwoTone /> : <LikeOutlined />;
+    let icon = isLiked ? <LikeTwoTone style={{color: 'red'}} /> : <LikeOutlined />;
     let data: LikeRequest = {
         postId: post.postId,
         isn: 5565

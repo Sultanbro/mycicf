@@ -1,13 +1,47 @@
-import {Alert, Avatar, Col, Divider, Row} from 'antd';
+import {Alert, Avatar, Button, Col, Divider, Input, Row} from 'antd';
 import {CommentMenu} from './comment-menu';
-import React from 'react';
-import {PostCommentEntity} from '../../ajax';
+import React, {useState} from 'react';
+import {Ajax, PostCommentEntity} from '../../ajax';
+import {CommentButtons} from './comment-buttons';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
+    onCommentDeleted: (commentId: number) => void;
 }
 
-export function PostComment({comment}: PostCommentProps) {
+export interface CommentEditFormProps {
+    comment: PostCommentEntity;
+    onCancel: () => void;
+    onSaved: () => void;
+}
+
+export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormProps) {
+    let [text, setText] = useState(comment.commentText);
+    return <div>
+        <Input.TextArea value={text} onChange={(e) => {
+            setText(e.target.value)
+        }} />
+
+        <Ajax.Button<{ commentId: number, commentText: string }, { edited: boolean, success: boolean }>
+            url="/news/comments/editComment"
+            method="POST"
+            data={{commentId: comment.commentId, commentText: comment.commentText}}
+            onSuccess={(res) => {
+                if (res.data.edited) {
+                    onSaved();
+                }
+            }}>
+            Сохранить
+        </Ajax.Button>
+
+        <Button onClick={() => {
+            onCancel();
+        }}>Отмена</Button>
+    </div>
+}
+
+export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
+    let [showEditForm, setShowEditForm] = useState(false);
     return <div>
         <Row>
             <Col md={2}>
@@ -19,12 +53,28 @@ export function PostComment({comment}: PostCommentProps) {
                         {comment.fullname}
                     </Col>
                     <Col md={2} offset={20}>
-                        <CommentMenu comment={comment} />
+                        <CommentMenu comment={comment}
+                                        onCommentDeleted={(commentId) => {
+                                            onCommentDeleted(commentId);
+                                        }}
+                                        onShowEditForm={(commentId) => {
+                                            setShowEditForm(true);
+                                        }} />
                     </Col>
                 </Row>
                 <Row>
                     <Col md={24}>
-                        <Alert message={comment.commentText} type="info" />
+                        {
+                            showEditForm ?
+                                <CommentEditForm comment={comment}
+                                                 onCancel={() => {
+                                                     setShowEditForm(false);
+                                                 }}
+                                                 onSaved={() => {
+                                                 }} /> :
+                                <Alert message={comment.commentText} type="info" />
+                        }
+
                     </Col>
                 </Row>
                 <Row>

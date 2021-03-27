@@ -6,17 +6,18 @@ import {Ajax, PostCommentEntity} from '../../ajax';
 export interface CommentMenuProps {
     comment: PostCommentEntity;
     onCommentDeleted: (commentId: number) => void;
+    onShowEditForm: (commentId: number) => void;
 }
 
-export function CommentMenu({comment, onCommentDeleted}: CommentMenuProps) {
+export function CommentMenu({comment, onCommentDeleted, onShowEditForm}: CommentMenuProps) {
     const menu = (
         <Menu>
             <Menu.Item>
-                <a target="_blank"
-                   rel="noopener noreferrer"
-                   href="https://www.antgroup.com">
+                <Button type="link" onClick={() => {
+                    onShowEditForm(comment.commentId);
+                }}>
                     Отредактировать
-                </a>
+                </Button>
             </Menu.Item>
             <Menu.Item>
                 <Ajax.Button<{ commentId: number }, { success: true }>
