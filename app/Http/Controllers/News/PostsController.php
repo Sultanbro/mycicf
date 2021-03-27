@@ -53,8 +53,11 @@ class PostsController extends Controller
             $success = false;
         }
 
+        $likesCount = Like::where('post_id', $post_id)->count();
+
         $response = [
           'success' => $success,
+            'count' => $likesCount,
         ];
 
         broadcast(new NewPost([

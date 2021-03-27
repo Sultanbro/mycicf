@@ -6,22 +6,31 @@ export interface PostLikeProps {
     post: PostEntity;
 }
 
+export interface LikeRequest {
+    postId: number;
+    isn: any;
+}
+export interface LikeResponse {
+    success: boolean;
+    count: number;
+}
+
 export function PostLike({post}: PostLikeProps) {
     let [isLiked, setIsLiked] = useState(post.isLiked);
     let [likes, setLikes] = useState(post.likes);
     let icon = isLiked ? <LikeTwoTone /> : <LikeOutlined />;
-    let data = {
+    let data: LikeRequest = {
         postId: post.postId,
         isn: 5565
     };
 
-    return <Ajax.Button url="/news/likePost"
+    return <Ajax.Button<LikeRequest, LikeResponse> url="/news/likePost"
                         method="POST"
                         data={data}
                         icon={icon}
-                        onSuccess={(res: any) => {
+                        onSuccess={(res) => {
                             setIsLiked(res.data.success);
-                            setLikes(res.data.success ? likes + 1 : likes - 1);
+                            setLikes(res.data.count);
                         }}>
         {likes} Нравится
     </Ajax.Button>;

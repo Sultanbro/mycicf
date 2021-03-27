@@ -25,6 +25,7 @@ export function CommentForm({post}: CommentFormProps) {
                 <Ajax.Button type="text"
                              url="/news/comments/addComment"
                              method="POST"
+                             disabled={!commentText}
                              icon={<SendOutlined />}
                              data={{isn: 5565, commentText, "postId": post.postId}} onSuccess={() => {
                     setCommentText('');

@@ -47,12 +47,15 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         <Divider type="horizontal" style={{margin: '12px 0'}} />
         <Row>
             <Col>
-                <Button><FileImageOutlined />Фото</Button>
-                <Button><VideoCameraOutlined />Видео</Button>
-                <Button><FileOutlined />Файл</Button>
+                <Button icon={<FileImageOutlined />}>Фото</Button>
+                <Divider type="vertical" />
+                <Button icon={<VideoCameraOutlined />}>Видео</Button>
+                <Divider type="vertical" />
+                <Button icon={<FileOutlined />}>Файл</Button>
+                <Divider type="vertical" />
                 <Button onClick={() => {
                     setShowPollForm(!showPollForm)
-                }}><BarChartOutlined />Опрос</Button>
+                }} icon={<BarChartOutlined />}>Опрос</Button>
             </Col>
             <Col>
                 {showPublishButton ? <Ajax.Button<AddPostData, AddPostData> url="/news/addPost" data={{
@@ -61,6 +64,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     isn: 5565
                 }} method="POST" onSuccess={(response) => {
                     onAddPost(response.data);
+                    setPostText('');
                 }}>Опубликовать</Ajax.Button> : null}
             </Col>
         </Row>
