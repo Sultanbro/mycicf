@@ -1,8 +1,32 @@
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
+import {Button} from 'antd';
+import {ButtonProps} from 'antd/lib/button/button';
+
+interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
+    url: string;
+    data: TReq;
+    onSuccess: (res: AxiosResponse<TRes>) => any;
+    children: any;
+    method: Method;
+}
+
+export interface PostCommentEntity {
+    date: string;
+    commentText: string;
+    fullname: string;
+    userISN: string;
+}
 
 export interface PostEntity {
-
+    postId: number;
+    likes: number;
+    isLiked: boolean;
+    comments: PostCommentEntity[];
+    date: string;
+    fullname: string;
+    isn: string;
+    postText: string;
 }
 
 interface AjaxPropsChildrenArgs<T> {
@@ -16,7 +40,7 @@ interface AjaxProps<T> extends AxiosRequestConfig {
 }
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
-    lastIndex: number | null;
+    lastIndex?: number;
 }
 
 interface AjaxRefetchArgs {
@@ -72,7 +96,7 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
     </div>
 }
 
-export function PostsAjax({lastIndex = null, children}: PostsAjaxProps) {
+export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
     return <Ajax.POST<PostEntity> url="/news/getPosts" q={{lastIndex}}>
         {({response, refetch, callback}: any) => {
             return children({response, callback, refetch});
@@ -84,3 +108,17 @@ Ajax.GET = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="GET"
 Ajax.POST = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="POST" {...props} />;
 Ajax.PUT = <T extends any>(props: AjaxProps<any> | any) => <Ajax<T> method="PUT" {...props} />;
 // ...
+
+Ajax.Button = <TReq extends any, TRes extends any> ({url, data, onSuccess, children, method}: AjaxButtonProps<TReq, TRes>) => {
+    return <Button type="text" onClick={() => {
+        axios.request({
+            url,
+            method,
+            data
+        }).then((res) => {
+            onSuccess(res);
+        });
+    }}>
+        {children}
+    </Button>
+}
