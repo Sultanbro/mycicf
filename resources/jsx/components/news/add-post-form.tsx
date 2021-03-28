@@ -24,7 +24,7 @@ interface AddPostData {
 let useLocalStorage = createUseLocalStorage('newPost');
 
 export function AddPostForm({onAddPost}: AddPostFormProps) {
-    let [showPollForm, setShowPollForm] = useState(false);
+    let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let showPublishButton = !!postText;
     let AjaxButton = ({...props}: any) => <Ajax.Button<any, any> {...props} />;
@@ -60,7 +60,10 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Avatar size={64} src="/images/avatar.png" />
                 </Col>
                 <Col md={18}>
-                    <Input.TextArea placeholder="Что у вас нового?" value={postText} onChange={(e) => {
+                    <Input.TextArea placeholder="Что у вас нового?"
+                                    value={postText}
+                                    allowClear
+                                    onChange={(e) => {
                         setPostText(e.target.value);
                     }} />
                 </Col>
@@ -85,7 +88,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Divider type="vertical" />
                     <Button onClick={() => {
                         setShowPollForm(!showPollForm)
-                    }} icon={<BarChartOutlined />}>Опрос</Button>
+                    }} icon={<BarChartOutlined />} type={showPollForm ? 'primary' : 'default'}>Опрос</Button>
                 </Col>
                 <Col offset={1}>
                     {showPublishButton ? publishBtn : null}

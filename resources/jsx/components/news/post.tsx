@@ -1,4 +1,4 @@
-import {Ajax, PostEntity} from '../../ajax';
+import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
 import {Button, Card, Col, Divider, Input, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
@@ -67,17 +67,8 @@ export function Post({post, onDeleted}: PostProps) {
     let [comments, setComments] = useState(post.comments);
     let [postText, setPostText] = useState(post.postText);
 
-    let buttons = post.isMine ? <div>
-            <Button type="text"
-                    icon={editing ? <EditFilled /> : <EditOutlined />}
-                    onClick={() => {
-                        setEditing(!editing);
-                    }}
-            />
-            <Button type="text" icon={<CloseOutlined />} onClick={() => {
-                onDeleted(post);
-            }} />
-        </div> : null
+    let AjaxDeleteButton = ({...props}: AjaxButtonProps<{postId: number}, {success: boolean}>) =>
+        <Ajax.Button<{postId: number}, {success: boolean}> {...props} />
 
     return <Card style={{marginBottom: '10px'}}>
         <Row>
@@ -105,9 +96,17 @@ export function Post({post, onDeleted}: PostProps) {
                                 setEditing(!editing);
                             }}
                     />
-                    <Button type="text" icon={<CloseOutlined />} onClick={() => {
-                        onDeleted(post);
-                    }} />
+                    <AjaxDeleteButton
+                        url="/news/my/deletePost"
+                        method="POST"
+                        data={{postId: post.postId}}
+                        type="text"
+                        icon={<CloseOutlined />}
+                        onSuccess={(res) => {
+                            if (res.data.success) {
+                                onDeleted(post);
+                            }
+                        }} />
                 </div> : null}
             </Col>
         </Row>

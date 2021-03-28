@@ -32,7 +32,8 @@ export function Posts() {
                                     <Post key={i}
                                           post={post}
                                           onDeleted={(post) => {
-
+                                              debugger;
+                                              refetch();
                                           }} />)}
                             </Col>
                         </Row>

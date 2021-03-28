@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
-export type UseLocalStorage = <T>(key: string, initialState: T) => [T, (value: T) => void];
+export type UseLocalStorage = <T>(key: string, initialState: T, deleteOn?: T | (() => T)) => [T, (value: T) => void];
 
 /**
  * Returns a hook for LocalStorage values
@@ -8,18 +8,20 @@ export type UseLocalStorage = <T>(key: string, initialState: T) => [T, (value: T
  * @param prefix A prefix
  */
 export function createUseLocalStorage(prefix: string): UseLocalStorage {
-    return <TT>(key: string, initialState: TT) =>
-        useStateWithLocalStorage(`${prefix}::${key}`, initialState);
+    return <T>(key: string, initialState: T | (() => T), deleteOn: T | (() => T) = initialState) =>
+        useStateWithLocalStorage(`${prefix}::${key}`, initialState, deleteOn);
 }
 
 /**
  * Use state value from LocalStorage
  * @param key A key prefix
  * @param initialState initial state
+ * @param deleteOn A value that handle deleting local storage key
  */
 export function useStateWithLocalStorage<T>(
     key: string,
-    initialState: T | (() => T)
+    initialState: T | (() => T),
+    deleteOn: T | (() => T) = initialState
 ): [T, (value: T) => void] {
     let item = localStorage.getItem(key);
     let value: T;
@@ -38,7 +40,11 @@ export function useStateWithLocalStorage<T>(
     return [
         v,
         (val: T) => {
-            localStorage.setItem(key, JSON.stringify(val));
+            if (val === deleteOn) {
+                localStorage.removeItem(key);
+            } else {
+                localStorage.setItem(key, JSON.stringify(val));
+            }
             setV(val);
         }
     ];
