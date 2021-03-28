@@ -1,6 +1,6 @@
 import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
-import {Button, Col, List, Row, Spin} from 'antd';
+import {Button, Col, List, message, Row, Spin} from 'antd';
 import React, {useState} from 'react';
 import {EllipsisOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -63,7 +63,7 @@ export function Posts() {
                                 <Col md={24}>
                                     <Post post={item}
                                           onDeleted={(post) => {
-                                              debugger;
+                                              message.info('Пост удалён');
                                               refetch();
                                           }} />
                                 </Col>
