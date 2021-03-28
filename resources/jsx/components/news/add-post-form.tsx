@@ -60,7 +60,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         <Col md={24}>
             <Row>
                 <Col>
-                    <Typography.Title level={5}>
+                    <Typography.Title level={3}>
                         Создайте публикацию
                     </Typography.Title>
                 </Col>

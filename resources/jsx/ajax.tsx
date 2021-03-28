@@ -34,6 +34,7 @@ export interface PostPoll {
 }
 
 export interface PostEntity {
+    image: string[];
     post_poll: PostPoll;
     isVoted: boolean;
     postId: number;
