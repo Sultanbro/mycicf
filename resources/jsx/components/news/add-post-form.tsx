@@ -73,6 +73,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Input.TextArea placeholder="Что у вас нового?"
                                     value={postText}
                                     allowClear
+                                    rows={7}
                                     onChange={(e) => {
                                         setPostText(e.target.value);
                                     }} />

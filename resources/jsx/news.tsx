@@ -5,6 +5,7 @@ import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
 import {message} from 'antd';
 import {ReadMore} from './components/read-more';
+import {Birthdays} from './components/birthdays/birthdays';
 
 export function MyCiCNews() {
     return <Row style={{background: '#e9ebee', padding: '20px'}}>

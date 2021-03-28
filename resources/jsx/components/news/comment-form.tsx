@@ -1,9 +1,10 @@
 import React from 'react';
-import {Avatar, Button, Col, Input, Row} from 'antd';
+import {Avatar, Col, Input, Row} from 'antd';
 import {Ajax, AjaxButtonProps, PostCommentEntity, PostEntity} from '../../ajax';
 import {SendOutlined} from '@ant-design/icons';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
+import {BaseEmoji} from 'emoji-mart';
 
 interface CommentFormProps {
     post: PostEntity;
@@ -46,7 +47,7 @@ export function CommentForm({post, onCommendAdded, text = ''}: CommentFormProps)
                             }} />
         </Col>
         <Col md={2}>
-            <EmojiPicker onSelect={(data) => {
+            <EmojiPicker onSelect={(data: BaseEmoji) => {
                 setCommentText(commentText + data.native);
             }} />
         </Col>

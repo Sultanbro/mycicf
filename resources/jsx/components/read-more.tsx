@@ -17,6 +17,7 @@ export function ReadMore({children, defaultMaxHeight = '100px'}: any) {
         <Button type="link"
                 block
                 onClick={() => {
+                    console.log(ref);
                     if (!maximized) {
                         setMaxHeight('1000px');
                     } else {
