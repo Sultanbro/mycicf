@@ -19,7 +19,11 @@ export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
     </Ajax.POST>;
 }
 
-export function Posts() {
+interface PostsProps {
+    ref: React.Ref<any>;
+}
+
+export function Posts({ref}: PostsProps) {
     let [loading, setLoading] = useState(false);
     let [hasMore, setHasMore] = useState(true);
 

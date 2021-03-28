@@ -1,5 +1,6 @@
 import React, {Ref, useState} from 'react';
 import {Button} from 'antd';
+import {DownOutlined, UpOutlined} from '@ant-design/icons';
 
 export function ReadMore({children, defaultMaxHeight = '100px'}: any) {
     let [maxHeight, setMaxHeight] = useState(defaultMaxHeight);
@@ -14,8 +15,13 @@ export function ReadMore({children, defaultMaxHeight = '100px'}: any) {
         <div style={style}>
             {children}
         </div>
-        <Button type="link"
+        <Button type="dashed"
                 block
+                icon={
+                    maximized ?
+                        <UpOutlined /> :
+                        <DownOutlined />
+                }
                 onClick={() => {
                     console.log(ref);
                     if (!maximized) {
@@ -24,7 +30,11 @@ export function ReadMore({children, defaultMaxHeight = '100px'}: any) {
                         setMaxHeight(defaultMaxHeight);
                     }
                 }}>
-            { maximized ? 'Свернуть' : 'Показать больше' }
+            {
+                maximized ?
+                <span>Свернуть</span> :
+                <span>Показать больше</span>
+            }
         </Button>
     </div>
 }

@@ -1,5 +1,5 @@
 import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
-import {Button, Card, Carousel, Col, Divider, Image, Input, message, Row, Tag, Typography} from 'antd';
+import {Button, Card, Carousel, Col, Divider, Image, Input, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
@@ -165,7 +165,7 @@ export function Post({post, onDeleted}: PostProps) {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col>
+                                <Col md={24}>
                                     <ReadMore>
                                         {postText}
                                     </ReadMore>
