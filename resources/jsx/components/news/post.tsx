@@ -6,6 +6,7 @@ import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-des
 import {PostComment} from './post-comment';
 import {CommentForm} from './comment-form';
 import {UserAvatar} from '../UserAvatar';
+import {PostPoll} from './post-poll';
 
 export interface PostProps {
     post: PostEntity;
@@ -67,8 +68,8 @@ export function Post({post, onDeleted}: PostProps) {
     let [comments, setComments] = useState(post.comments);
     let [postText, setPostText] = useState(post.postText);
 
-    let AjaxDeleteButton = ({...props}: AjaxButtonProps<{postId: number}, {success: boolean}>) =>
-        <Ajax.Button<{postId: number}, {success: boolean}> {...props} />
+    let AjaxDeleteButton = ({...props}: AjaxButtonProps<{ postId: number }, { success: boolean }>) =>
+        <Ajax.Button<{ postId: number }, { success: boolean }> {...props} />
 
     return <Card style={{marginBottom: '10px'}}>
         <Row>
@@ -125,8 +126,21 @@ export function Post({post, onDeleted}: PostProps) {
                     }
 
                     return <Row>
-                        <Col>
-                            {postText}
+                        <Col md={24}>
+                            <Row>
+                                <Col md={24}>
+                                    {
+                                        post.post_poll.question_id ?
+                                            <PostPoll post={post} /> :
+                                            null
+                                    }
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    {postText}
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 })()}

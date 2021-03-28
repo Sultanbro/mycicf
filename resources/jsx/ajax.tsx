@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
-import {Button} from 'antd';
+import {Button, Spin} from 'antd';
 import {ButtonProps} from 'antd/lib/button/button';
 
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
@@ -20,7 +20,22 @@ export interface PostCommentEntity {
     isMine: boolean;
 }
 
+export interface PostPollAnswer {
+    answer_title: string;
+    answer_votes: number;
+    answer_id: number;
+}
+
+export interface PostPoll {
+    question_id: any;
+    question_title: any;
+    total_votes: any;
+    answers: PostPollAnswer[]
+}
+
 export interface PostEntity {
+    post_poll: PostPoll;
+    isVoted: boolean;
     postId: number;
     likes: number;
     isLiked: boolean;
@@ -81,9 +96,7 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
             return <div>Error: {error.message}</div>
         }
 
-        return <div>
-            Loading...
-        </div>
+        return <Spin />
     }
 
     return <div>

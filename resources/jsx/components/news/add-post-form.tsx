@@ -26,16 +26,25 @@ let useLocalStorage = createUseLocalStorage('newPost');
 export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
+    let [pollData, setPollData] = useState<any>(null);
     let showPublishButton = !!postText;
     let AjaxButton = ({...props}: any) => <Ajax.Button<any, any> {...props} />;
 
+    let postData: any = {
+        postText,
+        poll: 0,
+        isn: 5565,
+    };
+
+    if (pollData) {
+        postData.poll = 1;
+        postData.question = pollData.question;
+        postData.answers = pollData.answers;
+    }
+
     let publishBtn = <AjaxButton
         url="/news/addPost"
-        data={{
-            postText,
-            poll: 0,
-            isn: 5565
-        }}
+        data={postData}
         type="default"
         icon={<SendOutlined />}
         method="POST"
@@ -64,8 +73,8 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                     value={postText}
                                     allowClear
                                     onChange={(e) => {
-                        setPostText(e.target.value);
-                    }} />
+                                        setPostText(e.target.value);
+                                    }} />
                 </Col>
                 <Col md={2}>
                     <Button type="text">
@@ -94,7 +103,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     {showPublishButton ? publishBtn : null}
                 </Col>
             </Row>
-            {showPollForm ? <PollForm /> : null}
+            {showPollForm ? <PollForm onUpdatePoll={(data) => {
+                setPollData(data);
+            }} /> : null}
         </Col>
     </Row>
 }
