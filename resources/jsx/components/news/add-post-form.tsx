@@ -66,10 +66,10 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md={4}>
+                <Col md={3}>
                     <Avatar size={64} src="/images/avatar.png" />
                 </Col>
-                <Col md={18}>
+                <Col md={19}>
                     <Input.TextArea placeholder="Что у вас нового?"
                                     value={postText}
                                     allowClear
