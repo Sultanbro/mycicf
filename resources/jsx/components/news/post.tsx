@@ -7,6 +7,7 @@ import {PostComment} from './post-comment';
 import {CommentForm} from './comment-form';
 import {UserAvatar} from '../UserAvatar';
 import {PostPoll} from './post-poll';
+import {ReadMore} from '../read-more';
 
 export interface PostProps {
     post: PostEntity;
@@ -143,7 +144,9 @@ export function Post({post, onDeleted}: PostProps) {
                             </Row>
                             <Row>
                                 <Col>
-                                    {postText}
+                                    <ReadMore>
+                                        {postText}
+                                    </ReadMore>
                                 </Col>
                             </Row>
                         </Col>
@@ -174,7 +177,7 @@ export function Post({post, onDeleted}: PostProps) {
         <Row>
             <Col md={22} offset={2}>
                 {comments.map((comment: any, i: number) =>
-                    < PostComment comment={comment} key={i}
+                    <PostComment comment={comment} key={i}
                                   onCommentDeleted={(commentId) => {
                                       setComments((old) => {
                                           return old.filter((comment) => comment.commentId !== commentId);

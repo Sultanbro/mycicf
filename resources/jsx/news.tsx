@@ -4,6 +4,7 @@ import {AddPostForm} from './components/news/add-post-form';
 import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
 import {message} from 'antd';
+import {ReadMore} from './components/read-more';
 
 export function MyCiCNews() {
     return <Row style={{background: '#e9ebee', padding: '20px'}}>
