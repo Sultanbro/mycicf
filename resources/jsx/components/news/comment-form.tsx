@@ -52,17 +52,16 @@ export function CommentForm({post, onCommendAdded}: CommentFormProps) {
             </Button>
         </Col>
         <Col md={2}>
-            <AjaxButton type="text"
-                        url="/news/comments/addComment"
+            <AjaxButton url="/news/comments/addComment"
                         method="POST"
+                        type="text"
                         disabled={!commentText}
                         icon={<SendOutlined />}
                         data={{isn: 5565, commentText, postId: post.postId}}
                         onSuccess={(res) => {
                             setCommentText('');
                             onCommendAdded(res.data as any); // TODO
-                        }}>
-            </AjaxButton>
+                        }} />
         </Col>
     </Row>
 }
