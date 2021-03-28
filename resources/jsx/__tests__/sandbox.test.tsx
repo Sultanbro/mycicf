@@ -8,12 +8,12 @@ describe('sandbox tests', () => {
         const testInstance = testRenderer.root;
 
         expect(testInstance.children.length).toEqual(1);
-        expect((testInstance.children[0] as any).children).toEqual(1);
+        expect((testInstance.children[0] as any).children).not.toBeNull();
     });
     it('sandbox 2', () => {
         expect(sum(1, 5)).toBe(6);
     });
     it('sandbox 3', () => {
-        expect((1 + 5)).toBe(6);
+        expect(1 + 5).toBe(6);
     });
 });
