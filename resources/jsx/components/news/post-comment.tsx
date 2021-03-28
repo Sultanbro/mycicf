@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag} from 'antd';
+import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {Ajax, PostCommentEntity} from '../../ajax';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
     onCommentDeleted: (commentId: number) => void;
+    onReply: (comment: PostCommentEntity) => void;
 }
 
 export interface CommentEditFormProps {
@@ -40,7 +42,7 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
     </div>
 }
 
-export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
+export function PostComment({comment, onCommentDeleted, onReply}: PostCommentProps) {
     let [showEditForm, setShowEditForm] = useState(false);
     let [text, setText] = useState(comment.commentText);
     return <div>
@@ -51,7 +53,9 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
             <Col md={20}>
                 <Row>
                     <Col md={8}>
-                        {comment.fullname}
+                        <a href={`/colleagues/${comment.userISN}/dossier`}>
+                            {comment.fullname}
+                        </a>
                     </Col>
                     <Col md={2} offset={14}>
                         {
@@ -85,8 +89,17 @@ export function PostComment({comment, onCommentDeleted}: PostCommentProps) {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={8} offset={18}>
-                        <Tag color="green">{comment.date}</Tag>
+                    <Col md={8}>
+                        <Button type="text" icon={<EnterOutlined />} onClick={() => {
+                            onReply(comment);
+                        }}>
+                            Ответить
+                        </Button>
+                    </Col>
+                    <Col md={8} offset={8}>
+                        <Tag color="green" style={{
+                            margin: '4px 15px'
+                        }}>{comment.date}</Tag>
                     </Col>
                 </Row>
             </Col>

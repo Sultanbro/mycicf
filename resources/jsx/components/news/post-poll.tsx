@@ -25,9 +25,9 @@ export function PostPoll({post}: PostPollProps) {
             </Row>
             <Row>
                 <Col md={24}>
-                    {post.post_poll.answers ? post.post_poll.answers.map((answer) => {
+                    {post.post_poll.answers ? post.post_poll.answers.map((answer, ) => {
                         if (post.isVoted) {
-                            return <Button type="text" block>
+                            return <Button type="text" block key={answer.answer_id}>
                                 <pre>
                                     За <b>{answer.answer_title}</b> проголосовало: <b>{answer.answer_votes}</b>
                                 </pre>

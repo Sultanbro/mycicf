@@ -65,6 +65,7 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
 
 export function Post({post, onDeleted}: PostProps) {
     let [editing, setEditing] = useState(false);
+    let [newCommentText, setNewCommentText] = useState('');
     let [comments, setComments] = useState(post.comments);
     let [postText, setPostText] = useState(post.postText);
 
@@ -79,7 +80,11 @@ export function Post({post, onDeleted}: PostProps) {
             <Col md={16}>
                 <Row>
                     <Col>
-                        <Typography.Title level={5}>{post.fullname}</Typography.Title>
+                        <Typography.Title level={5}>
+                            <a href={`/colleagues/${post.isn}/dossier`}>
+                                {post.fullname}
+                            </a>
+                        </Typography.Title>
                     </Col>
                 </Row>
                 <Row>
@@ -169,17 +174,22 @@ export function Post({post, onDeleted}: PostProps) {
         <Row>
             <Col md={22} offset={2}>
                 {comments.map((comment: any, i: number) =>
-                    <PostComment comment={comment} key={i}
-                                 onCommentDeleted={(commentId) => {
-                                     setComments((old) => {
-                                         return old.filter((comment) => comment.commentId !== commentId);
-                                     });
-                                 }} />)}
+                    < PostComment comment={comment} key={i}
+                                  onCommentDeleted={(commentId) => {
+                                      setComments((old) => {
+                                          return old.filter((comment) => comment.commentId !== commentId);
+                                      });
+                                  }}
+                                  onReply={(comment) => {
+                                      setNewCommentText(`${comment.fullname}, `);
+                                  }}
+                    />)}
             </Col>
         </Row>
         <Row>
             <Col md={24}>
                 <CommentForm post={post}
+                             text={newCommentText}
                              onCommendAdded={(res) => {
                                  setComments((old) => [...old, res]);
                              }} />

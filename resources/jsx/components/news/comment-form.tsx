@@ -7,6 +7,7 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 interface CommentFormProps {
     post: PostEntity;
     onCommendAdded: (entity: PostCommentEntity) => void;
+    text?: string;
 }
 
 interface CommentAjaxRequest {
@@ -24,9 +25,9 @@ interface CommentAjaxResponse {
     userISN: number;
 }
 
-export function CommentForm({post, onCommendAdded}: CommentFormProps) {
+export function CommentForm({post, onCommendAdded, text = ''}: CommentFormProps) {
     let useLocalStorage = createUseLocalStorage(`post:${post.postId}:`);
-    let [commentText, setCommentText] = useLocalStorage('commentText', '');
+    let [commentText, setCommentText] = useLocalStorage('commentText', text);
     let AjaxButton = ({...props}: AjaxButtonProps<CommentAjaxRequest, CommentAjaxResponse>) =>
         <Ajax.Button<CommentAjaxRequest, CommentAjaxResponse> {...props} />
 
@@ -37,6 +38,7 @@ export function CommentForm({post, onCommendAdded}: CommentFormProps) {
         <Col md={18}>
             <Input.TextArea placeholder="Напишите комментарий..."
                             value={commentText}
+                            defaultValue={commentText}
                             rows={2}
                             onChange={(e) => {
                                 setCommentText(e.target.value);
