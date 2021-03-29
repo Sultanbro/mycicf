@@ -1,4 +1,3 @@
-import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
 import {Button, Col, Divider, Input, List, notification, Row, Spin, DatePicker} from 'antd';
 import React, {ChangeEvent, useState} from 'react';
@@ -9,6 +8,8 @@ import moment from 'moment';
 import './posts.css';
 import {AddPostForm} from "./add-post-form";
 import {authUserIsn} from '../../authUserIsn';
+import {Ajax, AjaxProps} from '../ajax/ajax';
+import {PostEntity} from '../ajax/types';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
     lastIndex?: number;

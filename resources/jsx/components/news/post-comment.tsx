@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
-import {Ajax, PostCommentEntity} from '../../ajax';
 import {UserAvatar} from '../UserAvatar';
+import {PostCommentEntity} from '../ajax/types';
+import { Ajax } from '../ajax/ajax';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;

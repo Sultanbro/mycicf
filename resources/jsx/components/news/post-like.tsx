@@ -1,7 +1,8 @@
-import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
 import React, {useState} from 'react';
 import {LikeOutlined, LikeTwoTone} from '@ant-design/icons';
 import {authUserIsn} from '../../authUserIsn';
+import {PostEntity} from '../ajax/types';
+import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 
 export interface PostLikeProps {
     post: PostEntity;

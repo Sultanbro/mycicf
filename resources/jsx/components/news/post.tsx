@@ -1,5 +1,4 @@
-import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
-import {Button, Card, Col, Divider, Popconfirm, Row, Tag, Typography} from 'antd';
+import {Button, Card, Col, Divider, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
@@ -10,6 +9,8 @@ import {PostPoll} from './post-poll';
 import {ReadMore} from '../read-more';
 import {EditPostForm} from './edit-post-form';
 import {PostImages} from './post-images';
+import {PostEntity} from '../ajax/types';
+import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 
 export interface PostProps {
     post: PostEntity;

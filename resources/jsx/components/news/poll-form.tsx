@@ -63,15 +63,15 @@ export function PollForm({onUpdatePoll}: PollFormProps) {
                                                onChange={(e) => {
                                                    updateByIndex(i, e.target.value);
                                                }}
-                                            addonAfter={<Button icon={<CloseOutlined />}
-                                                                type="link"
-                                                                size="small"
-                                                                onClick={() => {
-                                                                    if (options.length <= 2) {
-                                                                        return;
-                                                                    }
-                                                                    deleteByIndex(i);
-                                                                }} />}
+                                               suffix={<Button icon={<CloseOutlined />}
+                                                               type="link"
+                                                               size="small"
+                                                               onClick={() => {
+                                                                   if (options.length <= 2) {
+                                                                       return;
+                                                                   }
+                                                                   deleteByIndex(i);
+                                                               }} />}
                                         />
                                     </Col>
                                     <Col md={2} offset={1}>

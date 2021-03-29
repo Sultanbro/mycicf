@@ -8,11 +8,11 @@ import {
     VideoCameraOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
-import {Ajax} from '../../ajax';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
+import { Ajax } from '../ajax/ajax';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;

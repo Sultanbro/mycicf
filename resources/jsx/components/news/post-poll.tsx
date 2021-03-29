@@ -1,7 +1,8 @@
-import {Ajax, PostEntity} from '../../ajax';
 import {Button, Col, Divider, Row, Tag, Typography} from 'antd';
 import React from 'react';
 import {authUserIsn} from '../../authUserIsn';
+import { Ajax } from '../ajax/ajax';
+import {PostEntity} from '../ajax/types';
 
 interface PostPollProps {
     post: PostEntity;

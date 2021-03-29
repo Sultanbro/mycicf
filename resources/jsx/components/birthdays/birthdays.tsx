@@ -1,7 +1,7 @@
 import React from 'react';
 import {Carousel, Col, Row, Image, Typography} from 'antd';
-import {Ajax, AjaxProps} from '../../ajax';
-import {UserAvatar, UserPhoto} from '../UserAvatar';
+import {UserPhoto} from '../UserAvatar';
+import {Ajax, AjaxProps} from '../ajax/ajax';
 
 interface BirthdayEntry {
     ISN: string;

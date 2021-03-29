@@ -1,12 +1,13 @@
 import React from 'react';
 import {Col, Input, Row} from 'antd';
-import {Ajax, AjaxButtonProps, PostCommentEntity, PostEntity} from '../../ajax';
+import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 import {SendOutlined} from '@ant-design/icons';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {BaseEmoji} from 'emoji-mart';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
+import {PostCommentEntity, PostEntity} from '../ajax/types';
 
 interface CommentAjaxRequest {
     isn: any;

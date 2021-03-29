@@ -1,12 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import {AddPostForm} from './components/news/add-post-form';
 import {Posts} from './components/news/posts';
-import {Col, Divider, Row} from 'antd';
-import {notification} from 'antd';
-import {CheckOutlined} from '@ant-design/icons';
-import {Ajax} from "./ajax";
-import {Birthdays} from './components/birthdays/birthdays';
+import {Col, Row} from 'antd';
 
 export interface MyCiCNewsProps {
 }
