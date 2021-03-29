@@ -1,11 +1,13 @@
 import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
-import {Button, Col, Input, List, notification, Row, Spin} from 'antd';
+import {Button, Calendar, Card, Col, Divider, Dropdown, Input, List, notification, Row, Spin} from 'antd';
 import React, {ChangeEvent, useState} from 'react';
-import {CheckOutlined, EllipsisOutlined, LoadingOutlined} from '@ant-design/icons';
+import {CheckOutlined, EllipsisOutlined, LoadingOutlined, CalendarOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import debounce from 'lodash/debounce';
+import moment from 'moment';
 import './posts.css';
+import {AddPostForm} from "./add-post-form";
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
     lastIndex?: number;
@@ -52,11 +54,11 @@ export function Posts({ref}: PostsProps) {
                 })
             };
 
-            let search = () => {
+            let search = (li: number | null = lastIndex) => {
                 setLoading(true);
                 refetch({
                     previousData: response.data,
-                    data: {lastIndex, query: searchQuery},
+                    data: {lastIndex: li, query: searchQuery},
                     callback: (newData: any) => {
                         if (newData.length === 0) {
                             setHasMore(false);
@@ -74,14 +76,51 @@ export function Posts({ref}: PostsProps) {
             return <Row>
                 <Col md={24}>
                     <Row>
-                        <Input
-                            suffix={loading ? <LoadingOutlined /> : null}
-                            onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
-                            setSearchQuery(e.target.value);
+                        <Col md={24}>
+                            <AddPostForm onAddPost={() => {
+                                notification.info({
+                                    message: 'Пост успешно отправлен',
+                                    description: '',
+                                    icon: <CheckOutlined />
+                                });
+                                search(null);
+                            }} />
+                        </Col>
+                        <Divider type="horizontal" />
+                    </Row>
+                    <Row>
+                        <Col md={20}>
+                            <Input
+                                suffix={loading ? <LoadingOutlined/> : null}
+                                placeholder="Поиск новостей..."
+                                allowClear
+                                onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
+                                    setSearchQuery(e.target.value);
 
-                            search();
-                        }, 500)}
-                        />
+                                    search();
+                                }, 500)}
+                            />
+                        </Col>
+                        <Col md={4}>
+                            <Dropdown overlay={
+                                <Card>
+                                    <Ajax<{ start: string, end: string }>>
+                                        {({response}) => {
+                                            return <Calendar fullscreen={false}
+                                                             onPanelChange={() => {
+                                                             }}
+                                                             /*validRange={
+                                                                 [response.data.start, response.data.end]
+                                                             }*/
+                                            />;
+                                        }}
+                                    </Ajax>
+                                </Card>
+                            } placement="bottomCenter" arrow>
+                                <Button><CalendarOutlined/></Button>
+                            </Dropdown>
+                        </Col>
+                        <Divider/>
                     </Row>
                     <Row>
                         <Col md={24}>
@@ -105,7 +144,7 @@ export function Posts({ref}: PostsProps) {
                                                               message: 'Пост удалён',
                                                               icon: <CheckOutlined/>
                                                           });
-                                                          refetch();
+                                                          search(null);
                                                       }}/>
                                             </Col>
                                         </List.Item>

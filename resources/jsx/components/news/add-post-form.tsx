@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {Avatar, Button, Col, Divider, Input, Row, Typography} from 'antd';
 import {
     BarChartOutlined,
@@ -11,6 +11,7 @@ import {PollForm} from './poll-form';
 import {Ajax} from '../../ajax';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
+import debounce from 'lodash/debounce';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -80,7 +81,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                 </Col>
                 <Col md={2}>
                     <EmojiPicker onSelect={(data) => {
-                        setPostText(postText + data.native);
+                        setPostText(postText + (data as any).native);
                     }} />
                 </Col>
             </Row>

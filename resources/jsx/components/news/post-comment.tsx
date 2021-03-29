@@ -57,12 +57,7 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                             {comment.fullname}
                         </a>
                     </Col>
-                    <Col md={8} offset={8} className="text-right">
-                        <Tag color="green" style={{
-                            margin: '4px 0px'
-                        }}>{comment.date}</Tag>
-                    </Col>
-                    <Col md={2} offset={14}>
+                    <Col md={2} offset={6}>
                         {
                             comment.isMine ?
                                 <CommentMenu comment={comment}
@@ -74,6 +69,11 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                                              }} />
                                 : null}
 
+                    </Col>
+                    <Col md={8}>
+                        <Tag color="green" style={{
+                            margin: '4px 0px'
+                        }}>{comment.date}</Tag>
                     </Col>
                 </Row>
                 <Row>

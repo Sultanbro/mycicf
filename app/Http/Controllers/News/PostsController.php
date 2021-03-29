@@ -426,4 +426,8 @@ class PostsController extends Controller
         Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;
     }
+
+    public function getDateValidRanges() {
+        return Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])->first();
+    }
 }

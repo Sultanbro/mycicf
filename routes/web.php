@@ -257,6 +257,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/news-birthday', 'NewsController@birthday');
             Route::post('/editPost', 'NewsController@editPost')->middleware('checkPostAccess');
             Route::post('/vote', 'News\\PostsController@vote')->name('.votePost');
+            Route::post('/getDateValidRanges', 'News\\PostsController@getDateValidRanges')->name('.getDateValidRanges');
 
             Route::group([
                 'prefix'     => 'my',

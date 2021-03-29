@@ -12,19 +12,6 @@ export function MyCiCNews() {
         <Col md={24}>
             <Row>
                 <Col md={24}>
-                    <AddPostForm onAddPost={() => {
-                        notification.info({
-                            message: 'Пост успешно отправлен',
-                            description: '',
-                            icon: <CheckOutlined />
-                        });
-                        console.log(ref);
-                    }} />
-                </Col>
-            </Row>
-            <Divider type="horizontal" />
-            <Row>
-                <Col md={24}>
                     <Posts ref={ref} />
                 </Col>
             </Row>
