@@ -155,4 +155,8 @@ class SandboxController extends Controller
     public function react2() {
         return view('testing.sandbox.react2');
     }
+
+    public function error() {
+        throw new \Exception();
+    }
 }

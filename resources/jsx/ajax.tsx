@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
-import {Button, Spin} from 'antd';
+import {Alert, Button, Spin} from 'antd';
 import {ButtonProps} from 'antd/lib/button/button';
 
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
@@ -56,6 +56,7 @@ interface AjaxPropsChildrenArgs<TRes> {
 }
 
 export interface AjaxProps<TRes> extends AxiosRequestConfig {
+    loading?: any;
     children: ({response, refetch}: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
 }
 
@@ -68,7 +69,7 @@ interface AjaxRefetchArgs {
     callback?: (previousData: any, newData: any) => any;
 }
 
-export function Ajax<T>({url, method, params, data, children, headers}: AjaxProps<T>) {
+export function Ajax<T>({url, method, params, data, children, headers, loading = <Spin/>}: AjaxProps<T>) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 
@@ -97,7 +98,7 @@ export function Ajax<T>({url, method, params, data, children, headers}: AjaxProp
             return <div>Error: {error.message}</div>
         }
 
-        return <Spin />
+        return loading;
     }
 
     return <div>
@@ -127,25 +128,37 @@ Ajax.Button = <TReq, TRes>({
                                type = 'text'
                            }: AjaxButtonProps<TReq, TRes>) => {
     let [loading, setLoading] = useState(false);
-    return <Button type={loading ? 'ghost' : type}
-                   loading={loading}
-                   block={block}
-                   disabled={disabled}
-                   icon={icon}
-                   onClick={() => {
-                       setLoading(true);
-                       axios.request({
-                           url,
-                           method,
-                           data
-                       }).then((res) => {
-                           onSuccess(res);
-                           setLoading(false);
-                       }).catch((err) => {
-                           setLoading(false);
-                       });
-                   }}>
+    let [error, setError] = useState<any>(null);
+
+    let onClick = () => {
+        setLoading(true);
+        axios.request({
+            url,
+            method,
+            data
+        }).then((res) => {
+            onSuccess(res);
+            setLoading(false);
+        }).catch((err) => {
+            setLoading(false);
+            setError(err);
+        });
+    };
+    let btn = <Button type={loading ? 'ghost' : type}
+                      loading={loading}
+                      block={block}
+                      disabled={disabled}
+                      icon={icon}
+                      onClick={onClick}>
         {children}
+    </Button>;
+
+    return !error ? btn : <Alert message={<span>{error.message} <Button type="link"
+                                                                        loading={loading}
+                                                                        icon={icon}
+                                                                        onClick={onClick}>
+        Retry
     </Button>
+    </span>} type="error"/>
 }
 //

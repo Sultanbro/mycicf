@@ -1,8 +1,8 @@
 import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
-import {Button, Calendar, Card, Col, Divider, Dropdown, Input, List, notification, Row, Spin} from 'antd';
+import {Button, Col, Divider, Input, List, notification, Row, Spin, DatePicker} from 'antd';
 import React, {ChangeEvent, useState} from 'react';
-import {CheckOutlined, EllipsisOutlined, LoadingOutlined, CalendarOutlined} from '@ant-design/icons';
+import {CheckOutlined, EllipsisOutlined, LoadingOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
@@ -21,15 +21,61 @@ export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
     </Ajax.POST>;
 }
 
-interface PostsProps {
-    ref: React.Ref<any>;
+function SearchBox({loading, setSearchQuery, search, dateRange}: any) {
+    return <Row>
+        <Col md={14}>
+            <Input
+                suffix={loading ? <LoadingOutlined/> : null}
+                placeholder="Поиск новостей..."
+                allowClear
+                onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
+                    setSearchQuery(e.target.value);
+
+                    search();
+                }, 500)}
+            />
+        </Col>
+        <Col md={8}>
+            <Ajax<{ start: string, end: string }>
+                url="/news/getDateValidRanges"
+                method="POST"
+                loading={<div style={{width: 600}}>
+                    <Row>
+                        <Col md={12}>
+                            <DatePicker.RangePicker
+                                disabled
+                                placeholder={["", ""]} />
+                        </Col>
+                    </Row>
+                </div>}>
+                {({response}) => {
+                    let defaultValue: any = [moment(response.data.start), moment(response.data.end)];
+                    return <div style={{width: 600}}>
+                        <Row>
+                            <Col md={12}>
+                                <DatePicker.RangePicker
+                                    defaultValue={dateRange.length > 0 ? dateRange : defaultValue}
+                                    placeholder={["", ""]}
+                                    allowClear
+                                />
+                            </Col>
+                        </Row>
+                    </div>;
+                }}
+            </Ajax>
+        </Col>
+        <Divider/>
+    </Row>;
 }
 
-export function Posts({ref}: PostsProps) {
+interface PostsProps {
+}
+
+export function Posts({}: PostsProps) {
     let [loading, setLoading] = useState(false);
     let [hasMore, setHasMore] = useState(true);
     let [searchQuery, setSearchQuery] = useState<string>('');
-
+    let [dateRange, setDateRange] = useState<any[]>([]);
     return <PostsAjax>
         {({response, refetch}) => {
             let loadMore = () => {
@@ -81,47 +127,22 @@ export function Posts({ref}: PostsProps) {
                                 notification.info({
                                     message: 'Пост успешно отправлен',
                                     description: '',
-                                    icon: <CheckOutlined />
+                                    icon: <CheckOutlined/>
                                 });
                                 search(null);
-                            }} />
+                            }}/>
                         </Col>
-                        <Divider type="horizontal" />
+                        <Divider type="horizontal"/>
                     </Row>
-                    <Row>
-                        <Col md={20}>
-                            <Input
-                                suffix={loading ? <LoadingOutlined/> : null}
-                                placeholder="Поиск новостей..."
-                                allowClear
-                                onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
-                                    setSearchQuery(e.target.value);
 
-                                    search();
-                                }, 500)}
-                            />
-                        </Col>
-                        <Col md={4}>
-                            <Dropdown overlay={
-                                <Card>
-                                    <Ajax<{ start: string, end: string }>>
-                                        {({response}) => {
-                                            return <Calendar fullscreen={false}
-                                                             onPanelChange={() => {
-                                                             }}
-                                                             /*validRange={
-                                                                 [response.data.start, response.data.end]
-                                                             }*/
-                                            />;
-                                        }}
-                                    </Ajax>
-                                </Card>
-                            } placement="bottomCenter" arrow>
-                                <Button><CalendarOutlined/></Button>
-                            </Dropdown>
-                        </Col>
-                        <Divider/>
-                    </Row>
+
+                    <SearchBox loading={loading}
+                               setSearchQuery={setSearchQuery}
+                               search={search}
+                               dateRange={dateRange}
+                    />
+
+
                     <Row>
                         <Col md={24}>
                             <InfiniteScroll

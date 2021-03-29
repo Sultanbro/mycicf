@@ -6,12 +6,6 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {BaseEmoji} from 'emoji-mart';
 
-interface CommentFormProps {
-    post: PostEntity;
-    onCommendAdded: (entity: PostCommentEntity) => void;
-    text?: string;
-}
-
 interface CommentAjaxRequest {
     isn: any;
     postId: any;
@@ -27,15 +21,22 @@ interface CommentAjaxResponse {
     userISN: number;
 }
 
-export function CommentForm({post, onCommendAdded, text = ''}: CommentFormProps) {
+interface CommentFormProps {
+    post: PostEntity;
+    onCommendAdded: (entity: PostCommentEntity) => void;
+    text?: string;
+    children?: React.ReactNode;
+}
+
+export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({post, onCommendAdded, text = '', children}: CommentFormProps, ref) => {
     let useLocalStorage = createUseLocalStorage(`post:${post.postId}:`);
     let [commentText, setCommentText] = useLocalStorage('commentText', text);
     let AjaxButton = ({...props}: AjaxButtonProps<CommentAjaxRequest, CommentAjaxResponse>) =>
         <Ajax.Button<CommentAjaxRequest, CommentAjaxResponse> {...props} />
 
-    return <Row>
+    return <div ref={ref}><Row>
         <Col md={2}>
-            <Avatar size="small" src="/images/avatar.png" />
+            <Avatar size="small" src="/images/avatar.png"/>
         </Col>
         <Col md={18}>
             <Input.TextArea placeholder="Напишите комментарий..."
@@ -44,24 +45,27 @@ export function CommentForm({post, onCommendAdded, text = ''}: CommentFormProps)
                             rows={2}
                             onChange={(e) => {
                                 setCommentText(e.target.value);
-                            }} />
+                            }}/>
         </Col>
         <Col md={2}>
             <EmojiPicker onSelect={(data: BaseEmoji) => {
                 setCommentText(commentText + data.native);
-            }} />
+            }}/>
         </Col>
         <Col md={2}>
             <AjaxButton url="/news/comments/addComment"
                         method="POST"
                         type="text"
                         disabled={!commentText}
-                        icon={<SendOutlined />}
+                        icon={<SendOutlined/>}
                         data={{isn: 5565, commentText, postId: post.postId}}
                         onSuccess={(res) => {
                             setCommentText('');
                             onCommendAdded(res.data as any); // TODO
-                        }} />
+                        }}/>
         </Col>
     </Row>
-}
+    </div>
+})
+
+

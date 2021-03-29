@@ -428,6 +428,7 @@ class PostsController extends Controller
     }
 
     public function getDateValidRanges() {
-        return Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])->first();
+        return Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])
+            ->first();
     }
 }

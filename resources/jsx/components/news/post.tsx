@@ -22,7 +22,9 @@ export function Post({post, onDeleted}: PostProps) {
     let [comments, setComments] = useState(post.comments);
     let [postText, setPostText] = useState(post.postText);
 
-    let AjaxDeleteButton = ({...props}: AjaxButtonProps<{ postId: number }, { success: boolean }>) =>
+    let commentForm: React.Ref<any> = React.createRef<any>();
+
+    let AjaxDeletePostButton = ({...props}: AjaxButtonProps<{ postId: number }, { success: boolean }>) =>
         <Ajax.Button<{ postId: number }, { success: boolean }> {...props} />
 
     return <Card style={{marginBottom: '10px'}}>
@@ -55,7 +57,7 @@ export function Post({post, onDeleted}: PostProps) {
                                 setEditing(!editing);
                             }}
                     />
-                    <AjaxDeleteButton
+                    <AjaxDeletePostButton
                         url="/news/my/deletePost"
                         method="POST"
                         data={{postId: post.postId}}
@@ -149,6 +151,7 @@ export function Post({post, onDeleted}: PostProps) {
         <Row>
             <Col md={24}>
                 <CommentForm post={post}
+                             ref={commentForm}
                              text={newCommentText}
                              onCommendAdded={(res) => {
                                  setComments((old) => [...old, res]);

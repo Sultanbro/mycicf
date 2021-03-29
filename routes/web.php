@@ -19,6 +19,7 @@
 Route::get('/sandbox/index', 'SandboxController@index');
 Route::get('/sandbox/react', 'SandboxController@react');
 Route::get('/sandbox/react2', 'SandboxController@react2');
+Route::get('/sandbox/error', 'SandboxController@error');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
 Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');

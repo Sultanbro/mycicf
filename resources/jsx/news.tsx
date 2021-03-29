@@ -12,7 +12,7 @@ export function MyCiCNews() {
         <Col md={24}>
             <Row>
                 <Col md={24}>
-                    <Posts ref={ref} />
+                    <Posts />
                 </Col>
             </Row>
         </Col>

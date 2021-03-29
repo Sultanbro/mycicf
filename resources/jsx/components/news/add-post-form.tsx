@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState} from 'react';
 import {Avatar, Button, Col, Divider, Input, Row, Typography} from 'antd';
 import {
     BarChartOutlined,
@@ -11,7 +11,6 @@ import {PollForm} from './poll-form';
 import {Ajax} from '../../ajax';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
-import debounce from 'lodash/debounce';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -29,6 +28,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<any>(null);
+    let [textFieldHeight, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
     let showPublishButton = !!postText.trim();
     let AjaxPublishPostButton = ({...props}: any) =>
         <Ajax.Button<any, any> {...props}
@@ -49,10 +49,12 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
 
     let publishBtn = <AjaxPublishPostButton
         data={postData}
+        disabled={!showPublishButton}
         type="default"
         onSuccess={(response: any) => {
             onAddPost(response.data);
             setPostText('');
+            setShowPollForm(false);
         }}>
         Опубликовать
     </AjaxPublishPostButton>;
@@ -74,7 +76,13 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Input.TextArea placeholder="Что у вас нового?"
                                     value={postText}
                                     allowClear
-                                    rows={7}
+                                    style={{
+                                        height: textFieldHeight,
+                                    }}
+
+                                    onResize={(({height}) => {
+                                        setTextFieldHeight(height);
+                                    })}
                                     onChange={(e) => {
                                         setPostText(e.target.value);
                                     }} />
@@ -99,7 +107,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     }} icon={<BarChartOutlined />} type={showPollForm ? 'primary' : 'default'}>Опрос</Button>
                 </Col>
                 <Col offset={1}>
-                    {showPublishButton ? publishBtn : null}
+                    {publishBtn}
                 </Col>
             </Row>
             {showPollForm ? <PollForm onUpdatePoll={(data) => {
