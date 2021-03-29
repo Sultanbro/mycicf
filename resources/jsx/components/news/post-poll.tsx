@@ -1,5 +1,5 @@
 import {Ajax, PostEntity} from '../../ajax';
-import {Button, Col, Row, Typography} from 'antd';
+import {Button, Col, Divider, Row, Typography} from 'antd';
 import React from 'react';
 
 interface PostPollProps {
@@ -25,6 +25,7 @@ export function PostPoll({post}: PostPollProps) {
             </Row>
             <Row>
                 <Col md={24}>
+                    <Divider />
                     {post.post_poll.answers ? post.post_poll.answers.map((answer, ) => {
                         if (post.isVoted) {
                             return <Button type="text" block key={answer.answer_id}>
@@ -50,6 +51,7 @@ export function PostPoll({post}: PostPollProps) {
                             {answer.answer_title}
                         </Ajax.Button>;
                     }) : null}
+                    <Divider />
                 </Col>
             </Row>
         </Col>

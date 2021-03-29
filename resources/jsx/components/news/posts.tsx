@@ -145,7 +145,7 @@ export function Posts3() {
 }
 
 export function Posts2() {
-    return <Ajax url="/news/getPosts" method="POST" data={{a: 1}}>
+    return <Ajax url="/news/getPosts" method="POST" data={{test: 1}}>
         {({response, refetch}: any) =>
             <div>
                 <ul>

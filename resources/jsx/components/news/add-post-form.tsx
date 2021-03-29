@@ -28,7 +28,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<any>(null);
-    let showPublishButton = !!postText;
+    let showPublishButton = !!postText.trim();
     let AjaxPublishPostButton = ({...props}: any) =>
         <Ajax.Button<any, any> {...props}
                                method="POST"
