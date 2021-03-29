@@ -34,21 +34,21 @@ class PostsController extends Controller
         $this->postsService = $postsService;
     }
 
-    public function likePost(Request $request) {
+    public function likePost(Request $request)
+    {
         $post_id = $request->postId;
         $user_isn = auth()->user()->ISN;
 
         $model = Like::where('post_id', $post_id)
             ->where('user_isn', $user_isn);
 
-        if(count($model->get()) === 0) {
+        if (count($model->get()) === 0) {
             $like = new Like();
             $like->user_isn = $user_isn;
             $like->post_id = $post_id;
             $like->save();
             $success = true;
-        }
-        else {
+        } else {
             $model->delete();
             $success = false;
         }
@@ -56,7 +56,7 @@ class PostsController extends Controller
         $likesCount = Like::where('post_id', $post_id)->count();
 
         $response = [
-          'success' => $success,
+            'success' => $success,
             'count' => $likesCount,
         ];
 
@@ -73,15 +73,16 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function addPost(AddPostRequest $request) {
+    public function addPost(AddPostRequest $request)
+    {
         $isPoll = (boolean)$request->get('poll');
-        if($isPoll) {
+        if ($isPoll) {
             $question = $request->get('question');
             $answers = $request->get('answers');
         }
         DB::beginTransaction();
 
-        if(!Auth::check()) {
+        if (!Auth::check()) {
             $error = 'Пожалуйста авторизуйтесь заново';
             $success = false;
             return [
@@ -108,14 +109,14 @@ class PostsController extends Controller
         }
 
         try {
-            ini_set("upload_max_filesize","50M");
+            ini_set("upload_max_filesize", "50M");
             $new_post = new Post();
             $new_post->user_isn = $request->isn;
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
 
-            if(isset($request->postFiles)) {
+            if (isset($request->postFiles)) {
                 /**
                  * @var $postFiles File[]
                  */
@@ -127,15 +128,15 @@ class PostsController extends Controller
                 }
             }
 
-            if(isset($request->postDocuments)) {
-                foreach($request->postDocuments as $file) {
+            if (isset($request->postDocuments)) {
+                foreach ($request->postDocuments as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
                     Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
                 }
             }
 
-            if(isset($request->postVideos)) {
+            if (isset($request->postVideos)) {
                 foreach ($request->postVideos as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
@@ -143,7 +144,7 @@ class PostsController extends Controller
                 }
             }
 
-            if($isPoll) {
+            if ($isPoll) {
                 $poll = new Question();
                 $poll->question = $question;
                 $poll->post_id = $new_post->id;
@@ -169,7 +170,7 @@ class PostsController extends Controller
                     ];
                 }
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             $error = $e->getMessage();
             $success = false;
@@ -198,10 +199,10 @@ class PostsController extends Controller
             'videos' => $new_post->getVideoUrl(),
             'comments' => [],
             "post_poll" => !empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
-                "question_id"    => null,
+                "question_id" => null,
                 "question_title" => null,
-                "total_votes"    => null,
-                "answers"        => null
+                "total_votes" => null,
+                "answers" => null
             ],
             "isVoted" => false,
         ];
@@ -216,20 +217,21 @@ class PostsController extends Controller
     }
 
     /**
-     * @uses CheckPostAccess middleware
      * @param Request $request
      * @return bool[]
      * @throws Exception
+     * @uses CheckPostAccess middleware
      */
-    public function editPost(Request $request) {
+    public function editPost(Request $request)
+    {
         $success = false;
         $post_id = $request->postId;
         $post_text = $request->postText;
 
         $model = Post::where('id', $post_id)
-                ->update([
-                    'post_text' => $post_text,
-                ]);
+            ->update([
+                'post_text' => $post_text,
+            ]);
         $response = [
             'success' => !$success,
             'edited' => true,
@@ -248,7 +250,8 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function addComment(Request $request) {
+    public function addComment(Request $request)
+    {
         $postId = $request->postId;
         $new_comment = new Comment();
         $new_comment->text = $request->commentText;
@@ -270,7 +273,8 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function deleteComment(Request $request) {
+    public function deleteComment(Request $request)
+    {
         $commentId = $request->commentId;
 
         $comment = Comment::find($commentId);
@@ -291,7 +295,8 @@ class PostsController extends Controller
         return view('news-birthday');
     }
 
-    public function editComment(Request $request) {
+    public function editComment(Request $request)
+    {
         $success = false;
 
         $comment_id = $request->commentId;
@@ -319,7 +324,8 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function vote(Request $request) {
+    public function vote(Request $request)
+    {
         $post_id = $request->postId;
         $user_isn = $request->isn;
         $question_id = $request->questionId;
@@ -329,15 +335,14 @@ class PostsController extends Controller
             ->where('answer_id', $answer_id)
             ->where('user_isn', $user_isn);
 
-        if(count($model->get()) === 0) {
+        if (count($model->get()) === 0) {
             $vote = new UserAnswer();
             $vote->user_isn = $user_isn;
             $vote->question_id = $question_id;
             $vote->answer_id = $answer_id;
             $vote->save();
             $success = true;
-        }
-        else {
+        } else {
             $model->delete();
             $success = false;
         }
@@ -351,14 +356,16 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function getView() {
+    public function getView()
+    {
         return view('news');
     }
 
-    public function senateVote(Request $request){
+    public function senateVote(Request $request)
+    {
         $answers = $request->answers;
-        foreach ($answers as $answer){
-            if($answer['checked']){
+        foreach ($answers as $answer) {
+            if ($answer['checked']) {
                 $userAnswer = new UserAnswer();
                 $userAnswer->question_id = $request->question;
                 $userAnswer->answer_id = $answer['answer_id'];
@@ -374,11 +381,12 @@ class PostsController extends Controller
         ]);
     }
 
-    public function dev(Request $request) {
+    public function dev(Request $request)
+    {
         switch ($request->name) {
             case 'boss':
                 return view('dev')->with([
-                   'type' => 'boss'
+                    'type' => 'boss'
                 ]);
             case 'company':
                 return view('dev')->with([
@@ -401,16 +409,19 @@ class PostsController extends Controller
         }
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         return view('boss-says');
     }
 
-    public function getBossPosts(Request $request, PostsService $postsService) {
+    public function getBossPosts(Request $request, PostsService $postsService)
+    {
         Debugbar::startMeasure('NewsController@getBossPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
+        $query = $request->get('query');
 
-        $response = $postsService->getPosts($user_isn, $last_index, true);
+        $response = $postsService->getPosts($user_isn, $last_index, $query, true);
 
         Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;

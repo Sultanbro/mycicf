@@ -1,10 +1,10 @@
 import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
-import {Button, Col, List, notification, Row, Spin} from 'antd';
-import React, {useState} from 'react';
-import {CheckOutlined, EllipsisOutlined} from '@ant-design/icons';
+import {Button, Col, Input, List, notification, Row, Spin} from 'antd';
+import React, {ChangeEvent, useState} from 'react';
+import {CheckOutlined, EllipsisOutlined, LoadingOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
-
+import debounce from 'lodash/debounce';
 import './posts.css';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
@@ -26,6 +26,7 @@ interface PostsProps {
 export function Posts({ref}: PostsProps) {
     let [loading, setLoading] = useState(false);
     let [hasMore, setHasMore] = useState(true);
+    let [searchQuery, setSearchQuery] = useState<string>('');
 
     return <PostsAjax>
         {({response, refetch}) => {
@@ -33,7 +34,7 @@ export function Posts({ref}: PostsProps) {
                 setLoading(true);
                 refetch({
                     previousData: response.data,
-                    data: {lastIndex},
+                    data: {lastIndex, query: searchQuery},
                     callback: (newData: any, previousData: any) => {
                         if (!previousData) {
                             previousData = [];
@@ -41,6 +42,8 @@ export function Posts({ref}: PostsProps) {
 
                         if (newData.length === 0) {
                             setHasMore(false);
+                        } else {
+                            setHasMore(true);
                         }
 
                         setLoading(false);
@@ -49,52 +52,86 @@ export function Posts({ref}: PostsProps) {
                 })
             };
 
-            let lastIndex = Math.min(...response.data.map((post: any) => post.postId));
-            return <div className="demo-infinite-container">
-                <InfiniteScroll
-                    initialLoad={false}
-                    pageStart={0}
-                    hasMore={hasMore}
-                    useWindow={true}
-                    getScrollParent={() => {
-                        return document.body;
-                    }}
-                    loadMore={loadMore}>
-                    <List
-                        dataSource={response.data}
-                        renderItem={item => (
-                            <List.Item key={item.postId}>
-                                <Col md={24}>
-                                    <Post post={item}
-                                          onDeleted={(post) => {
-                                              notification.info({
-                                                  message: 'Пост удалён',
-                                                  icon: <CheckOutlined />
-                                              });
-                                              refetch();
-                                          }} />
-                                </Col>
-                            </List.Item>
-                        )}
-                    >
-                        {loading && hasMore && (
-                            <div className="demo-loading-container">
-                                <Spin />
-                            </div>
-                        )}
-                    </List>
+            let search = () => {
+                setLoading(true);
+                refetch({
+                    previousData: response.data,
+                    data: {lastIndex, query: searchQuery},
+                    callback: (newData: any) => {
+                        if (newData.length === 0) {
+                            setHasMore(false);
+                        } else {
+                            setHasMore(true);
+                        }
 
+                        setLoading(false);
+                        return newData;
+                    }
+                })
+            };
+
+            let lastIndex = Math.min(...response.data.map((post: any) => post.postId));
+            return <Row>
+                <Col md={24}>
                     <Row>
-                        <Col md={24} className="text-center">
-                            <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
-                                loadMore();
-                            }}>
-                                Больше
-                            </Button>
+                        <Input
+                            suffix={loading ? <LoadingOutlined /> : null}
+                            onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
+                            setSearchQuery(e.target.value);
+
+                            search();
+                        }, 500)}
+                        />
+                    </Row>
+                    <Row>
+                        <Col md={24}>
+                            <InfiniteScroll
+                                initialLoad={false}
+                                pageStart={0}
+                                hasMore={hasMore}
+                                useWindow={true}
+                                getScrollParent={() => {
+                                    return document.body;
+                                }}
+                                loadMore={loadMore}>
+                                <List
+                                    dataSource={response.data}
+                                    renderItem={item => (
+                                        <List.Item key={item.postId}>
+                                            <Col md={24}>
+                                                <Post post={item}
+                                                      onDeleted={(post) => {
+                                                          notification.info({
+                                                              message: 'Пост удалён',
+                                                              icon: <CheckOutlined/>
+                                                          });
+                                                          refetch();
+                                                      }}/>
+                                            </Col>
+                                        </List.Item>
+                                    )}
+                                >
+                                    {loading && hasMore && (
+                                        <div className="demo-loading-container">
+                                            <Spin/>
+                                        </div>
+                                    )}
+                                </List>
+
+                                {hasMore ? <Row>
+                                    <Col md={24} className="text-center">
+                                        <Button loading={loading} icon={<EllipsisOutlined/>} onClick={() => {
+                                            loadMore();
+                                        }}>
+                                            Больше
+                                        </Button>
+                                    </Col>
+                                </Row> : null}
+                            </InfiniteScroll>
                         </Col>
                     </Row>
-                </InfiniteScroll>
-            </div>
+                </Col>
+            </Row>
         }}
     </PostsAjax>
 }
@@ -116,12 +153,12 @@ export function Posts3() {
                                           onDeleted={(post) => {
                                               debugger;
                                               refetch();
-                                          }} />)}
+                                          }}/>)}
                             </Col>
                         </Row>
                         <Row>
                             <Col md={24} className="text-center">
-                                <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
+                                <Button loading={loading} icon={<EllipsisOutlined/>} onClick={() => {
                                     setLoading(true);
                                     refetch({
                                         previousData: data,

@@ -36,12 +36,13 @@ class PostsService {
      *
      * @param string $user_isn
      * @param $last_index
+     * @param $searchQuery
      * @param bool $boss
      * @param int $limit
      * @return array
      * @throws Exception
      */
-    public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5) {
+    public function getPosts(string $user_isn, $last_index = null, string $searchQuery = null, bool $boss = false, int $limit = 5) {
         $response = [];
         $cacheTTL = now()->addMinutes(2);
 
@@ -58,6 +59,7 @@ class PostsService {
                         ->withCount('userAnswers');
                 }
             ])
+            ->where('post_text', 'like', '%' . $searchQuery . '%')
             ->orderBy('id', 'DESC')
             ->with('comments')
             ->limit($limit);

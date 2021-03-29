@@ -151,4 +151,8 @@ class SandboxController extends Controller
     public function react() {
         return view('testing.sandbox.react');
     }
+
+    public function react2() {
+        return view('testing.sandbox.react2');
+    }
 }

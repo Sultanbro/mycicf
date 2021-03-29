@@ -41,7 +41,7 @@ export function Birthdays() {
     return <BirthdaysAjax data={{}}>
         {({response, refetch}) => {
             return <Carousel>
-                {response.data.birthdays.map((entry) => <Entry entry={entry} />)}
+                {response.data.birthdays.map((entry, i) => <Entry entry={entry} key={i}/>)}
             </Carousel>
         }}
     </BirthdaysAjax>
