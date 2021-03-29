@@ -1,5 +1,5 @@
 import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
-import {Button, Card, Col, Divider, Row, Tag, Typography} from 'antd';
+import {Button, Card, Col, Divider, Popconfirm, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
@@ -57,12 +57,15 @@ export function Post({post, onDeleted, isn}: PostProps) {
                                 setEditing(!editing);
                             }}
                     />
+
                     <AjaxDeletePostButton
                         url="/news/my/deletePost"
                         method="POST"
                         data={{postId: post.postId}}
                         type="text"
                         icon={<CloseOutlined />}
+                        confirm
+                        confirmText="Вы уверены?"
                         onSuccess={(res) => {
                             if (res.data.success) {
                                 onDeleted(post);

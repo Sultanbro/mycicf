@@ -1,5 +1,5 @@
 import React from 'react';
-import {Avatar, Col, Input, Row} from 'antd';
+import {Col, Input, Row} from 'antd';
 import {Ajax, AjaxButtonProps, PostCommentEntity, PostEntity} from '../../ajax';
 import {SendOutlined} from '@ant-design/icons';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
@@ -41,7 +41,7 @@ export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({po
         <Col md={2}>
             <UserAvatar size="default" isn={isn} />
         </Col>
-        <Col md={18}>
+        <Col md={19}>
             <Input.TextArea placeholder="Напишите комментарий..."
                             value={commentText}
                             defaultValue={commentText}
@@ -50,7 +50,7 @@ export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({po
                                 setCommentText(e.target.value);
                             }}/>
         </Col>
-        <Col md={2}>
+        <Col md={1}>
             <EmojiPicker onSelect={(data: BaseEmoji) => {
                 setCommentText(commentText + data.native);
             }}/>

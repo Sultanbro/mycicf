@@ -15,10 +15,6 @@ export function PostPoll({post}: PostPollProps) {
                     <Typography.Title level={3}>
                         {post.post_poll.question_title}
                     </Typography.Title>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={24}>
                     <Typography.Text>
                         Проголосовало: <Tag>{post.post_poll.total_votes}</Tag>
                     </Typography.Text>

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
-import {Button, Spin, Tooltip} from 'antd';
+import {Button, Popconfirm, Spin, Tooltip} from 'antd';
 import {ButtonProps} from 'antd/lib/button/button';
 import {CloseOutlined} from '@ant-design/icons';
 
@@ -10,6 +10,8 @@ export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     onSuccess: (res: AxiosResponse<TRes>) => any;
     children?: any;
     method: Method;
+    confirm?: boolean;
+    confirmText?: string;
 }
 
 export interface PostCommentEntity {
@@ -78,7 +80,7 @@ interface AjaxRefetchArgs {
     callback?: (previousData: any, newData: any) => any;
 }
 
-export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin/>}: AjaxProps<T>) {
+export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin />}: AjaxProps<T>) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 
@@ -139,7 +141,9 @@ Ajax.Button = <TReq, TRes>({
                                icon,
                                disabled = false,
                                block = false,
-                               type = 'text'
+                               type = 'text',
+                               confirm,
+                               confirmText
                            }: AjaxButtonProps<TReq, TRes>) => {
     let [loading, setLoading] = useState(false);
     let [error, setError] = useState<any>(null);
@@ -158,14 +162,30 @@ Ajax.Button = <TReq, TRes>({
             setError(err);
         });
     };
-    let btn = <Button type={loading ? 'ghost' : type}
-                      loading={loading}
-                      block={block}
-                      disabled={disabled}
-                      icon={icon}
-                      onClick={onClick}>
-        {children}
-    </Button>;
+    let btn;
+
+    if (confirm) {
+        btn = <Popconfirm title={confirmText} onConfirm={onClick}>
+            <Button type={loading ? 'ghost' : type}
+                    loading={loading}
+                    block={block}
+                    disabled={disabled}
+                    icon={icon}>
+                {children}
+            </Button>
+        </Popconfirm>
+    } else {
+        btn = <Popconfirm title={confirmText}>
+            <Button type={loading ? 'ghost' : type}
+                    loading={loading}
+                    block={block}
+                    disabled={disabled}
+                    icon={icon}
+                    onClick={onClick}>
+                {children}
+            </Button>
+        </Popconfirm>
+    }
 
     return !error ? btn :
         <Tooltip title={error.message}>
