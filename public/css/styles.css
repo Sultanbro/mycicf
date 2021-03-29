@@ -2866,15 +2866,16 @@ textarea::-webkit-scrollbar-thumb {
     margin-left: 20px;
 }
 
-.d-player-video-wrap {
+.dplayer-video-wrap {
     position: relative;
     padding-bottom: 56.25%;
     padding-top: 30px;
-    height: 0;
     overflow: hidden;
+    width: auto!important;
+    height: 0!important;
 }
 
-.d-player-video-wrap.d-player-video {
+.dplayer-video-wrap .dplayer-video {
     position: absolute;
     top: 0;
     left: 0;
