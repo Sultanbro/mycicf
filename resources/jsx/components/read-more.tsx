@@ -1,6 +1,5 @@
-import React, {Ref, useState} from 'react';
+import React, {useState} from 'react';
 import {Button} from 'antd';
-import {DownOutlined, UpOutlined} from '@ant-design/icons';
 
 export interface ReadMoreProps {
     text: string;

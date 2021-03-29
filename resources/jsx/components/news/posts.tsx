@@ -8,6 +8,7 @@ import debounce from 'lodash/debounce';
 import moment from 'moment';
 import './posts.css';
 import {AddPostForm} from "./add-post-form";
+import {authUserIsn} from '../../authUserIsn';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
     lastIndex?: number;
@@ -69,10 +70,9 @@ function SearchBox({loading, setSearchQuery, search, dateRange}: any) {
 }
 
 interface PostsProps {
-    isn: string;
 }
 
-export function Posts({isn}: PostsProps) {
+export function Posts({}: PostsProps) {
     let [loading, setLoading] = useState(false);
     let [hasMore, setHasMore] = useState(true);
     let [searchQuery, setSearchQuery] = useState<string>('');
@@ -132,8 +132,7 @@ export function Posts({isn}: PostsProps) {
                                         icon: <CheckOutlined />
                                     });
                                     search(null);
-                                }}
-                                isn={isn} />
+                                }} />
                         </Col>
                         <Divider type="horizontal" />
                     </Row>
@@ -162,7 +161,7 @@ export function Posts({isn}: PostsProps) {
                                         <List.Item key={item.postId}>
                                             <Col md={24}>
                                                 <Post post={item}
-                                                      isn={isn}
+                                                      isn={authUserIsn()}
                                                       onDeleted={(post) => {
                                                           notification.info({
                                                               message: 'Пост удалён',

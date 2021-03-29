@@ -33,8 +33,9 @@
 @include('layouts.header')
 <main class="flex-row">
     <div class="main_margin flex-row width100">
-        <div class="col-md-8 offset-2" id="jsx-app" data-isn="{{Auth::user()->ISN}}">
-        </div>
+        <div class="col-md-8 offset-2" id="jsx-app"></div>
+
+        <div id="auth-user-isn" hidden>{{Auth::user()->ISN}}</div>
     </div>
 </main>
 {{--FOOTER GOES HERE--}}

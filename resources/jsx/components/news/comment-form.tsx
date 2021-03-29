@@ -6,6 +6,7 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {BaseEmoji} from 'emoji-mart';
 import {UserAvatar} from '../UserAvatar';
+import {authUserIsn} from '../../authUserIsn';
 
 interface CommentAjaxRequest {
     isn: any;
@@ -60,7 +61,7 @@ export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({po
                         type="text"
                         disabled={!commentText}
                         icon={<SendOutlined/>}
-                        data={{isn: 5565, commentText, postId: post.postId}}
+                        data={{isn: authUserIsn(), commentText, postId: post.postId}}
                         onSuccess={(res) => {
                             setCommentText('');
                             onCommendAdded(res.data as any); // TODO

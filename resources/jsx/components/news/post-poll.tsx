@@ -1,6 +1,7 @@
 import {Ajax, PostEntity} from '../../ajax';
 import {Button, Col, Divider, Row, Tag, Typography} from 'antd';
 import React from 'react';
+import {authUserIsn} from '../../authUserIsn';
 
 interface PostPollProps {
     post: PostEntity;
@@ -41,7 +42,7 @@ export function PostPoll({post}: PostPollProps) {
                                             type="default"
                                             data={{
                                                 answerId: answer.answer_id,
-                                                isn: 5565,
+                                                isn: authUserIsn(),
                                                 questionId: post.post_poll.question_id
                                             }}
                                             onSuccess={() => {

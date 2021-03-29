@@ -35,7 +35,7 @@ export function PollForm({onUpdatePoll}: PollFormProps) {
                               question: pollQuestion,
                               answers: options
                           }}
-                          onInput={(e) => {
+                          onInput={() => {
                               if (!onUpdatePoll) {
                                   return;
                               }

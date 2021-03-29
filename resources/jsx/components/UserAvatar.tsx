@@ -27,6 +27,5 @@ interface UserPhotoProps {
 }
 
 export function UserPhoto({isn}: UserPhotoProps) {
-    return <Image src={url(isn)}
-                  loading="lazy"/>
+    return <Image src={url(isn)} loading="lazy"/>
 }

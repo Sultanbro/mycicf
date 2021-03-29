@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Avatar, Button, Col, Divider, Input, Row, Typography} from 'antd';
+import {Button, Col, Divider, Input, Row, Typography} from 'antd';
 import {
     BarChartOutlined,
     FileImageOutlined,
@@ -12,10 +12,10 @@ import {Ajax} from '../../ajax';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
+import {authUserIsn} from '../../authUserIsn';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
-    isn: string;
 }
 
 interface AddPostData {
@@ -26,7 +26,7 @@ interface AddPostData {
 
 let useLocalStorage = createUseLocalStorage('newPost');
 
-export function AddPostForm({onAddPost, isn}: AddPostFormProps) {
+export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<any>(null);
@@ -40,7 +40,7 @@ export function AddPostForm({onAddPost, isn}: AddPostFormProps) {
     let postData: any = {
         postText,
         poll: 0,
-        isn,
+        isn: authUserIsn(),
     };
 
     if (pollData) {
@@ -72,7 +72,7 @@ export function AddPostForm({onAddPost, isn}: AddPostFormProps) {
             </Row>
             <Row>
                 <Col md={3}>
-                    <UserAvatar isn={isn} />
+                    <UserAvatar isn={authUserIsn()} />
                 </Col>
                 <Col md={19}>
                     <Input.TextArea placeholder="Что у вас нового?"

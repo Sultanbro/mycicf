@@ -24,6 +24,11 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                 </Col>
             </Row>
             <Row>
+                <Col md={24}>
+                    <Divider />
+                </Col>
+            </Row>
+            <Row>
                 <Col offset={14}>
                     <Ajax.Button<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
                         type="default"
