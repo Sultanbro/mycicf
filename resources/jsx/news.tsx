@@ -12,7 +12,11 @@ export interface MyCiCNewsProps {
 }
 
 export function MyCiCNews({ isn }: MyCiCNewsProps) {
-    let ref = React.createRef();
+    debugger;
+    (window as any).Echo.private(`post`)
+        .listen('NewPost', (e: any) => {
+            debugger;
+        });
     return <Row style={{background: '#e9ebee', padding: '20px'}}>
         <Col md={24}>
             <Row>

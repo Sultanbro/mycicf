@@ -1,6 +1,8 @@
 import {useState} from 'react';
+// import debounce from 'lodash/debounce';
 
-export type UseLocalStorage = <T>(key: string, initialState: T, deleteOn?: T | (() => T)) => [T, (value: T) => void];
+export type StateValue<T> = T | (() => T);
+export type UseLocalStorage = <T>(key: string, initialState: StateValue<T>, deleteOn?: StateValue<T>) => [T, (value: T) => void];
 
 /**
  * Returns a hook for LocalStorage values
@@ -20,8 +22,8 @@ export function createUseLocalStorage(prefix: string): UseLocalStorage {
  */
 export function useStateWithLocalStorage<T>(
     key: string,
-    initialState: T | (() => T),
-    deleteOn: T | (() => T) = initialState
+    initialState: StateValue<T>,
+    deleteOn: StateValue<T> = initialState
 ): [T, (value: T) => void] {
     let item = localStorage.getItem(key);
     let value: T;
@@ -43,6 +45,7 @@ export function useStateWithLocalStorage<T>(
             if (val === deleteOn) {
                 localStorage.removeItem(key);
             } else {
+                // TODO найти способ использовать debounce
                 localStorage.setItem(key, JSON.stringify(val));
             }
             setV(val);

@@ -2,42 +2,25 @@ import React, {Ref, useState} from 'react';
 import {Button} from 'antd';
 import {DownOutlined, UpOutlined} from '@ant-design/icons';
 
-export function ReadMore({children, defaultMaxHeight = '100px'}: any) {
-    return children;
+export interface ReadMoreProps {
+    text: string;
+}
 
+export function ReadMore({text}: ReadMoreProps) {
+    let [expanded, setExpanded] = useState(false);
 
-    let [maxHeight, setMaxHeight] = useState(defaultMaxHeight);
-    let [div, setDiv] = useState<HTMLDivElement | null>(null);
-    let style: React.CSSProperties = {
-        maxHeight,
-        overflow: 'hidden',
-        transition: 'max-height 500ms ease-out'
-    };
+    if (!expanded) {
+        text = text.substr(0, 350);
+    }
+
     return <div>
-        <div style={style} ref={(el) => setDiv(el)}>
-            {children}
-        </div>
+        {text}
 
-        <Button type="dashed"
-                        block
-                        icon={
-                            (div && div.style.maxHeight !== '1000px') ?
-                                <UpOutlined/> :
-                                <DownOutlined/>
-                        }
-                        onClick={() => {
-                            if (!(div && div.style.maxHeight === '1000px')) {
-                                setMaxHeight('1000px');
-                            } else {
-                                setMaxHeight(defaultMaxHeight);
-                            }
-                        }}>
-            {
-                (div && div.style.maxHeight === '1000px') ?
-                    <span>Свернуть</span> :
-                    <span>Показать больше</span>
-            }
-        </Button>
-
+        {!expanded ? <Button type="link"
+                             onClick={() => {
+                                 setExpanded(true);
+                             }}>
+            Показать больше
+        </Button> : null}
     </div>
 }

@@ -59,10 +59,13 @@ class PostsService {
                         ->withCount('userAnswers');
                 }
             ])
-            ->where('post_text', 'like', '%' . $searchQuery . '%')
             ->orderBy('id', 'DESC')
             ->with('comments')
             ->limit($limit);
+
+        if ($searchQuery) {
+            $query = $query->where('post_text', 'like', '%' . trim($searchQuery) . '%');
+        }
 
         if ($boss) {
             $query = $query->where('user_isn', User::BOSS_ISN);

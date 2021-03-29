@@ -32,7 +32,7 @@ export function Post({post, onDeleted, isn}: PostProps) {
             <Col md={3}>
                 <UserAvatar isn={post.isn} />
             </Col>
-            <Col md={16}>
+            <Col md={18}>
                 <Row>
                     <Col>
                         <Typography.Title level={5}>
@@ -49,7 +49,7 @@ export function Post({post, onDeleted, isn}: PostProps) {
                     </Col>
                 </Row>
             </Col>
-            <Col md={4}>
+            <Col md={3}>
                 {post.isMine ? <div>
                     <Button type="text"
                             icon={editing ? <EditFilled /> : <EditOutlined />}
@@ -103,9 +103,7 @@ export function Post({post, onDeleted, isn}: PostProps) {
                             </Row>
                             <Row>
                                 <Col md={24}>
-                                    <ReadMore>
-                                        {postText}
-                                    </ReadMore>
+                                    <ReadMore text={postText} />
                                 </Col>
                             </Row>
                         </Col>
