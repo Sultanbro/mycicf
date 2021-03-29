@@ -12,7 +12,7 @@
             </div>
             <hr class="mt-0">
             <div class="d-flex align-items-center justify-content-center">
-                <h4>{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[month] }}</h4>
+                <h4>{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[birthdays[index].birthday.slice(3, 5)] }}</h4>
             </div>
             <div class="pt-2 pl-4 pr-4 pb-2 relative">
                 <div class="text-center relative">
@@ -67,29 +67,30 @@
                 today: new Date().getDate(),
                 month: new Date().getMonth() + 1,
                 monthNames: {
-                    1: 'Январь',
-                    2: 'Февраль',
-                    3: 'Март',
-                    4: 'Апрель',
-                    5: 'Май',
-                    6: 'Июнь',
-                    7: 'Июль',
-                    8: 'Август',
-                    9: 'Сентябрь',
-                    10: 'Октябрь',
-                    11: 'Ноябрь',
-                    12: 'Декабрь'
+                    '01': 'Январь',
+                    '02': 'Февраль',
+                    '03': 'Март',
+                    '04': 'Апрель',
+                    '05': 'Май',
+                    '06': 'Июнь',
+                    '07': 'Июль',
+                    '08': 'Август',
+                    '09': 'Сентябрь',
+                    '10': 'Октябрь',
+                    '11': 'Ноябрь',
+                    '12': 'Декабрь'
                 }
             }
         },
         mounted () {
-            this.getBirthdaysData()
+            this.getBirthdaysData();
         },
         methods: {
             getBirthdaysData() {
                 this.axios.post('/getBirthdays', {})
                     .then(response => {
-                        this.birthdays = response.data.birthdays
+                        this.birthdays = response.data.birthdays;
+                        console.log(this.birthdays);
                     })
                     .catch( error => {
                         alert(error);
