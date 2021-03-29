@@ -128,7 +128,7 @@ export function Post({post, onDeleted}: PostProps) {
                     lineHeight: 1.5715,
                     display: 'block'
                 }}>
-                    <CommentOutlined /> {comments.length} комментарии
+                    <CommentOutlined /> {comments.length} Комментарии
                 </span>
             </Col>
         </Row>

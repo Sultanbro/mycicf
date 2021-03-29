@@ -5,6 +5,7 @@ import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
 import {notification} from 'antd';
 import {CheckOutlined} from '@ant-design/icons';
+import {Ajax} from "./ajax";
 
 export function MyCiCNews() {
     let ref = React.createRef();
@@ -13,6 +14,10 @@ export function MyCiCNews() {
             <Row>
                 <Col md={24}>
                     <Posts />
+
+                    {/*<Ajax.Button url="/sandbox/error" method="GET" data={{}} onSuccess={() => {}} icon={<CheckOutlined />}>
+                        Error
+                    </Ajax.Button>*/}
                 </Col>
             </Row>
         </Col>

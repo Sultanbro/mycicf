@@ -19,9 +19,7 @@ export function PollForm({onUpdatePoll}: PollFormProps) {
     return <Row>
         <Col md={24}>
             <Row>
-                <Col md={22}>
-                </Col>
-                <Col md={2}>
+                <Col offset={22} md={2}>
                     <Button icon={<CloseOutlined />}
                             onClick={() => {
                                 setPollQuestion('');
@@ -30,7 +28,7 @@ export function PollForm({onUpdatePoll}: PollFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md={24}>
+                <Col md={18} offset={3}>
                     <Form form={form}
                           layout="vertical"
                           initialValues={{

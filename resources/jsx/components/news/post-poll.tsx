@@ -1,5 +1,5 @@
 import {Ajax, PostEntity} from '../../ajax';
-import {Button, Col, Divider, Row, Typography} from 'antd';
+import {Button, Col, Divider, Row, Tag, Typography} from 'antd';
 import React from 'react';
 
 interface PostPollProps {
@@ -19,7 +19,7 @@ export function PostPoll({post}: PostPollProps) {
             <Row>
                 <Col md={24}>
                     <Typography.Text>
-                        Проголосовало: {post.post_poll.total_votes}
+                        Проголосовало: <Tag>{post.post_poll.total_votes}</Tag>
                     </Typography.Text>
                 </Col>
             </Row>

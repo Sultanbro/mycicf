@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
-import {Alert, Button, Spin} from 'antd';
+import {Alert, Button, Spin, Tooltip} from 'antd';
 import {ButtonProps} from 'antd/lib/button/button';
 
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
@@ -55,9 +55,17 @@ interface AjaxPropsChildrenArgs<TRes> {
     callback?: any;
 }
 
+export interface AjaxCacheSettings {
+    enabled: boolean;
+    lifetime: number;
+    storage?: 'localstorage' | string;
+}
+
 export interface AjaxProps<TRes> extends AxiosRequestConfig {
     loading?: any;
     children: ({response, refetch}: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
+
+    cache?: AjaxCacheSettings;
 }
 
 interface AjaxRefetchArgs {
@@ -69,7 +77,7 @@ interface AjaxRefetchArgs {
     callback?: (previousData: any, newData: any) => any;
 }
 
-export function Ajax<T>({url, method, params, data, children, headers, loading = <Spin/>}: AjaxProps<T>) {
+export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin/>}: AjaxProps<T>) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 
@@ -89,6 +97,11 @@ export function Ajax<T>({url, method, params, data, children, headers, loading =
         }).catch((err) => {
             setError(err);
         });
+    }
+
+    if (cache) {
+        let cacheKey = 'cache__' + JSON.stringify({method, url, params, data});
+        debugger;
     }
 
     if (!response) {
@@ -153,12 +166,14 @@ Ajax.Button = <TReq, TRes>({
         {children}
     </Button>;
 
-    return !error ? btn : <Alert message={<span>{error.message} <Button type="link"
-                                                                        loading={loading}
-                                                                        icon={icon}
-                                                                        onClick={onClick}>
-        Retry
-    </Button>
-    </span>} type="error"/>
+    return !error ? btn :
+        <Tooltip title={error.message}>
+            <Button type="link"
+                    loading={loading}
+                    icon={icon}
+                    onClick={onClick}>
+                Retry
+            </Button>
+        </Tooltip>
 }
 //
