@@ -338,21 +338,33 @@ class RecruitingController extends Controller
         ]);
     }
     public function  getResultRequest(Request $request){
-        $result = RecruitingCandidatesData::pluck('responsible_recruiter', 'recruiting_id')->toArray();
+//        $result = RecruitingCandidatesData::pluck('responsible_recruiter', 'recruiting_id')->toArray();
+        $result = RecruitingCandidatesData::select('recruiting_id','responsible_recruiter', 'candidate_fullname')->get()->toArray();
+//        $result = RecruitingCandidatesData::pluck('candidate_fullname', 'recruiting_id')->toArray();
 
         $response = [];
 
-        foreach ($result as $key => $value) {
-            $data = Recruiting::where('id', $key)->first();
+        //dd($result);
 
+        foreach ($result as $res) {
+            $data = Recruiting::where('id', $res['recruiting_id'])->first();
+
+            $data->name_of_post = $data->getChiefsDicti($data->name_of_post);
+//            $data->structural_unit = $data->getChiefsDicti($data->structural_unit);
+            $data->unit_structural_name_and_city = $data->getBranchName($data->unit_structural_name_and_city);
             array_push($response, [
-                'fullname' => $value,
+                'fullname' => $res['responsible_recruiter'],
+                'candidate_fullname' => $res['candidate_fullname'],
                 'chiefs_fullname' => $data->chiefs_fullname,
                 'chiefs_duty' => $data->chiefs_duty,
                 'interview_result' => $data->interview_result,
                 'application_status' => $data->application_status,
                 'date_of_conclusion_dou' => $data->date_of_conclusion_dou,
+                'unit_structural_name_and_city' => $data->unit_structural_name_and_city,
+                'name_of_post' => $data->name_of_post,
             ]);
+            $data->name_of_post = $data->getChiefsDicti($data->name_of_post);
+            $data->unit_structural_name_and_city = $data->getChiefsDicti($data->structural_unit);
         }
 
         return response()->json([

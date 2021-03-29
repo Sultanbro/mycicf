@@ -359,7 +359,7 @@
                                                     candidat.functionalResponsobilities == '' ||
                                                     candidat.workExpirienceSelect == '' ||
                                                     candidat.isHeWasBossSelect == '' ||
-                                                    typeOfHire == '' ||
+                                                    candidat.typeOfHireSelect == '' ||
                                                     candidat.requestToCandidat == '' ||
                                                     candidat.perspectiveToCandidatSelect == '' ||
                                                     candidat.computerKnowingSelect == '' ||
@@ -605,105 +605,109 @@
                     </div>
                 </div>
                 <input class="form-control" type="text" placeholder="Поиск" id="interwiewWithCandidatesSearch" @keyup="tableSearch()">
-                <table class="table recruiting-striped" id="interwiewWithCandidatesTable">
-                    <thead>
+                <div class="recruiting-max-height-table">
+                    <table class="table recruiting-striped" id="interwiewWithCandidatesTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">№</th>
+                                <th scope="col">ФИО кандидата</th>
+                                <th scope="col">Структурное подразделение</th>
+                                <th scope="col">Дата собеседования</th>
+                                <th scope="col">Результат итогового интервью</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    <!--                    Цветные примеры-->
+    <!--                        <tr v-for="inner in recruitingInterviewCluster1">-->
+    <!--                            <td scope="row">{{inner.id}}</td>-->
+    <!--                            <td>{{inner.name}}</td>-->
+    <!--                            <td>{{inner.structureUnit}}</td>-->
+    <!--                            <td>{{inner.dateOfInterview}}</td>-->
+    <!--                            <td :class="modalSelectCheck(inner)">{{inner.label}}</td>-->
+    <!--                        </tr>-->
+
+
+    <!--                        <div>{{candidateInterviewTable}}</div>-->
+
+                            <!--Верхняя таблица-->
+                            <tr v-for="(inner, index) in candidateInterviewTable"
+                                data-toggle="modal"
+                                data-target="#interviewModal"
+                                class="pointer"
+                                @click="showTopModalMain(index,inner.id)">
+                                <td scope="row">{{inner.id}}</td>
+                                <td>{{inner.fullname}}</td>
+                                <td>{{inner.unit_structural_name_and_city}}</td>
+                                <td>{{ inner.interview_date }}</td>
+                                <td :class="modalSelectCheck(inner)">{{ inner.interview_result }} </td>
+                            </tr>
+    <!--Последняя рабочая версия-->
+    <!--<tr v-for="(person, index) in candidatDataLocal">-->
+    <!--    <td scope="row">{{index + 1}}</td>-->
+    <!--    <td>{{person.candidate_fullname}}</td>-->
+    <!--    <td></td>-->
+    <!--    <td></td>-->
+    <!--    <td :class="modalSelectCheck(person)"></td>-->
+    <!--</tr>-->
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="recruiting-max-height-table mb-5">
+                    <table class="table recruiting-striped" id="interwiewWithCandidatesTableUnits">
+                        <thead>
                         <tr>
                             <th scope="col">№</th>
-                            <th scope="col">ФИО кандидата</th>
+                            <th scope="col">ФИО Руководителя</th>
                             <th scope="col">Структурное подразделение</th>
-                            <th scope="col">Дата собеседования</th>
-                            <th scope="col">Результат итогового интервью</th>
                         </tr>
-                    </thead>
-                    <tbody>
-<!--                    Цветные примеры-->
-<!--                        <tr v-for="inner in recruitingInterviewCluster1">-->
-<!--                            <td scope="row">{{inner.id}}</td>-->
-<!--                            <td>{{inner.name}}</td>-->
-<!--                            <td>{{inner.structureUnit}}</td>-->
-<!--                            <td>{{inner.dateOfInterview}}</td>-->
-<!--                            <td :class="modalSelectCheck(inner)">{{inner.label}}</td>-->
-<!--                        </tr>-->
+                        </thead>
+                        <tbody>
+    <!--                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData" v-for="inner in recruitingInterviewCluster1">-->
+    <!--                            <td scope="row">{{inner.id}}</td>-->
+    <!--                            <td>{{inner.name}}</td>-->
+    <!--                            <td>{{inner.structureUnit}}</td>-->
+    <!--                        </tr>-->
 
 
-<!--                        <div>{{candidateInterviewTable}}</div>-->
+    <!--                        <tr-->
+    <!--                            v-for="(person, index) in recruitingInterviewCluster"-->
+    <!--                            class="pointer"-->
+    <!--                            data-toggle="modal"-->
+    <!--                            data-target="#interviewModalApplicationData"-->
+    <!--                            @click="showModal(index)"-->
+    <!--                        >-->
+    <!--                            <td scope="row">{{ person.id }}</td>-->
+    <!--                            <td>{{ person.fullName }}</td>-->
+    <!--                            <td>{{ person.department }}</td>-->
+    <!--                        </tr>-->
+                            <tr
+                                v-for="(person, index) in chiefsDataLocal"
+                                class="pointer"
+                                data-toggle="modal"
+                                data-target="#interviewModalApplicationData"
+                                @click="showModalMain(index)"
+                            >
+    <!--                            showModal(index)-->
 
-                        <!--Верхняя таблица-->
-                        <tr v-for="(inner, index) in candidateInterviewTable"
-                            data-toggle="modal"
-                            data-target="#interviewModal"
-                            class="pointer"
-                            @click="showTopModalMain(index,inner.id)">
-                            <td scope="row">{{inner.id}}</td>
-                            <td>{{inner.fullname}}</td>
-                            <td>{{inner.unit_structural_name_and_city}}</td>
-                            <td>{{ inner.interview_date }}</td>
-                            <td :class="modalSelectCheck(inner)">{{ inner.interview_result }} </td>
-                        </tr>
-<!--Последняя рабочая версия-->
-<!--<tr v-for="(person, index) in candidatDataLocal">-->
-<!--    <td scope="row">{{index + 1}}</td>-->
-<!--    <td>{{person.candidate_fullname}}</td>-->
-<!--    <td></td>-->
-<!--    <td></td>-->
-<!--    <td :class="modalSelectCheck(person)"></td>-->
-<!--</tr>-->
-
-                    </tbody>
-                </table>
-                <table class="table recruiting-striped" id="interwiewWithCandidatesTableUnits">
-                    <thead>
-                    <tr>
-                        <th scope="col">№</th>
-                        <th scope="col">ФИО Руководителя</th>
-                        <th scope="col">Структурное подразделение</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-<!--                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData" v-for="inner in recruitingInterviewCluster1">-->
-<!--                            <td scope="row">{{inner.id}}</td>-->
-<!--                            <td>{{inner.name}}</td>-->
-<!--                            <td>{{inner.structureUnit}}</td>-->
-<!--                        </tr>-->
-
-
-<!--                        <tr-->
-<!--                            v-for="(person, index) in recruitingInterviewCluster"-->
-<!--                            class="pointer"-->
-<!--                            data-toggle="modal"-->
-<!--                            data-target="#interviewModalApplicationData"-->
-<!--                            @click="showModal(index)"-->
-<!--                        >-->
-<!--                            <td scope="row">{{ person.id }}</td>-->
-<!--                            <td>{{ person.fullName }}</td>-->
-<!--                            <td>{{ person.department }}</td>-->
-<!--                        </tr>-->
-                        <tr
-                            v-for="(person, index) in chiefsDataLocal"
-                            class="pointer"
-                            data-toggle="modal"
-                            data-target="#interviewModalApplicationData"
-                            @click="showModalMain(index)"
-                        >
-<!--                            showModal(index)-->
-
-<!--                            {{ person.id }}-->
-                            <td scope="row">{{ person.id }}</td>
-                            <td>{{ person.chiefs_fullname }}</td>
-                            <td>{{ person.chiefs_duty }}</td>
-                        </tr>
-<!--                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData">-->
-<!--                            <td scope="row">{{recruitingInterviewCluster.depProg[0]}}</td>-->
-<!--                            <td>{{recruitingInterviewCluster.depProg[1]}}</td>-->
-<!--                            <td>{{recruitingInterviewCluster.depProg[2]}}</td>-->
-<!--                        </tr>-->
-<!--                        <tr class="pointer mt-2" data-toggle="modal" data-target="#interviewModalApplicationData">-->
-<!--                            <td scope="row">{{recruitingInterviewCluster.depHR[0]}}</td>-->
-<!--                            <td>{{recruitingInterviewCluster.depHR[1]}}</td>-->
-<!--                            <td>{{recruitingInterviewCluster.depHR[2]}}</td>-->
-<!--                        </tr>-->
-                    </tbody>
-                </table>
+    <!--                            {{ person.id }}-->
+                                <td scope="row">{{ person.id }}</td>
+                                <td>{{ person.chiefs_fullname }}</td>
+                                <td>{{ person.chiefs_duty }}</td>
+                            </tr>
+    <!--                        <tr class="pointer" data-toggle="modal" data-target="#interviewModalApplicationData">-->
+    <!--                            <td scope="row">{{recruitingInterviewCluster.depProg[0]}}</td>-->
+    <!--                            <td>{{recruitingInterviewCluster.depProg[1]}}</td>-->
+    <!--                            <td>{{recruitingInterviewCluster.depProg[2]}}</td>-->
+    <!--                        </tr>-->
+    <!--                        <tr class="pointer mt-2" data-toggle="modal" data-target="#interviewModalApplicationData">-->
+    <!--                            <td scope="row">{{recruitingInterviewCluster.depHR[0]}}</td>-->
+    <!--                            <td>{{recruitingInterviewCluster.depHR[1]}}</td>-->
+    <!--                            <td>{{recruitingInterviewCluster.depHR[2]}}</td>-->
+    <!--                        </tr>-->
+                        </tbody>
+                    </table>
+                </div>
                 <div class="modal fade show" id="interviewModalApplicationData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                     <div class="modal-dialog recruiting-modal-size" role="document">
                         <div class="modal-content">
@@ -951,11 +955,28 @@
                 </div>
             </div>
             <div v-if="recruitingTabs == 3">
-                <table class="table recruiting-striped">
+<!--                Пример фильтрации таблицы-->
+<!--                <div>-->
+<!--                    <button @click="active = null">Все</button>-->
+<!--                    <button v-for="n in types" @click="active = n.id">{{ n.name }}</button>-->
+<!--                    <table>-->
+<!--                        <tr>-->
+<!--                            <th></th>-->
+<!--                            <th>id</th>-->
+<!--                            <th>country</th>-->
+<!--                        </tr>-->
+<!--                        <tr v-for="(n, i) in filteredItems" :style="getStyle(n.type)">-->
+<!--                            <td>#{{ i + 1 }}</td>-->
+<!--                            <td>{{ n.id }}</td>-->
+<!--                            <td>{{ n.name }}</td>-->
+<!--                        </tr>-->
+<!--                    </table>-->
+<!--                </div>-->
+                <table class="table recruiting-striped" data-filter-control>
                     <thead>
                     <tr>
                         <th scope="col">№</th>
-                        <th scope="col">ФИО Заказчика</th>
+                        <th scope="col">ФИО Кандидата</th>
                         <th scope="col">Структурное подразделение/ФИО ответственного/Вакансия</th>
                         <th scope="col" class="recruiting-center">Статус</th>
                         <th scope="col" class="recruiting-center">Ответственный рекрутер</th>
@@ -971,11 +992,13 @@
 <!--                        <td class="recruiting-center">Филимонова Е.</td>-->
 <!--                        <td>01.01.2020</td>-->
 <!--                    </tr>-->
+
+<!--{{inner.chiefs_duty}}-->
                     <tr v-for="(inner, index) in candidateResultRequest">
 <!--                        <td scope="row">{{candidateResultRequest.thirdTableIndex++}}</td>-->
-                        <td scope="row">{{index}}</td>
-                        <td>{{inner.chiefs_fullname}}</td>
-                        <td>{{inner.chiefs_duty}}</td>
+                        <td scope="row">{{index+1}}</td>
+                        <td>{{inner.candidate_fullname}}</td>
+                        <td>{{inner.unit_structural_name_and_city}} / {{inner.chiefs_fullname}} / {{inner.name_of_post}}</td>
                         <td>{{inner.application_status}}</td>
                         <td>{{inner.fullname}}</td>
                         <td>{{inner.date_of_conclusion_dou}}</td>
@@ -994,6 +1017,24 @@
         name: "recruiting",
         data() {
             return {
+                items: [
+                    { type: 1, name: 'Чехия' },
+                    { type: 1, name: 'Франция' },
+                    { type: 3, name: 'Сомали' },
+                    { type: 2, name: 'Вьетнам' },
+                    { type: 3, name: 'Сенегал' },
+                    { type: 1, name: 'Испания' },
+                    { type: 2, name: 'Таиланд' },
+                    { type: 2, name: 'Филлипины' },
+                    { type: 1, name: 'Норвегия' },
+                    { type: 3, name: 'Ангола' },
+                ].map((n, i) => ({ ...n, id: i + 1 })),
+                types: [
+                    { id: 1, name: 'Европа', color: 'red' },
+                    { id: 2, name: 'Азия',  color: 'blue' },
+                    { id: 3, name: 'Африка', color: 'green' },
+                ],
+                active: null,
                 internshipResultCheckCounter: '',
                 filesInfo: [],
                 topTableId: {},
@@ -1104,7 +1145,8 @@
                     }],
                 sex: [
                     'Мужской',
-                    'Женский'
+                    'Женский',
+                    'Не имеет значения'
                 ],
                 education: [
                     'Высшее',
@@ -1182,7 +1224,7 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                recruitingTabs: 2,
+                recruitingTabs: 3,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1378,7 +1420,9 @@
                 candidatDataLocal: this.candidatData,
                 candidateInterviewTable: [],
                 candidateManualDataLocal: [],
-                candidateResultRequest: {},
+                candidateResultRequest: {
+                    candidatName: '',
+                },
                 candidateResultInterviewDate: '',
                 driverCardOptionFirst: [],
                 driverCardOptionSecond: [],
@@ -1422,8 +1466,17 @@
         // item.Value[0]
 
         computed: {
+            filteredItems() {
+                const { items, active } = this;
+                return active ? items.filter(n => n.type === active) : items;
+            },
         },
         methods: {
+            getStyle(type) {
+                return {
+                    color: this.types.find(n => n.id === type).color,
+                };
+            },
             qwer: function() {
                 // console.log(this.candidatBackward.nameOfPostSelect);
                 console.log(this.candidatBackward)
@@ -1522,9 +1575,10 @@
             },
             recruitingDataAfterSavedSuccess(response){
                 if (response.data.success){
+                    let timerId = setInterval(() => location.reload(), 3000);
                     this.flashMessage.success({
                         title: "",
-                        message: 'Кандидат успешно сохранен',
+                        message: 'Кандидат успешно сохранен. Страница будет перезагружена через 3 секунды',
                         time: 5000
                     });
                 } else {
@@ -1548,7 +1602,7 @@
                 if (response.data.success){
                     this.flashMessage.success({
                         title: "",
-                        message: 'Кандидат успешно сохранен',
+                        message: 'Кандидат успешно сохранен. Страница будет перезагружена через 3 секунды',
                         time: 5000
                     });
                     // ***
@@ -1557,6 +1611,7 @@
                             this.candidatsDataAfterSavedSuccess(response);
                         });
                     this.isActiveCandidatsBase = true;
+                    let timerId = setInterval(() => location.reload(), 3000);
                 } else {
                     this.flashMessage.error({
                         title: "Ошибка",
@@ -1607,6 +1662,13 @@
               this.candidateBase.documents = '';
               this.recruitingData.interviewResult = '';
               this.recruitingData.internshipResult = '';
+              this.candidatsData.manualFullname = '';
+              this.candidatsData.manualIIN = '';
+              this.candidatsData.manualPhoneNumber = '';
+              this.recruitingData.interviewDate = '';
+              this.recruitingData.interviewTime = '';
+              this.recruitingData.dateOfConclusionDOU = '';
+              this.recruitingData.dateOfConclusionTD = '';
               this.resultCheckCounter = '';
               this.filesInfo = [];
               // console.log(this.candidateBase.IIN);
@@ -1624,6 +1686,13 @@
                 this.candidateBase.documents = '';
                 this.recruitingData.interviewResult = '';
                 this.recruitingData.internshipResult = '';
+                this.candidatsData.manualFullname = '';
+                this.candidatsData.manualIIN = '';
+                this.candidatsData.manualPhoneNumber = '';
+                this.recruitingData.interviewDate = '';
+                this.recruitingData.interviewTime = '';
+                this.recruitingData.dateOfConclusionDOU = '';
+                this.recruitingData.dateOfConclusionTD = '';
                 this.resultCheckCounter = '';
                 this.filesInfo = [];
                 this.showTopModal(index,id);
@@ -2251,14 +2320,22 @@
                         alert('Ошибка, нет данных');
                     }
             },
+            // this.candidateResultRequest.candidatName = 'qwerty';
             getResultRequest(){
                 if (this.recruitingTabs == 3) {
                     this.preloader(true);
+                    this.candidateResultRequest.candidatName = 'qwerty';
                     this.axios.post('/recruiting/getResultRequest')
                         .then(response => {
                             this.aftergetResultRequest(response.data);
                             this.preloader(false);
                         });
+                    this.axios.post('/recruiting/getCandidatsDataRequest')
+                        .then(response => {
+                            this.afterCandidatsDataRequest(response.data);
+                        });
+                    this.candidateResultRequest.candidatName = 'qwerty';
+                    // candidateInterviewTable.fullname
                 }
             },
             getResultRequestOnClick(){
@@ -2270,6 +2347,10 @@
                         .then(response => {
                             this.aftergetResultRequest(response.data);
                             this.preloader(false);
+                        });
+                    this.axios.post('/recruiting/getCandidatsDataRequest')
+                        .then(response => {
+                            this.afterCandidatsDataRequest(response.data);
                         });
                 }
             },
@@ -2454,9 +2535,10 @@
                 if (response.data.success){
                     this.flashMessage.success({
                         title: "",
-                        message: 'Кандидат успешно сохранен',
+                        message: 'Кандидат успешно сохранен. Страница будет перезагружена через 3 секунд',
                         time: 5000
                     });
+                    let timerId = setInterval(() => location.reload(), 3000);
                 } else {
                     this.flashMessage.error({
                         title: "Ошибка",

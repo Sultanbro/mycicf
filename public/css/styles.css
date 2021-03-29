@@ -2786,3 +2786,7 @@ textarea::-webkit-scrollbar-thumb {
     border: 1px solid #d5d5d5;
     border-radius: 0.4rem;
 }
+.recruiting-max-height-table{
+    overflow-y: scroll;
+    max-height: 550px;
+}
