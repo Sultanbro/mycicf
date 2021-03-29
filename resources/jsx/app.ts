@@ -5,7 +5,8 @@ import {Birthdays} from "./components/birthdays/birthdays";
 
 let wrapper = document.getElementById('jsx-app');
 if (wrapper) {
-    let reactAppElement = React.createElement(MyCiCNews);
+    let isn = wrapper.dataset.isn;
+    let reactAppElement = React.createElement(MyCiCNews, { isn });
     ReactDOM.render(reactAppElement, wrapper);
 }
 

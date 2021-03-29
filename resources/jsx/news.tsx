@@ -7,15 +7,23 @@ import {notification} from 'antd';
 import {CheckOutlined} from '@ant-design/icons';
 import {Ajax} from "./ajax";
 
-export function MyCiCNews() {
+export interface MyCiCNewsProps {
+    isn: string;
+}
+
+export function MyCiCNews({ isn }: MyCiCNewsProps) {
     let ref = React.createRef();
     return <Row style={{background: '#e9ebee', padding: '20px'}}>
         <Col md={24}>
             <Row>
                 <Col md={24}>
-                    <Posts />
+                    <Posts isn={isn} />
 
-                    {/*<Ajax.Button url="/sandbox/error" method="GET" data={{}} onSuccess={() => {}} icon={<CheckOutlined />}>
+                    {/*<Ajax.Button url="/sandbox/error"
+                                 method="GET"
+                                 data={{}}
+                                 onSuccess={() => {}}
+                                 icon={<CheckOutlined />}>
                         Error
                     </Ajax.Button>*/}
                 </Col>

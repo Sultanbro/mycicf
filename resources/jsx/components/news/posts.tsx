@@ -25,7 +25,7 @@ function SearchBox({loading, setSearchQuery, search, dateRange}: any) {
     return <Row>
         <Col md={14}>
             <Input
-                suffix={loading ? <LoadingOutlined/> : null}
+                suffix={loading ? <LoadingOutlined /> : null}
                 placeholder="Поиск новостей..."
                 allowClear
                 onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
@@ -64,14 +64,15 @@ function SearchBox({loading, setSearchQuery, search, dateRange}: any) {
                 }}
             </Ajax>
         </Col>
-        <Divider/>
+        <Divider />
     </Row>;
 }
 
 interface PostsProps {
+    isn: string;
 }
 
-export function Posts({}: PostsProps) {
+export function Posts({isn}: PostsProps) {
     let [loading, setLoading] = useState(false);
     let [hasMore, setHasMore] = useState(true);
     let [searchQuery, setSearchQuery] = useState<string>('');
@@ -123,18 +124,19 @@ export function Posts({}: PostsProps) {
                 <Col md={24}>
                     <Row>
                         <Col md={24}>
-                            <AddPostForm onAddPost={() => {
-                                notification.info({
-                                    message: 'Пост успешно отправлен',
-                                    description: '',
-                                    icon: <CheckOutlined/>
-                                });
-                                search(null);
-                            }}/>
+                            <AddPostForm
+                                onAddPost={() => {
+                                    notification.info({
+                                        message: 'Пост успешно отправлен',
+                                        description: '',
+                                        icon: <CheckOutlined />
+                                    });
+                                    search(null);
+                                }}
+                                isn={isn} />
                         </Col>
-                        <Divider type="horizontal"/>
+                        <Divider type="horizontal" />
                     </Row>
-
 
                     <SearchBox loading={loading}
                                setSearchQuery={setSearchQuery}
@@ -160,27 +162,28 @@ export function Posts({}: PostsProps) {
                                         <List.Item key={item.postId}>
                                             <Col md={24}>
                                                 <Post post={item}
+                                                      isn={isn}
                                                       onDeleted={(post) => {
                                                           notification.info({
                                                               message: 'Пост удалён',
-                                                              icon: <CheckOutlined/>
+                                                              icon: <CheckOutlined />
                                                           });
                                                           search(null);
-                                                      }}/>
+                                                      }} />
                                             </Col>
                                         </List.Item>
                                     )}
                                 >
                                     {loading && hasMore && (
                                         <div className="demo-loading-container">
-                                            <Spin/>
+                                            <Spin />
                                         </div>
                                     )}
                                 </List>
 
                                 {hasMore ? <Row>
                                     <Col md={24} className="text-center">
-                                        <Button loading={loading} icon={<EllipsisOutlined/>} onClick={() => {
+                                        <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
                                             loadMore();
                                         }}>
                                             Больше
@@ -196,7 +199,7 @@ export function Posts({}: PostsProps) {
     </PostsAjax>
 }
 
-export function Posts3() {
+export function Posts3({ isn }: any) {
     let [loading, setLoading] = useState(false);
     return <PostsAjax>
         {({response, refetch}) => {
@@ -209,16 +212,17 @@ export function Posts3() {
                             <Col md={24}>
                                 {data.map((post: any, i: number) =>
                                     <Post key={i}
+                                          isn={isn}
                                           post={post}
                                           onDeleted={(post) => {
                                               debugger;
                                               refetch();
-                                          }}/>)}
+                                          }} />)}
                             </Col>
                         </Row>
                         <Row>
                             <Col md={24} className="text-center">
-                                <Button loading={loading} icon={<EllipsisOutlined/>} onClick={() => {
+                                <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
                                     setLoading(true);
                                     refetch({
                                         previousData: data,

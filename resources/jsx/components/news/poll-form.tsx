@@ -48,7 +48,6 @@ export function PollForm({onUpdatePoll}: PollFormProps) {
                         <Form.Item label="Тема опроса"
                                    required tooltip="Тема опроса" name="question">
                             <Input placeholder="Тема опроса"
-                                   defaultValue={pollQuestion}
                                    value={pollQuestion}
                                    onChange={(e) => {
                                        setPollQuestion(e.target.value);

@@ -1,12 +1,28 @@
-import {Avatar} from 'antd';
-import React from 'react';
+import {Avatar, Col, Image} from 'antd';
+import React, {useState} from 'react';
 import {AvatarSize} from 'antd/es/avatar/SizeContext';
 
 interface UserAvatarProps {
-    isn: string | number;
+    isn: string;
     size?: AvatarSize;
 }
 
 export function UserAvatar({isn, size = 64}: UserAvatarProps) {
-    return <Avatar size={size} src={`/storage/images/employee/${isn}.png`} />
+    let [src, setSrc] = useState(`/storage/images/employee/${isn}.png`);
+    return <Avatar size={size}
+                   src={src}
+                   onError={() => {
+                       setSrc("/images/avatar.png");
+                       return true;
+                   }}
+    />
+}
+
+interface UserPhotoProps {
+    isn: string;
+}
+
+export function UserPhoto({isn}: UserPhotoProps) {
+    return <Image src={`/storage/images/employee/${isn}.png`}
+                  loading="lazy"/>
 }

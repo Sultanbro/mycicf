@@ -3,6 +3,7 @@ import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {Ajax, PostCommentEntity} from '../../ajax';
+import {UserAvatar} from '../UserAvatar';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
@@ -48,7 +49,7 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
     return <div>
         <Row>
             <Col md={2}>
-                <Avatar size="small" src={`/storage/images/employee/${comment.userISN}.png`} />
+                <UserAvatar size="default" isn={comment.userISN} />
             </Col>
             <Col md={20}>
                 <Row>

@@ -5,6 +5,7 @@ import {SendOutlined} from '@ant-design/icons';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {BaseEmoji} from 'emoji-mart';
+import {UserAvatar} from '../UserAvatar';
 
 interface CommentAjaxRequest {
     isn: any;
@@ -26,9 +27,10 @@ interface CommentFormProps {
     onCommendAdded: (entity: PostCommentEntity) => void;
     text?: string;
     children?: React.ReactNode;
+    isn: string;
 }
 
-export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({post, onCommendAdded, text = '', children}: CommentFormProps, ref) => {
+export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({post, onCommendAdded, text = '', children, isn}: CommentFormProps, ref) => {
     let useLocalStorage = createUseLocalStorage(`post:${post.postId}:`);
     let [commentText, setCommentText] = useLocalStorage('commentText', text);
     let AjaxButton = ({...props}: AjaxButtonProps<CommentAjaxRequest, CommentAjaxResponse>) =>
@@ -36,7 +38,7 @@ export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({po
 
     return <div ref={ref}><Row>
         <Col md={2}>
-            <Avatar size="small" src="/images/avatar.png"/>
+            <UserAvatar size="default" isn={isn} />
         </Col>
         <Col md={18}>
             <Input.TextArea placeholder="Напишите комментарий..."
@@ -67,5 +69,3 @@ export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(({po
     </Row>
     </div>
 })
-
-

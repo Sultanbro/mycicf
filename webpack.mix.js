@@ -64,6 +64,7 @@ if (!mix.inProduction()) {
     mix
         .browserSync({
             proxy: env.APP_URL,
+            ui: false,
         })
         .sourceMaps()
         .disableNotifications();

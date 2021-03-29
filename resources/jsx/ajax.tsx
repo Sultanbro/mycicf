@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
-import {Alert, Button, Spin, Tooltip} from 'antd';
+import {Button, Spin, Tooltip} from 'antd';
 import {ButtonProps} from 'antd/lib/button/button';
+import {CloseOutlined} from '@ant-design/icons';
 
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     url: string;
@@ -169,8 +170,11 @@ Ajax.Button = <TReq, TRes>({
     return !error ? btn :
         <Tooltip title={error.message}>
             <Button type="link"
+                    style={{
+                        color: 'red'
+                    }}
                     loading={loading}
-                    icon={icon}
+                    icon={!icon ? null : <CloseOutlined />}
                     onClick={onClick}>
                 Retry
             </Button>

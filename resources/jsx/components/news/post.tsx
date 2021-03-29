@@ -1,5 +1,5 @@
 import {Ajax, AjaxButtonProps, PostEntity} from '../../ajax';
-import {Button, Card, Carousel, Col, Divider, Image, Input, Row, Tag, Typography} from 'antd';
+import {Button, Card, Col, Divider, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
@@ -14,14 +14,14 @@ import {PostImages} from './post-images';
 export interface PostProps {
     post: PostEntity;
     onDeleted: (post: PostEntity) => void;
+    isn: string;
 }
 
-export function Post({post, onDeleted}: PostProps) {
+export function Post({post, onDeleted, isn}: PostProps) {
     let [editing, setEditing] = useState(false);
     let [newCommentText, setNewCommentText] = useState('');
     let [comments, setComments] = useState(post.comments);
     let [postText, setPostText] = useState(post.postText);
-
     let commentForm: React.Ref<any> = React.createRef<any>();
 
     let AjaxDeletePostButton = ({...props}: AjaxButtonProps<{ postId: number }, { success: boolean }>) =>
@@ -29,7 +29,7 @@ export function Post({post, onDeleted}: PostProps) {
 
     return <Card style={{marginBottom: '10px'}}>
         <Row>
-            <Col md={4}>
+            <Col md={3}>
                 <UserAvatar isn={post.isn} />
             </Col>
             <Col md={16}>
@@ -153,6 +153,7 @@ export function Post({post, onDeleted}: PostProps) {
                 <CommentForm post={post}
                              ref={commentForm}
                              text={newCommentText}
+                             isn={isn}
                              onCommendAdded={(res) => {
                                  setComments((old) => [...old, res]);
                              }} />

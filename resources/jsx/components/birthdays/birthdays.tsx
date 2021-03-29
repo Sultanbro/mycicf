@@ -1,10 +1,10 @@
 import React from 'react';
 import {Carousel, Col, Row, Image, Typography} from 'antd';
 import {Ajax, AjaxProps} from '../../ajax';
-import {UserAvatar} from '../UserAvatar';
+import {UserAvatar, UserPhoto} from '../UserAvatar';
 
 interface BirthdayEntry {
-    ISN: number
+    ISN: string;
     birthday: string
     dept: string
     duty: string
@@ -21,7 +21,7 @@ function Entry({entry}: { entry: BirthdayEntry }) {
     return <div>
         <Row>
             <Col md={24}>
-                <Image src={`/storage/images/employee/${entry.ISN}.png`} loading="lazy"/>
+                <UserPhoto isn={entry.ISN} />
             </Col>
         </Row>
         <Row>

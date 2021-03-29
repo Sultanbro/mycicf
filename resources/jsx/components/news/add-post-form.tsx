@@ -11,9 +11,11 @@ import {PollForm} from './poll-form';
 import {Ajax} from '../../ajax';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
+import {UserAvatar} from '../UserAvatar';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
+    isn: string;
 }
 
 interface AddPostData {
@@ -24,7 +26,7 @@ interface AddPostData {
 
 let useLocalStorage = createUseLocalStorage('newPost');
 
-export function AddPostForm({onAddPost}: AddPostFormProps) {
+export function AddPostForm({onAddPost, isn}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<any>(null);
@@ -38,7 +40,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let postData: any = {
         postText,
         poll: 0,
-        isn: 5565,
+        isn,
     };
 
     if (pollData) {
@@ -70,7 +72,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
             </Row>
             <Row>
                 <Col md={3}>
-                    <Avatar size={64} src="/images/avatar.png" />
+                    <UserAvatar isn={isn} />
                 </Col>
                 <Col md={19}>
                     <Input.TextArea placeholder="Что у вас нового?"
@@ -79,7 +81,6 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                     style={{
                                         height: textFieldHeight,
                                     }}
-
                                     onResize={(({height}) => {
                                         setTextFieldHeight(height);
                                     })}
