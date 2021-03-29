@@ -1,6 +1,7 @@
 import {Ajax, PostEntity} from '../../ajax';
 import React, {useState} from 'react';
 import {Button, Col, Divider, Input, Row} from 'antd';
+import {SendOutlined} from "@ant-design/icons";
 
 export interface EditPostFormProps {
     post: PostEntity;
@@ -15,6 +16,7 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
             <Row>
                 <Col md={24}>
                     <Input.TextArea value={postText}
+                                    rows={7}
                                     onChange={(e) => {
                                         setPostText(e.target.value);
                                     }}
@@ -22,12 +24,13 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col offset={16}>
+                <Col offset={14}>
                     <Ajax.Button<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
                         type="default"
                         url="/news/my/editPost"
                         data={{postId: post.postId, postText: postText}}
                         method="POST"
+                        icon={<SendOutlined />}
                         onSuccess={(res) => {
                             post.postText = postText;
                             if (res.data.edited) {

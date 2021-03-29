@@ -3,7 +3,8 @@ import 'antd/dist/antd.css';
 import {AddPostForm} from './components/news/add-post-form';
 import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
-import {message} from 'antd';
+import {notification} from 'antd';
+import {CheckOutlined} from '@ant-design/icons';
 
 export function MyCiCNews() {
     let ref = React.createRef();
@@ -12,7 +13,11 @@ export function MyCiCNews() {
             <Row>
                 <Col md={24}>
                     <AddPostForm onAddPost={() => {
-                        message.info('Пост отправлен', 2);
+                        notification.info({
+                            message: 'Пост успешно отправлен',
+                            description: '',
+                            icon: <CheckOutlined />
+                        });
                         console.log(ref);
                     }} />
                 </Col>

@@ -57,6 +57,11 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                             {comment.fullname}
                         </a>
                     </Col>
+                    <Col md={8} offset={8} className="text-right">
+                        <Tag color="green" style={{
+                            margin: '4px 0px'
+                        }}>{comment.date}</Tag>
+                    </Col>
                     <Col md={2} offset={14}>
                         {
                             comment.isMine ?
@@ -95,11 +100,6 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                         }}>
                             Ответить
                         </Button>
-                    </Col>
-                    <Col md={8} offset={8}>
-                        <Tag color="green" style={{
-                            margin: '4px 15px'
-                        }}>{comment.date}</Tag>
                     </Col>
                 </Row>
             </Col>

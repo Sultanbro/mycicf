@@ -1,8 +1,8 @@
 import {Ajax, AjaxProps, PostEntity} from '../../ajax';
 import {Post} from './post';
-import {Button, Col, List, message, Row, Spin} from 'antd';
+import {Button, Col, List, notification, Row, Spin} from 'antd';
 import React, {useState} from 'react';
-import {EllipsisOutlined} from '@ant-design/icons';
+import {CheckOutlined, EllipsisOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import './posts.css';
@@ -67,7 +67,10 @@ export function Posts({ref}: PostsProps) {
                                 <Col md={24}>
                                     <Post post={item}
                                           onDeleted={(post) => {
-                                              message.info('Пост удалён');
+                                              notification.info({
+                                                  message: 'Пост удалён',
+                                                  icon: <CheckOutlined />
+                                              });
                                               refetch();
                                           }} />
                                 </Col>
