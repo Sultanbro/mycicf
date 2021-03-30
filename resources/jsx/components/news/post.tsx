@@ -30,7 +30,9 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
     return <Card style={{marginBottom: '10px'}}>
         <Row>
             <Col md={3}>
-                <UserAvatar isn={post.isn} />
+                <a href={`/colleagues/${post.isn}/dossier`}>
+                    <UserAvatar isn={post.isn} />
+                </a>
             </Col>
             <Col md={18}>
                 <Row>

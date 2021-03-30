@@ -36,6 +36,7 @@
         <div class="col-md-8 offset-2" id="jsx-app"></div>
 
         <div id="auth-user-isn" hidden>{{Auth::user()->ISN}}</div>
+        <div id="auth-user-name" hidden>{{Auth::user()->full_name}}</div>
     </div>
 </main>
 {{--FOOTER GOES HERE--}}
