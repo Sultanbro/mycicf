@@ -44,7 +44,7 @@ let commentForm = ({
 
     return <div ref={ref}>
         <Row>
-            <Col md={2}>
+            <Col md={2} className="d-flex justify-content-center align-items-center">
                 <UserAvatar size="default" isn={authUserIsn()} />
             </Col>
             <Col md={19}>

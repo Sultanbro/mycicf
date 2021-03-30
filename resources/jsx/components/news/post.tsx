@@ -37,7 +37,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
             <Col md={18}>
                 <Row>
                     <Col>
-                        <Typography.Title level={5}>
+                        <Typography.Title level={3}>
                             <a href={`/colleagues/${post.isn}/dossier`}>
                                 {post.fullname}
                             </a>
@@ -83,13 +83,13 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                 {(() => {
                     if (editing) {
                         return <EditPostForm post={post}
-                                             onCancel={() => {
-                                                 setEditing(false);
-                                             }}
-                                             onSaved={(post) => {
-                                                 setPostText(post.postText);
-                                                 setEditing(false);
-                                             }} />;
+                                          onCancel={() => {
+                                              setEditing(false);
+                                          }}
+                                          onSaved={(post) => {
+                                              setPostText(post.postText);
+                                              setEditing(false);
+                                          }} />;
                     }
 
                     return <Row>
@@ -106,7 +106,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                             </Row>
                             <Row>
                                 <Col md={24}>
-                                    <div style={{marginTop: '12px'}}>
+                                    <div style={{margin: '14px'}}>
                                         <ReadMore text={postText} />
                                     </div>
                                 </Col>

@@ -5,7 +5,6 @@ import {
     FileImageOutlined,
     FileOutlined,
     SendOutlined,
-    VideoCameraOutlined,
     QuestionCircleOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
@@ -25,9 +24,39 @@ interface AddPostData {
     isn: any;
 }
 
+export interface FileButtonProps {
+    children: React.ReactNode;
+    icon: any;
+
+    onFilesSelected(files: FileList | null): void;
+
+    accept: string;
+}
+
+export function FileButton({children, icon, onFilesSelected, accept}: FileButtonProps) {
+    let uploadRef = React.createRef<HTMLInputElement>();
+
+    return <span>
+        <input type="file"
+               ref={uploadRef}
+               hidden
+               accept={accept}
+               onChange={(e) => {
+                   onFilesSelected(e.target.files);
+               }} />
+        <Button icon={icon} onClick={() => {
+            if (!uploadRef.current) {
+                return;
+            }
+            uploadRef.current.click();
+        }}>{children}</Button>
+    </span>
+}
+
 let useLocalStorage = createUseLocalStorage('newPost');
 
 export function AddPostForm({onAddPost}: AddPostFormProps) {
+    let maxLength = 2000;
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<any>(null);
@@ -43,6 +72,8 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         poll: 0,
         isn: authUserIsn(),
     };
+
+    let uploadRef = React.createRef<HTMLInputElement>();
 
     if (pollData) {
         postData.poll = 1;
@@ -71,22 +102,25 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     </Typography.Title>
                 </Col>
                 <Col md={12}>
-                        <Tooltip placement="bottom" title="Содержимое публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент">
-                            <QuestionCircleOutlined />
-                        </Tooltip>
+                    <Tooltip placement="bottom"
+                             title="Содержимое публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент">
+                        <QuestionCircleOutlined />
+                    </Tooltip>
                 </Col>
             </Row>
-            <Row>
-                <Col md={3}>
+            <Row style={{backgroundColor: 'white'}}>
+                <Col md={3} className="d-flex justify-content-center align-items-center">
                     <UserAvatar isn={authUserIsn()} />
                 </Col>
-                <Col md={19}>
+                <Col md={20}>
                     <Input.TextArea placeholder="Что у вас нового?"
                                     value={postText}
                                     allowClear
+                                    maxLength={maxLength}
+                                    bordered={false}
                                     rows={5}
                                     style={{
-                                        height: textFieldHeight,
+                                        padding: 20
                                     }}
                                     spellCheck
                                     onResize={(({height}) => {
@@ -95,8 +129,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                     onChange={(e) => {
                                         setPostText(e.target.value);
                                     }} />
+                    <span style={{float: 'right'}}>{postText.length} / {maxLength} символов</span>
                 </Col>
-                <Col md={2}>
+                <Col md={1}>
                     <EmojiPicker onSelect={(data) => {
                         setPostText(postText + (data as any).native);
                     }} />
@@ -104,18 +139,48 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
             </Row>
             <Divider type="horizontal" style={{margin: '12px 0'}} />
             <Row>
-                <Col>
-                    <Button icon={<FileImageOutlined />}>Фото</Button>
+                <Col md={24}>
+
+                </Col>
+            </Row>
+            <Divider type="horizontal" style={{margin: '12px 0'}} />
+            <Row>
+                <Col md={18}>
+                    <FileButton icon={<FileImageOutlined />}
+                                accept="image/*"
+                                onFilesSelected={(files) => {
+                                    debugger;
+                                }}>
+                        <Tooltip title="Не работает">
+                            Фото
+                        </Tooltip>
+                    </FileButton>
                     <Divider type="vertical" />
-                    <Button icon={<VideoCameraOutlined />}>Видео</Button>
+                    <FileButton icon={<FileImageOutlined />}
+                                accept="video/*"
+                                onFilesSelected={(files) => {
+                                    debugger;
+                                }}>
+                        <Tooltip title="Не работает">
+                            Видео
+                        </Tooltip>
+                    </FileButton>
                     <Divider type="vertical" />
-                    <Button icon={<FileOutlined />}>Файл</Button>
+                    <FileButton icon={<FileOutlined />}
+                                accept="*/*"
+                                onFilesSelected={(files) => {
+                                    debugger;
+                                }}>
+                        <Tooltip title="Не работает">
+                            Файл
+                        </Tooltip>
+                    </FileButton>
                     <Divider type="vertical" />
                     <Button onClick={() => {
-                        setShowPollForm(!showPollForm)
+                        setShowPollForm(!showPollForm);
                     }} icon={<BarChartOutlined />} type={showPollForm ? 'primary' : 'default'}>Опрос</Button>
                 </Col>
-                <Col offset={1}>
+                <Col offset={1} md={3}>
                     {publishBtn}
                 </Col>
             </Row>

@@ -38,10 +38,10 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md={8}>
-                    <ColleagueData isn={authUserIsn()} />
+                <Col md={24}>
+                    {/*<ColleagueData isn={authUserIsn()} />*/}
 
-                    {/*<Posts />*/}
+                    <Posts />
 
                     {/*<Birthdays />*/}
 

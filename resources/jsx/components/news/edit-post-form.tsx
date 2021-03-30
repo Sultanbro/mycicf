@@ -17,7 +17,10 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
             <Row>
                 <Col md={24}>
                     <Input.TextArea value={postText}
-                                    rows={7}
+                                    rows={5}
+                                    bordered={false}
+                                    maxLength={2000}
+                                    style={{padding: '14px', backgroundColor: 'rgba(0, 0, 0, 0.03)'}}
                                     onChange={(e) => {
                                         setPostText(e.target.value);
                                     }}
