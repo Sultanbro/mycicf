@@ -1,7 +1,8 @@
 import {Button, Col, Row} from 'antd';
 import {CloseOutlined, EditOutlined} from '@ant-design/icons';
 import React from 'react';
-import {Ajax, PostCommentEntity} from '../../ajax';
+import {PostCommentEntity} from '../ajax/types';
+import { Ajax } from '../ajax/ajax';
 
 export interface CommentMenuProps {
     comment: PostCommentEntity;

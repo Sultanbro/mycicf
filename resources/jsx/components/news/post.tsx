@@ -78,6 +78,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
         </Row>
         <Row>
             <Col md={24}>
+                <Divider />
                 {(() => {
                     if (editing) {
                         return <EditPostForm post={post}
@@ -99,11 +100,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                             </Row>
                             <Row>
                                 <Col md={24}>
-                                    {
-                                        post.post_poll.question_id ?
-                                            <PostPoll post={post} /> :
-                                            null
-                                    }
+                                    { post.post_poll.question_id ? <PostPoll post={post} /> : null }
                                 </Col>
                             </Row>
                             <Row>
@@ -139,7 +136,8 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
         <Row>
             <Col md={22} offset={2}>
                 {comments.map((comment: any, i: number) =>
-                    <PostComment comment={comment} key={i}
+                    <PostComment comment={comment}
+                                 key={i}
                                  onCommentDeleted={(commentId) => {
                                      setComments((old) => {
                                          return old.filter((comment) => comment.commentId !== commentId);
