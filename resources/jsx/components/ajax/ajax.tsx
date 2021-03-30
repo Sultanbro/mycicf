@@ -25,7 +25,7 @@ export interface AjaxProps<TRes> extends AxiosRequestConfig {
     loading?: any;
     children: ({response, refetch}: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
 
-    cache?: AjaxCacheSettings;
+    cache?: AjaxCacheSettings | boolean;
 }
 
 export interface AjaxRefetchArgs {
@@ -59,9 +59,34 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
         });
     }
 
+    let cacheSettings: AjaxCacheSettings = {
+        enabled: false,
+        lifetime: 10 * 1000,
+        storage: 'localstorage'
+    };
+
     if (cache) {
-        let cacheKey = 'cache__' + JSON.stringify({method, url, params, data});
-        debugger;
+        if (typeof cache === 'boolean') {
+            cacheSettings = {
+                enabled: cache,
+                lifetime: 10 * 1000,
+                storage: 'localstorage'
+            };
+        }
+
+        if (cacheSettings.enabled) {
+            let cacheKey = 'cache__' + JSON.stringify({method, url, params, data});
+            let item = localStorage.getItem(cacheKey);
+            if (item) {
+                let result = JSON.parse(item);
+
+                if (result.expires <= Date.now()) {
+                    localStorage.removeItem(cacheKey);
+                } else {
+                    response = result.data;
+                }
+            }
+        }
     }
 
     if (!response) {
@@ -72,6 +97,15 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
         }
 
         return loading;
+    }
+
+    if (cacheSettings.enabled) {
+        let cacheKey = 'cache__' + JSON.stringify({method, url, params, data});
+        let result = JSON.stringify({
+            expires: Date.now() + cacheSettings.lifetime,
+            data: response
+        });
+        localStorage.setItem(cacheKey, result);
     }
 
     return <div>

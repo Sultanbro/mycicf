@@ -14,11 +14,10 @@ import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 
 export interface PostProps {
     post: PostEntity;
-    onDeleted: (post: PostEntity) => void;
-    isn: string;
+    onDeleted?: (post: PostEntity) => void;
 }
 
-export function Post({post, onDeleted, isn}: PostProps) {
+export function Post({post, onDeleted = () => {}}: PostProps) {
     let [editing, setEditing] = useState(false);
     let [newCommentText, setNewCommentText] = useState('');
     let [comments, setComments] = useState(post.comments);
@@ -46,7 +45,9 @@ export function Post({post, onDeleted, isn}: PostProps) {
                 <Row>
                     <Col>
                         <Tag color="green">{post.date}</Tag>
-                        {post.edited ? <Tag color="blue">отредактировано</Tag> : null}
+                        {post.edited ? <Tag color="blue" className="is-edited">
+                            отредактировано
+                        </Tag> : null}
                     </Col>
                 </Row>
             </Col>
@@ -155,7 +156,6 @@ export function Post({post, onDeleted, isn}: PostProps) {
                 <CommentForm post={post}
                              ref={commentForm}
                              text={newCommentText}
-                             isn={isn}
                              onCommendAdded={(res) => {
                                  setComments((old) => [...old, res]);
                              }} />

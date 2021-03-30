@@ -41,6 +41,7 @@ function SearchBox({loading, setSearchQuery, search, dateRange}: any) {
             <Ajax<{ start: string, end: string }>
                 url="/news/getDateValidRanges"
                 method="POST"
+                cache
                 loading={<div style={{width: 600}}>
                     <Row>
                         <Col md={12}>
@@ -162,7 +163,6 @@ export function Posts({}: PostsProps) {
                                         <List.Item key={item.postId}>
                                             <Col md={24}>
                                                 <Post post={item}
-                                                      isn={authUserIsn()}
                                                       onDeleted={(post) => {
                                                           notification.info({
                                                               message: 'Пост удалён',
@@ -212,7 +212,6 @@ export function Posts3({ isn }: any) {
                             <Col md={24}>
                                 {data.map((post: any, i: number) =>
                                     <Post key={i}
-                                          isn={isn}
                                           post={post}
                                           onDeleted={(post) => {
                                               debugger;

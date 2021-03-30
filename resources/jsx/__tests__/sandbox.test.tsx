@@ -1,3 +1,4 @@
+import '../__mocks__/match-media';
 import {Sandbox, sum} from '../sandbox';
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
