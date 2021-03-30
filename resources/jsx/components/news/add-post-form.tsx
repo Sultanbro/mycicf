@@ -109,7 +109,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     </Typography.Title>
                 </Col>
                 <Col offset={8} md={4}>
-                    {draftSaved ? <span>Черновик сохранён </span> : null}
+                    {/*{draftSaved ? <span>Черновик сохранён </span> : null}*/}
                 </Col>
             </Row>
             <Row style={{backgroundColor: 'white'}}>
@@ -143,7 +143,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                             }, 1500)();
                                         }
                                     }} />
-                    <span style={{float: 'right'}}>{postText.length} / {maxLength} символов</span>
+                    <span style={{float: 'right'}}>{maxLength - postText.length} символов</span>
                 </Col>
                 <Col md={1}>
                     <EmojiPicker onSelect={(data) => {
