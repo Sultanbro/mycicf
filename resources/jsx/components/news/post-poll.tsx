@@ -1,14 +1,36 @@
-import {Button, Col, Divider, Row, Tag, Typography} from 'antd';
+import {Col, Divider, List, Row, Tag, Typography} from 'antd';
 import React from 'react';
-import {authUserIsn} from '../../authUserIsn';
-import { Ajax } from '../ajax/ajax';
+import {Ajax} from '../ajax/ajax';
 import {PostEntity} from '../ajax/types';
+import {authUserIsn} from '../../authUserIsn';
 
 interface PostPollProps {
     post: PostEntity;
 }
 
 export function PostPoll({post}: PostPollProps) {
+    let list = <List
+        dataSource={post.post_poll.answers}
+        renderItem={answer => <List.Item style={{ padding: '5px 5px'}}>
+            <Ajax.Button key={answer.answer_id}
+                         url="/news/vote"
+                         method="POST"
+                         type="default"
+                         data={{
+                             answerId: answer.answer_id,
+                             isn: authUserIsn(),
+                             questionId: post.post_poll.question_id
+                         }}
+                         onSuccess={() => {
+
+                         }}
+                         block>
+                <pre>
+                    За <b>{answer.answer_title}</b> проголосовало: <b>{answer.answer_votes}</b>
+                </pre>
+            </Ajax.Button>
+        </List.Item>}
+    />;
     return <Row>
         <Col md={24}>
             <Row>
@@ -24,31 +46,7 @@ export function PostPoll({post}: PostPollProps) {
             <Row>
                 <Col md={24}>
                     <Divider />
-                    {post.post_poll.answers ? post.post_poll.answers.map((answer, ) => {
-                        if (post.isVoted) {
-                            return <Button type="text" block key={answer.answer_id}>
-                                <pre>
-                                    За <b>{answer.answer_title}</b> проголосовало: <b>{answer.answer_votes}</b>
-                                </pre>
-                            </Button>
-                        }
-
-                        return <Ajax.Button key={answer.answer_id}
-                                            url="/news/vote"
-                                            method="POST"
-                                            type="default"
-                                            data={{
-                                                answerId: answer.answer_id,
-                                                isn: authUserIsn(),
-                                                questionId: post.post_poll.question_id
-                                            }}
-                                            onSuccess={() => {
-
-                                            }}
-                                            block>
-                            {answer.answer_title}
-                        </Ajax.Button>;
-                    }) : null}
+                    {post.post_poll.answers ? list : null}
                     <Divider />
                 </Col>
             </Row>

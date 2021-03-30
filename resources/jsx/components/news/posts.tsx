@@ -1,15 +1,13 @@
 import {Post} from './post';
-import {Button, Col, Divider, Input, List, notification, Row, Spin, DatePicker} from 'antd';
-import React, {ChangeEvent, useState} from 'react';
-import {CheckOutlined, EllipsisOutlined, LoadingOutlined} from '@ant-design/icons';
+import {Button, Col, Divider, List, notification, Row, Spin} from 'antd';
+import React, {useState} from 'react';
+import {CheckOutlined, EllipsisOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
-import debounce from 'lodash/debounce';
-import moment from 'moment';
 import './posts.css';
 import {AddPostForm} from "./add-post-form";
-import {authUserIsn} from '../../authUserIsn';
 import {Ajax, AjaxProps} from '../ajax/ajax';
 import {PostEntity} from '../ajax/types';
+import {SearchBox} from './search-box';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
     lastIndex?: number;
@@ -21,54 +19,6 @@ export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
             return children({response, callback, refetch});
         }}
     </Ajax.POST>;
-}
-
-function SearchBox({loading, setSearchQuery, search, dateRange}: any) {
-    return <Row>
-        <Col md={14}>
-            <Input
-                suffix={loading ? <LoadingOutlined /> : null}
-                placeholder="Поиск новостей..."
-                allowClear
-                onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
-                    setSearchQuery(e.target.value);
-
-                    search();
-                }, 500)}
-            />
-        </Col>
-        <Col md={8}>
-            <Ajax<{ start: string, end: string }>
-                url="/news/getDateValidRanges"
-                method="POST"
-                cache
-                loading={<div style={{width: 600}}>
-                    <Row>
-                        <Col md={12}>
-                            <DatePicker.RangePicker
-                                disabled
-                                placeholder={["", ""]} />
-                        </Col>
-                    </Row>
-                </div>}>
-                {({response}) => {
-                    let defaultValue: any = [moment(response.data.start), moment(response.data.end)];
-                    return <div style={{width: 600}}>
-                        <Row>
-                            <Col md={12}>
-                                <DatePicker.RangePicker
-                                    defaultValue={dateRange.length > 0 ? dateRange : defaultValue}
-                                    placeholder={["", ""]}
-                                    allowClear
-                                />
-                            </Col>
-                        </Row>
-                    </div>;
-                }}
-            </Ajax>
-        </Col>
-        <Divider />
-    </Row>;
 }
 
 interface PostsProps {
@@ -145,7 +95,6 @@ export function Posts({}: PostsProps) {
                                dateRange={dateRange}
                     />
 
-
                     <Row>
                         <Col md={24}>
                             <InfiniteScroll
@@ -153,9 +102,7 @@ export function Posts({}: PostsProps) {
                                 pageStart={0}
                                 hasMore={hasMore}
                                 useWindow={true}
-                                getScrollParent={() => {
-                                    return document.body;
-                                }}
+                                getScrollParent={() => document.body}
                                 loadMore={loadMore}>
                                 <List
                                     dataSource={response.data}
@@ -183,9 +130,11 @@ export function Posts({}: PostsProps) {
 
                                 {hasMore ? <Row>
                                     <Col md={24} className="text-center">
-                                        <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
-                                            loadMore();
-                                        }}>
+                                        <Button loading={loading}
+                                                icon={<EllipsisOutlined />}
+                                                onClick={() => {
+                                                    loadMore();
+                                                }}>
                                             Больше
                                         </Button>
                                     </Col>
@@ -199,7 +148,7 @@ export function Posts({}: PostsProps) {
     </PostsAjax>
 }
 
-export function Posts3({ isn }: any) {
+export function Posts3({isn}: any) {
     let [loading, setLoading] = useState(false);
     return <PostsAjax>
         {({response, refetch}) => {

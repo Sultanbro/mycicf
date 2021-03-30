@@ -156,7 +156,7 @@ Ajax.Button = <TReq, TRes>({
     let btn;
 
     if (confirm) {
-        btn = <Popconfirm title={confirmText} onConfirm={onClick}>
+        btn = <Popconfirm title={confirmText} onConfirm={onClick} okText="Да" cancelText="Нет">
             <Button type={loading ? 'ghost' : type}
                     loading={loading}
                     block={block}

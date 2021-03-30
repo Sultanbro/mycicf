@@ -6,6 +6,14 @@ import {act} from 'react-dom/test-utils';
 import {render} from 'react-dom';
 
 let container: HTMLDivElement | any = null;
+let fakeISN: HTMLDivElement | any = null;
+
+beforeAll(() => {
+    fakeISN = document.createElement('div');
+    fakeISN.id = 'auth-user-isn';
+    fakeISN.innerText = '5565';
+    document.body.appendChild(fakeISN);
+});
 
 beforeEach(() => {
     // подготавливаем DOM-элемент, куда будем рендерить
@@ -14,7 +22,7 @@ beforeEach(() => {
 });
 
 describe('posts tests', () => {
-    it('Simple post', () => {
+    it('Check `edited` label', () => {
         let post: PostEntity = {
             image: [''],
             postText: 'lorem',
@@ -42,5 +50,15 @@ describe('posts tests', () => {
         });
         expect(container.querySelector('.is-edited')).not.toBeNull();
         expect(container.querySelector('.is-edited').textContent).toBe('отредактировано');
+
+        post.edited = false;
+        act(() => {
+            render(<Post post={post} />, container);
+        });
+        expect(container.querySelector('.is-edited')).toBeNull();
     });
+});
+
+afterAll(() => {
+    fakeISN.remove();
 });

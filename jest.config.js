@@ -9,5 +9,6 @@ module.exports = {
     ],
     "moduleNameMapper"       : {
         "\\.(css|less|sass|scss)$": "<rootDir>/resources/jsx/__mocks__/styleMock.js"
-    }
+    },
+    // "setupFilesAfterEnv": ["jest-extended"]
 };

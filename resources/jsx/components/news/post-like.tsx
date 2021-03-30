@@ -22,17 +22,16 @@ export function PostLike({post}: PostLikeProps) {
     let [isLiked, setIsLiked] = useState(post.isLiked);
     let [likes, setLikes] = useState(post.likes);
     let icon = isLiked ? <LikeTwoTone style={{color: 'red'}} /> : <LikeOutlined />;
-    let data: LikeRequest = {
-        postId: post.postId,
-        isn: authUserIsn()
-    };
 
     let AjaxButton = ({...props}: AjaxButtonProps<LikeRequest, LikeResponse>) =>
         <Ajax.Button<LikeRequest, LikeResponse> {...props} />;
 
     return <AjaxButton url="/news/likePost"
                        method="POST"
-                       data={data}
+                       data={{
+                           postId: post.postId,
+                           isn: authUserIsn()
+                       }}
                        icon={icon}
                        onSuccess={(res) => {
                            setIsLiked(res.data.success);
