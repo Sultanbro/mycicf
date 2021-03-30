@@ -108,10 +108,18 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
         localStorage.setItem(cacheKey, result);
     }
 
+    let inputData = {
+        method,
+        url,
+        params,
+        headers,
+        data
+    };
+
     return <div>
         {children({
             response,
-            refetch: ({params, data, previousData, callback}: any) => {
+            refetch: ({params= inputData.params, data = inputData.data, previousData, callback}: any = {}) => {
                 refetch({method, url, params, data, previousData, callback});
             }
         })}
@@ -183,6 +191,7 @@ Ajax.Button = <TReq, TRes>({
                         color: 'red'
                     }}
                     loading={loading}
+                    block={block}
                     icon={!icon ? null : <CloseOutlined />}
                     onClick={onClick}>
                 Retry

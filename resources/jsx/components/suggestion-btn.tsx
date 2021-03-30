@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {UserOutlined} from '@ant-design/icons';
+import {CheckOutlined, UserOutlined} from '@ant-design/icons';
 import {Ajax} from './ajax/ajax';
 import {Button, Col, Form, Input, Modal, notification, Row} from 'antd';
 import {authUserName} from '../authUserName';
@@ -12,9 +12,11 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     return <Row>
         <Col md={12}>
-            <Button onClick={() => {
-                setIsModalVisible(true);
-            }}>
+            <Button
+                icon={<CheckOutlined />}
+                onClick={() => {
+                    setIsModalVisible(true);
+                }}>
                 Предложить улучшение
             </Button>
             <Modal title="Предложить улучшение"
@@ -26,7 +28,7 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                 <Form>
                     <Form.Item
                         name="username"
-                        rules={[{ required: true, message: 'Please input your Username!' }]}
+                        rules={[{required: true, message: 'Please input your Username!'}]}
                     >
                         <Input prefix={<UserOutlined className="site-form-item-icon" />}
                                defaultValue={authUserName()}
@@ -34,13 +36,14 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                     </Form.Item>
                     <Form.Item
                         name="username"
-                        rules={[{ required: true, message: 'Please input your Username!' }]}
+                        rules={[{required: true, message: 'Please input your Username!'}]}
                     >
                         <Input.TextArea placeholder="Обращение" rows={15} />
                     </Form.Item>
                 </Form>
 
                 <Ajax.Button
+                    url="/news/addSuggestion"
                     method="POST"
                     data={{}}
                     block
@@ -48,8 +51,7 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                         notification.info({
                             message: 'Спасибо за обращение!'
                         });
-                    }}
-                    url="/news/addSuggestion">
+                    }}>
                     Отправить
                 </Ajax.Button>
             </Modal>

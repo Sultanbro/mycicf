@@ -12,7 +12,7 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
-import { Ajax } from '../ajax/ajax';
+import {Ajax} from '../ajax/ajax';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -78,9 +78,11 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Input.TextArea placeholder="Что у вас нового?"
                                     value={postText}
                                     allowClear
+                                    rows={5}
                                     style={{
                                         height: textFieldHeight,
                                     }}
+                                    spellCheck
                                     onResize={(({height}) => {
                                         setTextFieldHeight(height);
                                     })}

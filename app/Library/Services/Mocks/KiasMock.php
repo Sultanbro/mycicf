@@ -312,6 +312,9 @@ class KiasMock implements KiasServiceInterface {
                 <remark>Lorem ipsum</remark>
             </row>
         </MISSION>
+        <Duty>Test duty</Duty>
+        <Name>Developer</Name>
+        <Birthday>01 января 1991</Birthday>
     </data>
 ');
     }
