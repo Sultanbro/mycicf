@@ -59,6 +59,17 @@ body {
     font-size: 2.5em;
 }
 
+.logo-my-cic {
+    height: 1em;
+    vertical-align: inherit;
+    transition: 0.4s ease;
+}
+
+.logo-my-cic:hover {
+    color: transparent;
+    transition: 0.4s ease;
+    background-color: #41678e;
+}
 /*--Social network's block-*/
 .social-network {
     text-align: center;

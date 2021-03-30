@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>my.cic.kz</title>
+    <title>my.CIC</title>
     <script type="text/javascript" src="{{asset('js/nicEdit.js')}}"></script>
     <script type="text/javascript">
         bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });

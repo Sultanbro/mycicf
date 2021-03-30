@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>my.cic.kz</title>
+    <title>my.CIC</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-29153373-9"></script>
     <script>

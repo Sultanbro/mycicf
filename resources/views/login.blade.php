@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My.cic.kz</title>
+    <title>my.CIC</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-29153373-9"></script>
     <script>
@@ -53,7 +53,8 @@
             <div class="col-lg-6 column-1">
                 <h1 class="title">
                     <span class="title__welcome">Добро пожаловать в</span>
-                    <strong class="title__main">my.cic.kz</strong>
+                    <strong class="title__main">
+                        <a href="https://my.cic.kz/"><img src="{{asset('images/logo-my-cic.png')}}" alt="logo-my-cic" class="logo-my-cic"></a>my.CIC</strong>
                 </h1>
                 <div class="social-network">
                     <p class="social-network__title">Подписывайтесь на наши обновления</p>
