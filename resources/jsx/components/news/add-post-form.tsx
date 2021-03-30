@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Button, Col, Divider, Input, Row, Typography} from 'antd';
+import {Button, Col, Divider, Input, Row, Tooltip, Typography} from 'antd';
 import {
     BarChartOutlined,
     FileImageOutlined,
     FileOutlined,
     SendOutlined,
-    VideoCameraOutlined
+    VideoCameraOutlined,
+    QuestionCircleOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
@@ -64,10 +65,15 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     return <Row>
         <Col md={24}>
             <Row>
-                <Col>
+                <Col md={12}>
                     <Typography.Title level={4}>
                         Создайте публикацию
                     </Typography.Title>
+                </Col>
+                <Col md={12}>
+                        <Tooltip placement="bottom" title="Содержимое публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент">
+                            <QuestionCircleOutlined />
+                        </Tooltip>
                 </Col>
             </Row>
             <Row>

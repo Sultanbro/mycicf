@@ -136,6 +136,14 @@ class KiasMock implements KiasServiceInterface {
                 </data>
             ');
         }
+
+        if ($name === 'User_CicGetCoordinationList') {
+            return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+                <data>
+                </data>
+            ');
+        }
+
         dd($name, $params);
         throw new \Exception('DEPRECATED');
         try {

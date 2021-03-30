@@ -9,6 +9,11 @@ import {CentcoinOperationsList} from './components/centcoins/operations-list';
 import {CoordinationList} from './components/coordination/list';
 import {UserMenu} from './components/usermenu';
 import {Dossier} from './components/dossier/dossier';
+import {Sidebar} from './components/sidebar';
+import {Birthdays} from './components/birthdays/birthdays';
+import {BossPosts} from './components/news/boss-posts';
+import {ColleagueData} from './components/colleague-data';
+import {authUserIsn} from './authUserIsn';
 
 export interface MyCiCNewsProps {
 }
@@ -33,18 +38,26 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md={24}>
+                <Col md={8}>
+                    <ColleagueData isn={authUserIsn()} />
+
                     {/*<Posts />*/}
 
                     {/*<Birthdays />*/}
 
                     {/*<Centcoins />*/}
 
+                    {/*<CentcoinOperationsList />*/}
+
                     {/*<CoordinationList />*/}
 
                     {/*<UserMenu />*/}
 
-                    <Dossier />
+                    {/*<BossPosts />*/}
+
+                    {/*<Dossier />*/}
+
+                    {/*<Sidebar />*/}
                 </Col>
             </Row>
         </Col>

@@ -1,13 +1,14 @@
 import React from 'react';
 import {Col, Row, Typography} from 'antd';
 import {Ajax} from '../ajax/ajax';
+import {authUserIsn} from '../../authUserIsn';
 
 export interface CoordinationListProps {
 
 }
 
 export function CoordinationList({}: CoordinationListProps) {
-    return <Ajax.POST>
+    return <Ajax.POST url="/getCoordinationList" data={{isn: authUserIsn()}}>
         {({ response }) => {
             return <Row>
                 <Col>

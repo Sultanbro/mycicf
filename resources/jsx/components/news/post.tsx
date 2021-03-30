@@ -80,7 +80,6 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
         </Row>
         <Row>
             <Col md={24}>
-                <Divider />
                 {(() => {
                     if (editing) {
                         return <EditPostForm post={post}
@@ -107,7 +106,9 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                             </Row>
                             <Row>
                                 <Col md={24}>
-                                    <ReadMore text={postText} />
+                                    <div style={{marginTop: '12px'}}>
+                                        <ReadMore text={postText} />
+                                    </div>
                                 </Col>
                             </Row>
                         </Col>
@@ -161,6 +162,5 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                              }} />
             </Col>
         </Row>
-        <Divider type="horizontal" style={{margin: '12px 0'}} />
     </Card>
 }

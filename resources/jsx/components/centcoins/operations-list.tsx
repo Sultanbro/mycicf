@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import moment from 'moment';
+import {EyeOutlined} from '@ant-design/icons';
 import {Button, Col, DatePicker, Divider, Row, Table} from 'antd';
 import {Ajax} from '../ajax/ajax';
 import {authUserIsn} from '../../authUserIsn';
@@ -65,7 +66,9 @@ export function CentcoinOperationsList({}: CentcoinOperationsListProps) {
                                 placeholder={["", ""]} />
                         </Col>
                         <Col md={10}>
-                            <Button onClick={() => {
+                            <Button
+                                icon={<EyeOutlined />}
+                                onClick={() => {
                                 refetch();
                             }}>Показать</Button>
                         </Col>
