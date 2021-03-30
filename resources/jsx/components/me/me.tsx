@@ -27,5 +27,5 @@ export function Me({}: MeProps) {
                 }}
             </Ajax.POST>
         </Col>
-    </Row>;
+    </Row>
 }

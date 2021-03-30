@@ -89,7 +89,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                                           onSaved={(post) => {
                                               setPostText(post.postText);
                                               setEditing(false);
-                                          }} />;
+                                          }} />
                     }
 
                     return <Row>

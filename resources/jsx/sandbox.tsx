@@ -4,7 +4,7 @@ export function Sandbox({a, b}: any) {
     return <div>
         <p>{a}</p>
         <p>{b}</p>
-    </div>;
+    </div>
 }
 
 export function sum(a: number, b: number) {

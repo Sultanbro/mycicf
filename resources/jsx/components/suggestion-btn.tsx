@@ -53,8 +53,8 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                 </Form>
 
                 <Alert message={
-                    <span><b>Примечание:</b> Содержимое Вашего обращения сохраняется в браузере.
-                    Вы сможете вернуться к нему в любой момент</span>
+                    <span><b>Примечание:</b> Черновик Вашего обращения сохраняется в браузере.
+                    Вы сможете вернуться к нему в любой момент.</span>
                 } type="info"/>
 
                 <Divider />
@@ -75,5 +75,5 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                 </Ajax.Button>
             </Modal>
         </Col>
-    </Row>;
+    </Row>
 }

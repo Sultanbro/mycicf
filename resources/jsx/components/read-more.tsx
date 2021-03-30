@@ -26,6 +26,7 @@ export function ReadMore({text, limit = 350}: ReadMoreProps) {
 
         {showButton ? <div>
             <Button type="link"
+                    style={{padding: 0}}
                     onClick={() => {
                         setExpanded(true);
                     }}>

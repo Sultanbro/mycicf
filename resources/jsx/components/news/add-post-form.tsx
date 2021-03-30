@@ -8,6 +8,7 @@ import {
     QuestionCircleOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
+import debounce from 'lodash/debounce';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
@@ -60,13 +61,14 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<any>(null);
+    let [draftSaved, setDraftSaved] = useState(false);
     let [textFieldHeight, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
     let showPublishButton = !!postText.trim();
     let AjaxPublishPostButton = ({...props}: any) =>
         <Ajax.Button<any, any> {...props}
                                method="POST"
                                icon={<SendOutlined />}
-                               url="/news/addPost" />;
+                               url="/news/addPost" />
     let postData: any = {
         postText,
         poll: 0,
@@ -99,13 +101,15 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                 <Col md={12}>
                     <Typography.Title level={4}>
                         Создайте публикацию
+
+                        <Tooltip placement="bottom"
+                                 title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент.">
+                            <QuestionCircleOutlined />
+                        </Tooltip>
                     </Typography.Title>
                 </Col>
-                <Col md={12}>
-                    <Tooltip placement="bottom"
-                             title="Содержимое публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент">
-                        <QuestionCircleOutlined />
-                    </Tooltip>
+                <Col offset={8} md={4}>
+                    {draftSaved ? <span>Черновик сохранён </span> : null}
                 </Col>
             </Row>
             <Row style={{backgroundColor: 'white'}}>
@@ -128,6 +132,16 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                     })}
                                     onChange={(e) => {
                                         setPostText(e.target.value);
+
+                                        if (e.target.value) {
+                                            debounce(() => {
+                                                setDraftSaved(true);
+
+                                                setTimeout(() => {
+                                                    setDraftSaved(false);
+                                                }, 1500);
+                                            }, 1500)();
+                                        }
                                     }} />
                     <span style={{float: 'right'}}>{postText.length} / {maxLength} символов</span>
                 </Col>

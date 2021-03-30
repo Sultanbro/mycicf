@@ -33,7 +33,7 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col offset={14}>
+                <Col offset={17}>
                     <Ajax.Button<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
                         type="default"
                         url="/news/my/editPost"
