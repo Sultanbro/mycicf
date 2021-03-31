@@ -112,7 +112,9 @@ export function Posts({}: PostsProps) {
                                     dataSource={response.data}
                                     renderItem={item => {
                                         return (
-                                            <List.Item key={item.postId}>
+                                            <List.Item key={item.postId} style={{
+                                                padding: 0,
+                                            }}>
                                                 <Col md={24}>
                                                     <Post post={item}
                                                           onDeleted={(post) => {

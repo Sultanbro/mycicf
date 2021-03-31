@@ -4,7 +4,7 @@ import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';
 import {PostCommentEntity} from '../ajax/types';
-import { Ajax } from '../ajax/ajax';
+import {Ajax} from '../ajax/ajax';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;

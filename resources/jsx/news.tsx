@@ -46,7 +46,7 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 <Col md={24}>
                     {/*<ColleagueData isn={authUserIsn()} />*/}
 
-                    <Posts />
+                    {/*<Posts />*/}
 
                     {/*<Birthdays />*/}
 
@@ -62,7 +62,7 @@ export function MyCiCNews({}: MyCiCNewsProps) {
 
                     {/*<Dossier />*/}
 
-                    {/*<Sidebar />*/}
+                    <Sidebar />
                 </Col>
             </Row>
         </Col>

@@ -11,13 +11,14 @@ import {EditPostForm} from './edit-post-form';
 import {PostImages} from './post-images';
 import {PostEntity} from '../ajax/types';
 import {Ajax, AjaxButtonProps} from '../ajax/ajax';
+import {PostCommentList} from './post-comment-list';
 
 export interface PostProps {
     post: PostEntity;
     onDeleted?: (post: PostEntity) => void;
 }
 
-export function Post({post, onDeleted = () => {}}: PostProps) {
+export function Post({ post, onDeleted = () => { } }: PostProps) {
     let [editing, setEditing] = useState(false);
     let [newCommentText, setNewCommentText] = useState('');
     let [comments, setComments] = useState(post.comments);
@@ -54,7 +55,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                 </Row>
             </Col>
             <Col md={3}>
-                {post.isMine ? <div className="control-buttons">
+                {post.isMine ? <div className="control-buttons text-right">
                     <Button type="text"
                             icon={editing ? <EditFilled /> : <EditOutlined />}
                             onClick={() => {
@@ -83,13 +84,13 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                 {(() => {
                     if (editing) {
                         return <EditPostForm post={post}
-                                          onCancel={() => {
-                                              setEditing(false);
-                                          }}
-                                          onSaved={(post) => {
-                                              setPostText(post.postText);
-                                              setEditing(false);
-                                          }} />
+                                             onCancel={() => {
+                                                 setEditing(false);
+                                             }}
+                                             onSaved={(post) => {
+                                                 setPostText(post.postText);
+                                                 setEditing(false);
+                                             }} />
                     }
 
                     return <Row>
@@ -101,7 +102,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                             </Row>
                             <Row>
                                 <Col md={24}>
-                                    { post.post_poll.question_id ? <PostPoll post={post} /> : null }
+                                    {post.post_poll.question_id ? <PostPoll post={post} /> : null}
                                 </Col>
                             </Row>
                             <Row>
@@ -138,18 +139,15 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
         <Divider type="horizontal" style={{margin: '12px 0'}} />
         <Row>
             <Col md={22} offset={2}>
-                {comments.map((comment: any, i: number) =>
-                    <PostComment comment={comment}
-                                 key={i}
+                <PostCommentList comments={comments}
+                                 onReply={(comment) => {
+                                     setNewCommentText(`${comment.fullname}, `);
+                                 }}
                                  onCommentDeleted={(commentId) => {
                                      setComments((old) => {
                                          return old.filter((comment) => comment.commentId !== commentId);
                                      });
-                                 }}
-                                 onReply={(comment) => {
-                                     setNewCommentText(`${comment.fullname}, `);
-                                 }}
-                    />)}
+                                 }} />
             </Col>
         </Row>
         <Row>

@@ -5,7 +5,7 @@ import React, {ChangeEvent} from 'react';
 import {Ajax} from '../ajax/ajax';
 import moment from 'moment';
 
-type Dispatch<T> = React.Dispatch<React.SetStateAction<string>>;
+type Dispatch<T> = React.Dispatch<React.SetStateAction<T>>;
 
 export interface SearchBoxProps {
     loading: boolean;

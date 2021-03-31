@@ -33,7 +33,7 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col offset={17}>
+                <Col offset={16}>
                     <Ajax.Button<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
                         type="default"
                         url="/news/my/editPost"
@@ -53,9 +53,11 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                     <Divider type="vertical" />
                 </Col>
                 <Col>
-                    <Button onClick={() => {
-                        onCancel();
-                    }}>
+                    <Button
+                        onClick={() => {
+                            onCancel();
+                        }}
+                        color="red">
                         Отмена
                     </Button>
                 </Col>
