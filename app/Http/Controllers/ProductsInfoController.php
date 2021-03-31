@@ -100,17 +100,16 @@ class ProductsInfoController extends Controller
     }
 
     public function getItemsList(Request $request) {
-
         $items = ProductsInfo::where('parent_id', $request->parentId)->get();
-
         $result = [];
-
         foreach ($items as $item) {
             array_push($result, [
                 'id' => $item->id,
                 'label' => $item->label,
                 'url' => $item->url,
                 'icon_url' => $item->icon_url,
+                'description' => $item->description,
+                'documents' => $item->documents,
                 'childs' => [],
                 'opened' => false
             ]);
@@ -120,5 +119,9 @@ class ProductsInfoController extends Controller
 
     public function getView() {
         return view('productsinfo');
+    }
+    public function showNameDocuments(Request $request)
+    {
+        //$c = ProductsInfo::select('docfile')->where('$request->')
     }
 }

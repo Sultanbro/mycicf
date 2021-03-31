@@ -18,5 +18,14 @@ class ProductsInfo extends Model
     public function getParent(){
         return $this->parent_id === 0 ? 'Не указано' : (self::findOrFail($this->parent_id)->label ?? 'DELETED');
     }
+    public function saveWord($word){
+        $fileName = time().'.'.$word->extension();
+        $word = $word->get();
+        Storage::disk('local')->put("/public/menu/{$fileName}", $word);
+        $this->description = "/storage/menu/{$fileName}";
+        $this->documents = "/storage/menu/{$fileName}";
+    }
+
+
 }
 

@@ -164,7 +164,8 @@ Vue.component('inspection-info', require('./components/employee/inspection-info'
 Vue.component('upload-image', require('./components/common/upload-image').default);
 
 Vue.component('products-info', require('./components/productsinfo/productsinfo').default);
-
+Vue.component('step1', require('./components/productsinfo/step1').default);
+Vue.component('step2', require('./components/productsinfo/step2').default);
 window.onload = function(){
     var app = new Vue({
         el: '#app',

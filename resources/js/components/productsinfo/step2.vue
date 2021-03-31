@@ -1,5 +1,12 @@
 <template>
     <div class="nav mt-2 d-flex justify-content-center bg-WHITE">
+        <!--<productsmodal-modal>
+        </productsmodal-modal>
+
+        <button ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+-->
+
+
         <div class="nav-container flex-row width100">
             <div class="row width110">
                 <div class="blue-bg-all width100 alert">
@@ -15,6 +22,8 @@
                 </div>
                 <div class=" nav-dropdown initial  alert alert-p width100   "  v-if="isOpened">
                     <div class="dropdown-content__list d-flex justify-content-between align-items-center w-100" >
+                        <!--<img src="/images/surface1.png" class="img-size"/><a href="#exampleModal"></a>-->
+<!--                        <div class="img-fx">-->
                             <div v-for="innerItem in itemsLevelOne"
                                  @click="getLevelTwo(innerItem.id, innerItem.url)"
                                  class=""
@@ -23,12 +32,98 @@
                                     <img class="img-fx size-img " :src="innerItem.icon_url"/>
                                     <span class=" label-size " >{{innerItem.label}}</span>
                                 </div>
-
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
+                <!-- <div class="dropdown-content mb-4 flex-row width-100-imp">
+                     <div class=" nav-drop initial margin-t-5 alert alert-p  margin-r-2  " v-if="isOpened">
+                         <div class="container ">
+                             &lt;!&ndash;Column 1&ndash;&gt;
+                             <div class="&lt;!&ndash;att-flex-class dropdown-content__list&ndash;&gt;" >
+                                 <div v-for="innerItem in itemsLevelOne"
+                                      @click="getLevelTwo(innerItem.id, innerItem.url)"
+                                      class="flex-row pl-4 pt-3 pb-3 dropbtn-inner justify-content-between"
+                                      :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
+                                     <div class="d-flex align-items-center">
 
-<!--                <button @click="stepChangeM">dfgkh</button>-->
+                                         <span class="d-flex">{{innerItem.label}}</span>
+                                     </div>
+                                     <div @click="getModalImage()" >
+                                         <div class="flex-attention">
+                                             <img id="myImg" src="/images/Attention.png" class="attention-size " alt="Snow" >
+                                         </div>
+
+
+                                         &lt;!&ndash; The Modal &ndash;&gt;
+                                         <div id="myModal" class="modal">
+                                             <span class="close">&times;</span>
+                                             <img class="modal-content" id="img01">
+                                             <div id="caption"></div>
+                                         </div>
+                                        &lt;!&ndash; <img src="/image/Attention.png">
+                                         <span>{{item.label}}</span>&ndash;&gt;
+                                     </div>
+                                     &lt;!&ndash;<div  class="flex-attention">
+                                         <a href="#exampleModal">
+                                             <img class="attention-size " src="/images/Attention.png"
+                                                >
+                                         </a>
+                                     </div>&ndash;&gt;
+                                     &lt;!&ndash;<div class="flex-attention">
+                                         <nav class="cl-effect-15  ">
+                                             <img class="attention-size " src="/images/Attention.png"/><a href="#exampleModal"></a>
+
+                                         </nav>
+                                     </div>&ndash;&gt;
+
+                                 </div>
+
+
+
+
+                             </div>
+                         </div>
+                     </div>
+                     <div class=" nav-drop initial margin-t-5 alert alert-p width-80" v-if="isOpened" id="exampleModal">
+                         <div class="container ">
+                             <button type='button'
+                                     class="close-btn"
+                                     @click="showDropdown"><i class="fas fa-times"></i></button>
+                             &lt;!&ndash;Column 2&ndash;&gt;
+                                 <div class=" pr-4 pl-4 pb-4  flex-column" >
+                                     <div class="input-group mb-3">
+                                         <div class="input-group-prepend">
+                                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                                             <div class="dropdown-menu">
+                                                 <a class="dropdown-item" href="#">Action</a>
+                                                 <a class="dropdown-item" href="#">Another action</a>
+                                                 <a class="dropdown-item" href="#">Something else here</a>
+                                                 <div role="separator" class="dropdown-divider"></div>
+                                                 <a class="dropdown-item" href="#">Separated link</a>
+                                             </div>
+                                         </div>
+                                         <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                         <div class="input-group-append">
+
+                                             <span class="input-group-text" id="basic-addon2">
+                                                 <img class="attention-size " src="/images/search.png"/>
+                                             </span>
+                                         </div>
+                                     </div>
+
+                                     <div class="m-2"
+                                          v-if="levelOneOpened"
+                                          v-for="innerItem in itemsLevelTwo">
+                                         <img :src="innerItem.icon_url"
+                                              class="items-icons">
+                                         <span class="mr-2"><a :href="'/productsinfo/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
+                                     </div>
+
+                                 </div>
+                         </div>
+                     </div>
+                 </div>-->
                 <div class="dropdown-content mb-4 flex-row width-100-imp">
                     <div class=" nav-drop initial margin-t-5 alert alert-p  margin-r-2  " v-if="isOpened">
                         <div class="container  " >
@@ -37,14 +132,62 @@
                                 <div class="m-2"
                                      v-if="levelOneOpened"
                                      v-for="innerItem in itemsLevelTwo">
-                                    <span class="mr-2 flex-cent">
-                                    <a @click="">{{innerItem.label}}</a></span>
+                                    <img :src="innerItem.icon_url"
+                                         class="items-icons ">
+                                    <span class="mr-2 flex-cent"><a :href="'/productsinfo/'+innerItem.url+'?id='+levelOnePinned">{{innerItem.label}}</a></span>
                                     <!-- Button trigger modal -->
                                   <div data-toggle="modal" data-target="#exampleModal">
                                         <div class="flex-attention">
                                             <img id="myImg" src="/images/Attention.png" class="attention-size" ref="modalButton" >
                                         </div>
                                   </div>
+                                        <!-- The Modal -->
+<!--                                        <div id="myModal" class="modal modal-flex ">-->
+<!--                                            <div class=" bottom-border-modal bg-div modal-d " id="img01">-->
+<!--                                                <div class="  ">-->
+<!--                                                    <div class="pl-5 pt-4 pb-4 pr-5">-->
+<!--                                                        <div class="nav-dropdown initial  alert alert-p ">-->
+<!--                                                            <div class=" color-icon vertical-m  close ">-->
+<!--                                                                <i class="  color-icon   fas fa-chevron-circle-left icon-size"></i>-->
+<!--                                                                <span class="pl-1 color-icon  icon-size">НАЗАД</span>-->
+<!--                                                            </div>-->
+<!--                                                            <div>-->
+<!--                                                                <div class="mt-4">-->
+<!--                                                                    <div class="table-responsive-sm">-->
+<!--                                                                        <table class="table table-bordered table-striped">-->
+<!--                                                                            <tbody>-->
+<!--                                                                            <td>{{innerItem.Label}}</td>-->
+<!--                                                                            <tr>Документы {{innerItem.description}}</tr>-->
+<!--                                                                            <tr>Франшиза {{innerItem.documents}}</tr>-->
+<!--                                                                            </tbody>-->
+<!--                                                                        </table>-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+
+<!--                                            &lt;!&ndash;<div id="caption">-->
+<!--                                                <div>-->
+<!--                                                    <img  src="/images/back-arrow-circular-simbol@2x.png" class="attention-size  "  >-->
+<!--                                                    <span class="close">&times;</span>-->
+<!--                                                </div>-->
+
+
+<!--                                            </div>&ndash;&gt;-->
+<!--                                        </div>-->
+
+
+
+
+
+
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -52,16 +195,13 @@
                     <div class="width-100-imp">
                         <div class=" nav-drop initial margin-t-5 alert alert-p width-100-imp" v-if="isOpened">
                             <div class="  ">
-<!--                                <step1-->
-<!--                                :stepChange="stepChange">-->
-<!--                                </step1>-->
                                 <div class="container ">
                                     <button type='button'
                                             class="close-btn"
                                             @click="showDropdown"><i class="fas fa-times"></i></button>
-<!--                                    &lt;!&ndash;Column 2&ndash;&gt;-->
-                                   <!-- <div class=" pr-4 pl-4 pb-4  flex-column" >
-                                        <div class="input-group mb-3" >
+                                    <!--Column 2-->
+                                    <div class=" pr-4 pl-4 pb-4  flex-column" >
+                                        <div class="input-group mb-3">
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">По всем продуктам</button>
                                                 <div class="dropdown-menu">
@@ -75,12 +215,15 @@
                                             <input type="text" class="form-control" aria-describedby="basic-addon2">
                                             <div class="input-group-append">
 
-                                                <span class="input-group-text" id="basic-addon2">
-                                                    <img class="attention-size " src="/images/search.png"/>
-                                                </span>
+                                            <span class="input-group-text" id="basic-addon2">
+                                                <img class="attention-size " src="/images/search.png"/>
+                                            </span>
                                             </div>
                                         </div>
-                                    </div>-->
+
+
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -95,11 +238,17 @@
             <div class="modal-dialog modal-dial" role="document">
                 <div class="modal-content modal-external">
 
+
+
                     <div class="modal-contact">
                         <div type="button" class="backword" data-dismiss="modal">
                             <i class="fas back fa-chevron-circle-left"></i>
                             <span class="pl-1 back">НАЗАД</span>
                         </div>
+<!--                        <button type="button" class="backword" data-dismiss="modal" aria-label="Close" aria-hidden="true">-->
+<!--                            <i class="fas back fa-chevron-circle-left"></i>-->
+<!--                            <span class="pl-1 back">НАЗАД</span>-->
+<!--                        </button>-->
                         <div class="text-left product-name text-d">
                             ДГПО АВТО
                         </div>
@@ -146,7 +295,6 @@
                 itemsLevelThree: [],
                 levelOnePinned: null,
                 levelTwoPinned: null,
-                stepChange: 1,
             }
         },
         props: {
@@ -352,6 +500,7 @@
                     modal.style.display = "block";
                     modalImg.src = this.src;
                     captionText.innerHTML = this.alt;
+
                 }
                 // Get the <span> element that closes the modal
                 var span = document.getElementsByClassName("close")[0];
@@ -360,10 +509,6 @@
                     modal.style.display = "none";
                 }
             },
-            stepChangeM: function(){
-              this.stepChange=2;
-            },
-
 
         },
     }
