@@ -7,31 +7,38 @@ export interface ReadMoreProps {
 }
 
 // TODO
-export function ReadMore({text, limit = 350}: ReadMoreProps) {
-    let [expanded, setExpanded] = useState(false);
-    let length = text.length;
-    let limitedText = text;
-    if (length >= limit && !expanded) {
-        limitedText = text.substr(0, limit);
+export function ReadMore({text, limit = 3}: ReadMoreProps) {
+    try {
+        let [expanded, setExpanded] = useState(false);
+        let paragraphs = text.split(/\n\n/);
+        let limitedText = paragraphs;
+
+        if (limitedText.length >= limit && !expanded) {
+            limitedText = paragraphs.slice(0, limit);
+        }
+
+        let showButton = limitedText.length >= limit;
+
+        if (expanded) {
+            showButton = false;
+        }
+
+        return <div>
+            {limitedText.map((paragraph, i) => <p key={i}>{paragraph}</p>)}
+
+            {showButton ? <div>
+                <Button type="link"
+                        style={{padding: 0}}
+                        onClick={() => {
+                            setExpanded(true);
+                        }}>
+                    Показать больше
+                </Button>
+            </div> : null}
+        </div>
+    } catch(e) {
+        return <div>
+            {text}
+        </div>
     }
-
-    let showButton = length >= limit;
-
-    if (expanded) {
-        showButton = false;
-    }
-
-    return <div>
-        {limitedText}
-
-        {showButton ? <div>
-            <Button type="link"
-                    style={{padding: 0}}
-                    onClick={() => {
-                        setExpanded(true);
-                    }}>
-                Показать больше
-            </Button>
-        </div> : null}
-    </div>
 }

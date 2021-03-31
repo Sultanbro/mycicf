@@ -5,30 +5,35 @@ import {Birthdays} from "./components/birthdays/birthdays";
 import {Me} from './components/me/me';
 import {UserMenu} from './components/usermenu';
 
-setTimeout(() => {
-    let wrapper = document.getElementById('jsx-app-news');
-    if (wrapper) {
-        let reactAppElement = React.createElement(MyCiCNews);
-        ReactDOM.render(reactAppElement, wrapper);
+// https://github.com/websemantics/awesome-ant-design
+
+function findElement<T extends HTMLElement = HTMLElement>(selector: string, cb: (el: T) => void) {
+    let el = document.querySelector(selector) as T;
+    if (el) {
+        cb(el);
     }
+}
+
+function attachReactApp(selector: string, fn: any) {
+    findElement(selector, (el) => {
+        let reactAppElement = React.createElement(fn);
+        ReactDOM.render(reactAppElement, el);
+    });
+}
+
+let reactApps = {
+    '#sandbox-app': Birthdays,
+    '#usermenu': UserMenu,
+};
+
+setTimeout(() => {
+    findElement('#jsx-app-news', (el) => {
+        let reactAppElement = React.createElement(MyCiCNews);
+        ReactDOM.render(reactAppElement, el);
+    });
+
 }, 500);
 
-let wrapper2 = document.getElementById('sandbox-app');
-if (wrapper2) {
-    let reactAppElement2 = React.createElement(Birthdays);
-    ReactDOM.render(reactAppElement2, wrapper2);
+for (let [selector, app] of Object.entries(reactApps)) {
+    attachReactApp(selector, app);
 }
-
-let usermenu = document.getElementById('usermenu');
-if (usermenu) {
-    let reactAppElement = React.createElement(UserMenu);
-    ReactDOM.render(reactAppElement, usermenu);
-}
-/*
-
-let wrapper3 = document.getElementById('simple-info');
-if (wrapper3) {
-    let reactAppElement3 = React.createElement(Me);
-    ReactDOM.render(reactAppElement3, wrapper3);
-}
-*/
