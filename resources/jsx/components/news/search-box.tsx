@@ -10,8 +10,13 @@ type Dispatch<T> = React.Dispatch<React.SetStateAction<string>>;
 export interface SearchBoxProps {
     loading: boolean;
     setSearchQuery: Dispatch<string>;
-    search: (li?: number | null) => void;
+    search: (li?: number | null, query?: string) => void;
     dateRange: any[];
+}
+
+interface DateValidRangesResult {
+    start: string;
+    end: string;
 }
 
 export function SearchBox({loading, setSearchQuery, search, dateRange}: SearchBoxProps) {
@@ -24,12 +29,12 @@ export function SearchBox({loading, setSearchQuery, search, dateRange}: SearchBo
                 onChange={debounce<(e: ChangeEvent<HTMLInputElement>) => void>((e) => {
                     setSearchQuery(e.target.value);
 
-                    search();
+                    search(null, e.target.value);
                 }, 500)}
             />
         </Col>
         <Col md={8}>
-            <Ajax<{ start: string, end: string }>
+            <Ajax<DateValidRangesResult>
                 url="/news/getDateValidRanges"
                 method="POST"
                 cache

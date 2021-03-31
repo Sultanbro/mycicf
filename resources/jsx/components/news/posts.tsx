@@ -54,11 +54,14 @@ export function Posts({}: PostsProps) {
                 })
             };
 
-            let search = (li: number | null = lastIndex) => {
+            let search = (li: number | null = lastIndex, query?: string) => {
+                if (!query) {
+                    query = searchQuery;
+                }
                 setLoading(true);
                 refetch({
                     previousData: response.data,
-                    data: {lastIndex: li, query: searchQuery},
+                    data: {lastIndex: li, query},
                     callback: (newData: any) => {
                         if (newData.length === 0) {
                             setHasMore(false);

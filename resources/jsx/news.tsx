@@ -31,9 +31,9 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 <Col md={6}>
                     <SuggestionBtn />
                 </Col>
-                <Col offset={12} md={6}>
+                <Col offset={10} md={8}>
                     <a href="/news">
-                        Вернуться к старому дизайну
+                        Вернуться к старому интерфейсу
                     </a>
                 </Col>
             </Row>
