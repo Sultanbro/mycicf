@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+
         /*
          * Package Service Providers...
          */
@@ -180,6 +181,7 @@ return [
          */
         App\Providers\KiasServiceProvider::class,
         App\Providers\NotificationServiceProvider::class,
+        App\Providers\CoordinationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
     ],

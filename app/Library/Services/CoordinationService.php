@@ -10,6 +10,8 @@ use Debugbar;
 use App\Post;
 use App\Notification;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Auth;
 /**+
  * Class CoordinationService
@@ -22,6 +24,11 @@ use Illuminate\Support\Facades\Auth;
 class CoordinationService implements CoordinationServiceInterface
 {
     private static $instance;
+    /**
+     * @var KiasServiceInterface|\Illuminate\Contracts\Foundation\Application
+     */
+    private $kias;
+
     public static function instance() {
         if (empty(self::$instance)) {
             self::$instance = new self();
@@ -202,8 +209,6 @@ class CoordinationService implements CoordinationServiceInterface
             )
         ];
 
-        //return response()->json($result)->withCallback($request->input('callback'));
-
         return $result;
     }
 
@@ -220,7 +225,6 @@ class CoordinationService implements CoordinationServiceInterface
                 'success' => $success,
                 'error' => (string)$error
             ];
-            //return response()->json($result)->withCallback($request->input('callback'));
 
             return $result;
     }
@@ -330,7 +334,7 @@ class CoordinationService implements CoordinationServiceInterface
     }
 
     public function DocRowList($class_isn, $doc_isn) {
-        try {
+
             $result = $this->kias->request('User_CicGetDocRowAttr', [
                 'CLASSISN' => $class_isn->class_isn,
                 'DOCISN' => $doc_isn->doc_isn,
@@ -363,16 +367,7 @@ class CoordinationService implements CoordinationServiceInterface
                     'doc_row_inner' => $doc_row_inner,
                 ];
             }
-            else
-                throw new \Exception('Данные не найдены', 400);
-        }
-        catch(\Exception $e) {
-            return response()->json([
-                'success'   => false,
-                'code'      => $e->getCode(),
-                'message'   => $e->getMessage()
-            ]);
-        }
+        return  $result;
     }
 
     public function attributeKeys(){
@@ -502,12 +497,12 @@ class CoordinationService implements CoordinationServiceInterface
                 $file = $fileType->file;
                 $extension = isset($fileType->fileExt) ? $fileType->fileExt : '';
                 $filename = 'signed_'.$fileType->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
-            } else {
+            } /*else {
 //                $file = $request->base64_encode($request->file);
 //                $contents = $file->get();
 //                $extension = $file->extension();
 //                $filename = mt_rand(1000000, 9999999).'.'.$extension;
-            }
+            }*/
 
             $results = $this->kias->saveAttachment(
                 $isn,
@@ -533,9 +528,9 @@ class CoordinationService implements CoordinationServiceInterface
         }
     }
 
-    public function sendNotifyService($users, $doc_no, $doc_type){
-        $users = explode(',', $users);
-        $client = new \GuzzleHttp\Client();
+    public function sendNotifyService($users_rec, $doc_no, $doc_type){
+        $users = explode(',', $users_rec);
+        $client = new Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
         (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
@@ -548,14 +543,17 @@ class CoordinationService implements CoordinationServiceInterface
             $model->doc_type = $doc_type;
             $model->sendDate = date('d.m.Y', time());
             $model->save();
-            $res = $client->request('POST', $url, [
-                'form_params' => [
-                    'isn' => $user,
-                    'docType' => $doc_type,
-                    'docNum' => $doc_no
-                ],
-                'verify' => false
-            ]);
+            try {
+                $res = $client->request('POST', $url, [
+                    'form_params' => [
+                        'isn' => $user,
+                        'docType' => $doc_type,
+                        'docNum' => $doc_no
+                    ],
+                    'verify' => false
+                ]);
+            } catch (GuzzleException $e) {
+            }
             if($res->getStatusCode() !== 200){
                 return false;
             }
@@ -574,16 +572,12 @@ class CoordinationService implements CoordinationServiceInterface
         $post = Post::where('user_isn',$isn)->whereBetween('created_at', [$from, $to])->first();
 
         if(!$post) {
-            try {
                 $new_post = new Post();
                 $new_post->user_isn = $isn;  //Даурен Рамазанов
                 $new_post->post_text = $contentT;
                 $new_post->pinned = 0;
                 $new_post->from_kias = 1;
                 $new_post->save();
-            } catch (\Exception $e) {
-                return false;
-            }
 
             $response = [
                 'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
@@ -603,15 +597,10 @@ class CoordinationService implements CoordinationServiceInterface
                 'comments' => [],
             ];
 
-            try {
                 broadcast(new NewPost([
                     'post' => $response,
                     'type' => Post::NEW_POST
                 ]));
-            } catch (\Exception $e) {
-                return false;
-            }
-
         }
         return 'пост успешно добавлен';
     }
@@ -626,32 +615,35 @@ class CoordinationService implements CoordinationServiceInterface
     }
 
     public function serviceCenterNotify($data) {
-
-        $users_isn = explode(',', $data['isn']);
-        $client = new \GuzzleHttp\Client();
+        $param = $data->isn;
+        $users_isn = explode(',', $param['isn']);
+        $client = new Client();
         $url = 'https://botan.kupipolis.kz/serviceCenterNotify';
 
         foreach ($users_isn as $isn) {
-            $res = $client->request('POST', $url, [
-                'form_params' => [
-                    'ISN'           => $isn,
-                    'serviceCenter' => $data['serviceCenter'],
-                    'customer'      => $data['customer'],
-                    'customerDept'  => $data['customerDept'],
-                    'requestNo'     => $data['requestNo'],
-                    'status'        => $data['status'],
-                    'subject'       => $data['subject'],
-                    'type'          => $data['type']
-                ],
-                'verify' => false
-            ]);
-            if($res->getStatusCode() !== 200){
-                return response()->json([
-                    'success' => false
+            try {
+                $result = $client->request('POST', $url, [
+                    'form_params' => [
+                        'ISN' => $isn,
+                        'serviceCenter' => $data['serviceCenter'],
+                        'customer' => $data['customer'],
+                        'customerDept' => $data['customerDept'],
+                        'requestNo' => $data['requestNo'],
+                        'status' => $data['status'],
+                        'subject' => $data['subject'],
+                        'type' => $data['type']
+                    ],
+                    'verify' => false
                 ]);
+            } catch (GuzzleException $e) {
+            }
+            if($result->getStatusCode() !== 200){
+                return $result = [
+                    'success' => false
+                ];
             }
         }
-        return $response =[
+        return $result =[
             'success' => true,
         ];
     }

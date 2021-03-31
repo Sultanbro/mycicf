@@ -2,8 +2,6 @@
 
 
 namespace App\Http\Controllers;
-use App\Library\Services\KiasServiceInterface;
-use App\Library\Services\CoordinationService;
 use Illuminate\Http\Request;
 use App\Library\Services\CoordinationServiceInterface;
 /**
@@ -25,56 +23,64 @@ class CoordinationController extends Controller
 
     public function getCoordinationList(Request $request)
     {
-        return $this->coordinationService->coordinationList($request);
+        $result = $this->coordinationService->coordinationList($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function getCoordinationInfo(Request $request)
     {
-        return $this->coordinationService->coordinationInfo($request);
+        $result = $this->coordinationService->coordinationInfo($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function getDocRowList(Request $request)
     {
-        //$param = $request->get('param');
-        return $this->coordinationService->docRowList($request);
+        $result = $this->coordinationService->docRowList($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function getAttachments(Request $request)
     {
-        return $this->coordinationService->attachmentsService($request);
+        $result = $this->coordinationService->attachmentsService($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function getAgreedCoordination(Request $request)
     {
-        return $this->coordinationService->agreedCoordination($request);
+        $result = $this->coordinationService->agreedCoordination($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function setCoordination(Request $request)
     {
-        return $this->coordinationService->coordinationService($request);
+        $result = $this->coordinationService->coordinationService($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function saveAttachment(Request $request)
     {
-        return $this->coordinationService->saveAttachmentService($request);
+        $result = $this->coordinationService->saveAttachmentService($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function sendNotify(Request $request)
     {
-        return $this->coordinationService->sendNotifyService($request);
+        $result = $this->coordinationService->sendNotifyService($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
     public function closeDecade(Request $request)
     {
-        return $this->coordinationService->closeDecadeService($request);
+        $result = $this->coordinationService->closeDecadeService($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 
@@ -91,7 +97,8 @@ class CoordinationController extends Controller
 
     public function serviceCenterNotify(Request $request)
     {
-        return $this->coordinationService->serviceCenterNotify($request);
+        $result = $this->coordinationService->serviceCenterNotify($request);
+        return response()->json($result)->withCallback($request->input('callback'));
     }
 
 }
