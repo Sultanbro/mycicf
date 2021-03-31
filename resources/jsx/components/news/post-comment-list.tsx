@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {DownOutlined} from '@ant-design/icons';
 import {PostComment} from './post-comment';
 import {PostCommentEntity} from '../ajax/types';
 import {Button, Col, Divider, Row} from 'antd';
