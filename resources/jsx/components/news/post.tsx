@@ -1,8 +1,7 @@
-import {Button, Card, Col, Divider, Modal, Row, Tag, Typography} from 'antd';
+import {Button, Card, Col, Divider, Modal, Row, Tag, Tooltip, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
-import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined, PushpinOutlined} from '@ant-design/icons';
-import {PostComment} from './post-comment';
+import {EditOutlined, EditFilled, CloseOutlined, PushpinOutlined,CommentOutlined} from '@ant-design/icons';
 import {CommentForm} from './comment-form';
 import {UserAvatar} from '../UserAvatar';
 import {PostPoll} from './post-poll';
@@ -17,11 +16,11 @@ import {UserName} from '../../UserName';
 export interface PostProps {
     post: PostEntity;
     onDeleted?: (post: PostEntity) => void;
+    onDateClicked?: (post: PostEntity) => void;
 }
 
 export function Post({
-                         post, onDeleted = () => {
-    }
+                         post, onDeleted = () => {}, onDateClicked
                      }: PostProps) {
     let [editing, setEditing] = useState(false);
     let [newCommentText, setNewCommentText] = useState('');
@@ -51,7 +50,7 @@ export function Post({
                 </Row>
                 <Row>
                     <Col>
-                        <Tag color="green">{post.date}</Tag>
+                        <Tag color="green" onClick={() => onDateClicked ? onDateClicked(post) : null}>{post.date}</Tag>
                         {post.edited ? <Tag color="blue" className="is-edited">
                             отредактировано
                         </Tag> : null}
@@ -140,11 +139,13 @@ export function Post({
             </Col>*/}
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}}>
-            <Button type="link" onClick={() => {
-                setShowCommentModal(true);
-            }}>
-                Комментарии ({comments.length || 0})
-            </Button>
+            <Tooltip title="Показать всю ветку комментариев">
+                <Button type="link" onClick={() => {
+                    setShowCommentModal(true);
+                }}>
+                    <CommentOutlined /> Комментарии ({comments.length || 0})
+                </Button>
+            </Tooltip>
         </Divider>
         <Row>
             <Col md={22} offset={2}>

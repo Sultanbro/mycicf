@@ -56,10 +56,10 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
             </Col>
             <Col md={20}>
                 <Row>
-                    <Col md={8}>
+                    <Col md={12}>
                         <UserName isn={comment.userISN} username={comment.fullname} />
                     </Col>
-                    <Col md={2} offset={6}>
+                    <Col md={2} offset={2}>
                         {
                             comment.isMine ?
                                 <CommentMenu comment={comment}
@@ -98,7 +98,7 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                 <Row>
                     <Col md={8}>
                         <Tooltip title="Не работает">
-                            <Button type="text" icon={<EnterOutlined />} onClick={() => {
+                            <Button type="link" icon={<EnterOutlined />} onClick={() => {
                                 onReply(comment);
                             }}>
                                 Ответить

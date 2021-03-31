@@ -1,5 +1,5 @@
 import {Post} from './post';
-import {Button, Col, Divider, List, notification, Row, Spin} from 'antd';
+import {Button, Col, Divider, List, Modal, notification, Row, Spin} from 'antd';
 import React, {useState} from 'react';
 import {CheckOutlined, EllipsisOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';

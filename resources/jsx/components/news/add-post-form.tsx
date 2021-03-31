@@ -106,7 +106,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                         <Divider type="vertical" />
 
                         <Tooltip placement="bottom"
-                                 title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент.">
+                                 title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к нему в любой момент.">
                             <QuestionCircleOutlined />
                         </Tooltip>
                     </Typography.Title>

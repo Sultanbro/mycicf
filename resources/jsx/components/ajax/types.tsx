@@ -37,6 +37,8 @@ export interface PostEntity {
     fullname: string;
     isn: string;
     postText: string;
+
+    showModal?: boolean;
 }
 
 export interface AjaxCacheSettings {

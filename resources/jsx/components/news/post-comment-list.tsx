@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {DownOutlined} from '@ant-design/icons';
 import {PostComment} from './post-comment';
 import {PostCommentEntity} from '../ajax/types';
 import {Button, Col, Row} from 'antd';
@@ -11,10 +12,8 @@ export interface PostCommentListProps {
 }
 
 export function PostCommentList({comments, onReply, onCommentDeleted, commentsLimit = 3}: PostCommentListProps) {
-    let [limit, setLimited] = useState(commentsLimit);
-
+    let [limit, setLimit] = useState(commentsLimit);
     let limitedComments = comments.slice(0, limit);
-
     let hasMoreComments = limitedComments.length < comments.length;
 
     return <Row>
@@ -35,9 +34,9 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
             </Row>
             <Row>
                 {hasMoreComments ? <Button type="link" onClick={() => {
-                    setLimited(limit + 5);
+                    setLimit(limit + 5);
                 }}>
-                    Показать больше
+                    Показать больше <DownOutlined />
                 </Button> : null}
             </Row>
         </Col>

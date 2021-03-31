@@ -66,6 +66,6 @@ if (!mix.inProduction()) {
             proxy: env.APP_URL,
             ui: false,
         })
-        .sourceMaps()
+        // .sourceMaps()
         .disableNotifications();
 }
