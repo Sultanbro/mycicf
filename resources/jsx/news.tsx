@@ -44,12 +44,12 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md={24}>
+                <Col md={10}>
                     {/*<ColleagueData isn={authUserIsn()} />*/}
 
-                    <Posts />
+                    {/*<Posts />*/}
 
-                    {/*<Birthdays />*/}
+                    <Birthdays />
 
                     {/*<Centcoins />*/}
 

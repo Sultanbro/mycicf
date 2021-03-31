@@ -19,7 +19,7 @@ let useLocalStorage = createUseLocalStorage('suggestion');
 
 function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
     const [content, setContent] = useLocalStorage('content', '');
-    return <Modal title="Предложить улучшение"
+    return <Modal title="Предложить идею"
            visible={visible}
            footer={null}
            onCancel={() => {

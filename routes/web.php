@@ -180,6 +180,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
+    Route::get('/getBirthdays2', 'SiteController@getBirthdays2')->name('getBirthdays');
 
     Route::get('eds/od', 'EdsController@edsOD');
 
