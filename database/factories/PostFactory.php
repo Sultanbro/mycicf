@@ -8,7 +8,7 @@ $factory->define(\App\Post::class, function (Faker $faker) {
     return [
         'user_isn' => \App\User::inRandomOrder()->first()->ISN,
         'post_text' => $faker->text(2000),
-        'pinned' => $faker->boolean,
+        'pinned' => 0,
         'from_kias' => $faker->boolean,
     ];
 });

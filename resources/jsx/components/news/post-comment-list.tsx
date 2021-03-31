@@ -7,10 +7,11 @@ export interface PostCommentListProps {
     comments: PostCommentEntity[];
     onReply(comment: PostCommentEntity): void;
     onCommentDeleted(commentId: number): void;
+    commentsLimit?: number;
 }
 
-export function PostCommentList({comments, onReply, onCommentDeleted}: PostCommentListProps) {
-    let [limit, setLimited] = useState(3);
+export function PostCommentList({comments, onReply, onCommentDeleted, commentsLimit = 3}: PostCommentListProps) {
+    let [limit, setLimited] = useState(commentsLimit);
 
     let limitedComments = comments.slice(0, limit);
 

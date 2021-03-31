@@ -1,4 +1,4 @@
-import {Button, Card, Col, Divider, Row, Tag, Typography} from 'antd';
+import {Button, Card, Col, Divider, Modal, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined, PushpinOutlined} from '@ant-design/icons';
@@ -19,10 +19,14 @@ export interface PostProps {
     onDeleted?: (post: PostEntity) => void;
 }
 
-export function Post({ post, onDeleted = () => { } }: PostProps) {
+export function Post({
+                         post, onDeleted = () => {
+    }
+                     }: PostProps) {
     let [editing, setEditing] = useState(false);
     let [newCommentText, setNewCommentText] = useState('');
     let [comments, setComments] = useState(post.comments);
+    let [showCommentsModal, setShowCommentModal] = useState(false);
     let [postText, setPostText] = useState(post.postText);
     let commentForm: React.Ref<any> = React.createRef<any>();
 
@@ -117,7 +121,6 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
                 })()}
             </Col>
         </Row>
-        <Divider type="horizontal" style={{margin: '12px 0'}} />
         <Row>
             <Col>
                 <PostLike post={post} />
@@ -136,7 +139,13 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
                 </span>
             </Col>*/}
         </Row>
-        <Divider type="horizontal" style={{margin: '12px 0'}}>Комментарии ({comments.length || 0})</Divider>
+        <Divider type="horizontal" style={{margin: '12px 0'}}>
+            <Button type="link" onClick={() => {
+                setShowCommentModal(true);
+            }}>
+                Комментарии ({comments.length || 0})
+            </Button>
+        </Divider>
         <Row>
             <Col md={22} offset={2}>
                 <PostCommentList comments={comments}
@@ -148,6 +157,28 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
                                          return old.filter((comment) => comment.commentId !== commentId);
                                      });
                                  }} />
+
+                <Modal visible={showCommentsModal}
+                       footer={null}
+                       onCancel={() => {
+                           setShowCommentModal(false)
+                       }}
+                       style={{width: 1000}}>
+                    <Divider type="horizontal" style={{margin: '12px 0'}}>
+                        Комментарии ({comments.length || 0})
+                    </Divider>
+                    <PostCommentList comments={comments}
+                                     commentsLimit={1000}
+                                     onReply={(comment) => {
+                                         setNewCommentText(`${comment.fullname}, `);
+                                     }}
+                                     onCommentDeleted={(commentId) => {
+                                         setComments((old) => {
+                                             return old.filter((comment) => comment.commentId !== commentId);
+                                         });
+                                     }} />
+
+                </Modal>
             </Col>
         </Row>
         <Row>

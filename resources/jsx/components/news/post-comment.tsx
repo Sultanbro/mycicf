@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag, Tooltip} from 'antd';
+import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag, Tooltip, Typography} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';
 import {PostCommentEntity} from '../ajax/types';
 import {Ajax} from '../ajax/ajax';
 import {FileButton} from './add-post-form';
+import {UserName} from '../../UserName';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
@@ -56,9 +57,7 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
             <Col md={20}>
                 <Row>
                     <Col md={8}>
-                        <a href={`/colleagues/${comment.userISN}/dossier`}>
-                            {comment.fullname}
-                        </a>
+                        <UserName isn={comment.userISN} username={comment.fullname} />
                     </Col>
                     <Col md={2} offset={6}>
                         {
@@ -110,7 +109,7 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
             </Col>
         </Row>
         <Row>
-            <Divider type="horizontal" style={{margin: '12px 0'}} />
+            <Divider type="horizontal" style={{margin: '10px 0'}} />
         </Row>
     </div>;
 }

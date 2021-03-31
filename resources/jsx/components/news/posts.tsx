@@ -36,8 +36,6 @@ export function Posts({}: PostsProps) {
                 // Use ORDER BY on backend instead
                 .sort((a, b) => +b.pinned - +a.pinned);
 
-            debugger;
-
             ///////
 
             let loadMore = () => {
