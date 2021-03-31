@@ -23,34 +23,34 @@ class CoordinationController extends Controller
         return view('coordination');
     }
 
-    public function getCoordinationList(Request $request, KiasServiceInterface $kias)
+    public function getCoordinationList(Request $request)
     {
-        return $this->coordinationService->coordinationList($request, $kias);
+        return $this->coordinationService->coordinationList($request);
     }
 
 
-    public function getCoordinationInfo(Request $request, KiasServiceInterface $kias)
+    public function getCoordinationInfo(Request $request)
     {
-        return $this->coordinationService->coordinationInfo($request, $kias);
+        return $this->coordinationService->coordinationInfo($request);
     }
 
 
-    public function getDocRowList(Request $request, KiasServiceInterface $kias)
+    public function getDocRowList(Request $request)
     {
         //$param = $request->get('param');
-        return $this->coordinationService->docRowList($request, $kias);
+        return $this->coordinationService->docRowList($request);
     }
 
 
-    public function getAttachments(Request $request, KiasServiceInterface $kias)
+    public function getAttachments(Request $request)
     {
-        return $this->coordinationService->attachmentsService($request, $kias);
+        return $this->coordinationService->attachmentsService($request);
     }
 
 
-    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias)
+    public function getAgreedCoordination(Request $request)
     {
-        return $this->coordinationService->agreedCoordination($request, $kias);
+        return $this->coordinationService->agreedCoordination($request);
     }
 
 
@@ -60,9 +60,9 @@ class CoordinationController extends Controller
     }
 
 
-    public function saveAttachment(Request $request, KiasServiceInterface $kias)
+    public function saveAttachment(Request $request)
     {
-        return $this->coordinationService->saveAttachmentService($request, $kias);
+        return $this->coordinationService->saveAttachmentService($request);
     }
 
 

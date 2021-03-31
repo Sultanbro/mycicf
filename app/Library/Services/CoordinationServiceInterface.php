@@ -3,8 +3,6 @@
 
 namespace App\Library\Services;
 
-
-
 /**
  * Interface CoordinationServiceInterface
  *
@@ -17,41 +15,40 @@ interface CoordinationServiceInterface
     /**
      * Получить список документов на согласование
      *
-     * @param $request string
-     * @param $kias string
+     *
      *
      *
      */
-    public function CoordinationList($request, $kias);
+    public function CoordinationList($ISN);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     * @param $kias string
+     * @param $ISN integer
+     *
      *
      *
      */
-    public function CoordinationInfo($request, $kias);
+    public function CoordinationInfo($docIsn);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     * @param $kias string
+     * @param $docIsn string
+     *
      *
      *
      */
 
-    public function CoordinationService($request);
+    public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution);
 
-    public function DocRowList($request, $kias);
+    public function DocRowList($class_isn, $doc_isn);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     * @param $kias string
+     * @param $class_isn string
+     * @param $doc_isn integer
      *
      *
      */
@@ -62,51 +59,53 @@ interface CoordinationServiceInterface
 
     public function getKVAttributes();
 
-    public function AttachmentsService($request, $kias);
+    public function AttachmentsService($docIsn);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     * @param $kias string
+     * @param $docIsn string
+     *
      *
      *
      */
-    public function AgreedCoordination($request, $kias);
+    public function AgreedCoordination($ISN);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     * @param $kias string
+     * @param $ISN string
+     *
      *
      *
      */
-    public function saveAttachmentService($request, $kias);
+    public function saveAttachmentService($fileType, $isn, $requestType);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     * @param $kias string
+     * @param $fileType string
+     * @param $isn string
+     * @param $requestType string
      *
      *
      */
-    public function sendNotifyService($request);
+    public function sendNotifyService($users, $doc_no, $doc_type);
 
     /**
      *
      *  getCoordinationInfo
-     * @param $request string
-     *
+     * @param $users string
+     *@param $doc_no string
+     *@param $doc_type string
      *
      */
-    public function closeDecadeService($request);
+    public function closeDecadeService($postText);
 
     /**
      *
-     *  getCoordinationInfo
-     * @param $request string
+     *
+     * @param $postText string
      *
      *
      */
@@ -120,9 +119,9 @@ interface CoordinationServiceInterface
      * @param  $no string
      *
      */
-    public function serviceCenterNotify($request);
+    public function serviceCenterNotify($data);
     /**
-     * @param $request string
+     * @param $data string
      *
      */
 

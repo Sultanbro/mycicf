@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Library\Services\CoordinationService;
 use App\Library\Services\CoordinationServiceInterface;
-use App\Library\Services\Kias;
-use App\Library\Services\Mocks\KiasMock;
+use App\Library\Services\Mocks\CoordinationServiceMock;
 use Illuminate\Support\ServiceProvider;
 use Debugbar;
 use Illuminate\Support\Facades\Auth;
@@ -27,15 +27,14 @@ class CoordinationServiceProvider extends ServiceProvider
                 }
                 if(config('kias.mock.enabled')){
                     Debugbar::info('Using mocked Kias Service');
-                    $kias = KiasMock::instance();
+                    $coordination = CoordinationServiceMock::instance();
                 }else{
                     Debugbar::info('Using real Kias Service');
-                    $kias = Kias::instance();
+                    $coordination = CoordinationService::instance();
                 }
-                $kias->init($session);
             }
             Debugbar::stopMeasure('CoordinationServiceInterface initialization');
-            return $kias;
+            return $coordination;
         });
     }
 
