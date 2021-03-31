@@ -6,6 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Новости | My.cic.kz</title>
     <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-29153373-9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-29153373-9');
+    </script>
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
     <!-- Bootstrap-->
@@ -29,14 +37,26 @@
     <script src="{{asset('js/app.js')}}"></script>
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
-<body>
+<body >
 @include('layouts.header')
-<main class="flex-row">
+<main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
-        <div class="col-md-8 offset-2" id="jsx-app-news"></div>
+        @include('layouts.sidebar')
+        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+            <div id="jsx-app-news">
 
-        <div id="auth-user-isn" hidden>{{Auth::user()->ISN}}</div>
-        <div id="auth-user-name" hidden>{{Auth::user()->full_name}}</div>
+            </div>
+
+            <div id="auth-user-isn" hidden>{{Auth::user()->ISN}}</div>
+            <div id="auth-user-name" hidden>{{Auth::user()->full_name}}</div>
+        </div>
+        <div class="col-md-2-sm-3-lg mt-3">
+            <news-birthday></news-birthday>
+            <div>
+                <Countdown end="December 31, 2021"></Countdown>
+            </div>
+        </div>
+        {{--RIGHT SIDE BAR GOES HERE--}}
     </div>
 </main>
 {{--FOOTER GOES HERE--}}

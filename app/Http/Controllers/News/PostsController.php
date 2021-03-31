@@ -361,6 +361,11 @@ class PostsController extends Controller
         return view('news');
     }
 
+    public function getViewBeta()
+    {
+        return view('news-beta');
+    }
+
     public function senateVote(Request $request)
     {
         $answers = $request->answers;

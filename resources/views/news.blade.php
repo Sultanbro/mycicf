@@ -43,6 +43,13 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+
+            <a href="/news/beta" style="padding: 10px; display: block; text-align: right;">
+                Попробовать новый интерфейс Новостей
+            </a>
+
+            <hr>
+
             <post :isn="{{Auth::user()->ISN}}"></post>
         </div>
         <div class="col-md-2-sm-3-lg mt-3">

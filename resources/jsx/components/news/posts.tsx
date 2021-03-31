@@ -29,6 +29,7 @@ export function Posts({}: PostsProps) {
     let [hasMore, setHasMore] = useState(true);
     let [searchQuery, setSearchQuery] = useState<string>('');
     let [dateRange, setDateRange] = useState<any[]>([]);
+
     return <PostsAjax>
         {({response, refetch}) => {
             let loadMore = () => {
@@ -106,20 +107,22 @@ export function Posts({}: PostsProps) {
                                 loadMore={loadMore}>
                                 <List
                                     dataSource={response.data}
-                                    renderItem={item => (
-                                        <List.Item key={item.postId}>
-                                            <Col md={24}>
-                                                <Post post={item}
-                                                      onDeleted={(post) => {
-                                                          notification.info({
-                                                              message: 'Пост удалён',
-                                                              icon: <CheckOutlined />
-                                                          });
-                                                          search(null);
-                                                      }} />
-                                            </Col>
-                                        </List.Item>
-                                    )}
+                                    renderItem={item => {
+                                        return (
+                                            <List.Item key={item.postId}>
+                                                <Col md={24}>
+                                                    <Post post={item}
+                                                          onDeleted={(post) => {
+                                                              notification.info({
+                                                                  message: 'Пост удалён',
+                                                                  icon: <CheckOutlined/>
+                                                              });
+                                                              search(null);
+                                                          }}/>
+                                                </Col>
+                                            </List.Item>
+                                        );
+                                    }}
                                 >
                                     {loading && hasMore && (
                                         <div className="demo-loading-container">

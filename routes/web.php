@@ -251,6 +251,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             'as'     => 'news',
         ], function () {
 // TODO Постепенно перенести сюда все роуты связанные с этой группой
+            Route::get('/beta', 'News\\PostsController@getViewBeta')->name('.index');
+
             Route::get('/', 'News\\PostsController@getView')->name('.index');
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
             Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
