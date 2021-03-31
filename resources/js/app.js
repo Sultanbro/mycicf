@@ -202,6 +202,12 @@ Vue.component('management-employee', require('./components/document/management-e
 
 Vue.component('management-application', require('./components/document/management-application').default);
 
+Vue.component('application-blank', require('./components/document/application-blank').default);
+
+Vue.component('disciplinary-action', require('./components/document/disciplinary-action').default);
+
+Vue.component('management-business-trip', require('./components/document/management-business-trip').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

@@ -334,4 +334,10 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function userCicChangeDocCoordination($row);
+
+    /**
+     * @param $tarifIsn
+     * @return mixed
+     */
+    public function userCicGetDictiList($tarifIsn);
 }

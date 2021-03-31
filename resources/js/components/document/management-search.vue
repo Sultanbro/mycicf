@@ -12,13 +12,51 @@
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-primary d-inline-flex align-items-center padding-block"
-                                @click="searchDocument()">
+                                data-toggle="modal" data-target="#searchMySZ"
+                                @click="searchMySZ()">
                             Поиск <i class="fa fa-search search"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+<!--        SearchMySZ-->
+        <div class="modal fade" id="searchMySZ" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div>
+                            <span class="color-blue-standart">Список СЗ и Заявлении</span>
+                        </div>
+                        <div v-if="documentList.length === 0">
+                            <span class="text-warning">...У Вас нет документа для поиска</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="table-responsive-sm">
+                                <table class="table table-bordered table-striped">
+                                    <tbody class="date-color">
+                                    <tr v-for="(list, index) in documentList" :key="index">
+                                        <th scope="row">{{index + 1}}</th>
+                                        <td>
+                                            <button class="btn-third" @click="showDocument(list.classisn, list.docisn)">{{list.docisn}}</button>
+                                        </td>
+                                        <td>{{list.classisn}}</td>
+                                        <td>{{list.classname}}</td>
+                                        <td>{{list.id}}</td>
+                                        <td>{{list.docdate}}</td>
+                                        <td>{{list.status}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        SearchMySZ-->
 
         <!-- MODAL -->
         <div class="modal fade" id="createDocument" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel"
@@ -62,7 +100,11 @@
                 caretClass: 'fa-chevron-down',
                 caretColor: 'color-black',
                 documents: {},
+                documentList: {},
                 none: false,
+                list: false,
+                index: 0,
+
             }
         },
         mounted() {
@@ -72,15 +114,32 @@
         },
         methods: {
             isnShow(isn, index) {
+                this.preloader(true);
                 this.axios.get(`/document/${isn}`).then(response => {
                     location.href = `/document/${isn}`
-                    console.log(response)
+                    this.preloader(false);
+                })
+                this.preloader(false);
+            },
+            showDocument(isn, docisn) {
+                this.axios.get(`/document/${isn}/${docisn}`).then(response => {
+                        location.href = `/document/${isn}/${docisn}`
                 })
             },
             createDocument: function (e) {
                 this.axios.post("/getDocument").then((response) => {
                     if (response.data.success) {
                         this.documents = response.data.result;
+                    } else {
+                        alert(response.data.error)
+                    }
+                })
+            },
+            searchMySZ: function(e) {
+                this.axios.get("/showMySZ").then((response) => {
+                    if (response.data.success) {
+                        this.documentList = response.data.itens;
+                        this.list = true;
                     } else {
                         alert(response.data.error)
                     }
@@ -133,6 +192,15 @@
 
     .btn:hover {
         font-size: larger; /* blue */
+    }
+
+    .btn-third {
+        border: none;
+        background-color: inherit;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-block;
     }
 
     .color-blue {

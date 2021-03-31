@@ -6,9 +6,7 @@ use App\Dicti;
 use App\Helpers\Helper;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
-use App\Refund;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
 use App\Http\Controllers\SiteController;
 use DB;
 use mysql_xdevapi\Result;
@@ -33,47 +31,52 @@ class DocumentManagementController extends Controller
 
     public function index()
     {
-        //$isn     = 1445769; //$request->isn;
-        //$dateBeg = '28.09.2020'; //(new \DateTime())->format('d.m.Y');
-        //$dateEnd = '01.10.2020'; //(new \DateTime())->modify('+ 7 days')->format('d.m.Y');
-        //try {
-        //    $getDocuments = $this->kiasService->getMySz($isn, $dateBeg, $dateEnd);
-        //    dd($getDocuments);
-        //    $inspections    = Helper::simpleXmlToArray($getInspections->Request);
-        //} catch (\Exception $e) {
-        //    return response()->json([
-        //        'success' => false,
-        //        'error'   => $e->getMessage(),
-        //    ]);
-        //}
         return view('document.management.index');
     }
 
-    public function show(Request $request, KiasServiceInterface $kias)
+    public function showMySZ(Request $request, KiasServiceInterface  $kias)
     {
-        //date_default_timezone_set('UTC');
+        $error = "";
         $today = date('d.m.Y');
-        $documents = $kias->getMySZ(auth()->user()->ISN, '17.01.2021', $today, '2516'); //2516 - в работе
+        $dateBeg = date("d.m.Y", strtotime("-15 days"));
+        $documents = $kias->getMySZ(auth()->user()->ISN, $dateBeg, $today, '2516'); //2516 - в работе
 //        dd($documents);
-        $itens = [];
+        if($documents->error){
+            $success = false;
+            $error .= (string)$documents->error->text;
+            $result = [
+                'success' => $success,
+                'error' => (string)$error
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        $items = [];
         if(isset($documents->SZ->row)) {
             foreach ($documents->SZ->row as $iten) {
-                if ($iten->classisn == $request->isn) {
-                    $itens = $iten;
-                }
+                    $items[] = $iten;
             }
         }
         if(isset($documents->Zayav->row)){
             foreach($documents->Zayav->row as $iten) {
-                if($iten->classisn == $request->isn){
-                    $itens = $iten;
-                }
+                    $items[] = $iten;
             }
         }
-//        dd($request->isn);
+        $itens = array_slice($items, -10, 10);
+        $responseData = [
+            'itens' => $itens,
+            'success' => true,
+        ];
+        return response()->json($responseData);
+    }
+
+    public function show(Request $request, KiasServiceInterface $kias)
+    {
+        $today = date('d.m.Y');
+//        dd($request->docisn);
+
         $show = $kias->request('User_CicGetDocRowAttr', [
             'CLASSISN' => $request->isn,
-            'DOCISN' => '',
+            'DOCISN' => $request->docisn ? $request->docisn : '',
         ]);
 //        dd($show);
         $result = [];
@@ -110,22 +113,30 @@ class DocumentManagementController extends Controller
                     'classisn' => empty($docrow->classisn) ? null : get_object_vars($docrow->classisn)[0],
                     'rowisn' => empty($docrow->rowisn) ? null : get_object_vars($docrow->rowisn)[0],
                     'val' => empty($docrow->val) ? null : get_object_vars($docrow->val)[0],
-                    'value' => empty(get_object_vars($docrow->value)) ? null : $docrow->value,
-                    'value_name' => empty(get_object_vars($docrow->value_name)) ? null : $docrow->value_name,
+                    'value' => empty(get_object_vars($docrow->value)) ? null : get_object_vars($docrow->value)[0],
+                    'value_name' => empty(get_object_vars($docrow->value_name)) ? null : empty(get_object_vars($docrow->value_name)),
                 ];
             }
         }
-//        dd($docrows);
+
+            $docParam = [
+                'button1caption' => get_object_vars($show->DocParam->row->showbutton1)[0],
+                'button2caption' => get_object_vars($show->DocParam->row->showbutton2)[0],
+                'button3caption' => get_object_vars($show->DocParam->row->showbutton3)[0],
+                'showSubject' => get_object_vars($show->DocParam->row->showsubject)[0],
+                'showRemark' => get_object_vars($show->DocParam->row->showremark)[0],
+                'showRemark2' => get_object_vars($show->DocParam->row->showremark2)[0],
+                'showTable' => get_object_vars($show->DocParam->row->showtable)[0],
+            ];
 
         $className = get_object_vars($show->Doc->row->CLASSNAME)[0];
         $docdate = isset($itens->docdate) ? get_object_vars($itens->docdate) : $today;
         $docdate = isset($itens->docdate) ? date('m.d.Y',strtotime($docdate[0])) : $docdate;
         $emplisn = get_object_vars($show->Doc->row->EMPLISN)[0];
         $statusName = get_object_vars($show->Doc->row->STATUSNAME)[0];
-//        dd($statusName);
         $results = array_merge([
-            'classisn' => $request->isn,
-            'parentClass' => $request->Parentclass,
+            'classisn' => get_object_vars($show->Doc->row->CLASSISN)[0],
+            'parentClass' => get_object_vars($show->Parentclass)[0],
             'emplisn' => $emplisn,
             'docdate' => $docdate ?? $today,
             'className' => $className,
@@ -140,9 +151,10 @@ class DocumentManagementController extends Controller
             'docrows' => $docrows
         ], [
             'contragent' => $contragent,
+        ], [
+            'docParam' => $docParam
             ]
         );
-//        dd($results);
 
         return view('document.management.show', compact('results'));
     }
@@ -176,18 +188,12 @@ class DocumentManagementController extends Controller
         $result = [];
         foreach($isns as $isn) {
             $headData = Dicti::where('isn', $isn)->first();
-//->where('code', '0')
             array_push($result, [
                 'isn' => $headData['isn'],
                 'fullname' => $headData['fullname'],
                 'parent_isn' => $headData['parent_isn'],
                 'children' => $this->getSearchChild($headData),
             ]);
-//            $result = [
-//                'success' => $this->success,
-//                'error' => $this->error,
-//                'result' => $result,
-//            ];
         }
         $responseData = [
           'result' => $result,
@@ -211,15 +217,6 @@ class DocumentManagementController extends Controller
         return $result;
     }
 
-    public function documents()
-    {
-        $docIsn = 29403340;
-        $classIsn = 800731;
-        $documents = $this->kiasService->getDocument($docIsn, $classIsn);
-        dd($documents);
-
-    }
-
     public function getUserInfo(Request $request){
         $users = Branch::where('has_child',0)->get();
         $result = [];
@@ -232,8 +229,430 @@ class DocumentManagementController extends Controller
         ]);
     }
 
+    public function getMissingProduct(Request $request){
+        $result = [];
+            $headProduct = Dicti::where('parent_isn', 13)->where('n_kids', 1)->get();
+            foreach($headProduct as $product)
+            array_push($result, [
+                'id' => $product['isn'],
+                'label' => $product['fullname'],
+                'parent_isn' => $product['parent_isn'],
+                'children' => $this->getSearchChildProduct($product),
+            ]);
+        $missingProducts = [
+            'result' => $result,
+            'success' => true,
+        ];
+        return response()->json($missingProducts);
+    }
+
+    public function getSearchChildProduct($product){
+        $result = [];
+        $child = Dicti::where('parent_isn', $product['isn'])->get();
+//        dd($child);
+        foreach($child as $branchData){
+            array_push($result, [
+                'id' => $branchData['isn'],
+                'label' => $branchData['fullname'],
+                'parent_isn' => $product['isn'],
+            ]);
+        }
+        return $result;
+    }
+
+    public function getUnitGroup(Request $request){
+        $result = [];
+        $headProduct = Dicti::where('parent_isn', 13)->where('n_kids', 1)->get();
+//            dd($headProduct);
+        foreach($headProduct as $product)
+            array_push($result, [
+                'id' => $product['isn'],
+                'label' => $product['fullname'],
+                'parent_isn' => $product['parent_isn'],
+                'children' => $this->getSearchChildUnit($product),
+            ]);
+        $missingProducts = [
+            'result' => $result,
+            'success' => true,
+        ];
+        return response()->json($missingProducts);
+    }
+
+    public function getSearchChildUnit($product){
+        $result = [];
+        $child = Dicti::where('parent_isn', $product['isn'])->get();
+//        dd($child);
+        foreach($child as $branchData){
+            array_push($result, [
+                'id' => $branchData['isn'],
+                'label' => $branchData['fullname'],
+                'parent_isn' => $product['isn'],
+            ]);
+        }
+        return $result;
+    }
+
+    public function getCostType(Request $request){
+        $types = Dicti::where('parent_isn',222517)->get();
+        $result = [];
+        $result2 = [];
+        $result3 = [];
+        foreach($types as $costType){
+            if($costType['n_kids'] === 1){
+                array_push($result, [
+                    'id' => $costType['isn'],
+                    'label' => $costType['fullname'],
+                    'parent_isn' => $costType['parent_isn'],
+                    'children' => $this->getSearchChildUnit($costType),
+                ]);
+            }
+            if($costType['n_kids'] === 0){
+                array_push($result, [
+                    'id' => $costType['isn'],
+                    'label' => $costType['fullname'],
+                    'parent_isn' => $costType['parent_isn'],
+                ]);
+            }
+        }
+        array_push($result3, $result, $result2);
+//        dd($result3);
+        $costTypes = [
+            'result' => $result,
+            'success' => true,
+        ];
+        return response()->json($costTypes);
+    }
+
+    public function getSearchChildCost($costType){
+        $result = [];
+        $child = Dicti::where('parent_isn', $costType['isn'])->get();
+        foreach($child as $branchData){
+            array_push($result, [
+                'id' => $branchData['isn'],
+                'label' => $branchData['fullname'],
+                'parent_isn' => $costType['isn'],
+            ]);
+        }
+        return $result;
+    }
+
+    public function getProxyType(Request $request){
+        $proxys = Dicti::where('parent_isn',804341)->get();
+        $result = [];
+        foreach($proxys as $proxy){
+            $proxy['isn'] = $proxy->isn;
+            $proxy['fullname'] = $proxy->fullname;
+            $proxy['parent_isn'] = $proxy->parent_isn;
+            $result[] = [$proxy['isn'],$proxy['fullname'],$proxy['parent_isn']];
+        }
+        return response()->json([
+            'proxyTypes' => $result
+        ]);
+    }
+
+    public function getDailyMc(Request $request){
+        $MC = Dicti::where('parent_isn',1042681)->get();
+        $result = [];
+
+        foreach($MC as $daily){
+            $daily['isn'] = $daily->isn;
+            $daily['fullname'] = $daily->fullname;
+            $daily['parent_isn'] = $daily->parent_isn;
+            $result[] = [$daily['isn'],$daily['fullname'],$daily['parent_isn']];
+        }
+        return response()->json([
+            'dailyMC' => $result
+        ]);
+    }
+
+    public function getDuty(Request $request){
+        $dutys = Dicti::where('parent_isn',2147381)->get();
+        $result = [];
+
+        foreach($dutys as $duty){
+            $duty['isn'] = $duty->isn;
+            $duty['fullname'] = $duty->fullname;
+            $duty['parent_isn'] = $duty->parent_isn;
+            $result[] = [$duty['isn'],$duty['fullname'],$duty['parent_isn']];
+        }
+        return response()->json([
+            'duties' => $result
+        ]);
+    }
+
+    public function getHelpTo(Request $request){
+        $helps = Dicti::where('parent_isn',1737181)->get();
+        $result = [];
+
+        foreach($helps as $help){
+            $help['isn'] = $help->isn;
+            $help['fullname'] = $help->fullname;
+            $help['parent_isn'] = $help->parent_isn;
+            $result[] = [$help['isn'],$help['fullname'],$help['parent_isn']];
+        }
+        return response()->json([
+            'helpTo' => $result
+        ]);
+    }
+
+    public function getSzTopic(Request $request){
+        $topics = Dicti::where('parent_isn',1326291)->get();
+        $result = [];
+
+        foreach($topics as $topic){
+            $topic['isn'] = $topic->isn;
+            $topic['fullname'] = $topic->fullname;
+            $topic['parent_isn'] = $topic->parent_isn;
+            $result[] = [$topic['isn'],$topic['fullname'],$topic['parent_isn']];
+        }
+        return response()->json([
+            'topicSZ' => $result
+        ]);
+    }
+
+    public function getPaymentForm(Request $request){
+        $payments = Dicti::where('parent_isn',39)->get();
+        $result = [];
+
+        foreach($payments as $payment){
+            $payment['isn'] = $payment->isn;
+            $payment['fullname'] = $payment->fullname;
+            $payment['parent_isn'] = $payment->parent_isn;
+            $result[] = [$payment['isn'],$payment['fullname'],$payment['parent_isn']];
+        }
+        return response()->json([
+            'paymentForms' => $result
+        ]);
+    }
+
+    public function getPaymentOrder(Request $request){
+        $payments = Dicti::where('parent_isn',2999)->get();
+        $result = [];
+
+        foreach($payments as $order){
+            $order['isn'] = $order->isn;
+            $order['fullname'] = $order->fullname;
+            $order['parent_isn'] = $order->parent_isn;
+            $result[] = [$order['isn'],$order['fullname'],$order['parent_isn']];
+        }
+        return response()->json([
+            'paymentOrders' => $result
+        ]);
+    }
+
+    public function getServicesFor(Request $request){
+        $payments = Dicti::where('parent_isn',2087201)->get();
+        $result = [];
+
+        foreach($payments as $service){
+            $service['isn'] = $service->isn;
+            $service['fullname'] = $service->fullname;
+            $service['parent_isn'] = $service->parent_isn;
+            $result[] = [$service['isn'],$service['fullname'],$service['parent_isn']];
+        }
+        return response()->json([
+            'servicesFor' => $result
+        ]);
+    }
+
+    public function getReason(Request $request){
+        $res = Dicti::where('parent_isn',1113561)->get();
+        $result = [];
+
+        foreach($res as $reason){
+            $reason['isn'] = $reason->isn;
+            $reason['fullname'] = $reason->fullname;
+            $reason['parent_isn'] = $reason->parent_isn;
+            $result[] = [$reason['isn'],$reason['fullname'],$reason['parent_isn']];
+        }
+        return response()->json([
+            'reasons' => $result
+        ]);
+    }
+
+    public function getTopicEconomicActivity(Request $request){
+        $res = Dicti::where('parent_isn',1872641)->get();
+        $result = [];
+
+        foreach($res as $economic){
+            $economic['isn'] = $economic->isn;
+            $economic['fullname'] = $economic->fullname;
+            $economic['parent_isn'] = $economic->parent_isn;
+            $result[] = [$economic['isn'],$economic['fullname'],$economic['parent_isn']];
+        }
+        return response()->json([
+            'economicActivity' => $result
+        ]);
+    }
+
+    public function getVehicleModel(Request $request){
+        $res = Dicti::where('parent_isn',2004861)->get();
+        $result = [];
+
+        foreach($res as $vehicle){
+            $vehicle['isn'] = $vehicle->isn;
+            $vehicle['fullname'] = $vehicle->fullname;
+            $vehicle['parent_isn'] = $vehicle->parent_isn;
+            $result[] = [$vehicle['isn'],$vehicle['fullname'],$vehicle['parent_isn']];
+        }
+        return response()->json([
+            'vehicleModel' => $result
+        ]);
+    }
+
+    public function getCarStateNumber(Request $request){
+        $cars = Dicti::where('parent_isn',2004901)->get();
+        $result = [];
+
+        foreach($cars as $car){
+            $car['isn'] = $car->isn;
+            $car['fullname'] = $car->fullname;
+            $vehicle['parent_isn'] = $car->parent_isn;
+            $result[] = [$car['isn'],$car['fullname'],$car['parent_isn']];
+        }
+        return response()->json([
+            'stateNumbers' => $result
+        ]);
+    }
+
+    public function getViolationComposition(Request $request){
+        $violations = Dicti::where('parent_isn',2004731)->get();
+        $result = [];
+
+        foreach($violations as $violation){
+            $violation['isn'] = $violation->isn;
+            $violation['fullname'] = $violation->fullname;
+            $violation['parent_isn'] = $violation->parent_isn;
+            $result[] = [$violation['isn'],$violation['fullname'],$violation['parent_isn']];
+        }
+        return response()->json([
+            'violationComposition' => $result
+        ]);
+    }
+
+    public function getAutoColor(Request $request){
+        $colors = Dicti::where('parent_isn',2028)->get();
+        $result = [];
+
+        foreach($colors as $color){
+            $color['isn'] = $color->isn;
+            $color['fullname'] = $color->fullname;
+            $color['parent_isn'] = $color->parent_isn;
+            $result[] = [$color['isn'],$color['fullname'],$color['parent_isn']];
+        }
+        return response()->json([
+            'autoColors' => $result
+        ]);
+    }
+
+    public function getReasonDeprivation(Request $request){
+        $res = Dicti::where('parent_isn',1446391)->get();
+        $result = [];
+
+        foreach($res as $reason){
+            $reason['isn'] = $reason->isn;
+            $reason['fullname'] = $reason->fullname;
+            $reason['parent_isn'] = $reason->parent_isn;
+            $result[] = [$reason['isn'],$reason['fullname'],$reason['parent_isn']];
+        }
+        return response()->json([
+            'reasonDeprivation' => $result
+        ]);
+    }
+
+    public function getTypeSzAhd(Request $request){
+        $res = Dicti::where('parent_isn',812801)->get();
+        $result = [];
+
+        foreach($res as $reason){
+            $reason['isn'] = $reason->isn;
+            $reason['fullname'] = $reason->fullname;
+            $reason['parent_isn'] = $reason->parent_isn;
+            $result[] = [$reason['isn'],$reason['fullname'],$reason['parent_isn']];
+        }
+        return response()->json([
+            'typeAhd' => $result
+        ]);
+    }
+
+    public function getTypeSzMain(Request $request){
+        $res = Dicti::where('parent_isn',1872651)->get();
+        $result = [];
+
+        foreach($res as $reason){
+            $reason['isn'] = $reason->isn;
+            $reason['fullname'] = $reason->fullname;
+            $reason['parent_isn'] = $reason->parent_isn;
+            $result[] = [$reason['isn'],$reason['fullname'],$reason['parent_isn']];
+        }
+        return response()->json([
+            'typeMain' => $result
+        ]);
+    }
+
+    public function getDelegateAuthority(Request $request){
+        $res = Dicti::where('parent_isn',997421)->get();
+        $result = [];
+
+        foreach($res as $authority){
+            $authority['isn'] = $authority->isn;
+            $authority['fullname'] = $authority->fullname;
+            $authority['parent_isn'] = $authority->parent_isn;
+            $result[] = [$authority['isn'],$authority['fullname'],$authority['parent_isn']];
+        }
+        return response()->json([
+            'authorities' => $result
+        ]);
+    }
+
+    public function getRelational(Request $request){
+        $relations = Dicti::where('parent_isn',50)->get();
+        $result = [];
+
+        foreach($relations as $relation){
+            $relation['isn'] = $relation->isn;
+            $relation['fullname'] = $relation->fullname;
+            $relation['parent_isn'] = $relation->parent_isn;
+            $result[] = [$relation['isn'],$relation['fullname'],$relation['parent_isn']];
+        }
+        return response()->json([
+            'relationTo' => $result
+        ]);
+    }
+
+    public function getCountriesList(Request $request){
+        $countries = Dicti::where('parent_isn',9434)->get();
+        $result = [];
+
+        foreach($countries as $country){
+            $country['isn'] = $country->isn;
+            $country['fullname'] = $country->fullname;
+            $country['parent_isn'] = $country->parent_isn;
+            $result[] = [$country['isn'],$country['fullname'],$country['parent_isn']];
+        }
+        return response()->json([
+            'countriesList' => $result
+        ]);
+    }
+
+    public function getCalculationType(Request $request){
+        $types = Dicti::where('parent_isn',11360)->get();
+        $result = [];
+
+        foreach($types as $type){
+            $type['isn'] = $type->isn;
+            $type['fullname'] = $type->fullname;
+            $type['parent_isn'] = $type->parent_isn;
+            $result[] = [$type['isn'],$type['fullname'],$type['parent_isn']];
+        }
+        return response()->json([
+            'calculationTypes' => $result
+        ]);
+    }
+
     public function saveDocument(Request $request, KiasServiceInterface $kias)
     {
+//        dd($request);
         $error = "";
         $request->result = [];
         foreach ($request->results["result1"] as $result1){
@@ -282,6 +701,7 @@ class DocumentManagementController extends Controller
         $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs];
         if(!isset($request->status)){
             $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
+//            dd($document);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];
             }else{
@@ -301,7 +721,6 @@ class DocumentManagementController extends Controller
                 'success' => true,
             ]);
         } else {
-//            dd($request->status);
             $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];
@@ -329,10 +748,8 @@ class DocumentManagementController extends Controller
         $error = "";
         $docIsn = $request->docIsn;
         $button = $request->button;
-//        dd($request);
         if(isset($request->docIsn)){
             $buttonClick = $kias->buttonClick($docIsn, $button);
-//            dd($buttonClick);
             if($buttonClick->error){
                 $success = false;
                 $error .= (string)$buttonClick->error->text;
@@ -351,23 +768,6 @@ class DocumentManagementController extends Controller
                 'DOCISN' => $listDocIsn,
                 'success' => true,
             ]);
-            if(isset($buttonClick->error)){
-                $success = false;
-                $error = (string)$buttonClick->error->text;
-            } else {
-//                foreach ($request->result['docrows'] as $info) {
-//                    $refund = Refund::find($info['id']);
-//                    if ($info['confirmed'] == 1) {
-//                        $refund->confirmed = 1;
-//                        $refund->main_doc_isn = $save->DocISN;
-//                    } else {
-//                        $refund->iin_fail = 1;
-//                    }
-//                    if ($refund->save()) {
-//                        $success = true;
-//                    }
-//                }
-            }
         } else{
             $docIsn = $request->docIsn ? '' : $request->docIsn;
             $buttonClick = $kias->buttonClick($docIsn, $button);
@@ -383,7 +783,6 @@ class DocumentManagementController extends Controller
         $status1 = [
             'В работе' => '2516', 'На подписи' => '2522', 'Подписан' => '2518', 'Оплачен' => '2517', 'Аннулирован' => '2515',
         ];
-//        dd($request);
         $docs = $kias->getOrSetDocs($request->docIsn, 1, $request->status);
 //        dd($docs);
             if($docs->error){
@@ -439,9 +838,7 @@ class DocumentManagementController extends Controller
                     ];
                 }
             }
-//            dd($row);
             $changeCoordination = $kias->userCicChangeDocCoordination($row);
-//            dd($changeCoordination);
             if($changeCoordination->error){
                 $success = false;
                 $error .= (string)$changeCoordination->error->text;
@@ -455,7 +852,5 @@ class DocumentManagementController extends Controller
                 'result' => $changeCoordination,
                 'success' => true,
             ]);
-//        }
-
     }
 }

@@ -1,109 +1,46 @@
 <template>
-    <div class="application-not-administrative-day">
-        <div class="pt-4">
-            <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-5 pr-5 pt-4 pb-3">
-                <div class="flex-row jc-sb mt-3 mb-3">
-                    <div class="row">
-                        <div class="offset-md-7 col-md-5">
-                            <div class="form-inline pull-right mb-4">
-                                <label for="contractor" class="left">Контрагент:</label>
-                                <input type="text" name="contractor" id="contractor" value="Иванов И.В"
-                                       class="form-control" readonly>
-                            </div>
-                            <div class="form-inline pull-right mb-4">
-                                <label for="addressee" class="left">Адресат:</label>
-                                <input type="text" name="addressee" id="addressee" value="Омаров Б.Т"
-                                       class="form-control" readonly>
-                            </div>
-                            <div class="form-inline pull-right mb-4">
-                                <label for="executor" class="left">Исполнитель:</label>
-                                <input type="text" name="executor" id="executor" value="Борисов Б.Т"
-                                       class="form-control" readonly>
-                            </div>
-                            <div class="form-inline pull-right mb-4">
-                                <label for="date" class="left">Дата рег.</label>
-                                <input type="text" name="date" id="date" value="20.09.2020" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="form-inline pull-right mb-4">
-                                <label for="numberDocument" class="left">Номер:</label>
-                                <input type="text" name="numberDocument" id="numberDocument" value="ЗТ-11-13/15"
-                                       class="form-control" readonly>
-                            </div>
-                            <div class="form-inline pull-right mb-4">
-                                <label for="status" class="left">Статус:</label>
-                                <input type="text" name="status" id="status" value="На подписи" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="form-inline pull-right mb-4">
-                                <label for="stage" class="left">Стадия:</label>
-                                <input type="text" name="stage" id="stage" value="На подписи" class="form-control"
-                                       readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="title text-align-center pt-5">Заявление не административный день</div>
-                            <div class="form-group">
-                                <label for="remark">Примечание</label>
-                                <textarea name="remark" id="remark" cols="30" rows="5"
-                                          class="form-control"></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="dateBegin">Дата начала</label>
-                                        <input type="date" name="dateBegin" id="dateBegin" value="" class="form-control"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="offset-md-4 col-md-4">
-                                    <div class="form-group">
-                                        <label for="dateEnd">Дата окончания</label>
-                                        <input type="date" name="dateEnd" id="dateEnd" value=""
-                                               class="form-control" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-5">
-                                <div class="col-md-4">
-                                    <button class="btn btn-secondary">
-                                        Подтвердить
-                                    </button>
-                                </div>
-                                <div class="col-md-4 text-align-center">
-                                    <button class="btn btn-secondary">
-                                        Узнать кол-во доступных дней
-                                    </button>
-                                </div>
-                                <div class="col-md-4 text-right">
-                                    <button class="btn btn-secondary">
-                                        Сформировать лист согласования
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="pt-4">
-            <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-2 pr-2 pt-4 pb-3">
-                <div class="flex-row jc-sb mt-3 mb-3">
-                    <table class="table text-align-center">
-                        <thead>
-                        <tr class="header color-white">
-                            <th scope="col">№</th>
-                            <th scope="col" class="thead-border">Атрибут</th>
-                            <th scope="col" class="thead-border">Значение</th>
-                            <th scope="col" class="thead-border">Примичание</th>
-                            <th scope="col" class="thead-border">Изменен</th>
-                            <th scope="col">Автор</th>
-                        </tr>
-                        </thead>
-                        <tbody class="date-color">
+    <div id="application-not-administrative-day">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 mx-auto mt-3">
 
-                        </tbody>
-                    </table>
+                    <form @submit.prevent="addWallPost">
+                        <div class="form-group">
+                            <label for="wall">Стена</label>
+                            <textarea @click="resizeWall" v-model="wallPost.text" placeholder="Что нового?" class="form-control" :rows="wallRows"></textarea>
+                            <button type="submit" class="btn btn-primary mt-2">Опубликовать</button>
+                        </div>
+                    </form>
+<!--                    <form @submit.prevent="addWallPost">-->
+<!--                        <div class="form-group">-->
+<!--                            <label for="wall">Стена</label>-->
+<!--                            <textarea @click="resizeWall" v-model="wallPost.text" placeholder="Что нового?"-->
+<!--                                      class="form-control" id="wall" :rows="wallRows"></textarea>-->
+<!--                            <button type="submit" class="btn btn-primary mt-2">Опубликовать</button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+                    <transition-group name="fade">
+                        <div v-for="wallPost in wallPosts" :key="wallPost.id" class="card mt-3">
+                            <div class="card-body">
+
+                                <div class="wall">
+                                    {{ wallPost.text }}
+                                    <div>
+                                        <i @click="editWallPost(wallPost)" class="fas fa-edit"></i>
+                                        <i @click="deleteWallPost(wallPost.id)" class="fa fa-times"></i>
+                                    </div>
+                                </div>
+
+                                <div v-if="editPost === wallPost" class="mt-2">
+                                    <textarea v-model="editText" class="form-control"
+                                      id="wall" rows="3"></textarea>
+                                    <button @click="editWallPostSubmit"
+                                            class="btn btn-primary mt-2">Отредактировать</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </transition-group>
                 </div>
             </div>
         </div>
@@ -112,19 +49,103 @@
 
 <script>
     export default {
-        name: "application-not-administrative-day"
+        name: "application-not-administrative-day",
+        props: {
+          results: Object
+        },
+        data() {
+          return {
+              wallRows: 1,
+              wallCount: 0,
+              wallPosts: [],
+              wallPost: {
+                  text: ''
+              },
+              editPost: {},
+              editText: ''
+          }
+        },
+        methods: {
+            resizeWall() {
+                this.wallRows = 3
+            },
+            addWallPost() {
+                if (this.wallPost.text) {
+                    this.wallCount++
+
+                    // Добавить запись
+                    this.wallPosts.unshift({
+                        id: this.wallCount,
+                        text: this.wallPost.text
+                    })
+
+                    this.wallPost.text = ''
+
+                }
+            },
+            addW() {
+              if(this.wallPost.text) {
+                  this.wallCount++
+
+                  this.wallPosts.unshift({
+                      id: this.wallCount,
+                      text: this.wallPost.text
+                  })
+
+                  this.wallPost.text = ''
+              }
+            },
+            deleteWallPost(id) {
+                // Находим в массиве по id
+                const post_id = this.wallPosts.findIndex(post => post.id === id)
+
+                if (post_id !== -1) {
+                    this.wallPosts.splice(post_id, 1)
+                }
+
+            },
+            deleted() {
+                const post_id = this.wallPosts.findIndex(post => post.id === id)
+                if(post_id !== -1){
+                    this.wallPosts.splice(post_id, 1)
+                }
+            },
+            editWallPost(post) {
+                this.editPost = post
+                this.editText = post.text
+            },
+            editWallPostSubmit() {
+                this.editPost.text = this.editText
+                this.editPost = null
+            }
+        }
     }
 </script>
 
 
 <style>
-    .left {
-        font-size: 17px;
-        margin-right: 100px;
+    /*.fa {*/
+    /*    color: #b4b4b4;*/
+    /*    cursor: pointer;*/
+    /*}*/
+
+    .fas.fa-edit:hover {
+        color: #5f9fe9;
     }
 
-    .title {
-        font-size: 18px;
-        font-weight: bold;
+    .fa.fa-times:hover {
+        color: #e95f5f;
+    }
+
+    .wall {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
     }
 </style>

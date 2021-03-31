@@ -170,9 +170,6 @@
             //...
         },
         methods: {
-            // beforeSendSolution(solution){
-            //     this.$refs.eds.getToken('coordination',solution)
-            // },
             getUsersInfo(){
                 this.axios.post('/document/getUserInfo', {}).then((response) => {
                     this.usersInfo = response.data.usersInfo;
