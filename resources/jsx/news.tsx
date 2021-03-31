@@ -28,7 +28,7 @@ export function MyCiCNews({}: MyCiCNewsProps) {
     return <Row style={{background: '#e9ebee', padding: '20px'}}>
         <Col md={24}>
             <Row>
-                <Col offset={18} md={6}>
+                <Col md={6}>
                     <SuggestionBtn />
                 </Col>
             </Row>

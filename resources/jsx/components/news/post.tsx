@@ -54,7 +54,7 @@ export function Post({post, onDeleted = () => {}}: PostProps) {
                 </Row>
             </Col>
             <Col md={3}>
-                {post.isMine ? <div>
+                {post.isMine ? <div className="control-buttons">
                     <Button type="text"
                             icon={editing ? <EditFilled /> : <EditOutlined />}
                             onClick={() => {

@@ -57,6 +57,41 @@ describe('posts tests', () => {
         });
         expect(container.querySelector('.is-edited')).toBeNull();
     });
+
+    it('Check delete button if isMine is true', () => {
+        let post: PostEntity = {
+            image: [''],
+            postText: 'lorem',
+            postId: 1,
+            comments: [],
+            date: new Date().toISOString(),
+            edited: true,
+            fullname: 'Developer',
+            isLiked: false,
+            isMine: true,
+            isn: '5565',
+            isVoted: false,
+            likes: 1,
+            post_poll: {
+                question_id: null,
+                question_title: null,
+                answers: [],
+                total_votes: 0
+            }
+        };
+
+        expect(container).not.toBeNull();
+        act(() => {
+            render(<Post post={post} />, container);
+        });
+        expect(container.querySelector('.control-buttons')).not.toBeNull();
+
+        post.isMine = false;
+        act(() => {
+            render(<Post post={post} />, container);
+        });
+        expect(container.querySelector('.control-buttons')).toBeNull();
+    });
 });
 
 afterAll(() => {
