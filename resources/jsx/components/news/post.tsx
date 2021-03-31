@@ -95,8 +95,8 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
 
                     return <Row>
                         <Col md={24}>
-                            <Row>
-                                <Col md={24}>
+                            <Row justify="center" align="middle">
+                                <Col md={18}>
                                     <PostImages post={post} />
                                 </Col>
                             </Row>
@@ -122,7 +122,7 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
             <Col>
                 <PostLike post={post} />
             </Col>
-            <Col>
+            {/*<Col>
                 <Divider type="vertical" />
             </Col>
             <Col>
@@ -134,9 +134,9 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
                 }}>
                     <CommentOutlined /> {comments.length} Комментарии
                 </span>
-            </Col>
+            </Col>*/}
         </Row>
-        <Divider type="horizontal" style={{margin: '12px 0'}} />
+        <Divider type="horizontal" style={{margin: '12px 0'}}>Комментарии ({comments.length || 0})</Divider>
         <Row>
             <Col md={22} offset={2}>
                 <PostCommentList comments={comments}

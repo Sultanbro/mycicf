@@ -13,11 +13,12 @@ class DatabaseSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         $this->call(UserSeeder::class);
+        $this->call(BranchesSeeder::class);
         $this->call(PostSeeder::class);
         $this->call(LikeSeeder::class);
         $this->call(CommentSeeder::class);
         $this->call(QuestionSeeder::class);
-        $this->call(AnswerSeeder::class);
+        // $this->call(AnswerSeeder::class);
         Schema::enableForeignKeyConstraints();
     }
 }

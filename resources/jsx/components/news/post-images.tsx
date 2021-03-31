@@ -8,13 +8,10 @@ interface PostImagesProps {
 
 export function PostImages({post}: PostImagesProps) {
     let images = post.image || [];
-    return <Carousel>
-        {images.map((image, index) => {
-            return <Row justify="center" align="middle" key={index}>
-                <Col md={12}>
-                    <Image src={image} key={index} />
-                </Col>
-            </Row>
-        })}
-    </Carousel>
+    return <Row align="middle" justify="space-around" >
+        {images.map((image, index) =>
+            <Col md={8} key={index} order={4}>
+                <Image src={image} key={index} />
+            </Col>)}
+    </Row>
 }

@@ -36,21 +36,23 @@ function Info({isn, username}: InfoProps) {
             <Col md={6}>
                 <UserAvatar isn={isn} size={128} shape="square" />
             </Col>
-            <Ajax.POST<GetColleagueDataResponse> url="/getColleagueData" data={{isn}} cache>
-                {({response}) => {
-                    return <Col md={18}>
-                        <Typography.Title level={4}>
-                            {username}
-                        </Typography.Title>
-                        <Typography.Text>
-                            <p>{response.data.response.Birthday}</p>
-                        </Typography.Text>
-                        <Typography.Text>
-                            <p>{response.data.response.Duty}</p>
-                        </Typography.Text>
-                    </Col>
-                }}
-            </Ajax.POST>
+            <Col md={18}>
+                <Ajax.POST<GetColleagueDataResponse> url="/getColleagueData" data={{isn}} cache>
+                    {({response}) => {
+                        return <div>
+                            <Typography.Title level={4}>
+                                {username}
+                            </Typography.Title>
+                            <Typography.Text>
+                                <p>{response.data.response.Birthday}</p>
+                            </Typography.Text>
+                            <Typography.Text>
+                                <p>{response.data.response.Duty}</p>
+                            </Typography.Text>
+                        </div>
+                    }}
+                </Ajax.POST>
+            </Col>
         </Row>
         <Row>
             <Divider />

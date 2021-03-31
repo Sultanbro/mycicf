@@ -80,7 +80,7 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                 onClick={() => {
                     setIsModalVisible(true);
                 }}>
-                Предложить улучшение
+                Предложить идею
             </Button>
 
             <SuggestionModal visible={isModalVisible} setVisible={(visible) => {

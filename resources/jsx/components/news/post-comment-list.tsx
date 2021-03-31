@@ -10,12 +10,9 @@ export interface PostCommentListProps {
 }
 
 export function PostCommentList({comments, onReply, onCommentDeleted}: PostCommentListProps) {
-    let [limited, setLimited] = useState(true);
+    let [limit, setLimited] = useState(3);
 
-    let limitedComments = comments;
-    if (limited) {
-        limitedComments = comments.slice(0, 3);
-    }
+    let limitedComments = comments.slice(0, limit);
 
     let hasMoreComments = limitedComments.length < comments.length;
 
@@ -37,7 +34,7 @@ export function PostCommentList({comments, onReply, onCommentDeleted}: PostComme
             </Row>
             <Row>
                 {hasMoreComments ? <Button type="link" onClick={() => {
-                    setLimited(false);
+                    setLimited(limit + 5);
                 }}>
                     Показать больше
                 </Button> : null}
