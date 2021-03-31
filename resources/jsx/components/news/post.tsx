@@ -1,7 +1,7 @@
 import {Button, Card, Col, Divider, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
-import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined} from '@ant-design/icons';
+import {CommentOutlined, EditOutlined, EditFilled, CloseOutlined, PushpinOutlined} from '@ant-design/icons';
 import {PostComment} from './post-comment';
 import {CommentForm} from './comment-form';
 import {UserAvatar} from '../UserAvatar';
@@ -12,6 +12,7 @@ import {PostImages} from './post-images';
 import {PostEntity} from '../ajax/types';
 import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 import {PostCommentList} from './post-comment-list';
+import {UserName} from '../../UserName';
 
 export interface PostProps {
     post: PostEntity;
@@ -38,10 +39,9 @@ export function Post({ post, onDeleted = () => { } }: PostProps) {
             <Col md={18}>
                 <Row>
                     <Col>
-                        <Typography.Title level={3}>
-                            <a href={`/colleagues/${post.isn}/dossier`}>
-                                {post.fullname}
-                            </a>
+                        <Typography.Title level={4}>
+                            <UserName isn={post.isn} username={post.fullname} />
+                            {post.pinned ? <PushpinOutlined /> : null}
                         </Typography.Title>
                     </Col>
                 </Row>

@@ -14,6 +14,7 @@ import {Birthdays} from './components/birthdays/birthdays';
 import {BossPosts} from './components/news/boss-posts';
 import {ColleagueData} from './components/colleague-data';
 import {authUserIsn} from './authUserIsn';
+import {UserName} from './UserName';
 
 export interface MyCiCNewsProps {
 }
@@ -46,7 +47,7 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 <Col md={24}>
                     {/*<ColleagueData isn={authUserIsn()} />*/}
 
-                    {/*<Posts />*/}
+                    <Posts />
 
                     {/*<Birthdays />*/}
 
@@ -62,7 +63,9 @@ export function MyCiCNews({}: MyCiCNewsProps) {
 
                     {/*<Dossier />*/}
 
-                    <Sidebar />
+                    {/*<Sidebar />*/}
+
+                    {/*<UserName isn={'5565'} username={'Developer'} />*/}
                 </Col>
             </Row>
         </Col>

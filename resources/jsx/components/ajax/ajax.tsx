@@ -72,6 +72,11 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
                 lifetime: 10 * 1000,
                 storage: 'localstorage'
             };
+        } else {
+            cacheSettings = {
+                ...cacheSettings,
+                ...cache
+            }
         }
 
         if (cacheSettings.enabled) {

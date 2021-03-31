@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag} from 'antd';
+import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag, Tooltip} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';
 import {PostCommentEntity} from '../ajax/types';
 import {Ajax} from '../ajax/ajax';
+import {FileButton} from './add-post-form';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
@@ -97,11 +98,13 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                 </Row>
                 <Row>
                     <Col md={8}>
-                        <Button type="text" icon={<EnterOutlined />} onClick={() => {
-                            onReply(comment);
-                        }}>
-                            Ответить
-                        </Button>
+                        <Tooltip title="Не работает">
+                            <Button type="text" icon={<EnterOutlined />} onClick={() => {
+                                onReply(comment);
+                            }}>
+                                Ответить
+                            </Button>
+                        </Tooltip>
                     </Col>
                 </Row>
             </Col>

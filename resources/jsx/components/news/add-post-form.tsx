@@ -5,7 +5,8 @@ import {
     FileImageOutlined,
     FileOutlined,
     SendOutlined,
-    QuestionCircleOutlined
+    QuestionCircleOutlined,
+    PlayCircleOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
 import debounce from 'lodash/debounce';
@@ -166,7 +167,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                         </Tooltip>
                     </FileButton>
                     <Divider type="vertical" />
-                    <FileButton icon={<FileImageOutlined />}
+                    <FileButton icon={<PlayCircleOutlined />}
                                 accept="video/*"
                                 onFilesSelected={(files) => {
                                     debugger;

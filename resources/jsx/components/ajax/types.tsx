@@ -28,6 +28,7 @@ export interface PostEntity {
     isVoted: boolean;
     postId: number;
     likes: number;
+    pinned: boolean;
     isLiked: boolean;
     isMine: boolean;
     edited: boolean;

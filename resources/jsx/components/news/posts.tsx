@@ -32,10 +32,18 @@ export function Posts({}: PostsProps) {
 
     return <PostsAjax>
         {({response, refetch}) => {
+            let posts = response.data
+                // Use ORDER BY on backend instead
+                .sort((a, b) => +b.pinned - +a.pinned);
+
+            debugger;
+
+            ///////
+
             let loadMore = () => {
                 setLoading(true);
                 refetch({
-                    previousData: response.data,
+                    previousData: posts,
                     data: {lastIndex, query: searchQuery},
                     callback: (newData: any, previousData: any) => {
                         if (!previousData) {
@@ -60,7 +68,7 @@ export function Posts({}: PostsProps) {
                 }
                 setLoading(true);
                 refetch({
-                    previousData: response.data,
+                    previousData: posts,
                     data: {lastIndex: li, query},
                     callback: (newData: any) => {
                         if (newData.length === 0) {
@@ -75,7 +83,7 @@ export function Posts({}: PostsProps) {
                 })
             };
 
-            let lastIndex = Math.min(...response.data.map((post: any) => post.postId));
+            let lastIndex = Math.min(...posts.map((post: any) => post.postId));
             return <Row>
                 <Col md={24}>
                     <Row>
@@ -109,7 +117,7 @@ export function Posts({}: PostsProps) {
                                 getScrollParent={() => document.body}
                                 loadMore={loadMore}>
                                 <List
-                                    dataSource={response.data}
+                                    dataSource={posts}
                                     renderItem={item => {
                                         return (
                                             <List.Item key={item.postId} style={{
@@ -136,7 +144,7 @@ export function Posts({}: PostsProps) {
                                     )}
                                 </List>
 
-                                {hasMore ? <Row>
+                                {hasMore ? <Row hidden>
                                     <Col md={24} className="text-center">
                                         <Button loading={loading}
                                                 icon={<EllipsisOutlined />}
