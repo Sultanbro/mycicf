@@ -4,9 +4,6 @@
 namespace App\Library\Services;
 
 
-use App\Events\NewPost;
-use App\Http\Controllers\NotificationController;
-
 
 /**
  * Interface CoordinationServiceInterface
@@ -20,7 +17,7 @@ interface CoordinationServiceInterface
     /**
      * Получить список документов на согласование
      *
-     * @param $request integer
+     * @param $request string
      * @param $kias string
      *
      *
@@ -30,8 +27,8 @@ interface CoordinationServiceInterface
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
+     * @param $kias string
      *
      *
      */
@@ -40,8 +37,8 @@ interface CoordinationServiceInterface
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
+     * @param $kias string
      *
      *
      */
@@ -49,11 +46,12 @@ interface CoordinationServiceInterface
     public function CoordinationService($request);
 
     public function DocRowList($request, $kias);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
+     * @param $kias string
      *
      *
      */
@@ -64,59 +62,68 @@ interface CoordinationServiceInterface
 
     public function getKVAttributes();
 
-    public function AttachmentsService ($request, $kias);
+    public function AttachmentsService($request, $kias);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
+     * @param $kias string
      *
      *
      */
     public function AgreedCoordination($request, $kias);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
+     * @param $kias string
      *
      *
      */
     public function saveAttachmentService($request, $kias);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
+     * @param $kias string
      *
      *
      */
     public function sendNotifyService($request);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
      *
      *
      */
     public function closeDecadeService($request);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
+     * @param $request string
      *
      *
      */
     public function checkNotificationSended($isn, $no, $type);
+
     /**
      *
      *  getCoordinationInfo
-     * @param $request integer
-     *@param $kias integer
-     *
+     * @param $isn string
+     * @param $type string
+     * @param  $no string
      *
      */
     public function serviceCenterNotify($request);
+    /**
+     * @param $request string
+     *
+     */
+
 }

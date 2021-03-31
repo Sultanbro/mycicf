@@ -9,7 +9,6 @@ use App\Http\Controllers\NotificationController;
 use Debugbar;
 use App\Post;
 use App\Notification;
-use App\Library\Services\KiasServiceInterface;
 /**+
  * Class CoordinationService
  *

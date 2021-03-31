@@ -7,16 +7,16 @@ use App\Library\Services\CoordinationService;
 use Illuminate\Http\Request;
 use App\Library\Services\CoordinationServiceInterface;
 /**
- * @var CoordinationService
+ * @var CoordinationServiceInterface
  */
 
 class CoordinationController extends Controller
 {
-    private $coordinationServiceInterface;
+    private $coordinationService;
 
-    public function __construct(CoordinationServiceInterface $coordinationServiceInterface)
+    public function __construct(CoordinationServiceInterface $coordinationService)
     {
-        $this->coordinationServiceInterface = $coordinationServiceInterface;
+        $this->coordinationService = $coordinationService;
     }
 
     public function index(){
@@ -25,82 +25,73 @@ class CoordinationController extends Controller
 
     public function getCoordinationList(Request $request, KiasServiceInterface $kias)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->coordinationList($param, $kias);
+        return $this->coordinationService->coordinationList($request, $kias);
     }
 
 
     public function getCoordinationInfo(Request $request, KiasServiceInterface $kias)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->coordinationInfo($param, $kias);
+        return $this->coordinationService->coordinationInfo($request, $kias);
     }
 
 
     public function getDocRowList(Request $request, KiasServiceInterface $kias)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->docRowList($param, $kias);
+        //$param = $request->get('param');
+        return $this->coordinationService->docRowList($request, $kias);
     }
 
 
     public function getAttachments(Request $request, KiasServiceInterface $kias)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->attachmentsService($request, $kias);
+        return $this->coordinationService->attachmentsService($request, $kias);
     }
 
 
     public function getAgreedCoordination(Request $request, KiasServiceInterface $kias)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->agreedCoordination($request, $kias);
+        return $this->coordinationService->agreedCoordination($request, $kias);
     }
 
 
     public function setCoordination(Request $request)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->coordinationService($request);
+        return $this->coordinationService->coordinationService($request);
     }
 
 
     public function saveAttachment(Request $request, KiasServiceInterface $kias)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->saveAttachmentService($request, $kias);
+        return $this->coordinationService->saveAttachmentService($request, $kias);
     }
 
 
     public function sendNotify(Request $request)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->sendNotifyService($request);
+        return $this->coordinationService->sendNotifyService($request);
     }
 
 
     public function closeDecade(Request $request)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->closeDecadeService($request);
+        return $this->coordinationService->closeDecadeService($request);
     }
 
 
     public function checkNotificationSended($isn, $no, $type)
     {
-        $param = ([
+/*        $param = ([
             'isn'=>$isn,
             'no'=>$no,
             'type'=>$type
-        ]);
-        return $this->coordinationServiceInterface->checkNotificationSended($param);
+        ]);*/
+        return $this->coordinationService->checkNotificationSended($isn, $no, $type);
     }
 
 
     public function serviceCenterNotify(Request $request)
     {
-        $param = $request->get('param');
-        return $this->coordinationServiceInterface->serviceCenterNotify($param);
+        return $this->coordinationService->serviceCenterNotify($request);
     }
 
 }
