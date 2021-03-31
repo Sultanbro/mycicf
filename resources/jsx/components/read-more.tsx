@@ -27,7 +27,8 @@ export function ReadMore({text, limit = 3}: ReadMoreProps) {
             {limitedText.map((paragraph, i) => <p key={i}>{paragraph}</p>)}
 
             {showButton ? <div>
-                <Button type="link"
+                <Button type="dashed"
+                        block
                         style={{padding: 0}}
                         onClick={() => {
                             setExpanded(true);

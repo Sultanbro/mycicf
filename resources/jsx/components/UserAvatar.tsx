@@ -10,17 +10,18 @@ interface UserAvatarProps {
 
 const DEFAULT_AVATAR = "/images/avatar.png";
 
-let url = (isn: string) => `/storage/images/employee/${isn}.png`
+// let url = (isn: string) => `/storage/images/employee/${isn}.png`
+let url = (isn: string) => DEFAULT_AVATAR
 
 export function UserAvatar({isn, size = 64, shape = 'circle'}: UserAvatarProps) {
-    let [src, setSrc] = useState(url(isn));
+    let placeholder =
+        <Image
+            preview={false}
+            src={DEFAULT_AVATAR}
+        />
     return <Avatar size={size}
-                   src={src}
+                   src={<Image preview={false} src={url(isn)} placeholder={placeholder} />}
                    shape={shape}
-                   onError={() => {
-                       setSrc(DEFAULT_AVATAR);
-                       return true;
-                   }}
     />
 }
 
