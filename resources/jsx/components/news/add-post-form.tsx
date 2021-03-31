@@ -102,6 +102,8 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Typography.Title level={4}>
                         Создайте публикацию
 
+                        <Divider type="vertical" />
+
                         <Tooltip placement="bottom"
                                  title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к ней в любой момент.">
                             <QuestionCircleOutlined />
@@ -149,12 +151,6 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <EmojiPicker onSelect={(data) => {
                         setPostText(postText + (data as any).native);
                     }} />
-                </Col>
-            </Row>
-            <Divider type="horizontal" style={{margin: '12px 0'}} />
-            <Row>
-                <Col md={24}>
-
                 </Col>
             </Row>
             <Divider type="horizontal" style={{margin: '12px 0'}} />

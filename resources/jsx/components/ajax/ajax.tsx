@@ -194,7 +194,7 @@ Ajax.Button = <TReq, TRes>({
                     block={block}
                     icon={!icon ? null : <CloseOutlined />}
                     onClick={onClick}>
-                Retry
+                Повторить попытку
             </Button>
         </Tooltip>
 }

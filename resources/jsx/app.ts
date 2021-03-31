@@ -5,11 +5,13 @@ import {Birthdays} from "./components/birthdays/birthdays";
 import {Me} from './components/me/me';
 import {UserMenu} from './components/usermenu';
 
-let wrapper = document.getElementById('jsx-app-news');
-if (wrapper) {
-    let reactAppElement = React.createElement(MyCiCNews);
-    ReactDOM.render(reactAppElement, wrapper);
-}
+setTimeout(() => {
+    let wrapper = document.getElementById('jsx-app-news');
+    if (wrapper) {
+        let reactAppElement = React.createElement(MyCiCNews);
+        ReactDOM.render(reactAppElement, wrapper);
+    }
+}, 500);
 
 let wrapper2 = document.getElementById('sandbox-app');
 if (wrapper2) {

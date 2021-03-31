@@ -31,6 +31,11 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 <Col md={6}>
                     <SuggestionBtn />
                 </Col>
+                <Col offset={12} md={6}>
+                    <a href="/news">
+                        Вернуться к старому дизайну
+                    </a>
+                </Col>
             </Row>
             <Row>
                 <Col md={24}>
