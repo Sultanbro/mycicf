@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Mail\Email;
 use App\Post;
@@ -19,7 +20,5 @@ class SandboxCommand extends Command {
     protected $description = 'Command description';
 
     public function handle() {
-        $faker = app(Generator::class);
-        dd(Str::slug(collect($faker->words(2))->join(' ')));
     }
 }

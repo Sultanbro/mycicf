@@ -142,7 +142,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
     }
 
     if (cacheSettings.enabled) {
-        let cacheKey = 'ajax__cache__' + JSON.stringify({method, url, params, data});
+        let cacheKey = `ajax__cache__${JSON.stringify({method, url, params, data})}`;
         let result = JSON.stringify({
             expires: Date.now() + cacheSettings.lifetime,
             data: response
@@ -168,9 +168,9 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
     </div>
 }
 
-Ajax.GET = <TRes extends any>(props: AjaxProps<TRes>) => <Ajax<TRes> method="GET" {...props} />;
-Ajax.POST = <TRes extends any>(props: AjaxProps<TRes>) => <Ajax<TRes> method="POST" {...props} />;
-Ajax.PUT = <TRes extends any>(props: AjaxProps<TRes>) => <Ajax<TRes> method="PUT" {...props} />;
+Ajax.GET = <TRes extends any>({children, ...props}: AjaxProps<TRes>) => <Ajax<TRes> method="GET" {...props}>{children}</Ajax>;
+Ajax.POST = <TRes extends any>({children, ...props}: AjaxProps<TRes>) => <Ajax<TRes> method="POST" {...props}>{children}</Ajax>;
+Ajax.PUT = <TRes extends any>({children, ...props}: AjaxProps<TRes>) => <Ajax<TRes> method="PUT" {...props}>{children}</Ajax>;
 // ...
 
 Ajax.Button = <TReq, TRes>({

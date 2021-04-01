@@ -1,5 +1,5 @@
 import {Avatar, Image} from 'antd';
-import React from 'react';
+import React, {Component} from 'react';
 import {AvatarSize} from 'antd/es/avatar/SizeContext';
 
 interface UserAvatarProps {

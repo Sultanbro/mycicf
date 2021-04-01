@@ -38,6 +38,7 @@
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body >
+
 @include('layouts.header')
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">

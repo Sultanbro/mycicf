@@ -2,6 +2,11 @@ import React from 'react';
 import {Posts} from "./components/news/posts";
 import {Col} from "antd";
 import {Birthdays} from "./components/birthdays/birthdays";
+import {PostComment} from "./components/news/post-comment";
+import {PostCommentEntity} from "./components/ajax/types";
+import {ColleagueData} from "./components/colleague-data";
+import {authUserIsn} from "./authUserIsn";
+import {UserName} from "./UserName";
 
 export function Sandbox({}: any) {
     return <div>
@@ -9,7 +14,7 @@ export function Sandbox({}: any) {
 
         {/*<Posts />*/}
 
-        <Birthdays />
+        {/*<Birthdays />*/}
 
         {/*<Centcoins />*/}
 
@@ -25,6 +30,6 @@ export function Sandbox({}: any) {
 
         {/*<Sidebar />*/}
 
-        {/*<UserName isn={'5565'} username={'Developer'} />*/}
+        <UserName isn={'5565'} username={'Developer'} />
     </div>
 }

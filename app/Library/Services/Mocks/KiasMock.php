@@ -226,7 +226,7 @@ class KiasMock implements KiasServiceInterface {
             'method' => 'getBranches',
         ]);
         $this->delay();
-        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+        return new \App\XML\Kias\GetBranchesResult('<?xml version="1.0" encoding="utf-8"?>
     <data>
         <LIST>
             <row>
