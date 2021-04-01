@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {LeftOutlined, RightOutlined} from '@ant-design/icons';
-import {Carousel, Col, Row, Image, Typography, Button, Divider} from 'antd';
-import {UserAvatar, UserPhoto} from '../UserAvatar';
-import {Ajax, AjaxProps} from '../ajax/ajax';
+import {Col, Row, Typography, Button, Divider} from 'antd';
+import {UserAvatar} from '../UserAvatar';
+import {Ajax} from '../ajax/ajax';
 
 const monthNames = {
     1: 'Январь',
@@ -36,7 +36,8 @@ function Entry({entry}: { entry: BirthdayEntry }) {
             <Row justify="center" align="middle">
                 <Col md={6} className="jc-center d-flex width50 events-window-size relative">
                     <UserAvatar isn={entry.kias_id as any} shape="square" size={100} />
-                    <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" className="absolute width100 height100" />
+                    <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif"
+                         className="absolute width100 height100" />
                 </Col>
             </Row>
             <Row>
@@ -51,7 +52,7 @@ function Entry({entry}: { entry: BirthdayEntry }) {
 
 export function Birthdays() {
     let [index, setIndex] = useState(0);
-    return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2">
+    return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2" cache>
         {({response, refetch}) => {
             let keys = Object.keys(response.data);
             let date = keys[index];

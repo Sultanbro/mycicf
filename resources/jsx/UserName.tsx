@@ -1,7 +1,7 @@
-import {Button, Card, Col, Divider, Dropdown, Row, Tooltip, Typography} from 'antd';
+import {Button, Card, Col, Divider, Dropdown, Row, Typography} from 'antd';
 import React from 'react';
 import {UserAvatar} from './components/UserAvatar';
-import {Ajax} from './components/ajax/ajax';
+import {Ajax} from './components/ajax';
 
 let dossierUrl = (isn: string | number) => `/colleagues/${isn}/dossier`;
 
@@ -47,10 +47,10 @@ function Info({isn, username}: InfoProps) {
                                 <p><b>ISN: </b>{isn}</p>
                             </Typography.Text>
                             <Typography.Text>
-                                <p>{response.data.response.Birthday}</p>
+                                <p><b>Дата рождения: </b>{response.data.response.Birthday}</p>
                             </Typography.Text>
                             <Typography.Text>
-                                <p>{response.data.response.Duty}</p>
+                                <p><b>Подразделение: </b>{response.data.response.Duty}</p>
                             </Typography.Text>
                         </div>
                     }}

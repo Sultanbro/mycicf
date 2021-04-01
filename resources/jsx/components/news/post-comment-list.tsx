@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {PostComment} from './post-comment';
 import {PostCommentEntity} from '../ajax/types';
-import {Affix, Button, Col, Divider, Row} from 'antd';
+import {Button, Col, Divider, Row} from 'antd';
 import {If} from '../if';
 
 export interface PostCommentListProps {

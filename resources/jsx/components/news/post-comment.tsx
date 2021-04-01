@@ -8,6 +8,7 @@ import {Ajax} from '../ajax/ajax';
 import {FileButton} from './add-post-form';
 import {UserName} from '../../UserName';
 import {If} from '../if';
+import {AjaxButton} from '../ajax';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
@@ -28,7 +29,7 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
             setText(e.target.value)
         }} />
 
-        <Ajax.Button<{ commentId: number, commentText: string }, { edited: boolean, success: boolean }>
+        <AjaxButton<{ commentId: number, commentText: string }, { edited: boolean, success: boolean }>
             url="/news/comments/editComment"
             method="POST"
             type="default"
@@ -39,7 +40,7 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
                 }
             }}>
             Сохранить
-        </Ajax.Button>
+        </AjaxButton>
 
         <Button onClick={() => {
             onCancel();

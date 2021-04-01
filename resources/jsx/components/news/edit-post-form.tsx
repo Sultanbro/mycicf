@@ -3,6 +3,7 @@ import {Button, Col, Divider, Input, Row} from 'antd';
 import {SendOutlined} from "@ant-design/icons";
 import {PostEntity} from '../ajax/types';
 import {Ajax} from '../ajax/ajax';
+import {AjaxButton} from '../ajax';
 
 export interface EditPostFormProps {
     post: PostEntity;
@@ -34,7 +35,7 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
             </Row>
             <Row>
                 <Col offset={16}>
-                    <Ajax.Button<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
+                    <AjaxButton<{ postId: number, postText: string }, { edited: boolean, success: boolean }>
                         type="default"
                         url="/news/my/editPost"
                         data={{postId: post.postId, postText: postText}}
@@ -47,7 +48,7 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                             }
                         }}>
                         Отправить
-                    </Ajax.Button>
+                    </AjaxButton>
                 </Col>
                 <Col>
                     <Divider type="vertical" />

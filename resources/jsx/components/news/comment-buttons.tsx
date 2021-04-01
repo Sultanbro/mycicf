@@ -2,7 +2,7 @@ import {Button, Col, Row} from 'antd';
 import {CloseOutlined, EditOutlined} from '@ant-design/icons';
 import React from 'react';
 import {PostCommentEntity} from '../ajax/types';
-import { Ajax } from '../ajax/ajax';
+import {AjaxButton} from '../ajax';
 
 export interface CommentMenuProps {
     comment: PostCommentEntity;
@@ -21,7 +21,7 @@ export function CommentButtons({comment, onCommentDeleted, onShowEditForm}: Comm
         </Col>
 
         <Col md={4}>
-            <Ajax.Button<{ commentId: number }, { success: true }>
+            <AjaxButton<{ commentId: number }, { success: true }>
                 url="/news/comments/deleteComment"
                 method="POST"
                 block
@@ -33,7 +33,7 @@ export function CommentButtons({comment, onCommentDeleted, onShowEditForm}: Comm
                         onCommentDeleted(comment.commentId);
                     }
                 }}
-            >a</Ajax.Button>
+            >a</AjaxButton>
         </Col>
     </Row>;
 }

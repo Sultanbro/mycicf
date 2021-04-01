@@ -1,8 +1,8 @@
 import {Col, Divider, List, Progress, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
-import {Ajax} from '../ajax/ajax';
 import {PostEntity, PostPollAnswer} from '../ajax/types';
 import {authUserIsn} from '../../authUserIsn';
+import {AjaxButton} from '../ajax';
 
 interface PostPollProps {
     post: PostEntity;
@@ -12,7 +12,7 @@ export function PostPoll({post}: PostPollProps) {
     let [voted, setVoted] = useState(post.isVoted);
     let answerVotesCount = post.post_poll.answers.reduce((a, b) => a + b.answer_votes, 0);
     let button = (answer: PostPollAnswer) =>
-        <Ajax.Button key={answer.answer_id}
+        <AjaxButton key={answer.answer_id}
                      url="/news/vote"
                      method="POST"
                      type="default"
@@ -26,7 +26,7 @@ export function PostPoll({post}: PostPollProps) {
                      }}
                      block>
             {answer.answer_title}
-        </Ajax.Button>
+        </AjaxButton>
 
     let progressBar = (answer: PostPollAnswer) => <Row style={
         {width: '100%'}

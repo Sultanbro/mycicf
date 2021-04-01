@@ -9,10 +9,10 @@ import {ReadMore} from '../read-more';
 import {EditPostForm} from './edit-post-form';
 import {PostImages} from './post-images';
 import {PostEntity} from '../ajax/types';
-import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 import {PostCommentList} from './post-comment-list';
 import {UserName} from '../../UserName';
 import {If} from '../if';
+import {AjaxButton, AjaxButtonProps} from '../ajax';
 
 export interface PostProps {
     post: PostEntity;
@@ -35,7 +35,7 @@ export function Post({
     let commentForm: React.Ref<any> = React.createRef<any>();
 
     let AjaxDeletePostButton = ({...props}: AjaxButtonProps<{ postId: number }, { success: boolean }>) =>
-        <Ajax.Button<{ postId: number }, { success: boolean }> {...props} />
+        <AjaxButton<{ postId: number }, { success: boolean }> {...props} />
 
     return <Card style={{marginBottom: '10px'}}>
         <Row>
@@ -138,19 +138,6 @@ export function Post({
             <Col>
                 <PostLike post={post} />
             </Col>
-            {/*<Col>
-                <Divider type="vertical" />
-            </Col>
-            <Col>
-                <span style={{
-                    height: '32px',
-                    padding: '4px 15px',
-                    lineHeight: 1.5715,
-                    display: 'block'
-                }}>
-                    <CommentOutlined /> {comments.length} Комментарии
-                </span>
-            </Col>*/}
         </Row>
         <Divider type="horizontal" style={{margin: '12px 0'}}>
             <Tooltip title="Показать всю ветку комментариев">

@@ -1,6 +1,5 @@
 import React, {ForwardedRef} from 'react';
 import {Col, Input, Row} from 'antd';
-import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 import {SendOutlined} from '@ant-design/icons';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
@@ -8,6 +7,7 @@ import {BaseEmoji} from 'emoji-mart';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
 import {PostCommentEntity, PostEntity} from '../ajax/types';
+import {AjaxButton, AjaxButtonProps} from '../ajax';
 
 interface CommentAjaxRequest {
     isn: any;
@@ -39,8 +39,8 @@ let commentForm = ({
               }: CommentFormProps, ref: ForwardedRef<any>) => {
     let useLocalStorage = createUseLocalStorage(`post:${post.postId}:`);
     let [commentText, setCommentText] = useLocalStorage('commentText', text);
-    let AjaxButton = ({...props}: AjaxButtonProps<CommentAjaxRequest, CommentAjaxResponse>) =>
-        <Ajax.Button<CommentAjaxRequest, CommentAjaxResponse> {...props} />
+    let AddCommentAjaxButton = ({...props}: AjaxButtonProps<CommentAjaxRequest, CommentAjaxResponse>) =>
+        <AjaxButton<CommentAjaxRequest, CommentAjaxResponse> {...props} />
 
     return <div ref={ref}>
         <Row>
@@ -62,7 +62,7 @@ let commentForm = ({
                 }} />
             </Col>
             <Col md={2}>
-                <AjaxButton url="/news/comments/addComment"
+                <AddCommentAjaxButton url="/news/comments/addComment"
                             method="POST"
                             type="text"
                             disabled={!commentText}

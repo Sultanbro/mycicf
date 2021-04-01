@@ -14,7 +14,7 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
-import {Ajax} from '../ajax/ajax';
+import {Ajax, AjaxButton} from '../ajax';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -66,7 +66,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [textFieldHeight, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
     let showPublishButton = !!postText.trim();
     let AjaxPublishPostButton = ({...props}: any) =>
-        <Ajax.Button<any, any> {...props}
+        <AjaxButton<any, any> {...props}
                                method="POST"
                                icon={<SendOutlined />}
                                url="/news/addPost" />

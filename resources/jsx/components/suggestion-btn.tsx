@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {CheckOutlined, UserOutlined} from '@ant-design/icons';
-import {Ajax} from './ajax/ajax';
 import {Alert, Button, Col, Divider, Form, Input, Modal, notification, Row} from 'antd';
 import {authUserName} from '../authUserName';
 import {authUserIsn} from '../authUserIsn';
 import {createUseLocalStorage} from '../hooks/useLocalStorage';
+import {AjaxButton} from './ajax';
 
 export interface SuggestionBtnProps {
 
@@ -55,7 +55,7 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
 
         <Divider />
 
-        <Ajax.Button
+        <AjaxButton
             url="/news/addSuggestion"
             method="POST"
             type="primary"
@@ -68,7 +68,7 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
                 });
             }}>
             Отправить
-        </Ajax.Button>
+        </AjaxButton>
     </Modal>
 }
 

@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {LikeOutlined, LikeTwoTone} from '@ant-design/icons';
 import {authUserIsn} from '../../authUserIsn';
 import {PostEntity} from '../ajax/types';
-import {Ajax, AjaxButtonProps} from '../ajax/ajax';
+import {AjaxButtonProps} from '../ajax';
+import {AjaxButton} from '../ajax';
 
 export interface PostLikeProps {
     post: PostEntity;
@@ -23,10 +24,10 @@ export function PostLike({post}: PostLikeProps) {
     let [likes, setLikes] = useState(post.likes);
     let icon = isLiked ? <LikeTwoTone style={{color: 'red'}} /> : <LikeOutlined />;
 
-    let AjaxButton = ({...props}: AjaxButtonProps<LikeRequest, LikeResponse>) =>
-        <Ajax.Button<LikeRequest, LikeResponse> {...props} />;
+    let PostLikeAjaxButton = ({...props}: AjaxButtonProps<LikeRequest, LikeResponse>) =>
+        <AjaxButton<LikeRequest, LikeResponse> {...props} />;
 
-    return <AjaxButton url="/news/likePost"
+    return <PostLikeAjaxButton url="/news/likePost"
                        method="POST"
                        data={{
                            postId: post.postId,
@@ -38,5 +39,5 @@ export function PostLike({post}: PostLikeProps) {
                            setLikes(res.data.count);
                        }}>
         {likes} Нравится
-    </AjaxButton>;
+    </PostLikeAjaxButton>;
 }

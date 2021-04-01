@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import './posts.css';
 import {AddPostForm} from "./add-post-form";
 import {Ajax, AjaxProps} from '../ajax/ajax';
-import {AjaxCacheSettings, PostEntity} from '../ajax/types';
+import {PostEntity} from '../ajax/types';
 import {SearchBox} from './search-box';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
@@ -14,10 +14,6 @@ interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
 }
 
 export function PostsAjax({children}: PostsAjaxProps) {
-    let cache: AjaxCacheSettings = {
-        enabled: true,
-        lifetime: 1000 * 60,
-    };
     return <Ajax.POST<PostEntity> url="/news/getPosts">
         {({response, refetch, callback}: any) => {
             return children({response, callback, refetch});
@@ -123,7 +119,7 @@ export function Posts({}: PostsProps) {
                                 <List
                                     dataSource={posts}
                                     renderItem={item => {
-                                        let [showModal, setShowModal] = useState(false);
+                                        // let [showModal, setShowModal] = useState(false);
 
                                         return (
                                             <List.Item key={item.postId} style={{
@@ -131,7 +127,7 @@ export function Posts({}: PostsProps) {
                                             }}>
                                                 <Col md={24}>
                                                     <Post post={item}
-                                                          onDateClicked={() => setShowModal(true)}
+                                                          // onDateClicked={() => setShowModal(true)}
                                                           onDeleted={(post) => {
                                                               notification.info({
                                                                   message: 'Пост удалён',
@@ -140,7 +136,7 @@ export function Posts({}: PostsProps) {
                                                               search(null);
                                                           }} />
 
-                                                    <Modal visible={showModal}
+                                                    {/*<Modal visible={showModal}
                                                            width={880}
                                                            onCancel={() => setShowModal(false)}>
                                                         <Post post={item}
@@ -152,7 +148,7 @@ export function Posts({}: PostsProps) {
                                                                   });
                                                                   search(null);
                                                               }} />
-                                                    </Modal>
+                                                    </Modal>*/}
                                                 </Col>
                                             </List.Item>
                                         );

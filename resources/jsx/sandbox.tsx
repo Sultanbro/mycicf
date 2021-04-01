@@ -12,9 +12,9 @@ export function Sandbox({}: any) {
     return <div>
         {/*<ColleagueData isn={authUserIsn()} />*/}
 
-        <Posts />
+        {/*<Posts />*/}
 
-        {/*<Birthdays />*/}
+        <Birthdays />
 
         {/*<Centcoins />*/}
 
