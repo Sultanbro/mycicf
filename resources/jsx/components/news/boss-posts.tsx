@@ -56,8 +56,8 @@ export function BossPosts() {
                 <Col md={24}>
                     <BossPostsAjax>
                         {({response}) => {
-                            return response.data.map((post) => {
-                                return <Post post={post} />
+                            return response.data.map((post, index) => {
+                                return <Post post={post} key={index} />
                             });
                         }}
                     </BossPostsAjax>

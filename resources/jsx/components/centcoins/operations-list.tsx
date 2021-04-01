@@ -70,7 +70,9 @@ export function CentcoinOperationsList({}: CentcoinOperationsListProps) {
                                 icon={<EyeOutlined />}
                                 onClick={() => {
                                 refetch();
-                            }}>Показать</Button>
+                            }}>
+                                Показать
+                            </Button>
                         </Col>
                     </Row>
                     <Row>

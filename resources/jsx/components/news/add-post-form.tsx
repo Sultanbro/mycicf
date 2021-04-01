@@ -161,7 +161,6 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <FileButton icon={<FileImageOutlined />}
                                 accept="image/*"
                                 onFilesSelected={(files) => {
-                                    debugger;
                                 }}>
                         <Tooltip title="Не работает">
                             Фото
@@ -171,7 +170,6 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <FileButton icon={<PlayCircleOutlined />}
                                 accept="video/*"
                                 onFilesSelected={(files) => {
-                                    debugger;
                                 }}>
                         <Tooltip title="Не работает">
                             Видео
@@ -181,7 +179,6 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <FileButton icon={<FileOutlined />}
                                 accept="*/*"
                                 onFilesSelected={(files) => {
-                                    debugger;
                                 }}>
                         <Tooltip title="Не работает">
                             Файл

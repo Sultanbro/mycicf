@@ -1,7 +1,7 @@
 import {Button, Card, Col, Divider, Modal, Row, Tag, Tooltip, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
-import {EditOutlined, EditFilled, CloseOutlined, PushpinOutlined,CommentOutlined} from '@ant-design/icons';
+import {EditOutlined, EditFilled, CloseOutlined, PushpinOutlined, CommentOutlined} from '@ant-design/icons';
 import {CommentForm} from './comment-form';
 import {UserAvatar} from '../UserAvatar';
 import {PostPoll} from './post-poll';
@@ -23,7 +23,8 @@ export interface PostProps {
 
 export function Post({
                          post,
-                         onDeleted = () => {},
+                         onDeleted = () => {
+                         },
                          onDateClicked,
                          expanded = false
                      }: PostProps) {

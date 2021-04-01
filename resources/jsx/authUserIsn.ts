@@ -1,7 +1,8 @@
+import {ISN} from './types';
 
 let userIsn: string;
 
-export function authUserIsn(): string {
+export function authUserIsn(): ISN {
     if (userIsn) {
         return userIsn;
     }

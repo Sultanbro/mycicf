@@ -40,7 +40,9 @@ function Info({isn, username}: InfoProps) {
                     <Col md={24}>
                         <Row>
                             <Col md={6}>
-                                <UserAvatar isn={isn} size={128} shape="square" />
+                                <UserAvatar isn={isn}
+                                            size={128}
+                                            shape="square" />
                             </Col>
                             <Col md={18}>
                                 <div>

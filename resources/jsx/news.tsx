@@ -3,18 +3,18 @@ import 'antd/dist/antd.css';
 import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
 import { SuggestionBtn } from './components/suggestion-btn';
-import {Centcoins} from './components/centcoins/centcoins';
-import {Me} from './components/me/me';
-import {CentcoinOperationsList} from './components/centcoins/operations-list';
-import {CoordinationList} from './components/coordination/list';
-import {UserMenu} from './components/usermenu';
-import {Dossier} from './components/dossier/dossier';
-import {Sidebar} from './components/sidebar';
-import {Birthdays} from './components/birthdays/birthdays';
-import {BossPosts} from './components/news/boss-posts';
-import {ColleagueData} from './components/colleague-data';
-import {authUserIsn} from './authUserIsn';
-import {UserName} from './UserName';
+// import {Centcoins} from './components/centcoins/centcoins';
+// import {Me} from './components/me/me';
+// import {CentcoinOperationsList} from './components/centcoins/operations-list';
+// import {CoordinationList} from './components/coordination/list';
+// import {UserMenu} from './components/usermenu';
+// import {Dossier} from './components/dossier/dossier';
+// import {Sidebar} from './components/sidebar';
+// import {Birthdays} from './components/birthdays/birthdays';
+// import {BossPosts} from './components/news/boss-posts';
+// import {ColleagueData} from './components/colleague-data';
+// import {authUserIsn} from './authUserIsn';
+// import {UserName} from './UserName';
 
 export interface MyCiCNewsProps {
 }

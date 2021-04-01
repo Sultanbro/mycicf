@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button} from 'antd';
+import {If} from './if';
 
 export interface ReadMoreProps {
     text: string;
@@ -27,18 +28,20 @@ export function ReadMore({text, limit = 3, expanded: $expanded = false}: ReadMor
         return <div>
             {limitedText.map((paragraph, i) => <p key={i}>{paragraph}</p>)}
 
-            {showButton ? <div>
-                <Button type="dashed"
-                        block
-                        style={{padding: 0}}
-                        onClick={() => {
-                            setExpanded(true);
-                        }}>
-                    Показать больше
-                </Button>
-            </div> : null}
+            <If condition={showButton}>
+                <div>
+                    <Button type="dashed"
+                            block
+                            style={{padding: 0}}
+                            onClick={() => {
+                                setExpanded(true);
+                            }}>
+                        Показать больше
+                    </Button>
+                </div>
+            </If>
         </div>
-    } catch(e) {
+    } catch (e) {
         return <div>
             {text}
         </div>

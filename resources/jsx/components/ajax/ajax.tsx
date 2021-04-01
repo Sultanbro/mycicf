@@ -1,9 +1,7 @@
-import {Button, Popconfirm, Spin, Tooltip} from 'antd';
+import {Spin} from 'antd';
 import React, {useState} from 'react';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
 import {AjaxCacheSettings} from './types';
-import {CloseOutlined} from '@ant-design/icons';
-import {ButtonProps} from 'antd/lib/button/button';
 
 export interface AjaxPropsChildrenArgs<TRes> {
     response: AxiosResponse<TRes>;

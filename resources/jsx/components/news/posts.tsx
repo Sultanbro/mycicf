@@ -8,6 +8,7 @@ import {AddPostForm} from "./add-post-form";
 import {Ajax, AjaxProps} from '../ajax';
 import {PostEntity} from '../ajax/types';
 import {SearchBox} from './search-box';
+import {If} from '../if';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
 
@@ -127,7 +128,7 @@ export function Posts({}: PostsProps) {
                                             }}>
                                                 <Col md={24}>
                                                     <Post post={item}
-                                                          // onDateClicked={() => setShowModal(true)}
+                                                        // onDateClicked={() => setShowModal(true)}
                                                           onDeleted={(post) => {
                                                               notification.info({
                                                                   message: 'Пост удалён',
@@ -160,18 +161,19 @@ export function Posts({}: PostsProps) {
                                         </div>
                                     )}
                                 </List>
-
-                                {hasMore ? <Row>
-                                    <Col md={24} className="text-center">
-                                        <Button loading={loading}
-                                                icon={<EllipsisOutlined />}
-                                                onClick={() => {
-                                                    loadMore();
-                                                }}>
-                                            Больше
-                                        </Button>
-                                    </Col>
-                                </Row> : null}
+                                <If condition={hasMore}>
+                                    <Row>
+                                        <Col md={24} className="text-center">
+                                            <Button loading={loading}
+                                                    icon={<EllipsisOutlined />}
+                                                    onClick={() => {
+                                                        loadMore();
+                                                    }}>
+                                                Больше
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </If>
                             </InfiniteScroll>
                         </Col>
                     </Row>
@@ -196,7 +198,6 @@ export function Posts3({isn}: any) {
                                     <Post key={i}
                                           post={post}
                                           onDeleted={(post) => {
-                                              debugger;
                                               refetch();
                                           }} />)}
                             </Col>
@@ -234,7 +235,8 @@ export function Posts2() {
         {({response, refetch}: any) =>
             <div>
                 <ul>
-                    {response.data.map((post: any) => <li>Post #{post.postId}: {post.postText}</li>)}
+                    {response.data.map((post: PostEntity, index: number) =>
+                        <li key={index}>Post #{post.postId}: {post.postText}</li>)}
                 </ul>
                 <Button onClick={() => {
                     refetch();

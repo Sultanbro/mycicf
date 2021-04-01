@@ -1,0 +1,21 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended"
+    ],
+    "rules": {
+        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/explicit-module-boundary-types": 0,
+        "@typescript-eslint/no-empty-interface": 0,
+        "no-empty-pattern": 0,
+        "prefer-const": 0,
+        "react/display-name": 0,
+        "@typescript-eslint/no-empty-function": 0
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

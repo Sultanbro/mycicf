@@ -20,6 +20,11 @@ let useLocalStorage = createUseLocalStorage('suggestion');
 
 function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
     const [content, setContent] = useLocalStorage('content', '');
+    let alert = <Alert message={
+        <span><b>Примечание:</b> Черновик Вашего обращения сохраняется в браузере.
+                Вы сможете вернуться к нему в любой момент.</span>
+    } type="info" />;
+
     return <Modal title="Оставить отзыв"
                   visible={visible}
                   footer={null}
@@ -42,16 +47,15 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
                 name="content"
                 rules={[{required: true, message: ''}]}
             >
-                <Input.TextArea placeholder="Обращение" rows={15} onChange={(e) => {
-                    setContent(e.target.value);
-                }} />
+                <Input.TextArea placeholder="Обращение"
+                                rows={15}
+                                onChange={(e) => {
+                                    setContent(e.target.value);
+                                }} />
             </Form.Item>
         </Form>
 
-        <Alert message={
-            <span><b>Примечание:</b> Черновик Вашего обращения сохраняется в браузере.
-                    Вы сможете вернуться к нему в любой момент.</span>
-        } type="info" />
+        {alert}
 
         <Divider />
 

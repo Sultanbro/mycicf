@@ -1,8 +1,5 @@
 import React from 'react';
-import {Button, Col, List, Menu, Row} from 'antd';
-import {MailOutlined, AppstoreOutlined, SettingOutlined, PaperClipOutlined} from '@ant-design/icons';
-
-let SubMenu = Menu.SubMenu;
+import {Button, Col, Menu, Row} from 'antd';
 
 export interface SidebarProps {
 

@@ -5,8 +5,8 @@ import {authUserName} from '../authUserName';
 import {UserAvatar} from './UserAvatar';
 import {authUserIsn} from '../authUserIsn';
 
-declare var messaging: any;
-declare var setTokenSentToServer: any;
+declare let messaging: any;
+declare let setTokenSentToServer: any;
 
 export interface UserMenuProps {
 
@@ -68,9 +68,9 @@ function sendTokenToServer(currentToken: any) {
     // if (!isTokenSentToServer(currentToken)) {
     console.log('Отправка токена на сервер...');
 
-    var url = '/setToken'; // адрес скрипта на сервере который сохраняет ID устройства
-    var http = new XMLHttpRequest();
-    var params = currentToken;
+    let url = '/setToken'; // адрес скрипта на сервере который сохраняет ID устройства
+    let http = new XMLHttpRequest();
+    let params = currentToken;
     http.open('POST', url, true);
 
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
