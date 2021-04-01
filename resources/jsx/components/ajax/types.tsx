@@ -1,11 +1,12 @@
 import React from 'react';
+import {ISN} from '../../types';
 
 export interface PostCommentEntity {
     date: string;
     commentId: number;
     commentText: string;
     fullname: string;
-    userISN: any;
+    userISN: ISN;
     isMine: boolean;
 }
 
@@ -35,7 +36,7 @@ export interface PostEntity {
     comments: PostCommentEntity[];
     date: string;
     fullname: string;
-    isn: string;
+    isn: ISN;
     postText: string;
 
     showModal?: boolean;

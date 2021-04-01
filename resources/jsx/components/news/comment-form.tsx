@@ -8,9 +8,10 @@ import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
 import {PostCommentEntity, PostEntity} from '../ajax/types';
 import {AjaxButton, AjaxButtonProps} from '../ajax';
+import {ISN} from '../../types';
 
 interface CommentAjaxRequest {
-    isn: any;
+    isn: ISN;
     postId: any;
     commentText: string;
 }
@@ -21,7 +22,7 @@ interface CommentAjaxResponse {
     date: string;
     fullname: string;
     postId: number;
-    userISN: number;
+    userISN: ISN;
 }
 
 interface CommentFormProps {

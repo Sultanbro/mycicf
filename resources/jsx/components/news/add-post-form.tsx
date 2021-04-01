@@ -15,6 +15,7 @@ import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
 import {Ajax, AjaxButton} from '../ajax';
+import {ISN} from '../../types';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -23,7 +24,7 @@ export interface AddPostFormProps {
 interface AddPostData {
     postText: string;
     poll: any;
-    isn: any;
+    isn: ISN;
 }
 
 export interface FileButtonProps {

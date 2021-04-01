@@ -2,11 +2,12 @@ import {Button, Card, Col, Divider, Dropdown, Row, Typography} from 'antd';
 import React from 'react';
 import {UserAvatar} from './components/UserAvatar';
 import {Ajax} from './components/ajax';
+import {ISN} from './types';
 
-let dossierUrl = (isn: string | number) => `/colleagues/${isn}/dossier`;
+let dossierUrl = (isn: ISN) => `/colleagues/${isn}/dossier`;
 
 export interface UserNameProps {
-    isn: string;
+    isn: ISN;
     username: string;
 }
 
@@ -19,7 +20,7 @@ export function UserName({isn, username}: UserNameProps) {
 }
 
 interface InfoProps {
-    isn: string;
+    isn: ISN;
     username: string;
 }
 

@@ -19,5 +19,6 @@ Accept: application/json
 > {%
     client.test('Must return the array of posts', function () {
         client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body instanceof Array, "Response body is not an array");
     });
  %}

@@ -1,9 +1,10 @@
 import {Avatar, Image} from 'antd';
 import React from 'react';
 import {AvatarSize} from 'antd/es/avatar/SizeContext';
+import {ISN} from '../types';
 
 interface UserAvatarProps {
-    isn: string;
+    isn: ISN;
     size?: AvatarSize;
     shape?: 'circle' | 'square';
     title?: string;
@@ -11,9 +12,9 @@ interface UserAvatarProps {
 
 const DEFAULT_AVATAR = "/images/avatar.png";
 
-// let url = (isn: string | number) => `/storage/images/employee/${isn}.png`
-// let url = (isn: string | number) => `https://dummyimage.com/340x340/95bbdf/ffffff.png&text=${isn}`;
-let url = (isn: string | number) => DEFAULT_AVATAR
+// let url = (isn: ISN) => `/storage/images/employee/${isn}.png`
+// let url = (isn: ISN) => `https://dummyimage.com/340x340/95bbdf/ffffff.png&text=${isn}`;
+let url = (isn: ISN) => DEFAULT_AVATAR
 
 export function UserAvatar({isn, size = 64, shape = 'circle', title}: UserAvatarProps) {
     let placeholder =
@@ -36,7 +37,7 @@ export function UserAvatar({isn, size = 64, shape = 'circle', title}: UserAvatar
 }
 
 interface UserPhotoProps {
-    isn: string | number;
+    isn: ISN;
 }
 
 export function UserPhoto({isn}: UserPhotoProps) {

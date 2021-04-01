@@ -6,6 +6,7 @@ import {Ajax, AjaxButtonProps} from '../ajax';
 import {AjaxButton} from '../ajax';
 import {Card, Dropdown} from 'antd';
 import {UserAvatar} from '../UserAvatar';
+import {ISN} from '../../types';
 
 export interface PostLikeProps {
     post: PostEntity;
@@ -13,7 +14,7 @@ export interface PostLikeProps {
 
 export interface LikeRequest {
     postId: number;
-    isn: any;
+    isn: ISN;
 }
 
 export interface LikeResponse {
@@ -23,7 +24,7 @@ export interface LikeResponse {
 
 export interface LikedUserEntry {
     id: number;
-    ISN: string | number;
+    ISN: ISN;
     username: "Dahlia Johnston MD";
     full_name: "Armani McDermott V";
 }
