@@ -32,14 +32,16 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
                 </Col>
             </Row>
             <Row>
-                {hasMoreComments ? <Button
-                    type="dashed"
-                    block
-                    onClick={() => {
-                        setLimit(limit + 5);
-                    }}>
-                    Ещё &nbsp; <b>{comments.length - limit}</b> &nbsp; комментариев
-                </Button> : null}
+                <Col offset={2} md={20}>
+                    {hasMoreComments ? <Button
+                        type="dashed"
+                        block
+                        onClick={() => {
+                            setLimit(limit + 5);
+                        }}>
+                        Ещё &nbsp; <b>{comments.length - limit}</b> &nbsp; комментариев
+                    </Button> : null}
+                </Col>
             </Row>
             <Divider type="horizontal" style={{margin: '10px 0'}} />
         </Col>
