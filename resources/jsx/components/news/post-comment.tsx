@@ -4,8 +4,6 @@ import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';
 import {PostCommentEntity} from '../ajax/types';
-import {Ajax} from '../ajax/ajax';
-import {FileButton} from './add-post-form';
 import {UserName} from '../../UserName';
 import {If} from '../if';
 import {AjaxButton} from '../ajax';

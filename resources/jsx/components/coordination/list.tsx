@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col, Row, Typography} from 'antd';
-import {Ajax} from '../ajax/ajax';
+import {Ajax} from '../ajax';
 import {authUserIsn} from '../../authUserIsn';
 
 export interface CoordinationListProps {

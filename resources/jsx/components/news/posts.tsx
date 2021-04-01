@@ -5,7 +5,7 @@ import {CheckOutlined, EllipsisOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import './posts.css';
 import {AddPostForm} from "./add-post-form";
-import {Ajax, AjaxProps} from '../ajax/ajax';
+import {Ajax, AjaxProps} from '../ajax';
 import {PostEntity} from '../ajax/types';
 import {SearchBox} from './search-box';
 

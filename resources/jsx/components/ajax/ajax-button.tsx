@@ -7,8 +7,8 @@ import {ButtonProps} from 'antd/lib/button/button';
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     url: string;
     data: TReq;
-    onSuccess: (res: AxiosResponse<TRes>) => any;
-    children?: any;
+    onSuccess: (res: AxiosResponse<TRes>) => void;
+    children?: React.ReactNode;
     method: Method;
     confirm?: boolean;
     confirmText?: string;

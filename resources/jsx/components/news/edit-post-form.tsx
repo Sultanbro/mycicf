@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {Button, Col, Divider, Input, Row} from 'antd';
 import {SendOutlined} from "@ant-design/icons";
 import {PostEntity} from '../ajax/types';
-import {Ajax} from '../ajax/ajax';
 import {AjaxButton} from '../ajax';
 
 export interface EditPostFormProps {

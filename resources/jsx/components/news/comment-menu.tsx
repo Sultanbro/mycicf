@@ -2,7 +2,6 @@ import {Button, Dropdown, Menu} from 'antd';
 import {EllipsisOutlined} from '@ant-design/icons';
 import React from 'react';
 import {PostCommentEntity} from '../ajax/types';
-import { Ajax } from '../ajax/ajax';
 import {AjaxButton} from '../ajax';
 
 export interface CommentMenuProps {

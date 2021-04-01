@@ -2,7 +2,7 @@ import {Col, DatePicker, Divider, Input, Row} from 'antd';
 import {LoadingOutlined} from '@ant-design/icons';
 import debounce from 'lodash/debounce';
 import React, {ChangeEvent} from 'react';
-import {Ajax} from '../ajax/ajax';
+import {Ajax} from '../ajax';
 import moment from 'moment';
 
 type Dispatch<T> = React.Dispatch<React.SetStateAction<T>>;

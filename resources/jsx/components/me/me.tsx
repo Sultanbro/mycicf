@@ -1,7 +1,7 @@
 import React from 'react';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
-import {Ajax} from '../ajax/ajax';
+import {Ajax} from '../ajax';
 import {Col, Collapse, Row} from 'antd';
 
 export interface MeProps {

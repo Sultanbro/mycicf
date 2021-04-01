@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import moment from 'moment';
 import {EyeOutlined} from '@ant-design/icons';
 import {Button, Col, DatePicker, Divider, Row, Table} from 'antd';
-import {Ajax} from '../ajax/ajax';
+import {Ajax} from '../ajax';
 import {authUserIsn} from '../../authUserIsn';
 
 export interface CentcoinOperationsListProps {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col, Image, Row} from 'antd';
-import {Ajax, AjaxProps} from '../ajax/ajax';
+import {Ajax, AjaxProps} from '../ajax';
 import {PostEntity} from '../ajax/types';
 import {Post} from './post';
 

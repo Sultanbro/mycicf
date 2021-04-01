@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Col, Collapse, DatePicker, Divider, Row, Select} from 'antd';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
-import {Ajax} from '../ajax/ajax';
+import {Ajax} from '../ajax';
 import {authUserIsn} from '../../authUserIsn';
 
 export interface DossierProps {
