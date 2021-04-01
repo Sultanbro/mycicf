@@ -4,6 +4,21 @@ import {Carousel, Col, Row, Image, Typography, Button, Divider} from 'antd';
 import {UserAvatar, UserPhoto} from '../UserAvatar';
 import {Ajax, AjaxProps} from '../ajax/ajax';
 
+const monthNames = {
+    1: 'Январь',
+    2: 'Февраль',
+    3: 'Март',
+    4: 'Апрель',
+    5: 'Май',
+    6: 'Июнь',
+    7: 'Июль',
+    8: 'Август',
+    9: 'Сентябрь',
+    10: 'Октябрь',
+    11: 'Ноябрь',
+    12: 'Декабрь'
+};
+
 interface BirthdayEntry {
     id: number;
     birthday: string;
@@ -16,20 +31,22 @@ interface BirthdaysResponse {
 }
 
 function Entry({entry}: { entry: BirthdayEntry }) {
-    return <div>
-        <Row>
-            <Col md={24}>
-                <UserPhoto isn={entry.kias_id} />
-            </Col>
-        </Row>
-        <Row>
-            <Col md={24}>
-                <Typography.Title level={2}>
+    return <Row justify="center" align="middle">
+        <Col md={24}>
+            <Row justify="center" align="middle">
+                <Col md={6} className="jc-center d-flex width50 events-window-size relative">
+                    <Image src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" preview={false} />
+                    <UserAvatar isn={entry.kias_id as any} shape="square" size={100} />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={24} className="text-center">
                     {entry.fullname}
-                </Typography.Title>
-            </Col>
-        </Row>
-    </div>
+                </Col>
+            </Row>
+        </Col>
+        <Divider />
+    </Row>
 }
 
 export function Birthdays() {
@@ -45,6 +62,8 @@ export function Birthdays() {
 
             let users = response.data[date];
 
+            let [day, month] = date.split('-').map(el => parseInt(el));
+
             return <Row>
                 <Col md={4}>
                     <Button style={{height: '100%'}}
@@ -59,24 +78,10 @@ export function Birthdays() {
                 </Col>
                 <Col md={16}>
                     <Typography.Title level={4} className="text-center">
-                        {date}
+                        {day} {(monthNames as any)[month]}
                     </Typography.Title>
-                    {users.map((user, index) => {
-                        return <Row justify="center" align="middle">
-                            <Col md={24} key={index}>
-                                <Row justify="center" align="middle">
-                                    <Col md={6}>
-                                        <UserAvatar isn={user.kias_id as any} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={24} className="text-center">
-                                        {user.fullname}
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Divider />
-                        </Row>
+                    {users.map((entry, index) => {
+                        return <Entry entry={entry} key={index} />
                     })}
                 </Col>
                 <Col md={4}>

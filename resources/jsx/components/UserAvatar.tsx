@@ -15,12 +15,14 @@ let url = (isn: string | number) => DEFAULT_AVATAR
 
 export function UserAvatar({isn, size = 64, shape = 'circle'}: UserAvatarProps) {
     let placeholder =
-        <Image
-            preview={false}
-            src={DEFAULT_AVATAR}
-        />
+        <Image preview={false}
+                src={DEFAULT_AVATAR}
+        />;
+    let src = <Image preview={false}
+                     src={url(isn)}
+                     placeholder={placeholder} />;
     return <Avatar size={size}
-                   src={<Image preview={false} src={url(isn)} placeholder={placeholder} />}
+                   src={src}
                    shape={shape}
     />
 }
