@@ -90,18 +90,17 @@
                 this.axios.post('/getBirthdays', {})
                     .then(response => {
                         this.birthdays = response.data.birthdays;
-                        console.log(this.birthdays);
                     })
                     .catch( error => {
                         alert(error);
                     });
             },
             next(){
-                let year = new Date().getFullYear()
-                let month = new Date().getMonth() + 1
-                let lastDay = new Date(year, month, 0).getDate()
+                let year = new Date().getFullYear();
+                let month = new Date().getMonth() + 1;
+                let lastDay = new Date(year, month, 0).getDate();
 
-                if(this.birthdays[this.index].birthday.slice(0, 2) == lastDay) {
+                if(this.birthdays[this.index].birthday.slice(0, 2) === lastDay) {
                     return;
                 }
                 else {
@@ -109,12 +108,7 @@
                 }
             },
             prev() {
-                if(this.today == 1) {
-                    return;
-                }
-                else {
-                    this.index--;
-                }
+                this.index--;
             }
         }
     }

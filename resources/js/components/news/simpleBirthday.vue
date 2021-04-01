@@ -2,7 +2,7 @@
     <div>
         <div class="d-flex flex-column vertical-middle Birthday-margin-inner">
             <div class="jc-center d-flex width50 events-window-size relative">
-                <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" class="absolute width100 height100" />
+                <img src="/images/konfeti.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
                 <img :src="imageUrl" class="width100" v-if="!fakeImage">
                 <img :src="fakeImageUrl" class="width100" v-else>
@@ -22,7 +22,7 @@
 
         <div v-if="similar.length > 0" v-for="birthday in similar" class="d-flex flex-column vertical-middle Birthday-margin-inner">
             <div class="jc-center d-flex width50 events-window-size relative">
-                <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" class="absolute width100 height100" />
+                <img src="/images/konfeti.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
                 <img :src="'/storage/images/employee/' + birthday.ISN + '.png'" class="width100" v-if="!birthday.fakeImage">
                 <img :src="fakeImageUrl" class="width100" v-else>
