@@ -34,9 +34,8 @@ export function SearchBox({loading, setSearchQuery, search, dateRange}: SearchBo
             />
         </Col>
         <Col md={8}>
-            <Ajax<DateValidRangesResult>
+            <Ajax.POST<DateValidRangesResult>
                 url="/news/getDateValidRanges"
-                method="POST"
                 cache
                 loading={<div style={{width: 600}}>
                     <Row>
@@ -61,7 +60,7 @@ export function SearchBox({loading, setSearchQuery, search, dateRange}: SearchBo
                         </Row>
                     </div>;
                 }}
-            </Ajax>
+            </Ajax.POST>
         </Col>
         <Divider />
     </Row>;

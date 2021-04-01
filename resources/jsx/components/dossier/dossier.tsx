@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, Col, Collapse, DatePicker, Divider, Row, Select} from 'antd';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {Ajax} from '../ajax';
@@ -11,7 +11,7 @@ export interface DossierProps {
 let useLocalStorage = createUseLocalStorage('dossier');
 
 export function Dossier({}: DossierProps) {
-    let [activeKeys, setActiveKeys] = useLocalStorage<any>('activeKeys', []);
+    let [activeKeys, setActiveKeys] = useLocalStorage<string | string[]>('activeKeys', []);
 
     return <Ajax.POST<any> url="/emplInfo" data={{isn: authUserIsn()}}>
         {({response, refetch}) => {

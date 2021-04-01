@@ -10,7 +10,7 @@ export interface AjaxPropsChildrenArgs<TRes> {
 }
 
 export interface AjaxProps<TRes> extends AxiosRequestConfig {
-    loading?: any;
+    loading?: React.ReactNode;
     children: ({response, refetch}: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
 
     cache?: AjaxCacheSettings | boolean;

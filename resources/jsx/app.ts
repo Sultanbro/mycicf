@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {MyCiCNews} from "./news";
-import {Birthdays} from "./components/birthdays/birthdays";
-import {Me} from './components/me/me';
 import {UserMenu} from './components/usermenu';
 import {Sandbox} from "./sandbox";
 

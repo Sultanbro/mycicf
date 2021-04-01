@@ -9,7 +9,7 @@ export interface CoordinationListProps {
 
 export function CoordinationList({}: CoordinationListProps) {
     return <Ajax.POST url="/getCoordinationList" data={{isn: authUserIsn()}}>
-        {({ response }) => {
+        {({  }) => {
             return <Row>
                 <Col>
                     <Row>

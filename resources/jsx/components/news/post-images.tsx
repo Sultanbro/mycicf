@@ -1,4 +1,4 @@
-import {Carousel, Col, Image, Row} from 'antd';
+import {Col, Image, Row} from 'antd';
 import React from 'react';
 import {PostEntity} from '../ajax/types';
 

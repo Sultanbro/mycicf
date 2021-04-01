@@ -1,7 +1,7 @@
 import React from 'react';
 import {Collapse} from 'antd';
 import {authUserName} from '../authUserName';
-import {Ajax} from './ajax/ajax';
+import {Ajax} from './ajax';
 
 interface ColleagueDataProps {
     isn: string;

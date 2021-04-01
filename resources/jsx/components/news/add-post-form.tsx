@@ -14,16 +14,21 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
-import {Ajax, AjaxButton} from '../ajax';
+import {AjaxButton, AjaxButtonProps} from '../ajax';
 import {ISN} from '../../types';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
 }
 
+interface PollData {
+    question: any;
+    answers: any[];
+}
+
 interface AddPostData {
     postText: string;
-    poll: any;
+    poll: PollData;
     isn: ISN;
 }
 
@@ -62,12 +67,12 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let maxLength = 2000;
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
-    let [pollData, setPollData] = useState<any>(null);
+    let [pollData, setPollData] = useState<PollData | null>(null);
     let [draftSaved, setDraftSaved] = useState(false);
     let [textFieldHeight, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
     let showPublishButton = !!postText.trim();
     let AjaxPublishPostButton = ({...props}: any) =>
-        <AjaxButton<any, any> {...props}
+        <AjaxButton<AddPostData, any> {...props}
                                method="POST"
                                icon={<SendOutlined />}
                                url="/news/addPost" />

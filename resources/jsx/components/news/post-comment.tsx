@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Avatar, Button, Col, Divider, Input, Row, Tag, Tooltip, Typography} from 'antd';
+import {Alert, Button, Col, Divider, Input, Row, Tag, Tooltip} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';

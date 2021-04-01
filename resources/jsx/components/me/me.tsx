@@ -8,11 +8,19 @@ export interface MeProps {
 
 }
 
+interface GetUsersDataResponse {
+    response: {
+        Name: string;
+        Duty: string;
+        Birthday: string;
+    }
+}
+
 export function Me({}: MeProps) {
     return <Row>
         <Col md={24}>
             <UserAvatar size={200} shape="square" isn={authUserIsn()} />
-            <Ajax.POST<any> url="/getUsersData" data={{isn: authUserIsn()}}>
+            <Ajax.POST<GetUsersDataResponse> url="/getUsersData" data={{isn: authUserIsn()}}>
                 {({response}) => {
                     return <Row>
                         <Col md={24}>

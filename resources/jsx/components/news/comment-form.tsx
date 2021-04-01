@@ -29,14 +29,12 @@ interface CommentFormProps {
     post: PostEntity;
     onCommendAdded: (entity: PostCommentEntity) => void;
     text?: string;
-    children?: React.ReactNode;
 }
 
 let commentForm = ({
                   post,
                   onCommendAdded,
                   text = '',
-                  children
               }: CommentFormProps, ref: ForwardedRef<any>) => {
     let useLocalStorage = createUseLocalStorage(`post:${post.postId}:`);
     let [commentText, setCommentText] = useLocalStorage('commentText', text);

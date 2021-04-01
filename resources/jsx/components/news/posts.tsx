@@ -1,5 +1,5 @@
 import {Post} from './post';
-import {Button, Col, Divider, List, Modal, notification, Row, Spin} from 'antd';
+import {Button, Col, Divider, List, notification, Row, Spin} from 'antd';
 import React, {useState} from 'react';
 import {CheckOutlined, EllipsisOutlined} from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -181,68 +181,4 @@ export function Posts({}: PostsProps) {
             </Row>
         }}
     </PostsAjax>
-}
-
-export function Posts3({isn}: any) {
-    let [loading, setLoading] = useState(false);
-    return <PostsAjax>
-        {({response, refetch}) => {
-            let {data} = response;
-            let lastIndex = Math.min(...data.map((post: any) => post.postId));
-            return <>
-                <Row style={{marginBottom: '50px'}}>
-                    <Col md={24}>
-                        <Row>
-                            <Col md={24}>
-                                {data.map((post: any, i: number) =>
-                                    <Post key={i}
-                                          post={post}
-                                          onDeleted={(post) => {
-                                              refetch();
-                                          }} />)}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={24} className="text-center">
-                                <Button loading={loading} icon={<EllipsisOutlined />} onClick={() => {
-                                    setLoading(true);
-                                    refetch({
-                                        previousData: data,
-                                        data: {lastIndex},
-                                        callback: (newData: any, previousData: any) => {
-                                            if (!previousData) {
-                                                previousData = [];
-                                            }
-
-                                            setLoading(false);
-                                            return previousData.concat(newData);
-                                        }
-                                    })
-                                }}>
-                                    Больше
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-            </>
-        }}
-    </PostsAjax>;
-}
-
-export function Posts2() {
-    return <Ajax url="/news/getPosts" method="POST" data={{test: 1}}>
-        {({response, refetch}: any) =>
-            <div>
-                <ul>
-                    {response.data.map((post: PostEntity, index: number) =>
-                        <li key={index}>Post #{post.postId}: {post.postText}</li>)}
-                </ul>
-                <Button onClick={() => {
-                    refetch();
-                }}>
-                    Больше
-                </Button>
-            </div>}
-    </Ajax>;
 }

@@ -29,14 +29,18 @@ export interface LikedUserEntry {
     full_name: "Armani McDermott V";
 }
 
-export function LikedUsers({postId}: any) {
+interface LikedUsersProps {
+    postId: number;
+}
+
+export function LikedUsers({postId}: LikedUsersProps) {
     // /news/getLikes
     return <Card style={{boxShadow: '0 0 8px #0000003b'}} onClick={(e) => e.preventDefault()}>
         <Ajax.POST<LikedUserEntry[]> url="/news/getLikes" data={{postId}} cache>
             {({response}) => {
                 let users = response.data.slice(0, 5);
                 return users.map((user, index) => {
-                    return <UserAvatar isn={user.ISN as any}
+                    return <UserAvatar isn={user.ISN}
                                        size="default"
                                        key={index}
                                        title={user.full_name}
