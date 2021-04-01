@@ -13,105 +13,94 @@ interface CoordinationServiceInterface
 {
 
     /**
-     * Получить список документов на согласование
-     *
-     *
-     * @param $ISN string
-     *
+     * @param $ISN
+     * @return mixed
      */
     public function CoordinationList($ISN);
 
     /**
-     *
-     *
-     *@param $docIsn string
-     *
+     * @param $docIsn
+     * @return mixed
      */
     public function CoordinationInfo($docIsn);
 
     /**
-     *
-     * @param $DocISN string
-     * @param $ISN string
-     * @param $Solution string
-     * @param $Remark string
-     * @param $Resolution string
-     *
+     * @param $DocISN
+     * @param $ISN
+     * @param $Solution
+     * @param $Remark
+     * @param $Resolution
+     * @return mixed
      */
     public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution);
 
     /**
-     *
      * @param $class_isn
      * @param $doc_isn
-     *
+     * @return mixed
      */
     public function DocRowList($class_isn, $doc_isn);
 
+    /**
+     * @return mixed
+     */
     public function attributeKeys();
 
+    /**
+     * @return mixed
+     */
     public function getCoordinationAttributes();
 
+    /**
+     * @return mixed
+     */
     public function getKVAttributes();
 
     /**
-     *
-     *
-     * @param $docIsn string
-     *
-     *
+     * @param $docIsn
+     * @return mixed
      */
     public function AttachmentsService($docIsn);
 
     /**
-     *
-     *
-     * @param $ISN string
-     *
+     * @param $ISN
+     * @return mixed
      */
     public function AgreedCoordination($ISN);
 
     /**
-     *
-     *
-     * @param mixed $fileType
-     * @param $isn string
-     * @param $requestType string
-     *
-     *
+     * @param $fileType
+     * @param $isn
+     * @param $requestType
+     * @return mixed
      */
     public function saveAttachmentService($fileType, $isn, $requestType);
 
     /**
-     *
-     *
-     * @param $users_rec string
-     * @param $doc_no string
-     * @param $doc_type string
-     *
+     * @param $users_rec
+     * @param $doc_no
+     * @param $doc_type
+     * @return mixed
      */
     public function sendNotifyService($users_rec, $doc_no, $doc_type);
 
     /**
-     *
-     * @param $postText string
-     *
+     * @param $postText
+     * @return mixed
      */
     public function closeDecadeService($postText);
 
     /**
-     *
-     *
-     * @param $isn string
-     * @param $type string
-     * @param  $no string
-     *
+     * @param $isn
+     * @param $no
+     * @param $type
+     * @return mixed
      */
     public function checkNotificationSended($isn, $no, $type);
 
     /**
-     * @param mixed $data
-     *
+     * @param $data
+     * @return mixed
      */
     public function serviceCenterNotify($data);
 

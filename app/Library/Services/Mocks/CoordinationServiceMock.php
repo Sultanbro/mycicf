@@ -15,7 +15,7 @@ use App\Library\Services\Kias;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Auth;
-use SimpleXMLElement;
+use Debugbar;
 
 /**+
  * Class CoordinationService
@@ -49,109 +49,181 @@ class CoordinationServiceMock implements CoordinationServiceInterface
     const AC_ATTRIBUTES_LABEL = 'ACattr';
     const COORDINATIONS_LABEL = 'Coordination';
 
+    /**
+     * @param string $ISN
+     * @return array
+     */
     public function CoordinationList($ISN){
-        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
-            <data>
-                <AC>
-                    <row>
-                        <ISN>5565</ISN>
-                        <type>1</type>
-                        <curator>1</curator>
-                        <DeptName>1</DeptName>
-                        <id>1</id>
-                        <docdate>01.01.2021</docdate>
-                        <ClassPovestka>1</ClassPovestka>
-                        <Povestka>1</Povestka>
-                    </row>
-                </AC>
-                <SP>
-                    <row>
-                        <ISN>5565</ISN>
-                        <type></type>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
-                        <docdate>01.01.2021</docdate>
-                    </row>
-                </SP>
-                <SZ>
-                    <row>
-                        <ISN>5565</ISN>
-                        <type></type>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
-                        <docdate>01.01.2021</docdate>
-                        <SzISN></SzISN>
-                        <SzClassISN></SzClassISN>
-                    </row>
-                </SZ>
-                <KV>
-                    <row>
-                        <ISN>5565</ISN>
-                        <empl></empl>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
-                        <docdate>01.01.2021</docdate>
-                    </row>
-                </KV>
-                <OL>
-                    <row>
-                        <ISN>5565</ISN>
-                        <empl></empl>
-                        <id></id>
-                        <docdate>01.01.2021</docdate>
-                        <DeptName></DeptName>
-                    </row>
-                </OL>
-                <AD>
-                    <row>
-                        <ISN>5565</ISN>
-                        <empl></empl>
-                        <id>1</id>
-                        <period>1</period>
-                        <docdate>01.01.2021</docdate>
-                        <days></days>
-                    </row>
-                </AD>
-                <RV>
-                    <row>
-                        <ISN>5565</ISN>
-                        <empl></empl>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
-                        <docpaydate>01.01.2021</docpaydate>
-                    </row>
-                </RV>
-                <BK>
-                    <row>
-                        <ISN>5565</ISN>
-                        <type></type>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
-                        <docdate>01.01.2021</docdate>
-                    </row>
-                </BK>
-                <other>
-                    <row>
-                        <ISN>5565</ISN>
-                        <Type></Type>
-                        <curator></curator>
-                        <id></id>
-                        <docdate>01.01.2021</docdate>
-                        <DeptName></DeptName>
-                        <ClassISN></ClassISN>
-                        <RefDocISN></RefDocISN>
-                        <RefClassISN></RefClassISN>
-                    </row>
-                </other>
-            </data>
-        ');
+        $success = true;
+        $error = null;
+        //$ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
+        $response = $this->kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
+
+        if($response->error){
+            $success = false;
+            $error = (string)$response->text;
+        }
+        $AC = $SP = $SZ = $KV = $OL = $AD = $RV = $VC = $other = null;
+
+        if($response->AC->row[0]->docdate != 0){
+            $AC = array();
+            foreach ($response->AC->row as $row) {
+                array_push($AC, [
+                    'ISN' => (integer)$row->ISN,
+                    'type' => (string)$row->type,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                    'ClassPovestka' => (string)$row->ClassPovestka,
+                    'Povestka' => (string)$row->Povestka
+                ]);
+            }
+        }
+
+        if($response->SP->row[0]->docdate != 0){
+            $SP = array();
+            foreach ($response->SP->row as $row) {
+                array_push($SP, [
+                    'ISN' => (string)$row->ISN,
+                    'type' => (string)$row->type,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                ]);
+            }
+        }
+
+        if($response->SZ->row[0]->docdate != 0){
+            $SZ = array();
+            foreach ($response->SZ->row as $row) {
+                array_push($SZ, [
+                    'ISN' => (string)$row->ISN,
+                    'type' => (string)$row->type,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                    'sz_isn' => (string)$row->SzISN,
+                    'sz_class_isn' => (string)$row->SzClassISN
+                ]);
+            }
+        }
+
+        if($response->KV->row[0]->docdate != 0){
+            $KV = array();
+            foreach ($response->KV->row as $row) {
+                array_push($KV, [
+                    'ISN' => (string)$row->ISN,
+                    'empl' => (string)$row->empl,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                ]);
+            }
+        }
+
+        if($response->OL->row[0]->docdate != 0){
+            $OL = array();
+            foreach ($response->OL->row as $row){
+                array_push($OL, [
+                    'ISN' => (string)$row->ISN,
+                    'empl' => (string)$row->empl,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                    'DeptName' => (string)$row->DeptName,
+                ]);
+            }
+        }
+
+        if($response->AD->row[0]->period != 0){
+            $AD = array();
+            foreach ($response->AD->row as $row){
+                array_push($AD, [
+                    'ISN' => (string)$row->ISN,
+                    'empl' => (string)$row->empl,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->period,
+                    'days' => (string)$row->cnt
+                ]);
+            }
+        }
+
+        if($response->RV->row[0]->docpaydate != 0){
+            $RV = array();
+            foreach ($response->RV->row as $row) {
+                array_push($RV, [
+                    'ISN' => (string)$row->ISN,
+                    'empl' => (string)$row->empl,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'PayDate' => (string)$row->docpaydate,
+                ]);
+            }
+        }
+        //1256401
+        if($response->BK->row[0]->docdate != 0){
+            $VC = array();
+            foreach ($response->BK->row as $row) {
+                array_push($VC, [
+                    'ISN' => (integer)$row->ISN,
+                    'type' => (string)$row->type,
+                    'curator' => (string)$row->curator,
+                    'DeptName' => (string)$row->DeptName,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                ]);
+            }
+        }
+
+        if($response->other->row[0]->docdate != 0){
+            $other = array();
+            foreach ($response->other->row as $row){
+                array_push($other, [
+                    'ISN' => (string)$row->ISN,
+                    'type' => (string)$row->Type,
+                    'curator' => (string)$row->curator,
+                    'id' => (string)$row->id,
+                    'docdate' => (string)$row->docdate,
+                    'DeptName' => (string)$row->DeptName,
+                    'ClassISN' => (string)$row->ClassISN,
+                    'RefDocISN' => (string)$row->RefDocISN,
+                    'RefClassISN' => (string)$row->RefClassISN,
+                ]);
+            }
+        }
+
+        $result = [
+            'success' => $success,
+            'error' => $error,
+            'result' => array(
+                'AC' => $AC,
+                'SP' => $SP,
+                'SZ' => $SZ,
+                'KV' => $KV,
+                'OL' => $OL,
+                'AD' => $AD,
+                'RV' => $RV,
+                'VC' => $VC,
+                'other' => $other
+            )
+        ];
+
+        return $result;
     }
 
+    /**
+     * @param string $docIsn
+     * @return array
+     */
     public function CoordinationInfo($docIsn)
     {
         $success = true;
@@ -249,6 +321,14 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param string $DocISN
+     * @param string $ISN
+     * @param string $Solution
+     * @param string $Remark
+     * @param string $Resolution
+     * @return array
+     */
     public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution){
         $success = true;
         $error = '';
@@ -273,6 +353,11 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param $class_isn
+     * @param $doc_isn
+     * @return array
+     */
     public function DocRowList($class_isn, $doc_isn) {
 
         $result = $this->kias->request('User_CicGetDocRowAttr', [
@@ -310,6 +395,9 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return  $result;
     }
 
+    /**
+     * @return array
+     */
     public function attributeKeys(){
         return [
             'AttrDocType' => 'Тип СЗ',
@@ -325,6 +413,9 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getCoordinationAttributes(){
         return [
             'ISN',                  //ISN СЗ
@@ -340,6 +431,9 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getKVAttributes(){
         return [
             'dept' => 'Филиал/Подразделение',
@@ -370,6 +464,10 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         ];
     }
 
+    /**
+     * @param string $docIsn
+     * @return array
+     */
     public function AttachmentsService ($docIsn){
         $response = $this->kias->getAttachmentsList($docIsn);
         $attachments = [];
@@ -396,6 +494,10 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param string $ISN
+     * @return array
+     */
     public function AgreedCoordination($ISN){
 
         $results = $this->kias->request('User_CicGetAgreedCoordinationList', array(
@@ -430,6 +532,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
     }
 
 
+    /**
+     * @param mixed $fileType
+     * @param string $isn
+     * @param string $requestType
+     * @return array
+     */
     public function saveAttachmentService($fileType, $isn, $requestType){
         try{
             $success = true;
@@ -468,6 +576,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         }
     }
 
+    /**
+     * @param string $users_rec
+     * @param string $doc_no
+     * @param string $doc_type
+     * @return bool
+     */
     public function sendNotifyService($users_rec, $doc_no, $doc_type){
         $users = explode(',', $users_rec);
         $client = new Client();
@@ -501,6 +615,10 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return true;
     }
 
+    /**
+     * @param string $postText
+     * @return string
+     */
     public function closeDecadeService($postText){
         $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
         $contentT .= $postText;
@@ -545,6 +663,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return 'пост успешно добавлен';
     }
 
+    /**
+     * @param string $isn
+     * @param string $no
+     * @param string $type
+     * @return bool
+     */
     public function checkNotificationSended($isn, $no, $type){
         $data = Notification::where('user_isn', $isn)
             ->where('doc_no', $no)
@@ -554,6 +678,10 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return sizeof($data) > 0;
     }
 
+    /**
+     * @param mixed $data
+     * @return array
+     */
     public function serviceCenterNotify($data) {
         $param = $data->isn;
         $users_isn = explode(',', $param['isn']);

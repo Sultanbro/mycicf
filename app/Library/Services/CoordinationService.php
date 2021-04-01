@@ -45,6 +45,10 @@ class CoordinationService implements CoordinationServiceInterface
     const AC_ATTRIBUTES_LABEL = 'ACattr';
     const COORDINATIONS_LABEL = 'Coordination';
 
+    /**
+     * @param string $ISN
+     * @return array
+     */
     public function CoordinationList($ISN){
         $success = true;
         $error = null;
@@ -212,6 +216,10 @@ class CoordinationService implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param string $docIsn
+     * @return array
+     */
     public function CoordinationInfo($docIsn)
     {
         $success = true;
@@ -309,6 +317,14 @@ class CoordinationService implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param string $DocISN
+     * @param string $ISN
+     * @param string $Solution
+     * @param string $Remark
+     * @param string $Resolution
+     * @return array
+     */
     public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution){
         $success = true;
         $error = '';
@@ -333,6 +349,11 @@ class CoordinationService implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param $class_isn
+     * @param $doc_isn
+     * @return array
+     */
     public function DocRowList($class_isn, $doc_isn) {
 
             $result = $this->kias->request('User_CicGetDocRowAttr', [
@@ -370,6 +391,9 @@ class CoordinationService implements CoordinationServiceInterface
         return  $result;
     }
 
+    /**
+     * @return array
+     */
     public function attributeKeys(){
         return [
             'AttrDocType' => 'Тип СЗ',
@@ -385,6 +409,9 @@ class CoordinationService implements CoordinationServiceInterface
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getCoordinationAttributes(){
         return [
             'ISN',                  //ISN СЗ
@@ -400,6 +427,9 @@ class CoordinationService implements CoordinationServiceInterface
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getKVAttributes(){
         return [
             'dept' => 'Филиал/Подразделение',
@@ -430,6 +460,10 @@ class CoordinationService implements CoordinationServiceInterface
         ];
     }
 
+    /**
+     * @param string $docIsn
+     * @return array
+     */
     public function AttachmentsService ($docIsn){
         $response = $this->kias->getAttachmentsList($docIsn);
         $attachments = [];
@@ -456,6 +490,10 @@ class CoordinationService implements CoordinationServiceInterface
         return $result;
     }
 
+    /**
+     * @param string $ISN
+     * @return array
+     */
     public function AgreedCoordination($ISN){
 
         $results = $this->kias->request('User_CicGetAgreedCoordinationList', array(
@@ -490,6 +528,12 @@ class CoordinationService implements CoordinationServiceInterface
     }
 
 
+    /**
+     * @param mixed $fileType
+     * @param string $isn
+     * @param string $requestType
+     * @return array
+     */
     public function saveAttachmentService($fileType, $isn, $requestType){
         try{
             $success = true;
@@ -528,6 +572,12 @@ class CoordinationService implements CoordinationServiceInterface
         }
     }
 
+    /**
+     * @param string $users_rec
+     * @param string $doc_no
+     * @param string $doc_type
+     * @return bool
+     */
     public function sendNotifyService($users_rec, $doc_no, $doc_type){
         $users = explode(',', $users_rec);
         $client = new Client();
@@ -561,6 +611,10 @@ class CoordinationService implements CoordinationServiceInterface
         return true;
     }
 
+    /**
+     * @param string $postText
+     * @return string
+     */
     public function closeDecadeService($postText){
         $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
         $contentT .= $postText;
@@ -605,6 +659,12 @@ class CoordinationService implements CoordinationServiceInterface
         return 'пост успешно добавлен';
     }
 
+    /**
+     * @param string $isn
+     * @param string $no
+     * @param string $type
+     * @return bool
+     */
     public function checkNotificationSended($isn, $no, $type){
         $data = Notification::where('user_isn', $isn)
             ->where('doc_no', $no)
@@ -614,6 +674,10 @@ class CoordinationService implements CoordinationServiceInterface
         return sizeof($data) > 0;
     }
 
+    /**
+     * @param mixed $data
+     * @return array
+     */
     public function serviceCenterNotify($data) {
         $param = $data->isn;
         $users_isn = explode(',', $param['isn']);
