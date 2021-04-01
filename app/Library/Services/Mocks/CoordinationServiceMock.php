@@ -7,9 +7,16 @@ namespace App\Library\Services\Mocks;
 use App\Events\NewPost;
 use App\Http\Controllers\NotificationController;
 use App\Library\Services\CoordinationServiceInterface;
-use Debugbar;
+use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\NotificationServiceInterface;
 use App\Post;
 use App\Notification;
+use App\Library\Services\Kias;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Auth;
+use SimpleXMLElement;
+
 /**+
  * Class CoordinationService
  *
@@ -21,6 +28,11 @@ use App\Notification;
 class CoordinationServiceMock implements CoordinationServiceInterface
 {
     private static $instance;
+    /**
+     * @var KiasServiceInterface|\Illuminate\Contracts\Foundation\Application
+     */
+    private $kias;
+
     public static function instance() {
         if (empty(self::$instance)) {
             self::$instance = new self();
@@ -29,12 +41,16 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return self::$instance;
     }
 
+    public function __construct()
+    {
+        $this->kias = app(KiasServiceInterface::class);
+    }
+
     const AC_ATTRIBUTES_LABEL = 'ACattr';
     const COORDINATIONS_LABEL = 'Coordination';
 
-    public function CoordinationList($request, $kias){
-
-        return new \SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+    public function CoordinationList($ISN){
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
             <data>
                 <AC>
                     <row>
@@ -136,11 +152,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         ');
     }
 
-    public function CoordinationInfo($request, $kias){
+    public function CoordinationInfo($docIsn)
+    {
         $success = true;
         $error = "";
-        $docIsn = $request->docIsn;
-        $response = $kias->getCoordination($docIsn);
+        //$docIsn = $request->docIsn;
+        $response = $this->kias->getCoordination($docIsn);
         if($response->error){
             $success = false;
             $error .= (string)$response->error->text;
@@ -148,7 +165,8 @@ class CoordinationServiceMock implements CoordinationServiceInterface
                 'success' => $success,
                 'error' => (string)$error
             ];
-            return response()->json($result)->withCallback($request->input('callback'));
+
+            return $result;
         }
         $responseData = [];
         $attributes = [];
@@ -231,12 +249,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return $result;
     }
 
-    public function CoordinationService($DocISN, $ISN){
+    public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution){
         $success = true;
         $error = '';
         $kias = new Kias();
         $kias->initSystem();
-        $response = $kias->setCoordination($request->DocISN, $request->ISN, $request->Solution, $request->Remark, $request->Resolution);
+        $response = $kias->setCoordination($DocISN, $ISN, $Solution,$Remark, $Resolution);
         if($response->error){
             $success = false;
             $error .= $response->error->fulltext;
@@ -245,60 +263,51 @@ class CoordinationServiceMock implements CoordinationServiceInterface
                 'error' => $error,
             ];
 
-            return response()->json($result)->withCallback($request->input('callback'));
+            return $result;
         }
         $result = [
             'success' => $success,
             'error' => $error,
             'result' => (string)$response->Result
         ];
-        return response()->json($result)->withCallback($request->input('callback'));
+        return $result;
     }
 
-    public function DocRowList($request, $kias) {
-        try {
-            $result = $kias->request('User_CicGetDocRowAttr', [
-                'CLASSISN' => $request->class_isn,
-                'DOCISN' => $request->doc_isn,
-            ]);
+    public function DocRowList($class_isn, $doc_isn) {
 
-            if(!isset($result->error))
+        $result = $this->kias->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => $class_isn->class_isn,
+            'DOCISN' => $doc_isn->doc_isn,
+        ]);
+
+        if(!isset($result->error))
+        {
+            $doc_row_list = array();
+            $doc_row_inner = array();
+            foreach ($result->DocRow->row as $row)
             {
-                $doc_row_list = array();
-                $doc_row_inner = array();
-                foreach ($result->DocRow->row as $row)
-                {
-                    if(!isset($doc_row_list[(string)$row->orderno])){
-                        $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
-                    }
-                    if(isset($row->classisn)) {
-                        if ($row->classisn == 1784771) {
-                            $doc_row_inner[(string)$row->orderno][] = array(
-                                'ISN' => (string)$row->value,
-                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
-                            );
-                        } else {
-                            $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
-                        }
+                if(!isset($doc_row_list[(string)$row->orderno])){
+                    $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
+                }
+                if(isset($row->classisn)) {
+                    if ($row->classisn == 1784771) {
+                        $doc_row_inner[(string)$row->orderno][] = array(
+                            'ISN' => (string)$row->value,
+                            'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
+                        );
+                    } else {
+                        $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
                     }
                 }
-
-                return response()->json([
-                    'success' => true,
-                    'doc_row_list' => $doc_row_list,
-                    'doc_row_inner' => $doc_row_inner,
-                ]);
             }
-            else
-                throw new \Exception('Данные не найдены', 400);
+
+            return  $result = [
+                'success' => true,
+                'doc_row_list' => $doc_row_list,
+                'doc_row_inner' => $doc_row_inner,
+            ];
         }
-        catch(\Exception $e) {
-            return response()->json([
-                'success'   => false,
-                'code'      => $e->getCode(),
-                'message'   => $e->getMessage()
-            ]);
-        }
+        return  $result;
     }
 
     public function attributeKeys(){
@@ -361,15 +370,15 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         ];
     }
 
-    public function AttachmentsService ($request, $kias){
-        $response = $kias->getAttachmentsList($request->docIsn);
+    public function AttachmentsService ($docIsn){
+        $response = $this->kias->getAttachmentsList($docIsn);
         $attachments = [];
         if($response->error){
             $result = [
                 'success' => false,
                 'error' => (string)$response->error->text,
             ];
-            return response()->json($result)->withCallback($request->input('callback'));
+            return $result;
         }
         if(isset($response->LIST->row)){
             foreach ($response->LIST->row as $row){
@@ -384,13 +393,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
             'error' => "",
             'attachments' => $attachments,
         ];
-        return response()->json($result)->withCallback($request->input('callback'));
+        return $result;
     }
 
-    public function AgreedCoordination($request, $kias){
-        $ISN = $request->ISN;
+    public function AgreedCoordination($ISN){
 
-        $results = $kias->request('User_CicGetAgreedCoordinationList', array(
+        $results = $this->kias->request('User_CicGetAgreedCoordinationList', array(
             'EmplISN' => $ISN
         ));
 
@@ -409,62 +417,60 @@ class CoordinationServiceMock implements CoordinationServiceInterface
                 ]);
             }
 
-            return response()->json([
+            return $response = [
                 'agreedAC' => $agreedAC,
                 'success' => true
-            ]);
+            ];
         }
         else {
-            return response()->json([
+            return $response = [
                 'success' => false
-            ]);
+            ];
         }
     }
 
 
-    public function saveAttachmentService($request, $kias){
+    public function saveAttachmentService($fileType, $isn, $requestType){
         try{
             $success = true;
-            if($request->fileType == 'base64'){
-                $file = $request->file;
-                $extension = isset($request->fileExt) ? $request->fileExt : '';
-                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
-            } else {
+            if($fileType == 'base64'){
+                $file = $fileType->file;
+                $extension = isset($fileType->fileExt) ? $fileType->fileExt : '';
+                $filename = 'signed_'.$fileType->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
+            } /*else {
 //                $file = $request->base64_encode($request->file);
 //                $contents = $file->get();
 //                $extension = $file->extension();
 //                $filename = mt_rand(1000000, 9999999).'.'.$extension;
-            }
+            }*/
 
-            $results = $kias->saveAttachment(
-                $request->isn,
+            $results = $this->kias->saveAttachment(
+                $isn,
                 $filename,
                 $file,
-                $request->requestType
+                $requestType
             );
             if(isset($results->error)){
                 $success = false;
                 $error = 'Ошибка загрузки файла, обратитесь к системному администратору';  //(string)$results->error->text
             }
 
-            return response()->json([
+            return $response = [
                 'success' => $success,
                 'error' => isset($error) ? $error : '',
                 'result' => isset($results->ISN) ? (string)$results->ISN : ''
-            ]);
+            ];
         } catch (Exception $e) {
-            return response()->json([
+            return $response = [
                 'success' => false,
                 'result' => $e->getMessage()
-            ]);
+            ];
         }
     }
 
-    public function sendNotifyService($request){
-        $users = explode(',', $request->users);
-        $doc_no = $request->doc_no;
-        $doc_type = $request->doc_type;
-        $client = new \GuzzleHttp\Client();
+    public function sendNotifyService($users_rec, $doc_no, $doc_type){
+        $users = explode(',', $users_rec);
+        $client = new Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
         (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
@@ -477,14 +483,17 @@ class CoordinationServiceMock implements CoordinationServiceInterface
             $model->doc_type = $doc_type;
             $model->sendDate = date('d.m.Y', time());
             $model->save();
-            $res = $client->request('POST', $url, [
-                'form_params' => [
-                    'isn' => $user,
-                    'docType' => $doc_type,
-                    'docNum' => $doc_no
-                ],
-                'verify' => false
-            ]);
+            try {
+                $res = $client->request('POST', $url, [
+                    'form_params' => [
+                        'isn' => $user,
+                        'docType' => $doc_type,
+                        'docNum' => $doc_no
+                    ],
+                    'verify' => false
+                ]);
+            } catch (GuzzleException $e) {
+            }
             if($res->getStatusCode() !== 200){
                 return false;
             }
@@ -492,9 +501,9 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return true;
     }
 
-    public function closeDecadeService($request){
+    public function closeDecadeService($postText){
         $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
-        $contentT .= $request->postText;
+        $contentT .= $postText;
         $isn = 1445725; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
         $username = 'Даурен Рамазанов';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
 
@@ -503,16 +512,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         $post = Post::where('user_isn',$isn)->whereBetween('created_at', [$from, $to])->first();
 
         if(!$post) {
-            try {
-                $new_post = new Post();
-                $new_post->user_isn = $isn;  //Даурен Рамазанов
-                $new_post->post_text = $contentT;
-                $new_post->pinned = 0;
-                $new_post->from_kias = 1;
-                $new_post->save();
-            } catch (\Exception $e) {
-                return false;
-            }
+            $new_post = new Post();
+            $new_post->user_isn = $isn;  //Даурен Рамазанов
+            $new_post->post_text = $contentT;
+            $new_post->pinned = 0;
+            $new_post->from_kias = 1;
+            $new_post->save();
 
             $response = [
                 'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
@@ -532,17 +537,12 @@ class CoordinationServiceMock implements CoordinationServiceInterface
                 'comments' => [],
             ];
 
-            try {
-                broadcast(new NewPost([
-                    'post' => $response,
-                    'type' => Post::NEW_POST
-                ]));
-            } catch (\Exception $e) {
-                return false;
-            }
-
-            return 'пост успешно добавлен';
+            broadcast(new NewPost([
+                'post' => $response,
+                'type' => Post::NEW_POST
+            ]));
         }
+        return 'пост успешно добавлен';
     }
 
     public function checkNotificationSended($isn, $no, $type){
@@ -554,35 +554,37 @@ class CoordinationServiceMock implements CoordinationServiceInterface
         return sizeof($data) > 0;
     }
 
-    public function serviceCenterNotify($request) {
-        $data = $request->all();
-
-        $users_isn = explode(',', $data['isn']);
-        $client = new \GuzzleHttp\Client();
+    public function serviceCenterNotify($data) {
+        $param = $data->isn;
+        $users_isn = explode(',', $param['isn']);
+        $client = new Client();
         $url = 'https://botan.kupipolis.kz/serviceCenterNotify';
 
         foreach ($users_isn as $isn) {
-            $res = $client->request('POST', $url, [
-                'form_params' => [
-                    'ISN'           => $isn,
-                    'serviceCenter' => $data['serviceCenter'],
-                    'customer'      => $data['customer'],
-                    'customerDept'  => $data['customerDept'],
-                    'requestNo'     => $data['requestNo'],
-                    'status'        => $data['status'],
-                    'subject'       => $data['subject'],
-                    'type'          => $data['type']
-                ],
-                'verify' => false
-            ]);
-            if($res->getStatusCode() !== 200){
-                return response()->json([
-                    'success' => false
+            try {
+                $result = $client->request('POST', $url, [
+                    'form_params' => [
+                        'ISN' => $isn,
+                        'serviceCenter' => $data['serviceCenter'],
+                        'customer' => $data['customer'],
+                        'customerDept' => $data['customerDept'],
+                        'requestNo' => $data['requestNo'],
+                        'status' => $data['status'],
+                        'subject' => $data['subject'],
+                        'type' => $data['type']
+                    ],
+                    'verify' => false
                 ]);
+            } catch (GuzzleException $e) {
+            }
+            if($result->getStatusCode() !== 200){
+                return $result = [
+                    'success' => false
+                ];
             }
         }
-        return response()->json([
+        return $result =[
             'success' => true,
-        ]);
+        ];
     }
 }

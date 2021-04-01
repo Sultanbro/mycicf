@@ -74,7 +74,7 @@ interface CoordinationServiceInterface
     /**
      *
      *
-     * @param $fileType
+     * @param mixed $fileType
      * @param $isn string
      * @param $requestType string
      *
@@ -110,7 +110,7 @@ interface CoordinationServiceInterface
     public function checkNotificationSended($isn, $no, $type);
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      */
     public function serviceCenterNotify($data);
