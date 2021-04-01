@@ -12,6 +12,7 @@ export interface SuggestionBtnProps {
 
 export interface SuggestionModalProps {
     visible: boolean;
+
     setVisible(visible: boolean): void;
 }
 
@@ -20,11 +21,11 @@ let useLocalStorage = createUseLocalStorage('suggestion');
 function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
     const [content, setContent] = useLocalStorage('content', '');
     return <Modal title="Оставить отзыв"
-           visible={visible}
-           footer={null}
-           onCancel={() => {
-               setVisible(false);
-           }}>
+                  visible={visible}
+                  footer={null}
+                  onCancel={() => {
+                      setVisible(false);
+                  }}>
         <Form initialValues={{
             username: `${authUserName()} (ISN: ${authUserIsn()})`,
             content
@@ -50,7 +51,7 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
         <Alert message={
             <span><b>Примечание:</b> Черновик Вашего обращения сохраняется в браузере.
                     Вы сможете вернуться к нему в любой момент.</span>
-        } type="info"/>
+        } type="info" />
 
         <Divider />
 
@@ -85,7 +86,7 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
 
             <SuggestionModal visible={isModalVisible} setVisible={(visible) => {
                 setIsModalVisible(visible);
-            }}/>
+            }} />
         </Col>
     </Row>
 }

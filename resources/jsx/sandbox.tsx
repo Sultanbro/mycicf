@@ -12,7 +12,7 @@ export function Sandbox({}: any) {
     return <div>
         {/*<ColleagueData isn={authUserIsn()} />*/}
 
-        {/*<Posts />*/}
+        <Posts />
 
         {/*<Birthdays />*/}
 
@@ -30,6 +30,6 @@ export function Sandbox({}: any) {
 
         {/*<Sidebar />*/}
 
-        <UserName isn={'5565'} username={'Developer'} />
+        {/*<UserName isn={'5565'} username={'Developer'} />*/}
     </div>
 }
