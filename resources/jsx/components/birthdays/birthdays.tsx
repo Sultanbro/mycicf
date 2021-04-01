@@ -35,8 +35,8 @@ function Entry({entry}: { entry: BirthdayEntry }) {
         <Col md={24}>
             <Row justify="center" align="middle">
                 <Col md={6} className="jc-center d-flex width50 events-window-size relative">
-                    <Image src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" preview={false} />
                     <UserAvatar isn={entry.kias_id as any} shape="square" size={100} />
+                    <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" className="absolute width100 height100" />
                 </Col>
             </Row>
             <Row>

@@ -10,17 +10,22 @@ interface UserAvatarProps {
 
 const DEFAULT_AVATAR = "/images/avatar.png";
 
-// let url = (isn: string) => `/storage/images/employee/${isn}.png`
-let url = (isn: string | number) => DEFAULT_AVATAR
+// let url = (isn: string | number) => `/storage/images/employee/${isn}.png`
+let url = (isn: string | number) => `https://dummyimage.com/340x340/95bbdf/ffffff.png&text=${isn}`;
+// let url = (isn: string | number) => DEFAULT_AVATAR
 
 export function UserAvatar({isn, size = 64, shape = 'circle'}: UserAvatarProps) {
     let placeholder =
         <Image preview={false}
-                src={DEFAULT_AVATAR}
+               src={DEFAULT_AVATAR}
+               loading="lazy"
         />;
-    let src = <Image preview={false}
-                     src={url(isn)}
-                     placeholder={placeholder} />;
+    let src =
+        <Image preview={false}
+               src={url(isn)}
+               placeholder={placeholder}
+               loading="lazy"
+        />;
     return <Avatar size={size}
                    src={src}
                    shape={shape}
@@ -32,5 +37,5 @@ interface UserPhotoProps {
 }
 
 export function UserPhoto({isn}: UserPhotoProps) {
-    return <Image src={url(isn)} loading="lazy" />
+    return <Image src={url(isn)} loading="lazy"/>
 }

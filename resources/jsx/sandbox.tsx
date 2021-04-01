@@ -1,12 +1,30 @@
 import React from 'react';
+import {Posts} from "./components/news/posts";
+import {Col} from "antd";
+import {Birthdays} from "./components/birthdays/birthdays";
 
-export function Sandbox({a, b}: any) {
+export function Sandbox({}: any) {
     return <div>
-        <p>{a}</p>
-        <p>{b}</p>
-    </div>
-}
+        {/*<ColleagueData isn={authUserIsn()} />*/}
 
-export function sum(a: number, b: number) {
-    return a + b;
+        {/*<Posts />*/}
+
+        <Birthdays />
+
+        {/*<Centcoins />*/}
+
+        {/*<CentcoinOperationsList />*/}
+
+        {/*<CoordinationList />*/}
+
+        {/*<UserMenu />*/}
+
+        {/*<BossPosts />*/}
+
+        {/*<Dossier />*/}
+
+        {/*<Sidebar />*/}
+
+        {/*<UserName isn={'5565'} username={'Developer'} />*/}
+    </div>
 }

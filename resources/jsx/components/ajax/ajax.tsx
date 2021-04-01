@@ -37,9 +37,46 @@ export interface AjaxRefetchArgs {
     callback?: (previousData: any, newData: any) => any;
 }
 
-export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin />}: AjaxProps<T>) {
+function flushExpiredCache() {
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+
+        if (!key) {
+            continue;
+        }
+
+        if (!key.startsWith('ajax__cache__')) {
+            continue;
+        }
+
+        try {
+            let value = localStorage.getItem(key);
+
+            if (!value) {
+                continue;
+            }
+
+            let json = JSON.parse(value);
+
+            if (!json.expires) {
+                localStorage.removeItem(key);
+                continue;
+            }
+
+            if (json.expires < Date.now()) {
+                localStorage.removeItem(key);
+            }
+        } catch(e) {
+            localStorage.removeItem(key);
+        }
+    }
+}
+
+export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin/>}: AjaxProps<T>) {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
+
+    flushExpiredCache();
 
     function refetch({method, url, params, data, previousData, callback}: AjaxRefetchArgs) {
         axios.request<T>({
@@ -80,7 +117,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
         }
 
         if (cacheSettings.enabled) {
-            let cacheKey = 'cache__' + JSON.stringify({method, url, params, data});
+            let cacheKey = 'ajax__cache__' + JSON.stringify({method, url, params, data});
             let item = localStorage.getItem(cacheKey);
             if (item) {
                 let result = JSON.parse(item);
@@ -105,7 +142,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
     }
 
     if (cacheSettings.enabled) {
-        let cacheKey = 'cache__' + JSON.stringify({method, url, params, data});
+        let cacheKey = 'ajax__cache__' + JSON.stringify({method, url, params, data});
         let result = JSON.stringify({
             expires: Date.now() + cacheSettings.lifetime,
             data: response
@@ -124,7 +161,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
     return <div>
         {children({
             response,
-            refetch: ({params= inputData.params, data = inputData.data, previousData, callback}: any = {}) => {
+            refetch: ({params = inputData.params, data = inputData.data, previousData, callback}: any = {}) => {
                 refetch({method, url, params, data, previousData, callback});
             }
         })}
@@ -197,7 +234,7 @@ Ajax.Button = <TReq, TRes>({
                     }}
                     loading={loading}
                     block={block}
-                    icon={!icon ? null : <CloseOutlined />}
+                    icon={!icon ? null : <CloseOutlined/>}
                     onClick={onClick}>
                 Повторить попытку
             </Button>

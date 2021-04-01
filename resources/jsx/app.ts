@@ -4,6 +4,7 @@ import {MyCiCNews} from "./news";
 import {Birthdays} from "./components/birthdays/birthdays";
 import {Me} from './components/me/me';
 import {UserMenu} from './components/usermenu';
+import {Sandbox} from "./sandbox";
 
 // https://github.com/websemantics/awesome-ant-design
 
@@ -22,7 +23,7 @@ function attachReactApp(selector: string, fn: any) {
 }
 
 let reactApps = {
-    '#sandbox-app': Birthdays,
+    '#jsx-sandbox-app': Sandbox,
     '#usermenu': UserMenu,
 };
 
