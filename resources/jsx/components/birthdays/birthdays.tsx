@@ -3,6 +3,7 @@ import {LeftOutlined, RightOutlined} from '@ant-design/icons';
 import {Col, Row, Typography, Button, Divider} from 'antd';
 import {UserAvatar} from '../UserAvatar';
 import {Ajax} from '../ajax';
+import {ISN} from '../../types';
 
 const monthNames = {
     1: 'Январь',
@@ -22,7 +23,7 @@ const monthNames = {
 interface BirthdayEntry {
     id: number;
     birthday: string;
-    kias_id: number | string;
+    kias_id: ISN;
     fullname: string;
 }
 
@@ -35,7 +36,7 @@ function Entry({entry}: { entry: BirthdayEntry }) {
         <Col md={24}>
             <Row justify="center" align="middle">
                 <Col md={6} className="jc-center d-flex width50 events-window-size relative">
-                    <UserAvatar isn={entry.kias_id as any} shape="square" size={100} />
+                    <UserAvatar isn={entry.kias_id} shape="square" size={100} />
                     <img alt=""
                          src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif"
                          className="absolute width100 height100"

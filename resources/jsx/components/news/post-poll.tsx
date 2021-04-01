@@ -10,7 +10,11 @@ interface PostPollProps {
 
 export function PostPoll({post}: PostPollProps) {
     let [voted, setVoted] = useState(post.isVoted);
-    let answerVotesCount = post.post_poll.answers.reduce((a, b) => a + b.answer_votes, 0);
+
+    let answerVotesCount = post.post_poll.answers
+        .reduce((a, b) =>
+            a + b.answer_votes, 0);
+
     let button = (answer: PostPollAnswer) =>
         <AjaxButton key={answer.answer_id}
                      url="/news/vote"

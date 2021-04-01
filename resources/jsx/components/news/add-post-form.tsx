@@ -14,7 +14,7 @@ import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
-import {AjaxButton, AjaxButtonProps} from '../ajax';
+import {AjaxButton} from '../ajax';
 import {ISN} from '../../types';
 
 export interface AddPostFormProps {
@@ -152,7 +152,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                             }, 1500)();
                                         }
                                     }} />
-                    <span style={{float: 'right'}}>{maxLength - postText.length}/{maxLength} символов</span>
+                    <span style={{float: 'right'}}>
+                        {maxLength - postText.length}/{maxLength} символов
+                    </span>
                 </Col>
                 <Col md={1}>
                     <EmojiPicker onSelect={(data) => {

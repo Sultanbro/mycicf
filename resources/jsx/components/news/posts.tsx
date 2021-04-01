@@ -16,7 +16,7 @@ interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
 
 export function PostsAjax({children}: PostsAjaxProps) {
     return <Ajax.POST<PostEntity> url="/news/getPosts">
-        {({response, refetch, callback}: any) => {
+        {({response, refetch, callback}: any) => { // TODO
             return children({response, callback, refetch});
         }}
     </Ajax.POST>;
@@ -41,7 +41,7 @@ export function Posts({}: PostsProps) {
              * @deprecated
              */
             let loadMore = () => {
-                let lastIndex = Math.min(...posts.map((post: any) => post.postId));
+                let lastIndex = Math.min(...posts.map((post) => post.postId));
                 setLoading(true);
                 refetch({
                     previousData: posts,
@@ -84,7 +84,7 @@ export function Posts({}: PostsProps) {
                 })
             };
 
-            let lastIndex = Math.min(...posts.map((post: any) => post.postId));
+            let lastIndex = Math.min(...posts.map((post) => post.postId));
             return <Row>
                 <Col md={24}>
                     <Row>
@@ -97,7 +97,8 @@ export function Posts({}: PostsProps) {
                                         icon: <CheckOutlined />
                                     });
                                     search(null);
-                                }} />
+                                }}
+                            />
                         </Col>
                         <Divider type="horizontal" />
                     </Row>

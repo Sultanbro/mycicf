@@ -5,8 +5,14 @@ import {authUserName} from '../authUserName';
 import {UserAvatar} from './UserAvatar';
 import {authUserIsn} from '../authUserIsn';
 
-declare let messaging: any;
-declare let setTokenSentToServer: any;
+interface Messaging {
+    requestPermission(): Promise<void>
+    getToken(): Promise<string>
+}
+
+declare let messaging: Messaging;
+declare function setTokenSentToServer(sent: boolean): void;
+declare function setTokenSentToServer(token: string): void;
 
 export interface UserMenuProps {
 
@@ -43,7 +49,7 @@ function subscribe() {
         .then(function () {
             // получаем ID устройства
             messaging.getToken()
-                .then(function (currentToken: any) {
+                .then(function (currentToken) {
                     console.log(currentToken);
 
                     if (currentToken) {
@@ -53,18 +59,18 @@ function subscribe() {
                         setTokenSentToServer(false);
                     }
                 })
-                .catch(function (err: any) {
+                .catch(function (err) {
                     console.warn('При получении токена произошла ошибка.', err);
                     setTokenSentToServer(false);
                 });
         })
-        .catch(function (err: any) {
+        .catch(function (err) {
             console.warn('Не удалось получить разрешение на показ уведомлений.', err);
         });
 }
 
 // отправка ID на сервер
-function sendTokenToServer(currentToken: any) {
+function sendTokenToServer(currentToken: string) {
     // if (!isTokenSentToServer(currentToken)) {
     console.log('Отправка токена на сервер...');
 

@@ -13,9 +13,9 @@ function findElement<T extends HTMLElement = HTMLElement>(selector: string, cb: 
     }
 }
 
-function attachReactApp(selector: string, fn: any) {
+function attachReactApp(selector: string, type: any) {
     findElement(selector, (el) => {
-        let reactAppElement = React.createElement(fn);
+        let reactAppElement = React.createElement(type);
         ReactDOM.render(reactAppElement, el);
     });
 }

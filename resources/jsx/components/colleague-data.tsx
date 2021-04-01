@@ -2,9 +2,10 @@ import React from 'react';
 import {Collapse} from 'antd';
 import {authUserName} from '../authUserName';
 import {Ajax} from './ajax';
+import {ISN} from '../types';
 
 interface ColleagueDataProps {
-    isn: string;
+    isn: ISN;
 }
 
 interface ColleagueResponse {

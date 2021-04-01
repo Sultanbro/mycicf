@@ -23,9 +23,12 @@ export interface CommentEditFormProps {
 export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormProps) {
     let [text, setText] = useState(comment.commentText);
     return <div>
-        <Input.TextArea value={text} onChange={(e) => {
-            setText(e.target.value)
-        }} />
+        <Input.TextArea
+            value={text}
+            onChange={(e) => {
+                setText(e.target.value)
+            }}
+        />
 
         <AjaxButton<{ commentId: number, commentText: string }, { edited: boolean, success: boolean }>
             url="/news/comments/editComment"
@@ -65,9 +68,10 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                                          onCommentDeleted={(commentId) => {
                                              onCommentDeleted(commentId);
                                          }}
-                                         onShowEditForm={(commentId) => {
+                                         onShowEditForm={() => {
                                              setShowEditForm(true);
-                                         }} />
+                                         }}
+                            />
                         </If>
                     </Col>
                     <Col md={8}>
@@ -80,14 +84,16 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                     <Col md={24}>
                         {
                             showEditForm ?
-                                <CommentEditForm comment={comment}
-                                                 onCancel={() => {
-                                                     setShowEditForm(false);
-                                                 }}
-                                                 onSaved={(text) => {
-                                                     setText(text);
-                                                     setShowEditForm(false);
-                                                 }} /> :
+                                <CommentEditForm
+                                    comment={comment}
+                                    onCancel={() => {
+                                        setShowEditForm(false);
+                                    }}
+                                    onSaved={(text) => {
+                                        setText(text);
+                                        setShowEditForm(false);
+                                    }}
+                                /> :
                                 <Alert message={text} type="info" />
                         }
 

@@ -12,7 +12,7 @@ import {ISN} from '../../types';
 
 interface CommentAjaxRequest {
     isn: ISN;
-    postId: any;
+    postId: number;
     commentText: string;
 }
 

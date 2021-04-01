@@ -60,7 +60,7 @@ function flushExpiredCache() {
     }
 }
 
-export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin/>}: AjaxProps<T>) {
+export function Ajax<T>({url, method, params, data, children, headers, cache, loading = <Spin/>}: AjaxProps<T>): React.ReactNode {
     let [response, setResponse] = useState<AxiosResponse<T>>();
     let [error, setError] = useState<Error>();
 

@@ -8,12 +8,23 @@ export interface DossierProps {
 
 }
 
+interface DossierResponse {
+    result: {
+        CARIER: any;
+        VACATION: any;
+        MISSION: any;
+        ADMINS: any;
+        SICK: any;
+        THANKS: any;
+    }
+}
+
 let useLocalStorage = createUseLocalStorage('dossier');
 
 export function Dossier({}: DossierProps) {
     let [activeKeys, setActiveKeys] = useLocalStorage<string | string[]>('activeKeys', []);
 
-    return <Ajax.POST<any> url="/emplInfo" data={{isn: authUserIsn()}}>
+    return <Ajax.POST<DossierResponse> url="/emplInfo" data={{isn: authUserIsn()}}>
         {({response, refetch}) => {
             let {result} = response.data;
             return <Row>
