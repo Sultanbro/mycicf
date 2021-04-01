@@ -7,6 +7,7 @@ import {PostCommentEntity} from '../ajax/types';
 import {Ajax} from '../ajax/ajax';
 import {FileButton} from './add-post-form';
 import {UserName} from '../../UserName';
+import {If} from '../if';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;
@@ -60,17 +61,15 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
                         <UserName isn={comment.userISN} username={comment.fullname} />
                     </Col>
                     <Col md={2} offset={2}>
-                        {
-                            comment.isMine ?
-                                <CommentMenu comment={comment}
-                                             onCommentDeleted={(commentId) => {
-                                                 onCommentDeleted(commentId);
-                                             }}
-                                             onShowEditForm={(commentId) => {
-                                                 setShowEditForm(true);
-                                             }} />
-                                : null}
-
+                        <If condition={comment.isMine}>
+                            <CommentMenu comment={comment}
+                                         onCommentDeleted={(commentId) => {
+                                             onCommentDeleted(commentId);
+                                         }}
+                                         onShowEditForm={(commentId) => {
+                                             setShowEditForm(true);
+                                         }} />
+                        </If>
                     </Col>
                     <Col md={8}>
                         <Tag color="green" style={{

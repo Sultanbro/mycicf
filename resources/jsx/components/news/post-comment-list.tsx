@@ -2,15 +2,17 @@ import React, {useState} from 'react';
 import {PostComment} from './post-comment';
 import {PostCommentEntity} from '../ajax/types';
 import {Affix, Button, Col, Divider, Row} from 'antd';
+import {If} from '../if';
 
 export interface PostCommentListProps {
     comments: PostCommentEntity[];
     onReply(comment: PostCommentEntity): void;
     onCommentDeleted(commentId: number): void;
     commentsLimit?: number;
+    expanded?: boolean;
 }
 
-export function PostCommentList({comments, onReply, onCommentDeleted, commentsLimit = 3}: PostCommentListProps) {
+export function PostCommentList({comments, onReply, onCommentDeleted, commentsLimit = 3, expanded = false}: PostCommentListProps) {
     let [limit, setLimit] = useState(commentsLimit);
     let limitedComments = comments.slice(0, limit);
     let hasMoreComments = limitedComments.length < comments.length;
@@ -33,14 +35,16 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
             </Row>
             <Row>
                 <Col offset={2} md={20}>
-                    {hasMoreComments ? <Button
-                        type="dashed"
-                        block
-                        onClick={() => {
-                            setLimit(limit + 5);
-                        }}>
-                        Ещё &nbsp; <b>{comments.length - limit}</b> &nbsp; комментариев
-                    </Button> : null}
+                    <If condition={hasMoreComments}>
+                        <Button
+                            type="dashed"
+                            block
+                            onClick={() => {
+                                setLimit(limit + 5);
+                            }}>
+                            Ещё &nbsp; <b>{comments.length - limit}</b> &nbsp; комментариев
+                        </Button>
+                    </If>
                 </Col>
             </Row>
             <Divider type="horizontal" style={{margin: '10px 0'}} />

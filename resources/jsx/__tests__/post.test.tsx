@@ -36,6 +36,7 @@ describe('posts tests', () => {
             isn: '5565',
             isVoted: false,
             likes: 1,
+            pinned: false,
             post_poll: {
                 question_id: null,
                 question_title: null,
@@ -72,6 +73,7 @@ describe('posts tests', () => {
             isn: '5565',
             isVoted: false,
             likes: 1,
+            pinned: false,
             post_poll: {
                 question_id: null,
                 question_title: null,

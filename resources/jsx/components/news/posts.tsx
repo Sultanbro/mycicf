@@ -6,15 +6,19 @@ import InfiniteScroll from 'react-infinite-scroller';
 import './posts.css';
 import {AddPostForm} from "./add-post-form";
 import {Ajax, AjaxProps} from '../ajax/ajax';
-import {PostEntity} from '../ajax/types';
+import {AjaxCacheSettings, PostEntity} from '../ajax/types';
 import {SearchBox} from './search-box';
 
 interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
-    lastIndex?: number;
+
 }
 
-export function PostsAjax({lastIndex, children}: PostsAjaxProps) {
-    return <Ajax.POST<PostEntity> url="/news/getPosts" data={{lastIndex}}>
+export function PostsAjax({children}: PostsAjaxProps) {
+    let cache: AjaxCacheSettings = {
+        enabled: true,
+        lifetime: 1000 * 60,
+    };
+    return <Ajax.POST<PostEntity> url="/news/getPosts">
         {({response, refetch, callback}: any) => {
             return children({response, callback, refetch});
         }}
@@ -36,9 +40,11 @@ export function Posts({}: PostsProps) {
                 // Use ORDER BY on backend instead
                 .sort((a, b) => +b.pinned - +a.pinned);
 
-            ///////
-
+            /**
+             * @deprecated
+             */
             let loadMore = () => {
+                let lastIndex = Math.min(...posts.map((post: any) => post.postId));
                 setLoading(true);
                 refetch({
                     previousData: posts,
@@ -117,19 +123,36 @@ export function Posts({}: PostsProps) {
                                 <List
                                     dataSource={posts}
                                     renderItem={item => {
+                                        let [showModal, setShowModal] = useState(false);
+
                                         return (
                                             <List.Item key={item.postId} style={{
                                                 padding: 0,
                                             }}>
                                                 <Col md={24}>
                                                     <Post post={item}
+                                                          onDateClicked={() => setShowModal(true)}
                                                           onDeleted={(post) => {
                                                               notification.info({
                                                                   message: 'Пост удалён',
-                                                                  icon: <CheckOutlined/>
+                                                                  icon: <CheckOutlined />
                                                               });
                                                               search(null);
-                                                          }}/>
+                                                          }} />
+
+                                                    <Modal visible={showModal}
+                                                           width={880}
+                                                           onCancel={() => setShowModal(false)}>
+                                                        <Post post={item}
+                                                              expanded
+                                                              onDeleted={(post) => {
+                                                                  notification.info({
+                                                                      message: 'Пост удалён',
+                                                                      icon: <CheckOutlined />
+                                                                  });
+                                                                  search(null);
+                                                              }} />
+                                                    </Modal>
                                                 </Col>
                                             </List.Item>
                                         );
@@ -142,7 +165,7 @@ export function Posts({}: PostsProps) {
                                     )}
                                 </List>
 
-                                {hasMore ? <Row hidden>
+                                {hasMore ? <Row>
                                     <Col md={24} className="text-center">
                                         <Button loading={loading}
                                                 icon={<EllipsisOutlined />}

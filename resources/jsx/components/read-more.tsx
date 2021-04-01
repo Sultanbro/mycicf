@@ -4,12 +4,13 @@ import {Button} from 'antd';
 export interface ReadMoreProps {
     text: string;
     limit?: number;
+    expanded?: boolean;
 }
 
 // TODO
-export function ReadMore({text, limit = 3}: ReadMoreProps) {
+export function ReadMore({text, limit = 3, expanded: $expanded = false}: ReadMoreProps) {
     try {
-        let [expanded, setExpanded] = useState(false);
+        let [expanded, setExpanded] = useState($expanded);
         let paragraphs = text.split(/\n\n/);
         let limitedText = paragraphs;
 

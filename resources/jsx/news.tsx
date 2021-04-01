@@ -45,27 +45,7 @@ export function MyCiCNews({}: MyCiCNewsProps) {
             </Row>
             <Row>
                 <Col md={24}>
-                    {/*<ColleagueData isn={authUserIsn()} />*/}
-
                     <Posts />
-
-                    {/*<Birthdays />*/}
-
-                    {/*<Centcoins />*/}
-
-                    {/*<CentcoinOperationsList />*/}
-
-                    {/*<CoordinationList />*/}
-
-                    {/*<UserMenu />*/}
-
-                    {/*<BossPosts />*/}
-
-                    {/*<Dossier />*/}
-
-                    {/*<Sidebar />*/}
-
-                    {/*<UserName isn={'5565'} username={'Developer'} />*/}
                 </Col>
             </Row>
         </Col>

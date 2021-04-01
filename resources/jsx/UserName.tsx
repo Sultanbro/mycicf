@@ -44,6 +44,9 @@ function Info({isn, username}: InfoProps) {
                                 {username}
                             </Typography.Title>
                             <Typography.Text>
+                                <p><b>ISN: </b>{isn}</p>
+                            </Typography.Text>
+                            <Typography.Text>
                                 <p>{response.data.response.Birthday}</p>
                             </Typography.Text>
                             <Typography.Text>

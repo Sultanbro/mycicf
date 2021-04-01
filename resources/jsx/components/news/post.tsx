@@ -12,15 +12,20 @@ import {PostEntity} from '../ajax/types';
 import {Ajax, AjaxButtonProps} from '../ajax/ajax';
 import {PostCommentList} from './post-comment-list';
 import {UserName} from '../../UserName';
+import {If} from '../if';
 
 export interface PostProps {
     post: PostEntity;
     onDeleted?: (post: PostEntity) => void;
     onDateClicked?: (post: PostEntity) => void;
+    expanded?: boolean;
 }
 
 export function Post({
-                         post, onDeleted = () => {}, onDateClicked
+                         post,
+                         onDeleted = () => {},
+                         onDateClicked,
+                         expanded = false
                      }: PostProps) {
     let [editing, setEditing] = useState(false);
     let [newCommentText, setNewCommentText] = useState('');
@@ -50,36 +55,45 @@ export function Post({
                 </Row>
                 <Row>
                     <Col>
-                        <Tag color="green" onClick={() => onDateClicked ? onDateClicked(post) : null}>{post.date}</Tag>
-                        {post.edited ? <Tag color="blue" className="is-edited">
-                            отредактировано
-                        </Tag> : null}
+                        <Tag color="green"
+                             onClick={() => onDateClicked ? onDateClicked(post) : null}
+                             style={{cursor: 'pointer'}}
+                        >
+                            {post.date}
+                        </Tag>
+                        <If condition={post.edited}>
+                            <Tag color="blue" className="is-edited">
+                                отредактировано
+                            </Tag>
+                        </If>
                     </Col>
                 </Row>
             </Col>
             <Col md={3}>
-                {post.isMine ? <div className="control-buttons text-right">
-                    <Button type="text"
-                            icon={editing ? <EditFilled /> : <EditOutlined />}
-                            onClick={() => {
-                                setEditing(!editing);
-                            }}
-                    />
+                <If condition={post.isMine}>
+                    <div className="control-buttons text-right">
+                        <Button type="text"
+                                icon={editing ? <EditFilled /> : <EditOutlined />}
+                                onClick={() => {
+                                    setEditing(!editing);
+                                }}
+                        />
 
-                    <AjaxDeletePostButton
-                        url="/news/my/deletePost"
-                        method="POST"
-                        data={{postId: post.postId}}
-                        type="text"
-                        icon={<CloseOutlined />}
-                        confirm
-                        confirmText="Вы уверены?"
-                        onSuccess={(res) => {
-                            if (res.data.success) {
-                                onDeleted(post);
-                            }
-                        }} />
-                </div> : null}
+                        <AjaxDeletePostButton
+                            url="/news/my/deletePost"
+                            method="POST"
+                            data={{postId: post.postId}}
+                            type="text"
+                            icon={<CloseOutlined />}
+                            confirm
+                            confirmText="Вы уверены?"
+                            onSuccess={(res) => {
+                                if (res.data.success) {
+                                    onDeleted(post);
+                                }
+                            }} />
+                    </div>
+                </If>
             </Col>
         </Row>
         <Row>
@@ -111,7 +125,7 @@ export function Post({
                             <Row>
                                 <Col md={24}>
                                     <div style={{margin: '14px'}}>
-                                        <ReadMore text={postText} />
+                                        <ReadMore text={postText} expanded={expanded} />
                                     </div>
                                 </Col>
                             </Row>
@@ -150,6 +164,7 @@ export function Post({
         <Row>
             <Col md={22} offset={2}>
                 <PostCommentList comments={comments}
+                                 commentsLimit={expanded ? 1000 : 3}
                                  onReply={(comment) => {
                                      setNewCommentText(`${comment.fullname}, `);
                                  }}
@@ -170,6 +185,7 @@ export function Post({
                     </Divider>
                     <PostCommentList comments={comments}
                                      commentsLimit={1000}
+                                     expanded={expanded}
                                      onReply={(comment) => {
                                          setNewCommentText(`${comment.fullname}, `);
                                      }}

@@ -35,7 +35,7 @@
     <div class="main_margin flex-row width100">
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2">
 
-            <div class="col-md-8 offset-2" id="jsx-sandbox-app"></div>
+            <div id="jsx-sandbox-app"></div>
 
             <div id="auth-user-isn" hidden>{{Auth::user()->ISN}}</div>
             <div id="auth-user-name" hidden>{{Auth::user()->full_name}}</div>

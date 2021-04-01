@@ -79,6 +79,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
     flushExpiredCache();
 
     function refetch({method, url, params, data, previousData, callback}: AjaxRefetchArgs) {
+        console.log('refetching', {method, url, params, data});
         axios.request<T>({
             method,
             url,
@@ -118,6 +119,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
 
         if (cacheSettings.enabled) {
             let cacheKey = 'ajax__cache__' + JSON.stringify({method, url, params, data});
+            console.log({method, url, params, data});
             let item = localStorage.getItem(cacheKey);
             if (item) {
                 let result = JSON.parse(item);
@@ -226,18 +228,18 @@ Ajax.Button = <TReq, TRes>({
         </Button>
     }
 
-    return !error ? btn :
-        <Tooltip title={error.message}>
-            <Button type="link"
-                    style={{
-                        color: 'red'
-                    }}
-                    loading={loading}
-                    block={block}
-                    icon={!icon ? null : <CloseOutlined/>}
-                    onClick={onClick}>
-                Повторить попытку
-            </Button>
-        </Tooltip>
+    let errorBtn = (error: any) => <Tooltip title={error.message}>
+        <Button type="link"
+                style={{
+                    color: 'red'
+                }}
+                loading={loading}
+                block={block}
+                icon={!icon ? null : <CloseOutlined/>}
+                onClick={onClick}>
+            Повторить попытку
+        </Button>
+    </Tooltip>;
+    return !error ? btn : errorBtn(error)
 }
 //
