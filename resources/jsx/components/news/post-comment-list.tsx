@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {PostComment} from './post-comment';
 import {PostCommentEntity} from '../ajax/types';
-import {Button, Col, Divider, Row} from 'antd';
+import {Affix, Button, Col, Divider, Row} from 'antd';
 
 export interface PostCommentListProps {
     comments: PostCommentEntity[];
@@ -19,7 +19,7 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
         <Col md={24}>
             <Row>
                 <Col md={24}>
-                    {limitedComments.map((comment: any, i: number) =>
+                    {limitedComments.map((comment: PostCommentEntity, i: number) =>
                         <PostComment comment={comment}
                                      key={i}
                                      onCommentDeleted={(commentId) => {
@@ -38,7 +38,7 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
                     onClick={() => {
                         setLimit(limit + 5);
                     }}>
-                    Показать ещё &nbsp; <b>{comments.length - limit}</b> &nbsp; комментариев
+                    Ещё &nbsp; <b>{comments.length - limit}</b> &nbsp; комментариев
                 </Button> : null}
             </Row>
             <Divider type="horizontal" style={{margin: '10px 0'}} />

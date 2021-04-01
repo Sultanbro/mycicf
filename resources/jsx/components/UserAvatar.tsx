@@ -11,8 +11,8 @@ interface UserAvatarProps {
 const DEFAULT_AVATAR = "/images/avatar.png";
 
 // let url = (isn: string | number) => `/storage/images/employee/${isn}.png`
-let url = (isn: string | number) => `https://dummyimage.com/340x340/95bbdf/ffffff.png&text=${isn}`;
-// let url = (isn: string | number) => DEFAULT_AVATAR
+// let url = (isn: string | number) => `https://dummyimage.com/340x340/95bbdf/ffffff.png&text=${isn}`;
+let url = (isn: string | number) => DEFAULT_AVATAR
 
 export function UserAvatar({isn, size = 64, shape = 'circle'}: UserAvatarProps) {
     let placeholder =
