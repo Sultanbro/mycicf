@@ -28,3 +28,14 @@ POST http://{{host}}/news/getPosts
         client.assert(typeof response.body.length === 'number', "Response status is not an array");
     });
  %}
+
+### Get likes
+POST http://{{host}}/news/getLikes
+Accept: application/json
+
+{
+  "postId": 1
+}
+
+
+### Get user data

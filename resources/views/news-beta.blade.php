@@ -53,9 +53,9 @@
         </div>
         <div class="col-md-2-sm-3-lg mt-3">
             <news-birthday></news-birthday>
-            <div>
+<!--            <div>
                 <Countdown end="December 31, 2021"></Countdown>
-            </div>
+            </div>-->
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>

@@ -32,36 +32,44 @@ interface GetColleagueDataResponse {
 
 function Info({isn, username}: InfoProps) {
     return <Card style={{width: 600, boxShadow: '0 0 8px #0000003b'}}>
-        <Row>
-            <Col md={6}>
-                <UserAvatar isn={isn} size={128} shape="square" />
-            </Col>
-            <Col md={18}>
-                <Ajax.POST<GetColleagueDataResponse> url="/getColleagueData" data={{isn}} cache>
-                    {({response}) => {
-                        return <div>
-                            <Typography.Title level={4}>
-                                {username}
-                            </Typography.Title>
-                            <Typography.Text>
-                                <p><b>ISN: </b>{isn}</p>
-                            </Typography.Text>
-                            <Typography.Text>
-                                <p><b>Дата рождения: </b>{response.data.response.Birthday}</p>
-                            </Typography.Text>
-                            <Typography.Text>
-                                <p><b>Подразделение: </b>{response.data.response.Duty}</p>
-                            </Typography.Text>
-                        </div>
-                    }}
-                </Ajax.POST>
-            </Col>
-        </Row>
-        <Row>
-            <Divider />
-            <Button href={dossierUrl(isn)}>
-                <i className="far fa-clipboard" /> Досье
-            </Button>
-        </Row>
+
+        <Ajax.POST<GetColleagueDataResponse> url="/getColleagueData" data={{isn}} cache>
+            {({response}) => {
+                return <Row>
+                    <Col md={24}>
+                        <Row>
+                            <Col md={6}>
+                                <UserAvatar isn={isn} size={128} shape="square" />
+                            </Col>
+                            <Col md={18}>
+                                <div>
+                                    <Typography.Title level={4}>
+                                        {username}
+                                    </Typography.Title>
+                                    <Typography.Text>
+                                        <p><b>ISN: </b>{isn}</p>
+                                    </Typography.Text>
+                                    <Typography.Text>
+                                        <p><b>Дата рождения: </b>{response.data.response.Birthday}</p>
+                                    </Typography.Text>
+                                    <Typography.Text>
+                                        <p><b>Подразделение: </b>{response.data.response.Duty}</p>
+                                    </Typography.Text>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={24}>
+                                <Divider />
+                                <Button href={dossierUrl(isn)}>
+                                    <i className="far fa-clipboard" /> Досье
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            }}
+        </Ajax.POST>
+
     </Card>;
 }

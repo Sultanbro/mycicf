@@ -1,0 +1,23 @@
+### Authorization
+POST http://{{host}}/login
+Content-Type: application/json
+
+{
+    "username": "Developer",
+    "password": "password"
+}
+
+### Get posts
+POST http://{{host}}/news/getLikes
+Content-Type: application/json
+Accept: application/json
+
+{
+    "postId": 1
+}
+
+> {%
+    client.test('Must return the array of posts', function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+ %}

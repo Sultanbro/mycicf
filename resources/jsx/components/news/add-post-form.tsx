@@ -99,7 +99,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     return <Row>
         <Col md={24}>
             <Row>
-                <Col md={12}>
+                <Col md={24}>
                     <Typography.Title level={4}>
                         Создайте публикацию
 

@@ -15,6 +15,7 @@ use App\Question;
 use App\UserAnswer;
 use Debugbar;
 use Exception;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Auth;
@@ -22,20 +23,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class PostsController extends Controller
-{
+class PostsController extends Controller {
     /**
      * @var PostsService
      */
     private $postsService;
 
-    public function __construct(PostsService $postsService)
-    {
+    public function __construct(PostsService $postsService) {
         $this->postsService = $postsService;
     }
 
-    public function likePost(Request $request)
-    {
+    public function likePost(Request $request) {
         $post_id = $request->postId;
         $user_isn = auth()->user()->ISN;
 
@@ -57,12 +55,12 @@ class PostsController extends Controller
 
         $response = [
             'success' => $success,
-            'count' => $likesCount,
+            'count'   => $likesCount,
         ];
 
         broadcast(new NewPost([
             'post' => [
-                'id' => $post_id,
+                'id'    => $post_id,
                 'likes' => (new Like())->getLikes($post_id),
             ],
             'type' => Post::LIKED_POST
@@ -73,8 +71,7 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function addPost(AddPostRequest $request)
-    {
+    public function addPost(AddPostRequest $request) {
         $isPoll = (boolean)$request->get('poll');
         if ($isPoll) {
             $question = $request->get('question');
@@ -82,11 +79,11 @@ class PostsController extends Controller
         }
         DB::beginTransaction();
 
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             $error = 'Пожалуйста авторизуйтесь заново';
             $success = false;
             return [
-                'error' => $error,
+                'error'   => $error,
                 'success' => $success
             ];
         }
@@ -103,7 +100,7 @@ class PostsController extends Controller
             $error = 'Заполните поле или добавьте вложения';
             $success = false;
             return [
-                'error' => $error,
+                'error'   => $error,
                 'success' => $success
             ];
         }
@@ -158,15 +155,15 @@ class PostsController extends Controller
                     $answersModel->question_id = $poll->id;
                     $answersModel->save();
                     $post_answers[] = [
-                        "answer_id" => $answersModel->id,
+                        "answer_id"    => $answersModel->id,
                         "answer_title" => $answersModel->value = $answer,
                         "answer_votes" => 0,
                     ];
                     $post_poll = [
-                        "question_id" => $poll->id,
+                        "question_id"    => $poll->id,
                         "question_title" => $poll->question = $question,
-                        "total_votes" => 0,
-                        "answers" => $post_answers,
+                        "total_votes"    => 0,
+                        "answers"        => $post_answers,
                     ];
                 }
             }
@@ -176,35 +173,35 @@ class PostsController extends Controller
             $success = false;
             return [
                 'success' => $success,
-                'error' => $error
+                'error'   => $error
             ];
         }
         DB::commit();
 
         // TODO Придумать как перенести это в PostsService
         $response = [
-            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
-            'edited' => false,
-            'fullname' => Auth::user()->full_name,
-            'isLiked' => false,
-            'isn' => $new_post->user_isn,
-            'userISN' => $new_post->user_isn,
-            'likes' => 0,
-            'pinned' => false,
-            'postText' => $new_post->getText(),
-            'postId' => $new_post->id,
-            'image' => $new_post->getImage(),
+            'date'      => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited'    => false,
+            'fullname'  => Auth::user()->full_name,
+            'isLiked'   => false,
+            'isn'       => $new_post->user_isn,
+            'userISN'   => $new_post->user_isn,
+            'likes'     => 0,
+            'pinned'    => false,
+            'postText'  => $new_post->getText(),
+            'postId'    => $new_post->id,
+            'image'     => $new_post->getImage(),
             'documents' => $new_post->getDocuments(),
-            'youtube' => $new_post->getVideo(),
-            'videos' => $new_post->getVideoUrl(),
-            'comments' => [],
-            "post_poll" => !empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
-                "question_id" => null,
+            'youtube'   => $new_post->getVideo(),
+            'videos'    => $new_post->getVideoUrl(),
+            'comments'  => [],
+            "post_poll" => ! empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
+                "question_id"    => null,
                 "question_title" => null,
-                "total_votes" => null,
-                "answers" => null
+                "total_votes"    => null,
+                "answers"        => null
             ],
-            "isVoted" => false,
+            "isVoted"   => false,
         ];
 
         broadcast(new NewPost([
@@ -222,8 +219,7 @@ class PostsController extends Controller
      * @throws Exception
      * @uses CheckPostAccess middleware
      */
-    public function editPost(Request $request)
-    {
+    public function editPost(Request $request) {
         $success = false;
         $post_id = $request->postId;
         $post_text = $request->postText;
@@ -233,14 +229,14 @@ class PostsController extends Controller
                 'post_text' => $post_text,
             ]);
         $response = [
-            'success' => !$success,
-            'edited' => true,
+            'success' => ! $success,
+            'edited'  => true,
         ];
 
         broadcast(new NewPost([
             'post' => [
                 'text' => $post_text,
-                'id' => $post_id,
+                'id'   => $post_id,
             ],
             'type' => Post::EDITED_POST
         ]));
@@ -250,8 +246,7 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function addComment(Request $request)
-    {
+    public function addComment(Request $request) {
         $postId = $request->postId;
         $new_comment = new Comment();
         $new_comment->text = $request->commentText;
@@ -260,12 +255,12 @@ class PostsController extends Controller
         $new_comment->save();
 
         $response = [
-            'userISN' => $new_comment->user_isn,
+            'userISN'     => $new_comment->user_isn,
             'commentText' => $new_comment->text,
-            'postId' => $new_comment->post_id,
-            'commentId' => $new_comment->id,
-            'date' => date("d.m.Y H:i", strtotime($new_comment->created_at)),
-            'fullname' => Auth::user()->full_name,
+            'postId'      => $new_comment->post_id,
+            'commentId'   => $new_comment->id,
+            'date'        => date("d.m.Y H:i", strtotime($new_comment->created_at)),
+            'fullname'    => Auth::user()->full_name,
         ];
 
         $this->postsService->forget($postId);
@@ -273,8 +268,7 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function deleteComment(Request $request)
-    {
+    public function deleteComment(Request $request) {
         $commentId = $request->commentId;
 
         $comment = Comment::find($commentId);
@@ -290,13 +284,11 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function birthday()
-    {
+    public function birthday() {
         return view('news-birthday');
     }
 
-    public function editComment(Request $request)
-    {
+    public function editComment(Request $request) {
         $success = false;
 
         $comment_id = $request->commentId;
@@ -307,8 +299,8 @@ class PostsController extends Controller
                 'text' => $comment_text,
             ]);
         $response = [
-            'success' => !$success,
-            'edited' => true,
+            'success' => ! $success,
+            'edited'  => true,
         ];
         //TODO настроить сокеты
 //        broadcast(new NewPost([
@@ -324,8 +316,7 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function vote(Request $request)
-    {
+    public function vote(Request $request) {
         $post_id = $request->postId;
         $user_isn = $request->isn;
         $question_id = $request->questionId;
@@ -356,18 +347,15 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function getView()
-    {
+    public function getView() {
         return view('news');
     }
 
-    public function getViewBeta()
-    {
+    public function getViewBeta() {
         return view('news-beta');
     }
 
-    public function senateVote(Request $request)
-    {
+    public function senateVote(Request $request) {
         $answers = $request->answers;
         foreach ($answers as $answer) {
             if ($answer['checked']) {
@@ -386,8 +374,7 @@ class PostsController extends Controller
         ]);
     }
 
-    public function dev(Request $request)
-    {
+    public function dev(Request $request) {
         switch ($request->name) {
             case 'boss':
                 return view('dev')->with([
@@ -414,13 +401,11 @@ class PostsController extends Controller
         }
     }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         return view('boss-says');
     }
 
-    public function getBossPosts(Request $request, PostsService $postsService)
-    {
+    public function getBossPosts(Request $request, PostsService $postsService) {
         Debugbar::startMeasure('NewsController@getBossPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
@@ -435,5 +420,13 @@ class PostsController extends Controller
     public function getDateValidRanges() {
         return Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])
             ->first();
+    }
+
+    public function getPostLikes(Request $request) {
+        $postId = $request->get('postId');
+        return Like::wherePostId($postId)
+            ->with(['user' => function (BelongsTo $relation) {
+                $relation->select('id', 'ISN', 'username', 'full_name');
+            }])->get()->pluck('user');
     }
 }

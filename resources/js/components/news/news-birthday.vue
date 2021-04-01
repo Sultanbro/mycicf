@@ -12,7 +12,7 @@
             </div>
             <hr class="mt-0">
             <div class="d-flex align-items-center justify-content-center">
-                <h4>{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[month] }}</h4>
+                <h4 v-if="birthdays[index]">{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[month] }}</h4>
             </div>
             <div class="pt-2 pl-4 pr-4 pb-2 relative">
                 <div class="text-center relative">
