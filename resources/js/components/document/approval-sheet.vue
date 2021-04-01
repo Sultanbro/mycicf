@@ -527,7 +527,7 @@
                                         <option value="482301">Нет</option>
                                     </select>
                                 </div>
-                                <div v-else-if="result.fullname === 'Тип расчета'">482291
+                                <div v-else-if="result.fullname === 'Тип расчета'">
                                     <select v-model="result.val" :disabled="addChange" class="form-control" required>
                                         <option v-for="calculationType in calculationTypes" :value="calculationType[0]">{{ calculationType[1] }}</option>
                                     </select>

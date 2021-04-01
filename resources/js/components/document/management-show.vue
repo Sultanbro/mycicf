@@ -2,21 +2,19 @@
     <div class="news-tape-bg radius-4px mt-3 pb-2">
         <ManagementSearch :results="results"></ManagementSearch>
 <!--        <form id="object-form" @submit.prevent="saveDocument">-->
-            <ManagementApplication v-if="results['classisn']==='1448061' || results['classisn']==='1440581' || results['classisn']==='1440541' || results['classisn']==='1747341'
-                                    || results['classisn']==='1440531' || results['classisn']==='1440591' || results['classisn']==='1461771' || results['classisn']==='1747351'
-                                    || results['classisn']==='1775861' || results['classisn']==='1440561' || results['classisn']==='1440571' || results['classisn']==='1791101'
-                                    || results['classisn']==='1252461' || results['classisn']==='800791'"
+            <ManagementApplication v-if="results['classisn']==='1448061' || results['classisn']==='1747341'|| results['classisn']==='1440591' || results['classisn']==='1791101'
+                                    || results['classisn']==='800791'"
                                    :results="results"></ManagementApplication>
 <!--            <ManagementBusinessTrip v-if="results.id==3" :id="results.id"></ManagementBusinessTrip>-->
-            <ApplicationNotAdministrativeDay v-else-if="results['classisn']==='1011941'" :results="results"></ApplicationNotAdministrativeDay>
+<!--            <ApplicationNotAdministrativeDay v-else-if="results['classisn']==='1011941'" :results="results"></ApplicationNotAdministrativeDay>-->
             <ApplicationBlank v-else-if="results['classisn']==='1479131' || results['classisn']==='1479141' || results['classisn']==='820621' || results['classisn']==='1011971'
                                     || results['classisn']==='1007411' || results['classisn']==='1479151' || results['classisn']==='1007391'
-                                    || results['classisn']==='1011931' || results['classisn']==='1011961' || results['classisn']==='1007421'
-                                    || results['classisn']==='1011951' || results['classisn']==='1007401' || results['classisn']==='1011941'"
+                                    || results['classisn']==='1011931' || results['classisn']==='1011961' || results['classisn']==='1011951' || results['classisn']==='1011941'"
                               :results="results"></ApplicationBlank> <!-- Заявления -->
             <DisciplinaryAction v-else-if="results['classisn']==='2018171'" :results="results"></DisciplinaryAction>
             <ManagementBusinessTrip v-else-if="results['classisn']==='1042311'" :results="results"></ManagementBusinessTrip>
-            <ApprovalSheet v-else :results="results"></ApprovalSheet>
+            <ApprovalSheet v-else-if="results['classisn']==='1791111' || results['classisn']==='1783591'|| results['classisn']==='1799231' || results['classisn']==='2071791'
+                                    || results['classisn']==='826591' || results['classisn']==='800781'" :results="results"></ApprovalSheet>
             <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
 <!--                <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument" @click="saveDocument">-->
 <!--                    Сохранитьasdasdsa-->

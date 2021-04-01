@@ -262,7 +262,7 @@ class DocumentManagementController extends Controller
 
     public function getUnitGroup(Request $request){
         $result = [];
-        $headProduct = Dicti::where('parent_isn', 13)->where('n_kids', 1)->get();
+        $headProduct = Dicti::where('parent_isn', 702941)->where('n_kids', 1)->get();
 //            dd($headProduct);
         foreach($headProduct as $product)
             array_push($result, [
