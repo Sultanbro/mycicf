@@ -25,21 +25,16 @@ interface CoordinationServiceInterface
     public function CoordinationInfo($docIsn);
 
     /**
-     * @param $DocISN
-     * @param $ISN
-     * @param $Solution
-     * @param $Remark
-     * @param $Resolution
+     * @param $params
      * @return mixed
      */
-    public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution);
+    public function CoordinationService($params);
 
     /**
-     * @param $class_isn
-     * @param $doc_isn
+     * @param $params
      * @return mixed
      */
-    public function DocRowList($class_isn, $doc_isn);
+    public function DocRowList($params);
 
     /**
      * @return mixed
@@ -69,20 +64,16 @@ interface CoordinationServiceInterface
     public function AgreedCoordination($ISN);
 
     /**
-     * @param $fileType
-     * @param $isn
-     * @param $requestType
+     * @param $params
      * @return mixed
      */
-    public function saveAttachmentService($fileType, $isn, $requestType);
+    public function saveAttachmentService($params);
 
     /**
-     * @param $users_rec
-     * @param $doc_no
-     * @param $doc_type
+     * @param $params
      * @return mixed
      */
-    public function sendNotifyService($users_rec, $doc_no, $doc_type);
+    public function sendNotifyService($params);
 
     /**
      * @param $postText
@@ -91,12 +82,10 @@ interface CoordinationServiceInterface
     public function closeDecadeService($postText);
 
     /**
-     * @param $isn
-     * @param $no
-     * @param $type
+     * @param $params
      * @return mixed
      */
-    public function checkNotificationSended($isn, $no, $type);
+    public function checkNotificationSended($params);
 
     /**
      * @param $data

@@ -152,8 +152,8 @@ class Kias implements KiasServiceInterface
                     break;
 
                 case 'User_CicMyCoordinationList':
-                    $key = 'kias::User_CicMyCoordinationList::' . $name . '::' . serialize($params) . '::';
-                    $ttl = $this->getLifetime();
+                    //$key = 'kias::User_CicMyCoordinationList::' . $name . '::' . serialize($params) . '::';
+                    //$ttl = $this->getLifetime();
                     Debugbar::startMeasure('User_CicMyCoordinationList in Kias');
                     $execResponse = $this->execProc($name, $params);
                     // $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {

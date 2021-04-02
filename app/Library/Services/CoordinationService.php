@@ -224,7 +224,6 @@ class CoordinationService implements CoordinationServiceInterface
     {
         $success = true;
         $error = "";
-        //$docIsn = $request->docIsn;
         $response = $this->kias->getCoordination($docIsn);
         if($response->error){
             $success = false;
@@ -325,12 +324,18 @@ class CoordinationService implements CoordinationServiceInterface
      * @param string $Resolution
      * @return array
      */
-    public function CoordinationService($DocISN, $ISN, $Solution,$Remark, $Resolution){
+    public function CoordinationService($params = ['DocISN', 'ISN', 'Solution','Remark', 'Resolution']){
         $success = true;
         $error = '';
         $kias = new Kias();
         $kias->initSystem();
-        $response = $kias->setCoordination($DocISN, $ISN, $Solution,$Remark, $Resolution);
+        $DocISN = $params['DocISN'];
+        $ISN = $params['ISN'];
+        $Solution = $params['Solution'];
+        $Remark = $params['Remark'];
+        $Resolution = $params['Resolution'];
+
+        $response = $kias->setCoordination($DocISN, $ISN, $Solution, $Remark, $Resolution);
         if($response->error){
             $success = false;
             $error .= $response->error->fulltext;
@@ -350,11 +355,13 @@ class CoordinationService implements CoordinationServiceInterface
     }
 
     /**
-     * @param $class_isn
-     * @param $doc_isn
-     * @return array
+     * @param array $params
+     * @return array|mixed
      */
-    public function DocRowList($class_isn, $doc_isn) {
+    public function DocRowList($params = ['class_isn','doc_isn']) {
+
+            $class_isn = $params['class_isn'];
+            $doc_isn = $params['doc_isn'];
 
             $result = $this->kias->request('User_CicGetDocRowAttr', [
                 'CLASSISN' => $class_isn->class_isn,
@@ -529,12 +536,13 @@ class CoordinationService implements CoordinationServiceInterface
 
 
     /**
-     * @param mixed $fileType
-     * @param string $isn
-     * @param string $requestType
-     * @return array
+     * @param array $params
+     * @return array|mixed
      */
-    public function saveAttachmentService($fileType, $isn, $requestType){
+    public function saveAttachmentService($params = ['fileType', 'isn', 'requestType']){
+        $fileType = $params['fileType'];
+        $isn = $params['isn'];
+        $requestType = $params['requestType'];
         try{
             $success = true;
             if($fileType == 'base64'){
@@ -573,12 +581,14 @@ class CoordinationService implements CoordinationServiceInterface
     }
 
     /**
-     * @param string $users_rec
-     * @param string $doc_no
-     * @param string $doc_type
-     * @return bool
+     * @param array $params
+     * @return bool|mixed
      */
-    public function sendNotifyService($users_rec, $doc_no, $doc_type){
+    public function sendNotifyService($params = ['users_rec', 'doc_no', 'doc_type']){
+        $users_rec = $params['users_rec'];
+        $doc_no = $params['doc_no'];
+        $doc_type = $params['doc_type'];
+
         $users = explode(',', $users_rec);
         $client = new Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
@@ -660,12 +670,13 @@ class CoordinationService implements CoordinationServiceInterface
     }
 
     /**
-     * @param string $isn
-     * @param string $no
-     * @param string $type
-     * @return bool
+     * @param array $params
+     * @return bool|mixed
      */
-    public function checkNotificationSended($isn, $no, $type){
+    public function checkNotificationSended($params = ['isn', 'no', 'type']){
+        $isn = $params['isn'];
+        $no = $params['no'];
+        $type = $params['type'];
         $data = Notification::where('user_isn', $isn)
             ->where('doc_no', $no)
             ->where('doc_type', $type)
