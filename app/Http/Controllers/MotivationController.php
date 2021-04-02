@@ -17,6 +17,7 @@ class MotivationController extends Controller
         $ISN = $request->isn;
         $begin = $request->begin;
         $motivations = [];
+        $mot_sum = '';
         $response = $kias->getEmplMotivation($ISN, $begin);
         if($response->error) {
             return response()
@@ -144,6 +145,8 @@ class MotivationController extends Controller
             default :
                 $list = [];
         }
+        $x_axis = array();
+        $y_axis = array();
         if(isset($mot_sum)) {
             $finded = false;
             if(isset($response->MOTLIST->row)) {
@@ -153,6 +156,8 @@ class MotivationController extends Controller
                         'Date' => date('m.Y', strtotime($value->Date)),
                         'Sum' => (int)$value->Motivation
                     ]);
+                    array_push($x_axis, date('m.Y', strtotime($value->Date)));
+                    array_push($y_axis, (int)$value->Motivation);
                 }
             }
             if(!$finded){
@@ -162,6 +167,11 @@ class MotivationController extends Controller
                 ]);
             }
         }
+        $chart_data = array(
+            'x_axis' => array_reverse($x_axis),
+            'y_axis' => array_reverse($y_axis),
+        );
+
         return response()
             ->json([
                 'success' => true,
@@ -169,8 +179,9 @@ class MotivationController extends Controller
                 'list' => $list,
                 'motivations' => array_reverse($motivations),
                 'cat' => $category,
-                'mot_sum' => $mot_sum
-        ])
+                'mot_sum' => $mot_sum,
+                'chart_data' => $chart_data,
+            ])
             ->withCallback(
                 $request->input(
                     'callback'
