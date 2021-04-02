@@ -62,6 +62,18 @@ Vue.component('full-constructor-create', require('./components/admin/products/fu
 Vue.component('constructor', require('./components/admin/products/full_constructor/constructor.vue').default);
 Vue.component('formular', require('./components/admin/products/full_constructor/formular.vue').default);
 
+//Products-Info
+Vue.component('org-structure', require('./components/admin/productsinfo/org-structure.vue').default);
+Vue.component('svg-load', require('./components/admin/productsinfo/svg-load.vue').default);
+Vue.component('image-load', require('./components/admin/productsinfo/image-load.vue').default);
+Vue.component('menu-load', require('./components/admin/productsinfo/menu-load.vue').default);
+Vue.component('pdf-load', require('./components/admin/productsinfo/pdf-load.vue').default);
+
+Vue.component('menu-list', require('./components/admin/productsinfo/menu-list.vue').default);
+Vue.component('svg-list', require('./components/admin/productsinfo/svg-list.vue').default);
+Vue.component('word-list', require('./components/admin/productsinfo/word-list.vue').default);
+
+
 Vue.component('rating-permission-list', require('./components/admin/rating/rating-permission-list').default);
 Vue.component('rating-permission-new', require('./components/admin/rating/rating-permission-new').default);
 

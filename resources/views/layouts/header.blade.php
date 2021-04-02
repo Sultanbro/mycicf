@@ -54,11 +54,16 @@
                         </li>
                     </ul>
                 </li>
-{{--                <a class="header-navigation" href="javascript:void(0)">--}}
-{{--                    <li>--}}
-{{--                        Обучение--}}
-{{--                    </li>--}}
-{{--                </a>--}}
+                <a class="header-navigation" href="{{route('productsinfo')}}">
+                    <li>
+                        Продукты
+                    </li>
+                </a>
+                <a class="header-navigation" href="javascript:void(0)">
+                    <li>
+                        Обучение
+                    </li>
+                </a>
             </ul>
         </div>
         <div class="col-md-4">
