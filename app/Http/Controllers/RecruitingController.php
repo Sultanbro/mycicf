@@ -10,6 +10,7 @@ use App\RecruitingCandidatesData;
 use Illuminate\Http\Request;
 use App\Branch;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use App\Answer;
@@ -76,7 +77,7 @@ class RecruitingController extends Controller
             $req->name_of_post = $req->getChiefsDicti($req->name_of_post);
             $req->reason_to_recruiting = $req->getChiefsDicti($req->reason_to_recruiting);
             $req->desired_age = $req->getChiefsDicti($req->desired_age);
-            $req->sex = $req->getChiefsDicti($req->sex);
+//            $req->sex = $req->getChiefsDicti($req->sex);
             $req->education = $req->getChiefsDicti($req->education);
             $req->work_experience = $req->getChiefsDicti($req->work_experience);
             $req->is_he_was_boss = $req->getChiefsDicti($req->is_he_was_boss);
@@ -251,6 +252,8 @@ class RecruitingController extends Controller
         $candidats_data->candidate_iin = $cData->manualIIN;
         $candidats_data->candidate_phone_number = $cData->manualPhoneNumber;
         $candidats_data->responsible_recruiter = $cData->recruiterFullname;
+
+        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail('asdadas'));
 
         if(!$candidats_data->save()){
             return response()->json([
@@ -462,7 +465,7 @@ class RecruitingController extends Controller
         $nameOfPostIsn = $request->nameOfPost;
         $reasonIsn = $request->reason;
         $desiredAgeIsn = $request->desiredAge;
-        $sexIsn = $request->sex;
+//        $sexIsn = $request->sex;
         $educationIsn = $request->education;
         $workExpirienceIsn = $request->workExpirience;
         $isHeWasBossIsn = $request->isHeWasBoss;
@@ -481,7 +484,7 @@ class RecruitingController extends Controller
         $responseNameOfPost = $kias->getDictiList($nameOfPostIsn);
         $responseReason = $kias->getDictiList($reasonIsn);
         $responseDesiredAge = $kias->getDictiList($desiredAgeIsn);
-        $responseSex = $kias->getDictiList($sexIsn);
+//        $responseSex = $kias->getDictiList($sexIsn);
         $responseEducation = $kias->getDictiList($educationIsn);
         $responseWorkExpirience = $kias->getDictiList($workExpirienceIsn);
         $responseIsHeWasBoss = $kias->getDictiList($isHeWasBossIsn);
@@ -500,7 +503,7 @@ class RecruitingController extends Controller
         $resultNameOfPost = [];
         $resultReason = [];
         $resultDesiredAge = [];
-        $resultSex = [];
+//        $resultSex = [];
         $resultEducation = [];
         $resultWorkExpirience = [];
         $resultIsHeWasBoss = [];
@@ -603,16 +606,16 @@ class RecruitingController extends Controller
             $success = true;
         }
 
-        if(isset($responseSex->ROWSET->row)){
-            foreach ($responseSex->ROWSET->row as $row){
-                array_push($resultSex, [
-                    'Value' => $row->ISN,
-                    'Label' => $row->FULLNAME
-                ]);
-            }
-
-            $success = true;
-        }
+//        if(isset($responseSex->ROWSET->row)){
+//            foreach ($responseSex->ROWSET->row as $row){
+//                array_push($resultSex, [
+//                    'Value' => $row->ISN,
+//                    'Label' => $row->FULLNAME
+//                ]);
+//            }
+//
+//            $success = true;
+//        }
 
         if(isset($responseEducation->ROWSET->row)){
             foreach ($responseEducation->ROWSET->row as $row){
@@ -711,7 +714,7 @@ class RecruitingController extends Controller
             'structuralUnitAndCity' => $resultStructuralUnitAndCity,
             'nameOfPost' => $resultNameOfPost,
             'desiredAge' => $resultDesiredAge,
-            'sex' => $resultSex,
+//            'sex' => $resultSex,
             'education' => $resultEducation,
             'workExpirience' => $resultWorkExpirience,
             'isHeWasBoss' => $resultIsHeWasBoss,

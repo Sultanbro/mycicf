@@ -67,6 +67,7 @@
 <!--                </div>-->
                 <div class="recruiting-body">
                     <div>
+                        <button @click="sendMail">Click to send mail!</button>
                         <div class="recruiting-select-header">
                             Наименование структурного подразделения (укажите город и адрес филиала)
                         </div>
@@ -123,7 +124,8 @@
                             </div>
                             <div>
                                 <select class="recruiting-select" v-model="candidat.sexSelect">
-                                    <option v-for="sex in dicti.sex" :value="sex.Value[0]">{{sex.Label[0]}}</option>
+<!--                                    <option v-for="sex in dicti.sex" :value="sex.Value[0]">{{sex.Label[0]}}</option>-->
+                                    <option v-for="sex in sex">{{sex}}</option>
                                 </select>
                             </div>
                         </div>
@@ -231,6 +233,7 @@
                             </div>
                             <hr>
                         </div>
+                        <button @click="testpush">Push to array</button>
 
                         <div class="recruiting-simple-block-container">
                             <div class="recruiting-simple-block ml-2 mr-2" @click="addLanguage">
@@ -283,8 +286,8 @@
                                 Наличие автомобиля
                             </div>
                             <div>
-                                <select class="recruiting-select" v-model="candidat.haveCarSelect">
-                                    <option v-for="havecar in dicti.haveCar" :value="havecar.Value[0]">{{havecar.Label[0]}}</option>
+                                <select class="recruiting-select" @change="havecarChecking()" v-model="candidat.haveCarSelect">
+                                    <option @change="havecarChecking()" v-for="havecar in dicti.haveCar" :value="havecar.Value[0]">{{havecar.Label[0]}}</option>
                                 </select>
                             </div>
                         </div>
@@ -293,7 +296,7 @@
                                 Категория вод. удостоверения
                             </div>
                             <div>
-                                <select class="recruiting-select" v-model="candidat.driverCategorySelect">
+                                <select v-if="isDriverCard" class="recruiting-select" v-model="candidat.driverCategorySelect">
                                     <option v-for="card in dicti.driverCard" :value="card.Value[0]">{{card.Label[0]}}</option>
                                 </select>
                             </div>
@@ -458,7 +461,7 @@
 <!--                                        candidatBackward.manualIIN-->
 
 <!--                                        v-if="manualSearchIIN == false && candidatsPersonalData"-->
-                                        <input v-if="manualSearchIIN == false" type="text" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidateBase.IIN">
+                                        <input v-if="!manualSearchIIN" type="text" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidateBase.IIN">
                                         <input v-if="manualSearchIIN" :maxlength="maxlengthIIN" type="text" class="recruiting-modal-general" v-model="candidatsData.manualIIN">
                                         <i v-if="showEditBtn" class="far fa-edit pointer" @click="candidatWithoutIIN"></i>
                                     </div>
@@ -467,7 +470,7 @@
                                     <div class="col-md-6 color-blue">Контактный номер кандидата:</div>
                                     <div class="col-md-6">
 <!--                                        v-if="manualSearchIIN == false && candidatsPersonalData"-->
-                                        <input v-if="manualSearchIIN == false" type="text" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidateBase.phone">
+                                        <input v-if="!manualSearchIIN" type="text" onclick="this.select()" disabled class="recruiting-modal-general" v-model="candidateBase.phone">
                                         <input v-if="manualSearchIIN" :maxlength="maxlengthPhone" type="text" class="recruiting-modal-general" v-model="candidatsData.manualPhoneNumber">
                                     </div>
                                 </div>
@@ -1439,6 +1442,8 @@
                 candidateStorage: {},
                 candidatePerson: null,
                 isActiveCandidatsBase: false,
+                isDriverCard: true,
+                testvar: [],
             }
         },
         props: {
@@ -1472,6 +1477,21 @@
             },
         },
         methods: {
+            sendMail: function(){
+                e
+            },
+            testpush: function(){
+                // this.testvar
+            },
+            havecarChecking: function (){
+                if(this.candidat.haveCarSelect == 482301){
+                    this.isDriverCard = false;
+                    this.candidat.driverCategorySelect = '-';
+                } else if(this.candidat.haveCarSelect == 482291){
+                    this.isDriverCard = true;
+                    this.candidat.driverCategorySelect = '';
+                }
+            },
             getStyle(type) {
                 return {
                     color: this.types.find(n => n.id === type).color,
@@ -1603,7 +1623,7 @@
                     this.flashMessage.success({
                         title: "",
                         message: 'Кандидат успешно сохранен. Страница будет перезагружена через 3 секунды',
-                        time: 5000
+                        time: 5000,
                     });
                     // ***
                     this.axios.post('/recruiting/sendRecruitingNotify',{candidatsData: this.candidatsData})
@@ -1616,7 +1636,7 @@
                     this.flashMessage.error({
                         title: "Ошибка",
                         message: 'Не удалось сохранить данные',
-                        time: 5000
+                        time: 5000,
                     });
                 }
             },
@@ -2339,10 +2359,11 @@
                 }
             },
             getResultRequestOnClick(){
-                if (this.candidateResultRequest == ''
+                if (this.candidateResultRequest.candidatName == ''
                     || this.candidateResultRequest == null
                     || Object.keys(this.candidateResultRequest).length == 0) {
                     this.preloader(true);
+                    this.candidateResultRequest.candidatName = 'qwerty';
                     this.axios.post('/recruiting/getResultRequest')
                         .then(response => {
                             this.aftergetResultRequest(response.data);
@@ -2352,6 +2373,7 @@
                         .then(response => {
                             this.afterCandidatsDataRequest(response.data);
                         });
+                    this.candidateResultRequest.candidatName = 'qwerty';
                 }
             },
             aftergetResultRequest(data){
