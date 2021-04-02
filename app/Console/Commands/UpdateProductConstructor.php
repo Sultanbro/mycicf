@@ -76,7 +76,7 @@ class UpdateProductConstructor extends Command
     }
 
     public function updateAgrobject($constructor,$objects,$product_name){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $kias->initSystem();
         $response = $kias->getFullObject($constructor->product_isn);
 

@@ -60,6 +60,7 @@ class KolesaPricesFile extends Command
                 'drive' => $item->drive,
                 'inkz' => $item->inkz,
                 'vin' => $item->vin,
+                'link' => $item->link,
                 'milage' => $item->milage,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->updated_at,

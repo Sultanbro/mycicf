@@ -117,7 +117,7 @@
                 v-on:deletePost="deleteFromPost(pinnedPostIndex)"
             ></news-post>
         </div>
-        <div v-for="(post, index) in posts" v-if="post.pinned === 0">
+        <div v-for="(post, index) in posts" v-if="!post.pinned">
             <news-post
                 :post="post"
                 :isn="isn"
@@ -304,7 +304,7 @@
 
             addPost: function () {
                 this.preloader(true);
-                this.axios.post('/addPost', this.getFormData()).then(response => {
+                this.axios.post('/news/addPost', this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
                     alert('Ошибка на стороне сервера');
@@ -322,8 +322,10 @@
 
             getPosts () {
                 this.preloader(true);
-                this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
-                    this.setPosts(response.data)
+                console.time('getPosts');
+                this.axios.post('/news/getPosts', {lastIndex: this.lastIndex}).then(response => {
+                    this.setPosts(response.data);
+                    console.timeEnd('getPosts');
                 });
             },
 
@@ -339,7 +341,7 @@
                         vm.lastIndex = data.postId;
                     }
 
-                    if(data.pinned === 1){
+                    if(data.pinned){
                         vm.pinnedPost = data;
                         vm.pinnedPostIndex = i;
                     }
@@ -377,8 +379,10 @@
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
                 if (this.bottomOfWindow && !this.allPostShown) {
                     this.preloader(true);
-                    this.axios.post('/getPosts', {lastIndex: this.lastIndex}).then(response => {
-                        this.setPosts(response.data)
+                    console.time('getPosts');
+                    this.axios.post('/news/getPosts', {lastIndex: this.lastIndex}).then(response => {
+                        this.setPosts(response.data);
+                        console.timeEnd('getPosts');
                     });
                 }
             },

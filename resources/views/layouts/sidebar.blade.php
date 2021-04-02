@@ -1,3 +1,5 @@
+@if(!Auth::user()->branch->duty() ||
+    array_key_exists(auth()->user()->ISN, \App\Http\Middleware\KommeskUsers::getKommeskAccess()))
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
     <div id="simple-info">
         <simple-info
@@ -80,12 +82,12 @@
 {{--                </a>--}}
 {{--            @endif--}}
 
-            <!--a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
+{{--            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-book-reader"></i>
                     <span>Экспресс котировка</span>
                 </li>
-            </a-->
+            </a>--}}
             @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
                     <li class="leftsidebar-icons">
@@ -115,3 +117,5 @@
         </ul>
     </div>
 </div>
+@elseif(Auth::user()->branch->duty() === 'Сотрудник Коммеск');
+@endif

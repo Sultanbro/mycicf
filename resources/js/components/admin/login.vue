@@ -6,7 +6,7 @@
             </span>
 
             <div class="wrap-input100 validate-input m-b-16">
-                <input class="input100" type="text" v-model="username" placeholder="Имя пользователя">
+                <input class="input100" type="text" v-model="username" id="username"  placeholder="Имя пользователя">
                 <span class="focus-input100"></span>
                 <span class="symbol-input100">
 							<span class="lnr lnr-envelope"></span>
@@ -14,7 +14,7 @@
             </div>
 
             <div class="wrap-input100 validate-input m-b-16">
-                <input class="input100" v-model="password" type="password" placeholder="Пароль">
+                <input class="input100" v-model="password" type="password" id="password"  placeholder="Пароль">
                 <span class="focus-input100"></span>
                 <span class="symbol-input100">
 							<span class="lnr lnr-lock"></span>

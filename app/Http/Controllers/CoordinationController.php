@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\NotificationServiceInterface;
 use App\Notification;
-use App\Providers\KiasServiceProvider;
-use http\Env\Response;
+use Debugbar;
 use Illuminate\Http\Request;
-use App\Comment;
 use App\Events\NewPost;
-use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +24,11 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
         $response = $kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
@@ -433,6 +435,41 @@ class CoordinationController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias){
+        $ISN = $request->ISN;
+
+        $results = $kias->request('User_CicGetAgreedCoordinationList', array(
+            'EmplISN' => $ISN
+        ));
+
+        if(!isset($results->error)) {
+            $agreedAC = [];
+            foreach ($results->AgreedAC->row as $result){
+                array_push($agreedAC, [
+                    'ISN'=> (string)$result->ISN,
+                    'type'=>(string)$result->type,
+                    'curator'=>(string)$result->curator,
+                    'DeptName'=>(string)$result->DeptName,
+                    'id'=>(string)$result->id,
+                    'docdate'=>(string)$result->docdate,
+                    'ClassPovestka'=>(string)$result->ClassPovestka,
+                    'Povestka'=>(string)$result->Povestka
+                ]);
+            }
+
+            return response()->json([
+                'agreedAC' => $agreedAC,
+                'success' => true
+            ]);
+        }
+        else {
+            return response()->json([
+                'success' => false
+            ]);
+        }
+    }
+
+
     public function saveAttachment(Request $request, KiasServiceInterface $kias){
         try{
             $success = true;
@@ -483,7 +520,7 @@ class CoordinationController extends Controller
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
-        (new NotificationController())->sendCoordinationNotify($users);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
                 continue;

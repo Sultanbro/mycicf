@@ -179,6 +179,7 @@ return [
          * Own Service Providers...
          */
         App\Providers\KiasServiceProvider::class,
+        App\Providers\NotificationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
     ],

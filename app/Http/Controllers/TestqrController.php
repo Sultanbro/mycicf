@@ -21,24 +21,18 @@ class TestqrController extends Controller
         $username = $request->username;
         $password = $request->password;
         $qr = $request->qr;
-        $kias->initSystem();    //$username,$password
+        $initSystem = $kias->initSystem($username, $password);    //$username,$password
         $result = '';
-        $response = $kias->authenticate($username, hash('sha512', $password));
-        if($response->error)
-        {
+        if($initSystem->error){
             $success = false;
             $error = 'Ошибка авторизации';
-        }
-        if($success && $response)
-        {
-            $result = $kias->request('User_CicCreateAVOTbyQR',[
-                'SubjISN' => $response->ISN,
-                'QR'=> $qr,
-                'Sid'=>$response->Sid
+        } else {
+            $result = $kias->request('User_CicCreateAVOTbyQR', [
+                'SubjISN' => (int)$initSystem->UserDetails->ISN,
+                'QR' => $qr,
+                'Sid' => (string)$initSystem->Sid
             ]);
         }
-
         return response()->json($result)->withCallback($request->input('callback'));
-
     }
 }
