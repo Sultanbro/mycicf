@@ -7,12 +7,15 @@ import {PostCommentEntity} from "./components/ajax/types";
 import {ColleagueData} from "./components/colleague-data";
 import {authUserIsn} from "./authUserIsn";
 import {UserName} from "./UserName";
+import {LoginPage} from "./login-page";
 
 export function Sandbox({}: any) {
     return <div>
         {/*<ColleagueData isn={authUserIsn()} />*/}
 
-        <Posts />
+        {/*<Posts />*/}
+
+        <LoginPage />
 
         {/*<Birthdays />*/}
 
