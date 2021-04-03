@@ -1,49 +1,78 @@
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react';
 
-const noop = () => {}
+const noop = () => {
+};
 
 interface UseFileReaderOptions {
     method?: keyof FileReader;
     onload?: any;
+    autoRead?: boolean;
+}
+
+export interface FileEntry {
+    file: File;
+    dataUrl?: string | ArrayBuffer | null;
 }
 
 // https://github.com/jcblw/react-use-file-reader
-export const useFileReader = (options: UseFileReaderOptions = {}) => {
-    const { method = 'readAsDataURL', onload: onloadHook = noop } = options
-    const [file, addFile] = useState(null)
-    const [error, setError] = useState(null)
-    const [result, setResult] = useState<any[]>([])
-    const [loading, setLoading] = useState(false)
+export function useFileReader(options: UseFileReaderOptions = {}): [FileEntry[], any] {
+    const {method = 'readAsDataURL', onload: onloadHook = noop, autoRead = false} = options;
+    const [file, addFile] = useState<File | null>(null);
+    const [, setError] = useState(null);
+    const [result, setResult] = useState<FileEntry[]>([]);
+    const [, setLoading] = useState(false);
 
     useEffect(() => {
         if (!file) return;
 
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onloadstart = () => {
-            setLoading(true)
-        }
+            setLoading(true);
+        };
         reader.onloadend = () => {
-            setLoading(false)
-        }
+            setLoading(false);
+        };
         reader.onload = e => {
             if (!e.target) {
                 return;
             }
             setResult((prev) => {
-                prev.push(e.target.result);
+                if (!e.target) {
+                    return prev;
+                }
+                prev.push({
+                    file,
+                    dataUrl: e.target.result,
+                });
                 return prev;
-            })
-            onloadHook(e.target.result)
-        }
+            });
+            onloadHook(e.target.result);
+        };
         reader.onerror = (err: any) => {
             setError(err);
-        }
+        };
         try {
-            reader[method](file)
+            if (autoRead) {
+                (reader as any)[method](file);
+            } else {
+                setResult((prev) => {
+                    prev.push({
+                        file,
+                    });
+                    return prev;
+                });
+            }
         } catch (e) {
-            setError(e)
+            setError(e);
         }
-    }, [file])
+    }, [file]);
 
-    return [result, addFile]
+    return [
+        result,
+        (...files: File[]) => {
+            for (let file of files) {
+                addFile(file);
+            }
+        }
+    ];
 }

@@ -63,5 +63,5 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
                 </Col>
             </Row>
         </Col>
-    </Row>
+    </Row>;
 }

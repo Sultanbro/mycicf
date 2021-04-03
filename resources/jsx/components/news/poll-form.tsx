@@ -11,9 +11,22 @@ interface PollFormProps {
     onUpdatePoll?(data: { question: string, answers: string[] }): void;
 }
 
+interface DeleteOptionButtonProps {
+    options: string[];
+    i: number;
+    onClick: () => void;
+}
+
+function DeleteOptionButton({onClick}: DeleteOptionButtonProps) {
+    return <Button icon={<CloseOutlined />}
+                   type="link"
+                   size="small"
+                   onClick={onClick} />;
+}
+
 export function PollForm({onUpdatePoll}: PollFormProps) {
     let [form] = Form.useForm();
-    let [options, setOptions, pushOption, deleteByIndex, updateByIndex] = useArrayLocalStorage('answers', ['', '']);
+    let [options, setOptions, pushOption, deleteOptionByIndex, updateOptionByIndex] = useArrayLocalStorage('answers', ['', '']);
     let [pollQuestion, setPollQuestion] = useLocalStorage('question', '');
 
     return <Row>
@@ -61,17 +74,17 @@ export function PollForm({onUpdatePoll}: PollFormProps) {
                                         <Input value={option}
                                                placeholder={`Ответ ${i + 1}`}
                                                onChange={(e) => {
-                                                   updateByIndex(i, e.target.value);
+                                                   updateOptionByIndex(i, e.target.value);
                                                }}
-                                               suffix={<Button icon={<CloseOutlined />}
-                                                               type="link"
-                                                               size="small"
-                                                               onClick={() => {
-                                                                   if (options.length <= 2) {
-                                                                       return;
-                                                                   }
-                                                                   deleteByIndex(i);
-                                                               }} />}
+                                               suffix={
+                                                   <DeleteOptionButton options={options} i={i} onClick={() => {
+                                                       if (options.length <= 2) {
+                                                           updateOptionByIndex(i, '');
+                                                           return;
+                                                       }
+                                                       deleteOptionByIndex(i);
+                                                   }} />
+                                               }
                                         />
                                     </Col>
                                     <Col md={2} offset={1}>

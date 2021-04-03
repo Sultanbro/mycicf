@@ -6,7 +6,7 @@ import {
     FileOutlined,
     SendOutlined,
     QuestionCircleOutlined,
-    PlayCircleOutlined, CheckOutlined
+    PlayCircleOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
 import debounce from 'lodash/debounce';
@@ -18,6 +18,7 @@ import {AjaxButton} from '../ajax';
 import {ISN} from '../../types';
 import {BaseEmoji} from 'emoji-mart';
 import {useFileReader} from '../../hooks/useFileReader';
+import {If} from '../if';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -38,7 +39,7 @@ export interface FileButtonProps {
     children: React.ReactNode;
     icon: any;
 
-    onFilesSelected(files: FileList | null): void;
+    onFilesSelected(files: FileList): void;
 
     accept: string;
     multiple?: boolean;
@@ -54,6 +55,10 @@ export function FileButton({children, icon, onFilesSelected, accept, multiple = 
                multiple={multiple}
                accept={accept}
                onChange={(e) => {
+                   if (!e.target.files) {
+                       return;
+                   }
+
                    onFilesSelected(e.target.files);
                }} />
         <Button icon={icon} onClick={() => {
@@ -62,7 +67,7 @@ export function FileButton({children, icon, onFilesSelected, accept, multiple = 
             }
             uploadRef.current.click();
         }}>{children}</Button>
-    </span>
+    </span>;
 }
 
 let useLocalStorage = createUseLocalStorage('newPost');
@@ -79,12 +84,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData, setPollData] = useState<PollData | null>(null);
-    let [draftSaved, setDraftSaved] = useState(false);
-    let [textFieldHeight, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
-
-    let [{result, error, loading}, setFile]: any[] = useFileReader({
-        method: 'readAsDataURL',
-    });
+    let [, setDraftSaved] = useState(false);
+    let [, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
+    let [{result}, setFile]: any[] = useFileReader();
 
     let showPublishButton = !!postText.trim();
 
@@ -176,7 +178,13 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
             <Divider type="horizontal" style={{margin: '12px 0'}} />
             <Row>
                 <Col md={24}>
-                    <span> {result.length} </span>
+                    <span>
+                        <If condition={result}>
+                            <span>
+                                {result.length}
+                            </span>
+                        </If>
+                    </span>
                 </Col>
             </Row>
             <Row>
@@ -185,10 +193,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                         icon={<FileImageOutlined />}
                         accept="image/*"
                         onFilesSelected={(files) => {
-                            if (!files) {
-                                return;
-                            }
-                            setFile(files[0])
+                            setFile(files[0]);
                         }}>
                         <Tooltip title="Не работает">
                             Фото
@@ -222,9 +227,11 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     {publishBtn}
                 </Col>
             </Row>
-            {showPollForm ? <PollForm onUpdatePoll={(data) => {
-                setPollData(data);
-            }} /> : null}
+            <If condition={showPollForm}>
+                <PollForm onUpdatePoll={(data) => {
+                    setPollData(data);
+                }} />
+            </If>
         </Col>
-    </Row>
+    </Row>;
 }
