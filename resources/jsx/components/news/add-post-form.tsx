@@ -6,7 +6,7 @@ import {
     FileOutlined,
     SendOutlined,
     QuestionCircleOutlined,
-    PlayCircleOutlined
+    PlayCircleOutlined, CheckOutlined
 } from '@ant-design/icons';
 import {PollForm} from './poll-form';
 import debounce from 'lodash/debounce';
@@ -16,6 +16,8 @@ import {UserAvatar} from '../UserAvatar';
 import {authUserIsn} from '../../authUserIsn';
 import {AjaxButton} from '../ajax';
 import {ISN} from '../../types';
+import {BaseEmoji} from 'emoji-mart';
+import {useFileReader} from '../../hooks/useFileReader';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -39,15 +41,17 @@ export interface FileButtonProps {
     onFilesSelected(files: FileList | null): void;
 
     accept: string;
+    multiple?: boolean;
 }
 
-export function FileButton({children, icon, onFilesSelected, accept}: FileButtonProps) {
+export function FileButton({children, icon, onFilesSelected, accept, multiple = true}: FileButtonProps) {
     let uploadRef = React.createRef<HTMLInputElement>();
 
     return <span>
         <input type="file"
                ref={uploadRef}
                hidden
+               multiple={multiple}
                accept={accept}
                onChange={(e) => {
                    onFilesSelected(e.target.files);
@@ -63,6 +67,13 @@ export function FileButton({children, icon, onFilesSelected, accept}: FileButton
 
 let useLocalStorage = createUseLocalStorage('newPost');
 
+export function PublishInfo() {
+    return <Tooltip placement="bottom"
+                    title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к нему в любой момент.">
+        <QuestionCircleOutlined />
+    </Tooltip>;
+}
+
 export function AddPostForm({onAddPost}: AddPostFormProps) {
     let maxLength = 2000;
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
@@ -70,19 +81,18 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [pollData, setPollData] = useState<PollData | null>(null);
     let [draftSaved, setDraftSaved] = useState(false);
     let [textFieldHeight, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
+
+    let [{result, error, loading}, setFile]: any[] = useFileReader({
+        method: 'readAsDataURL',
+    });
+
     let showPublishButton = !!postText.trim();
-    let AjaxPublishPostButton = ({...props}: any) =>
-        <AjaxButton<AddPostData, any> {...props}
-                               method="POST"
-                               icon={<SendOutlined />}
-                               url="/news/addPost" />
+
     let postData: any = {
         postText,
         poll: 0,
         isn: authUserIsn(),
     };
-
-    let uploadRef = React.createRef<HTMLInputElement>();
 
     if (pollData) {
         postData.poll = 1;
@@ -90,17 +100,20 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         postData.answers = pollData.answers;
     }
 
-    let publishBtn = <AjaxPublishPostButton
+    let publishBtn = <AjaxButton<AddPostData, AddPostData>
+        method="POST"
+        url="/news/addPost"
         data={postData}
+        icon={<SendOutlined />}
         disabled={!showPublishButton}
         type="default"
-        onSuccess={(response: any) => {
+        onSuccess={(response) => {
             onAddPost(response.data);
             setPostText('');
             setShowPollForm(false);
         }}>
         Опубликовать
-    </AjaxPublishPostButton>;
+    </AjaxButton>;
 
     return <Row>
         <Col md={24}>
@@ -111,10 +124,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
 
                         <Divider type="vertical" />
 
-                        <Tooltip placement="bottom"
-                                 title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к нему в любой момент.">
-                            <QuestionCircleOutlined />
-                        </Tooltip>
+                        <PublishInfo />
                     </Typography.Title>
                 </Col>
                 <Col offset={8} md={4}>
@@ -126,58 +136,70 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <UserAvatar isn={authUserIsn()} />
                 </Col>
                 <Col md={20}>
-                    <Input.TextArea placeholder="Что у вас нового?"
-                                    value={postText}
-                                    allowClear
-                                    maxLength={maxLength}
-                                    bordered={false}
-                                    rows={5}
-                                    style={{
-                                        padding: 20
-                                    }}
-                                    spellCheck
-                                    onResize={(({height}) => {
-                                        setTextFieldHeight(height);
-                                    })}
-                                    onChange={(e) => {
-                                        setPostText(e.target.value);
+                    <Input.TextArea
+                        placeholder="Что у вас нового?"
+                        value={postText}
+                        allowClear
+                        maxLength={maxLength}
+                        bordered={false}
+                        rows={5}
+                        style={{
+                            padding: 20
+                        }}
+                        spellCheck
+                        onResize={(({height}) => {
+                            setTextFieldHeight(height);
+                        })}
+                        onChange={(e) => {
+                            setPostText(e.target.value);
 
-                                        if (e.target.value) {
-                                            debounce(() => {
-                                                setDraftSaved(true);
+                            if (e.target.value) {
+                                debounce(() => {
+                                    setDraftSaved(true);
 
-                                                setTimeout(() => {
-                                                    setDraftSaved(false);
-                                                }, 1500);
-                                            }, 1500)();
-                                        }
-                                    }} />
+                                    setTimeout(() => {
+                                        setDraftSaved(false);
+                                    }, 1500);
+                                }, 1500)();
+                            }
+                        }} />
                     <span style={{float: 'right'}}>
                         {maxLength - postText.length}/{maxLength} символов
                     </span>
                 </Col>
                 <Col md={1}>
                     <EmojiPicker onSelect={(data) => {
-                        setPostText(postText + (data as any).native);
+                        setPostText(postText + (data as BaseEmoji).native);
                     }} />
                 </Col>
             </Row>
             <Divider type="horizontal" style={{margin: '12px 0'}} />
             <Row>
+                <Col md={24}>
+                    <span> {result.length} </span>
+                </Col>
+            </Row>
+            <Row>
                 <Col md={18}>
-                    <FileButton icon={<FileImageOutlined />}
-                                accept="image/*"
-                                onFilesSelected={(files) => {
-                                }}>
+                    <FileButton
+                        icon={<FileImageOutlined />}
+                        accept="image/*"
+                        onFilesSelected={(files) => {
+                            if (!files) {
+                                return;
+                            }
+                            setFile(files[0])
+                        }}>
                         <Tooltip title="Не работает">
                             Фото
                         </Tooltip>
                     </FileButton>
                     <Divider type="vertical" />
-                    <FileButton icon={<PlayCircleOutlined />}
-                                accept="video/*"
-                                onFilesSelected={(files) => {
-                                }}>
+                    <FileButton
+                        icon={<PlayCircleOutlined />}
+                        accept="video/*"
+                        onFilesSelected={(files) => {
+                        }}>
                         <Tooltip title="Не работает">
                             Видео
                         </Tooltip>
