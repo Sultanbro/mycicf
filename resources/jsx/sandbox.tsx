@@ -4,31 +4,33 @@ import {Birthdays} from './components/birthdays/birthdays';
 import {Col, Row} from 'antd';
 
 export function Sandbox({}: any) {
-    return <div>
-        {/*<ColleagueData isn={authUserIsn()} />*/}
+    return <Row>
+        <Col md={24}>
+            {/*<ColleagueData isn={authUserIsn()} />*/}
 
-        {/*<FileForm />*/}
+            {/*<FileForm />*/}
 
-        <Row>
-            <Col md={2} sm={3}>
-                <Birthdays />
-            </Col>
-        </Row>
+            <Row>
+                <Col md={6} sm={3}>
+                    <Birthdays />
+                </Col>
+            </Row>
 
-        {/*<Centcoins />*/}
+            {/*<Centcoins />*/}
 
-        {/*<CentcoinOperationsList />*/}
+            {/*<CentcoinOperationsList />*/}
 
-        {/*<CoordinationList />*/}
+            {/*<CoordinationList />*/}
 
-        {/*<UserMenu />*/}
+            {/*<UserMenu />*/}
 
-        {/*<BossPosts />*/}
+            {/*<BossPosts />*/}
 
-        {/*<Dossier />*/}
+            {/*<Dossier />*/}
 
-        {/*<Sidebar />*/}
+            {/*<Sidebar />*/}
 
-        {/*<UserName isn={'5565'} username={'Developer'} />*/}
-    </div>;
+            {/*<UserName isn={'5565'} username={'Developer'} />*/}
+        </Col>
+    </Row>;
 }

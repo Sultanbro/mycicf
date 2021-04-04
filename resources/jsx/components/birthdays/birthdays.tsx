@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {LeftOutlined, RightOutlined} from '@ant-design/icons';
-import {Col, Row, Typography, Button, Divider} from 'antd';
+import {Col, Row, Typography, Button, Divider, Spin} from 'antd';
 import {UserAvatar} from '../UserAvatar';
 import {Ajax} from '../ajax';
 import {ISN} from '../../types';
 import {UserName} from '../../UserName';
 
-const monthNames = {
+const monthNames: {[index: number]: string} = {
     1: 'Январь',
     2: 'Февраль',
     3: 'Март',
@@ -59,32 +59,41 @@ function Entry({entry}: { entry: BirthdayEntry }) {
     </Row>;
 }
 
-export function Birthdays() {
+export interface ElProps {
+    data: BirthdaysResponse;
+}
+
+export function El({data}: ElProps) {
     let [index, setIndex] = useState(0);
+    let keys = Object.keys(data);
+    let date = keys[index];
+    let first = index === 0;
+    let last = index === keys.length - 1;
 
-    return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2">
-        {({response, refetch}) => {
-            let keys = Object.keys(response.data);
-            let date = keys[index];
-            let first = index === 0;
-            let last = index === keys.length - 1;
+    console.log(index, date);
 
-            console.log(index, date);
+    if (!date) {
+        setIndex(0);
+    }
 
-            if (!date) {
-                setIndex(0);
-                return;
-            }
+    let users = data[date];
 
-            let users = response.data[date];
+    let [day, month]: [number, number] = date
+        .split('-')
+        .map(el => parseInt(el));
 
-            let [day, month] = date
-                .split('-')
-                .map(el => parseInt(el));
-
-            return <Row>
+    return <Row>
+        <Col md={24}>
+            <Row>
+                <Col md={24}>
+                    <Typography.Title level={5}>
+                        Ближайшие дни рождения
+                    </Typography.Title>
+                </Col>
+            </Row>
+            <Row>
                 <Col md={4}>
-                    <Button style={{height: '100%'}}
+                    <Button style={{height: '184px'}}
                             type="text"
                             onClick={() => {
                                 setIndex(index - 1);
@@ -96,15 +105,15 @@ export function Birthdays() {
                 </Col>
                 <Col md={16}>
                     <Typography.Title level={4} className="text-center">
-                        {day} {(monthNames as any)[month]}
+                        {day} {monthNames[month]}
                     </Typography.Title>
-                    {users.map((entry, index) => {
-                        return <Entry entry={entry} key={index} />;
-                    })}
-                    {index}
+                    {
+                        users.map((entry, index) =>
+                            <Entry entry={entry} key={index} />)
+                    }
                 </Col>
                 <Col md={4}>
-                    <Button style={{height: '100%'}}
+                    <Button style={{height: '184px'}}
                             type="text"
                             onClick={() => {
                                 setIndex(index + 1);
@@ -113,7 +122,13 @@ export function Birthdays() {
                         <RightOutlined />
                     </Button>
                 </Col>
-            </Row>;
-        }}
+            </Row>
+        </Col>
+    </Row>;
+}
+
+export function Birthdays() {
+    return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2" loading={<Spin style={{ display: 'none'}}/>}>
+        {({response, refetch}) => <El data={response.data} />}
     </Ajax.GET>;
 }

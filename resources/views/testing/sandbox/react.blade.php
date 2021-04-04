@@ -32,7 +32,7 @@
 @include('layouts.header')
 <main class="flex-row">
     <div class="main_margin flex-row width100">
-        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2">
+        <div class="col-md-12 news-tape-bg radius-4px mt-3 pb-2">
 
             <div id="jsx-sandbox-app"></div>
 
