@@ -52,7 +52,7 @@
             <div id="auth-user-name" hidden>{{Auth::user()->full_name}}</div>
         </div>
         <div class="col-md-2-sm-3-lg mt-3">
-            <news-birthday></news-birthday>
+            <div id="birthdays"></div>
             <div>
                 <Countdown end="December 31, 2021"></Countdown>
             </div>

@@ -4,6 +4,7 @@ import {Col, Row, Typography, Button, Divider} from 'antd';
 import {UserAvatar} from '../UserAvatar';
 import {Ajax} from '../ajax';
 import {ISN} from '../../types';
+import {UserName} from '../../UserName';
 
 const monthNames = {
     1: 'Январь',
@@ -36,7 +37,10 @@ function Entry({entry}: { entry: BirthdayEntry }) {
         <Col md={24}>
             <Row justify="center" align="middle">
                 <Col md={6} className="jc-center d-flex width50 events-window-size relative">
-                    <UserAvatar isn={entry.kias_id} shape="square" size={100} />
+                    <UserAvatar isn={entry.kias_id}
+                                shape="square"
+                                size={100}
+                    />
                     <img alt=""
                          src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif"
                          className="absolute width100 height100"
@@ -45,28 +49,38 @@ function Entry({entry}: { entry: BirthdayEntry }) {
             </Row>
             <Row>
                 <Col md={24} className="text-center">
-                    {entry.fullname}
+                    <UserName isn={entry.kias_id}
+                              username={entry.fullname}
+                    />
                 </Col>
             </Row>
         </Col>
         <Divider />
-    </Row>
+    </Row>;
 }
 
 export function Birthdays() {
     let [index, setIndex] = useState(0);
-    return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2" cache>
+
+    return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2">
         {({response, refetch}) => {
             let keys = Object.keys(response.data);
             let date = keys[index];
+            let first = index === 0;
+            let last = index === keys.length - 1;
+
+            console.log(index, date);
+
             if (!date) {
-                setIndex((0));
+                setIndex(0);
                 return;
             }
 
             let users = response.data[date];
 
-            let [day, month] = date.split('-').map(el => parseInt(el));
+            let [day, month] = date
+                .split('-')
+                .map(el => parseInt(el));
 
             return <Row>
                 <Col md={4}>
@@ -75,7 +89,7 @@ export function Birthdays() {
                             onClick={() => {
                                 setIndex(index - 1);
                             }}
-                            disabled={index === 0}
+                            disabled={first}
                     >
                         <LeftOutlined />
                     </Button>
@@ -85,8 +99,9 @@ export function Birthdays() {
                         {day} {(monthNames as any)[month]}
                     </Typography.Title>
                     {users.map((entry, index) => {
-                        return <Entry entry={entry} key={index} />
+                        return <Entry entry={entry} key={index} />;
                     })}
+                    {index}
                 </Col>
                 <Col md={4}>
                     <Button style={{height: '100%'}}
@@ -94,11 +109,11 @@ export function Birthdays() {
                             onClick={() => {
                                 setIndex(index + 1);
                             }}
-                            disabled={index === keys.length - 1}>
+                            disabled={last}>
                         <RightOutlined />
                     </Button>
                 </Col>
-            </Row>
+            </Row>;
         }}
-    </Ajax.GET>
+    </Ajax.GET>;
 }

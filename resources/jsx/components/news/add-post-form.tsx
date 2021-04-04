@@ -1,14 +1,9 @@
 import React, {useState} from 'react';
 import {Button, Col, Divider, Input, Row, Tooltip, Typography} from 'antd';
 import {
-    BarChartOutlined,
-    FileImageOutlined,
-    FileOutlined,
     SendOutlined,
     QuestionCircleOutlined,
-    PlayCircleOutlined
 } from '@ant-design/icons';
-import {PollForm} from './poll-form';
 import debounce from 'lodash/debounce';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
@@ -17,8 +12,7 @@ import {authUserIsn} from '../../authUserIsn';
 import {AjaxButton} from '../ajax';
 import {ISN} from '../../types';
 import {BaseEmoji} from 'emoji-mart';
-import {useFileReader} from '../../hooks/useFileReader';
-import {If} from '../if';
+import {FileForm} from './files-form';
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -81,12 +75,11 @@ export function PublishInfo() {
 
 export function AddPostForm({onAddPost}: AddPostFormProps) {
     let maxLength = 2000;
-    let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
+    let [, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
-    let [pollData, setPollData] = useState<PollData | null>(null);
+    let [pollData,] = useState<PollData | null>(null);
     let [, setDraftSaved] = useState(false);
     let [, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
-    let [{result}, setFile]: any[] = useFileReader();
 
     let showPublishButton = !!postText.trim();
 
@@ -170,68 +163,21 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     </span>
                 </Col>
                 <Col md={1}>
-                    <EmojiPicker onSelect={(data) => {
-                        setPostText(postText + (data as BaseEmoji).native);
-                    }} />
+                    <EmojiPicker
+                        onSelect={(data) => {
+                            setPostText(postText + (data as BaseEmoji).native);
+                        }} />
                 </Col>
             </Row>
-            <Divider type="horizontal" style={{margin: '12px 0'}} />
-            <Row>
-                <Col md={24}>
-                    <span>
-                        <If condition={result}>
-                            <span>
-                                {result.length}
-                            </span>
-                        </If>
-                    </span>
-                </Col>
-            </Row>
+            <Divider />
             <Row>
                 <Col md={18}>
-                    <FileButton
-                        icon={<FileImageOutlined />}
-                        accept="image/*"
-                        onFilesSelected={(files) => {
-                            setFile(files[0]);
-                        }}>
-                        <Tooltip title="Не работает">
-                            Фото
-                        </Tooltip>
-                    </FileButton>
-                    <Divider type="vertical" />
-                    <FileButton
-                        icon={<PlayCircleOutlined />}
-                        accept="video/*"
-                        onFilesSelected={(files) => {
-                        }}>
-                        <Tooltip title="Не работает">
-                            Видео
-                        </Tooltip>
-                    </FileButton>
-                    <Divider type="vertical" />
-                    <FileButton icon={<FileOutlined />}
-                                accept="*/*"
-                                onFilesSelected={(files) => {
-                                }}>
-                        <Tooltip title="Не работает">
-                            Файл
-                        </Tooltip>
-                    </FileButton>
-                    <Divider type="vertical" />
-                    <Button onClick={() => {
-                        setShowPollForm(!showPollForm);
-                    }} icon={<BarChartOutlined />} type={showPollForm ? 'primary' : 'default'}>Опрос</Button>
+                    <FileForm />
                 </Col>
-                <Col offset={1} md={3}>
+                <Col md={6}>
                     {publishBtn}
                 </Col>
             </Row>
-            <If condition={showPollForm}>
-                <PollForm onUpdatePoll={(data) => {
-                    setPollData(data);
-                }} />
-            </If>
         </Col>
     </Row>;
 }

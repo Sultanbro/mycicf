@@ -103,11 +103,15 @@ export function Posts({}: PostsProps) {
                         <Divider type="horizontal" />
                     </Row>
 
-                    <SearchBox loading={loading}
-                               setSearchQuery={setSearchQuery}
-                               search={search}
-                               dateRange={dateRange}
-                    />
+                    <Row>
+                        <Col md={20}>
+                            <SearchBox loading={loading}
+                                       setSearchQuery={setSearchQuery}
+                                       search={search}
+                                       dateRange={dateRange}
+                            />
+                        </Col>
+                    </Row>
 
                     <Row>
                         <Col md={24}>
