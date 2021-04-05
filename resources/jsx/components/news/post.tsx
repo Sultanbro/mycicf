@@ -13,6 +13,9 @@ import {PostComments} from './post-comment-list';
 import {UserName} from '../../UserName';
 import {If} from '../if';
 import {AjaxButton, AjaxButtonProps} from '../ajax';
+import ReactMarkdown from 'react-markdown'
+import Editor from "rich-markdown-editor";
+import {editorDictionary} from "./editor-dict";
 
 export interface PostProps {
     post: PostEntity;
@@ -135,7 +138,10 @@ export function Post({
                             <Row>
                                 <Col md={24}>
                                     <div style={{margin: '14px'}}>
-                                        <ReadMore text={postText} expanded={expanded} />
+                                        <Editor
+                                            defaultValue={postText}
+                                            readOnly
+                                        />
                                     </div>
                                 </Col>
                             </Row>

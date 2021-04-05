@@ -137,18 +137,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                         value={postText}
                         maxLength={maxLength}
                         dictionary={editorDictionary}
-                        onChange={(e: any) => {
-                            setPostText(e.target.value);
-
-                            if (e.target.value) {
-                                debounce(() => {
-                                    setDraftSaved(true);
-
-                                    setTimeout(() => {
-                                        setDraftSaved(false);
-                                    }, 1500);
-                                }, 1500)();
-                            }
+                        onChange={(e) => {
+                            let value = e();
+                            setPostText(value);
                         }}
                         placeholder="Что у вас нового?"
                     />
