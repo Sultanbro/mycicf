@@ -183,9 +183,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                 }, 1500)();
                             }
                         }} />*/}
-                    <span style={{float: 'right'}}>
+                    {/*<span style={{float: 'right'}}>
                         {maxLength - postText.length}/{maxLength} символов
-                    </span>
+                    </span>*/}
                 </Col>
                 <Col md={1}>
                     <EmojiPicker
