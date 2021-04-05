@@ -90,7 +90,7 @@ export function AjaxButton<TReq, TRes>({
                     icon={icon}>
                 {children}
             </Button>
-        </Popconfirm>
+        </Popconfirm>;
     } else {
         btn = <Button type={loading ? 'ghost' : type}
                       loading={loading}
@@ -99,7 +99,7 @@ export function AjaxButton<TReq, TRes>({
                       icon={icon}
                       onClick={onClick}>
             {children}
-        </Button>
+        </Button>;
     }
 
     let errorBtn = (error: any) => <Tooltip title={error.message}>
@@ -114,5 +114,5 @@ export function AjaxButton<TReq, TRes>({
             Повторить попытку
         </Button>
     </Tooltip>;
-    return !error ? btn : errorBtn(error)
+    return !error ? btn : errorBtn(error);
 }

@@ -53,7 +53,7 @@ export function CoordinationList({}: CoordinationListProps) {
                         </Col>
                     </Row>
                 </Col>
-            </Row>
+            </Row>;
         }}
-    </Ajax.POST>
+    </Ajax.POST>;
 }

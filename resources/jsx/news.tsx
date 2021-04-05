@@ -2,7 +2,7 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import {Posts} from './components/news/posts';
 import {Col, Divider, Row} from 'antd';
-import { SuggestionBtn } from './components/suggestion-btn';
+import {SuggestionBtn} from './components/suggestion-btn';
 // import {Centcoins} from './components/centcoins/centcoins';
 // import {Me} from './components/me/me';
 // import {CentcoinOperationsList} from './components/centcoins/operations-list';
@@ -49,5 +49,5 @@ export function MyCiCNews({}: MyCiCNewsProps) {
                 </Col>
             </Row>
         </Col>
-    </Row>
+    </Row>;
 }

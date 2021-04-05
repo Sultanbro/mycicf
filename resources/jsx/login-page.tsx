@@ -69,5 +69,5 @@ export function LoginPage() {
                 Войти
             </AjaxButton>
         </Form.Item>
-    </Form>
+    </Form>;
 }

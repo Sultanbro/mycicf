@@ -39,7 +39,7 @@ let commentForm = ({
     let useLocalStorage = createUseLocalStorage(`post:${post.postId}:`);
     let [commentText, setCommentText] = useLocalStorage('commentText', text);
     let AddCommentAjaxButton = ({...props}: AjaxButtonProps<CommentAjaxRequest, CommentAjaxResponse>) =>
-        <AjaxButton<CommentAjaxRequest, CommentAjaxResponse> {...props} />
+        <AjaxButton<CommentAjaxRequest, CommentAjaxResponse> {...props} />;
 
     return <div ref={ref}>
         <Row>
@@ -73,6 +73,6 @@ let commentForm = ({
                             }} />
             </Col>
         </Row>
-    </div>
+    </div>;
 };
 export let CommentForm = React.forwardRef<HTMLDivElement, CommentFormProps>(commentForm);

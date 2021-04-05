@@ -1,6 +1,6 @@
 import React from 'react';
 import {Col, Row, Typography} from 'antd';
-import { Ajax } from '../ajax';
+import {Ajax} from '../ajax';
 import {authUserIsn} from '../../authUserIsn';
 
 export interface CentcoinsProps {
@@ -8,7 +8,7 @@ export interface CentcoinsProps {
 }
 
 export function Centcoins({}: CentcoinsProps) {
-    return <Ajax.POST<number> url="/getCentcoins" data={{ isn: authUserIsn()}}>
+    return <Ajax.POST<number> url="/getCentcoins" data={{isn: authUserIsn()}}>
         {({response}) => {
             return <Row className="centcoins-bg-blue color-white">
                 <Col>
@@ -23,7 +23,7 @@ export function Centcoins({}: CentcoinsProps) {
                              className="centcoin" />
                     </span>
                 </Col>
-            </Row>
+            </Row>;
         }}
-    </Ajax.POST>
+    </Ajax.POST>;
 }

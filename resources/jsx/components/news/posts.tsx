@@ -15,8 +15,8 @@ interface PostsAjaxProps extends AjaxProps<PostEntity[]> {
 }
 
 export function PostsAjax({children}: PostsAjaxProps) {
-    return <Ajax.POST<PostEntity> url="/news/getPosts">
-        {({response, refetch, callback}: any) => { // TODO
+    return <Ajax.POST<PostEntity[]> url="/news/getPosts">
+        {({response, refetch, callback}) => {
             return children({response, callback, refetch});
         }}
     </Ajax.POST>;

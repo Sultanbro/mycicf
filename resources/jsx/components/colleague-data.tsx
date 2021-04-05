@@ -29,7 +29,7 @@ export function ColleagueData({isn}: ColleagueDataProps) {
                     <p><b>Семейное положение:</b> {response.data.response.Married}</p>
                     <p><b>Образование:</b> {response.data.response.Education}</p>
                 </Collapse.Panel>
-            </Collapse>
+            </Collapse>;
         }}
-    </Ajax.POST>
+    </Ajax.POST>;
 }

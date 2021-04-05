@@ -37,7 +37,7 @@ export function Dossier({}: DossierProps) {
                             <Select />
                         </Col>
                         <Col md={6} offset={1}>
-                            <Button onClick={() => { refetch() }}>Показать</Button>
+                            <Button onClick={() => { refetch(); }}>Показать</Button>
                         </Col>
                     </Row>
                     <Divider />
@@ -68,7 +68,7 @@ export function Dossier({}: DossierProps) {
                         </Col>
                     </Row>
                 </Col>
-            </Row>
+            </Row>;
         }}
-    </Ajax.POST>
+    </Ajax.POST>;
 }

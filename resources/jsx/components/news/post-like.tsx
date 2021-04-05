@@ -44,11 +44,11 @@ export function LikedUsers({postId}: LikedUsersProps) {
                                        size="default"
                                        key={index}
                                        title={user.full_name}
-                    />
-                })
+                    />;
+                });
             }}
         </Ajax.POST>
-    </Card>
+    </Card>;
 }
 
 export function PostLike({post}: PostLikeProps) {
@@ -83,5 +83,5 @@ export function PostLike({post}: PostLikeProps) {
                 {span}
             </Dropdown>;
         })()}
-    </PostLikeAjaxButton>
+    </PostLikeAjaxButton>;
 }

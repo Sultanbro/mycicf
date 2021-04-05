@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Comment, Button, Col, Divider, Input, Row, Tag, Tooltip, Popconfirm} from 'antd';
+import {Alert, Comment, Button, Col, Divider, Input, Row, Tag, Tooltip} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';
@@ -26,7 +26,7 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
         <Input.TextArea
             value={text}
             onChange={(e) => {
-                setText(e.target.value)
+                setText(e.target.value);
             }}
         />
 
@@ -46,7 +46,7 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
         <Button onClick={() => {
             onCancel();
         }}>Отмена</Button>
-    </div>
+    </div>;
 }
 
 export function PostComment({comment, onCommentDeleted, onReply}: PostCommentProps) {
@@ -63,13 +63,20 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
     ];
 
     if (comment.isMine) {
-        actions.push(<Popconfirm title="Вы уверены?" key="comment-nested-delete" onConfirm={() => {
-            onCommentDeleted(comment.commentId);
-        }}>
-            <Button type="link">
-                Удалить
-            </Button>
-        </Popconfirm>)
+        actions.push(<AjaxButton<{ commentId: number }, { success: true }>
+            url="/news/comments/deleteComment"
+            method="POST"
+            block
+            data={{commentId: comment.commentId}}
+            type="link"
+            confirm
+            confirmText="Вы уверены?"
+            onSuccess={(res) => {
+                if (res.data.success) {
+                    onCommentDeleted(comment.commentId);
+                }
+            }}
+        >Удалить</AjaxButton>);
     }
 
     return <Comment

@@ -19,8 +19,61 @@ export function FileForm({ onImagesUpdated, onVideosUpdated, onDocsUpdated }: Fi
     return <Row>
         <Col md={24}>
             <Row>
+                <Col md={24}> <FileButton
+                    icon={<FileImageOutlined />}
+                    accept="image/*"
+                    onFilesSelected={(files) => {
+                        if (!files) {
+                            return;
+                        }
+
+                        if (!files.length) {
+                            return;
+                        }
+
+                        addImages(...files as any);
+                        onImagesUpdated(images);
+                    }}>
+                    Фото
+                </FileButton>
+
+                    <Divider type="vertical" />
+
+                    <FileButton
+                        icon={<PlayCircleOutlined />}
+                        accept="video/*"
+                        onFilesSelected={(files) => {
+                            addVideos(...files as any);
+                            onVideosUpdated(videos);
+                        }}>
+                        Видео
+                    </FileButton>
+
+                    <Divider type="vertical" />
+
+                    <FileButton
+                        icon={<FileOutlined />}
+                        accept="image/*"
+                        onFilesSelected={(files) => {
+                            if (!files) {
+                                return;
+                            }
+
+                            if (!files.length) {
+                                return;
+                            }
+
+                            addDocs(...files as any);
+                            onDocsUpdated(docs);
+                        }}>
+                        Файл
+                    </FileButton>
+                </Col>
+            </Row>
+
+            <Row>
                 {images.map((entry, index) => {
-                    return <Col md={4}
+                    return <Col md={6}
                                 key={index}
                                 className="d-flex justify-content-center align-items-center">
                         <div style={{
@@ -85,59 +138,6 @@ export function FileForm({ onImagesUpdated, onVideosUpdated, onDocsUpdated }: Fi
                     </Col>
                 </Row>
             </If>
-
-            <Row>
-                <Col md={24}> <FileButton
-                    icon={<FileImageOutlined />}
-                    accept="image/*"
-                    onFilesSelected={(files) => {
-                        if (!files) {
-                            return;
-                        }
-
-                        if (!files.length) {
-                            return;
-                        }
-
-                        addImages(...files as any);
-                        onImagesUpdated(images);
-                    }}>
-                    Фото
-                </FileButton>
-
-                    <Divider type="vertical" />
-
-                    <FileButton
-                        icon={<PlayCircleOutlined />}
-                        accept="video/*"
-                        onFilesSelected={(files) => {
-                            addVideos(...files as any);
-                            onVideosUpdated(videos);
-                        }}>
-                        Видео
-                    </FileButton>
-
-                    <Divider type="vertical" />
-
-                    <FileButton
-                        icon={<FileOutlined />}
-                        accept="image/*"
-                        onFilesSelected={(files) => {
-                            if (!files) {
-                                return;
-                            }
-
-                            if (!files.length) {
-                                return;
-                            }
-
-                            addDocs(...files as any);
-                            onDocsUpdated(docs);
-                        }}>
-                        Файл
-                    </FileButton>
-                </Col>
-            </Row>
         </Col>
     </Row>;
 }

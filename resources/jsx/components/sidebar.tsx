@@ -67,5 +67,5 @@ export function Sidebar({}: SidebarProps) {
                 </Col>
             </Row>
         </Col>
-    </Row>
+    </Row>;
 }

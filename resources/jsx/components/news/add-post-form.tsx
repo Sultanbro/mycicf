@@ -58,8 +58,12 @@ export function FileButton({children, icon, onFilesSelected, accept, multiple = 
                        return;
                    }
 
+                   if (e.target.files.length === 0) {
+                       return;
+                   }
+
                    onFilesSelected(e.target.files);
-               }}/>
+               }} />
         <Button icon={icon} onClick={() => {
             if (!uploadRef.current) {
                 return;
@@ -74,7 +78,7 @@ let useLocalStorage = createUseLocalStorage('newPost');
 export function PublishInfo() {
     return <Tooltip placement="bottom"
                     title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к нему в любой момент.">
-        <QuestionCircleOutlined/>
+        <QuestionCircleOutlined />
     </Tooltip>;
 }
 
@@ -83,8 +87,8 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData,] = useState<PollData | null>(null);
-    let [, setDraftSaved] = useState(false);
-    let [, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
+    // let [, setDraftSaved] = useState(false);
+    // let [, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
 
     let [images, setImages] = useState<FileEntry[]>([]);
     let [videos, setVideos] = useState<FileEntry[]>([]);
@@ -106,14 +110,14 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
 
     let publishBtn = <AjaxButton<AddPostData, AddPostData>
         method="POST"
-        url="/news/addPost2"
+        url="/news/addPost/beta"
         data={postData}
         files={{
             'postImages[]': images,
             'postVideos[]': videos,
             'postDocuments[]': docs,
         }}
-        icon={<SendOutlined/>}
+        icon={<SendOutlined />}
         disabled={!showPublishButton}
         type="default"
         onSuccess={(response) => {
@@ -131,9 +135,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Typography.Title level={4}>
                         Создайте публикацию
 
-                        <Divider type="vertical"/>
+                        <Divider type="vertical" />
 
-                        <PublishInfo/>
+                        <PublishInfo />
                     </Typography.Title>
                 </Col>
                 <Col offset={8} md={4}>
@@ -142,62 +146,33 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
             </Row>
             <Row style={{backgroundColor: 'white'}}>
                 <Col md={4} className="d-flex justify-content-center align-items-center">
-                    <UserAvatar isn={authUserIsn()}/>
+                    <UserAvatar isn={authUserIsn()} />
                 </Col>
                 <Col md={19}>
                     <Editor
                         defaultValue={postText}
                         maxLength={maxLength}
                         dictionary={editorDictionary}
-                        onChange={(e) => {
+                        onChange={(e: any) => {
                             let value = e();
                             setPostText(value);
                             return value;
                         }}
                         style={{
-                            minHeight: '150px'
+                            minHeight: '150px',
+                            justifyContent: 'inherit'
                         }}
                         placeholder="Что у вас нового?"
                     />
-                    {/*<Input.TextArea
-                        placeholder="Что у вас нового?"
-                        value={postText}
-                        allowClear
-                        maxLength={maxLength}
-                        bordered={false}
-                        rows={5}
-                        style={{
-                            padding: 20
-                        }}
-                        spellCheck
-                        onResize={(({height}) => {
-                            setTextFieldHeight(height);
-                        })}
-                        onChange={(e) => {
-                            setPostText(e.target.value);
-
-                            if (e.target.value) {
-                                debounce(() => {
-                                    setDraftSaved(true);
-
-                                    setTimeout(() => {
-                                        setDraftSaved(false);
-                                    }, 1500);
-                                }, 1500)();
-                            }
-                        }} />*/}
-                    {/*<span style={{float: 'right'}}>
-                        {maxLength - postText.length}/{maxLength} символов
-                    </span>*/}
                 </Col>
                 <Col md={1}>
                     <EmojiPicker
                         onSelect={(data) => {
                             setPostText(postText + (data as BaseEmoji).native);
-                        }}/>
+                        }} />
                 </Col>
             </Row>
-            <Divider/>
+            <Divider />
             <Row>
                 <Col md={12}>
                     <FileForm
@@ -217,7 +192,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                         onClick={() => {
                             setShowPollForm(!showPollForm);
                         }}
-                        icon={<BarChartOutlined/>}
+                        icon={<BarChartOutlined />}
                         type={showPollForm ? 'primary' : 'default'}>Опрос</Button>
                 </Col>
                 <Col md={6}>

@@ -1,4 +1,3 @@
-import React from 'react';
 import {ISN} from '../../types';
 
 export interface PostCommentEntity {

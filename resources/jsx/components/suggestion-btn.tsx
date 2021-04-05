@@ -73,7 +73,7 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
             }}>
             Отправить
         </AjaxButton>
-    </Modal>
+    </Modal>;
 }
 
 export function SuggestionBtn({}: SuggestionBtnProps) {
@@ -92,5 +92,5 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
                 setIsModalVisible(visible);
             }} />
         </Col>
-    </Row>
+    </Row>;
 }

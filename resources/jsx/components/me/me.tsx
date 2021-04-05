@@ -31,9 +31,9 @@ export function Me({}: MeProps) {
                                 </Collapse.Panel>
                             </Collapse>
                         </Col>
-                    </Row>
+                    </Row>;
                 }}
             </Ajax.POST>
         </Col>
-    </Row>
+    </Row>;
 }

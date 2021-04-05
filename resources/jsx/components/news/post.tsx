@@ -1,11 +1,10 @@
-import {Button, Card, Col, Row, Tag, Typography} from 'antd';
+import {Button, Card, Col, Row, Space, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {EditOutlined, EditFilled, CloseOutlined, PushpinOutlined} from '@ant-design/icons';
 import {CommentForm} from './comment-form';
 import {UserAvatar} from '../UserAvatar';
 import {PostPoll} from './post-poll';
-import {ReadMore} from '../read-more';
 import {EditPostForm} from './edit-post-form';
 import {PostImages} from './post-images';
 import {PostEntity} from '../ajax/types';
@@ -13,9 +12,7 @@ import {PostComments} from './post-comment-list';
 import {UserName} from '../../UserName';
 import {If} from '../if';
 import {AjaxButton, AjaxButtonProps} from '../ajax';
-import ReactMarkdown from 'react-markdown'
 import Editor from "rich-markdown-editor";
-import {editorDictionary} from "./editor-dict";
 
 export interface PostProps {
     post: PostEntity;
@@ -108,14 +105,18 @@ export function Post({
             <Col md={24}>
                 {(() => {
                     if (editing) {
-                        return <EditPostForm post={post}
-                                             onCancel={() => {
-                                                 setEditing(false);
-                                             }}
-                                             onSaved={(post) => {
-                                                 setPostText(post.postText);
-                                                 setEditing(false);
-                                             }} />;
+                        return <Row>
+                                <Col md={18} offset={2} style={{backgroundColor: '#e9ebee', padding: 10}}>
+                                    <EditPostForm post={post}
+                                                  onCancel={() => {
+                                                      setEditing(false);
+                                                  }}
+                                                  onSaved={(post) => {
+                                                      setPostText(post.postText);
+                                                      setEditing(false);
+                                                  }} />
+                                </Col>
+                        </Row>;
                     }
 
                     return <Row>
@@ -141,7 +142,6 @@ export function Post({
                                         <Editor
                                             defaultValue={postText}
                                             readOnly
-                                            onChange={() => {}}
                                         />
                                     </div>
                                 </Col>
