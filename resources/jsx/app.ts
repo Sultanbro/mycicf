@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {MyCiCNews} from "./news";
 import {UserMenu} from './components/usermenu';
 import {Sandbox} from "./sandbox";
+import {Birthdays} from './components/birthdays/birthdays';
 
 // https://github.com/websemantics/awesome-ant-design
 
@@ -22,12 +23,21 @@ function attachReactApp(selector: string, type: any) {
 
 let reactApps = {
     '#jsx-sandbox-app': Sandbox,
+    // '#birthdays': Birthdays,
     '#usermenu': UserMenu,
 };
 
 setTimeout(() => {
     findElement('#jsx-app-news', (el) => {
         let reactAppElement = React.createElement(MyCiCNews);
+        ReactDOM.render(reactAppElement, el);
+    });
+
+}, 500);
+
+setTimeout(() => {
+    findElement('#birthdays', (el) => {
+        let reactAppElement = React.createElement(Birthdays);
         ReactDOM.render(reactAppElement, el);
     });
 

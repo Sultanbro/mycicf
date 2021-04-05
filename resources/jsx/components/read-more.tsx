@@ -40,10 +40,10 @@ export function ReadMore({text, limit = 3, expanded: $expanded = false}: ReadMor
                     </Button>
                 </div>
             </If>
-        </div>
+        </div>;
     } catch (e) {
         return <div>
             {text}
-        </div>
+        </div>;
     }
 }

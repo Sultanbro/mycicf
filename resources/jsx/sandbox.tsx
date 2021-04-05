@@ -1,38 +1,36 @@
 import React from 'react';
-import {Posts} from "./components/news/posts";
-import {Col} from "antd";
-import {Birthdays} from "./components/birthdays/birthdays";
-import {PostComment} from "./components/news/post-comment";
-import {PostCommentEntity} from "./components/ajax/types";
-import {ColleagueData} from "./components/colleague-data";
-import {authUserIsn} from "./authUserIsn";
-import {UserName} from "./UserName";
-import {LoginPage} from "./login-page";
+import {FileForm} from './components/news/files-form';
+import {Birthdays} from './components/birthdays/birthdays';
+import {Col, Row} from 'antd';
 
 export function Sandbox({}: any) {
-    return <div>
-        {/*<ColleagueData isn={authUserIsn()} />*/}
+    return <Row>
+        <Col md={24}>
+            {/*<ColleagueData isn={authUserIsn()} />*/}
 
-        {/*<Posts />*/}
+            {/*<FileForm />*/}
 
-        <LoginPage />
+            <Row>
+                <Col md={6} sm={3}>
+                    <Birthdays />
+                </Col>
+            </Row>
 
-        {/*<Birthdays />*/}
+            {/*<Centcoins />*/}
 
-        {/*<Centcoins />*/}
+            {/*<CentcoinOperationsList />*/}
 
-        {/*<CentcoinOperationsList />*/}
+            {/*<CoordinationList />*/}
 
-        {/*<CoordinationList />*/}
+            {/*<UserMenu />*/}
 
-        {/*<UserMenu />*/}
+            {/*<BossPosts />*/}
 
-        {/*<BossPosts />*/}
+            {/*<Dossier />*/}
 
-        {/*<Dossier />*/}
+            {/*<Sidebar />*/}
 
-        {/*<Sidebar />*/}
-
-        {/*<UserName isn={'5565'} username={'Developer'} />*/}
-    </div>
+            {/*<UserName isn={'5565'} username={'Developer'} />*/}
+        </Col>
+    </Row>;
 }

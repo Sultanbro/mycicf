@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Button, Col, Divider, Input, Row, Tag, Tooltip} from 'antd';
+import {Alert, Comment, Button, Col, Divider, Input, Row, Tag, Tooltip, Popconfirm} from 'antd';
 import {EnterOutlined} from '@ant-design/icons';
 import {CommentMenu} from './comment-menu';
 import {UserAvatar} from '../UserAvatar';
@@ -50,6 +50,45 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
 }
 
 export function PostComment({comment, onCommentDeleted, onReply}: PostCommentProps) {
+    let actions = [
+        <Tooltip title="Не работает" key="comment-nested-reply-to">
+            <Button
+                type="link"
+                onClick={() => {
+                    onReply(comment);
+                }}>
+                Ответить
+            </Button>
+        </Tooltip>
+    ];
+
+    if (comment.isMine) {
+        actions.push(<Popconfirm title="Вы уверены?" key="comment-nested-delete" onConfirm={() => {
+            onCommentDeleted(comment.commentId);
+        }}>
+            <Button type="link">
+                Удалить
+            </Button>
+        </Popconfirm>)
+    }
+
+    return <Comment
+        actions={actions}
+        author={<UserName isn={comment.userISN} username={comment.fullname} />}
+        avatar={
+            <UserAvatar
+                isn={comment.userISN}
+            />
+        }
+        content={
+            <p data-id={comment.commentId}>
+                {comment.commentText}
+            </p>
+        }
+    />;
+}
+
+export function PostComment2({comment, onCommentDeleted, onReply}: PostCommentProps) {
     let [showEditForm, setShowEditForm] = useState(false);
     let [text, setText] = useState(comment.commentText);
     return <div>

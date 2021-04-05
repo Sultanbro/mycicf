@@ -26,14 +26,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@riophae/vue-treeselect@^0.3.0/dist/vue-treeselect.min.css">
 
-    <script src="{{asset('js/app.js')}}"></script>
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body>
 @include('layouts.header')
 <main class="flex-row">
     <div class="main_margin flex-row width100">
-        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2">
+        <div class="col-md-12 news-tape-bg radius-4px mt-3 pb-2">
 
             <div id="jsx-sandbox-app"></div>
 

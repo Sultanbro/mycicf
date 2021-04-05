@@ -60,7 +60,7 @@ export function Posts({}: PostsProps) {
                         setLoading(false);
                         return previousData.concat(newData);
                     }
-                })
+                });
             };
 
             let search = (li: number | null = lastIndex, query?: string) => {
@@ -81,7 +81,7 @@ export function Posts({}: PostsProps) {
                         setLoading(false);
                         return newData;
                     }
-                })
+                });
             };
 
             let lastIndex = Math.min(...posts.map((post) => post.postId));
@@ -103,11 +103,15 @@ export function Posts({}: PostsProps) {
                         <Divider type="horizontal" />
                     </Row>
 
-                    <SearchBox loading={loading}
-                               setSearchQuery={setSearchQuery}
-                               search={search}
-                               dateRange={dateRange}
-                    />
+                    <Row>
+                        <Col md={20}>
+                            <SearchBox loading={loading}
+                                       setSearchQuery={setSearchQuery}
+                                       search={search}
+                                       dateRange={dateRange}
+                            />
+                        </Col>
+                    </Row>
 
                     <Row>
                         <Col md={24}>
@@ -133,6 +137,13 @@ export function Posts({}: PostsProps) {
                                                           onDeleted={(post) => {
                                                               notification.info({
                                                                   message: 'Пост удалён',
+                                                                  icon: <CheckOutlined />
+                                                              });
+                                                              search(null);
+                                                          }}
+                                                          onVoted={(post) => {
+                                                              notification.info({
+                                                                  message: 'Спасибо за голос',
                                                                   icon: <CheckOutlined />
                                                               });
                                                               search(null);
@@ -179,7 +190,7 @@ export function Posts({}: PostsProps) {
                         </Col>
                     </Row>
                 </Col>
-            </Row>
+            </Row>;
         }}
-    </PostsAjax>
+    </PostsAjax>;
 }

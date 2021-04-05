@@ -6,9 +6,10 @@ import {AjaxButton} from '../ajax';
 
 interface PostPollProps {
     post: PostEntity;
+    onVoted: (answer: PostPollAnswer) => void;
 }
 
-export function PostPoll({post}: PostPollProps) {
+export function PostPoll({post,onVoted = () => {}}: PostPollProps) {
     let [voted, setVoted] = useState(post.isVoted);
 
     let answerVotesCount = post.post_poll.answers
@@ -27,21 +28,26 @@ export function PostPoll({post}: PostPollProps) {
                      }}
                      onSuccess={() => {
                          setVoted(true);
+                         onVoted(answer);
                      }}
                      block>
             {answer.answer_title}
-        </AjaxButton>
+        </AjaxButton>;
 
-    let progressBar = (answer: PostPollAnswer) => <Row style={
-        {width: '100%'}
-    }>
-        <Col md={24}>
-            <Progress
-                percent={(answer.answer_votes / answerVotesCount) * 100}
-            />
-            За <b>{answer.answer_title}</b> проголосовало: <b>{answer.answer_votes}</b>
-        </Col>
-    </Row>;
+    let progressBar = (answer: PostPollAnswer) => {
+        let percent = (answer.answer_votes / answerVotesCount) * 100;
+        percent = Math.round(percent * 100) / 100;
+        return <Row style={
+            {width: '100%'}
+        }>
+            <Col md={24}>
+                <Progress
+                    percent={percent}
+                />
+                За <b>{answer.answer_title}</b> проголосовало: <b>{answer.answer_votes}</b>
+            </Col>
+        </Row>;
+    };
 
     let list = <List
         dataSource={post.post_poll.answers}
@@ -69,5 +75,5 @@ export function PostPoll({post}: PostPollProps) {
                 </Col>
             </Row>
         </Col>
-    </Row>
+    </Row>;
 }
