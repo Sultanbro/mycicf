@@ -13,6 +13,7 @@ import {AjaxButton} from '../ajax';
 import {ISN} from '../../types';
 import {BaseEmoji} from 'emoji-mart';
 import {FileForm} from './files-form';
+// import Editor from "rich-markdown-editor";
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;

@@ -12,3 +12,12 @@ Accept: application/json, text/plain, */*
 ###
 
 POST http://{{host}}/news/getDateValidRanges
+Accept: application/json, text/plain, */*
+
+> {%
+ client.test("Data fetched", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(typeof response.body.start === 'string', 'Response `start` field is not a string');
+        client.assert(typeof response.body.end === 'string', 'Response `end` field is not a string');
+ });
+%}

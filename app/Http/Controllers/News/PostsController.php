@@ -418,8 +418,13 @@ class PostsController extends Controller {
     }
 
     public function getDateValidRanges() {
-        return Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])
+        $model = Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])
             ->first();
+        $array = $model->toArray();
+
+        unset($array['is_mine']);
+
+        return $array;
     }
 
     public function getPostLikes(Request $request) {
