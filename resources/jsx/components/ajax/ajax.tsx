@@ -102,7 +102,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
             cacheSettings = {
                 ...cacheSettings,
                 ...cache
-            }
+            };
         }
 
         if (cacheSettings.enabled) {
@@ -125,7 +125,7 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
         refetch({method, url, params, data});
 
         if (error) {
-            return <div>Error: {error.message}</div>
+            return <div>Error: {error.message}</div>;
         }
 
         return loading;
@@ -155,10 +155,13 @@ export function Ajax<T>({url, method, params, data, children, headers, cache, lo
                 refetch({method, url, params, data, previousData, callback});
             }
         })}
-    </div>
+    </div>;
 }
 
+// @ts-ignore
 Ajax.GET = <TRes extends any>({children, ...props}: AjaxProps<TRes>) => <Ajax<TRes> method="GET" {...props}>{children}</Ajax>;
+// @ts-ignore
 Ajax.POST = <TRes extends any>({children, ...props}: AjaxProps<TRes>) => <Ajax<TRes> method="POST" {...props}>{children}</Ajax>;
+// @ts-ignore
 Ajax.PUT = <TRes extends any>({children, ...props}: AjaxProps<TRes>) => <Ajax<TRes> method="PUT" {...props}>{children}</Ajax>;
 // ...

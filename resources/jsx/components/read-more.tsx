@@ -43,7 +43,6 @@ export function ReadMore({text, limit = 3, expanded: $expanded = false}: ReadMor
         </div>;
     } catch (e) {
         return <div>
-            <ReactMarkdown># Hello, *world*!</ReactMarkdown>
             {text}
         </div>;
     }

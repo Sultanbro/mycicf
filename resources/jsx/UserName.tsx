@@ -16,7 +16,7 @@ export function UserName({isn, username}: UserNameProps) {
         <a href={dossierUrl(isn)}>
             {username}
         </a>
-    </Dropdown>
+    </Dropdown>;
 }
 
 interface InfoProps {
@@ -70,7 +70,7 @@ function Info({isn, username}: InfoProps) {
                             </Col>
                         </Row>
                     </Col>
-                </Row>
+                </Row>;
             }}
         </Ajax.POST>
 

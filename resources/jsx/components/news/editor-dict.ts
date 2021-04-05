@@ -31,7 +31,7 @@ export const editorDictionary = {
     hr: "Divider",
     image: "Image",
     imageUploadError: "Sorry, an error occurred uploading the image",
-    info: "Info",
+    info: "Информация",
     infoNotice: "Info notice",
     link: "Link",
     linkCopied: "Link copied to clipboard",
@@ -53,6 +53,6 @@ export const editorDictionary = {
     table: "Table",
     tip: "Tip",
     tipNotice: "Tip notice",
-    warning: "Warning",
+    warning: "Предупреждение",
     warningNotice: "Warning notice",
 };

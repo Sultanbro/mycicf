@@ -3,6 +3,7 @@ import axios, {AxiosResponse, Method} from 'axios';
 import {Button, Popconfirm, Tooltip} from 'antd';
 import {CloseOutlined} from '@ant-design/icons';
 import {ButtonProps} from 'antd/lib/button/button';
+import {FileEntry} from "../../hooks/useFileReader";
 
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     url: string;
@@ -12,37 +13,71 @@ export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
     method: Method;
     confirm?: boolean;
     confirmText?: string;
+    files?: { [key: string]: FileEntry[] };
 }
 
 export function AjaxButton<TReq, TRes>({
-                               url,
-                               data,
-                               onSuccess,
-                               children,
-                               method,
-                               icon,
-                               disabled = false,
-                               block = false,
-                               type = 'text',
-                               confirm,
-                               confirmText
-                           }: AjaxButtonProps<TReq, TRes>) {
+                                           url,
+                                           data,
+                                           onSuccess,
+                                           children,
+                                           method,
+                                           icon,
+                                           files = {},
+                                           disabled = false,
+                                           block = false,
+                                           type = 'text',
+                                           confirm,
+                                           confirmText
+                                       }: AjaxButtonProps<TReq, TRes>) {
     let [loading, setLoading] = useState(false);
     let [error, setError] = useState<any>(null);
 
+    let formData = new FormData();
+    let hasFiles = Object.keys(files).length > 0;
+    if (hasFiles) {
+        for (let [key, value] of Object.entries(data)) {
+            formData.append(key, value);
+        }
+
+        for (let [key, value] of Object.entries(files)) {
+            for (let entry of value) {
+                formData.append(key, entry.file, entry.file.name);
+            }
+        }
+    }
+
     let onClick = () => {
         setLoading(true);
-        axios.request({
-            url,
-            method,
-            data
-        }).then((res) => {
-            onSuccess(res);
-            setLoading(false);
-        }).catch((err) => {
-            setLoading(false);
-            setError(err);
-        });
+        if (hasFiles) {
+            // TODO Bad practice
+            axios
+                .post(url, formData)
+                .then((res) => {
+                    onSuccess(res);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    setError(err);
+                });
+        } else {
+            axios
+                .request({
+                    url,
+                    method,
+                    data,
+                })
+                .then((res) => {
+                    onSuccess(res);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    setError(err);
+                });
+        }
+
     };
     let btn;
 

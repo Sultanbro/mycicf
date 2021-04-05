@@ -257,6 +257,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::get('/', 'News\\PostsController@getView')->name('.index');
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
             Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
+            Route::post('/addPost2', 'News\\PostsController@addPost2')->name('.addPost2'); // TODO use grouping
             Route::post('/likePost', 'News\\PostsController@likePost')->name('.likePost');
             Route::post('/getLikes', 'News\\PostsController@getPostLikes')->name('.getLikes');
             Route::post('/news-birthday', 'NewsController@birthday');

@@ -141,6 +141,7 @@ export function Post({
                                         <Editor
                                             defaultValue={postText}
                                             readOnly
+                                            onChange={() => {}}
                                         />
                                     </div>
                                 </Col>

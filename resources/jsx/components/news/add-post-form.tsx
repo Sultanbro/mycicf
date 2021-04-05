@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {Button, Col, Divider, Input, Row, Tooltip, Typography} from 'antd';
+import {Button, Col, Divider, Row, Tooltip, Typography} from 'antd';
 import {
     SendOutlined,
     QuestionCircleOutlined,
 } from '@ant-design/icons';
-import debounce from 'lodash/debounce';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
 import {UserAvatar} from '../UserAvatar';
@@ -15,6 +14,7 @@ import {BaseEmoji} from 'emoji-mart';
 import {FileForm} from './files-form';
 import Editor from "rich-markdown-editor";
 import {editorDictionary} from "./editor-dict";
+import {FileEntry} from "../../hooks/useFileReader";
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -33,7 +33,7 @@ interface AddPostData {
 
 export interface FileButtonProps {
     children: React.ReactNode;
-    icon: any;
+    icon: React.ReactNode;
 
     onFilesSelected(files: FileList): void;
 
@@ -83,6 +83,10 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [, setDraftSaved] = useState(false);
     let [, setTextFieldHeight] = useLocalStorage<number>('textFieldHeight', 55);
 
+    let [images, setImages] = useState<FileEntry[]>([]);
+    let [videos, setVideos] = useState<FileEntry[]>([]);
+    let [docs, setDocs] = useState<FileEntry[]>([]);
+
     let showPublishButton = !!postText.trim();
 
     let postData: any = {
@@ -99,8 +103,13 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
 
     let publishBtn = <AjaxButton<AddPostData, AddPostData>
         method="POST"
-        url="/news/addPost"
+        url="/news/addPost2"
         data={postData}
+        files={{
+            'postImages[]': images,
+            'postVideos[]': videos,
+            'postDocs[]': docs,
+        }}
         icon={<SendOutlined/>}
         disabled={!showPublishButton}
         type="default"
@@ -134,12 +143,16 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                 </Col>
                 <Col md={19}>
                     <Editor
-                        value={postText}
+                        defaultValue={postText}
                         maxLength={maxLength}
                         dictionary={editorDictionary}
                         onChange={(e) => {
                             let value = e();
                             setPostText(value);
+                            return value;
+                        }}
+                        style={{
+                            minHeight: '150px'
                         }}
                         placeholder="Что у вас нового?"
                     />
@@ -184,7 +197,17 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
             <Divider/>
             <Row>
                 <Col md={18}>
-                    <FileForm/>
+                    <FileForm
+                        onImagesUpdated={(files) => {
+                            setImages(files);
+                        }}
+                        onVideosUpdated={(files) => {
+                            setVideos(files);
+                        }}
+                        onDocsUpdated={(files) => {
+                            setDocs(files);
+                        }}
+                    />
                 </Col>
                 <Col md={6}>
                     {publishBtn}

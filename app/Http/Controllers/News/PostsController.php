@@ -71,6 +71,148 @@ class PostsController extends Controller {
         return $response;
     }
 
+    public function addPost2(AddPostRequest $request) {
+        $isPoll = (boolean)$request->get('poll');
+        if ($isPoll) {
+            $question = $request->get('question');
+            $answers = $request->get('answers');
+        }
+        DB::beginTransaction();
+
+        if (! Auth::check()) {
+            $error = 'Пожалуйста авторизуйтесь заново';
+            $success = false;
+            return [
+                'error'   => $error,
+                'success' => $success
+            ];
+        }
+
+        // TODO Создать FormRequest для этого действия и заложить эти проверки в валидацию
+        if ($request->postText === null
+            && isset($request->postFiles)
+            && count($request->postFiles) === 0
+            && isset($request->postVideos)
+            && count($request->postVideos) === 0
+            && isset($request->postDocuments)
+            && count($request->postDocuments) === 0) {
+
+            $error = 'Заполните поле или добавьте вложения';
+            $success = false;
+            return [
+                'error'   => $error,
+                'success' => $success
+            ];
+        }
+
+        try {
+            ini_set("upload_max_filesize", "50M");
+            $new_post = new Post();
+            $new_post->user_isn = $request->isn;
+            $new_post->post_text = $request->postText;
+            $new_post->pinned = 0;
+            $new_post->save();
+
+            if (isset($request->postImages)) {
+                /**
+                 * @var $postImages File[]
+                 */
+                $postImages = $request->postImages;
+                foreach ($postImages as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/images/$fileName", $content);
+                }
+            }
+
+            if (isset($request->postDocuments)) {
+                foreach ($request->postDocuments as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
+                }
+            }
+
+            if (isset($request->postVideos)) {
+                foreach ($request->postVideos as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/videos/$fileName", $content);
+                }
+            }
+
+            if ($isPoll) {
+                $poll = new Question();
+                $poll->question = $question;
+                $poll->post_id = $new_post->id;
+                $poll->save();
+                $post_poll = [];
+                $post_answers = [];
+
+                foreach ($answers as $answer) {
+                    $answersModel = new Answer();
+                    $answersModel->value = $answer;
+                    $answersModel->question_id = $poll->id;
+                    $answersModel->save();
+                    $post_answers[] = [
+                        "answer_id"    => $answersModel->id,
+                        "answer_title" => $answersModel->value = $answer,
+                        "answer_votes" => 0,
+                    ];
+                    $post_poll = [
+                        "question_id"    => $poll->id,
+                        "question_title" => $poll->question = $question,
+                        "total_votes"    => 0,
+                        "answers"        => $post_answers,
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            $error = $e->getMessage();
+            $success = false;
+            return [
+                'success' => $success,
+                'error'   => $error
+            ];
+        }
+        DB::commit();
+
+        // TODO Придумать как перенести это в PostsService
+        $response = [
+            'date'      => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited'    => false,
+            'fullname'  => Auth::user()->full_name,
+            'isLiked'   => false,
+            'isn'       => $new_post->user_isn,
+            'userISN'   => $new_post->user_isn,
+            'likes'     => 0,
+            'pinned'    => false,
+            'postText'  => $new_post->getText(),
+            'postId'    => $new_post->id,
+            'image'     => $new_post->getImage(),
+            'documents' => $new_post->getDocuments(),
+            'youtube'   => $new_post->getVideo(),
+            'videos'    => $new_post->getVideoUrl(),
+            'comments'  => [],
+            "post_poll" => ! empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
+                "question_id"    => null,
+                "question_title" => null,
+                "total_votes"    => null,
+                "answers"        => null
+            ],
+            "isVoted"   => false,
+        ];
+
+        broadcast(new NewPost([
+            'post' => $response,
+            'type' => Post::NEW_POST
+        ]));
+
+        cache()->clear();
+        return $response;
+    }
+
     public function addPost(AddPostRequest $request) {
         $isPoll = (boolean)$request->get('poll');
         if ($isPoll) {
@@ -114,6 +256,7 @@ class PostsController extends Controller {
             $new_post->save();
 
             if (isset($request->postFiles)) {
+                dd($request->postFiles);
                 /**
                  * @var $postFiles File[]
                  */

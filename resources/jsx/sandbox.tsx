@@ -2,6 +2,7 @@ import React from 'react';
 import {FileForm} from './components/news/files-form';
 import {Birthdays} from './components/birthdays/birthdays';
 import {Col, Row} from 'antd';
+import {AddPostForm} from "./components/news/add-post-form";
 
 export function Sandbox({}: any) {
     return <Row>
@@ -11,8 +12,8 @@ export function Sandbox({}: any) {
             {/*<FileForm />*/}
 
             <Row>
-                <Col md={6} sm={3}>
-                    <Birthdays />
+                <Col md={24}>
+                    <AddPostForm onAddPost={() => {}} />
                 </Col>
             </Row>
 

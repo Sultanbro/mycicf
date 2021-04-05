@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
-import {Button, Col, Divider, Input, Row} from 'antd';
+import {Button, Col, Divider, Row} from 'antd';
 import {SendOutlined} from "@ant-design/icons";
 import {PostEntity} from '../ajax/types';
 import {AjaxButton} from '../ajax';
+import Editor from "rich-markdown-editor";
+import {editorDictionary} from "./editor-dict";
 
 export interface EditPostFormProps {
     post: PostEntity;
@@ -16,14 +18,18 @@ export function EditPostForm({post, onCancel, onSaved}: EditPostFormProps) {
         <Col md={24}>
             <Row>
                 <Col md={24}>
-                    <Input.TextArea value={postText}
-                                    rows={5}
-                                    bordered={false}
-                                    maxLength={2000}
-                                    style={{padding: '14px', backgroundColor: 'rgba(0, 0, 0, 0.03)'}}
-                                    onChange={(e) => {
-                                        setPostText(e.target.value);
-                                    }}
+                    <Editor
+                        defaultValue={postText}
+                        maxLength={2000}
+                        dictionary={editorDictionary}
+                        onChange={(e) => {
+                            let value = e();
+                            setPostText(value);
+                            return value;
+                        }}
+                        style={{
+                            minHeight: '150px'
+                        }}
                     />
                 </Col>
             </Row>

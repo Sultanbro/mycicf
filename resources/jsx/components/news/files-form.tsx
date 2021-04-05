@@ -5,10 +5,16 @@ import {FileEntry, useFileReader} from '../../hooks/useFileReader';
 import {DeleteOutlined, FileImageOutlined, FileOutlined, PlayCircleOutlined} from '@ant-design/icons';
 import {FileButton} from './add-post-form';
 
-export function FileForm() {
+interface FileFormProps {
+    onImagesUpdated: (entries: FileEntry[]) => void;
+    onVideosUpdated: (entries: FileEntry[]) => void;
+    onDocsUpdated: (entries: FileEntry[]) => void;
+}
+
+export function FileForm({ onImagesUpdated, onVideosUpdated, onDocsUpdated }: FileFormProps) {
     let [images, addImages] = useFileReader({autoRead: true});
     let [videos, addVideos] = useFileReader();
-    let [files, addFiles] = useFileReader();
+    let [docs, addDocs] = useFileReader();
 
     return <Row>
         <Col md={24}>
@@ -62,7 +68,7 @@ export function FileForm() {
                 <Row>
                     <Col md={24}>
                         <List<FileEntry>
-                            dataSource={files}
+                            dataSource={docs}
                             renderItem={(entry, index) => {
                                 return <List.Item key={index}>
                                     <Row>
@@ -94,6 +100,7 @@ export function FileForm() {
                         }
 
                         addImages(...files as any);
+                        onImagesUpdated(images);
                     }}>
                     Фото
                 </FileButton>
@@ -105,6 +112,7 @@ export function FileForm() {
                         accept="video/*"
                         onFilesSelected={(files) => {
                             addVideos(...files as any);
+                            onVideosUpdated(videos);
                         }}>
                         Видео
                     </FileButton>
@@ -123,7 +131,8 @@ export function FileForm() {
                                 return;
                             }
 
-                            addFiles(...files as any);
+                            addDocs(...files as any);
+                            onDocsUpdated(docs);
                         }}>
                         Файл
                     </FileButton>
