@@ -13,7 +13,8 @@ import {AjaxButton} from '../ajax';
 import {ISN} from '../../types';
 import {BaseEmoji} from 'emoji-mart';
 import {FileForm} from './files-form';
-// import Editor from "rich-markdown-editor";
+import Editor from "rich-markdown-editor";
+import {editorDictionary} from "./editor-dict";
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -55,7 +56,7 @@ export function FileButton({children, icon, onFilesSelected, accept, multiple = 
                    }
 
                    onFilesSelected(e.target.files);
-               }} />
+               }}/>
         <Button icon={icon} onClick={() => {
             if (!uploadRef.current) {
                 return;
@@ -70,7 +71,7 @@ let useLocalStorage = createUseLocalStorage('newPost');
 export function PublishInfo() {
     return <Tooltip placement="bottom"
                     title="Черновик публикации сохраняется в браузере. Вы сможете вернуться к нему в любой момент.">
-        <QuestionCircleOutlined />
+        <QuestionCircleOutlined/>
     </Tooltip>;
 }
 
@@ -100,7 +101,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         method="POST"
         url="/news/addPost"
         data={postData}
-        icon={<SendOutlined />}
+        icon={<SendOutlined/>}
         disabled={!showPublishButton}
         type="default"
         onSuccess={(response) => {
@@ -118,9 +119,9 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <Typography.Title level={4}>
                         Создайте публикацию
 
-                        <Divider type="vertical" />
+                        <Divider type="vertical"/>
 
-                        <PublishInfo />
+                        <PublishInfo/>
                     </Typography.Title>
                 </Col>
                 <Col offset={8} md={4}>
@@ -128,11 +129,30 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                 </Col>
             </Row>
             <Row style={{backgroundColor: 'white'}}>
-                <Col md={3} className="d-flex justify-content-center align-items-center">
-                    <UserAvatar isn={authUserIsn()} />
+                <Col md={4} className="d-flex justify-content-center align-items-center">
+                    <UserAvatar isn={authUserIsn()}/>
                 </Col>
-                <Col md={20}>
-                    <Input.TextArea
+                <Col md={19}>
+                    <Editor
+                        value={postText}
+                        maxLength={maxLength}
+                        dictionary={editorDictionary}
+                        onChange={(e: any) => {
+                            setPostText(e.target.value);
+
+                            if (e.target.value) {
+                                debounce(() => {
+                                    setDraftSaved(true);
+
+                                    setTimeout(() => {
+                                        setDraftSaved(false);
+                                    }, 1500);
+                                }, 1500)();
+                            }
+                        }}
+                        placeholder="Что у вас нового?"
+                    />
+                    {/*<Input.TextArea
                         placeholder="Что у вас нового?"
                         value={postText}
                         allowClear
@@ -158,7 +178,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                                     }, 1500);
                                 }, 1500)();
                             }
-                        }} />
+                        }} />*/}
                     <span style={{float: 'right'}}>
                         {maxLength - postText.length}/{maxLength} символов
                     </span>
@@ -167,13 +187,13 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     <EmojiPicker
                         onSelect={(data) => {
                             setPostText(postText + (data as BaseEmoji).native);
-                        }} />
+                        }}/>
                 </Col>
             </Row>
-            <Divider />
+            <Divider/>
             <Row>
                 <Col md={18}>
-                    <FileForm />
+                    <FileForm/>
                 </Col>
                 <Col md={6}>
                     {publishBtn}
