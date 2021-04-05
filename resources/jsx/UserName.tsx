@@ -64,8 +64,8 @@ function Info({isn, username}: InfoProps) {
                         <Row>
                             <Col md={24}>
                                 <Divider />
-                                <Button href={dossierUrl(isn)}>
-                                    <i className="far fa-clipboard" /> Досье
+                                <Button href={dossierUrl(isn)} icon={<i className="far fa-clipboard" />}>
+                                     Досье
                                 </Button>
                             </Col>
                         </Row>

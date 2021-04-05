@@ -3,6 +3,7 @@ import {Button, Col, Divider, Row, Tooltip, Typography} from 'antd';
 import {
     SendOutlined,
     QuestionCircleOutlined,
+    BarChartOutlined,
 } from '@ant-design/icons';
 import {createUseLocalStorage} from '../../hooks/useLocalStorage';
 import {EmojiPicker} from '../emoji-picker';
@@ -15,6 +16,8 @@ import {FileForm} from './files-form';
 import Editor from "rich-markdown-editor";
 import {editorDictionary} from "./editor-dict";
 import {FileEntry} from "../../hooks/useFileReader";
+import {PollForm} from "./poll-form";
+import {If} from "../if";
 
 export interface AddPostFormProps {
     onAddPost(data: AddPostData): void;
@@ -77,7 +80,7 @@ export function PublishInfo() {
 
 export function AddPostForm({onAddPost}: AddPostFormProps) {
     let maxLength = 2000;
-    let [, setShowPollForm] = useLocalStorage('showPollForm', false);
+    let [showPollForm, setShowPollForm] = useLocalStorage('showPollForm', false);
     let [postText, setPostText] = useLocalStorage('postText', '');
     let [pollData,] = useState<PollData | null>(null);
     let [, setDraftSaved] = useState(false);
@@ -87,7 +90,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
     let [videos, setVideos] = useState<FileEntry[]>([]);
     let [docs, setDocs] = useState<FileEntry[]>([]);
 
-    let showPublishButton = !!postText.trim();
+    let showPublishButton = !!postText.replace(/^[\s\\]+/, '').replace(/[\s\\]+$/, '');
 
     let postData: any = {
         postText,
@@ -108,7 +111,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
         files={{
             'postImages[]': images,
             'postVideos[]': videos,
-            'postDocs[]': docs,
+            'postDocuments[]': docs,
         }}
         icon={<SendOutlined/>}
         disabled={!showPublishButton}
@@ -196,7 +199,7 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
             </Row>
             <Divider/>
             <Row>
-                <Col md={18}>
+                <Col md={12}>
                     <FileForm
                         onImagesUpdated={(files) => {
                             setImages(files);
@@ -210,7 +213,22 @@ export function AddPostForm({onAddPost}: AddPostFormProps) {
                     />
                 </Col>
                 <Col md={6}>
+                    <Button
+                        onClick={() => {
+                            setShowPollForm(!showPollForm);
+                        }}
+                        icon={<BarChartOutlined/>}
+                        type={showPollForm ? 'primary' : 'default'}>Опрос</Button>
+                </Col>
+                <Col md={6}>
                     {publishBtn}
+                </Col>
+            </Row>
+            <Row>
+                <Col md={24}>
+                    <If condition={showPollForm}>
+                        <PollForm />
+                    </If>
                 </Col>
             </Row>
         </Col>
