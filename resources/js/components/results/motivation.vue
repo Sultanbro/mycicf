@@ -14,7 +14,7 @@
                             :options="treeOptions"
                             :multiple="false"></treeselect>
             </div>
-            <div class="rating-search-btn" @click="getMotivation">
+            <div class="rating-search-btn" @click="getMotivationSearch">
                 <span>Показать</span>
             </div>
         </div>
@@ -154,6 +154,42 @@
                             this.showMotivation = true
                             this.employee_isn = this.$parent.personIsn;
                             this.motivation_date = this.$parent.personBegin;
+                        }
+                        else{
+                            alert(response.data.error)
+                        }
+                    })
+                    .catch(error => {
+                        alert(error)
+                    })
+                    .finally(() => {
+                        this.preloader(false)
+                    });
+            },
+            getMotivationSearch(isn , begin) {
+                this.preloader(true)
+                this.showMotivation = false;
+                this.axios.post('/getMotivationList', {
+                    isn: this.employee_isn,
+                    begin: this.motivation_date,
+
+                })
+                    .then(response => {
+                        if(response.data.success){
+                            this.motivations = response.data.list
+                            this.category = response.data.cat
+                            if(this.category === 1){
+                                this.label = 'Менеджер по корпоративному страхованию'
+                            }else if(this.category === 2){
+                                this.label = ' Менеджеры по корпоративным продажам (филиалы)'
+                            }else if(this.category === 3){
+                                this.label = 'Менеджеры по прямым продажам'
+                            }else{
+                                this.label = ''
+                            }
+                            this.motSum = response.data.mot_sum
+                            this.setChartData(response.data)
+                            this.showMotivation = true
                         }
                         else{
                             alert(response.data.error)
