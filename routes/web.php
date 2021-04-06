@@ -279,6 +279,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         });
 
+        Route::post('/setPinned', 'News\\MyPostsController@setPinned')->middleware('checkPostAccess');
+
         Route::post('/setSenateVote', 'NewsController@senateVote');
 //        //RATING
 //        Route::get('/rating', 'RatingController@index')->name('rating');

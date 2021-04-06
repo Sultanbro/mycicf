@@ -77,8 +77,11 @@ class MyPostsController extends Controller
         ]));
         $post->setPinned();
 
-        $this->postsService->forget($id);
-
+        if($this->postsService->forget($id)){
+            return response()->json([
+                'success' => true
+            ]);
+        }
     }
 
     /**

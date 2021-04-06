@@ -369,7 +369,9 @@
             setPinned() {
                 if(!this.post.pinned) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
-                        this.$parent.unsetAllPinned(this.index);
+                        if(response.data.success) {
+                            this.$parent.unsetAllPinned(this.index);
+                        }
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
