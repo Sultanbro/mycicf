@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
  * @package App\Library\Services
  */
 class PostsService {
+
     /**
      * Генерируем ключ кэша для конкретного поста по его ID
      *

@@ -7,10 +7,12 @@ import {authUserIsn} from '../authUserIsn';
 
 interface Messaging {
     requestPermission(): Promise<void>
+
     getToken(): Promise<string>
 }
 
 declare let messaging: Messaging;
+
 declare function setTokenSentToServer(sent: boolean): void;
 declare function setTokenSentToServer(token: string): void;
 
@@ -35,12 +37,11 @@ export function UserMenu({}: UserMenuProps) {
     );
     return <Dropdown overlay={menu}>
         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-            <UserAvatar isn={authUserIsn()} size="default" />
-            {authUserName()} <DownOutlined />
+            <UserAvatar isn={authUserIsn()} size="default"/>
+            {authUserName()} <DownOutlined/>
         </a>
-    </Dropdown>
+    </Dropdown>;
 }
-
 
 
 function subscribe() {
@@ -48,7 +49,8 @@ function subscribe() {
     messaging.requestPermission()
         .then(function () {
             // получаем ID устройства
-            messaging.getToken()
+            messaging
+                .getToken()
                 .then(function (currentToken) {
                     console.log(currentToken);
 
@@ -81,13 +83,13 @@ function sendTokenToServer(currentToken: string) {
 
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    http.onreadystatechange = function() {
-        if(http.readyState == 4 && http.status == 200) {
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
             notification.info({
                 message: "Вы успешно подписались на уведомления"
             });
         }
-    }
+    };
     http.send(params);
 
     setTokenSentToServer(currentToken);

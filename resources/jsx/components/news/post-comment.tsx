@@ -7,6 +7,7 @@ import {PostCommentEntity} from '../ajax/types';
 import {UserName} from '../../UserName';
 import {If} from '../if';
 import {AjaxButton} from '../ajax';
+import './post-comment.css';
 
 export interface PostCommentProps {
     comment: PostCommentEntity;

@@ -382,11 +382,21 @@ class KiasMock implements KiasServiceInterface {
                 <SZ>
                     <row>
                         <ISN>5565</ISN>
-                        <type></type>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
+                        <type>1</type>
+                        <curator>me</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>444334</id>
                         <docdate>01.01.2021</docdate>
+                        <SzISN></SzISN>
+                        <SzClassISN></SzClassISN>
+                    </row>
+                    <row>
+                        <ISN>5566</ISN>
+                        <type>1</type>
+                        <curator>me</curator>
+                        <DeptName>Develop 2</DeptName>
+                        <id>444333</id>
+                        <docdate>03.01.2021</docdate>
                         <SzISN></SzISN>
                         <SzClassISN></SzClassISN>
                     </row>
@@ -394,10 +404,34 @@ class KiasMock implements KiasServiceInterface {
                 <KV>
                     <row>
                         <ISN>5565</ISN>
-                        <empl></empl>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000001</id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000002</id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000003</id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000004</id>
                         <docdate>01.01.2021</docdate>
                     </row>
                 </KV>

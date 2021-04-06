@@ -1,4 +1,4 @@
-import {Button, Card, Col, Row, Space, Tag, Typography} from 'antd';
+import {Button, Card, Col, Row, Tag, Typography} from 'antd';
 import React, {useState} from 'react';
 import {PostLike} from './post-like';
 import {EditOutlined, EditFilled, CloseOutlined, PushpinOutlined} from '@ant-design/icons';
