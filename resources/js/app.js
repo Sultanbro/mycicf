@@ -203,6 +203,8 @@ Vue.component('rating-list', require('./components/results/rating-list').default
 
 Vue.component('employee-rate', require('./components/results/employee-rate').default);
 
+Vue.component('contact-center', require('./components/scripts/contact-center').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

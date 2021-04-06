@@ -101,6 +101,12 @@
                     <span>На переговоры!</span>
                 </li>
             </a>
+            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('contact-center.manager')}}">
+                <li class="leftsidebar-icons">
+                    <i class="fa fa-address-book" aria-hidden="true"></i>
+                    <span>Контакт-центр</span>
+                </li>
+            </a>
         </ul>
     </div>
 </div>
