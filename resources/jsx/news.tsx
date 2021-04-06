@@ -30,7 +30,7 @@ export function MyCiCNews({}: MyCiCNewsProps) {
         <Col md={24}>
             <Row>
                 <Col md={6}>
-                    <SuggestionBtn />
+                    {/*<SuggestionBtn />*/}
                 </Col>
                 <Col offset={10} md={8}>
                     <a href="/news">

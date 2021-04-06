@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {CheckOutlined, UserOutlined} from '@ant-design/icons';
-import {Alert, Button, Col, Divider, Form, Input, Modal, notification, Row} from 'antd';
+import {Alert, Button, Col, Divider, Form, Input, Modal, notification, Row, Tooltip} from 'antd';
 import {authUserName} from '../authUserName';
 import {authUserIsn} from '../authUserIsn';
 import {createUseLocalStorage} from '../hooks/useLocalStorage';
@@ -23,7 +23,7 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
     let alert = <Alert message={
         <span><b>Примечание:</b> Черновик Вашего обращения сохраняется в браузере.
                 Вы сможете вернуться к нему в любой момент.</span>
-    } type="info" />;
+    } type="info"/>;
 
     return <Modal title="Оставить отзыв"
                   visible={visible}
@@ -39,9 +39,9 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
                 name="username"
                 rules={[{required: true, message: 'Please input your Username!'}]}
             >
-                <Input prefix={<UserOutlined className="site-form-item-icon" />}
+                <Input prefix={<UserOutlined className="site-form-item-icon"/>}
                        readOnly
-                       placeholder="Ваше имя" />
+                       placeholder="Ваше имя"/>
             </Form.Item>
             <Form.Item
                 name="content"
@@ -51,13 +51,13 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
                                 rows={15}
                                 onChange={(e) => {
                                     setContent(e.target.value);
-                                }} />
+                                }}/>
             </Form.Item>
         </Form>
 
         {alert}
 
-        <Divider />
+        <Divider/>
 
         <AjaxButton
             url="/news/addSuggestion"
@@ -65,6 +65,8 @@ function SuggestionModal({visible, setVisible}: SuggestionModalProps) {
             type="primary"
             data={{}}
             block
+            title="Не работает"
+            disabled
             onSuccess={() => {
                 setContent('');
                 notification.info({
@@ -81,7 +83,7 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
     return <Row>
         <Col md={12}>
             <Button
-                icon={<CheckOutlined />}
+                icon={<CheckOutlined/>}
                 onClick={() => {
                     setIsModalVisible(true);
                 }}>
@@ -90,7 +92,7 @@ export function SuggestionBtn({}: SuggestionBtnProps) {
 
             <SuggestionModal visible={isModalVisible} setVisible={(visible) => {
                 setIsModalVisible(visible);
-            }} />
+            }}/>
         </Col>
     </Row>;
 }

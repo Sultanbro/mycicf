@@ -85,7 +85,6 @@ interface ColleaguesResponse {
 export function Colleagues() {
     let [searchText, setSearchText] = useState('');
     let [parentId, setParentId] = useState(50);
-    //https://my.cic.kz/colleagues/search
 
     return <Ajax.POST<ColleaguesResponse> url="/colleagues/search" data={{searchText, parentId}}>
         {({response, refetch}) => {

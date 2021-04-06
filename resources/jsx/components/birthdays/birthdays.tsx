@@ -78,7 +78,7 @@ export function El({data}: ElProps) {
 
     let users = data[date];
 
-    let [day, month]: [number, number] = date
+    let [day, month]: number[] = date
         .split('-')
         .map(el => parseInt(el));
 
@@ -129,6 +129,6 @@ export function El({data}: ElProps) {
 
 export function Birthdays() {
     return <Ajax.GET<BirthdaysResponse> url="/getBirthdays2" loading={<Spin style={{ display: 'none'}}/>}>
-        {({response, refetch}) => <El data={response.data} />}
+        {({response}) => <El data={response.data} />}
     </Ajax.GET>;
 }

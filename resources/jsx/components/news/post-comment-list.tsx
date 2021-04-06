@@ -75,12 +75,12 @@ export function PostComments({post, expanded}: PostCommentsProps) {
                              }} />
 
         </Modal>
-
     </Row>;
 }
 
 export function PostCommentList({comments, onReply, onCommentDeleted, commentsLimit = 3}: PostCommentListProps) {
     let [limit, setLimit] = useState(commentsLimit);
+    let [showReplyForm, setShowReplyForm] = useState(false);
     let limitedComments = comments.slice(0, limit);
     let hasMoreComments = limitedComments.length < comments.length;
 
@@ -95,7 +95,7 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
                                          onCommentDeleted(commentId);
                                      }}
                                      onReply={(comment) => {
-                                         onReply(comment);
+                                         setShowReplyForm(true);
                                      }}
                         />)}
                 </Col>
@@ -104,7 +104,7 @@ export function PostCommentList({comments, onReply, onCommentDeleted, commentsLi
                 <Col offset={2} md={20}>
                     <If condition={hasMoreComments}>
                         <Button
-                            type="dashed"
+                            type="link"
                             block
                             onClick={() => {
                                 setLimit(limit + 5);
