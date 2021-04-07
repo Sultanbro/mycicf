@@ -1,5 +1,5 @@
-<template> <!-- Без контрагента -->
-    <div class="management-application">
+<template>
+    <div class="management-application-extra">
         <div class="pt-4">
             <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-5 pr-5 pt-4 pb-3">
                 <h4 class="text-center">{{results.className}}</h4>
@@ -459,15 +459,15 @@
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div v-if="!result.val">
                                     <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(this.listDocIsn)">
-                                        </div>
+                                    </div>
                                 </div>
                                 <div v-else>
                                     <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
-                                    <input type="text" v-model="result.val"
-                                           class="form-control" :disabled="addChange">
+                                <input type="text" v-model="result.val"
+                                       class="form-control" :disabled="addChange">
                             </div>
                             <div v-else-if="result.fullname === 'Срок исполнения' || result.fullname === 'Срок исполнения СЗ'">
                                 <input class="form-control"
@@ -502,6 +502,7 @@
         </document-modal>
     </div>
 </template>
+
 <script>
 import DatePicker from "vue2-datepicker";
 import 'vue2-datepicker/index.css';
@@ -510,7 +511,7 @@ import 'vue2-datepicker/locale/ru';
 import moment from 'moment'
 import DocumentModal from "./document-modal";
 export default {
-    name: "management-application",
+    name: "management-application-extra",
     props: {
         results: Object,
         clearSum:Function,
@@ -681,14 +682,14 @@ export default {
                         this.toForm = false;
                         this.fillIn = false;
                         this.saveDoc = false;
-                        } else {
-                            this.addChange = false;
-                            this.annul = true;
-                            this.extraLoading = false;
-                        }
-                    });
-                    this.addChange = false;
-                    this.extraLoading = false;
+                    } else {
+                        this.addChange = false;
+                        this.annul = true;
+                        this.extraLoading = false;
+                    }
+                });
+            this.addChange = false;
+            this.extraLoading = false;
         },
         saveDocument(){
             this.loading = false;

@@ -1,6 +1,5 @@
 <template>
-    <div class="">
-        <div class="modal fade bd-example-modal-lg" :style="modalHide" id="test" tabindex="-1" role="dialog"
+        <div class="modal fade bd-example-modal-lg" :style="modalHide" id="listDoc" tabindex="-1" role="dialog"
              aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content products-margin modal-lg-custom modal-custom-border-top">
@@ -140,7 +139,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -184,9 +182,6 @@
                     this.isLoading = false;
                     // console.log(response)
                 });
-            },
-            setCoordinator() {
-
             },
             makeChange() {
               this.changeMatch.status = true;
@@ -233,39 +228,8 @@
                 //     this.coordinator[index] = obj.SubjISN;
                 // }
             },
-            // sendSolution: function (Solution) {
-            //     if (confirm("Проверьте правильность введенных данных\nОтменить действие будет невозможно")) {
-            //         this.preloader(true);
-            //         this.axios.post("/setCoordination", {
-            //             DocISN: this.coordination.ISN,
-            //             ISN: this.isn,
-            //             Solution: Solution,
-            //             Remark: this.Remark,
-            //             Resolution : this.resolution
-            //         }).then((response) => {
-            //             if (!response.data.success) {
-            //                 this.preloader(false);
-            //                 alert(response.data.error);
-            //             } else {
-            //                 this.preloader(false);
-            //                 location.reload();
-            //             }
-            //         });
-            //     }
-            // },
-            // sendEdsSolution(){
-            //     if(this.$refs.eds.edsConfirmed){
-            //         this.sendSolution(1);
-            //     } else {
-            //         alert('Чтобы согласовать сначало надо подписать через ЭЦП');
-            //         //$refs.eds.getToken('coordination', 1)
-            //     }
-            // },
             close() {
                 this.$parent.$refs.modalButton.click()
-            },
-            checkIsDir(){
-                return this.$parent.isDirector;
             },
             preloader(show){
                 if(show){
@@ -277,14 +241,6 @@
                 }
             }
         },
-        // watch: {
-        //     coordination:function(val){
-        //         this.coordinator = this.coordination.Coordinations;
-        //     }
-        // }
-        // computed: {
-        //     coordination.Coordinations.Fullname.pop();
-        // }
     }
 </script>
 
