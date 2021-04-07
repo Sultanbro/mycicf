@@ -39,27 +39,27 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
-                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'sum' => ($response->Mot->row->PercPlan).'%',
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
-                        'sum' => (number_format((double)$response->Mot->row->PlanFM ?? 0)).'%',
+                        'sum' => ($response->Mot->row->PlanFM).'%',
                         'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Себестоимость',
-                        'sum' => (number_format((double)$response->Mot->row->TotalProcKV ?? 0)).'%',
+                        'sum' => ($response->Mot->row->TotalProcKV).'%',
                         'color' => ((double)$response->Mot->row->TotalProcKV ?? 0) < 45 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Чистые сборы',
-                        'sum' => (number_format((double)$response->Mot->row->NetFees, 0, '.', ' ') ?? 0),
+                        'sum' => (number_format((double)$response->Mot->row->NetFees,0, '.', ' ')),
                         'color' => 'transparent',
                     ],
                     [
                         'types' => '% мотивации',
-                        'sum' => ((double)$response->Mot->row->MotProc ?? 0).'%',
+                        'sum' => ($response->Mot->row->MotProc ?? 0).'%',
                         'color' => 'transparent',
                     ],
                     [
