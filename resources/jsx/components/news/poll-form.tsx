@@ -19,6 +19,7 @@ interface DeleteOptionButtonProps {
 
 function DeleteOptionButton({onClick}: DeleteOptionButtonProps) {
     return <Button icon={<CloseOutlined />}
+                   tabIndex={-1}
                    type="link"
                    size="small"
                    onClick={onClick} />;

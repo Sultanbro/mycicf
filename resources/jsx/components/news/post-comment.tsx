@@ -8,11 +8,13 @@ import {UserName} from '../../UserName';
 import {If} from '../if';
 import {AjaxButton} from '../ajax';
 import './post-comment.css';
+import {CommentForm} from "./comment-form";
 
 export interface PostCommentProps {
+    postId: number;
     comment: PostCommentEntity;
     onCommentDeleted: (commentId: number) => void;
-    onReply: (comment: PostCommentEntity) => void;
+    onReply?: (comment: PostCommentEntity) => void;
 }
 
 export interface CommentEditFormProps {
@@ -50,17 +52,23 @@ export function CommentEditForm({comment, onCancel, onSaved}: CommentEditFormPro
     </div>;
 }
 
-export function PostComment({comment, onCommentDeleted, onReply}: PostCommentProps) {
+export function PostComment({
+                                comment,
+                                onCommentDeleted,
+                                onReply = () => {
+                                },
+                                postId,
+                            }: PostCommentProps) {
+    let [showReplyForm, setShowReplyForm] = useState(false);
     let actions = [
-        <Tooltip title="Не работает" key="comment-nested-reply-to">
-            <Button
+        <Button key={0}
                 type="link"
                 onClick={() => {
                     onReply(comment);
+                    setShowReplyForm(true);
                 }}>
-                Ответить
-            </Button>
-        </Tooltip>
+            Ответить
+        </Button>
     ];
 
     if (comment.isMine) {
@@ -80,20 +88,26 @@ export function PostComment({comment, onCommentDeleted, onReply}: PostCommentPro
         >Удалить</AjaxButton>);
     }
 
-    return <Comment
-        actions={actions}
-        author={<UserName isn={comment.userISN} username={comment.fullname} />}
-        avatar={
-            <UserAvatar
-                isn={comment.userISN}
-            />
-        }
-        content={
-            <p data-id={comment.commentId}>
-                {comment.commentText}
-            </p>
-        }
-    />;
+    return <div>
+        <Comment
+            actions={actions}
+            author={<UserName isn={comment.userISN} username={comment.fullname}/>}
+            avatar={
+                <UserAvatar
+                    isn={comment.userISN}
+                />
+            }
+            content={
+                <p data-id={comment.commentId}>
+                    {comment.commentText}
+                </p>
+            }
+        />
+
+        <If condition={showReplyForm}>
+            <CommentForm postId={postId} onCommendAdded={() => {}} text={comment.fullname + ', '} />
+        </If>
+    </div>;
 }
 
 export function PostComment2({comment, onCommentDeleted, onReply}: PostCommentProps) {
@@ -102,12 +116,12 @@ export function PostComment2({comment, onCommentDeleted, onReply}: PostCommentPr
     return <div>
         <Row>
             <Col md={2}>
-                <UserAvatar size="default" isn={comment.userISN} />
+                <UserAvatar size="default" isn={comment.userISN}/>
             </Col>
             <Col md={20}>
                 <Row>
                     <Col md={12}>
-                        <UserName isn={comment.userISN} username={comment.fullname} />
+                        <UserName isn={comment.userISN} username={comment.fullname}/>
                     </Col>
                     <Col md={2} offset={2}>
                         <If condition={comment.isMine}>
@@ -141,7 +155,7 @@ export function PostComment2({comment, onCommentDeleted, onReply}: PostCommentPr
                                         setShowEditForm(false);
                                     }}
                                 /> :
-                                <Alert message={text} type="info" />
+                                <Alert message={text} type="info"/>
                         }
 
                     </Col>
@@ -149,8 +163,10 @@ export function PostComment2({comment, onCommentDeleted, onReply}: PostCommentPr
                 <Row>
                     <Col md={8}>
                         <Tooltip title="Не работает">
-                            <Button type="link" icon={<EnterOutlined />} onClick={() => {
-                                onReply(comment);
+                            <Button type="link" icon={<EnterOutlined/>} onClick={() => {
+                                if (onReply) {
+                                    onReply(comment);
+                                }
                             }}>
                                 Ответить
                             </Button>
@@ -160,7 +176,7 @@ export function PostComment2({comment, onCommentDeleted, onReply}: PostCommentPr
             </Col>
         </Row>
         <Row>
-            <Divider type="horizontal" style={{margin: '10px 0'}} />
+            <Divider type="horizontal" style={{margin: '10px 0'}}/>
         </Row>
     </div>;
 }

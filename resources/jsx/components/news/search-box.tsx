@@ -33,7 +33,7 @@ export function SearchBox({loading, setSearchQuery, search, dateRange}: SearchBo
                 }, 500)}
             />
         </Col>
-        <Col md={8}>
+        <Col offset={2} md={8}>
             <Ajax.POST<DateValidRangesResult>
                 url="/news/getDateValidRanges"
                 cache
