@@ -57,12 +57,12 @@ export function BossPosts() {
                     <BossPostsAjax>
                         {({response}) => {
                             return response.data.map((post, index) => {
-                                return <Post post={post} key={index} />
+                                return <Post post={post} key={index} />;
                             });
                         }}
                     </BossPostsAjax>
                 </Col>
             </Row>
         </Col>
-    </Row>
+    </Row>;
 }
