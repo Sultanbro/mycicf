@@ -31,7 +31,7 @@ class EmailAmazonSes extends Mailable
     {
         $content = 'text kakoi nibud';
         $email = $this->from(env('MAIL_FROM'), env('MAIL_FROM_NAME'))
-            ->subject('title testiki')
+            ->subject('Уведомление с портала my.cic.kz | Рекрутинг')
             ->replyTo(env('MAIL_REPLY_TO'))
             ->view('emails.tour', compact('content'));
 

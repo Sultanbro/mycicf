@@ -296,6 +296,8 @@ class RecruitingController extends Controller
                 'error' => 'Ошибка'
             ]);
         }
+        $this->TestMail();
+
         return response()->json([
             'success' => true,
         ]);
@@ -406,12 +408,12 @@ class RecruitingController extends Controller
     }
     public function testMail(Request $request){
         try{
-            Mail::to('DJumagulov@cic.kz')->send(new EmailAmazonSes([
+            Mail::to('EFilimonova@cic.kz')->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
                 //'background_image' => asset('images/product/mst_product.png'),
-                'htmlTitle' => 'tst title ',
-                'greeting' => "Уважаемый(-ая)!",
-                'wish' => 'Желаем Вам увлекательной, эмоциональной и безопасной поездки!',
+//                'htmlTitle' => 'tst title ',
+//                'greeting' => "Уважаемый(-ая)!",
+//                'wish' => 'Желаем Вам увлекательной, эмоциональной и безопасной поездки!',
                 'tourId' => 1,
             ],
                 'tour',
