@@ -330,6 +330,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', '127.0.0.1')], function () {
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
 
         Route::post('recruiting/save', 'RecruitingController@saveCandidat');
+        Route::post('recruiting/testMail', 'RecruitingController@testMail');
 
         Route::post('/getNameByIsnBranch', 'SiteController@getNameByIsnBranch');
     });

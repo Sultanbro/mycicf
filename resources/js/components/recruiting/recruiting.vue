@@ -67,7 +67,7 @@
 <!--                </div>-->
                 <div class="recruiting-body">
                     <div>
-                        <button @click="sendMail">Click to send mail!</button>
+                        <button @click="mailTest">Click to send mail!</button>
                         <div class="recruiting-select-header">
                             Наименование структурного подразделения (укажите город и адрес филиала)
                         </div>
@@ -233,7 +233,7 @@
                             </div>
                             <hr>
                         </div>
-                        <button @click="testpush">Push to array</button>
+<!--                        <button @click="testpush">Push to array</button>-->
 
                         <div class="recruiting-simple-block-container">
                             <div class="recruiting-simple-block ml-2 mr-2" @click="addLanguage">
@@ -1227,7 +1227,7 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                recruitingTabs: 3,
+                recruitingTabs: 1,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1478,7 +1478,13 @@
         },
         methods: {
             sendMail: function(){
-                e
+                this.axios.post('/recruiting/testMail', {
+                    form: {}
+                }).then(response => {
+                    // console.log(this.options);
+                    // this.options = response.data.result;
+                    // console.log(this.options);
+                })
             },
             testpush: function(){
                 // this.testvar
@@ -1551,6 +1557,9 @@
                 }).catch(error => {
                     alert(error)
                 })
+            },
+            mailTest: function(){
+                this.axios.post('/recruiting/testMail',{})
             },
             clickertest: function(){
                 this.axios.post('/recruiting/test21',{candidatsData: this.candidatsData, index})

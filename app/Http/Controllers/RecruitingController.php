@@ -253,7 +253,6 @@ class RecruitingController extends Controller
         $candidats_data->candidate_phone_number = $cData->manualPhoneNumber;
         $candidats_data->responsible_recruiter = $cData->recruiterFullname;
 
-        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail('asdadas'));
 
         if(!$candidats_data->save()){
             return response()->json([
@@ -404,11 +403,39 @@ class RecruitingController extends Controller
         $Test = $kias->getTestKiadData();
         dd($Test);
     }
+    public function testMail(Request $request){
+        $q = $to_name = 'My.cic.kz';
+//        $to_email = 'zuaxxx@gmail.com';
+        $to_email = 'DJumagulov@cic.kz';
+        $data = array('header'=>"Данные в разделе Рекрутинг были обновлены", "body" => "Пожалуйста, проверьте my.cic.kz");
+//        Mail::send('emails.recruiting', $data, function($message) use ($to_name, $to_email) {
+//            $message->to($to_email, $to_name)->subject('Artisans Web Testing Mail');
+//            $message->from(env('MAIL_USERNAME'), 'Artisans Web');
+//        });
+        Mail::send('emails.recruiting', $data, function($message) use ($to_email, $q) {
+            $message->to($to_email)->subject($q);
+        });
+
+
+        //        $name = $request->name;
+//        $email = $request->email;
+//        $msg = $request->msg;
+//        $form = $request->get('form');
+//
+//        dd($form);
+//
+//        $authEmail = Auth::user()->email;
+//
+//
+//        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail($name, $email, $msg));
+    }
     public function saveCandidat(Request $request,KiasServiceInterface $kias){
 //        $candidate = $request->candidate;
 
 
 //        $language = new RecruitingLanguage();
+
+//        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail('asdadas'));
 
         if($request->candidat['cityAdressSelect'] == '1'){
 
@@ -439,6 +466,7 @@ class RecruitingController extends Controller
         $recruiting->candidates_trait = $request->candidat['candidatsTrait'];
         $recruiting->interview_stage = $request->candidat['interviewStage'];
         $recruiting->application_status = $request->candidat['status'];
+//        $recruiting->email_chief = authEmail;
 
 //        $recruiting->candidates_fullname = $request->candidat['manualFullname'];
 //        $recruiting->candidates_iin = $request->candidat['manualIIN'];
