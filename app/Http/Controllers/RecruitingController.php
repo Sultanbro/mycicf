@@ -17,6 +17,7 @@ use App\Answer;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\NotificationController;
 use App\Library\Services\Kias;
+use App\Mail\EmailAmazonSes;
 
 class RecruitingController extends Controller
 {
@@ -404,7 +405,40 @@ class RecruitingController extends Controller
         dd($Test);
     }
     public function testMail(Request $request){
-        $q = $to_name = 'My.cic.kz';
+        try{
+            Mail::to('DJumagulov@cic.kz')->send(new EmailAmazonSes([
+                'title' => __('shared.your_tour_polis'),
+                //'background_image' => asset('images/product/mst_product.png'),
+                'htmlTitle' => 'tst title ',
+                'greeting' => "Уважаемый(-ая)!",
+                'wish' => 'Желаем Вам увлекательной, эмоциональной и безопасной поездки!',
+                'tourId' => 1,
+            ],
+                'tour',
+                [
+                    'policy.pdf' => '', //$this->getPolicyPath() . "/" . $this->getPolicyFileName(),
+                    'insurer_memo.pdf' => '',   //TourOrder::INSURER_MEMO_PATH,
+                    'mst_part-2.pdf' => '', //TourOrder::MST_PART_2_PATH,
+                ]
+            ));
+            //$this->email_sent = 1;
+            //$this->save();
+            //return true;
+            dd('sended');
+        }catch (SesException $e){
+            echo $e->getMessage();
+            return false;
+        }
+
+
+
+
+
+
+
+
+
+/*        $q = $to_name = 'My.cic.kz';
 //        $to_email = 'zuaxxx@gmail.com';
         $to_email = 'DJumagulov@cic.kz';
         $data = array('header'=>"Данные в разделе Рекрутинг были обновлены", "body" => "Пожалуйста, проверьте my.cic.kz");
@@ -428,6 +462,7 @@ class RecruitingController extends Controller
 //
 //
 //        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail($name, $email, $msg));
+*/
     }
     public function saveCandidat(Request $request,KiasServiceInterface $kias){
 //        $candidate = $request->candidate;
