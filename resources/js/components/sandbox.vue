@@ -1,5 +1,5 @@
 <template>
-    <div>Sandbox</div>
+    <div>Sandbox {{ a }}</div>
 </template>
 
 <script>
@@ -11,7 +11,7 @@
             }
         },
         mounted(){
-
+            console.log(1);
         }
     }
 </script>
