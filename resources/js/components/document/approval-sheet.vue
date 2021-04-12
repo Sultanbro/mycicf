@@ -20,14 +20,14 @@
                                 <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
                                            id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                     </div>
                                 </div>
                                 <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
                                             id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
 <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
@@ -127,12 +127,12 @@
                                 <div v-if="docrow.fieldname === 'Дата проведения семинара, с'">
                                     <input class="form-control"
                                            type="tel"
-                                           v-model="docrow.val" :disabled="addChange"
+                                           v-model="docrow.value" :disabled="addChange"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
                                 <div v-if="docrow.fieldname === 'Проживание'">
-                                    <select v-model="docrow.val"  :disabled="addChange" class="form-control" required>
+                                    <select v-model="docrow.value"  :disabled="addChange" class="form-control" required>
                                         <option value="1042661" selected>Да</option>
                                         <option value="1042671">Нет</option>
                                     </select>
@@ -153,7 +153,7 @@
                                         v-model="docrow.value" :disabled="addChange" required
                                         :multiple="false"
                                         :options="userList"
-                                        @select="changeSelected(index,$event)"
+                                        @select="changeSelected($event)"
                                         :disable-branch-nodes="true"/>
                                 </div>
                                 <div class="col-md-6" v-if="docrow.fieldname === 'Возложить полномочия на:'">
@@ -161,7 +161,7 @@
                                         v-model="docrow.value" :disabled="addChange"
                                         :multiple="false"
                                         :options="userList"
-                                        @select="changeSelected(index,$event)"
+                                        @select="changeSelected($event)"
                                         :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Делегировать полномочия в части:'">
@@ -169,7 +169,7 @@
                                         v-model="docrow.value" :disabled="addChange"
                                         :multiple="false"
                                         :options="userList"
-                                        @select="changeSelected(index,$event)"
+                                        @select="changeSelected($event)"
                                         :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Номер свидетельства о рождении'">
@@ -211,13 +211,13 @@
                                     />
                                 </div>
                                 <div v-if="docrow.fieldname === 'Должность'">
-                                    <select v-model="docrow.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="dut in duties" :value="dut[0]">{{ dut[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-if="docrow.fieldname === 'В связи'">
                                     <input type="text"
-                                           v-model="docrow.value_name" :disabled="addChange" class="form-control">
+                                           v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Дата установление ЗП'">
                                     <input class="form-control"
@@ -346,7 +346,8 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-3">
-                        <button v-show="results.docParam.button1caption === 'Y'" v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
+                        <button v-show="(results.docParam.button1caption === 'Заполнить СЗ' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Заполнить СЗ' && results.docParam.showbutton2 === 'Y')"
+                                v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
                             Заполнить СЗ
                         </button>
                     </div>
@@ -355,7 +356,8 @@
                         <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
                             Разослать на согласование
                         </button>
-                        <button v-show="results.docParam.button2caption === 'Y'" v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                        <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
+                                v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
                         <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">
@@ -367,7 +369,8 @@
                     </div>
                     <div class="col-md-4">
                         <i v-if="extraLoading" class="fas fa-spinner fa-spin"></i>
-                        <button v-show="results.docParam.button3caption === 'Y'" v-if="addChange" class="btn btn-danger btn-block2" @click="addChangeForm()">
+                        <button v-show="(results.docParam.button2caption === 'Внести изменения в СЗ' && results.docParam.showbutton2 === 'Y') || (results.docParam.button3caption === 'Внести изменения в СЗ' && results.docParam.showbutton3 === 'Y')"
+                                v-if="addChange" class="btn btn-danger btn-block2" @click="addChangeForm()">
                             Внести изменения в СЗ
                         </button>
                         <button v-if="!addChange && annul" class="btn btn-danger btn-block2" @click="annulSz()">
@@ -415,51 +418,51 @@
                                      || result.fullname === 'Член комиссии 3' || result.fullname === 'Член комиссии 4' || result.fullname === 'Член комиссии 5'
                                     || result.fullname === 'Член комиссии 6' || result.fullname === 'Председатель комиссии (филиал)' || result.fullname === 'Секретарь комиссии'
                                     || result.fullname === 'Подписант за первого руководителя' || result.fullname === 'Подписант за главного бухгалтера' || result.fullname === 'Подписант за главного бухгалтера (ДСП)'">
-                                    <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
+                                    <treeselect v-model="result.value" placeholder="Не выбрано" :disabled="addChange"
                                                 :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-else-if="result.fullname === 'Вид доверенности'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="proxyType in proxyTypes" :value="proxyType[0]">{{ proxyType[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Тема СЗ (аренда/АХД)'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="ahd in typeAhd" :value="ahd[0]">{{ ahd[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Тема СЗ (хозяйственной деятельности)'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="economic in economicActivity" :value="economic[0]">{{ economic[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Тема СЗ (основной деятельности)'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="main in typeMain" :value="main[0]">{{ main[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Марка и Модель ТС'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="model in vehicleModel" :value="model[0]">{{ model[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Гос.номер авто'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="stateNumber in stateNumbers" :value="stateNumber[0]">{{ stateNumber[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Состав нарушении'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="violation in violationComposition" :value="violation[0]">{{ violation[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Цвет Авто'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="autoColor in autoColors" :value="autoColor[0]">{{ autoColor[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Лист согласования'">
-                                    <div v-if="!result.val">
+                                    <div v-if="!result.value">
                                         <div class="pointer" scope="col" @click="OpenModal()">{{listDocIsn}}</div>
                                     </div>
                                     <div v-else>
@@ -468,7 +471,7 @@
                                 </div>
                                 <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
                                     <div>
-                                        <input type="text" v-model="result.val"
+                                        <input type="text" v-model="result.value"
                                                class="form-control" :disabled="addChange">
                                     </div>
                                 </div>
@@ -476,7 +479,7 @@
                                 result.fullname === 'Дата расторжения договора поручения' || result.fullname === 'Дата предписания'">
                                     <input class="form-control"
                                            type="tel"
-                                           v-model="result.val" :disabled="addChange"
+                                           v-model="result.value" :disabled="addChange"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
@@ -485,20 +488,20 @@
                                     <input type="text"  @keypress="onlyNumber" v-model="result.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
                                 <div v-else-if="result.fullname === 'Тема СЗ (ДП)'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option value="804881">Заключение договора поручения со страховым агентом</option>
                                         <option value="804891">Перезакрепление агента</option>
                                         <option value="804901">Расторжение договора поручения</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'НДС'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option value="804651">без учета НДС</option>
                                         <option value="804661">с учетом НДС</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Период аренды'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option value="804681">в день</option>
                                         <option value="804691">в месяц</option>
                                         <option value="804701">в сутки</option>
@@ -506,7 +509,7 @@
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Валюта'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option value="9813">Тенге</option>
                                         <option value="9716">Доллар США</option>
                                         <option value="9721">Евро</option>
@@ -516,53 +519,53 @@
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Порядок расчетов'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option value="222462">Авансовый платеж</option>
                                         <option value="222461">По факту</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Типовой договор'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option value="482291">Да</option>
                                         <option value="482301">Нет</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Тип расчета'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="result.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="calculationType in calculationTypes" :value="calculationType[0]">{{ calculationType[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Форма оплаты'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <select v-model="result.value" :disabled="addChange" class="form-control">
                                         <option v-for="paymentForm in paymentForms" :value="paymentForm[0]">{{ paymentForm[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Порядок оплаты'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <select v-model="result.value" :disabled="addChange" class="form-control">
                                         <option v-for="paymentOrder in paymentOrders" :value="paymentOrder[0]">{{ paymentOrder[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Услуги по ДОУ'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <select v-model="result.value" :disabled="addChange" class="form-control">
                                         <option v-for="service in servicesFor" :value="service[0]">{{ service[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Вид затрат' || result.fullname === 'Вид доходов/затрат'">
-                                    <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
+                                    <treeselect v-model="result.value" placeholder="Не выбрано" :disabled="addChange"
                                                 :multiple="false" :options="costTypes" :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-else-if="result.fullname === 'Группа подразделений'">
-                                    <treeselect v-model="result.val" :multiple="false" :options="unitGroups" :disabled="addChange"/>
+                                    <treeselect v-model="result.value" :multiple="false" :options="unitGroups" :disabled="addChange"/>
                                 </div>
                                 <div v-else-if="result.fullname === 'Тема СЗ (списание)'">
-                                    <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <select v-model="result.value" :disabled="addChange" class="form-control">
                                         <option v-for="topic in topicSZ" :value="topic[0]">{{ topic[1] }}</option>
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Необходимо согласование работников АдмУ'">
                                     <input
                                         type="checkbox"
-                                        v-model="result.val"
+                                        v-model="result.value"
                                         true-value="1"
                                         false-value="0"
                                     >
@@ -570,7 +573,7 @@
 
                                 <div v-else>
                                     <div>
-                                        <input type="text" v-model="result.val"
+                                        <input type="text" v-model="result.value"
                                                class="form-control" :disabled="addChange">
                                     </div>
                                 </div>
@@ -699,8 +702,7 @@
                 today.setHours(0, 0, 0, 0);
                 return date <= today;
             },
-            changeSelected(index,e){
-                //console.log(e.id);
+            changeSelected(e){
                 //console.log(this.usersInfo[parseInt(e.id)].duty);
                 // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
                 this.duty = this.usersInfo[parseInt(e.id)].duty
@@ -809,12 +811,13 @@
             },
             annulSz(){
                 for(let i=0; i<this.results.resDop.length; i++){
-                    if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].val === ''){
+                    if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].value === ''){
                         this.flashMessage.warning({
                             title: "!",
                             message: 'Укажите причину аннулирования служебной записки в доп.атрибутах документа',
                             time: 5000
                         });
+                        return;
                     }
                 }
                 this.extra = true;
@@ -849,16 +852,22 @@
             },
             saveDocument(){
                 this.loading = false;
-                // console.log(this.results.result1[0].val);
-                // console.log(this.results.docdate);
-                if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
+                if(this.results.result1[0].value === '' || this.results.result1[1].value === '' || this.results.docdate === ''){
                     this.flashMessage.warning({
                         title: "!",
                         message: 'Пожалуйста заполните все обязательные поля',
                         time: 5000
                     });
+                    return;
                 }
                 this.loading = true;
+                if(this.duty.length > 0){
+                    for(let i=0; i<this.results.docrows.length; i++){
+                        if(this.results.docrows[i].fieldname === 'Должность'){
+                            this.results.docrows[i].value = this.duty
+                        }
+                    }
+                }
                 let data = {
                     results: this.results,
                     docIsn: this.docIsn,
@@ -896,6 +905,11 @@
                             this.status = response.data.status;
                             this.stage = response.data.stage;
                             this.listDocIsn = response.data.DOCISN
+                            for(let i=0; i<this.results.resDop.length; i++){
+                                if(this.results.resDop[i].fullname === 'Лист согласования'){
+                                    this.results.resDop[i].value = response.data.DOCISN
+                                }
+                            }
                             this.extraLoading = false;
                             this.sendOutForm = false;
                             this.addChange = false;

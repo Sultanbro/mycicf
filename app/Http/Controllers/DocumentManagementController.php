@@ -118,17 +118,21 @@ class DocumentManagementController extends Controller
                 ];
             }
         }
-
+        if(isset($show->DocParam->row)){
             $docParam = [
-                'button1caption' => get_object_vars($show->DocParam->row->showbutton1)[0],
-                'button2caption' => get_object_vars($show->DocParam->row->showbutton2)[0],
-                'button3caption' => get_object_vars($show->DocParam->row->showbutton3)[0],
+                'showbutton1' => get_object_vars($show->DocParam->row->showbutton1)[0],
+                'button1caption' => get_object_vars($show->DocParam->row->button1caption)[0],
+                'showbutton2' => get_object_vars($show->DocParam->row->showbutton2)[0],
+                'button2caption' => get_object_vars($show->DocParam->row->button2caption) ? get_object_vars($show->DocParam->row->button2caption)[0] : null,
+                'showbutton3' => get_object_vars($show->DocParam->row->showbutton3) ? get_object_vars($show->DocParam->row->showbutton3)[0] : null,
+                'button3caption' => get_object_vars($show->DocParam->row->button3caption) ? get_object_vars($show->DocParam->row->button3caption)[0] : null,
                 'showSubject' => get_object_vars($show->DocParam->row->showsubject)[0],
                 'showRemark' => get_object_vars($show->DocParam->row->showremark)[0],
                 'showRemark2' => get_object_vars($show->DocParam->row->showremark2)[0],
                 'showTable' => get_object_vars($show->DocParam->row->showtable)[0],
             ];
-
+        }
+//        dd($docParam);
         $className = get_object_vars($show->Doc->row->CLASSNAME)[0];
         $docdate = isset($itens->docdate) ? get_object_vars($itens->docdate) : $today;
         $docdate = isset($itens->docdate) ? date('m.d.Y',strtotime($docdate[0])) : $docdate;

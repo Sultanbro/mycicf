@@ -126,15 +126,6 @@
                                 </div>
                             </div>
                         </div>
-<!--                        <div>-->
-<!--                            <div class="bg-blue-standart">-->
-<!--                                <div class="pl-5 pt-4 pb-4 pr-5">-->
-<!--                                    <div class="flex-row color-white vertical-middle">-->
-<!--                                        <span class="ml-1">Примечание</span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -180,7 +171,6 @@
                 this.axios.post('/full/getFullBranch', data).then((response) => {
                     this.userList = response.data.result;
                     this.isLoading = false;
-                    // console.log(response)
                 });
             },
             makeChange() {
@@ -220,13 +210,6 @@
                             this.loading = false;
                         }
                     })
-            },
-            setCoordinationOnChange() {
-                //this.coordinator = this.coordination.Coordinations;
-                // this.coordinator[index] = this.coordination.Coordinations[index].SubjISN;
-                // for((obj, index) in this.coordination.Coordinations) {
-                //     this.coordinator[index] = obj.SubjISN;
-                // }
             },
             close() {
                 this.$parent.$refs.modalButton.click()

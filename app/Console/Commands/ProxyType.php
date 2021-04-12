@@ -213,6 +213,44 @@ class ProxyType extends Command
         }
 
         try{
+            $response = $kias->getDictiList(1994);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',1994)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (int)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 1994;
+                    $dicti->save();
+
+                    $responses = $kias->getDictiList($row->ISN);
+                    if(isset($responses->ROWSET->row)) {
+                        $oldDicti = Dicti::where('parent_isn', $row->ISN)->delete();
+                        foreach ($responses->ROWSET->row as $rowChild) {
+                            $dictiChild = new Dicti;
+                            $dictiChild->isn = (int)$rowChild->ISN;
+                            $dictiChild->fullname = (string)$rowChild->FULLNAME;
+                            $dictiChild->code = (string)$rowChild->CODE;
+                            $dictiChild->numcode = (string)$rowChild->NUMCODE;
+                            $dictiChild->n_kids = (string)$rowChild->N_KIDS;
+                            $dictiChild->parent_isn = (int)$row->ISN;
+                            if ($dictiChild->save()) {
+                                echo "Данные по " . (string)$rowChild->FULLNAME. $rowChild->ISN . " успешно записаны. \n";
+                            } else {
+                                echo "Ошибка записи " . (string)$rowChild->FULLNAME . " \n";
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
+        try{
             $response = $kias->getDictiList(39);
             if(isset($response->ROWSET->row)) {
                 $oldDicti = Dicti::where('parent_isn',39)->delete();
