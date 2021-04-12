@@ -120,16 +120,16 @@ class DocumentManagementController extends Controller
         }
         if(isset($show->DocParam->row)){
             $docParam = [
-                'showbutton1' => get_object_vars($show->DocParam->row->showbutton1)[0],
-                'button1caption' => get_object_vars($show->DocParam->row->button1caption)[0],
-                'showbutton2' => get_object_vars($show->DocParam->row->showbutton2)[0],
+                'showbutton1' => get_object_vars($show->DocParam->row->showbutton1) ? get_object_vars($show->DocParam->row->showbutton1)[0] : null,
+                'button1caption' => get_object_vars($show->DocParam->row->button1caption) ? get_object_vars($show->DocParam->row->button1caption)[0] : null,
+                'showbutton2' => get_object_vars($show->DocParam->row->showbutton2) ? get_object_vars($show->DocParam->row->showbutton2)[0] : null,
                 'button2caption' => get_object_vars($show->DocParam->row->button2caption) ? get_object_vars($show->DocParam->row->button2caption)[0] : null,
                 'showbutton3' => get_object_vars($show->DocParam->row->showbutton3) ? get_object_vars($show->DocParam->row->showbutton3)[0] : null,
                 'button3caption' => get_object_vars($show->DocParam->row->button3caption) ? get_object_vars($show->DocParam->row->button3caption)[0] : null,
-                'showSubject' => get_object_vars($show->DocParam->row->showsubject)[0],
-                'showRemark' => get_object_vars($show->DocParam->row->showremark)[0],
-                'showRemark2' => get_object_vars($show->DocParam->row->showremark2)[0],
-                'showTable' => get_object_vars($show->DocParam->row->showtable)[0],
+                'showSubject' => get_object_vars($show->DocParam->row->showsubject) ? get_object_vars($show->DocParam->row->showsubject)[0] : null,
+                'showRemark' => get_object_vars($show->DocParam->row->showremark) ? get_object_vars($show->DocParam->row->showremark)[0] : null,
+                'showRemark2' => get_object_vars($show->DocParam->row->showremark2) ? get_object_vars($show->DocParam->row->showremark2)[0] : null,
+                'showTable' => get_object_vars($show->DocParam->row->showtable) ? get_object_vars($show->DocParam->row->showtable)[0] : null,
             ];
         }
 //        dd($docParam);
