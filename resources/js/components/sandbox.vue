@@ -1,5 +1,5 @@
 <template>
-    <div>Sandbox {{ a }}</div>
+    <div>Sandbox</div>
 </template>
 
 <script>
@@ -8,7 +8,7 @@
         data() {
             return {
                 a : 1,
-            }.
+            }
         },
         mounted(){
 

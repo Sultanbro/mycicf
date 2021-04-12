@@ -1,11 +1,10 @@
 module.exports = {
-    presets: [
-        '@vue/cli-plugin-babel/preset'
-    ],
+    preset: 'ts-jest',
     testEnvironment          : 'jsdom',
-    "moduleFileExtensions": ["js", "json", "vue"],
+    "moduleFileExtensions": ["ts", "js", "json", "vue"],
     "transform": {
-        "^.+\\.vue$": "vue-jest"
+        "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+        ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
     },
     "transformIgnorePatterns": [
         "node_modules/(?!variables/.*)"
