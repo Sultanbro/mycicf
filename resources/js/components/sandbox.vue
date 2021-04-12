@@ -1,5 +1,9 @@
 <template>
-    <div>Sandbox {{ a }}</div>
+    <div>
+        Sandbox {{ a }}
+
+        <p v-if="b">{{b}}</p>
+    </div>
 </template>
 
 <script>
@@ -8,10 +12,10 @@
         data() {
             return {
                 a : 1,
+                b : 888,
             }
         },
         mounted(){
-            console.log(1);
         }
     }
 </script>

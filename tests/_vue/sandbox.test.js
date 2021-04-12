@@ -1,19 +1,23 @@
-import {shallowMount} from "@vue/test-utils";
+import {createLocalVue, shallowMount} from "@vue/test-utils";
 import Sandbox from '../../resources/js/components/sandbox.vue';
 
 describe('Sandbox.vue', () => {
-    it('should be the correct color', () => {
+    let localVue;
+
+    beforeEach(() => {
+        localVue = createLocalVue();
+    })
+
+    it('should be the correct text', () => {
         const wrapper = shallowMount(Sandbox, {
-            data() {
-                return { a: 2 };
-            }
+            localVue,
+            data: () => ({a: 2})
         });
         expect(wrapper.text()).toMatch('Sandbox 2');
         const wrapper2 = shallowMount(Sandbox, {
-            data() {
-                return { a: 6 };
-            }
+            data: () => ({a: 6, b: 1})
         });
         expect(wrapper2.text()).toMatch('Sandbox 6');
+        expect(wrapper2.find('p').text()).toMatch('1');
     });
 });

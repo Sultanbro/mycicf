@@ -24,4 +24,19 @@ describe('login.vue', () => {
         expect(wrapper.find('#username').element.value).toBe('Username');
         expect(wrapper.find('#username').attributes().placeholder).toBe('Логин');
     });
+
+    it('should be correct values', () => {
+        const wrapper = shallowMount(Login, {
+            localVue,
+            data() {
+                return {
+                    username : 'Username',
+                    password : '',
+                };
+            }
+        });
+
+        expect(wrapper.find('#username').element.value).toBe('Username');
+        expect(wrapper.find('#username').attributes().placeholder).toBe('Логин');
+    });
 });
