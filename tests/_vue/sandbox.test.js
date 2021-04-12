@@ -25,4 +25,8 @@ describe('Sandbox.vue', () => {
             expect(wrapper.find('p').text()).toMatch('1');
         }
     });
+
+    it('Sandbox', () => {
+
+    });
 });

@@ -102,4 +102,27 @@ describe('login.vue', () => {
         wrapper.vm.changeIcon();
         expect(wrapper.vm.className).toBe('fa fa-eye-slash');
     });
+
+    it('Preloader must be updated', () => {
+        let preloader = document.createElement('div');
+        preloader.id = 'preloader';
+        preloader.style.display = 'none';
+        document.body.append(preloader);
+
+        const wrapper = shallowMount(Login, {
+            localVue,
+            data() {
+                return {
+                    username : 'Name',
+                    password : 'pa$$w0rD',
+                };
+            }
+        });
+
+        expect(preloader.style.display).toBe('none');
+        wrapper.vm.preloader(true);
+        expect(preloader.style.display).toBe('flex');
+        wrapper.vm.preloader(false);
+        expect(preloader.style.display).toBe('none');
+    });
 });
