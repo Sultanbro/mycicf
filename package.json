@@ -37,6 +37,7 @@
     "@riophae/vue-treeselect": "^0.3.0",
     "@smartweb/vue-flash-message": "^0.5.3",
     "apexcharts": "^3.22.2",
+    "axios-mock-adapter": "^1.19.0",
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
     "laravel-echo": "^1.9.0",
