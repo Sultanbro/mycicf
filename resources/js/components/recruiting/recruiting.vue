@@ -1227,7 +1227,7 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                recruitingTabs: 1,
+                recruitingTabs: 2,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1614,7 +1614,7 @@
                     this.flashMessage.error({
                         title: "Ошибка",
                         message: 'Не удалось сохранить данные',
-                        time: 5000
+                        time: 5000,
                     });
                 }
             },

@@ -29,7 +29,7 @@ class EmailAmazonSes extends Mailable
      */
     public function build()
     {
-        $content = 'text kakoi nibud';
+        $content = 'Some text';
         $email = $this->from(env('MAIL_FROM'), env('MAIL_FROM_NAME'))
             ->subject('Уведомление с портала my.cic.kz | Рекрутинг')
             ->replyTo(env('MAIL_REPLY_TO'))

@@ -406,7 +406,7 @@ class RecruitingController extends Controller
         $Test = $kias->getTestKiadData();
         dd($Test);
     }
-    public function testMail(Request $request){
+    public function testMail(){
         try{
             Mail::to('EFilimonova@cic.kz')->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
@@ -426,7 +426,7 @@ class RecruitingController extends Controller
             //$this->email_sent = 1;
             //$this->save();
             //return true;
-            dd('sended');
+            // dd('sended');
         }catch (SesException $e){
             echo $e->getMessage();
             return false;
