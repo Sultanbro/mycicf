@@ -11,6 +11,7 @@
     "test:vue": "jest --config=jest.config.vue.js"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.12",
     "axios": "^0.19.2",
     "browser-sync": "^2.26.14",
     "browser-sync-webpack-plugin": "^2.0.1",
