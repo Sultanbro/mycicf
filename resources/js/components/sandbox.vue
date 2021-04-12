@@ -9,12 +9,10 @@
 <script>
     export default {
         name: "sandbox.vue",
-        data() {
-            return {
-                a : 1,
-                b : 888,
-            }
-        },
+        data: () => ({
+            a: 1,
+            b: 888,
+        }),
         mounted(){
         }
     }

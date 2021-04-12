@@ -36,4 +36,20 @@ describe('Centcoins', () => {
             done()
         }, 2000);
     });
+
+    it.skip('colleaguesMode test', (done) => {
+        let wrapper = shallowMount(Centcoins, {
+            localVue,
+            data: () => ({}),
+            propsData: {
+                isn: 5565
+            }
+        });
+
+        window.location.pathname = 'colleague';
+        expect(wrapper.vm.colleaguesMode).toBeTruthy();
+
+        window.location.pathname = '';
+        expect(wrapper.vm.colleaguesMode).toBeFalsy();
+    });
 });
