@@ -39,4 +39,67 @@ describe('login.vue', () => {
         expect(wrapper.find('#username').element.value).toBe('Username');
         expect(wrapper.find('#username').attributes().placeholder).toBe('Логин');
     });
+
+    it('Validate function test', () => {
+        const wrapper = shallowMount(Login, {
+            localVue,
+            data() {
+                return {
+                    username : '',
+                    password : '',
+                };
+            }
+        });
+
+        expect(wrapper.vm.validate()).toBeFalsy();
+    });
+
+    it('Validate function test (must return true if fields are filled)', () => {
+        const wrapper = shallowMount(Login, {
+            localVue,
+            data() {
+                return {
+                    username : 'Name',
+                    password : 'pa$$w0rD',
+                };
+            }
+        });
+
+        expect(wrapper.vm.validate()).toBeTruthy();
+    });
+
+    it('Type value must be updated', () => {
+        const wrapper = shallowMount(Login, {
+            localVue,
+            data() {
+                return {
+                    type: 1,
+                    username : 'Name',
+                    password : 'pa$$w0rD',
+                };
+            }
+        });
+
+        expect(wrapper.vm.type).toBe(1);
+        wrapper.vm.checkType();
+        expect(wrapper.vm.type).toBe(0);
+    });
+
+    it('Icon must be updated', () => {
+        const wrapper = shallowMount(Login, {
+            localVue,
+            data() {
+                return {
+                    type: 1,
+                    username : 'Name',
+                    password : 'pa$$w0rD',
+                };
+            }
+        });
+
+        expect(wrapper.vm.className).toBe('fa fa-eye');
+        wrapper.vm.type = 0;
+        wrapper.vm.changeIcon();
+        expect(wrapper.vm.className).toBe('fa fa-eye-slash');
+    });
 });

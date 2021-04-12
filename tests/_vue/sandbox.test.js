@@ -9,15 +9,20 @@ describe('Sandbox.vue', () => {
     })
 
     it('should be the correct text', () => {
-        const wrapper = shallowMount(Sandbox, {
-            localVue,
-            data: () => ({a: 2})
-        });
-        expect(wrapper.text()).toMatch('Sandbox 2');
-        const wrapper2 = shallowMount(Sandbox, {
-            data: () => ({a: 6, b: 1})
-        });
-        expect(wrapper2.text()).toMatch('Sandbox 6');
-        expect(wrapper2.find('p').text()).toMatch('1');
+        {
+            let wrapper = shallowMount(Sandbox, {
+                localVue,
+                data: () => ({a: 2})
+            });
+
+            expect(wrapper.text()).toMatch('Sandbox 2');
+        }
+        {
+            let wrapper = shallowMount(Sandbox, {
+                data: () => ({a: 6, b: 1})
+            });
+            expect(wrapper.text()).toMatch('Sandbox 6');
+            expect(wrapper.find('p').text()).toMatch('1');
+        }
     });
 });
