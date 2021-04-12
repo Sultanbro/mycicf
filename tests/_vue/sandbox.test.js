@@ -1,6 +1,11 @@
+var shallowMount = require("@vue/test-utils").shallowMount;
+var Sandbox = require('../../resources/js/components/sandbox.vue').default;
 
 describe('FancyHeading.vue', () => {
     it('should be the correct color', () => {
-        expect(1+1).toEqual(2);
+        const wrapper = shallowMount(Sandbox, {
+            propsData: { a: 2 }
+        });
+        expect(wrapper.text()).toMatch(msg);
     });
 });
