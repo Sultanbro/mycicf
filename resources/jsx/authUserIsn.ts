@@ -1,17 +1,11 @@
-import {ISN} from './types';
-
-let userIsn: string;
+import { ISN } from "./types";
 
 export function authUserIsn(): ISN {
-    if (userIsn) {
-        return userIsn;
-    }
-
-    let element = document.getElementById('auth-user-isn');
+    let element = document.getElementById("auth-user-isn");
 
     if (!element) {
-        throw new Error('Cannot read ISN');
+        throw new Error("Cannot read ISN");
     }
 
-    return userIsn = element.innerText;
+    return element.innerText;
 }

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 // import debounce from 'lodash/debounce';
 
 export type StateValue<T> = T | (() => T);
@@ -10,8 +10,8 @@ export type UseLocalStorage = <T>(key: string, initialState: StateValue<T>, dele
  * @param prefix A prefix
  */
 export function createUseLocalStorage(prefix: string): UseLocalStorage {
-    return <T>(key: string, initialState: T | (() => T), deleteOn: T | (() => T) = initialState) =>
-        useStateWithLocalStorage(`${prefix}::${key}`, initialState, deleteOn);
+  return <T>(key: string, initialState: T | (() => T), deleteOn: T | (() => T) = initialState) =>
+    useStateWithLocalStorage(`${prefix}::${key}`, initialState, deleteOn);
 }
 
 /**
@@ -21,34 +21,34 @@ export function createUseLocalStorage(prefix: string): UseLocalStorage {
  * @param deleteOn A value that handle deleting local storage key
  */
 export function useStateWithLocalStorage<T>(
-    key: string,
-    initialState: StateValue<T>,
-    deleteOn: StateValue<T> = initialState
+  key: string,
+  initialState: StateValue<T>,
+  deleteOn: StateValue<T> = initialState
 ): [T, (value: T) => void] {
-    let item = localStorage.getItem(key);
-    let value: T;
-    if (!item) {
-        value =
-            typeof initialState === 'function'
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (initialState as any)()
-                : initialState;
-    } else {
-        value = JSON.parse(item);
+  let item = localStorage.getItem(key);
+  let value: T;
+  if (!item) {
+    value =
+      typeof initialState === 'function'
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (initialState as any)()
+        : initialState;
+  } else {
+    value = JSON.parse(item);
+  }
+
+  let [v, setV] = useState<T>(value);
+
+  return [
+    v,
+    (val: T) => {
+      if (val === deleteOn) {
+        localStorage.removeItem(key);
+      } else {
+        // TODO найти способ использовать debounce
+        localStorage.setItem(key, JSON.stringify(val));
+      }
+      setV(val);
     }
-
-    let [v, setV] = useState<T>(value);
-
-    return [
-        v,
-        (val: T) => {
-            if (val === deleteOn) {
-                localStorage.removeItem(key);
-            } else {
-                // TODO найти способ использовать debounce
-                localStorage.setItem(key, JSON.stringify(val));
-            }
-            setV(val);
-        }
-    ];
+  ];
 }
