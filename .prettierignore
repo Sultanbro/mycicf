@@ -1,6 +1,8 @@
 # Ignore artifacts:
 public/js
+public/**/*.js
 public/css
+public/fonts
 public/vendor
 coverage
 .idea
