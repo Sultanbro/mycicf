@@ -10,7 +10,7 @@
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="results.contragent.value" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                        <treeselect v-model="results.contragent.val" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
                                 </div>
@@ -19,7 +19,7 @@
                                 <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                         <!--                                        <span class="text-danger" v-if="result.val === ''">*Обязательное поле</span>-->
                                     </div>
@@ -27,9 +27,8 @@
                                 <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
-                                        <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
                                 </div>
                             </div>
@@ -308,25 +307,25 @@
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
                                 || result.fullname === 'Согласующий 3'">
-                                <treeselect v-model="result.value" placeholder="Не выбрано" :disabled="addChange"
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
-                                <div v-if="!result.value">
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{listDocIsn}}</div>
+                                <div v-if="!result.val">
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(listDocIsn)">{{listDocIsn}}</div>
                                 </div>
                                 <div v-else>
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{result.value}}</div>
+                                    <div class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
                                 <div>
-                                    <input type="text" v-model="result.value"
+                                    <input type="text" v-model="result.val"
                                            class="form-control" :disabled="addChange">
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Кол-во используемых дней'">
-                                <select v-model="result.value" :disabled="addChange" class="form-control">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
                                     <option value="834241">0,5</option>
                                     <option value="834251">1</option>
                                     <option value="834261">1,5</option>
@@ -337,7 +336,7 @@
                             </div>
                             <div v-else>
                                 <div>
-                                    <input type="text" v-model="result.value"
+                                    <input type="text" v-model="result.val"
                                            class="form-control" :disabled="addChange">
                                 </div>
                             </div>
@@ -381,7 +380,6 @@
                     status: false
                 },
                 docDate: new Date(),
-                // formatDate: new Date(this.results.docdate.split('.')),
                 maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
                 userList : [],
                 isLoading: false,
@@ -423,7 +421,6 @@
             Vue.filter('splitNumber', function (value) {
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             })
-            // this.docDate = new Date(moment(this.results.docdate));
         },
         methods: {
             getDatePicker() {
@@ -439,7 +436,6 @@
                 return date <= today;
             },
             changeSelected(e){
-                //console.log(e.id);
                 //console.log(this.usersInfo[parseInt(e.id)].duty);
                 // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
                 this.duty = this.usersInfo[parseInt(e.id)].duty
@@ -474,7 +470,7 @@
             },
             annulSz(){
                 for(let i=0; i<this.results.resDop.length; i++){
-                    if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].value === ''){
+                    if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].val === ''){
                         this.flashMessage.warning({
                             title: "!",
                             message: 'Укажите причину аннулирования служебной записки в доп.атрибутах документа',
@@ -515,7 +511,7 @@
             },
             saveDocument(){
                 this.loading = false;
-                if(this.results.result1[0].value === '' || this.results.docdate === '' || this.results.contragent.value === ''){
+                if(this.results.result1[0].val === '' || this.results.docdate === '' || this.results.contragent.val === ''){
                     this.flashMessage.warning({
                         title: "!",
                         message: 'Пожалуйста заполните все обязательные поля',
@@ -527,7 +523,7 @@
                 if(this.duty.length > 0){
                     for(let i=0; i<this.results.docrows.length; i++){
                         if(this.results.docrows[i].fieldname === 'Должность'){
-                            this.results.docrows[i].value = this.duty
+                            this.results.docrows[i].value_name = this.duty
                         }
                     }
                 }
@@ -571,7 +567,7 @@
                             this.listDocIsn = response.data.DOCISN
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
-                                    this.results.resDop[i].value = response.data.DOCISN
+                                    this.results.resDop[i].val = response.data.DOCISN
                                 }
                             }
                             this.extraLoading = false;

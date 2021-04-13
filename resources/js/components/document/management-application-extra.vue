@@ -19,14 +19,14 @@
                                 <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                     </div>
                                 </div>
                                 <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                         <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
@@ -155,7 +155,7 @@
                                         :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Делегировать полномочия в части:'">
-                                    <select v-model="docrow.val" :disabled="addChange" class="form-control" required>
+                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="authority in authorities" :value="authority[0]">{{ authority[1] }}</option>
                                     </select>
                                 </div>
@@ -175,7 +175,7 @@
                                 </div>
                                 <div v-if="docrow.fieldname === 'Вывести из подразделение'">
                                     <treeselect
-                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.val"
+                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.value"
                                         :disabled="addChange"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Дата изменения' || docrow.fieldname === 'Дата, С'">
@@ -436,38 +436,39 @@
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
                             || result.fullname === 'Согласующий 3'">
-                                <treeselect v-model="result.value" placeholder="Не выбрано" :disabled="addChange"
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования' && results.classisn === '1461771'">
                                 <div v-if="!result.value" class="input-group">
-                                    <input type="text" class="form-control" v-model="result.value" placeholder="Поиск..." :disabled="addChange">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-secondary" type="button">
-                                            <i class="fa fa-search" @click="searchDocumentJournal"></i>
-                                        </button>
-                                    </div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+<!--                                    <input type="text" class="form-control" v-model="result.val" placeholder="Поиск..." :disabled="addChange">-->
+<!--                                    <div class="input-group-append">-->
+<!--                                        <button class="btn btn-secondary" type="button">-->
+<!--                                            <i class="fa fa-search" @click="searchDocumentJournal"></i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
                                 </div>
-                                <div v-else-if="result.value" class="input-group">
-                                    <div v-model="result.value" class="pointer" scope="col" @click="OpenModal(this.listDocIsn)">
-                                        <i class="fa fa-search" @click="searchDocumentJournal"></i>
+                                <div v-else-if="result.val" class="input-group">
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}
+<!--                                        <i class="fa fa-search" @click="searchDocumentJournal"></i>-->
                                     </div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
-                                <input type="text" v-model="result.value"
+                                <input type="text" v-model="result.val"
                                        class="form-control" :disabled="addChange">
                             </div>
                             <div v-else-if="result.fullname === 'Срок исполнения' || result.fullname === 'Срок исполнения СЗ'">
                                 <input class="form-control"
                                        type="tel"
-                                       v-model="result.value" :disabled="addChange"
+                                       v-model="result.val" :disabled="addChange"
                                        v-mask="'##.##.####'"
                                 />
                             </div>
                             <div v-else>
                                 <div>
-                                    <input type="text" v-model="result.value"
+                                    <input type="text" v-model="result.val"
                                            class="form-control" :disabled="addChange">
                                 </div>
                             </div>
@@ -583,7 +584,6 @@ export default {
             return date <= today;
         },
         changeSelected(e){
-            //console.log(e.id);
             //console.log(this.usersInfo[parseInt(e.id)].duty);
             // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
             this.duty = this.usersInfo[parseInt(e.id)].duty
@@ -647,7 +647,7 @@ export default {
         },
         annulSz(){
             for(let i=0; i<this.results.resDop.length; i++){
-                if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].value === ''){
+                if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].val === ''){
                     this.flashMessage.warning({
                         title: "!",
                         message: 'Укажите причину аннулирования служебной записки в доп.атрибутах документа',
@@ -688,8 +688,7 @@ export default {
         },
         saveDocument(){
             this.loading = false;
-            // console.log(this.results.result1[0].val);
-            if(this.results.result1[0].value === '' || this.results.result1[1].value === '' || this.results.docdate === ''){
+            if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
                 this.flashMessage.warning({
                     title: "!",
                     message: 'Пожалуйста заполните все обязательные поля',
@@ -701,7 +700,7 @@ export default {
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
                     if(this.results.docrows[i].fieldname === 'Должность'){
-                        this.results.docrows[i].value = this.duty
+                        this.results.docrows[i].value_name = this.duty
                     }
                 }
             }
@@ -744,7 +743,7 @@ export default {
                         this.listDocIsn = response.data.DOCISN
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
-                                this.results.resDop[i].value = this.listDocIsn
+                                this.results.resDop[i].val = this.listDocIsn
                             }
                         }
                         this.extraLoading = false;
@@ -767,11 +766,11 @@ export default {
             }
         },
         setDoc: async function() {
-            if(this.results.result1.fullname === 'Адресат' && this.result.result1.value === ''){
+            if(this.results.result1.fullname === 'Адресат' && this.result.result1.val === ''){
                 this.errorNotify('Ошибка', 'Укажите Адресата');
                 return false;
             }
-            if(this.results.result1.fullname === 'Исполнитель' && this.result.result1.value === ''){
+            if(this.results.result1.fullname === 'Исполнитель' && this.result.result1.val === ''){
                 this.errorNotify('Ошибка', 'Укажите Исполнителя');
                 return false;
             }
@@ -815,7 +814,7 @@ export default {
                         if(this.listDocIsn.length > 0){
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
-                                    this.results.resDop[i].value = this.listDocIsn
+                                    this.results.resDop[i].val = this.listDocIsn
                                 }
                             }
                         }

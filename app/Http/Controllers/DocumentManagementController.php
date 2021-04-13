@@ -656,7 +656,6 @@ class DocumentManagementController extends Controller
 
     public function saveDocument(Request $request, KiasServiceInterface $kias)
     {
-//        dd($request);
         $error = "";
         $request->result = [];
         foreach ($request->results["result1"] as $result1){
@@ -696,13 +695,15 @@ class DocumentManagementController extends Controller
                 ];
             }
         }
+//        dd($docrows);
         $isn = '0'; //update isn='$isn' delete='0'
         $delete = '0'; //delete isn='$isn' delete='1'
         $docs = ['isn' => $isn, 'delete' => $delete];
         for($i=0; $i<count($docrows); $i++){
             $docs = array_merge($docs, $docrows[$i]);
         }
-        $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs];
+//        $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['val'], $row, $docs];
+//        dd($wer);
         if(!isset($request->status)){
             $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
 //            dd($document);

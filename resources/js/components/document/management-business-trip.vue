@@ -11,7 +11,7 @@
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
                                         <!--                                             <treeselect @select="handleInput" v-model="contragent" :multiple="false" :options="userList" disabled="disabled"/>&ndash;&gt;-->
-                                        <treeselect v-model="results.contragent.value" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                        <treeselect v-model="results.contragent.val" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
                                 </div>
@@ -20,14 +20,14 @@
                                 <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                     </div>
                                 </div>
                                 <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                         <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
@@ -216,24 +216,24 @@
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
                                 || result.fullname === 'Согласующий 3'">
-                                <treeselect v-model="result.value" placeholder="Не выбрано" :disabled="addChange"
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых'">
-                                <treeselect v-model="result.value" placeholder="Не выбрано" :disabled="addChange"
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Вид доверенности'">
-                                <select v-model="result.value" :disabled="addChange" class="form-control" required>
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
                                     <option v-for="proxyType in proxyTypes" :value="proxyType[0]">{{ proxyType[1] }}</option>
                                 </select>
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
-                                <div v-if="!result.value">
+                                <div v-if="!result.val">
                                     <div class="pointer" scope="col" @click="OpenModal()">{{listDocIsn}}</div>
                                 </div>
                                 <div v-else>
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{result.value}}
+                                    <div class="pointer" scope="col" @click="OpenModal()">{{result.val}}
                                     </div>
                                 </div>
                             </div>
@@ -244,11 +244,11 @@
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Бензин (литр)' || result.fullname === 'Стоимость бензина (тенге)' || result.fullname === 'Расстояние (км)'">
-                                <input type="text"  @keypress="onlyNumber" v-model="result.value" :disabled="addChange" class="form-control">
+                                <input type="text"  @keypress="onlyNumber" v-model="result.val" :disabled="addChange" class="form-control">
                             </div>
                             <div v-else>
                                 <div>
-                                    <input type="text" v-model="result.value"
+                                    <input type="text" v-model="result.val"
                                            class="form-control" :disabled="addChange">
                                 </div>
                             </div>
@@ -384,12 +384,13 @@ export default {
         },
         annulSz(){
             for(let i=0; i<this.results.resDop.length; i++){
-                if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].value === ''){
+                if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].val === ''){
                     this.flashMessage.warning({
                         title: "!",
                         message: 'Укажите причину аннулирования служебной записки в доп.атрибутах документа',
                         time: 5000
                     });
+                    return;
                 }
             }
             this.extra = true;
@@ -424,7 +425,7 @@ export default {
         },
         saveDocument(){
             this.loading = false;
-            if(this.results.result1[0].value === '' || this.results.result1[1].value === '' || this.results.docdate === ''){
+            if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
                 this.flashMessage.warning({
                     title: "!",
                     message: 'Пожалуйста заполните все обязательные поля',
@@ -436,7 +437,7 @@ export default {
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
                     if(this.results.docrows[i].fieldname === 'Должность'){
-                        this.results.docrows[i].value = this.duty
+                        this.results.docrows[i].value_name = this.duty
                     }
                 }
             }
@@ -479,7 +480,7 @@ export default {
                         this.listDocIsn = response.data.DOCISN
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
-                                this.results.resDop[i].value = this.listDocIsn
+                                this.results.resDop[i].val = this.listDocIsn
                             }
                         }
                         this.extraLoading = false;
@@ -581,17 +582,13 @@ export default {
             if(this.listDocIsn === null){
                 for(let i=0; i<this.results.result.length; i++){
                     if(this.results.result[i].fullname === 'Лист согласования'){
-                        this.listDocIsn = this.results.result[i].value
+                        this.listDocIsn = this.results.result[i].val
                     }
                 }
             }
             this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
                 if(response.data.success){
                     this.coordination = response.data.response;
-                    // this.coordinator = response.data.response.Coordinations;
-                    // for(const item in response.data.response.Coordinations) {
-                    //     this.coordinator = item.SubjISN;
-                    // }
                     this.preloader(false);
                     this.$refs.modalButton.click();
                 }else{
