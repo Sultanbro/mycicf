@@ -408,29 +408,37 @@ class RecruitingController extends Controller
     }
     public function testMail(){
         try{
-            Mail::to('EFilimonova@cic.kz')->send(new EmailAmazonSes([
+            Mail::to('DJumagulov@cic.kz')->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
-                //'background_image' => asset('images/product/mst_product.png'),
+                'tourId' => 1,
+            ]
+//                'tour',
+//                [
+//                    'policy.pdf' => '',
+//                    'insurer_memo.pdf' => '',
+//                    'mst_part-2.pdf' => '',
+//                ]
+            ));
+
+
+        }
+        catch (SesException $e){
+            echo $e->getMessage();
+            return false;
+        }
+
+        //                внутрь try
+        //'background_image' => asset('images/product/mst_product.png'),
 //                'htmlTitle' => 'tst title ',
 //                'greeting' => "Уважаемый(-ая)!",
 //                'wish' => 'Желаем Вам увлекательной, эмоциональной и безопасной поездки!',
-                'tourId' => 1,
-            ],
-                'tour',
-                [
-                    'policy.pdf' => '', //$this->getPolicyPath() . "/" . $this->getPolicyFileName(),
-                    'insurer_memo.pdf' => '',   //TourOrder::INSURER_MEMO_PATH,
-                    'mst_part-2.pdf' => '', //TourOrder::MST_PART_2_PATH,
-                ]
-            ));
+
+
             //$this->email_sent = 1;
             //$this->save();
             //return true;
             // dd('sended');
-        }catch (SesException $e){
-            echo $e->getMessage();
-            return false;
-        }
+
 
 
 

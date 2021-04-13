@@ -1227,7 +1227,7 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                recruitingTabs: 2,
+                recruitingTabs: 1,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
