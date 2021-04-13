@@ -566,9 +566,9 @@ class ProductsController extends Controller
                 $quotation->nshb_id = (string)$response->DocID != '' ? (string)$response->DocID : null;    // номер документа
                 $quotation->nshb_request_id = (string)$response->RequestID != '' && (string)$response->RequestID != null ? (string)$response->RequestID : null;    // номер заявки НШБ
 
-                $quotation->prem_one = isset($response->prem_one) ? (string)$response->prem_one : null;
-                $quotation->prem_fam = isset($response->prem_fam) ? (string)$response->prem_fam : null;
-                $quotation->limit_sum_one = isset($response->limit_sum_one) != '' ? (string)$response->limit_sum_one : null;
+                $quotation->prem_one = isset($response->PremOne) ? (string)$response->PremOne : null;
+                $quotation->prem_fam = isset($response->PremFam) ? (string)$response->PremFam : null;
+                $quotation->limit_sum_one = isset($response->LimitSumOne) != '' ? (string)$response->LimitSumOne : null;
 
                 //$setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
 
