@@ -30,10 +30,12 @@ describe('Centcoins', () => {
         setTimeout(() => {
             expect(wrapper.find('.centcoins-value').text()).toBe('1');
 
-            expect(mock.history.post.find(entry => entry.url === "/getCentcoins")).not.toBeNull();
-            expect(JSON.parse(mock.history.post.find(entry => entry.url === "/getCentcoins").data).isn).toBe(5565);
+            let entry = mock.history.post.find(entry => entry.url === "/getCentcoins");
+            expect(entry).not.toBeNull();
+            let data = JSON.parse(entry.data).isn;
+            expect(data).toBe(5565);
 
-            done()
+            done();
         }, 2000);
     });
 
