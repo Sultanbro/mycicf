@@ -503,6 +503,9 @@ class ProductsController extends Controller
             'full_id' => isset($quotation->full_id) ? $quotation->full_id : null,
             'tariff' => isset($quotation->tariff) ? $quotation->tariff : null,
             'remark' => isset($quotation->remark) ? $quotation->remark : null,
+            'prem_one' => isset($quotation->prem_one) ? $quotation->prem_one : null,
+            'prem_fam' => isset($quotation->prem_fam) ? $quotation->prem_fam : null,
+            'limit_sum_one' => isset($quotation->limit_sum_one) ? $quotation->limit_sum_one : null,
         ]);
     }
 
@@ -563,6 +566,10 @@ class ProductsController extends Controller
                 $quotation->nshb_id = (string)$response->DocID != '' ? (string)$response->DocID : null;    // номер документа
                 $quotation->nshb_request_id = (string)$response->RequestID != '' && (string)$response->RequestID != null ? (string)$response->RequestID : null;    // номер заявки НШБ
 
+                $quotation->prem_one = isset($response->prem_one) ? (string)$response->prem_one : null;
+                $quotation->prem_fam = isset($response->prem_fam) ? (string)$response->prem_fam : null;
+                $quotation->limit_sum_one = isset($response->limit_sum_one) != '' ? (string)$response->limit_sum_one : null;
+
                 //$setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
 
 //                if(isset($setDocStatus->error)){
@@ -592,7 +599,11 @@ class ProductsController extends Controller
             'nshb_request' => $quotation->nshb_request,
             'nshb_id' => $quotation->nshb_id,
             'redirect_link' => route('express_quotations_list',['productISN' => $quotation->product_isn]),
-            'nshb_request_id' => $quotation->nshb_request_id
+            'nshb_request_id' => $quotation->nshb_request_id,
+
+            'prem_one' => $quotation->prem_one,
+            'prem_fam' => $quotation->prem_fam,
+            'limit_sum_one' => $quotation->limit_sum_one,
         ]);
     }
 
