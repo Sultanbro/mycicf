@@ -408,7 +408,7 @@ class RecruitingController extends Controller
     }
     public function testMail(){
         try{
-            Mail::to('DJumagulov@cic.kz')->send(new EmailAmazonSes([
+            Mail::to('EFilimonova@cic.kz')->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
                 'tourId' => 1,
             ]
