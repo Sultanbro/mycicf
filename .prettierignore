@@ -1,10 +1,6 @@
 # Ignore artifacts:
-public/js
-public/**/*.js
-public/css
-public/fonts
-public/vendor
+storage
+public
 coverage
 .idea
-
 vendor
