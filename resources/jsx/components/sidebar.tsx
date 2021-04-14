@@ -13,7 +13,7 @@ export function Sidebar({}: SidebarProps) {
     <Row>
       <Col md={24}>
         <Row>
-          <Col md={24}></Col>
+          <Col md={24} />
         </Row>
         <Row>
           <Col md={24}>
