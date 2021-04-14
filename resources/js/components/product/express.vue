@@ -53,11 +53,11 @@
 
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
-                <div class="fs-2 col-12" v-if="calculated && !nshb|| quotationId != 0 && price != 0 && !nshb || nshb && nshb_status == 2518 || nshb && nshb_status == '2518'">Сумма премий {{price}} Тенге</div>
+                <div class="fs-2 col-12" v-show="parseInt(id) != 11" v-if="calculated && !nshb|| quotationId != 0 && price != 0 && !nshb || nshb && nshb_status == 2518 || nshb && nshb_status == '2518'">Сумма премий {{price}} Тенге</div>
                 <!--div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
-                <div class="fs-2 col-12" v-if="tariff != null">Тариф {{tariff}}</div>
+                <div class="fs-2 col-12" v-show="parseInt(id) != 11" v-if="tariff != null">Тариф {{tariff}}</div>
                 <div class="fs-2 col-12" v-if="remark != null && remark != ''">Комментарии: {{remark}}</div>
                 <!--div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div-->
                 <div class="fs-2 col-12" v-if="full_id != null">№ полной котировки {{full_id}}</div>
