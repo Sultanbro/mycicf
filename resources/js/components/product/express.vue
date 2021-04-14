@@ -172,7 +172,7 @@
                         this.remark = response.data.remark;
                         this.attributes = response.data.attributes;
 
-                        this.premObject.prem_one = response.data.remark;
+                        this.premObject.prem_one = response.data.prem_one;
                         this.premObject.prem_fam = response.data.prem_fam;
                         this.premObject.limit_sum_one = response.data.limit_sum_one;
                         if(this.quotationId !=0) {
@@ -246,7 +246,7 @@
                         this.calc_id = response.data.calc_id;
                         this.tariff = response.data.tariff,
                         this.remark = response.data.remark,
-                        this.premObject.prem_one = response.data.remark;
+                        this.premObject.prem_one = response.data.prem_one;
                         this.premObject.prem_fam = response.data.prem_fam;
                         this.premObject.limit_sum_one = response.data.limit_sum_one;
                         this.preloader(false);
