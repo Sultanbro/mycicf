@@ -28,6 +28,7 @@
                     <agr-attributes
                         v-for="value, key in attributes"
                         :key="key"
+                        v-if="!exceptArray.includes(value.AttrISN)"
                         :attribute="value"
                         :express-attr="{}"
                         :calc-changed="calcChanged"></agr-attributes>
@@ -63,9 +64,9 @@
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки  {{nshb_request_id}}</div>
 
-                <div class="fs-2 col-12" v-if="premObject.prem_one != null">Страховая премия на одного Застрахованного  {{ premObject.prem_one }}</div>
-                <div class="fs-2 col-12" v-if="premObject.prem_fam != null">Страховая премия на одного члена семьи  {{ premObject.prem_fam }}</div>
-                <div class="fs-2 col-12" v-if="premObject.limit_sum_one != null">Страховая сумма на одного Застрахованного  {{ premObject.limit_sum_one }}</div>
+                <div class="fs-2 col-12" v-if="premObject.prem_one != null">Страховая премия на одного Застрахованного:  {{ premObject.prem_one }}</div>
+                <div class="fs-2 col-12" v-if="premObject.prem_fam != null">Страховая премия на одного члена семьи:  {{ premObject.prem_fam }}</div>
+                <div class="fs-2 col-12" v-if="premObject.limit_sum_one != null">Страховая сумма на одного Застрахованного:  {{ premObject.limit_sum_one }}</div>
 
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить нестандартный шаблон договора
@@ -117,6 +118,7 @@
                 participantDocs: {
                     types: []
                 },
+                exceptArray: ["501561","1756491","501571"],
                 participants: [
                     {
                         Value : null,
