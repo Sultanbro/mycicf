@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="d-flex flex-column vertical-middle Birthday-margin-inner">
+        <div class="d-flex flex-column vertical-middle Birthday-margin-inner" v-if="duty != 'Сотрудник Коммеск'">
             <div class="jc-center d-flex width50 events-window-size relative">
                 <img src="/images/konfeti.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
@@ -12,7 +12,7 @@
             <!--                            </div>-->
             <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
                 <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
-                    <span><a :href="`/colleagues/${this.ISN}/dossier`" class="color-blue">{{fullName}}</a></span>
+                    <span><a :href="`/colleagues/${this.ISN}/dossier`" class="color-blue">{{fullName}} <br> {{ duty.duty }}</a></span>
                 </div>
                 <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{dept}}</span>
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div v-if="similar.length > 0" v-for="birthday in similar" class="d-flex flex-column vertical-middle Birthday-margin-inner">
+        <div v-if="similar.length > 0 && birthday.duty != 'Сотрудник Коммеск'" v-for="birthday in similar" class="d-flex flex-column vertical-middle Birthday-margin-inner">
             <div class="jc-center d-flex width50 events-window-size relative">
                 <img src="/images/konfeti.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
@@ -29,7 +29,7 @@
             </div>
             <div class="colleagues-info-section__main d-flex flex-column vertical-middle">
                 <div class="color-blue mt-1 fs-1_1 Birthday-line_height-header text-center">
-                    <span><a :href="`/colleagues/${birthday.ISN}/dossier`" class="color-blue">{{birthday.fullname}}</a></span>
+                    <span><a :href="`/colleagues/${birthday.ISN}/dossier`" class="color-blue">{{birthday.fullname}} <br> {{ birthday.duty }}</a></span>
                 </div>
                 <div class="Birthday-line_height mt-1 mb-1">
                     <span class="fs-0_9">{{birthday.dept}}</span>
