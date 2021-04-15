@@ -23,7 +23,7 @@ class TestqrController extends Controller
         $qr = $request->qr;
         $initSystem = $kias->initSystem($username, $password);    //$username,$password
         $result = '';
-        if($initSystem->error){
+        if(isset($initSystem->error)){
             $success = false;
             $error = 'Ошибка авторизации';
         } else {

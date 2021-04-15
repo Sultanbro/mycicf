@@ -281,6 +281,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
 
         });
 
+        Route::post('/setPinned', 'News\\MyPostsController@setPinned')->middleware('checkPostAccess');
+
         Route::post('/setSenateVote', 'NewsController@senateVote');
 //        //RATING
 //        Route::get('/rating', 'RatingController@index')->name('rating');
