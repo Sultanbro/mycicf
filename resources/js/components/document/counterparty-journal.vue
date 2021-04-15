@@ -74,7 +74,7 @@
                         <div class="col-4 pt-4" v-for="docrow in orderedDocrows">
                             <div>
                                 <label>{{ docrow.fieldname }}</label>
-                                <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО работника ' || docrow.fieldname === 'ФИО Сотрудника'">
+                                <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО работника ' || docrow.fieldname === 'ФИО Сотрудника' || docrow.fieldname === 'Возложить полномочия на:'">
                                     <treeselect
                                         v-model="docrow.value" :disabled="addChange" required
                                         :multiple="false"
@@ -135,14 +135,20 @@
                                 <div v-if="docrow.fieldname === '% КВ' || docrow.fieldname === 'Сумма'">
                                     <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Возложить полномочия на:' || docrow.fieldname === 'Агент'">
-                                    <treeselect
-                                        v-model="docrow.value" :disabled="addChange"
-                                        :multiple="false"
-                                        :options="userList"
-                                        @select="changeSelected($event)"
-                                        :disable-branch-nodes="true"/>
+                                <div v-if="docrow.fieldname === 'Агент'">
+                                    <div class="input-group">
+                                        <input v-model="agent.fullName" @click="OpenModal('Агент')" type="text" :placeholder="agent.fullName" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-primary" @click="OpenModal('Агент')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-danger" @click="clearInfo('Агент')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div v-if="docrow.fieldname === 'Месяц'">
                                     <select v-model="docrow.value"  :disabled="addChange" class="form-control" placeholder="Выберите месяц" required>
                                         <option value="Январь" selected>Январь</option>
@@ -280,6 +286,14 @@
             :changeMatch="changeMatch"
         >
         </document-modal>
+        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+        <counterparty-journal-modal
+            :counterparty="counterparty"
+            :agent="agent"
+            :recordingCounterparty="recordingCounterparty"
+            :results="results"
+        >
+        </counterparty-journal-modal>
     </div>
 </template>
 
@@ -290,6 +304,7 @@ import MaskedInput from 'vue-text-mask';
 import 'vue2-datepicker/locale/ru';
 import moment from 'moment';
 import DocumentModal from "./document-modal";
+import CounterpartyJournalModal from "./counterparty-journal-modal";
 export default {
     name: "counterparty-journal",
     props: {
@@ -337,6 +352,13 @@ export default {
             reasons: [],
             authorities: [],
             reasonDeprivation: [],
+            counterparty: {
+            },
+            agent: {
+                fullName: '',
+            },
+            recordingCounterparty: {type: ''},
+            disableCounterparty: true
         }
     },
     created() {
@@ -429,6 +451,17 @@ export default {
                 this.options = response.data.result;
             })
         },
+        clearInfo(data){
+            for(let i=0; i<this.results.docrows.length; i++){
+                console.log(this.results.docrows.length)
+
+                if(this.results.docrows[i].fieldname === data){
+                    console.log(this.results.docrows[i].value_name)
+                    this.results.docrows[i].value_name = '';
+                    this.results.docrows[i].value = '';
+                }
+            }
+        },
         annulSz(){
             for(let i=0; i<this.results.resDop.length; i++){
                 if(this.results.resDop[i].fullname === 'Причина аннулирования СЗ' && this.results.resDop[i].val === ''){
@@ -485,6 +518,14 @@ export default {
                 for(let i=0; i<this.results.docrows.length; i++){
                     if(this.results.docrows[i].fieldname === 'Должность'){
                         this.results.docrows[i].value_name = this.duty
+                    }
+                }
+            }
+            if(this.agent.fullname !== ''){
+                for(let i=0; i<this.results.docrows.length; i++){
+                    if(this.results.docrows[i].fieldname === this.agent.type){
+                        this.results.docrows[i].value_name = this.agent.fullName
+                        this.results.docrows[i].value = this.agent.isn
                     }
                 }
             }
@@ -607,6 +648,7 @@ export default {
                         this.saveDoc = false;
                     } else {
                         this.addChange = false;
+                        alert(response.data.error);
                     }
                     this.loading = false;
                     this.addChange = true;
@@ -662,12 +704,21 @@ export default {
                     }
                 });
             }
+            else if(doc === 'Агент'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalCounterparty.click();
+            }
+            return;
         },
         preloader(show){
+            this.loading = true;
             if(show){
                 document.getElementById('preloader').style.display = 'flex';
+                this.loading = false;
             }else{
                 document.getElementById('preloader').style.display = 'none';
+                this.loading = false;
             }
         },
         reverseCaret: function (id) {
@@ -682,6 +733,7 @@ export default {
         },
     },
     components: {
+        CounterpartyJournalModal,
         DocumentModal,
         DatePicker,
         MaskedInput,
@@ -689,7 +741,10 @@ export default {
 }
 </script>
 <style scoped>
-.vdp-datepicker input {
-    background: none;
-}
+    .vdp-datepicker input {
+        background: none;
+    }
+    .fa fa-search {
+        margin-left: -50px;
+    }
 </style>

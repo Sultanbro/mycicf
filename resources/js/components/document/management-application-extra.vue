@@ -10,7 +10,7 @@
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="results.contragent.value" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                        <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
                                 </div>
@@ -207,12 +207,12 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <div v-if="docrow.fieldname === 'Должность'">
-                                    <label><input type="text" v-model="duty" class="form-control"
-                                                  :disabled="addChange">
-                                    </label>
-                                </div>
-                                <div v-if="results['classisn'] === '1440561' && docrow.fieldname === 'Должность' ||docrow.fieldname === 'ввести должность' || docrow.fieldname === 'Новая должность' || docrow.fieldname === 'Вывести из должность'">
+<!--                                <div v-if="docrow.fieldname === 'Должность'">-->
+<!--                                    <label><input type="text" v-model="duty" class="form-control"-->
+<!--                                                  :disabled="addChange">-->
+<!--                                    </label>-->
+<!--                                </div>-->
+                                <div v-if="docrow.fieldname === 'Должность' ||docrow.fieldname === 'ввести должность' || docrow.fieldname === 'Новая должность' || docrow.fieldname === 'Вывести из должность'">
                                     <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="dut in duties" :value="dut[0]">{{ dut[1] }}</option>
                                     </select>

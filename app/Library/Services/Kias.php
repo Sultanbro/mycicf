@@ -919,5 +919,18 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function userCicSearchSubject($rnn, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch)
+    {
+        // TODO: Implement subjectSearch() method.
+        return $this->request('User_CicSearchSubject', [
+            'RNN' => $rnn,
+            'IIN' => $iin,
+            'FIRSTNAME' => $firstName,
+            'LASTNAME' => $lastName,
+            'PARENTNAME' => $parentName,
+            'CLASSISN' => $classISN,
+            'ESBDSEARCH' => $esbdSearch,
+        ]);
+    }
 
 }

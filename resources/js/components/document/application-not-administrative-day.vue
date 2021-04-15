@@ -11,6 +11,26 @@
                             <button type="submit" class="btn btn-primary mt-2">Опубликовать</button>
                         </div>
                     </form>
+<!--                    <div class="mb-4" v-for="result in results.result1">-->
+<!--                        <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row">-->
+<!--                            <label class="col-md-4 col-form-label">{{result.fullname}}:</label>-->
+<!--                            <div class="col-md-6">-->
+<!--                                <input v-model="result.val" class="col-md-10" placeholder="Поиск адресата ..">-->
+<!--                                <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">-->
+<!--                            <label class="col-md-4 col-form-label">{{result.fullname}}:</label>-->
+<!--                            <div class="col-md-6">-->
+<!--                                <input v-model="result.val" class="col-md-10" placeholder="Поиск адресата ..">-->
+<!--                                <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО Сотрудника' || docrow.fieldname === 'ФИО сотрудника'">-->
+<!--                        <input v-model="docrow.value" class="col-md-10" placeholder="Поиск ..">-->
+<!--                        <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>-->
+<!--                    </div>--> <!-- disciplinary action-->
 <!--                    <form @submit.prevent="addWallPost">-->
 <!--                        <div class="form-group">-->
 <!--                            <label for="wall">Стена</label>-->

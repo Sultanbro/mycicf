@@ -198,7 +198,7 @@
                             this.loading = false;
                             this.changeMatch.status = false;
                             if(alert('Успешно изменено')){
-                                preloader(show)
+                                this.preloader(show)
                             }
                             // alert('Успешно изменено')
 

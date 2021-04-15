@@ -11,7 +11,7 @@
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
                                         <!--                                             <treeselect @select="handleInput" v-model="contragent" :multiple="false" :options="userList" disabled="disabled"/>&ndash;&gt;-->
-                                        <treeselect v-model="results.contragent.val" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                        <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
                                 </div>
@@ -538,16 +538,16 @@ export default {
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
-                        this.result = response.data.error
                         this.saveDoc = false;
                     } else {
+                        alert(response.data.error);
                         this.addChange = false;
                     }
                     this.loading = false;
                     this.addChange = true;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
+                    alert(error.response);
                 });
         },
         sendOut(){

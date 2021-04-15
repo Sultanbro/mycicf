@@ -91,6 +91,29 @@ class ProxyType extends Command
         }
 
         try{
+            $response = $kias->getDictiList(25);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',25)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 25;
+                    if($dicti->save()){
+                        echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".(string)$row->FULLNAME." \n";
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
+        try{
             $response = $kias->getDictiList(50);
             if(isset($response->ROWSET->row)) {
                 $oldDicti = Dicti::where('parent_isn',50)->delete();

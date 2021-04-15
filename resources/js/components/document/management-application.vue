@@ -10,7 +10,7 @@
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="results.contragent.val" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                        <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
                                 </div>

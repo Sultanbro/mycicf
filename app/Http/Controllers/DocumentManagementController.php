@@ -83,7 +83,7 @@ class DocumentManagementController extends Controller
         $contragent = [
             'fullname' => empty((string)$show->Doc->row->SUBJNAME) ? 'Контрагент' : $show->Doc->row->SUBJNAME,
             'value' => empty((string)$show->Doc->row->SUBJNAME) ? '' : $show->Doc->row->SUBJNAME,
-            'subjisn' => $show->Doc->row->SUBJISN ? '' : $show->Doc->row->SUBJISN,
+            'subjIsn' => $show->Doc->row->SUBJISN ? '' : $show->Doc->row->SUBJISN,
         ];
         foreach($show->DocParams->row as $item) {
             array_push($result, [
@@ -399,6 +399,21 @@ class DocumentManagementController extends Controller
         ]);
     }
 
+    public function getCounterpartyType(Request $request){
+        $types = Dicti::where('parent_isn',25)->get();
+        $result = [];
+
+        foreach($types as $type){
+            $type['isn'] = $type->isn;
+            $type['fullname'] = $type->fullname;
+            $type['parent_isn'] = $type->parent_isn;
+            $result[] = [$type['isn'],$type['fullname'],$type['parent_isn']];
+        }
+        return response()->json([
+            'counterpartyType' => $result
+        ]);
+    }
+
     public function getSzTopic(Request $request){
         $topics = Dicti::where('parent_isn',1326291)->get();
         $result = [];
@@ -702,10 +717,11 @@ class DocumentManagementController extends Controller
         for($i=0; $i<count($docrows); $i++){
             $docs = array_merge($docs, $docrows[$i]);
         }
-//        $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['val'], $row, $docs];
+//        dd($request->results["contragent"]);
+        $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $docs];
 //        dd($wer);
         if(!isset($request->status)){
-            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $docs);
 //            dd($document);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];
@@ -757,7 +773,7 @@ class DocumentManagementController extends Controller
             $buttonClick = $kias->buttonClick($docIsn, $button);
             if($buttonClick->error){
                 $success = false;
-                $error .= (string)$buttonClick->error->text;
+                $error .= (string)$buttonClick->error->fulltext;
                 $result = [
                     'success' => $success,
                     'error' => (string)$error
@@ -857,5 +873,66 @@ class DocumentManagementController extends Controller
                 'result' => $changeCoordination,
                 'success' => true,
             ]);
+    }
+
+    public function searchCounterparty(Request $request, KiasServiceInterface $kias) {
+        $error = "";
+        $result = [];
+        $result1 = [];
+//        dd($request);
+        $searchingResult = $kias->userCicSearchSubject('', $request->document['iin'], $request->document['firstName'],
+            $request->document['lastName'], $request->document['parentName'], $request->document['classISN'], 'N');
+//        dd($searchingResult);
+        if($searchingResult->error){
+            $success = false;
+            $error .= (string)$searchingResult->error->text;
+            $result = [
+                'success' => $success,
+                'error' => (string)$error
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        $type2 = [
+            '2255' => 'Нештатный сотрудник', '2249' => 'Агент', '21120' => 'Ассистанс', '2250' => 'Банк', '789121' => 'Брокер',
+            '800001' => 'Военкомат', '1735601' => 'Индивидуальный предприниматель', '2252' => 'Контрагент', '146320' => 'ЛПУ', '2253' => 'Медицинское учреждение',
+            '1788881' => 'Сотрудник коммеска', '221079' => 'Страховщик / Перестраховщик', '225355' => 'Суд', '2260' => 'Филиалы/Подразделение', '2257' => 'Штатный содрудник',
+        ];
+        if(count($searchingResult->ROWSET->row) > 1){
+            if(count($searchingResult->ROWSET->row) >= 20) {
+                for($i=0; $i<20; $i++){
+                    array_push($result1, $searchingResult->ROWSET->row[$i]);
+                }
+            }
+            elseif (count($searchingResult->ROWSET->row) < 20){
+                for($i=0; $i<count($searchingResult->ROWSET->row); $i++){
+                    array_push($result1, $searchingResult->ROWSET->row[$i]);
+                }
+            }
+            for($i=0; $i<count($result1); $i++){
+                array_push($result, [
+                    'lastName' => get_object_vars($result1[$i]->LASTNAME) ? get_object_vars($result1[$i]->LASTNAME)[0] : null,
+                    'firstName' => get_object_vars($result1[$i]->FIRSTNAME) ? get_object_vars($result1[$i]->FIRSTNAME)[0] : null,
+                    'parentName' => get_object_vars($result1[$i]->PARENTNAME) ? get_object_vars($result1[$i]->PARENTNAME)[0] : null,
+                    'birthday' => get_object_vars($result1[$i]->BIRTHDAY) ? get_object_vars($result1[$i]->BIRTHDAY)[0] : null,
+                    'iin' => get_object_vars($result1[$i]->IIN) ? get_object_vars($result1[$i]->IIN)[0] : null,
+                    'classIsn' => get_object_vars($result1[$i]->CLASSISN) ? $type2[get_object_vars($result1[$i]->CLASSISN)[0]] : null,
+                    'isn' => get_object_vars($result1[$i]->IIN) ? get_object_vars($result1[$i]->ISN)[0] : null,
+                ]);
+            }
+        } elseif (count($searchingResult->ROWSET->row) === 1){
+            $result1 = $searchingResult->ROWSET->row;
+            array_push($result, [
+                'lastName' => get_object_vars($result1->LASTNAME) ? get_object_vars($result1->LASTNAME)[0] : null,
+                'firstName' => get_object_vars($result1->FIRSTNAME) ? get_object_vars($result1->FIRSTNAME)[0] : null,
+                'parentName' => get_object_vars($result1->PARENTNAME) ? get_object_vars($result1->PARENTNAME)[0] : null,
+                'birthday' => get_object_vars($result1->BIRTHDAY) ? get_object_vars($result1->BIRTHDAY)[0] : null,
+                'iin' => get_object_vars($result1->IIN) ? get_object_vars($result1->IIN)[0] : null,
+                'classIsn' => get_object_vars($result1->CLASSISN) ? $type2[get_object_vars($result1->CLASSISN)[0]] : null,
+                'isn' => get_object_vars($result1->IIN) ? get_object_vars($result1->ISN)[0] : null,
+            ]);
+        }
+        return response()->json([
+            'result' => $result
+        ]);
     }
 }

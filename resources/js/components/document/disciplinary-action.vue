@@ -6,18 +6,19 @@
                 <div class="flex-row jc-sb mt-3 mb-3">
                     <div class="col-md-8 offset-md-4">
                             <div class="mb-4" v-for="result in results.result1">
-                                <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row">
+                                <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
-                                    <div class="col-md-6">
-                                        <input v-model="result.val" class="col-md-10" placeholder="Поиск адресата ..">
-                                        <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>
+                                    <div class="col-md-8">
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
+                                                    id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                     </div>
                                 </div>
                                 <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
-                                    <div class="col-md-6">
-                                        <input v-model="result.val" class="col-md-10" placeholder="Поиск адресата ..">
-                                        <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>
+                                    <div class="col-md-8">
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
+                                                    id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
+                                        <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
                                 </div>
                             </div>
@@ -77,8 +78,12 @@
                             <div>
                                 <label>{{ docrow.fieldname }}</label>
                                 <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО Сотрудника' || docrow.fieldname === 'ФИО сотрудника'">
-                                    <input v-model="docrow.value" class="col-md-10" placeholder="Поиск ..">
-                                    <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>
+                                    <treeselect
+                                        v-model="docrow.value" :disabled="addChange" required
+                                        :multiple="false"
+                                        :options="userList"
+                                        @select="changeSelected($event)"
+                                        :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Должность'">
                                     <label><input type="text" v-model="duty" class="form-control"
@@ -197,8 +202,8 @@
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
                                 || result.fullname === 'Согласующий 3'">
-                                <input v-model="result.val" class="col-md-10" placeholder="Поиск ..">
-                                <button type="submit" class="btn btn-primary" @click="OpenModal()"><i class="fa fa-search"></i></button>
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
+                                            :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div v-if="!result.val">

@@ -340,4 +340,16 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function userCicGetDictiList($tarifIsn);
+
+    /**
+     * @param $rnn
+     * @param $iin
+     * @param $firstName
+     * @param $lastName
+     * @param $parentName
+     * @param $classISN
+     * @param $esbdSearch
+     * @return mixed
+     */
+    public function userCicSearchSubject($rnn, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch);
 }
