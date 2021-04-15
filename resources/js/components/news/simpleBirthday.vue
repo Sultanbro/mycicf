@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="d-flex flex-column vertical-middle Birthday-margin-inner">
+        <div class="d-flex flex-column vertical-middle Birthday-margin-inner" v-if="duty != 'Сотрудник Коммеск'">
             <div class="jc-center d-flex width50 events-window-size relative">
                 <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div v-if="similar.length > 0" v-for="birthday in similar" class="d-flex flex-column vertical-middle Birthday-margin-inner">
+        <div v-if="similar.length > 0 && birthday.duty != 'Сотрудник Коммеск'" v-for="birthday in similar" class="d-flex flex-column vertical-middle Birthday-margin-inner">
             <div class="jc-center d-flex width50 events-window-size relative">
                 <img src="http://animations.shoppinng.ru/wp-content/uploads/2014/02/13.gif" class="absolute width100 height100" />
                 <img src="/images/balloons-icon.png" class="width100 absolute birthday-balls zi-1">
