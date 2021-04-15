@@ -320,7 +320,7 @@ class CoordinationController extends Controller
                         $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
                     }
                     if(isset($row->classisn)) {
-                        if ($row->classisn == 1784771) {
+                        if ($row->classisn == 1784771 || $row->classisn == 1920831) {
                             $doc_row_inner[(string)$row->orderno][] = array(
                                 'ISN' => (string)$row->value,
                                 'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
@@ -639,4 +639,5 @@ class CoordinationController extends Controller
             'success' => true,
         ]);
     }
+
 }

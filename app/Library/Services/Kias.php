@@ -427,6 +427,22 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getPrintableDoc($isn, $template, $classId)
+    {
+        return $this->request('GetPrintableDocument', [
+            'ISN' => '',
+            'TemplateISN' => $template,
+            'ClassID' => $classId,
+            'params' => [
+                'row' => [
+                    'paramName' => 'pISN',
+                    'paramType' => 'N',
+                    'paramValue' => $isn
+                ],
+            ],
+        ]);
+    }
+
     public function getExpressAttributes($product){
         return $this->request('User_CicGetAttrExpress', [
             'Product' => $product,
