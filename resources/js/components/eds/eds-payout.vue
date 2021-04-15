@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
+        {{info}}
+        <div class="inner-wrap t-0 text-center" >
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket()">Чекнуть</button>
             </div>
-            {{info}}
             <p v-for="(item,index) in info">
-                {{ parseInt(index)+1 }}. РВ isn: {{ item.rv_isn }}
+                {{ parseInt(index)+1 }}. РВ isn: {{ item.isn }}
                 <span class="text-success" v-if="item.confirmed == 1">прошел проверку</span>
                 <!--span class="text-danger" v-if="item.confirmed == 0">не проверен </span-->
                 <span class="text-danger" v-if="item.iin_fail == 1">не совпадает ИИН</span>
@@ -19,9 +19,10 @@
 <script>
     const axios = require('axios');
     export default {
-        name: "eds-od",
+        name: "eds-payout",
         data() {
             return {
+                kek:3919264,
                 confirmed: false,
                 loading: false,
                 seenmoney: false,
@@ -66,7 +67,6 @@
                 };
                 webSocket.onmessage = function(msg) {
                     var result = JSON.parse(msg.data);
-                    console.log(result)
                     if(!result.success && result.errorCode === 'MODULE_NOT_FOUND'){
                         vm.installModule()
                     }else{
@@ -244,9 +244,9 @@
             checkSigns(){
                 this.loader(true);
                 if(this.info.length > 0) {
-                    this.getEdsInfo(this.info[0].rv_isn,0);
+                    this.getEdsInfo(this.info[0].isn,0);
                     // for(let i = 0; Object.keys(this.info).length > i; i++){
-                    //     this.getEdsInfo(this.info[i].rv_isn,i);
+                    //     this.getEdsInfo(this.info[i].isn,i);
                     //     if(i == Object.keys(this.info).length-1){
                     //         this.loader(false);
                     //     }
@@ -258,7 +258,7 @@
                     this.saveDocument();
                     //console.log(index+'!!!');
                 } else {
-                    this.getEdsInfo(this.info[index].rv_isn,index);
+                    this.getEdsInfo(this.info[index].isn,index);
                     //console.log(index+'???');
                 }
             }

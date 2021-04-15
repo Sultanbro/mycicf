@@ -979,7 +979,8 @@ class SiteController extends Controller
 
     public function edsByIsn(Request $request,KiasServiceInterface $kias){
         $files = [];
-        $ISN = isset($request->isn) ? $request->isn : '';
+//        $ISN = isset($request->isn) ? $request->isn : '';
+        $ISN = isset($request->refISN) ? $request->refISN : '';
         $type = isset($request->type) ? $request->type : '';
         $format = isset($request->edsType) ? $request->edsType : '';
         $refISN = isset($request->refISN) ? $request->refISN : '';

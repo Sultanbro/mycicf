@@ -179,6 +179,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
 
     Route::get('eds/od', 'EdsController@edsOD');
+    Route::get('eds/po', 'EdsController@edsPO');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');

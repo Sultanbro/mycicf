@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Library\Services\KiasServiceInterface;
+use App\TblForPayEds;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,11 @@ class EdsController extends Controller
     public function edsOD(KiasServiceInterface $kias){
         $od = Refund::where('confirmed',0)->select('rv_isn','id','confirmed','iin','iin_fail')->get();
         return view('eds',compact('od'));
+    }
+
+    public function edsPO(KiasServiceInterface $kias){
+        $po = TblForPayEds::where('confirmed',"0")->select('isn','id','confirmed','iin','iin_fail')->get();
+        return view('eds-payout',compact('po'));
     }
 
     public function saveDocument(Request $request, KiasServiceInterface $kias) {
