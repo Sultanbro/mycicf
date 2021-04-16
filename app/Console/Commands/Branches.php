@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Branch;
 use App\Library\Services\KiasServiceInterface;
+use App\XML\Kias\GetBranchesResult\BranchEntry;
 use Illuminate\Console\Command;
 
 class Branches extends Command
@@ -66,6 +67,11 @@ class Branches extends Command
         echo "Окончание : {$time}\n";
     }
 
+    /**
+     * @param BranchEntry $subject
+     * @return bool
+     * @throws \Exception
+     */
     public function addToTable($subject){
         $model = new Branch();
         $model->fullname = $subject->FullName;

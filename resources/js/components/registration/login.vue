@@ -7,13 +7,13 @@
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-user-o fa-input" aria-hidden="true"></i>
-                    <input type="text" name="username" v-model="username" class="input-field" placeholder="Логин">
+                    <input type="text" name="username" id="username" v-model="username" class="input-field" placeholder="Логин">
                 </div>
             </div>
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-lock fa-input" aria-hidden="true"></i>
-                    <input :type="passwordType" v-model="password" class="input-field" placeholder="Пароль">
+                    <input :type="passwordType" v-model="password" id="password" class="input-field" placeholder="Пароль">
                     <button type="button" class="show-btn" @click="checkType">
                         <i :class="className" aria-hidden="true" id="icon"></i>
                     </button>
