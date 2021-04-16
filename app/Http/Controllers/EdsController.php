@@ -12,7 +12,7 @@ use App\Refund;
 class EdsController extends Controller
 {
     public function edsOD(KiasServiceInterface $kias){
-        $od = Refund::where('confirmed',0)->select('rv_isn','id','confirmed','iin','iin_fail')->get();
+        $od = Refund::where('confirmed',0)->select('rv_isn','id','confirmed','iin','iin_fail','claim_id')->get();
         return view('eds',compact('od'));
     }
 
@@ -67,9 +67,39 @@ class EdsController extends Controller
        ]);
     }
 
+    public function getOrSetDoc(Request $request, KiasServiceInterface $kias){
+        $success = false;
+        $info = $request->data;
+        if($info['confirmed'] == 1){
+            $setStatus = $kias->getOrSetDocs($info['rv_isn'],1,2522);    // 2522 - статус на подписании
+            if(isset($setStatus->error)){
+                $success = false;
+                $error = (string)$setStatus->error->text;
+            } else {
+                dd($info['id']);
+                if(isset($setStatus->Status)){
+                    $refund = Refund::find($info['id']);
+                    if ($info['confirmed'] == 1) {
+                        $refund->confirmed = 1;
+                        $refund->main_doc_isn = $setStatus->Status;
+                    } else {
+                        $refund->iin_fail = 1;
+                    }
+                    if ($refund->save()) {
+                        $success = true;
+                    }
+                }
+            }
+        }
+        return response()->json([
+            'success' => isset($success) ? $success : true,
+            'error' => isset($error) ? $error : ''
+        ]);
+    }
+
     public function saveFailStatus(Request $request){
-        foreach($request->data as $info){
-            $refund = Refund::find($info['id']);
+        //foreach($request->data as $info){
+            $refund = Refund::find($request->data['id']);
             $refund->iin_fail = 1;
             try{
                 if($refund->save()){
@@ -79,8 +109,7 @@ class EdsController extends Controller
                 $success = false;
                 $error = 'Возникла ошибка при сохранении статуса';
             }
-
-        }
+        //}
         return response()->json([
             'success' => isset($success) ? $success : true,
             'error' => isset($error) ? $error : ''

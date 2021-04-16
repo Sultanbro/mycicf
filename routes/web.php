@@ -186,6 +186,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::group(['middleware' => 'duty'], function () {
             Route::get('test/eds', 'SiteController@testEds');
+            Route::post('/save_document', 'EdsController@saveDocument');
+            Route::post('/get_or_set_doc', 'EdsController@getOrSetDoc');
+            Route::post('/save_fail_status', 'EdsController@saveFailStatus');
             Route::get('/getEDS', 'SiteController@getEds');
             Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
             Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
@@ -535,8 +538,7 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
-Route::post('/save_document', 'EdsController@saveDocument');
-Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
