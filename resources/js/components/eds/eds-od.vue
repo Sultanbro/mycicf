@@ -5,7 +5,7 @@
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket()">Чекнуть</button>
             </div>
             <p v-for="(item,index) in info">
-                {{ parseInt(index)+1 }}. РВ isn: {{ item.rv_isn }}
+                {{ parseInt(index)+1 }}. РВ исн: {{ item.rv_isn }}. Номер убытка : {{ item.claim_id }}
                 <span class="text-success" v-if="item.confirmed == 1">прошел проверку</span>
                 <!--span class="text-danger" v-if="item.confirmed == 0">не проверен </span-->
                 <span class="text-danger" v-if="item.iin_fail == 1">не совпадает ИИН</span>
@@ -106,30 +106,40 @@
                 }
             },
             getEdsInfo(docIsn,doc_index){    // docIsn - isn документа
-                let self = this;
-                self.signedFileInfo = [];
-                //self.loader(true);
-                axios.post("/eds-by-isn", {
-                    refISN: docIsn,
-                    type: 'D',
-                    edsType: 'cms'
-                }).then((response) => {
-                    if(response.data.success) {
-                        var obj = response.data.result;
-                        if(obj.length > 0){
-                            for(let index in obj) {
-                                this.checkSignedFile(obj[index].filepath,docIsn,obj[index].docISN, doc_index,obj[index]);     // Проверить подписанные файлы  obj[index].docISN
+                // console.log(this.info[doc_index]);
+                // if(this.info[doc_index].iin_fail == 0) {
+                    let self = this;
+                    self.hasConfirmed = false;
+                    self.signedFileInfo = [];
+                    //self.loader(true);
+                    axios.post("/eds-by-isn", {
+                        refISN: docIsn,
+                        type: 'D',
+                        edsType: 'cms'
+                    }).then((response) => {
+                        if (response.data.success) {
+                            var obj = response.data.result;
+                            if (obj.length > 0) {
+                                for (let index in obj) {
+                                    this.checkSignedFile(obj[index].filepath, docIsn, obj[index].docISN, doc_index, obj[index]);     // Проверить подписанные файлы  obj[index].docISN
+                                }
+                            } else {
+                                //self.loader(false);
+                                //self.checkContinue(doc_index+1);
                             }
                         } else {
+                            alert(response.data.error);
+                            return false;
+                            //---self.checkContinue(doc_index+1);
+                            //self.getOrSetDoc(doc_index);
                             //self.loader(false);
-                            //self.checkContinue(doc_index+1);
                         }
-                    } else {
-                        alert(response.data.error);
-                        self.checkContinue(doc_index+1);
-                        //self.loader(false);
-                    }
-                });
+                    });
+                // } else {
+                //     if(this.info[doc_index+1].iin_fail == 0){
+                //         this.getEdsInfo(this.info[doc_index+1].rv_isn,doc_index);
+                //     }
+                // }
             },
             checkSignedFile(url,refIsn,docISN, doc_index,rv_data){        // Посмотреть подписанный файл
                 let self = this;
@@ -158,7 +168,8 @@
                                         self.sendEdsInfoToKias(refIsn,docISN,doc_index); // Записываем в киас данные из подписанного файла
                                     } else {
                                         self.info[doc_index].iin_fail = 1;
-                                        self.checkContinue(doc_index+1);
+                                                //---self.checkContinue(doc_index+1);
+                                        self.getOrSetDoc(doc_index);
                                         //self.loader(false);
                                     }
                                 }
@@ -180,7 +191,7 @@
             sendEdsInfoToKias(refIsn,docIsn,doc_index){ // docIsn - isn документа, self.isn - это исн котировки
                 let self = this;
                 let obj = self.signedFileInfo;
-                //this.loader(true);
+                this.loader(true);
                 for (let index in obj) {
                     axios.post("/save_eds_info", {
                         data: obj[index],
@@ -195,11 +206,13 @@
                                 //self.confirmed = true;
                             //    this.saveDocument();
                             //} else {
-                                self.checkContinue(doc_index+1);
+                                    //---self.checkContinue(doc_index+1);
+                            self.getOrSetDoc(doc_index);
                             //}
                             //self.loader(false);
                         } else {
-                            self.checkContinue(doc_index+1);
+                                //---self.checkContinue(doc_index+1);
+                            self.getOrSetDoc(doc_index);
                         }
                     });
                 }
@@ -214,30 +227,38 @@
             loader(show){
                 this.loading = show;
             },
-            saveDocument(){
-                if(this.hasConfirmed) {
-                    axios.post("/save_document", {
-                        classISN: this.classIsn,
-                        data: this.info,
-                        emplISN: this.emplIsn
+            getOrSetDoc(index){
+                if(!this.info[index].iin_fail) {
+                    //console.log(index);
+                    console.log(this.info[index]);
+                    axios.post("/get_or_set_doc", {
+                        data: this.info[index]
                     }).then((response) => {
                         if (response.data.success) {
                             this.loader(false);
+                            this.checkContinue(index+1);
                         } else {
+                            alert(response.data.error);
+                            this.checkContinue(index+1);
                             this.loader(false);
                         }
                     });
                 } else {
                     axios.post("/save_fail_status", {
-                        data: this.info,
+                        data: this.info[index],
                     }).then((response) => {
                         if (response.data.success) {
-                            this.loader(false);
+                            //this.loader(false);
+                            this.checkContinue(index+1);
                         } else {
-                            this.loader(false);
+                            //this.loader(false);
+                            this.checkContinue(index+1);
                         }
                     });
                 }
+            },
+            saveFailStatus(){
+
             },
             checkSigns(){
                 this.loader(true);
@@ -252,12 +273,18 @@
                 }
             },
             checkContinue(index){
-                if(index > this.info.length-1) {
-                    this.saveDocument();
-                    //console.log(index+'!!!');
-                } else {
-                    this.getEdsInfo(this.info[index].rv_isn,index);
+                // if(index > this.info.length-1) {
+                //     this.getOrSetDoc(index);
+                //     //console.log(index+'!!!');
+                // } else {
+                    ///this.getEdsInfo(this.info[index].rv_isn,index);
                     //console.log(index+'???');
+                //}
+
+                if(index < this.info.length) {
+                    this.getEdsInfo(this.info[index].rv_isn,index);
+                } else {
+                    this.loader(false);
                 }
             }
         },
