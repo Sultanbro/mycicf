@@ -318,16 +318,18 @@ interface KiasServiceInterface
 
     /**
      * @param $isns
-     * @param $status_isn
-     * @param $class_isn
+     * @param $classIsn
+     * @param $statusIsn
      * @param $emplIsn
      * @param $docDate
      * @param $subjIsn
+     * @param $remark
+     * @param $remark2
      * @param $row
      * @param $docs
      * @return mixed
      */
-    public function userCicSaveDocument($isns, $status_isn, $class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs);
+    public function userCicSaveDocument($isns, $classIsn, $statusIsn,$emplIsn, $docDate, $subjIsn,$remark,$remark2,$row,$docs);
 
     /**
      * @param $row
@@ -342,7 +344,6 @@ interface KiasServiceInterface
     public function userCicGetDictiList($tarifIsn);
 
     /**
-     * @param $rnn
      * @param $iin
      * @param $firstName
      * @param $lastName
@@ -351,5 +352,19 @@ interface KiasServiceInterface
      * @param $esbdSearch
      * @return mixed
      */
-    public function userCicSearchSubject($rnn, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch);
+    public function userCicSearchSubject($iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch);
+
+    /**
+     * @param $iin
+     * @param $firstName
+     * @param $lastName
+     * @param $parentName
+     * @param $birthday
+     * @param $juridical
+     * @param $resident
+     * @param $sexId
+     * @param $countryIsn
+     * @return mixed
+     */
+    public function userCicSaveSubject($iin, $firstName, $lastName, $parentName, $birthday, $juridical, $resident, $sexId, $countryIsn);
 }

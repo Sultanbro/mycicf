@@ -835,13 +835,15 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function saveDocument($isns,$classISN,$emplISN,$subjISN,$docRow, $docParams){
+    public function saveDocument($isns,$classISN,$statusIsn,$emplISN,$docDate,$subjISN, $remark, $docRow, $docParams){
         return $this->request('User_CicSAVEDOCUMENT', [
             'ISN' => $isns,
             'CLASSISN' => $classISN,
+            'STATUSISN' => $statusIsn,
             'EMPLISN' => $emplISN,
-            'DOCDATE' => date('d.m.Y'),
+            'DOCDATE' => $docDate ? $docDate : date('d.m.Y'),
             'SUBJISN' => $subjISN,
+            'REMARK' => $remark,
             'DocParams' => [
                 'row' => $docParams
             ],
@@ -884,7 +886,7 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function userCicSaveDocument($isns, $status_isn, $class_isn, $emplIsn, $docDate, $subjIsn, $row, $docs) {
+    public function userCicSaveDocument($isns, $class_isn, $status_isn, $emplIsn, $docDate, $subjIsn, $remark, $remark2, $row, $docs) {
         return $this->request('User_CicSAVEDOCUMENT', [
             'ISN' => $isns,
             'STATUSISN' => $status_isn,
@@ -892,6 +894,7 @@ class Kias implements KiasServiceInterface
             'EMPLISN' => $emplIsn,
             'DOCDATE' => $docDate,
             'SUBJISN' => $subjIsn,
+            'REMARK' => $remark,
             'DocParams' => [
                 'row' => $row
 //                    [
@@ -920,11 +923,9 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function userCicSearchSubject($rnn, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch)
+    public function userCicSearchSubject($iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch)
     {
-        // TODO: Implement subjectSearch() method.
         return $this->request('User_CicSearchSubject', [
-            'RNN' => $rnn,
             'IIN' => $iin,
             'FIRSTNAME' => $firstName,
             'LASTNAME' => $lastName,
@@ -934,4 +935,17 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function userCicSaveSubject($iin, $firstName, $lastName, $parentName, $birthday, $juridical, $resident, $sexId, $countryIsn){
+        return $this->request('User_CicSaveSubject', [
+            'IIN' => $iin,
+            'FIRSTNAME' => $firstName,
+            'LASTNAME' => $lastName,
+            'PARENTNAME' => $parentName,
+            'BIRTHDAY' => $birthday,
+            'JURIDICAL' => $juridical,
+            'RESIDENT' => $resident,
+            'SEXID' => $sexId,
+            'COUNTRYISN' => $countryIsn,
+        ]);
+    }
 }

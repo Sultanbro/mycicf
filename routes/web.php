@@ -494,6 +494,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/changeDocCoordination', 'DocumentManagementController@changeDocCoordination');
         Route::post('/document/getCounterpartyType', 'DocumentManagementController@getCounterpartyType')->name('document.get.counterparty.type');
         Route::post('/searchCounterparty', 'DocumentManagementController@searchCounterparty');
+        Route::post('/saveSubject', 'DocumentManagementController@saveSubject');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');

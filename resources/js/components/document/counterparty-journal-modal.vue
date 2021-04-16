@@ -102,10 +102,9 @@
                                             <td>ИИН</td>
                                             <td>Тип контрагента</td>
                                         </tr>
-                                        <tr v-for="res in searchingResult" :key="index">
-                                            <td><input type="radio" :id="index" @change="onChange($event, res)"></td>
-                                            <td @click="getInfo">{{res.lastName}} {{res.firstName}} {{res.parentName}}</td>
-                                            <td>{{res.birthday}}</td>
+                                        <tr v-for="(res, index) in searchingResult" :key="index">
+                                            <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(res, index)"></td>
+                                            <td><div @click="selectCounterparty(res, index)">{{res.lastName}} {{res.firstName}} {{res.parentName}}</div></td>
                                             <td>{{res.birthday}}</td>
                                             <td>{{res.iin}}</td>
                                             <td>{{res.classIsn}}</td>
@@ -163,6 +162,8 @@ export default {
             resultDoc: false,
             counterpartyType: [],
             searchingResult: {},
+            check:false,
+            index: '',
         }
     },
     created() {
@@ -171,6 +172,18 @@ export default {
         this.getCounterpartyType();
     },
     methods: {
+        changeCheck(res, id){
+            console.log(res)
+            console.log(id)
+            console.log(this.counterparty)
+            if(this.searchingResult[id] !== id || this.searchingResult[id] === id){
+                this.counterparty.isn = ''
+                this.counterparty.fullName = ''
+            }
+            this.counterparty.isn = res.isn
+            this.counterparty.fullName = res.lastName + ' ' + res.firstName + ' ' + res.parentName
+
+        },
         getDatePicker() {
             const vm = this;
             vm.document.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
@@ -209,28 +222,26 @@ export default {
                 this.searchingResult = response.data.result
                 this.loading = false;
                 if(this.searchingResult.length === 1){
+                    if(this.searchingResult[0].isn === null){
+
+                    }
                     this.counterparty.isn = this.searchingResult[0].isn
                     this.counterparty.fullName = this.searchingResult[0].lastName + ' ' + this.searchingResult[0].firstName + ' ' + this.searchingResult[0].parentName
                 }
             });
         },
+        selectCounterparty(res, id){
+            this.counterparty.isn = res.isn
+            this.counterparty.fullName = res.lastName + ' ' + res.firstName + ' ' + res.parentName
+            this.getInfo();
+        },
         getInfo(){
             this.loading = true;
-            if(this.searchingResult.length === 0){
-                this.$parent.$refs.modalCounterparty.click()
-            }
             for(let i=0; i<this.results.docrows.length; i++){
                 if(this.results.docrows[i].fieldname === this.recordingCounterparty.type){
-                    if(this.counterparty.fullname === undefined || this.counterparty.fullname === ''){
-                        this.agent.fullName = ''
-                        this.agent.isn = ''
-                        this.agent.type = ''
-                    } else{
-                        this.agent.fullName = this.counterparty.fullName
-                        this.agent.isn = this.counterparty.isn
-                        this.agent.type = this.recordingCounterparty.type
-                    }
-
+                    this.agent.fullName = this.counterparty.fullName
+                    this.agent.isn = this.counterparty.isn
+                    this.agent.type = this.recordingCounterparty.type
                 }
             }
             this.$parent.$refs.modalCounterparty.click()

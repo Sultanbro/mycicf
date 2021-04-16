@@ -34,7 +34,7 @@ class DocumentManagementController extends Controller
         return view('document.management.index');
     }
 
-    public function showMySZ(Request $request, KiasServiceInterface  $kias)
+    public function showMySZ(Request $request, KiasServiceInterface $kias)
     {
         $error = "";
         $today = date('d.m.Y');
@@ -72,6 +72,7 @@ class DocumentManagementController extends Controller
     public function show(Request $request, KiasServiceInterface $kias)
     {
         $today = date('d.m.Y');
+//        dd($today);
 //        dd($request->docisn);
 
         $show = $kias->request('User_CicGetDocRowAttr', [
@@ -132,19 +133,17 @@ class DocumentManagementController extends Controller
                 'showTable' => get_object_vars($show->DocParam->row->showtable) ? get_object_vars($show->DocParam->row->showtable)[0] : null,
             ];
         }
-//        dd($docParam);
-        $className = get_object_vars($show->Doc->row->CLASSNAME)[0];
-        $docdate = isset($itens->docdate) ? get_object_vars($itens->docdate) : $today;
-        $docdate = isset($itens->docdate) ? date('m.d.Y',strtotime($docdate[0])) : $docdate;
-        $emplisn = get_object_vars($show->Doc->row->EMPLISN)[0];
-        $statusName = get_object_vars($show->Doc->row->STATUSNAME)[0];
         $results = array_merge([
             'classisn' => get_object_vars($show->Doc->row->CLASSISN)[0],
             'parentClass' => get_object_vars($show->Parentclass)[0],
-            'emplisn' => $emplisn,
-            'docdate' => $docdate ?? $today,
-            'className' => $className,
-            'statusName' => $statusName,
+            'emplisn' => get_object_vars($show->Doc->row->EMPLISN)[0],
+            'emplName' => get_object_vars($show->Doc->row->EMPLNAME)[0],
+            'docdate' => isset($itens->docdate) ? get_object_vars($itens->docdate) : $today,
+            'className' => get_object_vars($show->Doc->row->CLASSNAME)[0],
+            'showRemark' => '',
+            'showRemark2' => '',
+            'status' => get_object_vars($show->Doc->row->STATUSNAME)[0],
+            'stage' => get_object_vars($show->Doc->row->STAGENAME) ? get_object_vars($show->Doc->row->STAGENAME) : '',
         ], [
             'result' => $result
         ], [
@@ -159,7 +158,6 @@ class DocumentManagementController extends Controller
             'docParam' => $docParam
             ]
         );
-
         return view('document.management.show', compact('results'));
     }
 
@@ -710,18 +708,19 @@ class DocumentManagementController extends Controller
                 ];
             }
         }
-//        dd($docrows);
         $isn = '0'; //update isn='$isn' delete='0'
         $delete = '0'; //delete isn='$isn' delete='1'
         $docs = ['isn' => $isn, 'delete' => $delete];
         for($i=0; $i<count($docrows); $i++){
             $docs = array_merge($docs, $docrows[$i]);
         }
-//        dd($request->results["contragent"]);
+        $status1 = [
+            'В работе' => '2516', 'На подписи' => '2522', 'Подписан' => '2518', 'Оплачен' => '2517', 'Аннулирован' => '2515',
+        ];
+//        dd($request->docIsn);
         $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $docs];
-//        dd($wer);
-        if(!isset($request->status)){
-            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $docs);
+        if(!isset($request->results["status"])){
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->results["classisn"], $request->results["status"] ? $status1[$request->results["status"]] : '', $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $request->results['showRemark'],$request->results['showRemark2'], $row, $docs);
 //            dd($document);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];
@@ -742,7 +741,7 @@ class DocumentManagementController extends Controller
                 'success' => true,
             ]);
         } else {
-            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->status ? $request->status : '', $request->results["classisn"], $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['value'], $row, $docs);
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', $request->results["classisn"],$request->results["status"] ? $status1[$request->results["status"]] : '',  $request->results["emplisn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $request->results['showRemark'], '',$row, $docs);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];
             }else{
@@ -758,8 +757,6 @@ class DocumentManagementController extends Controller
             }
                 return response()->json([
                     'DocISN' => $docIsn,
-                    'status' => 'Аннулирован',
-                    'stage' => 'Аннулирован',
                     'success' => true,
                 ]);
             }
@@ -768,6 +765,7 @@ class DocumentManagementController extends Controller
     {
         $error = "";
         $docIsn = $request->docIsn;
+//        dd($docIsn);
         $button = $request->button;
         if(isset($request->docIsn)){
             $buttonClick = $kias->buttonClick($docIsn, $button);
@@ -804,7 +802,7 @@ class DocumentManagementController extends Controller
         $status1 = [
             'В работе' => '2516', 'На подписи' => '2522', 'Подписан' => '2518', 'Оплачен' => '2517', 'Аннулирован' => '2515',
         ];
-        $docs = $kias->getOrSetDocs($request->docIsn, 1, $request->status);
+        $docs = $kias->getOrSetDocs($request->docIsn, 1, $request->results["status"]);
 //        dd($docs);
             if($docs->error){
                 $success = false;
@@ -879,10 +877,46 @@ class DocumentManagementController extends Controller
         $error = "";
         $result = [];
         $result1 = [];
-//        dd($request);
-        $searchingResult = $kias->userCicSearchSubject('', $request->document['iin'], $request->document['firstName'],
+        $type2 = [
+            '2255' => 'Нештатный сотрудник', '2249' => 'Агент', '21120' => 'Ассистанс', '2250' => 'Банк', '789121' => 'Брокер',
+            '800001' => 'Военкомат', '1735601' => 'Индивидуальный предприниматель', '2252' => 'Контрагент', '146320' => 'ЛПУ', '2253' => 'Медицинское учреждение',
+            '1788881' => 'Сотрудник коммеска', '221079' => 'Страховщик / Перестраховщик', '225355' => 'Суд', '2260' => 'Филиалы/Подразделение', '2257' => 'Штатный содрудник',
+        ];
+        $searchingResult = $kias->userCicSearchSubject($request->document['iin'], $request->document['firstName'],
             $request->document['lastName'], $request->document['parentName'], $request->document['classISN'], 'N');
-//        dd($searchingResult);
+        if(count($searchingResult->result) === 0){
+            $searchingResult = $kias->userCicSearchSubject($request->document['iin'], $request->document['firstName'],
+                $request->document['lastName'], $request->document['parentName'], $request->document['classISN'], 'Y');
+            if($searchingResult->error){
+                $success = false;
+                $error .= (string)$searchingResult->error->text;
+                $result = [
+                    'success' => $success,
+                    'error' => (string)$error
+                ];
+                return response()->json($result)->withCallback($request->input('callback'));
+            }
+//            dd(get_object_vars( $searchingResult->ROWSET->row->ISN));
+            if(empty(get_object_vars($searchingResult->ROWSET->row->ISN))){
+                $subject = $searchingResult->ROWSET->row;
+                $saveSubject = $kias->userCicSaveSubject($subject->IIN ? $subject->IIN : '', $subject->FIRSTNAME ? $subject->FIRSTNAME : '',
+                    $subject->LASTNAME ? $subject->LASTNAME : '',$subject->PARENTNAME ? $subject->PARENTNAME : '', $subject->BIRTHDAY ? $subject->BIRTHDAY : '',
+                    $subject->JURIDICAL ? $subject->JURIDICAL : '', $subject->RESIDENT ? $subject->RESIDENT  : '', $subject->SEXID ? $subject->SEXID : '',
+                    $subject->COUNTRYISN ? $subject->COUNTRYISN : '');
+                array_push($result, [
+                    'lastName' => get_object_vars($subject->LASTNAME) ? get_object_vars($subject->LASTNAME)[0] : null,
+                    'firstName' => get_object_vars($subject->FIRSTNAME) ? get_object_vars($subject->FIRSTNAME)[0] : null,
+                    'parentName' => get_object_vars($subject->PARENTNAME) ? get_object_vars($subject->PARENTNAME)[0] : null,
+                    'birthday' => get_object_vars($subject->BIRTHDAY) ? get_object_vars($subject->BIRTHDAY)[0] : null,
+                    'iin' => get_object_vars($subject->IIN) ? get_object_vars($subject->IIN)[0] : null,
+                    'classIsn' => get_object_vars($result1->CLASSISN) ? $type2[get_object_vars($result1->CLASSISN)[0]] : 'Контрагент',
+                    'isn' => get_object_vars($subject->ISN) ? get_object_vars($subject->ISN)[0] : null,
+                ]);
+                return response()->json([
+                    'result' => $result
+                ]);
+            }
+        }
         if($searchingResult->error){
             $success = false;
             $error .= (string)$searchingResult->error->text;
@@ -892,11 +926,6 @@ class DocumentManagementController extends Controller
             ];
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        $type2 = [
-            '2255' => 'Нештатный сотрудник', '2249' => 'Агент', '21120' => 'Ассистанс', '2250' => 'Банк', '789121' => 'Брокер',
-            '800001' => 'Военкомат', '1735601' => 'Индивидуальный предприниматель', '2252' => 'Контрагент', '146320' => 'ЛПУ', '2253' => 'Медицинское учреждение',
-            '1788881' => 'Сотрудник коммеска', '221079' => 'Страховщик / Перестраховщик', '225355' => 'Суд', '2260' => 'Филиалы/Подразделение', '2257' => 'Штатный содрудник',
-        ];
         if(count($searchingResult->ROWSET->row) > 1){
             if(count($searchingResult->ROWSET->row) >= 20) {
                 for($i=0; $i<20; $i++){
@@ -916,7 +945,7 @@ class DocumentManagementController extends Controller
                     'birthday' => get_object_vars($result1[$i]->BIRTHDAY) ? get_object_vars($result1[$i]->BIRTHDAY)[0] : null,
                     'iin' => get_object_vars($result1[$i]->IIN) ? get_object_vars($result1[$i]->IIN)[0] : null,
                     'classIsn' => get_object_vars($result1[$i]->CLASSISN) ? $type2[get_object_vars($result1[$i]->CLASSISN)[0]] : null,
-                    'isn' => get_object_vars($result1[$i]->IIN) ? get_object_vars($result1[$i]->ISN)[0] : null,
+                    'isn' => get_object_vars($result1[$i]->ISN) ? get_object_vars($result1[$i]->ISN)[0] : null,
                 ]);
             }
         } elseif (count($searchingResult->ROWSET->row) === 1){
@@ -928,11 +957,12 @@ class DocumentManagementController extends Controller
                 'birthday' => get_object_vars($result1->BIRTHDAY) ? get_object_vars($result1->BIRTHDAY)[0] : null,
                 'iin' => get_object_vars($result1->IIN) ? get_object_vars($result1->IIN)[0] : null,
                 'classIsn' => get_object_vars($result1->CLASSISN) ? $type2[get_object_vars($result1->CLASSISN)[0]] : null,
-                'isn' => get_object_vars($result1->IIN) ? get_object_vars($result1->ISN)[0] : null,
+                'isn' => get_object_vars($result1->ISN) ? get_object_vars($result1->ISN)[0] : null,
             ]);
         }
         return response()->json([
             'result' => $result
         ]);
     }
+
 }

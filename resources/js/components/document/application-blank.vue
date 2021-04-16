@@ -32,6 +32,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">Куратор документа:</label>
+                                <div class="col-md-8">
+                                    <input type="text" v-model="results.emplName"
+                                           class="form-control" readonly>
+                                </div>
+                            </div>
                             <div class="row justify-content-between pt-4">
                                 <div>
                                     <label>Дата рег.</label>
@@ -56,27 +63,27 @@
                                         </date-picker>
                                     </div>
                                 </div>
-                                <div v-if="stage">
+                                <div>
                                     <label>Статус</label>
                                     <div>
-                                        <input type="text" v-model="status"
+                                        <input type="text" v-model="results.status"
                                                class="form-control" readonly>
                                     </div>
                                 </div>
-                                <div v-if="stage">
+                                <div>
                                     <label>Стадия</label>
                                     <div>
-                                        <input type="text" v-model="stage"
+                                        <input type="text" v-model="results.stage"
                                                class="form-control" readonly>
                                     </div>
                                 </div>
-                                <div v-if="!stage">
-                                    <label>Статус</label>
-                                    <div>
-                                        <input type="text" v-model="results.statusName"
-                                               class="form-control" readonly>
-                                    </div>
-                                </div>
+<!--                                <div v-if="!stage">-->
+<!--                                    <label>Статус</label>-->
+<!--                                    <div>-->
+<!--                                        <input type="text" v-model="results.statusName"-->
+<!--                                               class="form-control" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -235,11 +242,11 @@
                 </div>
                 <div class="pt-3" v-show="results.docParam.showRemark === 'Y'">
                     <div class="row ml-1 pb-2">Примечание</div>
-                    <textarea type="text pt-2 pb-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
+                    <textarea v-model="results.showRemark" type="text pt-2 pb-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
                 </div>
                 <div class="pt-3" v-show="results.docParam.showRemark2 === 'Y'">
                     <div class="row ml-1">Доп. Примечание</div>
-                    <textarea type="text pt-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
+                    <textarea v-model="results.showRemark2" type="text pt-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-3">
@@ -404,8 +411,6 @@
                 sendOutForm: false,
                 type: 1,
                 toForm: false,
-                status: '',
-                stage: '',
                 fillIn: false,
                 relationTo: [],
                 duties: [],
@@ -482,16 +487,16 @@
                 this.extraLoading = true;
                 this.annul = true;
                 this.addChange = false;
+                this.results.status = '2515'
                 let data = {
                     results: this.results,
                     docIsn: this.docIsn,
-                    status: '2515',
                 }
                 this.axios.post('/document/saveDocument', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.status = response.data.status;
-                            this.stage = response.data.stage;
+                            this.results.status = response.data.status;
+                            this.results.stage = response.data.stage;
                             this.extraLoading = false;
                             this.addChange = false;
                             this.sendOutForm = false;
@@ -562,8 +567,8 @@
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.status = response.data.status;
-                            this.stage = response.data.stage;
+                            this.results.status = response.data.status;
+                            this.results.stage = response.data.stage;
                             this.listDocIsn = response.data.DOCISN
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
@@ -621,17 +626,19 @@
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.sendOutForm = true;
-                            this.toForm = false;
-                            this.fillIn = false;
-                            this.listDocIsn = response.data.DOCISN
-                            this.result = response.data.error
-                            this.saveDoc = false;
+                                this.sendOutForm = true;
+                                this.toForm = false;
+                                this.fillIn = false;
+                                this.listDocIsn = response.data.DOCISN
+                                this.result = response.data.error
+                                this.saveDoc = false;
                         } else {
                             this.addChange = false;
+                            console.log('1');
                         }
                         this.loading = false;
                         this.addChange = true;
+                        console.log('2');
                     })
                     .catch(function (error) {
                         //alert(error.response);
@@ -639,16 +646,17 @@
             },
             sendOut(){
                 this.loading = true;
+                this.results.status = 2522
                 let data = {
                     docIsn: this.docIsn,
                     type: this.type,
-                    status: 2522,
+                    results: this.results,
                 }
                 this.axios.post('/sendOut', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.status = response.data.status;
-                            this.stage = response.data.stage;
+                            this.results.status = response.data.status;
+                            this.results.stage = response.data.stage;
                             this.loading = false;
                             this.addChange = true;
                             this.sendOutForm = false;
