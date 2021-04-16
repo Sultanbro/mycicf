@@ -323,7 +323,8 @@ class CoordinationController extends Controller
                         if ($row->classisn == 1784771 || $row->classisn == 1920831) {
                             $doc_row_inner[(string)$row->orderno][] = array(
                                 'ISN' => (string)$row->value,
-                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
+                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value,
+                                'ClassISN' => (string)$row->classisn,
                             );
                         } else {
                             $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;

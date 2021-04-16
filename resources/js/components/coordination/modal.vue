@@ -238,14 +238,39 @@
                                                   class="resize modal-note width100" maxlength="2000"></textarea>
                                     </div>
 
-                                    <eds
-                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
-                                            ref="eds"
-                                            :sendSolution="sendSolution"
-                                            :coordination="coordination"
-                                            :doc_row_list_inner_other="doc_row_list_inner_other"
-                                            show-view="sign">
-                                    </eds>
+                                    <div v-if="Object.keys(doc_row_list_inner_other).length > 0">
+                                        <div v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831 || doc_row_list_inner_other[1][0].ClassISN == '1920831'">
+                                            <eds-order-document
+                                                    v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
+                                                    ref="eds"
+                                                    :sendSolution="sendSolution"
+                                                    :coordination="coordination"
+                                                    :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                    show-view="sign">
+                                            </eds-order-document>
+                                        </div>
+                                        <div v-else>
+                                            asdqwe
+                                            <eds
+                                                    v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
+                                                    ref="eds"
+                                                    :sendSolution="sendSolution"
+                                                    :coordination="coordination"
+                                                    :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                    show-view="sign">
+                                            </eds>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <eds
+                                                v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
+                                                ref="eds"
+                                                :sendSolution="sendSolution"
+                                                :coordination="coordination"
+                                                :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                show-view="sign">
+                                        </eds>
+                                    </div>
 
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">

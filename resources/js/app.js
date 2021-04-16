@@ -90,6 +90,8 @@ Vue.component('eds-od', require('./components/eds/eds-od').default);
 
 Vue.component('eds', require('./components/eds/eds').default);
 
+Vue.component('eds-order-document', require('./components/eds/eds-order-document.vue').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);
