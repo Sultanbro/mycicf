@@ -19,48 +19,89 @@ class EdsController extends Controller
     public function saveDocument(Request $request, KiasServiceInterface $kias) {
         //$test = $kias->getDocRowAttr(1920701,'');
         //dd($test);
-       $rv = [];
-        if($request->data){
-            $i = 1;
-           foreach($request->data as $info){
-               if($info['confirmed'] == 1){
-                   $rv[] = array(
-                       "valn$i" => $info['rv_isn'],
-                       //"valc$i" => '',
-                       //"vald$i" => date('d.m.Y'),
-                   );
-                   $i++;
-               }
-           }
-       }
-       if(count($rv) > 0){
-            $save = $kias->saveDocument($request->classISN,$request->emplISN,'',$rv,[]);
-            if(isset($save->error)){
+//       $rv = [];
+//        if($request->data){
+//            $i = 1;
+//           foreach($request->data as $info){
+//               if($info['confirmed'] == 1){
+//                   $rv[] = array(
+//                       "valn$i" => $info['rv_isn'],
+//                       //"valc$i" => '',
+//                       //"vald$i" => date('d.m.Y'),
+//                   );
+//                   $i++;
+//               }
+//           }
+//       }
+//       if(count($rv) > 0){
+//            $save = $kias->saveDocument($request->classISN,$request->emplISN,'',$rv,[]);
+//            if(isset($save->error)){
+//                $success = false;
+//                $error = (string)$save->error->text;
+//            } else {
+//                if(isset($save->DocISN)){
+//                    $buttonClick = $kias->buttonClick(intval($save->DocISN),'BUTTON1');
+//                    if(isset($buttonClick->error)){
+//                        $success = false;
+//                        $error = (string)$buttonClick->error->text;
+//                    } else {
+//                        foreach ($request->data as $info) {
+//                            $refund = Refund::find($info['id']);
+//                            if ($info['confirmed'] == 1) {
+//                                $refund->confirmed = 1;
+//                                $refund->main_doc_isn = $save->DocISN;
+//                            } else {
+//                                $refund->iin_fail = 1;
+//                            }
+//                            if ($refund->save()) {
+//                                $success = true;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//       }
+
+        $success = false;
+        $info = $request->data;
+        if($info['confirmed'] == 1){
+
+            $rv[] = array(
+                'isn' => 0,
+                'delete' => 0,
+                "valn1" => $info['rv_isn'],
+                //"valc$i" => '',
+                //"vald$i" => date('d.m.Y'),
+            );
+
+            $createLS = $kias->saveDocument($request->classISN,$request->emplISN,'',$rv,[]);
+            if(isset($createLS->error)){
                 $success = false;
-                $error = (string)$save->error->text;
+                $error = (string)$createLS->error->text;
             } else {
-                if(isset($save->DocISN)){
-                    $buttonClick = $kias->buttonClick(intval($save->DocISN),'BUTTON1');
+                if(isset($createLS->DocISN)){
+                    $buttonClick = $kias->buttonClick(intval($createLS->DocISN),'BUTTON1');
                     if(isset($buttonClick->error)){
                         $success = false;
                         $error = (string)$buttonClick->error->text;
                     } else {
-                        foreach ($request->data as $info) {
+                        //foreach ($request->data as $info) {
                             $refund = Refund::find($info['id']);
                             if ($info['confirmed'] == 1) {
                                 $refund->confirmed = 1;
-                                $refund->main_doc_isn = $save->DocISN;
+                                $refund->main_doc_isn = $createLS->DocISN;
                             } else {
                                 $refund->iin_fail = 1;
                             }
                             if ($refund->save()) {
                                 $success = true;
                             }
-                        }
+                        //}
                     }
                 }
             }
-       }
+        }
+
        return response()->json([
            'success' => isset($success) ? $success : true,
            'error' => isset($error) ? $error : ''
@@ -76,7 +117,6 @@ class EdsController extends Controller
                 $success = false;
                 $error = (string)$setStatus->error->text;
             } else {
-                dd($info['id']);
                 if(isset($setStatus->Status)){
                     $refund = Refund::find($info['id']);
                     if ($info['confirmed'] == 1) {

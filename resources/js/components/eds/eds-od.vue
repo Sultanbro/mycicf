@@ -237,6 +237,7 @@
                         if (response.data.success) {
                             this.loader(false);
                             this.checkContinue(index+1);
+                            //this.saveDocument(index);
                         } else {
                             alert(response.data.error);
                             this.checkContinue(index+1);
@@ -257,6 +258,21 @@
                     });
                 }
             },
+            saveDocument(index){
+                this.loader(true);
+                axios.post("/save_document", {
+                    classISN: this.classIsn,
+                    data: this.info[index],
+                    emplISN: this.emplIsn
+                }).then((response) => {
+                    if (response.data.success) {
+                        this.checkContinue(index+1);
+                    } else {
+                        this.loader(false);
+                    }
+                });
+            },
+
             saveFailStatus(){
 
             },
