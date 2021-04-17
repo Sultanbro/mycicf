@@ -164,6 +164,19 @@ class EdsController extends Controller
         ]);
     }
 
+    public function getPrintableOrderDocument(Request $request, KiasServiceInterface $kias){
+        $printable = isset($request->isn) ? $kias->getPrintableOrderDocument($request->isn, 174) : null;
+        if (isset($printable->Bytes, $printable->FileName)) {
+            $base64Document = str_replace("\n", '', (string)$printable->Bytes);
+            $success = true;
+        }
+
+        return response()->json([
+            'success' => isset($base64Document) ? true : false,
+            'result' => isset($base64Document) ? $base64Document : null
+        ]);
+    }
+
     public function saveEdsInfo(Request $request,KiasServiceInterface $kias){
         $data = $request->data;
         $response = $kias->cicSaveEDS($request->refIsn,$request->isn,$data['iin'],$data['name'],'',$data['tspDate'],$data['certificateValidityPeriod'],'');

@@ -427,7 +427,7 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getPrintableDoc($isn, $template, $classId)
+    public function getPrintableOrderDocument($isn, $template, $classId = 0)
     {
         return $this->request('GetPrintableDocument', [
             'ISN' => '',
@@ -435,10 +435,17 @@ class Kias implements KiasServiceInterface
             'ClassID' => $classId,
             'params' => [
                 'row' => [
-                    'paramName' => 'pISN',
-                    'paramType' => 'N',
-                    'paramValue' => $isn
-                ],
+                    [
+                        'paramName' => 'pISN',
+                        'paramType' => 'N',
+                        'paramValue' => $isn
+                    ],
+                    [
+                        'paramName' => 'pDocISN',
+                        'paramType' => 'N',
+                        'paramValue' => $isn
+                    ]
+                ]
             ],
         ]);
     }
