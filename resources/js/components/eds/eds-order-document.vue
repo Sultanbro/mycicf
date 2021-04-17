@@ -277,6 +277,7 @@
                 axios.post("/eds-by-isn", {
                     isn: attachmentIsn,
                     refISN: self.doc_row_list_inner_other[1][docIndex].ISN,
+                    type: 'D'
                 }).then((response) => {
                     if(response.data.success) {
                         var obj = response.data.result;

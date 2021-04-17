@@ -128,7 +128,7 @@ class EdsController extends Controller
     public function edsByIsn(Request $request,KiasServiceInterface $kias){
         $files = [];
         $ISN = isset($request->isn) ? $request->isn : '';
-        $type = isset($request->type) ? $request->type : '';
+        $type = isset($request->type) ? $request->type : 'A';
         $format = isset($request->edsType) ? $request->edsType : '';
         $refISN = isset($request->refISN) ? $request->refISN : '';
         $refID = isset($request->refID ) ? $request->refID  : '';
@@ -144,7 +144,7 @@ class EdsController extends Controller
             foreach ($sigFiles->ROWSET->row as $file) {
                 //$signedBase64 = base64_encode('192.168.1.36\FILESKIAS$\D\33\877\D33877881\3860996.sig');
                 if($refISN != '') {
-                    $attachment = $kias->getAttachmentData($refISN, intval($file->ISN), 'A');
+                    $attachment = $kias->getAttachmentData($refISN, intval($file->ISN), $type);
                     if (isset($attachment->FILEDATA, $attachment->FILENAME)) {
                         $signedBase64 = (string)$attachment->FILEDATA;
                     }
