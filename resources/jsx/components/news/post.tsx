@@ -188,7 +188,7 @@ export function Post({
       <Row>
         <Col md={24}>
           <CommentForm
-            post={post}
+            postId={post.postId}
             ref={commentForm}
             text={newCommentText}
             onCommendAdded={(res: any) => {
