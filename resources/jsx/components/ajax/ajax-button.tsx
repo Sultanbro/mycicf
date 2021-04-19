@@ -14,7 +14,7 @@ export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
   confirm?: boolean;
   confirmText?: string;
   files?: { [key: string]: FileEntry[] };
-  dataType: 'json' | 'formData';
+  dataType?: 'json' | 'formData';
 }
 
 export function AjaxButton<TReq, TRes>({
