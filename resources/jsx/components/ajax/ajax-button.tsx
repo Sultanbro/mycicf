@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import axios, { AxiosResponse, Method } from "axios";
-import { Button, Popconfirm, Tooltip } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
-import { ButtonProps } from "antd/lib/button/button";
-import { FileEntry } from "../../hooks/useFileReader";
+import React, { useState } from 'react';
+import axios, { AxiosResponse, Method } from 'axios';
+import { Button, Popconfirm, Tooltip } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { ButtonProps } from 'antd/lib/button/button';
+import { FileEntry } from '../../hooks/useFileReader';
 
 export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
   url: string;
@@ -14,37 +14,50 @@ export interface AjaxButtonProps<TReq, TRes> extends ButtonProps {
   confirm?: boolean;
   confirmText?: string;
   files?: { [key: string]: FileEntry[] };
+  dataType: 'json' | 'formData';
 }
 
 export function AjaxButton<TReq, TRes>({
-  url,
-  data,
-  onSuccess,
-  children,
-  method,
-  icon,
-  files = {},
-  disabled = false,
-  block = false,
-  type = "text",
-  confirm,
-  confirmText,
-}: AjaxButtonProps<TReq, TRes>) {
+                                         url,
+                                         data,
+                                         onSuccess,
+                                         children,
+                                         method,
+                                         icon,
+                                         files = {},
+                                         disabled = false,
+                                         block = false,
+                                         dataType = 'json',
+                                         type = 'text',
+                                         confirm,
+                                         confirmText
+                                       }: AjaxButtonProps<TReq, TRes>) {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState<any>(null);
 
-  let formData = new FormData();
-  let hasFiles = Object.keys(files).length > 0;
-  if (hasFiles) {
-    for (let [key, value] of Object.entries(data)) {
-      formData.append(key, value);
-    }
+  let requestData: any;
+  let hasFiles = false;
 
-    for (let [key, value] of Object.entries(files)) {
-      for (let entry of value) {
-        formData.append(key, entry.file, entry.file.name);
+  switch (dataType) {
+    case 'formData':
+      requestData = new FormData();
+      hasFiles = Object.keys(files).length > 0;
+      if (hasFiles) {
+        for (let [key, value] of Object.entries(data)) {
+          requestData.append(key, value);
+        }
+
+        for (let [key, value] of Object.entries(files)) {
+          for (let entry of value) {
+            requestData.append(key, entry.file, entry.file.name);
+          }
+        }
       }
-    }
+      break;
+
+    case 'json':
+      requestData = data;
+      break;
   }
 
   let onClick = () => {
@@ -52,7 +65,7 @@ export function AjaxButton<TReq, TRes>({
     if (hasFiles) {
       // TODO Bad practice
       axios
-        .post(url, formData)
+        .post(url, requestData)
         .then((res) => {
           onSuccess(res);
           setLoading(false);
@@ -66,7 +79,7 @@ export function AjaxButton<TReq, TRes>({
         .request({
           url,
           method,
-          data,
+          data
         })
         .then((res) => {
           onSuccess(res);
@@ -85,11 +98,11 @@ export function AjaxButton<TReq, TRes>({
       <Popconfirm
         title={confirmText}
         onConfirm={onClick}
-        okText="Да"
-        cancelText="Нет"
+        okText='Да'
+        cancelText='Нет'
       >
         <Button
-          type={loading ? "ghost" : type}
+          type={loading ? 'ghost' : type}
           loading={loading}
           block={block}
           disabled={disabled}
@@ -102,7 +115,7 @@ export function AjaxButton<TReq, TRes>({
   } else {
     btn = (
       <Button
-        type={loading ? "ghost" : type}
+        type={loading ? 'ghost' : type}
         loading={loading}
         block={block}
         disabled={disabled}
@@ -117,9 +130,9 @@ export function AjaxButton<TReq, TRes>({
   let errorBtn = (error: any) => (
     <Tooltip title={error.message}>
       <Button
-        type="link"
+        type='link'
         style={{
-          color: "red",
+          color: 'red'
         }}
         loading={loading}
         block={block}
