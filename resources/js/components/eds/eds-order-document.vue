@@ -5,7 +5,7 @@
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket('check')">Выберите файл для проверки</button>
                 <div class="mt-2 mb-1" v-if="selectedFile != ''">Выбранный для проверки файл {{ selectedFile }}</div>
                 <div>
-                    <button class="btn btn-primary mt-2" v-on:click="checkSignedFilessss">Показать информацию о подписях</button>
+                    <button class="btn btn-primary mt-2" v-on:click="checkSignedFilesViewCheck" :disabled="loading">Показать информацию о подписях</button>
                 </div>
 
                 <div class="mt-2 mb-1" v-if="signedFileInfo.length > 0">
@@ -28,7 +28,7 @@
                     <label class="mt-1 mb-1 col-md-12">Пароль от ключа</label>
                     <input class="form-control mt-1 mb-1" placeholder="Введите пароль" type="password" v-model="sign.password" style="width: 150px;margin: 0 auto;">
                 </div>
-                <button class="btn btn-primary mt-2" v-on:click="getToken()">Подписать</button>
+                <button class="btn btn-primary mt-2" v-on:click="getToken()" :disabled="loading">Подписать</button>
             </div>
         </div>
         <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
@@ -273,7 +273,6 @@
             getSignedFile(attachmentIsn, docIndex){    // docIsn - isn документа   Берем подписанный файл из киаса
                 let self = this;
                 self.signedFileInfo = [];
-                self.loader(true);
                 axios.post("/eds-by-isn", {
                     isn: attachmentIsn,
                     refISN: self.doc_row_list_inner_other[1][docIndex].ISN,
@@ -296,7 +295,6 @@
             },
             checkSignedFile(url, signedBase64, attachmentDocIsn, docIndex){        // Посмотреть подписанный файл (достаем данные подписи)
                 let self = this;
-                self.loader(true);
                 if(url != ''){
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
                     self.loader(true);
@@ -343,9 +341,32 @@
                     alert('Выберите пожалуйста файл');
                 }
             },
-            checkSignedFilessss(){
+            sendEdsInfoToKias(docIsn, signedBase64, docIndex){ // docIsn - isn документа
+                let self = this;
+                let obj = self.signedFileInfo;
+                self.loader(true);
+                for (let index in obj) {
+                    axios.post("/save_eds_info", {
+                        data: obj[index],
+                        isn: docIsn,
+                        refIsn: self.doc_row_list_inner_other[1][docIndex].ISN    //self.isn
+                    }).then((response) => {
+                        if (response.data.success) {
+                            if(docIndex < self.doc_row_list_inner_other[1].length-1){
+                                self.getToken(docIndex+1);
+                            } else {
+                                self.loader(false);
+                            }
+                        } else {
+                            alert(response.data.error);
+                        }
+                    });
+                }
+            },
+            checkSignedFilesViewCheck(){
                 this.signedFileInfo = [];
                 let self = this;
+                self.loader(true);
                 if(self.selectedFile != '') {
                     var webSocket = new WebSocket('wss://127.0.0.1:13579');
                     self.loader(true);
@@ -380,26 +401,6 @@
                     }
                 } else {
                     alert('Выберите пожалуйста файл');
-                }
-            },
-            sendEdsInfoToKias(docIsn, signedBase64, docIndex){ // docIsn - isn документа
-                let self = this;
-                let obj = self.signedFileInfo;
-                self.loader(true);
-                for (let index in obj) {
-                    axios.post("/save_eds_info", {
-                        data: obj[index],
-                        isn: docIsn,
-                        refIsn: self.doc_row_list_inner_other[1][docIndex].ISN    //self.isn
-                    }).then((response) => {
-                        if (response.data.success) {
-                            if(docIndex < self.doc_row_list_inner_other[1].length-1){
-                                self.getToken(docIndex+1);
-                            }
-                        } else {
-                            alert(response.data.error);
-                        }
-                    });
                 }
             },
             clearData(){
