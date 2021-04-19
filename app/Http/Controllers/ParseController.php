@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Http\Request;
@@ -2580,10 +2581,13 @@ class ParseController extends Controller
         return view('parse.addCompany');
     }
     public function postAddCompany(Request $request){
-        $this->validate($request, [
-            'fullname' => 'required|unique:insurance_company|max:255',
-            'shortname' => 'required|unique:insurance_company|max:255',
-        ]);
+        try {
+            $this->validate($request, [
+                'full_name' => 'required|unique:insurance_company|max:255',
+                'short_name' => 'required|unique:insurance_company|max:255',
+            ]);
+        } catch (ValidationException $e) {
+        }
 
         $model = new InsuranceCompany();
         $model->full_name = $request->fullname;
@@ -2591,9 +2595,9 @@ class ParseController extends Controller
         if($model->save()){
             $previousName = new PreviousName();
             $previousName->company_id = $model->id;
-            $previousName->name = $request->full_name;
+            $previousName->name = $request->fullname;
             if($previousName->save()){
-                echo 'Успешно добавлена';
+                return response()->json(['success' => true]);
             }else{
                 $model->delete();
                 echo 'Ошибка во время добавления';
@@ -2646,6 +2650,7 @@ class ParseController extends Controller
             $previousName->name = $request->fullname;
             $previousName->save();
             $result .= 'Добавлена полное наименование<br>';
+            return response()->json(['success' => true]);
         }
 
         if($request->shortname != ''){
@@ -2653,8 +2658,9 @@ class ParseController extends Controller
             $model->short_name = $request->shortname;
             $model->save();
             $result .= 'Добавлена наименование для вывода';
+            return response()->json(['success' => true]);
         }
-        return $result;
+
     }
     public function getEditProduct(){
         $list = $this->getProductListWithId();
