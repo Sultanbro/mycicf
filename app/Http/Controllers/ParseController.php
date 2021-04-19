@@ -2641,7 +2641,7 @@ class ParseController extends Controller
         }
         $id = $request->company;
         if($request->fullname == '' && $request->shortname == ''){
-            return  'как миннимум одно из двух текстовых  полей должна быть заполнена';
+            return  'как миннимум одно из двух текстовых  полей должно быть заполнено';
         }
         $result = '';
         if($request->fullname != ''){
@@ -2649,18 +2649,16 @@ class ParseController extends Controller
             $previousName->company_id = $id;
             $previousName->name = $request->fullname;
             $previousName->save();
-            $result .= 'Добавлена полное наименование<br>';
-            return response()->json(['success' => true]);
+            $result .= 'Добавлено полное наименование. ';
         }
 
         if($request->shortname != ''){
             $model = InsuranceCompany::findOrFail($id);
             $model->short_name = $request->shortname;
             $model->save();
-            $result .= 'Добавлена наименование для вывода';
-            return response()->json(['success' => true]);
+            $result .= 'Добавлено наименование для вывода.';
         }
-
+        return response()->json(['success' => true, 'result' => $result]);
     }
     public function getEditProduct(){
         $list = $this->getProductListWithId();
@@ -2679,7 +2677,7 @@ class ParseController extends Controller
         if($request->fullname == '' && $request->shortname == ''){
             return response()->json([
                 'success' => false,
-                'error' => 'как миннимум одно из двух текстовых  полей должна быть заполнена'
+                'error' => 'как миннимум одно из двух текстовых  полей должно быть заполнено'
             ]);
         }
         $result = '';
