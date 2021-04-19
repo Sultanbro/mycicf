@@ -393,7 +393,7 @@ class Kias implements KiasServiceInterface
 
     public function getEmplMotivation($isn, $begin)
     {
-        return $this->request('User_CicGetEmplMotivation', [
+        return $this->request('User_CicGetEmplMotivations', [
             'EmplISN' => $isn,
             'Month'   => date('m', strtotime($begin)),
             'Year'    => date('Y', strtotime($begin)),
