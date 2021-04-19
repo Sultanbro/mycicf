@@ -186,10 +186,10 @@ class Kias implements KiasServiceInterface
                 $date  = $d->format('d-m-Y_H-i-s-u');
 
                 // TODO Use Storage::disk instead
-                file_put_contents(
-                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
-                    $xml->asXml()
-                );
+//                file_put_contents(
+//                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+//                    $xml->asXml()
+//                );
             }
         }
 
@@ -233,10 +233,10 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
-                file_put_contents(
-                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
-                    $xml->asXML()
-                );
+//                file_put_contents(
+//                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
+//                    $xml->asXML()
+//                );
             }
         }
 
