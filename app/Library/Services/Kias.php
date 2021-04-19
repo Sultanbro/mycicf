@@ -427,23 +427,24 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getPrintableOrderDocument($isn, $template, $classId = 0)
+    public function getPrintableOrderDocument($data, $dataParams)
     {
         return $this->request('GetPrintableDocument', [
-            'ISN' => '',
-            'TemplateISN' => $template,
-            'ClassID' => $classId,
+            'ISN' => $data['ISN'],
+            'TemplateISN' => $data['TemplateISN'],
+            'ClassID' => $data['ClassID'],
+            'Remark' => $data['Remark'],
             'params' => [
                 'row' => [
                     [
-                        'paramName' => 'pISN',
-                        'paramType' => 'N',
-                        'paramValue' => $isn
+                        'paramName' => $dataParams[0]->paramName,
+                        'paramType' => $dataParams[0]->paramType,
+                        'paramValue' => $dataParams[0]->paramValue
                     ],
                     [
-                        'paramName' => 'pDocISN',
-                        'paramType' => 'N',
-                        'paramValue' => $isn
+                        'paramName' => $dataParams[1]->paramName,
+                        'paramType' => $dataParams[1]->paramType,
+                        'paramValue' => $dataParams[1]->paramValue
                     ]
                 ]
             ],
@@ -652,10 +653,11 @@ class Kias implements KiasServiceInterface
 //        ]);
 //    }
 
-    public function getPrintableDocumentList($contract_number){
+    public function getPrintableDocumentList($contract_number, $doc = 0){
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
-            'TemplateISN' => ''
+            'TemplateISN' => '',
+            'Doc' => $doc
         ]);
     }
 

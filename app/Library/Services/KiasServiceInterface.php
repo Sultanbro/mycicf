@@ -313,5 +313,5 @@ interface KiasServiceInterface
      * @param $classId
      * @return mixed
      */
-    public function getPrintableOrderDocument($isn, $template, $classId);
+    public function getPrintableOrderDocument($data, $dataParams);
 }

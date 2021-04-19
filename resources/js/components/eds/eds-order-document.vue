@@ -416,6 +416,9 @@
                 this.loading = show;
             },
         },
+        mounted(){
+            //this.getDocumentPrintableForm(0);
+        }
     }
 </script>
 

@@ -165,12 +165,18 @@ class EdsController extends Controller
     }
 
     public function getPrintableOrderDocument(Request $request, KiasServiceInterface $kias){
-        $printable = isset($request->isn) ? $kias->getPrintableOrderDocument($request->isn, 174) : null;
+        $dataParams = [];
+        $printableList = (array)$kias->getPrintableDocumentList($request->isn, 1)->ROWSET->row;
+        if(isset($printableList['params']->row)){
+            foreach($printableList['params']->row as $item){
+                $dataParams[] = $item;
+            }
+        }
+        $printable = isset($request->isn) ? $kias->getPrintableOrderDocument($printableList, $dataParams) : null;
         if (isset($printable->Bytes, $printable->FileName)) {
             $base64Document = str_replace("\n", '', (string)$printable->Bytes);
             $success = true;
         }
-
         return response()->json([
             'success' => isset($base64Document) ? true : false,
             'result' => isset($base64Document) ? $base64Document : null
