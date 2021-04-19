@@ -117,6 +117,7 @@ export function AddPostForm({ onAddPost }: AddPostFormProps) {
       'postVideos[]': videos,
       'postDocuments[]': docs
     }}
+    dataType="formData"
     icon={<SendOutlined />}
     disabled={!showPublishButton}
     type='default'
