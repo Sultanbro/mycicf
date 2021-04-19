@@ -2650,7 +2650,7 @@ class ParseController extends Controller
             $previousName->name = $request->fullname;
             $previousName->save();
             $result .= 'Добавлена полное наименование<br>';
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'result' => $result]);
         }
 
         if($request->shortname != ''){
@@ -2658,7 +2658,7 @@ class ParseController extends Controller
             $model->short_name = $request->shortname;
             $model->save();
             $result .= 'Добавлена наименование для вывода';
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'result' => $result]);
         }
 
     }
