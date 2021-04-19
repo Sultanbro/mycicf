@@ -1,7 +1,7 @@
-import { Spin } from "antd";
-import React, { useState } from "react";
-import axios, { AxiosRequestConfig, AxiosResponse, Method } from "axios";
-import { AjaxCacheSettings } from "./types";
+import { Spin } from 'antd';
+import React, { useState } from 'react';
+import axios, { AxiosRequestConfig, AxiosResponse, Method as HTTPMethod } from 'axios';
+import { AjaxCacheSettings } from './types';
 
 export interface AjaxPropsChildrenArgs<TRes> {
   response: AxiosResponse<TRes>;
@@ -12,15 +12,15 @@ export interface AjaxPropsChildrenArgs<TRes> {
 export interface AjaxProps<TRes> extends AxiosRequestConfig {
   loading?: React.ReactNode;
   children: ({
-    response,
-    refetch,
-  }: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
+               response,
+               refetch
+             }: AjaxPropsChildrenArgs<TRes>) => React.ReactNode;
 
   cache?: AjaxCacheSettings | boolean;
 }
 
 export interface AjaxRefetchArgs {
-  method?: Method;
+  method?: HTTPMethod;
   url?: string;
   params: any;
   data: any;
@@ -36,7 +36,7 @@ function flushExpiredCache() {
       continue;
     }
 
-    if (!key.startsWith("ajax__cache__")) {
+    if (!key.startsWith('ajax__cache__')) {
       continue;
     }
 
@@ -64,36 +64,36 @@ function flushExpiredCache() {
 }
 
 export function Ajax<T>({
-  url,
-  method,
-  params,
-  data,
-  children,
-  headers,
-  cache,
-  loading = <Spin />,
-}: AjaxProps<T>): React.ReactNode {
+                          url,
+                          method,
+                          params,
+                          data,
+                          children,
+                          headers,
+                          cache,
+                          loading = <Spin />
+                        }: AjaxProps<T>): React.ReactNode {
   let [response, setResponse] = useState<AxiosResponse<T>>();
   let [error, setError] = useState<Error>();
 
   flushExpiredCache();
 
   function refetch({
-    method,
-    url,
-    params,
-    data,
-    previousData,
-    callback,
-  }: AjaxRefetchArgs) {
-    console.log("refetching", { method, url, params, data });
+                     method,
+                     url,
+                     params,
+                     data,
+                     previousData,
+                     callback
+                   }: AjaxRefetchArgs) {
+    console.log('refetching', { method, url, params, data });
     axios
       .request<T>({
         method,
         url,
         params,
         headers,
-        data,
+        data
       })
       .then((res) => {
         if (!callback) {
@@ -110,26 +110,26 @@ export function Ajax<T>({
   let cacheSettings: AjaxCacheSettings = {
     enabled: false,
     lifetime: 10 * 1000,
-    storage: "localstorage",
+    storage: 'localstorage'
   };
 
   if (cache) {
-    if (typeof cache === "boolean") {
+    if (typeof cache === 'boolean') {
       cacheSettings = {
         enabled: cache,
         lifetime: 10 * 1000,
-        storage: "localstorage",
+        storage: 'localstorage'
       };
     } else {
       cacheSettings = {
         ...cacheSettings,
-        ...cache,
+        ...cache
       };
     }
 
     if (cacheSettings.enabled) {
       let cacheKey =
-        "ajax__cache__" + JSON.stringify({ method, url, params, data });
+        'ajax__cache__' + JSON.stringify({ method, url, params, data });
       console.log({ method, url, params, data });
       let item = localStorage.getItem(cacheKey);
       if (item) {
@@ -159,11 +159,11 @@ export function Ajax<T>({
       method,
       url,
       params,
-      data,
+      data
     })}`;
     let result = JSON.stringify({
       expires: Date.now() + cacheSettings.lifetime,
-      data: response,
+      data: response
     });
     localStorage.setItem(cacheKey, result);
   }
@@ -173,7 +173,7 @@ export function Ajax<T>({
     url,
     params,
     headers,
-    data,
+    data
   };
 
   return (
@@ -181,30 +181,27 @@ export function Ajax<T>({
       {children({
         response,
         refetch: ({
-          params = inputData.params,
-          data = inputData.data,
-          previousData,
-          callback,
-        }: any = {}) => {
+                    params = inputData.params,
+                    data = inputData.data,
+                    previousData,
+                    callback
+                  }: any = {}) => {
           refetch({ method, url, params, data, previousData, callback });
-        },
+        }
       })}
     </div>
   );
 }
 
 // @ts-ignore
-Ajax.GET = <TRes extends any>({ children, ...props }: AjaxProps<TRes>) => (
-  <Ajax<TRes> method="GET" {...props}>
-    {children}
-  </Ajax>
-);
+Ajax.GET = <TRes extends any>({ children, ...props }: AjaxProps<TRes>) => <Ajax<TRes> method='GET' {...props}>
+  {children}
+</Ajax>;
 // @ts-ignore
-Ajax.POST = <TRes extends any>({ children, ...props }: AjaxProps<TRes>) => (
-  <Ajax<TRes> method="POST" {...props}>
-    {children}
-  </Ajax>
-);
+Ajax.POST = <TRes extends any>({ children, ...props }: AjaxProps<TRes>) => <Ajax<TRes> method='POST' {...props}>
+  {children}
+</Ajax>
+;
 // @ts-ignore
 Ajax.PUT = <TRes extends any>({ children, ...props }: AjaxProps<TRes>) => <Ajax<TRes>
   method='PUT' {...props}>{children}</Ajax>;

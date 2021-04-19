@@ -57,6 +57,13 @@ mix.js('resources/js/app.js', 'public/js')
     //.js('resources/js/agreement.js', 'public/js')
     .sass('resources/sass/documentation/style.scss', 'public/css/documentation')
     .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/admin.scss', 'public/css')
+    .sass('resources/sass/admin_head.scss', 'public/css')
+    .sass('resources/sass/main.scss', 'public/css')
+    .sass('resources/sass/mobile.scss', 'public/css')
+    .sass('resources/sass/styles.scss', 'public/css')
+    .sass('resources/sass/style_parse.scss', 'public/css')
+    .sass('resources/sass/util.scss', 'public/css')
     .reactTypeScript('resources/jsx/app.ts', 'public/jsx')
     .onlyIfChanged();
 

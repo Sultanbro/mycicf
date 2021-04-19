@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Booking;
 use App\Http\Controllers\Controller;
 use Eloquent;
 use Illuminate\Console\Command;
@@ -33,7 +34,16 @@ class CodeAnalyzeCommand extends Command
      * @return void
      * @throws ReflectionException
      */
-    public function handle()
+    public function handle(\AddPostRequest $request)
     {
+        try {
+            // ...
+        } catch (\Exception $e) {
+
+        } catch (\HttpException $e) {
+
+        } finally {
+
+        }
     }
 }

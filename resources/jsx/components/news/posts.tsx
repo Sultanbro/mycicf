@@ -41,7 +41,8 @@ export function Posts({}: PostsProps) {
              * @deprecated
              */
             let loadMore = () => {
-                let lastIndex = Math.min(...posts.map((post) => post.postId));
+              let postIds = posts.map((post) => post.postId);
+              let lastIndex = Math.min(...postIds);
                 setLoading(true);
                 refetch({
                     previousData: posts,

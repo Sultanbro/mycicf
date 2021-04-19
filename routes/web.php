@@ -439,13 +439,6 @@ Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-Route::get('test', function () {
-    return view('test');
-});
-Route::get('test3', function () {
-    echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
-});
-
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');
     Route::post('/login', 'Documentation\DocumentationAuthController@login');
