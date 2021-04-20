@@ -833,11 +833,13 @@ class ProductsController extends Controller
     public function fullList(){
         $products = [];
         foreach (ExpressProduct::orderBy('ordinal','asc')->get() as $product){
-            array_push($products, [
-                'url' => "/full/calc/{$product->id}/0",
-                'name' => $product->name,
-                'isn' => $product->product_isn
-            ]);
+            if(isset($product->constr->id)) {
+                array_push($products, [
+                    'url' => "/full/calc/{$product->id}/0",
+                    'name' => $product->name,
+                    'isn' => $product->product_isn
+                ]);
+            }
         }
         return view('full.list', compact('products'));
     }
