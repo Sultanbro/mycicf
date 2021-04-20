@@ -355,6 +355,7 @@
                             if(docIndex < self.doc_row_list_inner_other[1].length-1){
                                 self.getToken(docIndex+1);
                             } else {
+                                seld.sendSolution(1);
                                 self.loader(false);
                             }
                         } else {
