@@ -26,6 +26,9 @@ class ProductsInfo extends Model
         $this->documents = "/storage/menu/{$fileName}";
     }
 
+    /*public function docFile(){
+        return $this->hasMany('App\DocFile', 'product_info_id', 'id');
+    }*/
 
 }
 

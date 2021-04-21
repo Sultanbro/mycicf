@@ -268,6 +268,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         Route::get('/productsinfo', 'ProductsInfoController@getView')->name('productsinfo');
         Route::post('/getItemList', 'ProductsInfoController@getItemsList');
+        Route::post('/productsinfo/showNameDocuments', 'ProductsInfoController@showNameDocuments');
+        Route::post('/productsinfo/showFullText', 'ProductsInfoController@showFullText');
+        Route::post('/productsinfo/searchName', 'ProductsInfoController@searchName');
+
         //PARSE
         Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
@@ -364,6 +368,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             //UNTITLED
             Route::get('/name', 'NameController@getView')->name('documentation');
             Route::post('/getItemsList', 'NameController@getItemsList');
+            Route::post('/getItemsFirst', 'NameController@getItemsFirst');
 
             Route::get('/report', 'ReportController@index')->name('report');
             Route::post('/getReport', 'ReportController@getReport');

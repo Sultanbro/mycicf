@@ -242,7 +242,8 @@ class ProductsInfoController extends Controller
                 'icon_url' => $item->icon_url,
                 'description' => $item->description,
                 'documents' => $item->documents,
-
+                'docfile' => $item->docfile,
+                'profile' => $item->profile
             ]);
         }
         return response()
@@ -307,4 +308,5 @@ class ProductsInfoController extends Controller
             $deleteModel->delete();
         }
     }
+
 }

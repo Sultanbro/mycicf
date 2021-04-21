@@ -1881,6 +1881,9 @@ body {
 .width-100-imp{
 	width: 100% !important;
 }
+.width-40-imp{
+    width: 50% !important;
+}
 .data-chart-pie{
 	width: 100% !important;
 }
@@ -2737,6 +2740,12 @@ textarea::-webkit-scrollbar-thumb {
     }
     .w-100{
         width:100%!important;
+    }
+    .w-90{
+        width:90%!important;
+    }
+    .h-90{
+        height:90%!important;
     }
     .flex-col-str {
         flex-direction: column;

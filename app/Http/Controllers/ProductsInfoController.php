@@ -7,6 +7,7 @@ use App\PdfFiles;
 use App\ProductsInfo;
 use App\SvgFiles;
 use App\UploadDocs;
+use App\DocFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -101,6 +102,7 @@ class ProductsInfoController extends Controller
 
     public function getItemsList(Request $request) {
         $items = ProductsInfo::where('parent_id', $request->parentId)->get();
+
         $result = [];
         foreach ($items as $item) {
             array_push($result, [
@@ -110,8 +112,24 @@ class ProductsInfoController extends Controller
                 'icon_url' => $item->icon_url,
                 'description' => $item->description,
                 'documents' => $item->documents,
+                'dopinform' => $item->dopinform,
+                'docfile' => $item->docfile,
+                'profile' => $item->profile,
+                'franzhiza' => $item->franshiza,
                 'childs' => [],
-                'opened' => false
+                'opened' => false,
+
+            ]);
+        }
+        return $result;
+    }
+    public function getItemsFirst(Request $request){
+        $items = ProductsInfo::where('parent_id', $request->parentId)->first();
+        //dd($request);
+        $result = [];
+        foreach ($items as $item) {
+            array_push($result, [
+                'label' => $item->label,
             ]);
         }
         return $result;
@@ -120,8 +138,48 @@ class ProductsInfoController extends Controller
     public function getView() {
         return view('productsinfo');
     }
-    public function showNameDocuments(Request $request)
-    {
-        //$c = ProductsInfo::select('docfile')->where('$request->')
+    public function showNameDocuments(Request $request){
+        $res = DocFile::where('product_info_id', $request->productInfoId)->get();
+        $result =[];
+        foreach($res as $prod){
+            array_push($result, [
+//                'id' => $prod->id,
+//                'product_id' => $prod->product_info_id,
+                'docfile' => $prod->docfile,
+                'profile' => $prod->profile
+            ]);
+        }
+        return response()->json([
+            'result' => $result
+        ]);
     }
+
+    public function searchName(Request $request){
+            $nameDoc = DocFile::where('docfile', 'like', "%". $request->searchId . "%")->get();
+            if(count($nameDoc) !==0){
+                $success = true;
+                $result= [];
+                foreach($nameDoc as $name){
+                    array_push($result, [
+                        'docfile' => $name->docfile,
+                        'profile' => $name->profile
+                    ]);
+                }
+                return response()->json([
+                    'success' => $success,
+                    'result' => $result
+                ]);
+            }
+            else{
+                return response()->json([
+                    'success' => false,
+                    'result' => 'Ничего не найдено'
+                ]);
+            }
+    }
+
+
+
+
+
 }
