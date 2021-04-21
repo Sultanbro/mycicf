@@ -79,7 +79,7 @@ class DocumentManagementController extends Controller
             'CLASSISN' => $request->isn ? $request->isn : '',
             'DOCISN' => $request->docisn ? $request->docisn : '',
         ]);
-        dd($show);
+//        dd($show);
         $result = [];
         $contragent = [
             'fullname' => empty((string)$show->Doc->row->SUBJNAME) ? 'Контрагент' : $show->Doc->row->SUBJNAME,
@@ -1087,6 +1087,6 @@ class DocumentManagementController extends Controller
             $request->quotes['dateEnd'], $request->quotes['type'], $request->quotes['dateBegAction'], $request->quotes['dateEndAction'],
             $request->quotes['subdivision'], $request->quotes['curator'], $request->quotes['insuranceProduct'], $request->quotes['status'],
             $request->quotes['creationSource'] ? $request->quotes['creationSource'] : '', '1');
-        dd($searchingAgreement);
+//        dd($searchingAgreement);
     }
 }
