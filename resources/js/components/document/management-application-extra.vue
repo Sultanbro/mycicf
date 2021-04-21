@@ -7,6 +7,14 @@
                     <div class="row">
                         <div class="offset-md-4 col-md-8">
                             <div class="mb-4">
+                                <div v-if="idShow" class="form-group row">
+                                    <label class="col-md-4 col-form-label">Номер:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
@@ -305,33 +313,15 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <div v-if="docrow.fieldname === 'Период С' || docrow.fieldname === 'Период, с'">
+                                <div v-if="docrow.fieldname === 'Период С' || docrow.fieldname === 'Период, с' || docrow.fieldname === 'Период ПО' || docrow.fieldname === 'Период, по' || docrow.fieldname === 'Дата ПО'">
                                     <input class="form-control"
                                            type="tel"
                                            v-model="docrow.value" :disabled="addChange"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <div v-if="docrow.fieldname === 'Период ПО' || docrow.fieldname === 'Период, по'">
-                                    <input class="form-control"
-                                           type="tel"
-                                           v-model="docrow.value" :disabled="addChange"
-                                           v-mask="'##.##.####'"
-                                    />
-                                </div>
-                                <div v-if="docrow.fieldname === 'Дата ПО'">
-                                    <input class="form-control"
-                                           type="tel"
-                                           v-model="docrow.value" :disabled="addChange"
-                                           v-mask="'##.##.####'"
-                                    />
-                                </div>
-                                <div v-if="docrow.fieldname === 'Вид транспорта'">
+                                <div v-if="docrow.fieldname === 'Вид транспорта' || docrow.fieldname === 'Страна'">
                                     <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
-                                </div>
-                                <div v-if="docrow.fieldname === 'Страна'">
-                                    <input type="text"
-                                           v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Суточные (МРП)'">
                                     <input @keypress="onlyNumber" type="text"
@@ -378,7 +368,9 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-3">
-                        <button v-show="(results.docParam.button1caption === 'Заполнить СЗ' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Заполнить СЗ' && results.docParam.showbutton2 === 'Y')"
+                        <button v-show="(results.docParam.button1caption === 'Заполнить СЗ' && results.docParam.showbutton1 === 'Y') ||
+                        (results.docParam.button2caption === 'Заполнить СЗ' && results.docParam.showbutton2 === 'Y') ||
+                        (results.docParam.button3caption === 'Заполнить СЗ' && results.docParam.showbutton3 === 'Y')"
                                 v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
                             Заполнить СЗ
                         </button>
@@ -388,7 +380,8 @@
                         <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
                             Разослать на согласование
                         </button>
-                        <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
+                        <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
+                                        || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
                                 v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
@@ -445,20 +438,28 @@
                                 <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
-                            <div v-else-if="result.fullname === 'Лист согласования' && results.classisn === '1461771'">
-                                <div v-if="!result.value" class="input-group">
-                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
-<!--                                    <input type="text" class="form-control" v-model="result.val" placeholder="Поиск..." :disabled="addChange">-->
-<!--                                    <div class="input-group-append">-->
-<!--                                        <button class="btn btn-secondary" type="button">-->
-<!--                                            <i class="fa fa-search" @click="searchDocumentJournal"></i>-->
-<!--                                        </button>-->
+<!--                            <div v-else-if="result.fullname === 'Лист согласования' && results.classisn === '1461771'">-->
+<!--                                <div v-if="!result.val" class="input-group">-->
+<!--                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>-->
+<!--&lt;!&ndash;                                    <input type="text" class="form-control" v-model="result.val" placeholder="Поиск..." :disabled="addChange">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div class="input-group-append">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <button class="btn btn-secondary" type="button">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <i class="fa fa-search" @click="searchDocumentJournal"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--                                </div>-->
+<!--                                <div v-else-if="result.val" class="input-group">-->
+<!--                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}-->
+<!--&lt;!&ndash;                                        <i class="fa fa-search" @click="searchDocumentJournal"></i>&ndash;&gt;-->
 <!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <div v-else-if="result.fullname === 'Лист согласования'">
+                                <div v-if="!result.val">
+                                    <div class="pointer" scope="col" @click="OpenModal(listDocIsn)">{{listDocIsn}}</div>
                                 </div>
-                                <div v-else-if="result.val" class="input-group">
-                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}
-<!--                                        <i class="fa fa-search" @click="searchDocumentJournal"></i>-->
-                                    </div>
+                                <div v-else>
+                                    <div class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -557,6 +558,7 @@ export default {
             authorities: [],
             reasonDeprivation: [],
             counterJournal: '',
+            idShow: false,
         }
     },
     created() {
@@ -717,6 +719,7 @@ export default {
                     if(response.data.success) {
                         this.loading = false;
                         this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
                         this.fillIn = true;
@@ -788,12 +791,31 @@ export default {
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = false;
-                        this.fillIn = true;
-                        this.toForm = true;
-                        this.saveDoc = false;
+                        if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                            let dat = {
+                                docisn: this.docIsn,
+                                isn: this.results.classisn,
+                                button: '1',
+                            }
+                            this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                this.results.id = response.data.id;
+                                if(this.results.id.length > 0){
+                                    this.idShow = true;
+                                }
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            })
+                        } else {
+                            this.sendOutForm = false;
+                            this.fillIn = true;
+                            this.toForm = true;
+                            this.saveDoc = false;
+                        }
                     } else {
                         this.addChange = false;
+                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;

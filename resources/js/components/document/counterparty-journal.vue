@@ -5,6 +5,14 @@
                 <h4 class="text-center">{{results.className}}</h4>
                 <div class="flex-row jc-sb mt-3 mb-3">
                     <div class="col-md-8 offset-md-4">
+                        <div class="mb-4">
+                            <div v-if="idShow" class="form-group row">
+                                <label class="col-md-4 col-form-label">Номер:</label>
+                                <div class="col-md-8">
+                                    <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
+                                </div>
+                            </div>
+                        </div>
                         <div class="mb-4" v-for="result in results.result1">
                             <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
                                 <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
@@ -81,7 +89,7 @@
                         <div class="col-4 pt-4" v-for="docrow in orderedDocrows">
                             <div>
                                 <label>{{ docrow.fieldname }}</label>
-                                <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО работника ' || docrow.fieldname === 'ФИО Сотрудника' || docrow.fieldname === 'Возложить полномочия на:'">
+                                <div v-if="(docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО работника ' || docrow.fieldname === 'ФИО Сотрудника' || docrow.fieldname === 'Возложить полномочия на:') && results['classisn'] !== '1440561'">
                                     <treeselect
                                         v-model="docrow.value" :disabled="addChange" required
                                         :multiple="false"
@@ -89,7 +97,7 @@
                                         @select="changeSelected($event)"
                                         :disable-branch-nodes="true"/>
                                 </div>
-                                <div v-if="results['classisn'] === '1440561' && docrow.fieldname === 'Должность' ||docrow.fieldname === 'ввести должность' || docrow.fieldname === 'Новая должность' || docrow.fieldname === 'Вывести из должность'">
+                                <div v-if="results['classisn'] === '1440561' && docrow.fieldname === 'Должность' || docrow.fieldname === 'ввести должность' || docrow.fieldname === 'Новая должность' || docrow.fieldname === 'Вывести из должность'">
                                     <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="dut in duties" :value="dut[0]">{{ dut[1] }}</option>
                                     </select>
@@ -142,20 +150,19 @@
                                 <div v-if="docrow.fieldname === '% КВ' || docrow.fieldname === 'Сумма'">
                                     <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Агент'">
+                                <div v-if="docrow.fieldname === 'Агент' || (docrow.fieldname === 'ФИО работника' && results['classisn'] === '1440561')">
                                     <div class="input-group">
                                         <input v-model="agent.fullName" @click="OpenModal('Агент')" type="text" :placeholder="agent.fullName" class="form-control">
                                         <div class="input-group-append">
-                                            <button type="submit" class="btn-primary" @click="OpenModal('Агент')">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Агент')">
                                                 <i class="fa fa-search"></i>
                                             </button>
-                                            <button type="submit" class="btn-danger" @click="clearInfo('Агент')">
+                                            <button type="submit" class="btn-light" @click="clearInfo('Агент')">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div v-if="docrow.fieldname === 'Месяц'">
                                     <select v-model="docrow.value"  :disabled="addChange" class="form-control" placeholder="Выберите месяц" required>
                                         <option value="Январь" selected>Январь</option>
@@ -369,7 +376,8 @@ export default {
                 type: '',
             },
             recordingCounterparty: {type: ''},
-            disableCounterparty: true
+            disableCounterparty: true,
+            idShow: false,
         }
     },
     created() {
@@ -464,12 +472,11 @@ export default {
         },
         clearInfo(data){
             for(let i=0; i<this.results.docrows.length; i++){
-                console.log(this.results.docrows.length)
-
                 if(this.results.docrows[i].fieldname === data){
-                    console.log(this.results.docrows[i].value_name)
                     this.results.docrows[i].value_name = '';
                     this.results.docrows[i].value = '';
+                    this.agent.fullName = ''
+                    this.agent.isn = ''
                 }
             }
         },
@@ -532,14 +539,14 @@ export default {
                     }
                 }
             }
-            if(this.agent.fullname !== ''){
-                for(let i=0; i<this.results.docrows.length; i++){
-                    if(this.results.docrows[i].fieldname === this.agent.type){
-                        this.results.docrows[i].value_name = this.agent.fullName
-                        this.results.docrows[i].value = this.agent.isn
-                    }
-                }
-            }
+            // if(this.agent.fullname !== ''){
+            //     for(let i=0; i<this.results.docrows.length; i++){
+            //         if(this.results.docrows[i].fieldname === this.agent.type){
+            //             this.results.docrows[i].value_name = this.agent.fullName
+            //             this.results.docrows[i].value = this.agent.isn
+            //         }
+            //     }
+            // }
             let data = {
                 results: this.results,
                 docIsn: this.docIsn,
@@ -549,6 +556,7 @@ export default {
                     if(response.data.success) {
                         this.loading = false;
                         this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
                         this.fillIn = true;
@@ -621,12 +629,31 @@ export default {
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = false;
-                        this.fillIn = true;
-                        this.toForm = true;
-                        this.saveDoc = false;
+                        if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                            let dat = {
+                                docisn: this.docIsn,
+                                isn: this.results.classisn,
+                                button: '1',
+                            }
+                            this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                this.results.id = response.data.id;
+                                if(this.results.id.length > 0){
+                                    this.idShow = true;
+                                }
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            })
+                        } else {
+                            this.sendOutForm = false;
+                            this.fillIn = true;
+                            this.toForm = true;
+                            this.saveDoc = false;
+                        }
                     } else {
                         this.addChange = false;
+                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;

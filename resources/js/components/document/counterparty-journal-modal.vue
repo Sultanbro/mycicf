@@ -28,9 +28,6 @@
                         <div class="pl-5 pt-4 pb-4 pr-5">
                             <button class="btn btn-info" @click="searchCounterparty"><i class="fa fa-check">Поиск</i></button>
                         </div>
-<!--                        <div class="pl-5 pt-4 pb-4 pr-5">-->
-<!--                            <button class="btn btn-info"><i class="fa fa-check">Поиск в ЕСБД</i></button>-->
-<!--                        </div>-->
                         <div class="tex">
                             <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>
                         </div>
@@ -130,7 +127,7 @@ import moment from 'moment'
 export default {
     name: "counterparty-journal-modal",
     props: {
-        results: Object,
+        results: {},
         counterparty: {
             isn: '',
             iin: '',
@@ -144,6 +141,8 @@ export default {
             classISN: '',
             type: '',
         },
+        contragent: {},
+        previousCuratorAgent: {},
         recordingCounterparty: Object ,
     },
     data() {
@@ -173,16 +172,15 @@ export default {
     },
     methods: {
         changeCheck(res, id){
-            console.log(res)
-            console.log(id)
-            console.log(this.counterparty)
+            // console.log(res)
+            // console.log(id)
+            // console.log(this.counterparty)
             if(this.searchingResult[id] !== id || this.searchingResult[id] === id){
                 this.counterparty.isn = ''
                 this.counterparty.fullName = ''
             }
             this.counterparty.isn = res.isn
             this.counterparty.fullName = res.lastName + ' ' + res.firstName + ' ' + res.parentName
-
         },
         getDatePicker() {
             const vm = this;
@@ -223,7 +221,6 @@ export default {
                 this.loading = false;
                 if(this.searchingResult.length === 1){
                     if(this.searchingResult[0].isn === null){
-
                     }
                     this.counterparty.isn = this.searchingResult[0].isn
                     this.counterparty.fullName = this.searchingResult[0].lastName + ' ' + this.searchingResult[0].firstName + ' ' + this.searchingResult[0].parentName
@@ -231,17 +228,36 @@ export default {
             });
         },
         selectCounterparty(res, id){
-            this.counterparty.isn = res.isn
-            this.counterparty.fullName = res.lastName + ' ' + res.firstName + ' ' + res.parentName
-            this.getInfo();
+                this.counterparty.isn = res.isn
+                this.counterparty.fullName = res.lastName + ' ' + res.firstName + ' ' + res.parentName
+                this.getInfo();
         },
         getInfo(){
             this.loading = true;
-            for(let i=0; i<this.results.docrows.length; i++){
-                if(this.results.docrows[i].fieldname === this.recordingCounterparty.type){
-                    this.agent.fullName = this.counterparty.fullName
-                    this.agent.isn = this.counterparty.isn
-                    this.agent.type = this.recordingCounterparty.type
+            if (this.recordingCounterparty.type === 'Контрагент'){
+                this.results.contragent.value = this.counterparty.fullName
+                this.results.contragent.subjIsn = this.counterparty.isn
+                this.contragent.fullName = this.counterparty.fullName
+                this.contragent.isn = this.counterparty.isn
+            }else if(this.recordingCounterparty.type === 'Куратор агента (предыдущий, при перезакреплении)'){
+                for(let i=0; i<this.results.resDop.length; i++){
+                    if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
+                        this.previousCuratorAgent.fullName = this.counterparty.fullName
+                        this.previousCuratorAgent.isn = this.counterparty.isn
+                        this.previousCuratorAgent.type = this.recordingCounterparty.type
+                        this.results.resDop[i].value = this.counterparty.fullName
+                        this.results.resDop[i].val = this.counterparty.isn
+                    }
+                }
+            }else {
+                for(let i=0; i<this.results.docrows.length; i++){
+                    if(this.results.docrows[i].fieldname === this.recordingCounterparty.type){
+                        this.agent.fullName = this.counterparty.fullName
+                        this.agent.isn = this.counterparty.isn
+                        this.agent.type = this.recordingCounterparty.type
+                        this.results.docrows[i].value_name = this.counterparty.fullName
+                        this.results.docrows[i].value = this.counterparty.isn
+                    }
                 }
             }
             this.$parent.$refs.modalCounterparty.click()

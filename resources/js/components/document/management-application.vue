@@ -7,6 +7,14 @@
                     <div class="row">
                         <div class="offset-md-4 col-md-8">
                             <div class="mb-4">
+                                <div v-if="idShow" class="form-group row">
+                                    <label class="col-md-4 col-form-label">Номер:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
@@ -565,6 +573,7 @@ export default {
             reasons: [],
             authorities: [],
             reasonDeprivation: [],
+            idShow: false,
         }
     },
     created() {
@@ -725,6 +734,7 @@ export default {
                     if(response.data.success) {
                         this.loading = false;
                         this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
                         this.fillIn = true;
@@ -797,12 +807,31 @@ export default {
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = false;
-                        this.fillIn = true;
-                        this.toForm = true;
-                        this.saveDoc = false;
+                        if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                            let dat = {
+                                docisn: this.docIsn,
+                                isn: this.results.classisn,
+                                button: '1',
+                            }
+                            this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                this.results.id = response.data.id;
+                                if(this.results.id.length > 0){
+                                    this.idShow = true;
+                                }
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            })
+                        } else {
+                            this.sendOutForm = false;
+                            this.fillIn = true;
+                            this.toForm = true;
+                            this.saveDoc = false;
+                        }
                     } else {
                         this.addChange = false;
+                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;

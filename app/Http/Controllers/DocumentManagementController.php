@@ -71,20 +71,20 @@ class DocumentManagementController extends Controller
 
     public function show(Request $request, KiasServiceInterface $kias)
     {
+//        dd($request->button);
         $today = date('d.m.Y');
 //        dd($today);
-//        dd($request->docisn);
 
         $show = $kias->request('User_CicGetDocRowAttr', [
-            'CLASSISN' => $request->isn,
+            'CLASSISN' => $request->isn ? $request->isn : '',
             'DOCISN' => $request->docisn ? $request->docisn : '',
         ]);
-//        dd($show);
+        dd($show);
         $result = [];
         $contragent = [
             'fullname' => empty((string)$show->Doc->row->SUBJNAME) ? 'Контрагент' : $show->Doc->row->SUBJNAME,
-            'value' => empty((string)$show->Doc->row->SUBJNAME) ? '' : $show->Doc->row->SUBJNAME,
-            'subjIsn' => $show->Doc->row->SUBJISN ? '' : $show->Doc->row->SUBJISN,
+            'value' => empty((string)$show->Doc->row->SUBJNAME) ? '' : get_object_vars($show->Doc->row->SUBJNAME)[0],
+            'subjIsn' => $show->Doc->row->SUBJISN ? '' : get_object_vars($show->Doc->row->SUBJISN)[0],
         ];
         foreach($show->DocParams->row as $item) {
             array_push($result, [
@@ -140,9 +140,10 @@ class DocumentManagementController extends Controller
             'emplName' => get_object_vars($show->Doc->row->EMPLNAME)[0],
             'docdate' => isset($itens->docdate) ? get_object_vars($itens->docdate) : $today,
             'className' => get_object_vars($show->Doc->row->CLASSNAME)[0],
-            'showRemark' => '',
-            'showRemark2' => '',
-            'status' => get_object_vars($show->Doc->row->STATUSNAME)[0],
+            'id' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
+            'showRemark' => $show->Doc->row->REMARK ? get_object_vars($show->Doc->row->REMARK) : '',
+            'showRemark2' => $show->Doc->row->REMARK2 ? get_object_vars($show->Doc->row->REMARK2) : '',
+            'status' => get_object_vars($show->Doc->row->STATUSNAME) ? get_object_vars($show->Doc->row->STATUSNAME)[0] : '',
             'stage' => get_object_vars($show->Doc->row->STAGENAME) ? get_object_vars($show->Doc->row->STAGENAME) : '',
         ], [
             'result' => $result
@@ -158,7 +159,17 @@ class DocumentManagementController extends Controller
             'docParam' => $docParam
             ]
         );
-        return view('document.management.show', compact('results'));
+        if(!empty(get_object_vars($show->Doc->row->ID)[0])){
+//            dd(get_object_vars($show->Doc->row->ID)[0]);
+//            dd($results['id']);
+            $resDoc = [
+                'id' => $results['id'],
+                'success' => true,
+            ];
+            return response()->json($resDoc);
+        }else{
+            return view('document.management.show', compact('results'));
+        }
     }
 
     public function bonus(Request $request, KiasServiceInterface $kias)
@@ -283,12 +294,42 @@ class DocumentManagementController extends Controller
     public function getSearchChildUnit($product){
         $result = [];
         $child = Dicti::where('parent_isn', $product['isn'])->get();
-//        dd($child);
         foreach($child as $branchData){
             array_push($result, [
                 'id' => $branchData['isn'],
                 'label' => $branchData['fullname'],
                 'parent_isn' => $product['isn'],
+            ]);
+        }
+        return $result;
+    }
+
+    public function getProductType(Request $request){
+        $result = [];
+        $headProduct = Dicti::where('parent_isn', 1994)->where('n_kids', 1)->get();
+        foreach($headProduct as $type)
+            array_push($result, [
+                'id' => $type['isn'],
+                'label' => $type['fullname'],
+                'parent_isn' => $type['parent_isn'],
+                'children' => $this->getProductChildType($type),
+            ]);
+        $missingProducts = [
+            'result' => $result,
+            'success' => true,
+        ];
+        return response()->json($missingProducts);
+    }
+
+    public function getProductChildType($type){
+        $result = [];
+        $child = Dicti::where('parent_isn', $type['isn'])->get();
+//        dd($child);
+        foreach($child as $branchData){
+            array_push($result, [
+                'id' => $branchData['isn'],
+                'label' => $branchData['fullname'],
+                'parent_isn' => $type['isn'],
             ]);
         }
         return $result;
@@ -349,6 +390,63 @@ class DocumentManagementController extends Controller
         }
         return response()->json([
             'proxyTypes' => $result
+        ]);
+    }
+
+    public function getStage(Request $request){
+        $stages = Dicti::where('parent_isn',223373)->get();
+        $result = [];
+        foreach($stages as $stage){
+            $stage['isn'] = $stage->isn;
+            $stage['fullname'] = $stage->fullname;
+            $stage['parent_isn'] = $stage->parent_isn;
+            $result[] = [$stage['isn'],$stage['fullname'],$stage['parent_isn']];
+        }
+        return response()->json([
+            'stages' => $result
+        ]);
+    }
+
+    public function getKNP(Request $request){
+        $knps = Dicti::where('parent_isn',222565)->get();
+        $result = [];
+        foreach($knps as $knp){
+            $knp['isn'] = $knp->isn;
+            $knp['fullname'] = $knp->fullname;
+            $knp['parent_isn'] = $knp->parent_isn;
+            $result[] = [$knp['isn'],$knp['fullname'],$knp['parent_isn']];
+        }
+        return response()->json([
+            'knps' => $result
+        ]);
+    }
+
+
+    public function getKBK(Request $request){
+        $kbks = Dicti::where('parent_isn',222555)->get();
+        $result = [];
+        foreach($kbks as $kbk){
+            $kbk['isn'] = $kbk->isn;
+            $kbk['fullname'] = $kbk->fullname;
+            $kbk['parent_isn'] = $kbk->parent_isn;
+            $result[] = [$kbk['isn'],$kbk['fullname'],$kbk['parent_isn']];
+        }
+        return response()->json([
+            'kbks' => $result
+        ]);
+    }
+
+    public function getCreationSources(Request $request){
+        $creationSources = Dicti::where('parent_isn',221389)->get();
+        $result = [];
+        foreach($creationSources as $creationSource){
+            $creationSource['isn'] = $creationSource->isn;
+            $creationSource['fullname'] = $creationSource->fullname;
+            $creationSource['parent_isn'] = $creationSource->parent_isn;
+            $result[] = [$creationSource['isn'],$creationSource['fullname'],$creationSource['parent_isn']];
+        }
+        return response()->json([
+            'creationSources' => $result
         ]);
     }
 
@@ -454,6 +552,21 @@ class DocumentManagementController extends Controller
         }
         return response()->json([
             'paymentOrders' => $result
+        ]);
+    }
+
+    public function getStagePassage(Request $request){
+        $stages = Dicti::where('parent_isn',221659)->get();
+        $result = [];
+
+        foreach($stages as $stage){
+            $stage['isn'] = $stage->isn;
+            $stage['fullname'] = $stage->fullname;
+            $stage['parent_isn'] = $stage->parent_isn;
+            $result[] = [$stage['isn'],$stage['fullname'],$stage['parent_isn']];
+        }
+        return response()->json([
+            'stagePassages' => $result
         ]);
     }
 
@@ -669,6 +782,7 @@ class DocumentManagementController extends Controller
 
     public function saveDocument(Request $request, KiasServiceInterface $kias)
     {
+//        dd($request);
         $error = "";
         $request->result = [];
         foreach ($request->results["result1"] as $result1){
@@ -757,6 +871,7 @@ class DocumentManagementController extends Controller
             }
                 return response()->json([
                     'DocISN' => $docIsn,
+                    'stage' => 'В работе',
                     'success' => true,
                 ]);
             }
@@ -965,4 +1080,13 @@ class DocumentManagementController extends Controller
         ]);
     }
 
+    public function agreementCalcSearch(Request $request, KiasServiceInterface $kias){ //Поиск полных котировок
+        $error = "";
+        $result = [];
+        $searchingAgreement = $kias->AGREEMENTCALCSEARCH($request->quotes['number'], $request->quotes['dateBeg'],
+            $request->quotes['dateEnd'], $request->quotes['type'], $request->quotes['dateBegAction'], $request->quotes['dateEndAction'],
+            $request->quotes['subdivision'], $request->quotes['curator'], $request->quotes['insuranceProduct'], $request->quotes['status'],
+            $request->quotes['creationSource'] ? $request->quotes['creationSource'] : '', '1');
+        dd($searchingAgreement);
+    }
 }

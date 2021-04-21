@@ -7,10 +7,17 @@
                     <div class="row">
                         <div class="offset-md-4 col-md-8">
                             <div class="mb-4">
+                                <div v-if="idShow" class="form-group row">
+                                    <label class="col-md-4 col-form-label">Номер:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <!--                                             <treeselect @select="handleInput" v-model="contragent" :multiple="false" :options="userList" disabled="disabled"/>&ndash;&gt;-->
                                         <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
@@ -350,13 +357,18 @@
                                 v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
                             Заполнить СЗ
                         </button>
+                        <button v-show="(results.docParam.button1caption === 'Список должностей' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Список должностей' && results.docParam.showbutton2 === 'Y')"
+                                v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
+                            Список должностей
+                        </button>
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
                             Разослать на согласование
                         </button>
-                        <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
+                        <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
+                                        || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
                                 v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
@@ -417,7 +429,8 @@
                                      || result.fullname === 'Председатель комиссии' || result.fullname === 'Член комиссии 1' || result.fullname === 'Член комиссии 2'
                                      || result.fullname === 'Член комиссии 3' || result.fullname === 'Член комиссии 4' || result.fullname === 'Член комиссии 5'
                                     || result.fullname === 'Член комиссии 6' || result.fullname === 'Председатель комиссии (филиал)' || result.fullname === 'Секретарь комиссии'
-                                    || result.fullname === 'Подписант за первого руководителя' || result.fullname === 'Подписант за главного бухгалтера' || result.fullname === 'Подписант за главного бухгалтера (ДСП)'">
+                                    || result.fullname === 'Подписант за первого руководителя' || result.fullname === 'Подписант за главного бухгалтера' || result.fullname === 'Подписант за главного бухгалтера (ДСП)'
+                                    || result.fullname === 'Член комиссии 1(филиалы)' || result.fullname === 'Член комиссии 2(филиалы)' || result.fullname === 'Член комиссии 3(филиалы)'">
                                 <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
@@ -463,10 +476,10 @@
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div v-if="!result.val">
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{listDocIsn}}</div>
+                                    <div class="pointer" scope="col" @click="OpenModal(listDocIsn)">{{listDocIsn}}</div>
                                 </div>
                                 <div v-else>
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{result.val}}</div>
+                                    <div class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -476,7 +489,7 @@
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Срок исполнения СЗ' || result.fullname === 'Дата заключения договора поручения' ||
-                                result.fullname === 'Дата расторжения договора поручения' || result.fullname === 'Дата предписания'">
+                                result.fullname === 'Дата расторжения договора поручения' || result.fullname === 'Дата предписания' || result.fullname === 'Дата оплаты'">
                                 <input class="form-control"
                                        type="tel"
                                        v-model="result.val" :disabled="addChange"
@@ -530,6 +543,11 @@
                                     <option value="482301">Нет</option>
                                 </select>
                             </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (гос.пошлина)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="812871">Оплата государственной пошлины</option>
+                                </select>
+                            </div>
                             <div v-else-if="result.fullname === 'Тип расчета'">
                                 <select v-model="result.val" :disabled="addChange" class="form-control" required>
                                     <option v-for="calculationType in calculationTypes" :value="calculationType[0]">{{ calculationType[1] }}</option>
@@ -557,10 +575,64 @@
                             <div v-else-if="result.fullname === 'Группа подразделений'">
                                 <treeselect v-model="result.val" :multiple="false" :options="unitGroups" :disabled="addChange"/>
                             </div>
+                            <div v-else-if="result.fullname === 'Подразделение'">
+                                <treeselect
+                                    :multiple="false" :options="options" :placeholder="'Выберите'" v-model="result.val"
+                                    :disabled="addChange"/>
+                            </div>
                             <div v-else-if="result.fullname === 'Тема СЗ (списание)'">
                                 <select v-model="result.val" :disabled="addChange" class="form-control">
                                     <option v-for="topic in topicSZ" :value="topic[0]">{{ topic[1] }}</option>
                                 </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'КНП'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="knp in knps" :value="knp[0]">{{ knp[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'КБК'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="kbk in kbks" :value="kbk[0]">{{ kbk[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Согласованная котировка ДА'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Согласованная котировка ДА')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Согласованная котировка ДА')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Согласованная котировка ДА')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else-if="result.fullname === 'Приложение'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Приложение')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Приложение')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Приложение')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else-if="result.fullname === 'Номер договора'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Номер договора')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Номер договора')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Номер договора')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div v-else-if="result.fullname === 'Необходимо согласование работников АдмУ'">
                                 <input
@@ -570,7 +642,9 @@
                                     false-value="0"
                                 >
                             </div>
-
+                            <div v-else-if="result.fullname === 'Тема СЗ (бланки)'">
+                                {{ result.value }}
+                            </div>
                             <div v-else>
                                 <div>
                                     <input type="text" v-model="result.val"
@@ -595,6 +669,18 @@
             :changeMatch="changeMatch"
         >
         </document-modal>
+        <button v-show="false" ref="modalQuotes" type="button" data-toggle="modal" data-target="#quotesJournal">Large modal</button>
+        <full-quotes-journal
+        >
+        </full-quotes-journal>
+        <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal"></button>
+        <document-journal-modal
+        >
+        </document-journal-modal>
+        <button v-show="false" ref="modalContract" type="button" data-toggle="modal" data-target="#contractJournal"></button>
+        <contract-journal-modal
+            :results="results">
+        </contract-journal-modal>
     </div>
 </template>
 
@@ -605,6 +691,9 @@ import MaskedInput from 'vue-text-mask';
 import 'vue2-datepicker/locale/ru';
 import moment from 'moment'
 import DocumentModal from "./document-modal";
+import FullQuotesJournal from "./full-quotes-journal";
+import DocumentJournalModal from "./document-journal-modal";
+import ContractJournalModal from "./contract-journal-modal";
 export default {
     name: "service-sheet",
     props: {
@@ -661,6 +750,15 @@ export default {
             stateNumbers: [],
             violationComposition: [],
             autoColors: [],
+            knps: [],
+            kbks: [],
+            recordingCounterparty: {type: ''},
+            idShow: false,
+            contragent: {
+                fullName: '',
+                isn: '',
+                type: '',
+            },
         }
     },
     created() {
@@ -683,6 +781,8 @@ export default {
         this.getCarStateNumber();
         this.getViolationComposition();
         this.getAutoColor();
+        this.getKNP();
+        this.getKBK();
         Vue.filter('splitNumber', function (value) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         })
@@ -701,7 +801,6 @@ export default {
             return date <= today;
         },
         changeSelected(index,e){
-            //console.log(e.id);
             //console.log(this.usersInfo[parseInt(e.id)].duty);
             // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
             this.duty = this.usersInfo[parseInt(e.id)].duty
@@ -715,6 +814,16 @@ export default {
         getProxyTypes(){
             this.axios.post('/document/getProxyType', {}).then((response) => {
                 this.proxyTypes = response.data.proxyTypes;
+            });
+        },
+        getKNP(){
+            this.axios.post('/document/getKNP', {}).then((response) => {
+                this.knps = response.data.knps;
+            });
+        },
+        getKBK(){
+            this.axios.post('/document/getKBK', {}).then((response) => {
+                this.kbks = response.data.kbks;
             });
         },
         getServicesFor(){
@@ -851,14 +960,14 @@ export default {
         },
         saveDocument(){
             this.loading = false;
-            if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-                this.flashMessage.warning({
-                    title: "!",
-                    message: 'Пожалуйста заполните все обязательные поля',
-                    time: 5000
-                });
-                return;
-            }
+            // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
+            //     this.flashMessage.warning({
+            //         title: "!",
+            //         message: 'Пожалуйста заполните все обязательные поля',
+            //         time: 5000
+            //     });
+            //     return;
+            // }
             this.loading = true;
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
@@ -876,6 +985,7 @@ export default {
                     if(response.data.success) {
                         this.loading = false;
                         this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
                         this.fillIn =true;
@@ -937,12 +1047,31 @@ export default {
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = false;
-                        this.fillIn = true;
-                        this.toForm = true;
-                        this.saveDoc = false;
+                        if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                            let dat = {
+                                docisn: this.docIsn,
+                                isn: this.results.classisn,
+                                button: '1',
+                            }
+                            this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                this.results.id = response.data.id;
+                                if(this.results.id.length > 0){
+                                    this.idShow = true;
+                                }
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            })
+                        } else {
+                            this.sendOutForm = false;
+                            this.fillIn = true;
+                            this.toForm = true;
+                            this.saveDoc = false;
+                        }
                     } else {
                         this.addChange = false;
+                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;
@@ -1003,29 +1132,53 @@ export default {
                     //alert(error.response);
                 });
         },
-        OpenModal () {
-            this.preloader(true);
-            this.changeMatch.status = false;
-            if(this.listDocIsn === null){
-                for(let i=0; i<this.results.result.length; i++){
-                    if(this.results.result[i].fullname === 'Лист согласования'){
-                        this.listDocIsn = this.results.result[i].val
+        OpenModal(doc) {
+            if(doc === this.listDocIsn){
+                this.preloader(true);
+                this.changeMatch.status = false;
+                if(this.listDocIsn === null){
+                    for(let i=0; i<this.results.result.length; i++){
+                        if(this.results.result[i].fullname === 'Лист согласования'){
+                            this.listDocIsn = this.results.result[i].val
+                        }
                     }
                 }
+                this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
+                    if(response.data.success){
+                        this.coordination = response.data.response;
+                        this.preloader(false);
+                        this.$refs.modalButton.click();
+                    }else{
+                        this.attachments = [];
+                    }
+                });
             }
-            this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
-                if(response.data.success){
-                    this.coordination = response.data.response;
-                    // this.coordinator = response.data.response.Coordinations;
-                    // for(const item in response.data.response.Coordinations) {
-                    //     this.coordinator = item.SubjISN;
-                    // }
-                    this.preloader(false);
-                    this.$refs.modalButton.click();
-                }else{
-                    this.attachments = [];
+            if(doc === 'Согласованная котировка ДА'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalQuotes.click();
+            }
+            if(doc === 'Приложение'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalDocument.click();
+            }
+            if(doc === 'Номер договора'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalContract.click();
+            }
+        },
+        clearInfo(data){
+            for(let i=0; i<this.results.resDop.length; i++){
+                console.log(this.results.resDop.length)
+
+                if(this.results.resDop[i].fullname === data){
+                    console.log(this.results.resDop[i].value)
+                    this.results.resDop[i].value = '';
+                    this.results.resDop[i].val = '';
                 }
-            });
+            }
         },
         preloader(show){
             if(show){
@@ -1035,6 +1188,11 @@ export default {
             }
         },
         // }, :key="`${index}-${docrow.value}`"
+        searchDocumentJournal(){
+            this.preloader(true);
+            this.$refs.modalQuotes.click();
+            this.preloader(false);
+        },
     },
     computed: {
         orderedDocrows: function () {
@@ -1042,7 +1200,10 @@ export default {
         },
     },
     components: {
+        ContractJournalModal,
+        FullQuotesJournal,
         DocumentModal,
+        DocumentJournalModal,
         DatePicker,
         MaskedInput,
     },

@@ -948,4 +948,15 @@ class Kias implements KiasServiceInterface
             'COUNTRYISN' => $countryIsn,
         ]);
     }
+
+    public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo){
+        return $this->request('AGREEMENTCALCSEARCH', [
+            'ID' => $id, 'DATESIGNFROM' => $dateSignFrom,
+            'DATESIGNTO' => $dateSignTo, 'CLASSISN' => $classIsn,
+            'DATEBEGFROM' => $dateBegFrom, 'DATEBEGTO' => $dateBegTo,
+            'DEPTISN' => $deptIsn, 'EMPLISN' => $emplIsn,
+            'PRODUCTISN' => $productIsn, 'STATUSISN' => $statusIsn,
+            'TASKISN' => $taskIsn, 'PAGENO' => $pageNo
+        ]);
+    }
 }

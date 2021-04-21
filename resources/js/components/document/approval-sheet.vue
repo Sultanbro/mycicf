@@ -7,17 +7,31 @@
                     <div class="row">
                         <div class="offset-md-4 col-md-8">
                             <div class="mb-4">
+                                <div v-if="idShow" class="form-group row">
+                                    <label class="col-md-4 col-form-label">Номер:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
-                                    <div class="col-md-8">
-                                        <!--                                             <treeselect @select="handleInput" v-model="contragent" :multiple="false" :options="userList" disabled="disabled"/>&ndash;&gt;-->
-                                        <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
-                                                    :options="userList" :disable-branch-nodes="true"/>
+                                    <div class="col-md-8 input-group">
+                                        <input v-model="results.contragent.value ? results.contragent.value : contragent.fullName" @click="OpenModal('Контрагент')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Контрагент')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo('Контрагент')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-4" v-for="result in results.result1">
-                                <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
+                                <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
                                         <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
@@ -28,7 +42,7 @@
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
                                         <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
-                                            id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
+                                            id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true"/>
 <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
                                 </div>
@@ -420,7 +434,20 @@
                                         <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                                     :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                                 </div>
-                                <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых' || result.fullname === 'Куратор агента (новый)' || result.fullname === 'Куратор агента (предыдущий, при перезакреплении)'
+                                <div v-else-if="result.fullname === 'Куратор агента (предыдущий, при перезакреплении)'">
+                                    <div class="input-group">
+                                        <input v-model="previousCuratorAgent.fullName" @click="OpenModal('Куратор агента (предыдущий, при перезакреплении)')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Куратор агента (предыдущий, при перезакреплении)')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo('Куратор агента (предыдущий, при перезакреплении)')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых' || result.fullname === 'Куратор агента (новый)'
                                      || result.fullname === 'Председатель комиссии' || result.fullname === 'Член комиссии 1' || result.fullname === 'Член комиссии 2'
                                      || result.fullname === 'Член комиссии 3' || result.fullname === 'Член комиссии 4' || result.fullname === 'Член комиссии 5'
                                     || result.fullname === 'Член комиссии 6' || result.fullname === 'Председатель комиссии (филиал)' || result.fullname === 'Секретарь комиссии'
@@ -470,7 +497,7 @@
                                 </div>
                                 <div v-else-if="result.fullname === 'Лист согласования'">
                                     <div v-if="!result.val">
-                                        <div class="pointer" scope="col" @click="OpenModal()">{{listDocIsn}}</div>
+                                        <div class="pointer" scope="col" @click="OpenModal(listDocIsn)">{{listDocIsn}}</div>
                                     </div>
                                     <div v-else>
                                         <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
@@ -577,7 +604,6 @@
                                         false-value="0"
                                     >
                                 </div>
-
                                 <div v-else>
                                     <div>
                                         <input type="text" v-model="result.val"
@@ -602,6 +628,15 @@
             :changeMatch="changeMatch"
         >
         </document-modal>
+        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+        <counterparty-journal-modal
+            :counterparty="counterparty"
+            :contragent="contragent"
+            :previous-curator-agent="previousCuratorAgent"
+            :recordingCounterparty="recordingCounterparty"
+            :results="results"
+        >
+        </counterparty-journal-modal>
     </div>
 </template>
 <script>
@@ -611,6 +646,7 @@
     import 'vue2-datepicker/locale/ru';
     import moment from 'moment'
     import DocumentModal from "./document-modal";
+    import CounterpartyJournalModal from "./counterparty-journal-modal";
     export default {
         name: "approval-sheet",
         props: {
@@ -667,6 +703,24 @@
                 stateNumbers: [],
                 violationComposition: [],
                 autoColors: [],
+                counterparty: {
+                    isn: '',
+                    iin: '',
+                    fullName: '',
+                    classISN: '',
+                },
+                contragent: {
+                    fullName: '',
+                    isn: '',
+                    type: '',
+                },
+                previousCuratorAgent: {
+                    fullName: '',
+                    isn: '',
+                    type: '',
+                },
+                recordingCounterparty: {type: ''},
+                idShow: false,
             }
         },
         created() {
@@ -856,14 +910,14 @@
             },
             saveDocument(){
                 this.loading = false;
-                if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-                    this.flashMessage.warning({
-                        title: "!",
-                        message: 'Пожалуйста заполните все обязательные поля',
-                        time: 5000
-                    });
-                    return;
-                }
+                // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
+                //     this.flashMessage.warning({
+                //         title: "!",
+                //         message: 'Пожалуйста заполните все обязательные поля',
+                //         time: 5000
+                //     });
+                //     return;
+                // }
                 this.loading = true;
                 if(this.duty.length > 0){
                     for(let i=0; i<this.results.docrows.length; i++){
@@ -881,6 +935,7 @@
                         if(response.data.success) {
                             this.loading = false;
                             this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                            this.results.stage = response.data.stage;
                             this.addChange = true;
                             this.toForm = true;
                             this.fillIn =true;
@@ -942,12 +997,31 @@
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.sendOutForm = false;
-                            this.fillIn = true;
-                            this.toForm = true;
-                            this.saveDoc = false;
+                            if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                                let dat = {
+                                    docisn: this.docIsn,
+                                    isn: this.results.classisn,
+                                    button: '1',
+                                }
+                                this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                    this.results.id = response.data.id;
+                                    if(this.results.id.length > 0){
+                                        this.idShow = true;
+                                    }
+                                    this.sendOutForm = false;
+                                    this.fillIn = true;
+                                    this.toForm = true;
+                                    this.saveDoc = false;
+                                })
+                            } else {
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            }
                         } else {
                             this.addChange = false;
+                            this.loading = false;
                         }
                         this.loading = false;
                         this.addChange = true;
@@ -1008,29 +1082,58 @@
                         //alert(error.response);
                     });
             },
-            OpenModal () {
-                this.preloader(true);
-                this.changeMatch.status = false;
-                if(this.listDocIsn === null){
-                    for(let i=0; i<this.results.result.length; i++){
-                        if(this.results.result[i].fullname === 'Лист согласования'){
-                            this.listDocIsn = this.results.result[i].val
+            OpenModal(doc) {
+                if(doc === this.listDocIsn){
+                    this.preloader(true);
+                    this.changeMatch.status = false;
+                    if(this.listDocIsn === null){
+                        for(let i=0; i<this.results.result.length; i++){
+                            if(this.results.result[i].fullname === 'Лист согласования'){
+                                this.listDocIsn = this.results.result[i].val
+                            }
                         }
                     }
+                    this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
+                        if(response.data.success){
+                            this.coordination = response.data.response;
+                            this.preloader(false);
+                            this.$refs.modalButton.click();
+                        }else{
+                            this.attachments = [];
+                        }
+                    });
                 }
-                this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
-                    if(response.data.success){
-                        this.coordination = response.data.response;
-                        // this.coordinator = response.data.response.Coordinations;
-                        // for(const item in response.data.response.Coordinations) {
-                        //     this.coordinator = item.SubjISN;
-                        // }
-                        this.preloader(false);
-                        this.$refs.modalButton.click();
-                    }else{
-                        this.attachments = [];
+                if(doc === this.results.contragent.fullname){
+                    this.preloader(false);
+                    this.recordingCounterparty.type = doc
+                    this.$refs.modalCounterparty.click();
+                }
+                if (doc === 'Куратор агента (предыдущий, при перезакреплении)') {
+                    this.preloader(false);
+                    this.recordingCounterparty.type = doc
+                    this.$refs.modalCounterparty.click();
+                }
+            },
+            clearInfo(data){
+                if(data === this.results.contragent.fullname){
+                    this.results.contragent.subjIsn = '';
+                    this.results.contragent.value = '';
+                    this.contragent.fullName = ''
+                    this.contragent.isn = ''
+                }
+                if(data === 'Куратор агента (предыдущий, при перезакреплении)'){
+                    for(let i=0; i<this.results.resDop.length; i++){
+                        if(this.results.resDop[i].fullname === 'Куратор агента (предыдущий, при перезакреплении)'){
+                            this.results.resDop[i].value = ''
+                            this.results.resDop[i].val = ''
+                        }
                     }
-                });
+                    this.previousCuratorAgent.fullName = ''
+                    this.previousCuratorAgent.isn = ''
+                    this.previousCuratorAgent.type = ''
+                }
+                this.counterparty.fullName = ''
+                this.counterparty.isn = ''
             },
             preloader(show){
                 if(show){
@@ -1050,6 +1153,7 @@
             DocumentModal,
             DatePicker,
             MaskedInput,
+            CounterpartyJournalModal,
         },
     }
 </script>

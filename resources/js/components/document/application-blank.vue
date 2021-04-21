@@ -7,6 +7,14 @@
                     <div class="row">
                         <div class="offset-md-4 col-md-8">
                             <div class="mb-4">
+                                <div v-if="idShow" class="form-group row">
+                                    <label class="col-md-4 col-form-label">Номер:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
@@ -77,13 +85,6 @@
                                                class="form-control" readonly>
                                     </div>
                                 </div>
-<!--                                <div v-if="!stage">-->
-<!--                                    <label>Статус</label>-->
-<!--                                    <div>-->
-<!--                                        <input type="text" v-model="results.statusName"-->
-<!--                                               class="form-control" readonly>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -415,6 +416,7 @@
                 relationTo: [],
                 duties: [],
                 wallRows: 2,
+                idShow: '',
             }
         },
         created() {
@@ -516,14 +518,14 @@
             },
             saveDocument(){
                 this.loading = false;
-                if(this.results.result1[0].val === '' || this.results.docdate === '' || this.results.contragent.subjIsn === ''){
-                    this.flashMessage.warning({
-                        title: "!",
-                        message: 'Пожалуйста заполните все обязательные поля',
-                        time: 5000
-                    });
-                    return;
-                }
+                // if(this.results.result1[0].val === '' || this.results.docdate === '' || this.results.contragent.subjIsn === ''){
+                //     this.flashMessage.warning({
+                //         title: "!",
+                //         message: 'Пожалуйста заполните все обязательные поля',
+                //         time: 5000
+                //     });
+                //     return;
+                // }
                 this.loading = true;
                 if(this.duty.length > 0){
                     for(let i=0; i<this.results.docrows.length; i++){
@@ -541,6 +543,7 @@
                         if(response.data.success) {
                             this.loading = false;
                             this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                            this.results.stage = response.data.stage;
                             this.addChange = true;
                             this.toForm = true;
                             this.fillIn =true;
@@ -603,12 +606,31 @@
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.sendOutForm = false;
-                            this.fillIn = true;
-                            this.toForm = true;
-                            this.saveDoc = false;
+                            if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                                let dat = {
+                                    docisn: this.docIsn,
+                                    isn: this.results.classisn,
+                                    button: '1',
+                                }
+                                this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                    this.results.id = response.data.id;
+                                    if(this.results.id.length > 0){
+                                        this.idShow = true;
+                                    }
+                                    this.sendOutForm = false;
+                                    this.fillIn = true;
+                                    this.toForm = true;
+                                    this.saveDoc = false;
+                                })
+                            } else {
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            }
                         } else {
                             this.addChange = false;
+                            this.loading = false;
                         }
                         this.loading = false;
                         this.addChange = true;

@@ -367,4 +367,21 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function userCicSaveSubject($iin, $firstName, $lastName, $parentName, $birthday, $juridical, $resident, $sexId, $countryIsn);
+
+    /**
+     * @param $id
+     * @param $dateSignFrom
+     * @param $dateSignTo
+     * @param $classIsn
+     * @param $dateBegFrom
+     * @param $dateBegTo
+     * @param $deptIsn
+     * @param $emplIsn
+     * @param $productIsn
+     * @param $statusIsn
+     * @param $taskIsn
+     * @param $pageNo
+     * @return mixed
+     */
+    public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo);
 }

@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="pt-2 pb-1 bold">
                                     <i class="far fa-file-alt"></i>
-                                    <span class="ml-2">Журнал документа</span>
+                                    <span class="ml-2">Журнал документов</span>
                                 </div>
                             </div>
                         </div>
@@ -35,45 +35,50 @@
                         <div class="tex">
                             <button class="btn btn-success"><i class="fa fa-check">Ok</i></button>
                         </div>
+                        <div v-show="loading" class="loading-ellipsis">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
                     </div>
                     <div class="pl-5 pb-4 pr-5">
                         <div class="border-bottom: 1px solid grey">
                             <span class="color-blue-standart">Критерии</span>
                         </div><hr>
                         <div class="row justify-content-between">
-                            <div>
+                            <div class="col-md-2">
                                 <label>Номер документа:</label>
                                 <div>
-                                    <input type="text"
+                                    <input v-model="document.number" type="text"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-2">
                                 <label>Внешний номер:</label>
                                 <div>
-                                    <input type="text"
+                                    <input v-model="document.externalNumber" type="text"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-3">
                                 <label>Тип документа:</label>
                                 <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
-                                    </select>
-                                    <div>
-                                        <input
-                                            type="checkbox"
-                                            true-value="Y"
-                                            false-value="N"
-                                        >Показывать аннулированные документы
-                                    </div>
+                                    <treeselect v-model="document.type" placeholder="Не выбрано"
+                                                :multiple="false" :options="documentType" :disable-branch-nodes="true"/>
+<!--                                    <div>-->
+<!--                                        <input-->
+<!--                                            type="checkbox"-->
+<!--                                            true-value="Y"-->
+<!--                                            false-value="N"-->
+<!--                                        >Показывать аннулированные документы-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label>Дата документа с:</label>
                                 <div>
-                                    <input class="form-control"
+                                    <input v-model="document.dateBeg" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -82,7 +87,7 @@
                             <div class="col-md-2">
                                 <label>Дата документа до:</label>
                                 <div>
-                                    <input class="form-control"
+                                    <input v-model="document.dateEnd" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -90,108 +95,115 @@
                             </div>
                         </div>
                         <div class="row justify-content-between pt-2">
-                            <div>
+                            <div class="col-md-3">
                                 <label>Контрагент:</label>
                                 <div>
-                                    <input type="text"
-                                           class="form-control">
+                                    <treeselect v-model="document.contragent" placeholder="Не выбрано" :multiple="false"
+                                                :options="userList" :disable-branch-nodes="true"/>
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-3">
                                 <label>Куратор (сотрудник):</label>
                                 <div>
-                                    <input type="text"
-                                           class="form-control">
+                                    <treeselect v-model="document.curator" placeholder="Не выбрано" :multiple="false"
+                                                :options="userList" :disable-branch-nodes="true"/>
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-3">
                                 <label>Куратор (Подразделение):</label>
                                 <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
-                                    </select>
+                                    <treeselect v-model="document.subdivision" placeholder="Не выбрано" :multiple="false"
+                                                :options="options" :disable-branch-nodes="true"/>
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-3">
                                 <label>Статус документа:</label>
-                                <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
-                                    </select>
-                                </div>
+                                <select v-model="document.status" class="form-control">
+                                    <option value="">Все</option>
+                                    <option value="2515">Аннулирован</option>
+                                    <option value="2516">В работе</option>
+                                    <option value="2522">На подписи</option>
+                                    <option value="2517">Оплачен</option>
+                                    <option value="2518">Подписан</option>
+                                </select>
                             </div>
-                            <div>
+                        </div>
+                        <div class="row justify-content-between pt-2">
+                            <div class="col-md-3">
                                 <label>Стадия прохождения документа:</label>
                                 <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
+                                    <select v-model="document.stage" class="form-control">
+                                        <option v-for="stagePassage in stagePassages" :value="stagePassage[0]">{{ stagePassage[1] }}</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row col-md-6 offset-md-3">
+                                <div class="col-md-4">
+                                    <label>Сумма док. от:</label>
+                                    <div>
+                                        <input v-model="document.sumBeg" class="form-control"
+                                               type="tel"
+                                               v-mask="'##.##.####'"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Сумма док. до:</label>
+                                    <div>
+                                        <input v-model="document.sumEnd" class="form-control"
+                                               type="tel"
+                                               v-mask="'##.##.####'"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Валюта:</label>
+                                    <div>
+                                        <select v-model="document.currency" class="form-control">
+                                            <option value="9716">USD Доллар США</option>
+                                            <option value="9721">EUR Евро</option>
+                                            <option value="9788">RUB Российский рубль</option>
+                                            <option value="9813">KZT Тенге</option>
+                                            <option value="9832">GBP Фунт стерлингов</option>
+                                            <option value="9838">Швейцарский франк</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class=" row col-md-6 offset-md-6">
-                            <div class="col-md-4">
-                                <label>Сумма док. от:</label>
-                                <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Сумма док. до:</label>
-                                <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label>Валюта:</label>
-                                <div>
-                                    <select class="form-control">
-                                        <option :value="1">1</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="pl-5 pb-4 pr-5">
                         <div class="border-bottom: 1px solid grey">
                             <span class="color-blue-standart">Результат</span>
                         </div><hr>
                         <div class="fadeInRight">
-                            <div class="scrollable">
+                            <div class="scrollable pb-4">
                                 <div class="table-responsive-sm pb-8">
                                     <table class="table table-bordered table-striped">
                                         <tbody>
                                         <tr>
-                                            <td>Тип документа</td>
                                             <td>№</td>
+                                            <td>Номер документа</td>
                                             <td>Дата</td>
                                             <td>Сумма док-та</td>
                                             <td>Контрагент</td>
                                             <td>Статус</td>
                                             <td>Стадия</td>
-                                            <td>Валюта</td>
-                                            <td>Сумма в валюте</td>
-                                            <td>Примечание</td>
-                                            <td>Начало</td>
-                                            <td>Окончание</td>
-                                            <td>Доср.прекр.</td>
-                                            <td>Внешн. №</td>
                                             <td>Подразделение</td>
                                             <td>Куратор</td>
-                                            <td>Подписант</td>
-                                            <td>Дата создания</td>
-                                            <td>Создатель</td>
-                                            <td>Источник создания</td>
-                                            <td>Коп</td>
-                                            <td>ISN</td>
                                         </tr>
-                                        <tr>
-                                                <input type="text" class="form-control">
+                                        <tr v-for="(doc, index) in searchingDocument" :key="index">
+                                            <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(doc, index)"></td>
+                                            <td><div @click="selectDocument(doc, index)">{{doc.number}}</div></td>
+                                            <td>{{doc.docDate}}</td>
+                                            <td>{{doc.iin}}</td>
+                                            <td>{{doc.sum}}</td>
+                                            <td>{{doc.contragent}}</td>
+                                            <td>{{doc.status}}</td>
+                                            <td>{{doc.stage}}</td>
+                                            <td>{{doc.subdivision}}</td>
+                                            <td>{{doc.curator}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -213,21 +225,80 @@ import 'vue2-datepicker/locale/ru';
 import moment from 'moment'
 export default {
     name: "document-journal-modal",
+    props: {
+        results: Object,
+        recordingCounterparty: Object ,
+    },
     data() {
         return {
-            document: Object,
+            document: {
+                number: '',
+                type: '',
+                externalNumber: '',
+                status: '',
+                contragent: '',
+                dateBeg: moment(new Date()).format('DD.MM.YYYY'),
+                dateEnd: '',
+                curator: '',
+                subdivision: '',
+                sumBeg: '',
+                sumEnd: '',
+                currency: '',
+                stage: '',
+            },
             docDate: new Date(),
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
             modalHide: '',
             loading: false,
-            resultDoc: false
+            resultDoc: false,
+            documentType: [],
+            userList: [],
+            options: [],
+            stagePassages: [],
+            index: '',
+            searchingDocument: {},
         }
     },
     created() {
         this.getBranchData();
         this.getUserList();
+        this.getProductType();
+        this.getStagePassage();
     },
     methods: {
+        searchDocument() {
+            this.loading = true;
+            let data = {
+                document: this.document,
+            }
+            this.axios.post('/searchCounterparty', data).then((response) => {
+                if(response.data.error) {
+                    this.loading = false;
+                    alert(response.data.error);
+                }
+                this.searchingDocument = response.data.result
+                this.loading = false;
+            });
+        },
+        selectDocument(doc, id){
+            for(let i=0; i<this.results.docrows.length; i++){
+                if(this.results.docrows[i].fieldname === this.recordingCounterparty.type){
+                    this.results.resDop[i].val = doc.isn
+                }
+            }
+            this.$parent.$refs.modalCounterparty.click();
+            this.loading = false;
+        },
+        getInfo(){
+            this.loading = true;
+            for(let i=0; i<this.results.docrows.length; i++){
+                if(this.results.resDop[i].fullname === 'Приложение'){
+                    this.results.resDop[i].val = this.searchingDocument.isn
+                }
+            }
+            this.$parent.$refs.modalCounterparty.click()
+            this.loading = false;
+        },
         getBranchData() {
             this.axios.post('/getSearchBranch', {}).then(response => {
                 this.options = response.data.result;
@@ -240,12 +311,22 @@ export default {
                 this.isLoading = false;
             });
         },
+        getProductType(){
+            this.axios.post('/document/getProductType', {}).then((response) => {
+                this.documentType = response.data.result;
+            });
+        },
+        getStagePassage(){
+            this.axios.post('/document/getStagePassage', {}).then((response) => {
+                this.stagePassages = response.data.stagePassages;
+            });
+        },
         getDatePicker() {
             const vm = this;
             vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
         },
         close() {
-            this.$parent.$refs.modalButton.click()
+            this.$parent.$refs.modalDocument.click();
         },
         preloader(show){
             if(show){

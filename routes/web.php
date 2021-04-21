@@ -481,8 +481,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/document/getReasonDeprivation', 'DocumentManagementController@getReasonDeprivation')->name('document.reason.deprivation');
         Route::post('/document/getTypeSzAhd', 'DocumentManagementController@getTypeSzAhd')->name('document.type.sz.ahd');
         Route::post('/document/getTypeSzMain', 'DocumentManagementController@getTypeSzMain')->name('document.type.sz.main');
-        Route::get('document/{isn}', 'DocumentManagementController@show')->name('document.show');
-        Route::get('document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('/document/{isn}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('/document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
         Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
         Route::get('document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
         Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
@@ -495,6 +495,13 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/document/getCounterpartyType', 'DocumentManagementController@getCounterpartyType')->name('document.get.counterparty.type');
         Route::post('/searchCounterparty', 'DocumentManagementController@searchCounterparty');
         Route::post('/saveSubject', 'DocumentManagementController@saveSubject');
+        Route::post('/document/getKNP', 'DocumentManagementController@getKNP')->name('document.get.knp');
+        Route::post('/document/getKBK', 'DocumentManagementController@getKBK')->name('document.get.kbk');
+        Route::post('/document/getCreationSources', 'DocumentManagementController@getCreationSources')->name('document.get.creation.sources');
+        Route::post('/document/getStage', 'DocumentManagementController@getStage')->name('document.get.stage');
+        Route::post('/document/getProductType', 'DocumentManagementController@getProductType')->name('document.product.type');
+        Route::post('/document/getStagePassage', 'DocumentManagementController@getStagePassage')->name('document.stage.passages');
+        Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');

@@ -44,6 +44,30 @@ class ProxyType extends Command
         $kias = new Kias();
         $kias->initSystem();
 
+
+        try{
+            $response = $kias->getDictiList(221659);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',221659)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 221659;
+                    if($dicti->save()){
+                        echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".(string)$row->FULLNAME." \n";
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
         try{
             $response = $kias->getDictiList(804341);
             if(isset($response->ROWSET->row)) {
@@ -79,6 +103,75 @@ class ProxyType extends Command
                     $dicti->numcode = (string)$row->NUMCODE;
                     $dicti->n_kids = (string)$row->N_KIDS;
                     $dicti->parent_isn = 1737181;
+                    if($dicti->save()){
+                        echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".(string)$row->FULLNAME." \n";
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
+        try{
+            $response = $kias->getDictiList(221389);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',221389)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 221389;
+                    if($dicti->save()){
+                        echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".(string)$row->FULLNAME." \n";
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
+        try{
+            $response = $kias->getDictiList(222565);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',222565)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 222565;
+                    if($dicti->save()){
+                        echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".(string)$row->FULLNAME." \n";
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
+        try{
+            $response = $kias->getDictiList(222555);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',222555)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 222555;
                     if($dicti->save()){
                         echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
                     } else {
@@ -285,6 +378,29 @@ class ProxyType extends Command
                     $dicti->numcode = (string)$row->NUMCODE;
                     $dicti->n_kids = (string)$row->N_KIDS;
                     $dicti->parent_isn = 39;
+                    if($dicti->save()){
+                        echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
+                    } else {
+                        echo "Ошибка записи ".(string)$row->FULLNAME." \n";
+                    }
+                }
+            }
+        }catch (\Exception $ex){
+            echo $ex->getMessage();
+        }
+
+        try{
+            $response = $kias->getDictiList(223373);
+            if(isset($response->ROWSET->row)) {
+                $oldDicti = Dicti::where('parent_isn',223373)->delete();
+                foreach ($response->ROWSET->row as $row) {
+                    $dicti = new Dicti;
+                    $dicti->isn = (string)$row->ISN;
+                    $dicti->fullname = (string)$row->FULLNAME;
+                    $dicti->code = (string)$row->CODE;
+                    $dicti->numcode = (string)$row->NUMCODE;
+                    $dicti->n_kids = (string)$row->N_KIDS;
+                    $dicti->parent_isn = 223373;
                     if($dicti->save()){
                         echo "Данные по ".(string)$row->FULLNAME." успешно записаны. \n";
                     } else {

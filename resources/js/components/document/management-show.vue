@@ -12,8 +12,8 @@
                  || results['classisn']==='1440531'" :results="results"></CounterpartyJournal>
             <ApplicationBlank v-else-if="results['classisn']==='1479131' || results['classisn']==='1479141' || results['classisn']==='820621' || results['classisn']==='1011971'
                                     || results['classisn']==='1007411' || results['classisn']==='1479151' || results['classisn']==='1007391'
-                                    || results['classisn']==='1011931' || results['classisn']==='1011961' || results['classisn']==='1011951' || results['classisn']==='1011941'"
-                              :results="results"></ApplicationBlank> <!-- Заявления -->
+                                    || results['classisn']==='1011931' || results['classisn']==='1011961' || results['classisn']==='1011951' || results['classisn']==='1011941'
+                                    || results['classisn']==='1007401'" :results="results"></ApplicationBlank> <!-- Заявления -->
             <DisciplinaryAction v-else-if="results['classisn']==='2018171'" :results="results"></DisciplinaryAction>
             <ManagementBusinessTrip v-else-if="results['classisn']==='1042311'" :results="results"></ManagementBusinessTrip>
             <ApprovalSheet v-else-if="results['classisn']==='1791111' || results['classisn']==='1783591'|| results['classisn']==='1799231' || results['classisn']==='2071791'

@@ -5,68 +5,76 @@
                 <h4 class="text-center">{{results.className}}</h4>
                 <div class="flex-row jc-sb mt-3 mb-3">
                     <div class="col-md-8 offset-md-4">
-                            <div class="mb-4" v-for="result in results.result1">
-                                <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
-                                    <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
-                                    <div class="col-md-8">
-                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
-                                                    id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
-                                    </div>
-                                </div>
-                                <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
-                                    <div class="col-md-8">
-                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
-                                                    id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
-                                        <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
-                                    </div>
+                        <div class="mb-4">
+                            <div v-if="idShow" class="form-group row">
+                                <label class="col-md-4 col-form-label">Номер:</label>
+                                <div class="col-md-8">
+                                    <input type="text" v-model="results.id" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label">Куратор документа:</label>
+                        </div>
+                        <div class="mb-4" v-for="result in results.result1">
+                            <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
+                                <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                 <div class="col-md-8">
-                                    <input type="text" v-model="results.emplName"
+                                    <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
+                                                id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
+                                </div>
+                            </div>
+                            <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
+                                <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
+                                <div class="col-md-8">
+                                    <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
+                                                id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
+                                    <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label">Куратор документа:</label>
+                            <div class="col-md-8">
+                                <input type="text" v-model="results.emplName"
+                                       class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between pt-4">
+                            <div>
+                                <label>Дата рег.</label>
+                                <div>
+                                    <date-picker
+                                        v-model="docDate"
+                                        format="DD.MM.YYYY"
+                                        :disabled-date="disabledDates"
+                                        @change="getDatePicker"
+                                        :disabled="addChange"
+                                    >
+                                        <template #input="slotProps">
+                                            <masked-input
+                                                type="text"
+                                                class="mx-input"
+                                                :mask="maskDate"
+                                                v-bind="slotProps.props"
+                                                v-on="slotProps.events"
+                                            >
+                                            </masked-input>
+                                        </template>
+                                    </date-picker>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Статус</label>
+                                <div>
+                                    <input type="text" v-model="results.status"
                                            class="form-control" readonly>
                                 </div>
                             </div>
-                            <div class="row justify-content-between pt-4">
+                            <div>
+                                <label>Стадия</label>
                                 <div>
-                                    <label>Дата рег.</label>
-                                    <div>
-                                        <date-picker
-                                            v-model="docDate"
-                                            format="DD.MM.YYYY"
-                                            :disabled-date="disabledDates"
-                                            @change="getDatePicker"
-                                            :disabled="addChange"
-                                        >
-                                            <template #input="slotProps">
-                                                <masked-input
-                                                    type="text"
-                                                    class="mx-input"
-                                                    :mask="maskDate"
-                                                    v-bind="slotProps.props"
-                                                    v-on="slotProps.events"
-                                                >
-                                                </masked-input>
-                                            </template>
-                                        </date-picker>
-                                    </div>
+                                    <input type="text" v-model="results.stage"
+                                           class="form-control" readonly>
                                 </div>
-                                <div>
-                                    <label>Статус</label>
-                                    <div>
-                                        <input type="text" v-model="results.status"
-                                               class="form-control" readonly>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label>Стадия</label>
-                                    <div>
-                                        <input type="text" v-model="results.stage"
-                                               class="form-control" readonly>
-                                    </div>
-                                </div>
+                            </div>
 <!--                                <div v-if="!stage">-->
 <!--                                    <label>Статус</label>-->
 <!--                                    <div>-->
@@ -74,8 +82,8 @@
 <!--                                               class="form-control" readonly>-->
 <!--                                    </div>-->
 <!--                                </div>-->
-                            </div>
                         </div>
+                    </div>
                 </div>
 
                 <!--                !!$show->DocRow->row!! -->
@@ -301,6 +309,7 @@ export default {
             index: '',
             unitGroups: [],
             wallRows: 2,
+            idShow: false
         }
     },
     created() {
@@ -421,6 +430,7 @@ export default {
                     if(response.data.success) {
                         this.loading = false;
                         this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
                         this.fillIn =true;
@@ -482,12 +492,31 @@ export default {
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = false;
-                        this.fillIn = true;
-                        this.toForm = true;
-                        this.saveDoc = false;
+                        if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
+                            let dat = {
+                                docisn: this.docIsn,
+                                isn: this.results.classisn,
+                                button: '1',
+                            }
+                            this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                this.results.id = response.data.id;
+                                if(this.results.id.length > 0){
+                                    this.idShow = true;
+                                }
+                                this.sendOutForm = false;
+                                this.fillIn = true;
+                                this.toForm = true;
+                                this.saveDoc = false;
+                            })
+                        } else {
+                            this.sendOutForm = false;
+                            this.fillIn = true;
+                            this.toForm = true;
+                            this.saveDoc = false;
+                        }
                     } else {
                         this.addChange = false;
+                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;
