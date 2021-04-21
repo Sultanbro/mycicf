@@ -71,6 +71,7 @@ class DocumentManagementController extends Controller
 
     public function show(Request $request, KiasServiceInterface $kias)
     {
+//        dd(auth()->user());
 //        dd($request->button);
         $today = date('d.m.Y');
 //        dd($today);
@@ -79,7 +80,7 @@ class DocumentManagementController extends Controller
             'CLASSISN' => $request->isn ? $request->isn : '',
             'DOCISN' => $request->docisn ? $request->docisn : '',
         ]);
-        dd($show);
+//        dd($show);
         $result = [];
         $contragent = [
             'fullname' => empty((string)$show->Doc->row->SUBJNAME) ? 'Контрагент' : $show->Doc->row->SUBJNAME,
@@ -136,8 +137,8 @@ class DocumentManagementController extends Controller
         $results = array_merge([
             'classisn' => get_object_vars($show->Doc->row->CLASSISN)[0],
             'parentClass' => get_object_vars($show->Parentclass)[0],
-            'emplisn' => get_object_vars($show->Doc->row->EMPLISN)[0],
-            'emplName' => get_object_vars($show->Doc->row->EMPLNAME)[0],
+            'emplisn' => auth()->user()->ISN,
+            'emplName' => auth()->user()->full_name ? auth()->user()->full_name : auth()->user()->short_name,
             'docdate' => isset($itens->docdate) ? get_object_vars($itens->docdate) : $today,
             'className' => get_object_vars($show->Doc->row->CLASSNAME)[0],
             'id' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
