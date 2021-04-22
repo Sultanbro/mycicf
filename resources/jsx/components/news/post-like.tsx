@@ -4,7 +4,7 @@ import { authUserIsn } from "../../authUserIsn";
 import { PostEntity } from "../ajax/types";
 import { Ajax, AjaxButtonProps } from "../ajax";
 import { AjaxButton } from "../ajax";
-import { Card, Dropdown } from "antd";
+import { Avatar, Card, Dropdown } from 'antd';
 import { UserAvatar } from "../UserAvatar";
 import { ISN } from "../../types";
 
@@ -43,16 +43,18 @@ export function LikedUsers({ postId }: LikedUsersProps) {
       <Ajax.POST<LikedUserEntry[]> url="/news/getLikes" data={{ postId }} cache>
         {({ response }) => {
           let users = response.data.slice(0, 5);
-          return users.map((user, index) => {
-            return (
-              <UserAvatar
-                isn={user.ISN}
-                size="default"
-                key={index}
-                title={user.full_name}
-              />
-            );
-          });
+          return <Avatar.Group>
+            {users.map((user, index) => {
+              return (
+                <UserAvatar
+                  isn={user.ISN}
+                  size="default"
+                  key={index}
+                  title={user.full_name}
+                />
+              );
+            })}
+          </Avatar.Group>
         }}
       </Ajax.POST>
     </Card>
