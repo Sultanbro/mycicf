@@ -66,7 +66,8 @@
             sendSolution: Function,
             showView: String,
             doc_row_list_inner_other: Object,
-            coordination: Object
+            coordination: Object,
+            preloader: Function
         },
         created(){
             //var url = "\\192.168.1.36\FILESKIAS$\D\33\877\D33877881\3860618.sig";
@@ -353,9 +354,11 @@
                     }).then((response) => {
                         if (response.data.success) {
                             if(docIndex < self.doc_row_list_inner_other[1].length-1){
+                                self.edsConfirmed = false;
                                 self.getToken(docIndex+1);
                             } else {
-                                seld.sendSolution(1);
+                                self.edsConfirmed = true;
+                                self.sendSolution(1);
                                 self.loader(false);
                             }
                         } else {
@@ -414,7 +417,7 @@
                 this.signedFileInfo = [];
             },
             loader(show){
-                this.loading = show;
+                this.preloader(show);
             },
         },
         mounted(){

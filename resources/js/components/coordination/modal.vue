@@ -246,6 +246,7 @@
                                                     :sendSolution="sendSolution"
                                                     :coordination="coordination"
                                                     :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                    :preloader="preloader"
                                                     show-view="sign">
                                             </eds-order-document>
                                         </div>
