@@ -118,8 +118,8 @@ export function Post({
               return (
                 <Row>
                   <Col
-                    md={18}
-                    offset={2}
+                    md={24}
+                    offset={0}
                     style={{ backgroundColor: "#e9ebee", padding: 10 }}
                   >
                     <EditPostForm
