@@ -241,7 +241,7 @@
                         if(result.code) {
                             if (result.code == 200) {
                                 self.signedFile = result.responseObject;
-                                let current_doc_isn = self.doc_row_list_inner_other[1][docIndex].ISN;  //self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
+                                let current_doc_isn = self.doc_row_list_inner_other[1][docIndex].DocISN; //self.doc_row_list_inner_other[1][docIndex].ISN;  //self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
                                 let ext = 'sig';
                                 let requestType = 'D';
                                 self.axios.post("/coordinationSaveAttachment", {
@@ -250,6 +250,7 @@
                                     fileType: 'base64',
                                     file: self.signedFile,
                                     fileExt: ext,
+                                    fileName: self.doc_row_list_inner_other[1][docIndex].ID
                                 }).then((response) => {
                                     if (!response.data.success) {
                                         alert(response.data.error);
@@ -276,7 +277,7 @@
                 self.signedFileInfo = [];
                 axios.post("/eds-by-isn", {
                     isn: attachmentIsn,
-                    refISN: self.doc_row_list_inner_other[1][docIndex].ISN,
+                    refISN: self.doc_row_list_inner_other[1][docIndex].DocISN,   //self.doc_row_list_inner_other[1][docIndex].ISN,
                     type: 'D'
                 }).then((response) => {
                     if(response.data.success) {
@@ -350,7 +351,7 @@
                     axios.post("/save_eds_info", {
                         data: obj[index],
                         isn: docIsn,
-                        refIsn: self.doc_row_list_inner_other[1][docIndex].ISN    //self.isn
+                        refIsn: self.doc_row_list_inner_other[1][docIndex].DocISN  //self.doc_row_list_inner_other[1][docIndex].ISN    //self.isn
                     }).then((response) => {
                         if (response.data.success) {
                             if(docIndex < self.doc_row_list_inner_other[1].length-1){
