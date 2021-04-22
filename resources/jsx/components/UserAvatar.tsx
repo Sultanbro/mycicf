@@ -12,9 +12,9 @@ interface UserAvatarProps {
 
 const DEFAULT_AVATAR = "/images/avatar.png";
 
-// let url = (isn: ISN) => `/storage/images/employee/${isn}.png`
+let url = (isn: ISN) => `/storage/images/employee/${isn}.png`
 // let url = (isn: ISN) => `https://dummyimage.com/340x340/95bbdf/ffffff.png&text=${isn}`;
-let url = (isn: ISN) => DEFAULT_AVATAR;
+// let url = (isn: ISN) => DEFAULT_AVATAR;
 
 export function UserAvatar({
   isn,
