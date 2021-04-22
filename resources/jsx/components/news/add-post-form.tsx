@@ -18,6 +18,7 @@ import { editorDictionary } from './editor-dict';
 import { FileEntry } from '../../hooks/useFileReader';
 import { PollForm } from './poll-form';
 import { If } from '../if';
+import './add-post-form.css';
 
 export interface AddPostFormProps {
   onAddPost(data: AddPostData): void;
@@ -129,7 +130,7 @@ export function AddPostForm({ onAddPost }: AddPostFormProps) {
     Опубликовать
   </AjaxButton>;
 
-  return <Row>
+  return <Row className="add-post-form">
     <Col md={24}>
       <Row>
         <Col md={24}>
