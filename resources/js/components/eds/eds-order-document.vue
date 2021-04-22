@@ -67,7 +67,8 @@
             showView: String,
             doc_row_list_inner_other: Object,
             coordination: Object,
-            preloader: Function
+            preloader: Function,
+            authorizedUserIin: Number
         },
         created(){
             //var url = "\\192.168.1.36\FILESKIAS$\D\33\877\D33877881\3860618.sig";
@@ -324,10 +325,13 @@
                                     //console.log(self.convertFileToBase64(signedBase64));
 
                                     //if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
+                                    if(result.responseObjects[0].iin == self.authorizedUserIin) {
                                         self.sendEdsInfoToKias(attachmentDocIsn, signedBase64, docIndex); // Записываем в киас данные из подписанного файла
-                                    //} else {
-                                        //self.loader(false);
-                                    //}
+                                    } else {
+                                        alert('Вы не можете подписать данный документ, по причине того что не совпадает Ваш ИИН и ИИН в ЭЦП ключе');
+                                        self.loader(false);
+                                        return false;
+                                    }
                                 }
                             } else {
                                 alert(result.message);

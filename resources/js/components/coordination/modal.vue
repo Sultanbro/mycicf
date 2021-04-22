@@ -243,6 +243,7 @@
                                             <eds-order-document
                                                     v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
                                                     ref="eds"
+                                                    :authorized-user-iin="authorizedUserIin"
                                                     :sendSolution="sendSolution"
                                                     :coordination="coordination"
                                                     :doc_row_list_inner_other="doc_row_list_inner_other"
@@ -251,7 +252,6 @@
                                             </eds-order-document>
                                         </div>
                                         <div v-else>
-                                            asdqwe
                                             <eds
                                                     v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
                                                     ref="eds"
@@ -369,7 +369,8 @@
             doc_row_list: Object,
             doc_row_inner: Object,
             doc_row_list_other: Object,
-            doc_row_list_inner_other: Object
+            doc_row_list_inner_other: Object,
+            authorizedUserIin: Number
         },
         methods: {
             beforeSendSolution(solution){

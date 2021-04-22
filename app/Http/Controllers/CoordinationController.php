@@ -165,6 +165,8 @@ class CoordinationController extends Controller
             }
         }
 
+        $getSubjectInformation = $kias->getSubject(null, null, null, null, $ISN);
+
         $result = [
             'success' => $success,
             'error' => $error,
@@ -177,7 +179,8 @@ class CoordinationController extends Controller
                 'AD' => $AD,
                 'RV' => $RV,
                 'VC' => $VC,
-                'other' => $other
+                'other' => $other,
+                'authorizedUserIin' => isset($getSubjectInformation->error) ? 0 : (int)$getSubjectInformation->ROWSET->row->IIN
             )
         ];
 

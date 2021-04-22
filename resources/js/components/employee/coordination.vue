@@ -302,6 +302,7 @@
             :doc_row_inner="doc_row_inner"
             :doc_row_list_other="doc_row_list_other"
             :doc_row_list_inner_other="doc_row_list_inner_other"
+            :authorized-user-iin="authorizedUserIin"
         >
         </coordination-modal>
     </div>
@@ -331,7 +332,8 @@
                 doc_row_list: {},
                 doc_row_inner: {},
                 doc_row_list_other: {},
-                doc_row_list_inner_other: {}
+                doc_row_list_inner_other: {},
+                authorizedUserIin: 0
             }
         },
         mounted: function(){
@@ -362,6 +364,7 @@
                     this.RV = response.result.RV;
                     this.VC = response.result.VC;
                     this.other = response.result.other;
+                    this.authorizedUserIin = response.result.authorizedUserIin;
                 }else{
                     alert(response.error);
                 }

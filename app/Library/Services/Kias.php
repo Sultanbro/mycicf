@@ -477,13 +477,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin)
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $subjIsn = null)
     {
         return $this->request('User_CicSearchSubject', [
             'IIN'          => $iin,
             'FIRSTNAME'    => $firstName,
             'LASTNAME'     => $lastName,
             'PARENTNAME'   => $patronymic,
+            'ISN' => $subjIsn
         ]);
     }
 
@@ -883,6 +884,12 @@ class Kias implements KiasServiceInterface
         return $this->request('User_CicGetDocRowAttr', [
             'CLASSISN' => $class_isn,
             'DOCISN'   => $doc_isn,
+        ]);
+    }
+
+    public function User_CicGetOrSetEorderDocs($doc_isn){
+        return $this->request('User_CicGetDocRating', [
+            'docisn' => $doc_isn,
         ]);
     }
 
