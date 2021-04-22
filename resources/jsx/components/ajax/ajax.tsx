@@ -29,38 +29,40 @@ export interface AjaxRefetchArgs {
 }
 
 function flushExpiredCache() {
-  for (let i = 0; i < localStorage.length; i++) {
-    let key = localStorage.key(i);
+  requestAnimationFrame(() => {
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
 
-    if (!key) {
-      continue;
-    }
-
-    if (!key.startsWith('ajax__cache__')) {
-      continue;
-    }
-
-    try {
-      let value = localStorage.getItem(key);
-
-      if (!value) {
+      if (!key) {
         continue;
       }
 
-      let json = JSON.parse(value);
-
-      if (!json.expires) {
-        localStorage.removeItem(key);
+      if (!key.startsWith('ajax__cache__')) {
         continue;
       }
 
-      if (json.expires < Date.now()) {
+      try {
+        let value = localStorage.getItem(key);
+
+        if (!value) {
+          continue;
+        }
+
+        let json = JSON.parse(value);
+
+        if (!json.expires) {
+          localStorage.removeItem(key);
+          continue;
+        }
+
+        if (json.expires < Date.now()) {
+          localStorage.removeItem(key);
+        }
+      } catch (e) {
         localStorage.removeItem(key);
       }
-    } catch (e) {
-      localStorage.removeItem(key);
     }
-  }
+  });
 }
 
 export function Ajax<T>({
