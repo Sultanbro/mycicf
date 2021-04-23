@@ -1,0 +1,16 @@
+
+### Get posts
+POST http://{{host}}/news/comments/deleteComment
+Content-Type: application/json
+Accept: application/json
+
+{
+    "commentId": 2
+}
+
+> {%
+    client.test('Must return the array of posts', function () {
+        client.assert(response.status === 200, "Response status is not 200");
+        client.assert(response.body.success === true, "Response body returns false");
+    });
+ %}

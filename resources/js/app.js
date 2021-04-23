@@ -1,3 +1,5 @@
+
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -244,3 +246,4 @@ window.onload = function(){
         el: '#header',
     });
 };
+

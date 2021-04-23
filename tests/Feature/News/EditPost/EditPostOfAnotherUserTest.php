@@ -5,6 +5,11 @@ namespace Tests\Feature\News\EditPost;
 use App\Post;
 use Tests\WithUser;
 
+/**
+ * Class EditPostOfAnotherUserTest
+ * @package Tests\Feature\News\EditPost
+ * @covers \App\Http\Controllers\News\MyPostsController::editPost
+ */
 class EditPostOfAnotherUserTest extends EditPostTestBase {
     use WithUser;
 

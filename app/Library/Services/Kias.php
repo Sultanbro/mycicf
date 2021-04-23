@@ -64,6 +64,9 @@ class Kias implements KiasServiceInterface
         Debugbar::log('Kias::Construct');
     }
 
+    /**
+     * @return \Illuminate\Support\Carbon
+     */
     private function getLifetime() {
         return now()->addMinutes(config('kias.cache.lifetime'));
     }
