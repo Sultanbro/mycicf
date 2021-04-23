@@ -376,7 +376,7 @@
                 this.doc_row_list_other = {};
                 this.doc_row_list_inner_other = {};
 
-                //this.preloader(true);
+                this.preloader(true);
                 if(type === 'SZ' && data !== null) {
                     this.axios.post("/getCoordinationInfo", {docIsn: ISN}).then((response) => {
                         this.setModalData(response.data, index, type);
@@ -417,8 +417,8 @@
                 else
                 {
                     alert('ERROR')
+                    this.preloader(false);
                 }
-                this.preloader(false);
             },
             getAttachments () {
                 var vm = this;
@@ -427,8 +427,10 @@
                 }).then(response => {
                     if(response.data.success){
                         vm.attachments = response.data.attachments;
+                        this.preloader(false);
                     }else{
                         vm.attachments = [];
+                        this.preloader(false);
                     }
                 });
             },

@@ -369,7 +369,9 @@
             setPinned() {
                 if(!this.post.pinned) {
                     this.axios.post('/setPinned', {postId: this.post.postId}).then(response => {
-                        this.$parent.unsetAllPinned(this.index);
+                        if(response.data.success) {
+                            this.$parent.unsetAllPinned(this.index);
+                        }
                     }).catch(error => {
                         alert('Ошибка на стороне сервера');
                     });
@@ -690,21 +692,5 @@
         width: 25px;
         border: 2px solid #D9D9D9;
         border-radius: 5px;
-    }
-
-    .d-player-video-wrap {
-        position: relative;
-        padding-bottom: 56.25%;
-        padding-top: 30px;
-        height: 0;
-        overflow: hidden;
-    }
-
-    .d-player-video-wrap.d-player-video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
     }
 </style>

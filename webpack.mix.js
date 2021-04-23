@@ -67,7 +67,7 @@ mix.js('resources/js/app.js', 'public/js')
     .reactTypeScript('resources/jsx/app.ts', 'public/jsx')
     .onlyIfChanged();
 
-if (!mix.inProduction()) {
+if (env && !mix.inProduction()) {
     mix
         .browserSync({
             proxy: env.APP_URL,

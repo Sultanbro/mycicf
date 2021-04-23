@@ -15,11 +15,6 @@ yarn-error.log
 /.idea/*
 /.idea
 /public/mix-manifest.json
-/public/docs
-
-/public/js
-/public/**/*.js
-/public/css
 
 /resources/docs
 /resources/views/apidoc

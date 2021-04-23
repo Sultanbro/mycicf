@@ -185,59 +185,55 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('eds/od', 'EdsController@edsOD');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
-        Route::get('test/eds', 'SiteController@testEds');
-        Route::get('/getEDS', 'SiteController@getEds');
-        Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
-        Route::post('/save_eds_info','SiteController@saveEdsInfo');
-        Route::post('/coordinationSaveAttachment','CoordinationController@saveAttachment');
-        Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
-        Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
-        Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
-        Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
-        //DOSSIER
-        Route::post('/emplInfo', 'SiteController@postEmplInfo');
-        Route::get('/dossier', 'SiteController@dossier')->name('dossier');
-        //COORIDNATION
-        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
-        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList')->name('coordination.getList');
-        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
-        Route::post('/setCoordination', 'CoordinationController@setCoordination');
-        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
-        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
-        Route::post('/getAgreedCoordination', 'CoordinationController@getAgreedCoordination');
-        //DOCUMENTATION ADMIN MIDDLEWARE
-        Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
-        Route::post('/documentation/save', 'DocumentationController@save');
-        Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
-        //DOCUMENTATION
-        Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
-        Route::post('/documentation/search', 'DocumentationController@search');
-        //PARSE
-        Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
-        Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
-        Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+        Route::group(['middleware' => 'duty'], function () {
+            Route::get('test/eds', 'SiteController@testEds');
+            Route::post('/save_document', 'EdsController@saveDocument');
+            Route::post('/get_or_set_doc', 'EdsController@getOrSetDoc');
+            Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+            Route::get('/getEDS', 'SiteController@getEds');
+            Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
+            Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
+            Route::post('/coordinationSaveAttachment', 'CoordinationController@saveAttachment');
+            Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
+            Route::post('/getBranchData', 'SiteController@postBranchData');
+            Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+            Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
+            //DOSSIER
+            Route::post('/emplInfo', 'SiteController@postEmplInfo');
+            Route::get('/dossier', 'SiteController@dossier')->name('dossier');
+            //DOCUMENTATION ADMIN MIDDLEWARE
+            Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
+            Route::post('/documentation/save', 'DocumentationController@save');
+            Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
+            //DOCUMENTATION
+            Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
+            Route::post('/documentation/search', 'DocumentationController@search');
+            //PARSE
+            Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+            Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+            Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+            Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
-        Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
-        Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
-        Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
+            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
+            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
+            Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
 
-        //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
-        Route::get('/parse/getCurrentPeriods/{type}', ['uses' => 'ParseController@getCurrentPeriods']);
-        Route::get('/parse/getCompanies', 'ParseController@getCompanies');
-        Route::post('/parse/opu/getData', 'ParseController@getOpuTopSum');
-        Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
-        Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
-        //CENTCOINS
-        Route::group(['middleware' => 'centcoinExcepts'], function () {
-            Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
-            Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
-            Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
-            Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
-            Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
-            Route::post('/buyItem', 'CentcoinsController@buyItem');
-        });
+            //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
+            Route::get('/parse/getCurrentPeriods/{type}', ['uses' => 'ParseController@getCurrentPeriods']);
+            Route::get('/parse/getCompanies', 'ParseController@getCompanies');
+            Route::post('/parse/opu/getData', 'ParseController@getOpuTopSum');
+            Route::post('/parse/balance/getData', 'ParseController@getBalanceTopSum');
+            Route::post('/parse/info/getData', 'ParseController@getCompanyInfo');
+            //CENTCOINS
+            Route::group(['middleware' => 'centcoinExcepts'], function () {
+                Route::get('/centcoins', 'CentcoinsController@getView')->name('centcoins');
+                Route::get('/spendCentcoins', 'CentcoinsController@spendCentcoinsView');
+                Route::post('/getOperationsList', 'CentcoinsController@getOperationsList');
+                Route::post('/getCentcoins', 'CentcoinsController@getCentcoins');
+                Route::post('/getItemsStorage', 'CentcoinsController@getItemsStorage');
+                Route::post('/buyItem', 'CentcoinsController@buyItem');
+            });
 
 //        Route::group(['middleware' => 'cors'], function() {
 //            Route::get('/getVersion', 'Controller@getVersion');
@@ -295,37 +291,115 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         });
 
+        Route::post('/setPinned', 'News\\MyPostsController@setPinned')->middleware('checkPostAccess');
+
         Route::post('/setSenateVote', 'NewsController@senateVote');
 //        //RATING
 //        Route::get('/rating', 'RatingController@index')->name('rating');
 //        Route::post('/getRatingList', 'RatingController@getRatingList');
-        //COLLEAGUES
-        Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
-        Route::post('/colleagues/search', 'ColleaguesController@search');
-        Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
-        Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
-        Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
-        Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
-        Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
-        Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
-        Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
-        Route::post('/addScore', 'ScoreController@addScore');
+            //COLLEAGUES
+            Route::get('/colleagues', 'ColleaguesController@index')->name('colleagues');
+            Route::post('/colleagues/search', 'ColleaguesController@search');
+            Route::get('/colleagues/{ISN}', 'ColleaguesController@redirectToDossier');
+            Route::get('/colleagues/{ISN}/dossier', 'ColleaguesController@showPageByIsn');
+            Route::get('/colleagues/{ISN}/rating', 'ColleaguesController@showRatingByIsn');
+            Route::get('/colleagues/{ISN}/motivation', 'ColleaguesController@showMotivationByIsn');
+            Route::get('/colleagues/{ISN}/report', 'ColleaguesController@showReportByIsn');
+            Route::get('/colleagues/{ISN}/centcoins', 'ColleaguesController@showCentcoinsByIsn');
+            Route::get('/colleagues/{ISN}/statistics', 'StatisticsController@showReportByIsn');
+            Route::post('/addScore', 'ScoreController@addScore');
 
-        //UNTITLED
-        Route::get('/name', 'NameController@getView')->name('documentation');
-        Route::post('/getItemsList', 'NameController@getItemsList');
+            //UNTITLED
+            Route::get('/name', 'NameController@getView')->name('documentation');
+            Route::post('/getItemsList', 'NameController@getItemsList');
 
-        Route::get('/report', 'ReportController@index')->name('report');
-        Route::post('/getReport', 'ReportController@getReport');
+            Route::get('/report', 'ReportController@index')->name('report');
+            Route::post('/getReport', 'ReportController@getReport');
 
-        //STATISTIC-DA
-        Route::get('/statistics', 'StatisticsController@index')->name('statistics');
-        Route::post('/getStatisticsReport', 'StatisticsController@getReport');
-        Route::post('/getProdData', 'StatisticsController@getProdData');
-        Route::post('/getProducts', 'StatisticsController@getProducts');
-        Route::post('/getBranchProdData', 'StatisticsController@postBranchProdData');
-        Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
+            //STATISTIC-DA
+            Route::get('/statistics', 'StatisticsController@index')->name('statistics');
+            Route::post('/getStatisticsReport', 'StatisticsController@getReport');
+            Route::post('/getProdData', 'StatisticsController@getProdData');
+            Route::post('/getProducts', 'StatisticsController@getProducts');
+            Route::post('/getBranchProdData', 'StatisticsController@postBranchProdData');
+            Route::post('/getSearchBranch', 'SiteController@getBranchSearch');
+            //MOTIVATION
+            Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
+            // MOBILE
+            Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
+            Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
+            Route::get('mobile/matching', 'ParseController@getMatchingMobile')->name('mobile/matching');
+            Route::get('mobile/matching-index', 'ParseController@getMatchingIndexMobile')->name('mobile/matching-index');
+            Route::get('parse/parse', 'ParseController@getTest')->name('parse/parse');
+            Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
+            Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
 
+            Route::post('/getUsersData', 'SiteController@getUserData');
+            Route::post('/getColleagueData', 'SiteController@getColleagueData');
+
+            Route::get('/motivation', 'MotivationController@motivation')->name('motivation');
+            Route::post('/getMotivationList', 'MotivationController@getMotivationList');
+
+            Route::get('/express', 'ProductsController@expressList');
+            //Route::get('/express/calc/{ID}', 'ProductsController@express');
+            Route::get('/express/calc/{ID}/{quotationId}', 'ProductsController@express')->name('express_front');
+            Route::post('/express/updateDocumentStatus', 'ProductsController@updateDocumentStatus');
+            Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
+            Route::get('/express/quotations/{productISN}', 'ProductsController@expressQuotationList')->name('express_quotations_list');
+            Route::post('/full/updateFullStatus', 'ProductsController@updateFullStatus');
+            Route::get('/full', 'ProductsController@fullList');
+            Route::get('/full/quotations/{productISN}', 'ProductsController@fullQuotationList')->name('full_quotations_list');
+            Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@fullCreateEdit')->name('full_front');
+            Route::post('/full/sendToInspection', 'ProductsController@sendToInspection');
+            Route::post('/full/create', 'ProductsController@fullCreate');
+            Route::post('/full/getFullObjects', 'ProductsController@getFullObjects');
+            Route::post('/full/getFullData', 'ProductsController@getFullData');
+            Route::post('/full/send-docs', 'ProductsController@sendDocs');
+            Route::post('/full/create-agr', 'ProductsController@createAgr');
+            Route::post('/full/getPrintableFormList', 'ProductsController@getPrintableFormList');
+            Route::get('/full/getPrintableForm', 'ProductsController@getPrintableForm');
+            Route::post('/full/getFullBranch', 'SiteController@getFullBranch');
+
+            Route::post('/getDictiList', 'SiteController@getDicti');
+            Route::post('/getDictiListFromBase', 'SiteController@getDictiFromBase');
+            Route::post('/searchSubject', 'SiteController@searchSubject');
+            Route::post('/setSubject', 'SiteController@setSubject');
+            Route::post('/calc/saveSubject', 'SiteController@saveSubject');
+            Route::post('/express/calculate', 'ProductsController@expressCalc');
+            Route::post('/express/createAgrByAgrcalc', 'ProductsController@CreateAgrByAgrcalc');
+            Route::post('/full/calculate', 'ProductsController@fullCalc');
+
+            Route::post('/getVehicle', 'VehicleController@getVehicle');
+            Route::post('/saveVehicle', 'VehicleController@saveVehicle');
+
+            Route::post('/setToken', 'NotificationController@setToken');
+            //PreInsuranceInspection
+            Route::get('insurance/inspection', 'PreInsuranceInspectionController@index')->name('insurance/inspection');
+            Route::get('insurance/inspection/{isn}', 'PreInsuranceInspectionController@show')
+                ->name('insurance/inspection/show');
+            Route::post('getInsuranceInspectionList', 'PreInsuranceInspectionController@getInsuranceInspectionList');
+            Route::post('getInsuranceInspectionInfo', 'PreInsuranceInspectionController@getInsuranceInspectionInfo');
+            Route::post('setInspection', 'PreInsuranceInspectionController@setInspection');
+            Route::post('upload', 'PreInsuranceInspectionController@upload');
+            Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
+            Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+
+            //Dev page route
+            Route::get('development/{name}', 'NewsController@dev')->name('development');
+
+            Route::get('boss-news', 'NewsController@index')->name('boss-news');
+            Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
+
+            //My results page
+            Route::get('rating', 'RatingController@ratingIndex')->name('rating');
+            Route::post('getTopRatingList', 'RatingController@getTopRatingList');
+            Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+
+            Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
+            Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
+            Route::post('my-results/getRating', 'RatingController@getRating');
+
+        });
         Route::get('/logout', 'SiteController@logout');
         //MOTIVATION
         Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
@@ -402,6 +476,14 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
         Route::post('my-results/getRating', 'RatingController@getRating');
+        //COORIDNATION
+        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList')->name('coordination.getList');
+        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
+        Route::post('/setCoordination', 'CoordinationController@setCoordination');
+        Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
+        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
+        Route::post('/getAgreedCoordination', 'CoordinationController@getAgreedCoordination');
     });
 
     Route::post('api/booking/get', 'ApiController@getBookingData');
@@ -423,8 +505,7 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
-Route::post('/save_document', 'EdsController@saveDocument');
-Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');

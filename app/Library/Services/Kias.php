@@ -86,17 +86,17 @@ class Kias implements KiasServiceInterface
     /**
      * Get kias by system credentials
      */
-    public function initSystem()
+    public function initSystem($name = null, $pass = null)
     {
-        if ($this->systemInitialized) {
+        if ($name == null && $this->systemInitialized) {
             return;
         }
         Debugbar::log('Kias::Mock Init System');
         $this->url = config('kias.url');
         $this->getClient();
 
-        $username = config('kias.auth.login');
-        $password = config('kias.auth.password');
+        $username = $name ??  config('kias.auth.login');
+        $password = $pass ?? config('kias.auth.password');
         $passwordHash = hash('sha512', $password);
 
         // $key = 'kias::authenticate::' . $username . '::' . $passwordHash;
@@ -105,6 +105,7 @@ class Kias implements KiasServiceInterface
         Debugbar::stopMeasure('Authenticate in Kias');
         $this->_sId = $systemData->Sid;
         $this->systemInitialized = true;
+        return $systemData;
     }
 
     /**
@@ -150,9 +151,7 @@ class Kias implements KiasServiceInterface
                     $key = 'kias::User_CicHelloSvc::' . $name . '::' . serialize($params) . '::';
                     $ttl = $this->getLifetime();
                     Debugbar::startMeasure('User_CicHelloSvc in Kias');
-                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
-                        return $this->execProc($name, $params);
-                    });
+                    $execResponse = $this->execProc($name, $params);
                     Debugbar::stopMeasure('User_CicHelloSvc in Kias');
                     break;
 
@@ -160,9 +159,10 @@ class Kias implements KiasServiceInterface
                     $key = 'kias::User_CicMyCoordinationList::' . $name . '::' . serialize($params) . '::';
                     $ttl = $this->getLifetime();
                     Debugbar::startMeasure('User_CicMyCoordinationList in Kias');
-                    $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
-                        return $this->execProc($name, $params);
-                    });
+                    $execResponse = $this->execProc($name, $params);
+                    // $execResponse = cache()->remember($key, $ttl, function () use ($name, $params) {
+                    //     return $this->execProc($name, $params);
+                    // });
                     Debugbar::stopMeasure('User_CicMyCoordinationList in Kias');
                     break;
 
@@ -189,10 +189,10 @@ class Kias implements KiasServiceInterface
                 $date  = $d->format('d-m-Y_H-i-s-u');
 
                 // TODO Use Storage::disk instead
-                file_put_contents(
-                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
-                    $xml->asXml()
-                );
+//                file_put_contents(
+//                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+//                    $xml->asXml()
+//                );
             }
         }
 
@@ -236,10 +236,10 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
-                file_put_contents(
-                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
-                    $xml->asXML()
-                );
+//                file_put_contents(
+//                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
+//                    $xml->asXML()
+//                );
             }
         }
 
@@ -396,7 +396,7 @@ class Kias implements KiasServiceInterface
 
     public function getEmplMotivation($isn, $begin)
     {
-        return $this->request('User_CicGetEmplMotivation', [
+        return $this->request('User_CicGetEmplMotivations', [
             'EmplISN' => $isn,
             'Month'   => date('m', strtotime($begin)),
             'Year'    => date('Y', strtotime($begin)),
