@@ -256,7 +256,6 @@ class PostsController extends Controller {
             $new_post->save();
 
             if (isset($request->postFiles)) {
-                dd($request->postFiles);
                 /**
                  * @var $postFiles File[]
                  */
