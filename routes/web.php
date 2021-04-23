@@ -17,6 +17,9 @@
 
 // Роуты для Песочницы
 Route::get('/sandbox/index', 'SandboxController@index');
+Route::get('/sandbox/react', 'SandboxController@react');
+Route::get('/sandbox/react2', 'SandboxController@react2');
+Route::get('/sandbox/error', 'SandboxController@error');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
 Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
@@ -177,6 +180,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
+    Route::get('/getBirthdays2', 'SiteController@getBirthdays2')->name('getBirthdays2');
 
     Route::get('eds/od', 'EdsController@edsOD');
 
@@ -244,13 +248,18 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             'as'     => 'news',
         ], function () {
 // TODO Постепенно перенести сюда все роуты связанные с этой группой
+            Route::get('/beta', 'News\\PostsController@getViewBeta')->name('.index');
+
             Route::get('/', 'News\\PostsController@getView')->name('.index');
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
             Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
+            Route::post('/addPost/beta', 'News\\PostsController@addPost2')->name('.addPost-beta'); // TODO use grouping
             Route::post('/likePost', 'News\\PostsController@likePost')->name('.likePost');
+            Route::post('/getLikes', 'News\\PostsController@getPostLikes')->name('.getLikes');
             Route::post('/news-birthday', 'NewsController@birthday');
             Route::post('/editPost', 'NewsController@editPost')->middleware('checkPostAccess');
             Route::post('/vote', 'News\\PostsController@vote')->name('.votePost');
+            Route::post('/getDateValidRanges', 'News\\PostsController@getDateValidRanges')->name('.getDateValidRanges');
 
             Route::group([
                 'prefix'     => 'my',
@@ -453,7 +462,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
 
-        //Dev page route
+        //DevDev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
 
         Route::get('boss-news', 'NewsController@index')->name('boss-news');
@@ -511,13 +520,6 @@ Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
-Route::get('test', function () {
-    return view('test');
-});
-Route::get('test3', function () {
-    echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
-});
-
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');
     Route::post('/login', 'Documentation\DocumentationAuthController@login');
@@ -534,4 +536,17 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+});
+
+Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
+    Route::get('code', 'Dev\CodeAnalyzeController@index')->name('.code');
+    Route::get('tests', 'Dev\TestsController@index')->name('.tests');
+    Route::get('routes', 'Dev\RoutesController@index')->name('.routes');
+    Route::get('vendor', 'Dev\VendorController@index')->name('.vendor');
+    Route::get('config', 'Dev\ConfigController@index')->name('.config');
+    Route::get('git', 'Dev\GitController@index')->name('.git');
+    Route::get('views', 'Dev\ViewsController@index')->name('.views');
+    Route::get('docs', 'Dev\DocsController@index')->name('.docs');
+    Route::get('caching', 'Dev\CachingController@index')->name('.caching');
+    Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });

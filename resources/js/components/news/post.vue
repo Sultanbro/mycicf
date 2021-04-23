@@ -1,7 +1,6 @@
 <template >
     <div class="mt-4 ml-2 mr-2">
         <div onscroll="bottomOfWindow" class="mb-2 bg-white rounded">
-
             <div class="d-flex justify-content-between bg-top pl-4 pt-2 pb-2 pr-4">
                 <div>
                     <span class="bold">Создайте публикацию</span>

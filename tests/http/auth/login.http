@@ -1,0 +1,8 @@
+### Authorization
+POST http://{{host}}/login
+Content-Type: application/json
+
+{
+    "username": "Developer",
+    "password": "password"
+}

@@ -10,7 +10,6 @@ class AddPostRequest extends FormRequest {
       'isn' => 'numeric',
       'poll' => 'numeric',
       'question' => 'string',
-      //'answers' => 'string',
       'postText' => 'string',
     ];
   }

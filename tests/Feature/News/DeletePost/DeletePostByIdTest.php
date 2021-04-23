@@ -5,6 +5,11 @@ namespace Tests\Feature\News\DeletePost;
 use App\Post;
 use Tests\WithUser;
 
+/**
+ * Class DeletePostByIdTest
+ * @package Tests\Feature\News\DeletePost
+ * @covers \App\Http\Controllers\News\MyPostsController::deletePost
+ */
 class DeletePostByIdTest extends DeletePostTestBase {
     use WithUser;
 

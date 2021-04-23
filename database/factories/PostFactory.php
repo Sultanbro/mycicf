@@ -6,9 +6,9 @@ use Faker\Generator as Faker;
 
 $factory->define(\App\Post::class, function (Faker $faker) {
     return [
-        'user_isn' => '1144',
-        'post_text' => $faker->text(1000),
-        'pinned' => $faker->boolean,
+        'user_isn' => \App\User::inRandomOrder()->first()->ISN,
+        'post_text' => $faker->paragraphs(4, true),
+        'pinned' => 0,
         'from_kias' => $faker->boolean,
     ];
 });

@@ -2,7 +2,7 @@
 
 return [
     'mock' => [
-        'enabled' => env('KIAS_MOCK_ENABLED', false),
+        'enabled' => (bool)env('KIAS_MOCK_ENABLED', false),
         'delay' => env('KIAS_MOCK_DELAY', 0)
     ],
 
