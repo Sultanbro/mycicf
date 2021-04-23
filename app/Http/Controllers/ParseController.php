@@ -2622,7 +2622,7 @@ class ParseController extends Controller
             $previousName->product_id = $model->id;
             $previousName->name = $request->fullname;
             if($previousName->save()){
-                echo 'Успешно добавлена';
+                return response()->json(['success' => true]);
             }else{
                 $model->delete();
                 echo 'Ошибка во время добавления';
