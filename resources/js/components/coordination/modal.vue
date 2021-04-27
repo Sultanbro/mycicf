@@ -161,7 +161,7 @@
                                                 <td v-for="(list,key) in doc_row_list_other">
                                                     <span v-if="doc_row_list_inner_other[key][index]['ID'] != undefined">{{ doc_row_list_inner_other[key][index]['ID'] }}</span>
                                                     <span v-else>{{ doc_row_list_inner_other[key][index] }}</span>
-                                                    <a href="#" role="button" v-if="key == 1" @click="getOrderDocumentContent(doc_row_list_inner_other[key][index]['ISN'])">
+                                                    <a href="#" role="button" v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831 && key == 1" @click="getOrderDocumentContent(doc_row_list_inner_other[key][index]['ISN'])">
                                                         (подробнее)
                                                     </a>
                                                 </td>
@@ -353,7 +353,10 @@
             </div>
         </div>
         <button v-show="false" ref="informationModal" type="button" data-toggle="modal" data-target="#information-modal">Large modal</button>
-        <information-modal :content-inner-information = "contentInnerInformation"></information-modal>
+        <information-modal
+                :content-inner-information = "contentInnerInformation"
+                v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831">
+        </information-modal>
     </div>
 </template>
 
