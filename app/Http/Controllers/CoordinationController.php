@@ -354,6 +354,28 @@ class CoordinationController extends Controller
         }
     }
 
+    public function getEorderDocs(Request $request, KiasServiceInterface $kias){
+        try {
+            $result = $kias->getOrSetEorderDocs($request->DocISN);
+            if(!isset($result->error))
+            {
+                return response()->json([
+                    'success' => true,
+                    'doc_info' => $result
+                ]);
+            }
+            else
+                throw new \Exception('Данные не найдены', 400);
+        }
+        catch(\Exception $e) {
+            return response()->json([
+                'success'   => false,
+                'code'      => $e->getCode(),
+                'message'   => $e->getMessage()
+            ]);
+        }
+    }
+
     public function attributeKeys(){
         return [
             'AttrDocType' => 'Тип СЗ',

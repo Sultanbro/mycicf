@@ -676,6 +676,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getOrSetEorderDocs($doc_isn){
+        return $this->request('User_CicGetOrSetEorderDocs',[
+            'DocISN' => $doc_isn
+        ]);
+    }
+
     public function getCoordinationCount($ISN)
     {
         return $this->request('User_CicCountEmplCoordination', [

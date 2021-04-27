@@ -355,7 +355,7 @@
                     axios.post("/save_eds_info", {
                         data: obj[index],
                         isn: docIsn,
-                        refIsn: self.doc_row_list_inner_other[1][docIndex].DocISN  //self.doc_row_list_inner_other[1][docIndex].ISN    //self.isn
+                        refIsn: self.doc_row_list_inner_other[1][docIndex].ISN  //self.doc_row_list_inner_other[1][docIndex].ISN    //self.isn
                     }).then((response) => {
                         if (response.data.success) {
                             if(docIndex < self.doc_row_list_inner_other[1].length-1){

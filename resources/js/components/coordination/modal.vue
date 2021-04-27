@@ -161,6 +161,9 @@
                                                 <td v-for="(list,key) in doc_row_list_other">
                                                     <span v-if="doc_row_list_inner_other[key][index]['ID'] != undefined">{{ doc_row_list_inner_other[key][index]['ID'] }}</span>
                                                     <span v-else>{{ doc_row_list_inner_other[key][index] }}</span>
+                                                    <a href="#" role="button" v-if="key == 1" @click="getOrderDocumentContent(doc_row_list_inner_other[key][index]['ISN'])">
+                                                        (подробнее)
+                                                    </a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -349,6 +352,8 @@
                 </div>
             </div>
         </div>
+        <button v-show="false" ref="informationModal" type="button" data-toggle="modal" data-target="#information-modal">Large modal</button>
+        <information-modal :content-inner-information = "contentInnerInformation"></information-modal>
     </div>
 </template>
 
@@ -360,6 +365,7 @@
                 Remark: "",
                 resolution: "0",
                 modalHide: '',
+                contentInnerInformation: {}
             }
         },
         props: {
@@ -410,13 +416,29 @@
             checkIsDir(){
                 return this.$parent.isDirector;
             },
+            getOrderDocumentContent(docIsn){
+                this.preloader(true);
+                this.axios.post("/getEorderDocs", {
+                    DocISN: docIsn
+                }).then((response) => {
+                    if (!response.data.success) {
+                        this.preloader(false);
+                        alert(response.data.error);
+                    } else {
+                        this.contentInnerInformation = response.data.doc_info;
+                        this.$refs.informationModal.click();
+                        this.modalHide = 'z-index:1050;overflow: scroll;';
+                        this.preloader(false);
+                    }
+                });
+            },
             preloader(show){
                 if(show){
                     document.getElementById('preloader').style.display = 'flex';
-                    this.modalHide = 'z-index:0;';
+                    this.modalHide = 'z-index:0;overflow: scroll;';
                 } else {
                     document.getElementById('preloader').style.display = 'none';
-                    this.modalHide = 'z-index:1050;';
+                    this.modalHide = 'z-index:1050;overflow: scroll;';
                 }
             }
         },

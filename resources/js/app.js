@@ -98,6 +98,8 @@ Vue.component('search', require('./components/documentation/search.vue').default
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
 
+Vue.component('information-modal', require('./components/shared/information-modal.vue').default);
+
 Vue.component('motivation', require('./components/employee/motivation.vue').default);
 
 Vue.component('name', require('./components/name/name.vue').default);

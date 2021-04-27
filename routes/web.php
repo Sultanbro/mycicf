@@ -191,6 +191,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/eds-by-isn', 'EdsController@edsByIsn')->name('eds-by-isn');
             Route::post('/save_eds_info', 'EdsController@saveEdsInfo');
             Route::post('/coordinationSaveAttachment', 'CoordinationController@saveAttachment');
+            Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
             Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
