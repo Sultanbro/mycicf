@@ -719,6 +719,7 @@
                                     <div class="recruiting-backward-title">
                                         Заявка на поиск кандидата
                                     </div>
+                                    <div>{{candidatBackward.chiefMail}}</div>
                                     <div class="recruiting-select-header">
                                         Наименование структурного подразделения (укажите город и адрес филиала)
                                     </div>
@@ -1093,6 +1094,7 @@
                     manualIIN: '',
                     manualPhoneNumber: '',
                     status: 'Открыта',
+                    chief_mail: null,
                 },
                 recruitingData: {
                     id: '',
@@ -1105,6 +1107,7 @@
                     dateOfConclusionTD: '',
                     commentary: '',
                     status: '',
+                    recruiterEmail: '',
                 },
                 showToTopBtn: false,
                 bottomOfWindow: 0,
@@ -1227,7 +1230,7 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                recruitingTabs: 1,
+                recruitingTabs: 2,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1437,7 +1440,8 @@
                 candidateBase: {
                     IIN: '',
                     phone: '',
-                    documents: []
+                    documents: [],
+                    recruiterEmail: '',
                 },
                 candidateStorage: {},
                 candidatePerson: null,
@@ -1460,6 +1464,7 @@
             this.getResultRequest();
             this.getCandidatsDataManualRequest();
             // this.applicationDataOutput();
+            // this.getDictiOnClick();
             this.getDicti();
             this.getChiefsRequest();
             this.getBranchData();
@@ -1689,6 +1694,7 @@
               this.candidateBase.IIN = '';
               this.candidateBase.phone = '';
               this.candidateBase.documents = '';
+              this.candidateBase.recruiterEmail = '';
               this.recruitingData.interviewResult = '';
               this.recruitingData.internshipResult = '';
               this.candidatsData.manualFullname = '';
@@ -1698,6 +1704,7 @@
               this.recruitingData.interviewTime = '';
               this.recruitingData.dateOfConclusionDOU = '';
               this.recruitingData.dateOfConclusionTD = '';
+              this.recruitingData.recruiterEmail = '';
               this.resultCheckCounter = '';
               this.filesInfo = [];
               // console.log(this.candidateBase.IIN);
@@ -1722,6 +1729,7 @@
                 this.recruitingData.interviewTime = '';
                 this.recruitingData.dateOfConclusionDOU = '';
                 this.recruitingData.dateOfConclusionTD = '';
+                this.candidateBase.recruiterEmail = '';
                 this.resultCheckCounter = '';
                 this.filesInfo = [];
                 this.showTopModal(index,id);
@@ -1731,6 +1739,7 @@
             showTopModal: function(index,id){
                 this.candidateBase.IIN = '';
                 this.candidateBase.phone = '';
+                this.candidateBase.recruiterEmail = '';
                 this.candidatePerson = '';
                 let vm = this;
 
@@ -1755,6 +1764,7 @@
                                 self.candidatePerson = el;
                                 self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
                                 self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
+                                self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
                                 self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
                             }
                         });
@@ -1789,6 +1799,7 @@
                 this.candidatBackward.manualFullname = this.candidateManualDataLocal.candidate_fullname;
                 this.candidatBackward.manualIIN = this.candidateManualDataLocal.candidate_iin;
                 this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
+                this.candidatBackward.chiefMail = this.person.email_chief;
                 this.recruitingData.interviewDate = this.person.interview_date;
                 this.recruitingData.interviewTime = this.person.interview_time;
                 this.recruitingData.interviewResult = this.person.interview_result;
@@ -1798,10 +1809,12 @@
                 this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                 this.recruitingData.commentary = this.person.commentary;
                 this.recruitingData.status = this.person.application_status;
+                this.recruitingData.recruiterEmail = this.candidateManualDataLocal.recruiter_email;
             },
             showModal: function(index,id){
                this.candidateBase.IIN = '';
                this.candidateBase.phone = '';
+               this.recruiterEmail = '';
                this.candidatePerson = '';
 
                if(id == undefined) {
@@ -1816,6 +1829,7 @@
                                self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
                                self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
                                self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                               self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
                            }
                        });
                    }
@@ -1835,6 +1849,7 @@
                                self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
                                self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
                                self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                               self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
                            }
                        });
                    }
@@ -1847,7 +1862,8 @@
                // if(this.candidateBase.phone == undefined){
                //     this.candidateBase.phone = 'Отсутствуют данные';
                // }
-               this.candidatsPersonalData = this.candidatDataLocal[index];
+               // this.candidatsPersonalData = this.candidatDataLocal[index];
+                this.candidatsPersonalData = this.candidatDataLocal.find(el => el.id == this.person.id)
                this.candidatBackward.id =  this.person.id;
                this.candidatBackward.cityAdressSelect = this.person.unit_structural_name_and_city;
                this.candidatBackward.nameOfPostSelect = this.person.name_of_post;
@@ -1873,6 +1889,7 @@
                this.candidatBackward.manualFullname = this.candidateManualDataLocal.candidate_fullname;
                this.candidatBackward.manualIIN = this.candidateManualDataLocal.candidate_iin;
                this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
+               this.candidatBackward.chiefMail = this.person.email_chief;
                this.recruitingData.interviewDate = this.person.interview_date;
                this.recruitingData.interviewTime = this.person.interview_time;
                this.recruitingData.interviewResult = this.person.interview_result;
@@ -1882,6 +1899,7 @@
                this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                this.recruitingData.commentary = this.person.commentary;
                this.recruitingData.status = this.person.application_status;
+               this.recruitingData.recruiterEmail = this.candidateManualDataLocal.recruiter_email;
                // console.log(this.candidateBase);
                // console.log(this.candidateManualDataLocal.candidate_iin);
                // this.candidateBase.IIN = this.candidateManualDataLocal.candidate_iin;
@@ -1961,7 +1979,12 @@
                                 this.dicti.haveCar = response.data.haveCar;
                                 this.dicti.driverCard = response.data.driverCard;
                                 this.dicti.socPacket = response.data.socPacket;
-                                // console.log(this.dicti.driverCard[0].Label[0]);
+                                // Сохранение почты шефа
+                                this.candidat.chief_mail = response.data.chief_mail[0];
+                                // this.candidat.chief_mail = 'qwerty';
+                                 //dd(response);
+                                //console.log('test=');
+                                 //console.log(response);
 
                                 // this.driverCardOption = this.dicti.driverCard[0].Label[0];
 
@@ -2104,6 +2127,8 @@
 
                     this.axios.post("/recruiting/get-recruiting-dicti", dataIsn)
                         .then(response => {
+
+                            console.log('asdasd');
                             if (response.data.success) {
                                 this.dicti.structuralUnitAndCity = response.data.structuralUnitAndCity;
                                 this.dicti.nameOfPost = response.data.nameOfPost;
@@ -2122,6 +2147,7 @@
                                 this.dicti.haveCar = response.data.haveCar;
                                 this.dicti.driverCard = response.data.driverCard;
                                 this.dicti.socPacket = response.data.socPacket;
+                                this.candidat.chief_mail = response.data.chief_mail[0];
                                 // console.log(this.dicti.driverCard[0].Label[0]);
 
                                 // this.driverCardOption = this.dicti.driverCard[0].Label[0];
@@ -2480,6 +2506,7 @@
                 this.candidatsData.recruitingId =  this.candidatBackward.id;
                 this.candidatsData.documents =  this.candidatBackward.documents;
                 this.candidatsData.recruiterFullname = this.user.branch.fullname;
+                this.candidatsData.chiefMail = this.candidatBackward.chiefMail;
                 formData.append("candidatsData", JSON.stringify(this.candidatsData));
                 return formData;
             },

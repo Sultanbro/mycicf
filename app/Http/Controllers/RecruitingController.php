@@ -57,9 +57,11 @@ class RecruitingController extends Controller
 //             'success' => false,
 //             'result' => []
 //         ]);
-
         $requests = Recruiting::all();
         foreach ($requests as $req){
+//            $response =  $kiasService->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+//            $recruiting_emails = explode(' ', $response->Mail);
+
             $req->unit_structural_name_and_city = $req->getBranchName($req->unit_structural_name_and_city);
 //            $req->name_of_post = $req->getBranchNameByIsn($req->name_of_post, $kiasService);
 //            $req->reason_to_recruiting = $req->getBranchNameByIsn($req->reason_to_recruiting, $kiasService);
@@ -89,6 +91,12 @@ class RecruitingController extends Controller
             $req->job_chart = $req->getChiefsDicti($req->job_chart);
             $req->have_car = $req->getChiefsDicti($req->have_car);
             $req->driver_category = $req->getChiefsDicti($req->driver_category);
+//            $req->email_chief = $recruiting_emails[0];
+
+
+//            $req->recruiter_mail = $req->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+//            $response =  $req->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+//            $req->recruiter_mail = explode(' ', $response->Mail);
         }
         return response()->json([
             'success' => $requests ? true : false,
@@ -247,13 +255,18 @@ class RecruitingController extends Controller
         if(!isset($candidats_data->id)) {
             $candidats_data = new RecruitingCandidatesData();
         }
+        $chiefMail = $cData->chiefMail;
+        $this->TestMail($chiefMail);
+        $response =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+        $recruiting_emails = explode(' ', $response->Mail);
 //        $candidats_data->candidats_phone_number = $request->candidatsData['cityAdress'];
         $candidats_data->recruiting_id = $cData->recruitingId;
         $candidats_data->candidate_fullname = $cData->manualFullname;
         $candidats_data->candidate_iin = $cData->manualIIN;
         $candidats_data->candidate_phone_number = $cData->manualPhoneNumber;
         $candidats_data->responsible_recruiter = $cData->recruiterFullname;
-
+        $recruiting_email_string = $recruiting_emails[0];
+        $candidats_data->recruiter_email = $recruiting_email_string;
 
         if(!$candidats_data->save()){
             return response()->json([
@@ -296,7 +309,7 @@ class RecruitingController extends Controller
                 'error' => 'Ошибка'
             ]);
         }
-        $this->TestMail();
+//        $this->TestMail();
 
         return response()->json([
             'success' => true,
@@ -342,7 +355,7 @@ class RecruitingController extends Controller
             'result' => $response
         ]);
     }
-    public function  getResultRequest(Request $request){
+    public function  getResuzltRequest(Request $request){
 //        $result = RecruitingCandidatesData::pluck('responsible_recruiter', 'recruiting_id')->toArray();
         $result = RecruitingCandidatesData::select('recruiting_id','responsible_recruiter', 'candidate_fullname')->get()->toArray();
 //        $result = RecruitingCandidatesData::pluck('candidate_fullname', 'recruiting_id')->toArray();
@@ -391,6 +404,8 @@ class RecruitingController extends Controller
     public function getCandidatsDataManualRequest(Request $request){
         $results = [];
         $result = RecruitingCandidatesData::get();
+//        dd($result);
+
         if($result){
             foreach($result as $res){
                 $res['documents'] = $res->getDocuments();
@@ -406,9 +421,13 @@ class RecruitingController extends Controller
         $Test = $kias->getTestKiadData();
         dd($Test);
     }
-    public function testMail(){
+    public function testMail($chiefMail){
         try{
-            Mail::to('EFilimonova@cic.kz')->send(new EmailAmazonSes([
+//            EFilimonova@cic.kz
+//            $emails = ['DJumagulov@cic.kz', 'Abylkhair@mail.ru'];
+//            $emails = array($recruiterName);
+            $emails = array($chiefMail);
+            Mail::to($emails)->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
                 'tourId' => 1,
             ]
@@ -511,6 +530,7 @@ class RecruitingController extends Controller
         $recruiting->candidates_trait = $request->candidat['candidatsTrait'];
         $recruiting->interview_stage = $request->candidat['interviewStage'];
         $recruiting->application_status = $request->candidat['status'];
+        $recruiting->email_chief = $request->candidat['chief_mail'];
 //        $recruiting->email_chief = authEmail;
 
 //        $recruiting->candidates_fullname = $request->candidat['manualFullname'];
@@ -590,6 +610,10 @@ class RecruitingController extends Controller
         $resultDriverCard = [];
         $resultSocPacket = [];
         $success = false;
+
+//        Почта авторизованного человека
+        $response_mail =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+        $recruiting_emails = explode(' ', $response_mail->Mail);
 
         if(isset($responseDriverCard->ROWSET->row)){
             foreach ($responseDriverCard->ROWSET->row as $row){
@@ -797,6 +821,7 @@ class RecruitingController extends Controller
             'motivation' => $resultMotivation,
             'haveCar' => $resultHaveCar,
             'success' => $success,
+            'chief_mail' => $recruiting_emails,
         ]);
     }
 }
