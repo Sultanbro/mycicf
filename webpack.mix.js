@@ -16,4 +16,12 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/admin.js', 'public/js')
     .js('resources/js/mobile.js', 'public/js')
     //.js('resources/js/agreement.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+    .sass('resources/sass/app.scss', 'public/css')
+    .sourceMaps()
+    .options({
+        processCssUrls: false,
+        hmrOptions: {
+            host: '127.0.0.1',
+            port: 8080
+        }
+    });

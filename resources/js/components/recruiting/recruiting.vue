@@ -719,7 +719,7 @@
                                     <div class="recruiting-backward-title">
                                         Заявка на поиск кандидата
                                     </div>
-                                    <div>{{candidatBackward.chiefMail}}</div>
+<!--                                    <div>{{candidatBackward.chiefMail}}</div>-->
                                     <div class="recruiting-select-header">
                                         Наименование структурного подразделения (укажите город и адрес филиала)
                                     </div>
@@ -1742,37 +1742,57 @@
                 this.candidateBase.recruiterEmail = '';
                 this.candidatePerson = '';
                 let vm = this;
+                this.person =  this.chiefsDataLocal[index];
+                    let self = this;
+                    // if (Object.keys(this.candidateStorage).length > 0) {
+                    //     this.candidateStorage.map(function (el) {
+                    //         console.log(el.recruiting_id + '===' + self.chiefsDataLocal[index].id);
+                    //         if (el.recruiting_id == id) {
+                    //             self.candidatePerson = el;
+                    //             self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
+                    //             self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
+                    //             self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
+                    //             self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                    //         }
+                    //     });
+                    // }
 
-                //if (Object.keys(this.chiefsDataLocal).length > 0) {
-                    this.chiefsDataLocal.map(function (element) {
-
-                        if (element.id == id) {
-                            vm.person = element;
-                            console.log(element.id+'='+id);
-                        }
-                    });
-                //}
-                   //this.chiefsDataLocal[index];
-                //if(id == undefined) {
-                    //this.person = this.chiefsDataLocal[index];
+                                if(id == undefined) {
+                    this.person =  this.chiefsDataLocal[index];
                     let self = this;
                     if (Object.keys(this.candidateStorage).length > 0) {
                         this.candidateStorage.map(function (el) {
                             console.log(el.recruiting_id + '===' + self.chiefsDataLocal[index].id);
-                            //let indexx = index+1;
+                            if (el.recruiting_id == self.chiefsDataLocal[index].id) {
+                                self.candidatePerson = el;
+                                self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
+                                self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
+                                self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                                self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
+                            }
+                        });
+                    }
+                } else {
+                    let vm = this;
+                    this.chiefsDataLocal.map(function (element) {
+                        if (element.id == id) {
+                            vm.person = element;
+                        }
+                    });
+                    let self = this;
+                    if (Object.keys(this.candidateStorage).length > 0) {
+                        this.candidateStorage.map(function (el) {
+                            console.log(el.recruiting_id + '===' + self.chiefsDataLocal[index].id);
                             if (el.recruiting_id == id) {
                                 self.candidatePerson = el;
                                 self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
                                 self.candidateBase.phone = el.candidate_phone_number == undefined ? '' : el.candidate_phone_number;
-                                self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
                                 self.candidateBase.documents = el.documents == undefined ? '' : el.documents;
+                                self.candidateBase.recruiterEmail = el.recruiter_email == undefined ? '' : el.recruiter_email;
                             }
                         });
                     }
-                // } else {
-                //
-                // }
-
+                }
                 this.candidatsPersonalData = this.candidatDataLocal[index];
                 this.candidatBackward.id =  this.person.id;
                 this.candidatBackward.cityAdressSelect = this.person.unit_structural_name_and_city;
@@ -1809,7 +1829,7 @@
                 this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                 this.recruitingData.commentary = this.person.commentary;
                 this.recruitingData.status = this.person.application_status;
-                this.recruitingData.recruiterEmail = this.candidateManualDataLocal.recruiter_email;
+                this.recruitingData.recruiterEmail = this.candidateManualDataLocal[index].recruiter_email;
             },
             showModal: function(index,id){
                this.candidateBase.IIN = '';
@@ -1823,7 +1843,6 @@
                    if (Object.keys(this.candidateStorage).length > 0) {
                        this.candidateStorage.map(function (el) {
                            console.log(el.recruiting_id + '===' + self.chiefsDataLocal[index].id);
-                           //let indexx = index+1;
                            if (el.recruiting_id == self.chiefsDataLocal[index].id) {
                                self.candidatePerson = el;
                                self.candidateBase.IIN = el.candidate_iin == undefined ? '' : el.candidate_iin;
@@ -1854,15 +1873,6 @@
                        });
                    }
                }
-
-
-               // if(this.candidateBase.IIN == undefined){
-               //     this.candidateBase.IIN = 'Отсутствуют данные';
-               // }
-               // if(this.candidateBase.phone == undefined){
-               //     this.candidateBase.phone = 'Отсутствуют данные';
-               // }
-               // this.candidatsPersonalData = this.candidatDataLocal[index];
                 this.candidatsPersonalData = this.candidatDataLocal.find(el => el.id == this.person.id)
                this.candidatBackward.id =  this.person.id;
                this.candidatBackward.cityAdressSelect = this.person.unit_structural_name_and_city;
@@ -1898,18 +1908,9 @@
                this.recruitingData.dateOfConclusionDOU = this.person.date_of_conclusion_dou;
                this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                this.recruitingData.commentary = this.person.commentary;
+
+               this.recruitingData.recruiterEmail = this.candidateManualDataLocal.find(e => e.id === this.person.id).recruiter_email;
                this.recruitingData.status = this.person.application_status;
-               this.recruitingData.recruiterEmail = this.candidateManualDataLocal.recruiter_email;
-               // console.log(this.candidateBase);
-               // console.log(this.candidateManualDataLocal.candidate_iin);
-               // this.candidateBase.IIN = this.candidateManualDataLocal.candidate_iin;
-               // console.log(this.candidateBase);
-               // console.log(this.candidateManualDataLocal.candidate_iin);
-               //  сюда
-               // candidateBase: {
-                //     IIN: '',
-                //         phone: '',
-                // },
             },
             addCandidateBtn() {
                 this.showEditBtn = false;

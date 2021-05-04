@@ -299,6 +299,11 @@ class RecruitingController extends Controller
         $rec_data->date_of_conclusion_td = $request->recruitingData['dateOfConclusionTD'];
         $rec_data->commentary = $request->recruitingData['commentary'];
         $rec_data->application_status = $request->recruitingData['status'];
+        $recruiterEmail = $request->recruitingData['recruiterEmail'];
+        $this->TestMail($recruiterEmail);
+//        qnnn
+//        dd($recruiterEmail);
+//        dd($request);
 //        $rec_data->recruiting_id = $request->recruitingData['recruitingId'];
 //        $rec_data->candidats_fullname = $request->recruitingData['manualFullname'];
 //        $rec_data->candidats_iin = $request->recruitingData['manualIIN'];
@@ -319,6 +324,7 @@ class RecruitingController extends Controller
     public function testt1(Request $request){
         $recruiting = new Recruiting();
         $recruiting->candidats_iin = $request->candidatsData['manualIIN'];
+
         if(!$recruiting->update()){
             return response()->json([
                 'success' => false,
@@ -355,7 +361,7 @@ class RecruitingController extends Controller
             'result' => $response
         ]);
     }
-    public function  getResuzltRequest(Request $request){
+    public function  getResultRequest(Request $request){
 //        $result = RecruitingCandidatesData::pluck('responsible_recruiter', 'recruiting_id')->toArray();
         $result = RecruitingCandidatesData::select('recruiting_id','responsible_recruiter', 'candidate_fullname')->get()->toArray();
 //        $result = RecruitingCandidatesData::pluck('candidate_fullname', 'recruiting_id')->toArray();
@@ -427,7 +433,12 @@ class RecruitingController extends Controller
 //            $emails = ['DJumagulov@cic.kz', 'Abylkhair@mail.ru'];
 //            $emails = array($recruiterName);
             $emails = array($chiefMail);
-            Mail::to($emails)->send(new EmailAmazonSes([
+
+//            $emails->email
+
+//            dd($emails);
+
+            Mail::to($emails[0])->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
                 'tourId' => 1,
             ]
