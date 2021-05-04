@@ -624,8 +624,8 @@ class RecruitingController extends Controller
 
 //        Почта авторизованного человека
         $response_mail =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
-        $recruiting_emails = explode(' ', $response_mail->Mail);
-
+//        $recruiting_emails = explode(' ', $response_mail->Mail);
+        $recruiting_emails = explode(' ', (string)$response_mail->Mail);
         if(isset($responseDriverCard->ROWSET->row)){
             foreach ($responseDriverCard->ROWSET->row as $row){
                 array_push($resultDriverCard, [
