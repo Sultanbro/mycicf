@@ -74,14 +74,14 @@
 @include('layouts.header')
 <div id="app">
 	<name></name>
-	<main>
-		<!--div class="w-100 d-flex justify-content-end">
-			<div class="d-flex flex-column mr-3 mt-1" style="color:#4267b2;"> <!-- надо добавить в css -->
+	<!--main>
+		<div class="w-100 d-flex justify-content-end">
+			<div class="d-flex flex-column mr-3 mt-1" style="color:#4267b2;">
 				<span><strong>Оргструктура действует с 01.07.2020 года</strong></span>
 				<span>на основании решения Совета директоров от 29.06.2020 года</span>
 			</div>
-		</div-->
-	</main>
+		</div>
+	</main-->
 </div>
 	<svg style="width: 100%;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
          xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="99.6929in" height="10.26772in"
