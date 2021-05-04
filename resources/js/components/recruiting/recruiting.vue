@@ -67,7 +67,7 @@
 <!--                </div>-->
                 <div class="recruiting-body">
                     <div>
-                        <button @click="mailTest">Click to send mail!</button>
+<!--                        <button @click="mailTest">Click to send mail!</button>-->
                         <div class="recruiting-select-header">
                             Наименование структурного подразделения (укажите город и адрес филиала)
                         </div>
