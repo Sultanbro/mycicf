@@ -5,8 +5,7 @@
             <div class="header-img-width">
                 <a href="{{route('index')}}">
 {{--                    <img src="{{asset('images/new-white-logo.png')}}" class="image">--}}
-{{--                    <img src="{{asset('images/mycic-horizontal-logo.png')}}" class="image">--}}
-                    <img src="{{asset('images/mycic_halloween.png')}}" class="image">
+                    <img src="{{asset('images/mycic-horizontal-logo.png')}}" class="image">
                 </a>
             </div>
         </div>
@@ -32,7 +31,7 @@
                 {{--Рейтинг--}}
                 {{--</li>--}}
                 {{--</a>--}}
-                <a class="header-navigation" href="{{route('development', 'rating')}}">
+                <a class="header-navigation" href="{{route('rating')}}">
                     <li>
                         Рейтинг
                     </li>
@@ -99,9 +98,6 @@
         <div class="item-3"></div>
         <div class="item-4"></div>
         <div class="item-5"></div>
-    </div>
-    <div >
-        <img src="{{asset('images/spider_web_mycic.png')}}" alt="" style="position: absolute; right: 0; z-index: 100; width: 8%">
     </div>
 </header>
 <script type="text/javascript" src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>

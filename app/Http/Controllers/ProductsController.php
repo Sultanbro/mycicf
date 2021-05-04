@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use DateTime;
 
+/**
+ * Class ProductsController
+ * @package App\Http\Controllers
+ *
+ * @group Products
+ */
 class ProductsController extends Controller
 {
     const DICT_CURRENCY_USD = 9716;
@@ -503,6 +509,9 @@ class ProductsController extends Controller
             'full_id' => isset($quotation->full_id) ? $quotation->full_id : null,
             'tariff' => isset($quotation->tariff) ? $quotation->tariff : null,
             'remark' => isset($quotation->remark) ? $quotation->remark : null,
+            'prem_one' => isset($quotation->prem_one) ? $quotation->prem_one : null,
+            'prem_fam' => isset($quotation->prem_fam) ? $quotation->prem_fam : null,
+            'limit_sum_one' => isset($quotation->limit_sum_one) ? $quotation->limit_sum_one : null,
         ]);
     }
 
@@ -563,6 +572,10 @@ class ProductsController extends Controller
                 $quotation->nshb_id = (string)$response->DocID != '' ? (string)$response->DocID : null;    // номер документа
                 $quotation->nshb_request_id = (string)$response->RequestID != '' && (string)$response->RequestID != null ? (string)$response->RequestID : null;    // номер заявки НШБ
 
+                $quotation->prem_one = isset($response->PremOne) ? (string)$response->PremOne : null;
+                $quotation->prem_fam = isset($response->PremFam) ? (string)$response->PremFam : null;
+                $quotation->limit_sum_one = isset($response->LimitSumOne) != '' ? (string)$response->LimitSumOne : null;
+
                 //$setDocStatus = $kias->getOrSetDocs((string)$response->CustomDoc, 1, 2522);
 
 //                if(isset($setDocStatus->error)){
@@ -592,7 +605,11 @@ class ProductsController extends Controller
             'nshb_request' => $quotation->nshb_request,
             'nshb_id' => $quotation->nshb_id,
             'redirect_link' => route('express_quotations_list',['productISN' => $quotation->product_isn]),
-            'nshb_request_id' => $quotation->nshb_request_id
+            'nshb_request_id' => $quotation->nshb_request_id,
+
+            'prem_one' => $quotation->prem_one,
+            'prem_fam' => $quotation->prem_fam,
+            'limit_sum_one' => $quotation->limit_sum_one,
         ]);
     }
 
@@ -822,11 +839,13 @@ class ProductsController extends Controller
     public function fullList(){
         $products = [];
         foreach (ExpressProduct::orderBy('ordinal','asc')->get() as $product){
-            array_push($products, [
-                'url' => "/full/calc/{$product->id}/0",
-                'name' => $product->name,
-                'isn' => $product->product_isn
-            ]);
+            if(isset($product->constr->id)) {
+                array_push($products, [
+                    'url' => "/full/calc/{$product->id}/0",
+                    'name' => $product->name,
+                    'isn' => $product->product_isn
+                ]);
+            }
         }
         return view('full.list', compact('products'));
     }
@@ -876,7 +895,7 @@ class ProductsController extends Controller
 
         $quotations = $quotations->orderBy('created_at','desc')->paginate(15);
         $product = ExpressProduct::where('product_isn',$productISN)->first();
-        $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
+        $statuses = isset($product->constr->parentisns) ? (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status) : [];
         return view('express.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
     }
 

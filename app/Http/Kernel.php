@@ -33,7 +33,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -72,7 +72,11 @@ class Kernel extends HttpKernel
         'centcoinExcepts' => \App\Http\Middleware\centcoinExcepts::class,
         'productsAdmin' => \App\Http\Middleware\ProductsAdmin::class,
         'kurators' => \App\Http\Middleware\Kurators::class,
+        'cors' => \App\Http\Middleware\cors::class,
         'parseDomainAuth' => \App\Http\Middleware\parseDomainAuth::class,
+        'ratingPermission' => \App\Http\Middleware\RatingPermission::class,
+        'checkPostAccess' => \App\Http\Middleware\News\CheckPostAccess::class,
+        'duty'=> \App\Http\Middleware\KommeskUsers::class,
     ];
 
     /**
@@ -99,5 +103,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\ProductsAdmin::class,
         \App\Http\Middleware\Kurators::class,
         \App\Http\Middleware\parseDomainAuth::class,
+        \App\Http\Middleware\News\CheckPostAccess::class,
     ];
 }

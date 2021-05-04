@@ -1,8 +1,27 @@
 <template>
     <div>
         <div class="avatar-menu-size mt-3 mb-3 ml-2 mr-2">
+            <div class="crown" :class="likes < 100
+            ? '' : likes >= 100 && likes < 200
+            ? 'crown-bronze' : likes >= 200 && likes < 300
+            ? 'crown-silver' : likes >= 300
+            ? 'crown-gold' : 'crown-gold'"
+                 v-if="likes >= 100">
+                <i class="fas fa-crown"></i>
+            </div>
             <img src="/images/avatar.png" class="image" v-if="fakeImage">
             <img :src="imageUrl" @error="fakeImage = true" v-else>
+            <div class="sticker-block">
+                <span @click="score('like')" class="sticker sticker-like hidden">
+                    <span class="sticker-num">{{likes}}</span>
+                </span>
+
+<!--                <span @click="score('dislike')" class="sticker sticker-dislike hidden">
+                    <span class="sticker-num">{{dislikes}}</span>
+                </span>-->
+
+            </div>
+
         </div>
         <div class="flex-row bg-color-blue color-white" @click="reverseCaret()" data-toggle="collapse" data-target="#persons-data" aria-expanded="true">
             <div class="pointer left-menu-nickname-fonts ml-3 mr-3 mt-1 mb-1 jc-sb width100">
@@ -49,6 +68,10 @@
                 rating: '',
                 fakeImage: false,
                 imageUrl : null,
+                likes: 0,
+/*                dislikes: 0,
+                isDisLiked: 0,*/
+                isLiked: 0
             }
         },
         props: {
@@ -74,12 +97,68 @@
                     this.education = information.Education;
                     this.rating = information.Rating;
                     this.place_of_birth = information.City;
+                    this.likes = information.Likes;
+                    this.dislikes = information.Dislikes;
+                    this.isLiked = information.isLiked;
+                    this.isDisLiked = information.isDisLiked;
                 }else{
                     alert(response.error);
                 }
             },
             reverseCaret: function () {
                 this.caretClass = this.caretClass === 'fa-chevron-up' ? 'fa-chevron-down' : 'fa-chevron-up';
+            },
+
+            fetchLiked(response) {
+                if(response.success === true) {
+                    this.post.isLiked = 1;
+                }
+                else {
+                    this.post.isLiked = 0;
+                }
+            },
+
+
+            score: function (type) {
+                switch (type) {
+                    case 'like':
+                        if(this.isLiked === 1 || this.isLiked === '1') {
+                            this.isLiked = 0;
+                            this.likes--;
+                        }
+                        else {
+                            this.isLiked = 1;
+                            this.likes++;
+                        }
+
+                        this.axios.post('/addScore', {user_isn: this.isn, type: type})
+                            .then(response => {
+                                this.fetchLiked(response.data);
+                            });
+                        break;
+ /*                   case 'dislike':
+                        if(this.isDisLiked === 1 || this.isDisLiked === '1') {
+                            this.isDisLiked = 0;
+                            this.dislikes--;
+                        }
+                        else {
+                            this.isDisLiked = 1;
+                            this.dislikes++;
+                        }
+
+                        this.axios.post('/addScore', {user_isn: this.isn, type: type})
+                            .then(response => {
+                                if(response.success === true) {
+                                    this.post.isDisLiked = 1;
+                                }
+                                else {
+                                    this.post.isDisLiked = 0;
+                                }
+                            });
+                        break;*/
+                    default:
+                        break;
+                }
             },
         },
 

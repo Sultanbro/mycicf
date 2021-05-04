@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\NotificationServiceInterface;
 use App\Notification;
-use App\Providers\KiasServiceProvider;
-use http\Env\Response;
+use Debugbar;
 use Illuminate\Http\Request;
-use App\Comment;
 use App\Events\NewPost;
-use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +24,11 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
         $response = $kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
@@ -42,6 +44,8 @@ class CoordinationController extends Controller
                     'DeptName' => (string)$row->DeptName,
                     'id' => (string)$row->id,
                     'docdate' => (string)$row->docdate,
+                    'ClassPovestka' => (string)$row->ClassPovestka,
+                    'Povestka' => (string)$row->Povestka
                 ]);
             }
         }
@@ -228,6 +232,7 @@ class CoordinationController extends Controller
                             'Date' => (string)$coordination->datesolution,
                             'Remark' => (string)$coordination->remark,
                             'ISN' => (string)$coordination->ISN,
+                            //'RefAgrISN' => isset($coordination->RefAgrISN) ? (string)$coordination->RefAgrISN : 0,
                         ]);
                     }
                 }
@@ -264,6 +269,7 @@ class CoordinationController extends Controller
             'Attributes' => $attributes,
             'Coordinations' => $coordinations,
             'Limit' => $LimitISN ?? null,
+            'link' => (string)$response->Link
         ]);
         $result = [
             'success' => $success,
@@ -313,8 +319,16 @@ class CoordinationController extends Controller
                     if(!isset($doc_row_list[(string)$row->orderno])){
                         $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
                     }
-
-                        $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
+                    if(isset($row->classisn)) {
+                        if ($row->classisn == 1784771) {
+                            $doc_row_inner[(string)$row->orderno][] = array(
+                                'ISN' => (string)$row->value,
+                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
+                            );
+                        } else {
+                            $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
+                        }
+                    }
                 }
 
                 return response()->json([
@@ -361,6 +375,7 @@ class CoordinationController extends Controller
             'SubjName',             //Наименование страхователя
             'SubjDept',             //Департамент страхователя
             'Remark',               //Примечание листа СЗ
+            'RefAgrISN',
         ];
     }
 
@@ -420,13 +435,86 @@ class CoordinationController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    public function getAgreedCoordination(Request $request, KiasServiceInterface $kias){
+        $ISN = $request->ISN;
+
+        $results = $kias->request('User_CicGetAgreedCoordinationList', array(
+            'EmplISN' => $ISN
+        ));
+
+        if(!isset($results->error)) {
+            $agreedAC = [];
+            foreach ($results->AgreedAC->row as $result){
+                array_push($agreedAC, [
+                    'ISN'=> (string)$result->ISN,
+                    'type'=>(string)$result->type,
+                    'curator'=>(string)$result->curator,
+                    'DeptName'=>(string)$result->DeptName,
+                    'id'=>(string)$result->id,
+                    'docdate'=>(string)$result->docdate,
+                    'ClassPovestka'=>(string)$result->ClassPovestka,
+                    'Povestka'=>(string)$result->Povestka
+                ]);
+            }
+
+            return response()->json([
+                'agreedAC' => $agreedAC,
+                'success' => true
+            ]);
+        }
+        else {
+            return response()->json([
+                'success' => false
+            ]);
+        }
+    }
+
+
+    public function saveAttachment(Request $request, KiasServiceInterface $kias){
+        try{
+            $success = true;
+            if($request->fileType == 'base64'){
+                $file = $request->file;
+                $extension = isset($request->fileExt) ? $request->fileExt : '';
+                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
+            } else {
+//                $file = $request->base64_encode($request->file);
+//                $contents = $file->get();
+//                $extension = $file->extension();
+//                $filename = mt_rand(1000000, 9999999).'.'.$extension;
+            }
+
+            $results = $kias->saveAttachment(
+                $request->isn,
+                $filename,
+                $file,
+                $request->requestType
+            );
+            if(isset($results->error)){
+                $success = false;
+                $error = 'Ошибка загрузки файла, обратитесь к системному администратору';  //(string)$results->error->text
+            }
+
+            return response()->json([
+                'success' => $success,
+                'error' => isset($error) ? $error : '',
+                'result' => isset($results->ISN) ? (string)$results->ISN : ''
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'result' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function sendNotify(Request $request){
         $users = explode(',', $request->users);
         $doc_no = $request->doc_no;
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
-        (new NotificationController())->sendCoordinationNotify($users);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
                 continue;

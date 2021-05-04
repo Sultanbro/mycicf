@@ -74,7 +74,7 @@
         <div class="row row-3">
             <div class="col-lg-12">
                 <p class="footer-title">
-                    <small class="footer-title__inner">©1997-2019 АО "Страховая Компания "Сентрас Иншуранс"</small>
+                    <small class="footer-title__inner">©1997-{{date('Y')}} АО "Страховая Компания "Сентрас Иншуранс"</small>
                     <small class="footer-title__inner">Все права защищены</small>
                 </p>
             </div>

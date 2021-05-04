@@ -1,3 +1,5 @@
+
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -21,6 +23,8 @@ import VTooltip from 'v-tooltip'
 import vmodal from 'vue-js-modal'
 
 import VueTheMask from 'vue-the-mask'
+
+import VueApexCharts from 'vue-apexcharts'
 
 import Vue from "vue";
 
@@ -47,6 +51,10 @@ Vue.use(VueTheMask);
 Vue.use(TextareaAutosize);
 
 Vue.use(VTooltip);
+
+Vue.use(VueApexCharts);
+
+Vue.component('apexchart', VueApexCharts)
 
 window.addEventListener('load', () => {
     Vue.use(Toastr);
@@ -78,6 +86,10 @@ Vue.component('news-birthday', require('./components/news/news-birthday.vue').de
 
 Vue.component('user-image', require('./components/employee/userImage.vue').default);
 
+Vue.component('edslogin', require('./components/eds/edslogin').default);
+
+Vue.component('eds-od', require('./components/eds/eds-od').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);
@@ -102,9 +114,8 @@ Vue.component('emoji-component', require('./components/news/emoji-component.vue'
 
 Vue.component('report', require('./components/employee/report.vue').default);
 
-Vue.component('rating', require('./components/employee/rating.vue').default);
 Vue.component('cabinet', require('./components/employee/cabinet.vue').default);
-// Vue.component('cabin', require('./components/employee/cabin.vue').default);
+
 Vue.component('colleagues', require('./components/colleagues/colleagues.vue').default);
 
 Vue.component('colleagues-info', require('./components/colleagues/colleagues-info.vue').default);
@@ -182,6 +193,18 @@ Vue.component('statistics', require('./components/employee/statistics').default)
 
 Vue.component('boss-news', require('./components/news/boss-news').default);
 
+Vue.component('my-results', require('./components/results/my-results').default);
+
+Vue.component('rating', require('./components/results/rating').default);
+
+Vue.component('motivation', require('./components/results/motivation').default);
+
+Vue.component('report', require('./components/results/report').default);
+
+Vue.component('rating-list', require('./components/results/rating-list').default);
+
+Vue.component('employee-rate', require('./components/results/employee-rate').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
@@ -223,3 +246,4 @@ window.onload = function(){
         el: '#header',
     });
 };
+

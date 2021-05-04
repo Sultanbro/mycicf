@@ -1,15 +1,14 @@
 <template >
     <div class="mt-4 ml-2 mr-2">
         <div onscroll="bottomOfWindow" class="mb-2 bg-white rounded">
-
             <div class="d-flex justify-content-between bg-top pl-4 pt-2 pb-2 pr-4">
                 <div>
                     <span class="bold">Создайте публикацию</span>
                 </div>
                 <transition name="transition-opacity">
-                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 1950">
+                    <div class="bg-white border-radius-8 pl-2 pr-2" v-if="postText.length > 7800">
                         <span>Осталось символов:</span>
-                        <span :class="2000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{2000 - postText.length > 0 ? 2000 - postText.length : 0}}</span>
+                        <span :class="8000 - postText.length > 0 ? 'text-success' : 'text-danger'">{{8000 - postText.length > 0 ? 8000 - postText.length : 0}}</span>
                     </div>
                 </transition>
             </div>
@@ -174,7 +173,7 @@
                 v-on:deletePost="deleteFromPost(pinnedPostIndex)"
             ></news-post>
         </div>
-        <div v-for="(post, index) in posts" v-if="post.pinned === 0">
+        <div v-for="(post, index) in posts" v-if="!post.pinned">
             <news-post
                 :post="post"
                 :isn="isn"
@@ -366,7 +365,7 @@
 
             addPost() {
                 this.preloader(true);
-                this.axios.post("/addPost", this.getFormData()).then(response => {
+                this.axios.post("/news/addPost", this.getFormData()).then(response => {
                     this.fetchAddPost(response.data);
                 }).catch(error => {
                     alert("Ошибка на стороне сервера");
@@ -429,8 +428,10 @@
 
             getPosts() {
                 this.preloader(true);
-                this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
-                    this.setPosts(response.data)
+                console.time('getPosts');
+                this.axios.post("/news/getPosts", {lastIndex: this.lastIndex}).then(response => {
+                    this.setPosts(response.data);
+                    console.timeEnd('getPosts');
                 });
             },
 
@@ -445,7 +446,7 @@
                         vm.lastIndex = data.postId;
                     }
 
-                    if(data.pinned === 1){
+                    if(data.pinned){
                         vm.pinnedPost = data;
                         vm.pinnedPostIndex = i;
                     }
@@ -485,8 +486,10 @@
                 this.bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
                 if (this.bottomOfWindow && !this.allPostShown) {
                     this.preloader(true);
-                    this.axios.post("/getPosts", {lastIndex: this.lastIndex}).then(response => {
-                        this.setPosts(response.data)
+                    console.time('getPosts');
+                    this.axios.post("/news/getPosts", {lastIndex: this.lastIndex}).then(response => {
+                        this.setPosts(response.data);
+                        console.timeEnd('getPosts');
                     });
                 }
             },

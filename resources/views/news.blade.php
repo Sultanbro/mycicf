@@ -43,14 +43,23 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
         <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+
+            <a href="/news/beta" style="padding: 10px; display: block; text-align: right;">
+                Попробовать новый интерфейс Новостей
+            </a>
+
             <post :isn="{{Auth::user()->ISN}}"></post>
         </div>
         <div class="col-md-2-sm-3-lg mt-3">
             <news-birthday></news-birthday>
+            <div>
+                <Countdown end="December 31, 2021"></Countdown>
+            </div>
         </div>
         {{--RIGHT SIDE BAR GOES HERE--}}
     </div>
 </main>
 {{--FOOTER GOES HERE--}}
+<script src="{{asset('jsx/app.js')}}"></script>
 </body>
 </html>

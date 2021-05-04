@@ -37,12 +37,24 @@
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
-        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
-            <edslogin></edslogin>
-        </div>
-        <div class="col-md-2-sm-3-lg mt-3">
-            <news-birthday></news-birthday>
-        </div>
+        @if(isset($od))
+            <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2">
+                <eds-od
+                        :info="{{ json_encode((object)$od) }}"
+                        :class-isn="1920701"
+                        :empl-isn="{{ json_decode(Auth::user())->ISN }}"
+                        show-view="sign"
+                        :doc_row_list_inner_other="{}">
+                </eds-od>
+            </div>
+        @else
+            <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+                <edslogin show-view="check"></edslogin>
+            </div>
+            <div class="col-md-2-sm-3-lg mt-3">
+                <news-birthday></news-birthday>
+            </div>
+        @endif
     </div>
 </main>
 </body>

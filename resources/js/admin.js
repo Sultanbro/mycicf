@@ -36,6 +36,7 @@ Vue.component('centcoin-history', require('./components/admin/centcoins/history.
 Vue.component('centcoin-spend', require('./components/admin/centcoins/spend.vue').default);
 Vue.component('centcoin-replenish', require('./components/admin/centcoins/relpenish.vue').default);
 Vue.component('centcoin-items', require('./components/admin/centcoins/items.vue').default);
+Vue.component('centcoin-apply', require('./components/admin/centcoins/apply.vue').default);//выпадающая вкладка "заявка" в админке
 
 Vue.component('org-structure', require('./components/admin/documentation/org-structure.vue').default);
 Vue.component('svg-load', require('./components/admin/documentation/svg-load.vue').default);
@@ -60,6 +61,9 @@ Vue.component('full-constructor-create', require('./components/admin/products/fu
 // Vue.component('constructor-attributes', require('./components/admin/products/full_constructor/constructor-attributes.vue').default);
 Vue.component('constructor', require('./components/admin/products/full_constructor/constructor.vue').default);
 Vue.component('formular', require('./components/admin/products/full_constructor/formular.vue').default);
+
+Vue.component('rating-permission-list', require('./components/admin/rating/rating-permission-list').default);
+Vue.component('rating-permission-new', require('./components/admin/rating/rating-permission-new').default);
 
 window.onload = function(){
     var app = new Vue({

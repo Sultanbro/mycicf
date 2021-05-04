@@ -5603,9 +5603,6 @@
             </g>
         </g>
 </svg>
-
-
-
 <script type="text/javascript">
 function changeDisplay(idName){
     var element = document.getElementById(idName);

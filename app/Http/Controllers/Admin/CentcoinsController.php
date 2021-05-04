@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Branch;
 use App\Centcoin;
+use App\CentcoinApply;
 use App\CentcoinHistory;
+use App\Observers\CentcoinObserver;
 use App\StoreItem;
 use App\User;
 use Illuminate\Http\Request;
@@ -35,6 +37,60 @@ class CentcoinsController extends Controller
     public function getItemsView(){
         return view('centcoins.items');
     }
+    //Заявка в Админ
+    public function getApplyView(){
+        return view('centcoins.apply');
+    }
+
+    public function getApply(Request $request){
+        $result = [];
+        foreach(CentcoinApply::all() as $data){
+            array_push($result, [
+                'id' => $data->id,
+                'type'=> $data->type,
+                'full_name' => (new User)->getFullName($data->full_name),
+                'created_at' => $data->created_at->format('d-m-Y'),
+                'wasted_centcoins' =>$data->wasted_centcoins,
+                'balance' =>$data->balance,
+                'description'=>$data->description,
+                'status' =>$data->status,
+                'updated_at'=>$data->updated_at->format('d-m-Y')
+            ]);
+        }
+
+        return response()
+            ->json([
+                'success' => true,
+                'error' => '',
+                'result' => $result
+            ])
+            ->withCallback(
+                $request->input('callback')
+            );
+    }
+
+    public function getStatusAccept(Request $request)
+    {
+        $accept = CentcoinApply::findOrFail($request->id);
+        if ($accept){
+        $accept->status = 'Исполнено';
+        $accept->save();
+        }
+
+        return response()->json(['success'=> true,
+            'message' => "Заявка Исполнена успешно"]);
+    }
+
+    public function getStatusDenied(Request $request)
+    {
+        $denied = CentcoinApply::findOrFail($request->id);
+        $denied->status = 'Отказано';
+        $denied->save();
+
+        return response()->json(['success'=> true,
+            'message' => "К сожалению вам Отказано"]);
+    }
+
 
     public function getUserList(Request $request){
         $result = [];
@@ -135,7 +191,7 @@ class CentcoinsController extends Controller
         $description = $request->description;
         try{
             $history = new CentcoinHistory();
-            $history->type = 'Оплата';
+            $history->type = 'Списание';
             $history->description = $description;
             $history->quantity = $count;
             $history->operation_type = CentcoinHistory::OPERATION_TYPE_SPEND;
@@ -208,4 +264,5 @@ class CentcoinsController extends Controller
                 $request->input('callback')
             );
     }
+
 }

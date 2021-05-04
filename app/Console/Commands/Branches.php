@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Branch;
 use App\Library\Services\KiasServiceInterface;
+use App\XML\Kias\GetBranchesResult\BranchEntry;
 use Illuminate\Console\Command;
 
 class Branches extends Command
@@ -51,20 +52,26 @@ class Branches extends Command
                 $this->addToTable($subject);
             }
             echo "Все {$size} строк записаны в БД\n";
+
+            echo "Меняем статус старых данных\n";
+            Branch::where('verified', '=', '1')->update(['verified' => '0']);
+            echo "Меняем статус новых данных\n";
+            Branch::where('verified', '=', '2')->update(['verified' => '1']);
+            echo "Удаляем старые данные\n";
+            Branch::where('verified', '=', '0')->delete();
+            echo "Данные успешно обновлены\n";
         }
-        echo "Меняем статус старых данных\n";
-        Branch::where('verified', '=', '1')->update(['verified' => '0']);
-        echo "Меняем статус новых данных\n";
-        Branch::where('verified', '=', '2')->update(['verified' => '1']);
-        echo "Удаляем старые данные\n";
-        Branch::where('verified', '=', '0')->delete();
-        echo "Данные успешно обновлены\n";
         $responseTime = time() - $time;
         echo "Выпонено за {$responseTime} секунд\n";
         $time = time();
         echo "Окончание : {$time}\n";
     }
 
+    /**
+     * @param BranchEntry $subject
+     * @return bool
+     * @throws \Exception
+     */
     public function addToTable($subject){
         $model = new Branch();
         $model->fullname = $subject->FullName;

@@ -1,0 +1,20 @@
+### Authorization
+POST http://{{host}}/login
+Content-Type: application/json
+
+{
+    "username": "Developer",
+    "password": "password"
+}
+
+### Get posts
+POST http://{{host}}/news/vote
+Content-Type: application/json
+Accept: application/json
+
+{
+    "postId": 2,
+    "isn": "5565",
+    "questionId": 1,
+    "answerId": 1
+}

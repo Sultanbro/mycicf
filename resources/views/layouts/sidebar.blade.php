@@ -1,3 +1,5 @@
+@if(!Auth::user()->branch->duty() ||
+    array_key_exists(auth()->user()->ISN, \App\Http\Middleware\KommeskUsers::getKommeskAccess()))
 <div class="col-md-2 blocks-small-borderRad-top blocks-small-borderRad-bot box-shadow padding0 mt-3 mb-3">
     <div id="simple-info">
         <simple-info
@@ -31,13 +33,15 @@
                     @endif
                 </li>
             </a>
-            <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('development', 'results')}}">
-                <li class="leftsidebar-icons">
-                    <i class="far fa-star" aria-hidden="true"></i>
-                    <span>Мои результаты</span>
-                </li>
-            </a>
-            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472 || auth()->user()->ISN == 5011 || auth()->user()->ISN == 4275866 || auth()->user()->ISN == 766502 || auth()->user()->ISN == 3534147 || auth()->user()->ISN == 801271)
+            @if(in_array(auth()->user()->ISN, ((new \App\RatingPermission())->getActiveUsers())) || in_array(auth()->user()->dept_isn, ((new \App\RatingPermission())->getActiveUsers())))
+                <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('my-results')}}">
+                    <li class="leftsidebar-icons">
+                        <i class="far fa-star" aria-hidden="true"></i>
+                        <span>Мои результаты</span>
+                    </li>
+                </a>
+            @endif
+            @if(in_array(auth()->user()->dept_isn, \App\User::getMotivationDepartments()) || in_array(auth()->user()->ISN, ((new \App\Kurators())->getActiveUsers())) || auth()->user()->ISN == 3560197 || auth()->user()->ISN == 1445721 || auth()->user()->ISN == 235472 || auth()->user()->ISN == 5011 || auth()->user()->ISN == 4275866 || auth()->user()->ISN == 766502 || auth()->user()->ISN == 3534147 || auth()->user()->ISN == 801271)
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('statistics')}}">
                     <li class="leftsidebar-icons">
                         <i class="far fa-chart-bar"></i>
@@ -67,12 +71,12 @@
 {{--                </a>--}}
 {{--            @endif--}}
 
-            <!--a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
+{{--            <a class="pt-2 pb-2 color-blue font-size-1_2" href="/express">
                 <li class="leftsidebar-icons">
                     <i class="fas fa-book-reader"></i>
                     <span>Экспресс котировка</span>
                 </li>
-            </a-->
+            </a>--}}
             @if(!in_array(Auth::user()->branch->duty, App\User::getCentcoinExcepts()))
                 <a class="pt-2 pb-2 color-blue font-size-1_2" href="{{route('centcoins')}}">
                     <li class="leftsidebar-icons">
@@ -102,3 +106,5 @@
         </ul>
     </div>
 </div>
+@elseif(Auth::user()->branch->duty() === 'Сотрудник Коммеск');
+@endif
