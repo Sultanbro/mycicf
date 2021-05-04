@@ -75,12 +75,12 @@
 <div id="app">
 	<name></name>
 	<main>
-		<div class="w-100 d-flex justify-content-end">
+		<!--div class="w-100 d-flex justify-content-end">
 			<div class="d-flex flex-column mr-3 mt-1" style="color:#4267b2;"> <!-- надо добавить в css -->
 				<span><strong>Оргструктура действует с 01.07.2020 года</strong></span>
 				<span>на основании решения Совета директоров от 29.06.2020 года</span>
 			</div>
-		</div>
+		</div-->
 	</main>
 </div>
 	<svg style="width: 100%;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
@@ -5507,7 +5507,7 @@
             </g>
             <g id="shape434-869" v:mID="434" v:groupContext="shape" transform="translate(629.291,-547.654)">
                 <title>Лист.434</title>
-                <desc>Оргструктура введена с 03.05.2021 года на основании решения С...</desc>
+                <desc>Оргструктура введена с 04.05.2021 года на основании решения С...</desc>
                 <v:userDefs>
                     <v:ud v:nameU="msvThemeColors" v:val="VT0(36):26"/>
                     <v:ud v:nameU="msvThemeEffects" v:val="VT0(16):26"/>
@@ -5516,7 +5516,7 @@
                 <v:textRect cx="102.047" cy="571.465" width="204.1" height="47.622"/>
                 <rect x="0" y="547.654" width="204.094" height="47.622" class="st35"/>
                 <text x="0" y="562.46" class="st36" v:langID="1049"><v:paragraph v:bulletSize="0.166667"/><v:tabList/>Оргструктура введена с <tspan
-                        class="st7" v:langID="1033">03</tspan>.05.2021 года<v:newlineChar/><tspan x="0" dy="1.2em" class="st37">на</tspan><tspan
+                        class="st7" v:langID="1033">0</tspan>4.05.2021 года<v:newlineChar/><tspan x="0" dy="1.2em" class="st37">на</tspan><tspan
                         class="st37"> </tspan><tspan class="st37">основании</tspan><tspan class="st37"> </tspan><tspan class="st37">решения</tspan><tspan
                         class="st37"> </tspan><tspan class="st37">Совета</tspan><tspan class="st37"> </tspan><tspan class="st37">директоров</tspan><tspan
                         class="st37"> </tspan><tspan x="0" dy="1.2em" class="st37">Протокол</tspan><tspan class="st37"> </tspan><tspan
