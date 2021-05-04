@@ -55,17 +55,15 @@ class UpdatePayOut extends Command
                 "verify_peer_name"=>false,
             ),
         );
-        $po = file_get_contents("http://127.0.0.1:8001/payout?token=ef292d4f1f2429cae344d090cc29b675&isn=506791&id=6", false, stream_context_create($arrContextOptions));
+        $po = file_get_contents("http://127.0.0.1:8001/payout?token=ef292d4f1f2429cae344d090cc29b675&isn=506791&id=$last_id", false, stream_context_create($arrContextOptions));
         if (0 === strpos(bin2hex($po), 'efbbbf')) {
             $po = substr($po, 3);
         }
         $po = json_decode($po)->payout;
         $count_po = count($po);
-
         echo "Количество записей $count_po \n";
         foreach($po as $payout) {
             $query = new TblForPayEds();
-            $query->isn = $payout->id;
             $query->isn = $payout->isn;
             $query->plea = $payout->plea;
             $query->iin = $payout->iin;
@@ -78,6 +76,7 @@ class UpdatePayOut extends Command
             $query->full_data = $payout->full_data;
             $query->po_isn = $payout->po_isn;
             $query->client_id = $payout->client_id;
+            $query->filetype = $payout->filetype;
             if ($query->save()) {
                 echo "Новая запись po_isn $payout->po_isn успешно записана \n";
             }

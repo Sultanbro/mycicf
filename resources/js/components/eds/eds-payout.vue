@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{info}}
+        {{path}}
         <div class="inner-wrap t-0 text-center" >
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket()">Чекнуть</button>
@@ -13,7 +13,15 @@
             </p>
         </div>
         <div v-show="loading" class="text-center"><img src="/images/loading.gif"></div>
+        <div class="title">
+            <button class="btn btn-primary mt-2" v-on:click="signQr()">Cкачать excel файл</button>
+        </div>
+        <div class="title">
+            <button class="btn btn-primary mt-2" v-on:click="setQr()">Посадить QR на excel и отправить в Kias</button>
+        </div>
     </div>
+
+
 </template>
 
 <script>
@@ -22,7 +30,6 @@
         name: "eds-payout",
         data() {
             return {
-                kek:3919264,
                 confirmed: false,
                 loading: false,
                 seenmoney: false,
@@ -41,6 +48,7 @@
                 base64String: 'dGVzdA==',
                 selectedECPFile: '',
                 signedFile:'',
+                path:'',
                 signedFileInfo: [],
                 edsConfirmed: false,
                 hasConfirmed: false,
@@ -49,7 +57,7 @@
         props: {
             showView: String,
             doc_row_list_inner_other: Object,
-            info: Array,
+            info: Object,
             classIsn: Number,
             emplIsn: Number
         },
@@ -116,6 +124,8 @@
                     type: 'D',
                     edsType: 'cms'
                 }).then((response) => {
+                    this.path = response.data.result[0].filepath;
+                    // console.log(response.data.result[0].filepath);
                     if(response.data.success) {
                         var obj = response.data.result;
                         if(obj.length > 0){
@@ -252,6 +262,36 @@
                     //     }
                     // }
                 }
+            },
+            signQr(){
+                axios.post("/signqr", {
+                    refISN: 40475701,
+                    type: 'D',
+                    edsType: 'cms'
+                }).then((response) => {
+                    console.log(response);
+                    if (response.data.success) {
+                        this.loader(false);
+                    } else {
+                        this.loader(false);
+                    }
+                });
+            },
+            setQr(){
+                axios.post("/setQr", {
+                    refISN: 40475701,
+                    path:this.path,
+                    type: 'D',
+                    edsType: 'cms',
+                    info:this.info,
+                }).then((response) => {
+                    console.log(response);
+                    if (response.data.success) {
+                        this.loader(false);
+                    } else {
+                        this.loader(false);
+                    }
+                });
             },
             checkContinue(index){
                 if(index > this.info.length-1) {

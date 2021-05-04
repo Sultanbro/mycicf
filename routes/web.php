@@ -180,6 +180,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
     Route::get('eds/od', 'EdsController@edsOD');
     Route::get('eds/po', 'EdsController@edsPO');
+    Route::post('/signqr', 'EdsController@signQr');
+    Route::post('/setQr', 'EdsController@setQr');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
@@ -526,7 +528,7 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
-
+Route::get('/payout', 'PaymentEdsController@payout');
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');

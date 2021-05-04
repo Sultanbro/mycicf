@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Attachment;
 use App\Library\Services\KiasServiceInterface;
 use App\TblForPayEds;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Refund;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class EdsController extends Controller
 {
@@ -16,10 +18,98 @@ class EdsController extends Controller
         $od = Refund::where('confirmed',0)->select('rv_isn','id','confirmed','iin','iin_fail')->get();
         return view('eds',compact('od'));
     }
-
+//file type = 1 sig.0=excel
     public function edsPO(KiasServiceInterface $kias){
-        $po = TblForPayEds::where('confirmed',"0")->select('isn','id','confirmed','iin','iin_fail')->get();
+        $po = TblForPayEds::where('filetype',"1")->orWhere('confirmed','0')->select('isn','name','date_sign','id','confirmed','plea','iin','iin_fail')->get();
         return view('eds-payout',compact('po'));
+    }
+
+    public function signQr(Request $request,KiasServiceInterface $kias){
+        $files = [];
+//        $ISN = isset($request->isn) ? $request->isn : '';
+        $ISN = 3948353;
+        $type = isset($request->type) ? $request->type : '';
+        $format = isset($request->edsType) ? $request->edsType : '';
+        $refISN = 40475701;
+        $refID = isset($request->refID ) ? $request->refID  : '';
+        $docClass = isset($request->docClass ) ? $request->docClass  : '';
+
+        $sigFiles = $kias->getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN);
+        if(isset($sigFiles->error)){
+            return response()->json([
+                'success' => false,
+                'result' => (string)$sigFiles->error->text
+            ]);
+        } else {
+            foreach ($sigFiles->ROWSET->row as $file) {
+                $files[] = ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN];
+            }
+        }
+    }
+    public function setQr(Request $request, KiasServiceInterface $kias){
+//        dd($request->info);
+//        dd($request);
+//        dd($request->path);
+        $info_client=[];
+        foreach ($request->info as $key => $value){
+           if ($value['confirmed']==1){
+                $value = $info_client;
+           }
+        }
+
+//        $iin = Auth::user()->iin;
+//        dd($iin);
+        $spreadsheet = $request->path;
+        //Изменения
+        $sheet = $spreadsheet->getActiveSheet();
+        //       QR тут костыльным методом ложится
+
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $qr=QrCode::format('png')->size(300)->generate($info_client);
+        dd($qr);
+        $drawing->setPath(storage_path('app/public/qr.png')); // put your path and image here
+        $drawing->setOffsetX(110);
+        $drawing->setRotation(0);
+        $drawing->setCoordinates('AE48');
+        $drawing->getShadow()->setVisible(true);
+        $drawing->getShadow()->setDirection(45);
+        $drawing->setWorksheet($spreadsheet->getActiveSheet());
+        $writer = new Xlsx($spreadsheet);
+        $writer->save(storage_path('app/public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx'));
+//        dd('kek');
+        //       QR тут костыльным методом ложится
+        $sheet->setCellValue('AD18', $request->refundsum);//summa'
+
+
+        //Вставка в файл
+        $writer = new Xlsx($spreadsheet);
+        $attachment = new Attachment();
+
+        $writer->save(storage_path('app/public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx'));
+        $path = 'public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx';
+
+        $attachment->insurance_case_id = session('caseId');
+        $attachment->filename = $path;
+        $attachment->type = 'insurancePayment';
+
+        $attachment->save();
+
+        $file = Storage::get($path);
+        $base64String = base64_encode($file);
+        //Making a Plea isn for uploading attachments
+
+        $results = $kias->saveAttachment(
+            40475701,
+            basename($path),
+            $base64String,
+            'D'
+        );
+
+        return response()->json([
+            'result' => isset($results->ISN) ? (string)$results->ISN : '',
+            'base64String'=>$base64String,
+            'success' => $request->data,
+        ]);
     }
 
     public function saveDocument(Request $request, KiasServiceInterface $kias) {
