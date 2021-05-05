@@ -161,6 +161,9 @@
                                                 <td v-for="(list,key) in doc_row_list_other">
                                                     <span v-if="doc_row_list_inner_other[key][index]['ID'] != undefined">{{ doc_row_list_inner_other[key][index]['ID'] }}</span>
                                                     <span v-else>{{ doc_row_list_inner_other[key][index] }}</span>
+                                                    <a href="#" role="button" v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831 && key == 1" @click="getOrderDocumentContent(doc_row_list_inner_other[key][index]['ISN'])">
+                                                        (подробнее)
+                                                    </a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -238,14 +241,40 @@
                                                   class="resize modal-note width100" maxlength="2000"></textarea>
                                     </div>
 
-                                    <edslogin
-                                            v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
-                                            ref="eds"
-                                            :sendSolution="sendSolution"
-                                            :coordination="coordination"
-                                            :doc_row_list_inner_other="doc_row_list_inner_other"
-                                            show-view="sign">
-                                    </edslogin>
+                                    <div v-if="Object.keys(doc_row_list_inner_other).length > 0">
+                                        <div v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831 || doc_row_list_inner_other[1][0].ClassISN == '1920831'">
+                                            <eds-order-document
+                                                    v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781'"
+                                                    ref="eds"
+                                                    :authorized-user-iin="authorizedUserIin"
+                                                    :sendSolution="sendSolution"
+                                                    :coordination="coordination"
+                                                    :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                    :preloader="preloader"
+                                                    show-view="sign">
+                                            </eds-order-document>
+                                        </div>
+                                        <div v-else>
+                                            <edslogin
+                                                    v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
+                                                    ref="eds"
+                                                    :sendSolution="sendSolution"
+                                                    :coordination="coordination"
+                                                    :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                    show-view="sign">
+                                            </edslogin>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <edslogin
+                                                v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
+                                                ref="eds"
+                                                :sendSolution="sendSolution"
+                                                :coordination="coordination"
+                                                :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                show-view="sign">
+                                        </edslogin>
+                                    </div>
 
                                     <div class="flex-row">
                                         <div class="flex-row pl-5 pb-4 pr-4 pointer">
@@ -323,6 +352,11 @@
                 </div>
             </div>
         </div>
+        <button v-show="false" ref="informationModal" type="button" data-toggle="modal" data-target="#information-modal">Large modal</button>
+        <information-modal
+                :content-inner-information = "contentInnerInformation"
+                v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831">
+        </information-modal>
     </div>
 </template>
 
@@ -334,6 +368,7 @@
                 Remark: "",
                 resolution: "0",
                 modalHide: '',
+                contentInnerInformation: {}
             }
         },
         props: {
@@ -343,7 +378,8 @@
             doc_row_list: Object,
             doc_row_inner: Object,
             doc_row_list_other: Object,
-            doc_row_list_inner_other: Object
+            doc_row_list_inner_other: Object,
+            authorizedUserIin: Number
         },
         methods: {
             beforeSendSolution(solution){
@@ -383,13 +419,29 @@
             checkIsDir(){
                 return this.$parent.isDirector;
             },
+            getOrderDocumentContent(docIsn){
+                this.preloader(true);
+                this.axios.post("/getEorderDocs", {
+                    DocISN: docIsn
+                }).then((response) => {
+                    if (!response.data.success) {
+                        this.preloader(false);
+                        alert(response.data.error);
+                    } else {
+                        this.contentInnerInformation = response.data.doc_info;
+                        this.$refs.informationModal.click();
+                        this.modalHide = 'z-index:1050;overflow: scroll;';
+                        this.preloader(false);
+                    }
+                });
+            },
             preloader(show){
                 if(show){
                     document.getElementById('preloader').style.display = 'flex';
-                    this.modalHide = 'z-index:0;';
+                    this.modalHide = 'z-index:0;overflow: scroll;';
                 } else {
                     document.getElementById('preloader').style.display = 'none';
-                    this.modalHide = 'z-index:1050;';
+                    this.modalHide = 'z-index:1050;overflow: scroll;';
                 }
             }
         },

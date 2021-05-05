@@ -90,11 +90,17 @@ Vue.component('edslogin', require('./components/eds/edslogin').default);
 
 Vue.component('eds-od', require('./components/eds/eds-od').default);
 
+Vue.component('eds', require('./components/eds/eds').default);
+
+Vue.component('eds-order-document', require('./components/eds/eds-order-document.vue').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
+
+Vue.component('information-modal', require('./components/shared/information-modal.vue').default);
 
 Vue.component('motivation', require('./components/employee/motivation.vue').default);
 

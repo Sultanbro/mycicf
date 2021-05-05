@@ -187,17 +187,19 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::group(['middleware' => 'duty'], function () {
-            Route::get('test/eds', 'SiteController@testEds');
+            Route::get('test/eds', 'EdsController@testEds');
             Route::post('/save_document', 'EdsController@saveDocument');
             Route::post('/get_or_set_doc', 'EdsController@getOrSetDoc');
             Route::post('/save_fail_status', 'EdsController@saveFailStatus');
-            Route::get('/getEDS', 'SiteController@getEds');
-            Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
-            Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
+            Route::get('/getEDS', 'EdsController@getEdsTokenForSign');
+            Route::post('/eds-by-isn', 'EdsController@edsByIsn')->name('eds-by-isn');
+            Route::post('/save_eds_info', 'EdsController@saveEdsInfo');
             Route::post('/coordinationSaveAttachment', 'CoordinationController@saveAttachment');
+            Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
             Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+            Route::post('/get-printable-order-document', 'EdsController@getPrintableOrderDocument');
             Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
             //DOSSIER
             Route::post('/emplInfo', 'SiteController@postEmplInfo');

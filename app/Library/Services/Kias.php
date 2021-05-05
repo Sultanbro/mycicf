@@ -430,6 +430,30 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        return $this->request('GetPrintableDocument', [
+            'ISN' => $data['ISN'],
+            'TemplateISN' => $data['TemplateISN'],
+            'ClassID' => $data['ClassID'],
+            'Remark' => $data['Remark'],
+            'params' => [
+                'row' => [
+                    [
+                        'paramName' => $dataParams[0]->paramName,
+                        'paramType' => $dataParams[0]->paramType,
+                        'paramValue' => $dataParams[0]->paramValue
+                    ],
+                    [
+                        'paramName' => $dataParams[1]->paramName,
+                        'paramType' => $dataParams[1]->paramType,
+                        'paramValue' => $dataParams[1]->paramValue
+                    ]
+                ]
+            ],
+        ]);
+    }
+
     public function getExpressAttributes($product){
         return $this->request('User_CicGetAttrExpress', [
             'Product' => $product,
@@ -456,13 +480,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin)
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $subjIsn = null)
     {
         return $this->request('User_CicSearchSubject', [
             'IIN'          => $iin,
             'FIRSTNAME'    => $firstName,
             'LASTNAME'     => $lastName,
             'PARENTNAME'   => $patronymic,
+            'ISN' => $subjIsn
         ]);
     }
 
@@ -632,10 +657,11 @@ class Kias implements KiasServiceInterface
 //        ]);
 //    }
 
-    public function getPrintableDocumentList($contract_number){
+    public function getPrintableDocumentList($contract_number, $doc = 0){
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
-            'TemplateISN' => ''
+            'TemplateISN' => '',
+            'Doc' => $doc
         ]);
     }
 
@@ -650,6 +676,12 @@ class Kias implements KiasServiceInterface
             'DocISN' => $doc_isn,
             'Type' => $type, // 1 сменить статус, 2 посмотреть статус
             'Status' => $status, //2522 на подписи, 2518 подписан
+        ]);
+    }
+
+    public function getOrSetEorderDocs($doc_isn){
+        return $this->request('User_CicGetOrSetEorderDocs',[
+            'DocISN' => $doc_isn
         ]);
     }
 

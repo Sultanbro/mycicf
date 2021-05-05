@@ -80,12 +80,15 @@
                  style="height: 40px;">
                 <div class="progress-bar"
                      role="progressbar"
+                     style="background-color: transparent !important"
                      :style="{width: post.isVoted ? '' + Math.round((answer.answer_votes / post.post_poll.total_votes) * 100) + '%' : '0%' }"
                      aria-valuemin="0"
                      aria-valuemax="100">
                     <div class="p-2">
-                        <span class="fs-1 color-black">{{post.isVoted ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " : answer.answer_title}}</span>
+                        <span class="fs-1 color-black">{{answer.answer_title}}</span>
+                        <!-- post.isVoted ? "За " + answer.answer_title + ((answer.answer_votes > 1) ? ' проголосовало: ' : ' проголосовал: ') + answer.answer_votes + " " :  -->
                     </div>
+                    <!--progressbar-->
                 </div>
                 <!--                <div class='d-flex align-items-center' v-if="post.isVoted === 1">-->
                 <!--                    <span class="p-2 color-black">-->
@@ -494,6 +497,7 @@
             },
             fetchVote(response) {
                 if(response.success === true) {
+                    alert('Вы успешно проголосовали');
                     this.post.isVoted = true;
                 }
                 else {
