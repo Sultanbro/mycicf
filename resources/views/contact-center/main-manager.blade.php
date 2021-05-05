@@ -31,12 +31,10 @@
 <body>
 @yield('layouts.header')
 @include('layouts.header')
-<div class="flex-row">
-    <div class="flex-row width100" id="app">
+    <div id="app">
         @yield('content')
     {{--RIGHT SIDE BAR GOES HERE--}}
     </div>
-</div>
 {{--FOOTER GOES HERE--}}
 </body>
 </html>
