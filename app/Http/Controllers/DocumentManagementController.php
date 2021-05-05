@@ -146,15 +146,15 @@ class DocumentManagementController extends Controller
                 'emplisn' => auth()->user()->ISN,
                 'emplName' => auth()->user()->full_name ? auth()->user()->full_name : auth()->user()->short_name,
                 'signerIsn' => count(get_object_vars($show->Doc->row->SIGNERISN)) === 0 ? '' : get_object_vars($show->Doc->row->SIGNERISN),
-                'extSignerIsn' => count(get_object_vars($show->Doc->row->EXTSIGNERISN)) ?  '' : get_object_vars($show->Doc->row->EXTSIGNERISN),
+                'extSignerIsn' => count(get_object_vars($show->Doc->row->EXTSIGNERISN))=== 0 ?  '' : get_object_vars($show->Doc->row->EXTSIGNERISN),
                 'docdate' => count(get_object_vars($show->Doc->row->DOCDATE)) === 0 ? $today : '',
                 'dateBeg' => count(get_object_vars($show->Doc->row->DATEBEG)) === 0 ? '' : get_object_vars($show->Doc->row->DATEBEG),
                 'dateEnd' => count(get_object_vars($show->Doc->row->DATEBEG)) === 0 ? '' : get_object_vars($show->Doc->row->DATEBEG),
                 'className' => get_object_vars($show->Doc->row->CLASSNAME)[0],
                 'id' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
-                'extID' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
-                'amount' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
-                'currIsn' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
+                'extID' => get_object_vars($show->Doc->row->EXTID) ? get_object_vars($show->Doc->row->EXTID)[0] : '',
+                'amount' => get_object_vars($show->Doc->row->AMOUNT) ? get_object_vars($show->Doc->row->AMOUNT)[0] : '',
+                'currIsn' => get_object_vars($show->Doc->row->CURRISN) ? get_object_vars($show->Doc->row->CURRISN)[0] : '',
                 'showRemark' => empty(get_object_vars($show->Doc->row->REMARK)[0]) ? null : get_object_vars($show->Doc->row->REMARK)[0],
                 'showRemark2' => empty(get_object_vars($show->Doc->row->REMARK2)[0]) ? null : get_object_vars($show->Doc->row->REMARK2)[0],
                 'status' => get_object_vars($show->Doc->row->STATUSNAME) ? get_object_vars($show->Doc->row->STATUSNAME)[0] : '',
@@ -916,8 +916,9 @@ class DocumentManagementController extends Controller
         $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $status1[$request->results["status"]], $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $doc];
 //        dd($wer);
         if(!isset($request->results["status"])){
-            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', isset($request->results["id"]) ? $request->results["id"] : '', $request->results["classisn"], $request->results["status"] ? $status1[$request->results["status"]] : '',
-                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["dateBeg"], $request->results["dateEnd"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
+                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["classisn"], $request->results["status"] ? $status1[$request->results["status"]] : '',
+                $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["dateBeg"], $request->results["dateEnd"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
                 $request->results['showRemark'], $row, $doc);
 //            dd($document);
             if(!empty($document->DocISN)){
@@ -941,8 +942,9 @@ class DocumentManagementController extends Controller
         } else {
             $today = date('d.m.Y');
 
-            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', isset($request->results["id"]) ? $request->results["id"] : '', $request->results["classisn"],$request->results["status"] ? $status1[$request->results["status"]] : '',
-                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"] ?? $today, $request->results["dateBeg"], $request->results["dateEnd"],$request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
+            $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
+                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["classisn"],$request->results["status"] ? $status1[$request->results["status"]] : '',
+                $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"] ?? $today, $request->results["dateBeg"], $request->results["dateEnd"],$request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
                 $request->results['showRemark'],$row, $doc);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];

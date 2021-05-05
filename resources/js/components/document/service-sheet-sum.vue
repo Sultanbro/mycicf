@@ -1109,6 +1109,8 @@ export default {
                                 this.results.showRemark2 = response.data.results.showRemark2 ? response.data.results.showRemark2 : response.data.results.showRemark2[0]
                                 this.results.id = response.data.results.id;
                                 this.results.amount = response.data.results.amount;
+                                this.results.currIsn = response.data.results.currIsn;
+                                this.results.extID = response.data.results.extID;
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
