@@ -1829,12 +1829,12 @@
                 this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                 this.recruitingData.commentary = this.person.commentary;
                 this.recruitingData.status = this.person.application_status;
-                this.recruitingData.recruiterEmail = this.candidateManualDataLocal[index].recruiter_email;
+                this.recruitingData.recruiterEmail = this.candidateBase.recruiterEmail;
             },
             showModal: function(index,id){
                this.candidateBase.IIN = '';
                this.candidateBase.phone = '';
-               this.recruiterEmail = '';
+               this.candidateBase.recruiterEmail = '';
                this.candidatePerson = '';
 
                if(id == undefined) {
@@ -1909,7 +1909,8 @@
                this.recruitingData.dateOfConclusionTD = this.person.date_of_conclusion_td;
                this.recruitingData.commentary = this.person.commentary;
 
-               this.recruitingData.recruiterEmail = this.candidateManualDataLocal.find(e => e.id === this.person.id).recruiter_email;
+               this.recruitingData.recruiterEmail = this.candidateBase.recruiterEmail;
+               // this.recruitingData.recruiterEmail = this.candidateManualDataLocal.find(e => e.id === this.person.id).recruiter_email;
                this.recruitingData.status = this.person.application_status;
             },
             addCandidateBtn() {
@@ -2506,7 +2507,7 @@
                 this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
                 this.candidatsData.recruitingId =  this.candidatBackward.id;
                 this.candidatsData.documents =  this.candidatBackward.documents;
-                this.candidatsData.recruiterFullname = this.user.branch.fullname;
+                this.email_chief.recruiterFullname = this.user.branch.fullname;
                 this.candidatsData.chiefMail = this.candidatBackward.chiefMail;
                 formData.append("candidatsData", JSON.stringify(this.candidatsData));
                 return formData;
