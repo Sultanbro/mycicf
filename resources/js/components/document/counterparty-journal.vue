@@ -14,11 +14,25 @@
                             </div>
                         </div>
                         <div class="mb-4" v-for="result in results.result1">
-                            <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row" required>
+                            <div v-if="!isLoading && result.fullname == 'Адресат' && results['classisn'] !== '1252461'" class="form-group row" required>
                                 <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                 <div class="col-md-8">
                                     <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                 id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
+                                </div>
+                            </div>
+                            <div v-if="!isLoading && result.fullname == 'Адресат' && results['classisn'] === '1252461'" class="form-group row">
+                                <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
+                                <div class="input-group col-md-8">
+                                    <input v-model="addressee.fullName ? result.value : addressee.fullName" @click="OpenModal(result.fullname)" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal(result.fullname)">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo(result.fullname)">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
@@ -102,10 +116,9 @@
                                         <option v-for="dut in duties" :value="dut[0]">{{ dut[1] }}</option>
                                     </select>
                                 </div>
-                                <div v-if="results['classisn'] !== '1440561' && docrow.fieldname === 'Должность'">
-                                    <label><input type="text" v-model="duty" class="form-control"
+                                <div v-if="results['classisn'] !== '1440561' && docrow.fieldname === 'Должность'" class="col-md-12">
+                                    <input type="text" v-model="duty" class="form-control"
                                                   :disabled="addChange">
-                                    </label>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Подразделение' || docrow.fieldname === 'Новое подразделение' || docrow.fieldname === 'Штатное расписание подразделение'">
                                     <treeselect
@@ -150,14 +163,27 @@
                                 <div v-if="docrow.fieldname === '% КВ' || docrow.fieldname === 'Сумма'">
                                     <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Агент' || (docrow.fieldname === 'ФИО работника' && results['classisn'] === '1440561')">
+                                <div v-if="docrow.fieldname === 'Агент'">
                                     <div class="input-group">
-                                        <input v-model="agent.fullName" @click="OpenModal('Агент')" type="text" :placeholder="agent.fullName" class="form-control">
+                                        <input v-model="agent.fullName ? docrow.value_name : agent.fullName" @click="OpenModal('Агент')" type="text" :placeholder="agent.fullName" class="form-control">
                                         <div class="input-group-append">
                                             <button type="submit" class="btn-light" @click="OpenModal('Агент')">
                                                 <i class="fa fa-search"></i>
                                             </button>
                                             <button type="submit" class="btn-light" @click="clearInfo('Агент')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="docrow.fieldname === 'ФИО работника' && results['classisn'] === '1440561'">
+                                    <div class="input-group">
+                                        <input v-model="worker.fullName ? worker.fullName : docrow.value_name" @click="OpenModal('ФИО работника')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('ФИО работника')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo('ФИО работника')">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>
@@ -207,16 +233,16 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
+<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
                                 v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
+<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
@@ -303,6 +329,8 @@
         <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
         <counterparty-journal-modal
             :counterparty="counterparty"
+            :worker="worker"
+            :addressee="addressee"
             :agent="agent"
             :recordingCounterparty="recordingCounterparty"
             :results="results"
@@ -375,9 +403,21 @@ export default {
                 isn: '',
                 type: '',
             },
+            addressee: {
+                fullName: '',
+                isn: '',
+                type: '',
+            },
+            worker: {
+                fullName: '',
+                isn: '',
+                type: '',
+            },
             recordingCounterparty: {type: ''},
             disableCounterparty: true,
             idShow: false,
+            isn: '0',
+            delete: '0',
         }
     },
     created() {
@@ -471,12 +511,32 @@ export default {
             })
         },
         clearInfo(data){
-            for(let i=0; i<this.results.docrows.length; i++){
-                if(this.results.docrows[i].fieldname === data){
-                    this.results.docrows[i].value_name = '';
-                    this.results.docrows[i].value = '';
-                    this.agent.fullName = ''
-                    this.agent.isn = ''
+            if(data === 'Агент'){
+                for(let i=0; i<this.results.docrows.length; i++){
+                    if(this.results.docrows[i].fieldname === data){
+                        this.results.docrows[i].value_name = '';
+                        this.results.docrows[i].value = '';
+                        this.agent.fullName = ''
+                        this.agent.isn = ''
+                    }
+                }
+            } else if(data === 'ФИО работника'){
+                for(let i=0; i<this.results.docrows.length; i++){
+                    if(this.results.docrows[i].fieldname === data){
+                        this.results.docrows[i].value_name = '';
+                        this.results.docrows[i].value = '';
+                        this.worker.fullName = ''
+                        this.worker.isn = ''
+                    }
+                }
+            } else if(data === 'Адресат'){
+                for(let i=0; i<this.results.result1.length; i++){
+                    if(this.results.result1[i].fullname === data){
+                        this.results.result1[i].value_name = '';
+                        this.results.result1[i].value = '';
+                        this.addressee.fullName = ''
+                        this.addressee.isn = ''
+                    }
                 }
             }
         },
@@ -494,7 +554,7 @@ export default {
             this.extraLoading = true;
             this.annul = true;
             this.addChange = false;
-            this.results.status = '2515';
+            this.results.status = 'Аннулирован';
             let data = {
                 results: this.results,
                 docIsn: this.docIsn,
@@ -523,14 +583,14 @@ export default {
         },
         saveDocument(){
             this.loading = false;
-            if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-                this.flashMessage.warning({
-                    title: "!",
-                    message: 'Пожалуйста заполните все обязательные поля',
-                    time: 5000
-                });
-                return;
-            }
+            // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
+            //     this.flashMessage.warning({
+            //         title: "!",
+            //         message: 'Пожалуйста заполните все обязательные поля',
+            //         time: 5000
+            //     });
+            //     return;
+            // }
             this.loading = true;
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
@@ -576,9 +636,14 @@ export default {
         },
         addChangeForm() {
             this.extraLoading = true;
+            if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){
+                this.button = 'BUTTON2'
+            } else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){
+                this.button = 'BUTTON3'
+            }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON3',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
@@ -622,9 +687,14 @@ export default {
         },
         fillInSz(){
             this.loading = true;
+            if(this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y'){
+                this.button = 'BUTTON1'
+            } else if(this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y'){
+                this.button = 'BUTTON2'
+            }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON1',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
@@ -633,10 +703,12 @@ export default {
                             let dat = {
                                 docisn: this.docIsn,
                                 isn: this.results.classisn,
-                                button: '1',
+                                button: this.button,
                             }
                             this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                this.results.id = response.data.id;
+                                this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
+                                this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
+                                this.results.id = response.data.results.id;
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
@@ -664,14 +736,20 @@ export default {
         },
         buttonClick() {
             this.loading = true;
+            if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){
+                this.button = 'BUTTON1'
+            } else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){
+                this.button = 'BUTTON2'
+            }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON2',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = true;
+                        this.results.status = response.data.status
+                        this.results.stage = response.data.stage
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
@@ -742,8 +820,15 @@ export default {
                         this.attachments = [];
                     }
                 });
-            }
-            else if(doc === 'Агент'){
+            } else if(doc === 'Агент'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalCounterparty.click();
+            } else if(doc === 'ФИО работника'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalCounterparty.click();
+            } else if(doc === 'Адресат'){
                 this.preloader(false);
                 this.recordingCounterparty.type = doc
                 this.$refs.modalCounterparty.click();

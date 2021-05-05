@@ -18,7 +18,6 @@
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <!--                                             <treeselect @select="handleInput" v-model="contragent" :multiple="false" :options="userList" disabled="disabled"/>&ndash;&gt;-->
                                         <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
                                     </div>
@@ -174,17 +173,17 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
+<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
                                 v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
-                        <button v-if="!addChange" class="btn btn-success btn-block2" @click="saveDocument()">
+<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
+                        <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
                     </div>
@@ -234,9 +233,14 @@
                                 <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
-                            <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых'">
-                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
-                                            :multiple="false" :options="userList" :disable-branch-nodes="true"/>
+                            <div v-else-if="result.fullname === 'Список командируемых'">
+                                <div v-if="!showTravellers">
+                                    <div v-model="result.val" class="pointer" scope="col" @click="listTravellers" :disabled="addChange">{{result.value}}</div>
+                                </div>
+                                <div v-if="showTravellers && idShow">
+                                    <treeselect v-model="travellersList" :disabled="addChange" :multiple="true" :options="userList" :disable-branch-nodes="true"/>
+                                </div>
+
                             </div>
                             <div v-else-if="result.fullname === 'Вид доверенности'">
                                 <select v-model="result.val" :disabled="addChange" class="form-control" required>
@@ -244,12 +248,8 @@
                                 </select>
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
-                                <div v-if="!result.val">
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{listDocIsn}}</div>
-                                </div>
-                                <div v-else>
-                                    <div class="pointer" scope="col" @click="OpenModal()">{{result.val}}
-                                    </div>
+                                <div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -336,6 +336,13 @@ export default {
             dailyMC: [],
             wallRows: 2,
             idShow: false,
+            showTravellers: false,
+            travellersList: [],
+            travellersDocIsn: '',
+            travellersListClassIsn: '1043001',
+            traveller: false,
+            isn: '0',
+            delete: '0',
         }
     },
     created() {
@@ -349,6 +356,10 @@ export default {
         })
     },
     methods: {
+        listTravellers(){
+          this.showTravellers = true;
+          this.idShow = true
+        },
         getDatePicker() {
             const vm = this;
             vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
@@ -407,10 +418,10 @@ export default {
                     return;
                 }
             }
-            this.extra = true;
+            this.extraLoading = true;
             this.annul = true;
             this.addChange = false;
-            this.results.status = '2515';
+            this.results.status = 'Аннулирован';
             let data = {
                 results: this.results,
                 docIsn: this.docIsn,
@@ -438,46 +449,78 @@ export default {
             this.extraLoading = false;
         },
         saveDocument(){
-            this.loading = false;
             this.loading = true;
-            if(this.duty.length > 0){
-                for(let i=0; i<this.results.docrows.length; i++){
-                    if(this.results.docrows[i].fieldname === 'Должность'){
-                        this.results.docrows[i].value_name = this.duty
+            if(this.showTravellers = true){
+                let data = {
+                    results: this.results,
+                    docIsn: this.docIsn,
+                    travellersDocIsn: this.travellersDocIsn,
+                    travellersList: this.travellersList,
+                    showTravellers: this.showTravellers,
+                    travellersListClassIsn: this.travellersListClassIsn
+                }
+                this.axios.post('/document/saveDocument', data)
+                    .then((response) => {
+                        if(response.data.success) {
+                            this.loading = false;
+                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                            this.results.stage = response.data.stage;
+                            this.addChange = true;
+                            this.showTravellers = false;
+                            this.fillIn = true
+                            this.toForm = true;
+                            this.fillIn = true;
+                            this.saveDoc = false;
+                            this.annul = false;
+                        } else {
+                            this.addChange = false;
+                            this.loading = false;
+                            alert(response.data.error);
+                        }
+                        this.loading = false;
+                    })
+                    .catch(function (error) {
+                        alert(error.response);
+                    });
+            }else{
+                if(this.duty.length > 0){
+                    for(let i=0; i<this.results.docrows.length; i++){
+                        if(this.results.docrows[i].fieldname === 'Должность'){
+                            this.results.docrows[i].value_name = this.duty
+                        }
                     }
                 }
-            }
-            let data = {
-                results: this.results,
-                docIsn: this.docIsn,
-            }
-            this.axios.post('/document/saveDocument', data)
-                .then((response) => {
-                    if(response.data.success) {
+                let data = {
+                    results: this.results,
+                    docIsn: this.docIsn,
+                }
+                this.axios.post('/document/saveDocument', data)
+                    .then((response) => {
+                        if(response.data.success) {
+                            this.loading = false;
+                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                            this.results.stage = response.data.stage;
+                            this.addChange = false;
+                            this.fillIn = true
+                        } else {
+                            this.addChange = false;
+                            this.loading = false;
+                            alert(response.data.error);
+                        }
                         this.loading = false;
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
-                        this.results.stage = response.data.stage;
-                        this.addChange = true;
-                        this.toForm = true;
-                        this.fillIn =true;
-                        this.saveDoc = false;
-                        this.annul = false;
-                    } else {
-                        this.addChange = false;
-                        this.loading = false;
-                        alert(response.data.error);
-                    }
-                    this.loading = false;
-                })
-                .catch(function (error) {
-                    //alert(error.response);
-                });
+                    })
+                    .catch(function (error) {
+                        alert(error.response);
+                    });
+            }
         },
         addChangeForm() {
             this.extraLoading = true;
+            if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
+            else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON3',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
@@ -511,9 +554,11 @@ export default {
         },
         fillInSz(){
             this.loading = true;
+            if(this.results.docParam.button1caption === 'Список командируемых' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
+            else if(this.results.docParam.button2caption === 'Список командируемых' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON1',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
@@ -522,48 +567,66 @@ export default {
                             let dat = {
                                 docisn: this.docIsn,
                                 isn: this.results.classisn,
-                                button: '1',
+                                button: this.button,
                             }
+                            console.log('список командируемых')
                             this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                this.results.id = response.data.id;
-                                if(this.results.id.length > 0){
-                                    this.idShow = true;
+                                this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
+                                this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
+                                this.results.id = response.data.results.id;
+                                for(let i=0; i<this.results.resDop.length; i++){
+                                    if(this.results.resDop[i].fullname === 'Список командируемых'){
+                                        this.travellersDocIsn = this.results.resDop[i].val
+                                    }
                                 }
-                                this.sendOutForm = false;
-                                this.fillIn = true;
-                                this.toForm = true;
-                                this.saveDoc = false;
+                                if(this.results.id.length > 0){
+                                    this.idShow = false;
+                                }
+                                this.showTravellers = false;
+                                this.addChange = false;
+                                this.toForm = false;
+                                this.saveDoc = true;
                             })
                         } else {
-                            this.sendOutForm = false;
+                            this.addChange = false;
                             this.fillIn = true;
-                            this.toForm = true;
-                            this.saveDoc = false;
+                            this.toForm = false;
+                            this.saveDoc = true;
                         }
                     } else {
                         this.addChange = false;
                         this.loading = false;
                     }
                     this.loading = false;
-                    this.addChange = true;
+                    this.addChange = false;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
+                    alert(error.response);
                 });
         },
         buttonClick() {
             this.loading = true;
+            if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
+            else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON2',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = true;
+                        this.results.status = response.data.status
+                        this.results.stage = response.data.stage
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
+                        if(this.listDocIsn.length > 0){
+                            for(let i=0; i<this.results.resDop.length; i++){
+                                if(this.results.resDop[i].fullname === 'Лист согласования'){
+                                    this.results.resDop[i].val = this.listDocIsn
+                                }
+                            }
+                        }
                         this.saveDoc = false;
                     } else {
                         alert(response.data.error);

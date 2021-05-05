@@ -175,6 +175,9 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * add local url to .env FRONTEND_DOMAIN
  */
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function () {
+
+    Route::get('/document-isn', 'DocumentManagementController@getDocumentIsn')->name('document.show');
+    Route::post('/createUser', 'DocumentManagementController@createUser');
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
@@ -484,7 +487,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::get('/document/{isn}', 'DocumentManagementController@show')->name('document.show');
         Route::get('/document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
         Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
-        Route::get('document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
+        Route::get('/document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
         Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
         Route::get('showMySZ', 'DocumentManagementController@showMySZ')->name('document.show');
         Route::post('/document/saveDocument', 'DocumentManagementController@saveDocument');
@@ -501,6 +504,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/document/getStage', 'DocumentManagementController@getStage')->name('document.get.stage');
         Route::post('/document/getProductType', 'DocumentManagementController@getProductType')->name('document.product.type');
         Route::post('/document/getStagePassage', 'DocumentManagementController@getStagePassage')->name('document.stage.passages');
+        Route::post('/document/getRegions', 'DocumentManagementController@getRegions')->name('document.get.regions');
         Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');
 
         //Dev page route

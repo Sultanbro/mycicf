@@ -835,23 +835,24 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function saveDocument($isns,$classISN,$statusIsn,$emplISN,$docDate,$subjISN, $remark, $docRow, $docParams){
-        return $this->request('User_CicSAVEDOCUMENT', [
-            'ISN' => $isns,
-            'CLASSISN' => $classISN,
-            'STATUSISN' => $statusIsn,
-            'EMPLISN' => $emplISN,
-            'DOCDATE' => $docDate ? $docDate : date('d.m.Y'),
-            'SUBJISN' => $subjISN,
-            'REMARK' => $remark,
-            'DocParams' => [
-                'row' => $docParams
-            ],
-            'DocRow' => [
-                'row' => $docRow
-            ]
-        ]);
-    }
+//    public function saveDocument($isns,$classISN,$statusIsn,$emplISN,$docDate,$subjISN, $remark, $docRow, $docParams){
+//        return $this->request('User_CicSAVEDOCUMENT', [
+//            'ISN' => $isns,
+//            'CLASSISN' => $classISN,
+//            'STATUSISN' => $statusIsn,
+//            'EMPLISN' => $emplISN,
+//            'DOCDATE' => $docDate ? $docDate : date('d.m.Y'),
+//            'SUBJISN' => $subjISN,
+//            'REMARK' => $remark,
+//            'DocParams' => [
+//                'row' => $docParams
+//            ],
+//            'DocRow' => [
+//                'row' => $docRow,
+//                'row' => $travellers
+//            ]
+//        ]);
+//    }
 
     public function buttonClick($docISN,$button){
         return $this->request('User_CicButtonClick',[
@@ -886,34 +887,27 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function userCicSaveDocument($isns, $class_isn, $status_isn, $emplIsn, $docDate, $subjIsn, $remark, $remark2, $row, $docs) {
+    public function userCicSaveDocument($isns, $id, $extId, $amount, $currIsn, $class_isn, $status_isn, $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $subjIsn, $remark, $row, $doc) {
         return $this->request('User_CicSAVEDOCUMENT', [
             'ISN' => $isns,
+            'ID' => $id,
+            'EXTID' => $extId == array($extId) || 'undefined' || null ? '' : $extId,
+            'AMOUNT' => $amount,
+            'CURRISN' => $currIsn,
             'STATUSISN' => $status_isn,
             'CLASSISN' => $class_isn,
             'EMPLISN' => $emplIsn,
+            'SIGNERISN' => $signerIsn,
+            'EXTSIGNERISN' => $extSignerIsn,
             'DOCDATE' => $docDate,
+            'DATEBEG' => $dateBeg,
+            'DATEEND' => $dateEnd,
             'SUBJISN' => $subjIsn,
             'REMARK' => $remark,
             'DocParams' => [
                 'row' => $row
-//                    [
-//                        'ATTRISN' => $attrIsn,
-//                        'REMARK' => $remark,
-//                        'VAL' => $val, //Значение
-//                        'VALUE' => $value, //Значение атрибута
-//                ]
             ],
-            'DocRow' => [
-                'row' => $docs
-            ],
-//            'DocRow' => [
-//                'row' => [
-//                    'valn1' => $valn1, //Число 1 значения
-//                    'valc1' => $valc1, //Строка 1 значания
-//                    'vald1' => $vald1, //Дата 1 значения
-//                ]
-//            ],
+            'DocRow' => $doc
         ]);
     }
 

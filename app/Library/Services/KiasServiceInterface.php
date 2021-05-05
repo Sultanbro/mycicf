@@ -318,18 +318,25 @@ interface KiasServiceInterface
 
     /**
      * @param $isns
-     * @param $classIsn
-     * @param $statusIsn
+     * @param $id
+     * @param $extID
+     * @param $amount
+     * @param $currIsn
+     * @param $class_isn
+     * @param $status_isn
      * @param $emplIsn
+     * @param $signerIsn
+     * @param $extSignerIsn
      * @param $docDate
+     * @param $dateBeg
+     * @param $dateEnd
      * @param $subjIsn
      * @param $remark
-     * @param $remark2
      * @param $row
-     * @param $docs
+     * @param $doc
      * @return mixed
      */
-    public function userCicSaveDocument($isns, $classIsn, $statusIsn,$emplIsn, $docDate, $subjIsn,$remark,$remark2,$row,$docs);
+    public function userCicSaveDocument($isns, $id, $extID, $amount, $currIsn, $class_isn, $status_isn, $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $subjIsn, $remark, $row, $doc);
 
     /**
      * @param $row

@@ -34,7 +34,7 @@
                                 <div v-if="!isLoading && result.fullname == 'Адресат'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                     <div class="col-md-8">
-                                        <treeselect v-model="result.value" :placeholder="'Не выбрано'" :disabled="addChange"
+                                        <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                            id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
                                     </div>
                                 </div>
@@ -92,13 +92,6 @@
                                                class="form-control" readonly>
                                     </div>
                                 </div>
-<!--                                <div v-if="!stage">-->
-<!--                                    <label>Статус</label>-->
-<!--                                    <div>-->
-<!--                                        <input type="text" v-model="results.statusName"-->
-<!--                                               class="form-control" readonly>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -359,11 +352,11 @@
                 </div>
                 <div class="pt-3" v-show="results.docParam.showRemark === 'Y'">
                     <div class="row ml-1 pb-2">Примечание</div>
-                    <textarea type="text pt-2 pb-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
+                    <textarea v-model="results.showRemark" type="text pt-2 pb-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
                 </div>
                 <div class="pt-3" v-show="results.docParam.showRemark2 === 'Y'">
                     <div class="row ml-1">Доп. Примечание</div>
-                    <textarea type="text pt-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
+                    <textarea v-model="results.showRemark2" type="text pt-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-3">
@@ -374,17 +367,17 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
+<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
-                                v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                                v-if="!agrList && toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
-                        <button v-if="!addChange" class="btn btn-success btn-block2" @click="saveDocument()">
+<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
+                        <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
                     </div>
@@ -460,6 +453,10 @@
                                         <option v-for="proxyType in proxyTypes" :value="proxyType[0]">{{ proxyType[1] }}</option>
                                     </select>
                                 </div>
+                                <div v-else-if="result.fullname === 'Город/Регион'">
+                                    <treeselect v-model="result.val" :disabled="addChange"
+                                                :multiple="false" :options="regions" :disable-branch-nodes="true"/>
+                                </div>
                                 <div v-else-if="result.fullname === 'Тема СЗ (аренда/АХД)'">
                                     <select v-model="result.val" :disabled="addChange" class="form-control" required>
                                         <option v-for="ahd in typeAhd" :value="ahd[0]">{{ ahd[1] }}</option>
@@ -496,11 +493,13 @@
                                     </select>
                                 </div>
                                 <div v-else-if="result.fullname === 'Лист согласования'">
-                                    <div v-if="!result.val">
-                                        <div class="pointer" scope="col" @click="OpenModal(listDocIsn)">{{listDocIsn}}</div>
-                                    </div>
-                                    <div v-else>
+                                    <div>
                                         <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                    </div>
+                                </div>
+                                <div v-else-if="result.fullname === 'Список договоров  для внесение изменение'">
+                                    <div>
+                                        <div v-model="result.val" class="pointer" scope="col">{{result.value}}</div>
                                     </div>
                                 </div>
                                 <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -721,6 +720,9 @@
                 },
                 recordingCounterparty: {type: ''},
                 idShow: false,
+                regions: [],
+                isn: '0',
+                delete: '0',
             }
         },
         created() {
@@ -743,6 +745,7 @@
             this.getCarStateNumber();
             this.getViolationComposition();
             this.getAutoColor();
+            this.getRegions();
             Vue.filter('splitNumber', function (value) {
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             })
@@ -769,6 +772,11 @@
             getUsersInfo(){
                 this.axios.post('/document/getUserInfo', {}).then((response) => {
                     this.usersInfo = response.data.usersInfo;
+                });
+            },
+            getRegions(){
+                this.axios.post('/document/getRegions', {}).then((response) => {
+                    this.regions = response.data.result
                 });
             },
             getProxyTypes(){
@@ -878,10 +886,10 @@
                         return;
                     }
                 }
-                this.extra = true;
+                this.extraLoading = true;
                 this.annul = true;
                 this.addChange = false;
-                this.results.status = '2515'
+                this.results.status = 'Аннулирован'
                 let data = {
                     results: this.results,
                     docIsn: this.docIsn,
@@ -938,7 +946,7 @@
                             this.results.stage = response.data.stage;
                             this.addChange = true;
                             this.toForm = true;
-                            this.fillIn =true;
+                            this.fillIn = true;
                             this.saveDoc = false;
                             this.annul = false;
                         } else {
@@ -954,9 +962,14 @@
             },
             addChangeForm() {
                 this.extraLoading = true;
+                if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){
+                    this.button = 'BUTTON2'
+                } else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){
+                    this.button = 'BUTTON3'
+                }
                 let data = {
                     docIsn: this.docIsn,
-                    button: 'BUTTON3',
+                    button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
@@ -990,9 +1003,14 @@
             },
             fillInSz(){
                 this.loading = true;
+                if(this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y'){
+                    this.button = 'BUTTON1'
+                } else if(this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y'){
+                    this.button = 'BUTTON2'
+                }
                 let data = {
                     docIsn: this.docIsn,
-                    button: 'BUTTON1',
+                    button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
@@ -1001,14 +1019,16 @@
                                 let dat = {
                                     docisn: this.docIsn,
                                     isn: this.results.classisn,
-                                    button: '1',
+                                    button: this.button,
                                 }
                                 this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                    this.results.id = response.data.id;
-                                    if(this.results.id.length > 0){
+                                    this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
+                                    this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
+                                    this.results.id = response.data.results.id;
+                                    this.results.resDop = response.data.results.resDop;
+                                    if(response.data.results.id.length > 0){
                                         this.idShow = true;
                                     }
-                                    this.sendOutForm = false;
                                     this.fillIn = true;
                                     this.toForm = true;
                                     this.saveDoc = false;
@@ -1032,17 +1052,30 @@
             },
             buttonClick() {
                 this.loading = true;
+                if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){
+                    this.button = 'BUTTON1'
+                } else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){
+                    this.button = 'BUTTON2'
+                }
                 let data = {
                     docIsn: this.docIsn,
-                    button: 'BUTTON2',
+                    button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.sendOutForm = true;
+                            this.results.status = response.data.status
+                            this.results.stage = response.data.stage
                             this.toForm = false;
                             this.fillIn = false;
                             this.listDocIsn = response.data.DOCISN
+                            if(this.listDocIsn.length > 0){
+                                for(let i=0; i<this.results.resDop.length; i++){
+                                    if(this.results.resDop[i].fullname === 'Лист согласования'){
+                                        this.results.resDop[i].val = this.listDocIsn
+                                    }
+                                }
+                            }
                             this.result = response.data.error
                             this.saveDoc = false;
                         } else {

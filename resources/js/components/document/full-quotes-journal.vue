@@ -20,13 +20,9 @@
                         </div>
                     </div>
                     <div class="flex-row jc-sb flex-wrap">
-<!--                        <div class="pl-5 pt-4 pb-4 pr-5">-->
-<!--                            <input type="checkbox">-->
-<!--                            <span class="ml-2">Ограничение числа строк результата</span>-->
-<!--                        </div>-->
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                            <button class="btn btn-info"><i class="fa fa-check">Поиск</i></button>
+                            <button class="btn btn-info" @click="searchQuotes"><i class="fa fa-check">Поиск</i></button>
                         </div>
                         <div class="tex">
                             <button class="btn btn-success"><i class="fa fa-check">Ok</i></button>
@@ -130,15 +126,15 @@
                             <div class="col-md-4">
                                 <label>Куратор (подразделения/cотрудник):</label>
                                 <div>
-                                    <input type="text" v-model="quotes.curator"
+                                    <input type="text" v-model="results.emplName"
                                            class="form-control" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label>Подразделения для расчета тарифа:</label>
                                 <div>
-                                    <input type="text" v-model="quotes.subdivision"
-                                           class="form-control">
+                                    <treeselect
+                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="quotes.subdivision"/>
                                 </div>
                             </div>
                         </div>
@@ -220,16 +216,20 @@ name: "full-quotes-journal",
             creationSources: [],
             missingProducts: [],
             stages: [],
+            options: null,
         }
     },
     created() {
         this.getBranchData();
-        this.getUserList();
+        // this.getUserList();
         this.getCreationSources();
         this.getMissingProduct();
         this.getStage();
     },
     methods: {
+        searchQuotes() {
+
+        },
         getBranchData() {
             this.axios.post('/getSearchBranch', {}).then(response => {
                 this.options = response.data.result;

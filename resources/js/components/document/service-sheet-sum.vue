@@ -1,5 +1,5 @@
-<template xmlns="http://www.w3.org/1999/html">
-    <div class="management-application-extra">
+<template>
+    <div class="service-sheet-sum">
         <div class="pt-4">
             <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-5 pr-5 pt-4 pb-3">
                 <h4 class="text-center">{{results.className}}</h4>
@@ -36,6 +36,7 @@
                                     <div class="col-md-8">
                                         <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
+                                        <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
                                 </div>
                             </div>
@@ -55,17 +56,59 @@
                                             format="DD.MM.YYYY"
                                             :disabled-date="disabledDates"
                                             @change="getDatePicker"
-                                            :disabled="addChange">
+                                            :disabled="addChange"
+                                        >
                                             <template #input="slotProps">
                                                 <masked-input
                                                     type="text"
                                                     class="mx-input"
                                                     :mask="maskDate"
                                                     v-bind="slotProps.props"
-                                                    v-on="slotProps.events">
+                                                    v-on="slotProps.events"
+                                                >
                                                 </masked-input>
                                             </template>
                                         </date-picker>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Сумма</label>
+                                    <div>
+                                        <input @keypress="onlyNumber" type="text" v-model="results.amount" :disabled="addChange" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Сумма</label>
+                                    <div>
+                                        <select v-model="results.currIsn" :disabled="addChange" class="form-control">
+                                            <option value="9813">Тенге</option>
+                                            <option value="9716">Доллар США</option>
+                                            <option value="9721">Евро</option>
+                                            <option value="9788">Российский рубль</option>
+                                            <option value="9832">Фунт стерлингов</option>
+                                            <option value="9838">Швейцарский франк</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label>Дата начала</label>
+                                    <div>
+                                        <input class="form-control"
+                                               type="tel"
+                                               v-model="results.dateBeg" :disabled="addChange"
+                                               v-mask="'##.##.####'"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>Дата оконч.</label>
+                                    <div>
+                                        <input class="form-control"
+                                               type="tel"
+                                               v-model="results.dateEnd" :disabled="addChange"
+                                               v-mask="'##.##.####'"
+                                        />
                                     </div>
                                 </div>
                                 <div>
@@ -86,6 +129,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!--                !!$show->DocRow->row!! -->
                 <div v-if="results.docrows.length !== 0">
                     <div class="row justify-content-between pt-4">
@@ -93,7 +137,7 @@
                             <div>
                                 <label>{{ docrow.fieldname }}</label>
                                 <div v-if="docrow.fieldname === 'Стоимость семинара'">
-                                    <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
+                                    <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Наименование'">
                                     <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
@@ -113,7 +157,7 @@
                                 <div v-if="docrow.fieldname === 'Итого кол-во дней' || docrow.fieldname === 'ИТОГО кол-во дней'">
                                     <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Срок по ДОУ, с' || docrow.fieldname === 'Дата (день рождения)'">
+                                <div v-if="docrow.fieldname === 'Срок по ДОУ, с'">
                                     <input class="form-control"
                                            type="tel"
                                            v-model="docrow.value" :disabled="addChange"
@@ -134,6 +178,12 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
+                                <div v-if="docrow.fieldname === 'Проживание'">
+                                    <select v-model="docrow.value"  :disabled="addChange" class="form-control" required>
+                                        <option value="1042661" selected>Да</option>
+                                        <option value="1042671">Нет</option>
+                                    </select>
+                                </div>
                                 <div v-if="docrow.fieldname === 'Дата проведения семинара, по'">
                                     <input class="form-control"
                                            type="tel"
@@ -145,52 +195,45 @@
                                     <input type="text"
                                            v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО работника ' || docrow.fieldname === 'ФИО Сотрудника'">
+                                <div v-if="docrow.fieldname === 'ФИО работника' || docrow.fieldname === 'ФИО работника ' || docrow.fieldname === 'ФИО Сотрудника' || docrow.fieldname === 'ФИО сотрудника'">
                                     <treeselect
                                         v-model="docrow.value" :disabled="addChange" required
                                         :multiple="false"
                                         :options="userList"
-                                        @select="changeSelected($event)"
+                                        @select="changeSelected(index,$event)"
                                         :disable-branch-nodes="true"/>
                                 </div>
-                                <div v-if="docrow.fieldname === 'Возложить полномочия на:' || docrow.fieldname === 'Агент'">
+                                <div class="col-md-6" v-if="docrow.fieldname === 'Возложить полномочия на:'">
                                     <treeselect
                                         v-model="docrow.value" :disabled="addChange"
                                         :multiple="false"
                                         :options="userList"
-                                        @select="changeSelected($event)"
+                                        @select="changeSelected(index,$event)"
                                         :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Делегировать полномочия в части:'">
-                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
-                                        <option v-for="authority in authorities" :value="authority[0]">{{ authority[1] }}</option>
-                                    </select>
+                                    <treeselect
+                                        v-model="docrow.value" :disabled="addChange"
+                                        :multiple="false"
+                                        :options="userList"
+                                        @select="changeSelected(index,$event)"
+                                        :disable-branch-nodes="true"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Номер свидетельства о рождении'">
                                     <input type="text"
                                            v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Подразделение' || docrow.fieldname === 'Новое подразделение' || docrow.fieldname === 'Штатное расписание подразделение'">
-                                    <treeselect
-                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.value"
-                                        :disabled="addChange"/>
-                                </div>
-                                <div v-if="docrow.fieldname === 'Ввести подразделение'">
-                                    <treeselect
-                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.value"
-                                        :disabled="addChange"/>
-                                </div>
-                                <div v-if="docrow.fieldname === 'Вывести из подразделение'">
-                                    <treeselect
-                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.value"
-                                        :disabled="addChange"/>
-                                </div>
-                                <div v-if="docrow.fieldname === 'Дата изменения' || docrow.fieldname === 'Дата, С'">
+                                <div v-if="docrow.fieldname === 'Срок по ДОУ, по'">
                                     <input class="form-control"
                                            type="tel"
-                                           v-model="docrow.value"
+                                           v-model="docrow.value" :disabled="addChange"
                                            v-mask="'##.##.####'"
                                     />
+                                </div>
+                                <div v-if="docrow.fieldname === 'Подразделение' || docrow.fieldname === 'Подразделение / Филиал'">
+                                    <treeselect
+                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.value"
+                                        :disabled="addChange"/>
                                 </div>
                                 <div v-if="docrow.fieldname === 'Дата выхода С'">
                                     <input class="form-control"
@@ -214,47 +257,14 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-<!--                                <div v-if="docrow.fieldname === 'Должность'">-->
-<!--                                    <label><input type="text" v-model="duty" class="form-control"-->
-<!--                                                  :disabled="addChange">-->
-<!--                                    </label>-->
-<!--                                </div>-->
-                                <div v-if="docrow.fieldname === 'Должность' ||docrow.fieldname === 'ввести должность' || docrow.fieldname === 'Новая должность' || docrow.fieldname === 'Вывести из должность'">
+                                <div v-if="docrow.fieldname === 'Должность'">
                                     <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
                                         <option v-for="dut in duties" :value="dut[0]">{{ dut[1] }}</option>
                                     </select>
                                 </div>
-                                <div v-if="docrow.fieldname === 'Старая должность'">
-                                    <input type="text"
-                                           v-model="docrow.value" :disabled="addChange" class="form-control">
-                                </div>
-                                <div v-if="docrow.fieldname === 'Старое подразделение'">
-                                    <input type="text"
-                                           v-model="docrow.value" :disabled="addChange" class="form-control">
-                                </div>
-
-                                <div v-if="docrow.fieldname === 'Помощь в связи'">
-                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
-                                        <option v-for="help in helpTo" :value="help[0]">{{ help[1] }}</option>
-                                    </select>
-                                </div>
-                                <div v-if="docrow.fieldname === 'Родственные связи'">
-                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
-                                        <option v-for="relation in relationTo" :value="relation[0]">{{ relation[1] }}</option>
-                                    </select>
-                                </div>
-                                <div v-if="docrow.fieldname === 'Отсутствующий продукт в ДП'">
-                                    <treeselect v-model="docrow.value" placeholder="Не выбрано" :disabled="addChange"
-                                                :multiple="false" :options="missingProducts" :disable-branch-nodes="true"/>
-
-                                </div>
-
                                 <div v-if="docrow.fieldname === 'В связи'">
-                                    <select v-model="docrow.value"  :disabled="addChange" class="form-control" required>
-                                        <option value="1777751" selected>с изменением штатного расписания</option>
-                                        <option value="1777741">с производственной необходимостью</option>
-                                        <option value="1777761">с увеличением объема работ</option>
-                                    </select>
+                                    <input type="text"
+                                           v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Дата установление ЗП'">
                                     <input class="form-control"
@@ -263,22 +273,17 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <div v-if="results['classisn'] === '1440581' && docrow.fieldname === 'Причина'">
-                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" required>
-                                        <option v-for="reason in reasons" :value="reason[0]">{{ reason[1] }}</option>
-                                    </select>
+                                <div v-if="docrow.fieldname === '% лишения ЗП'">
+                                    <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="results['classisn'] === '1747351' && docrow.fieldname === 'Причина'">
+                                <div v-if="docrow.fieldname === 'Причина' || docrow.fieldname === 'Причина выдачи премии'">
                                     <input type="text" v-model="docrow.value"  :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Причина выдачи премии' || docrow.fieldname === 'Причина перевода'">
-                                    <input type="text" v-model="docrow.value"  :disabled="addChange" placeholder="..." class="form-control">
-                                </div>
-                                <div v-if="docrow.fieldname === 'Оклад' || docrow.fieldname === 'оклад'">
+                                <div v-if="docrow.fieldname === 'Оклад'">
                                     <input @keypress="onlyNumber" type="text" v-model="docrow.value"  :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Месяц'">
-                                    <select v-model="docrow.value"  :disabled="addChange" class="form-control" placeholder="Выберите месяц" required>
+                                    <select v-model="docrow.value" :disabled="addChange" class="form-control" placeholder="Выберите месяц" required>
                                         <option value="Январь" selected>Январь</option>
                                         <option value="Февраль">Февраль</option>
                                         <option value="Март">Март</option>
@@ -306,28 +311,55 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <div v-if="docrow.fieldname === 'Период С' || docrow.fieldname === 'Период, с' || docrow.fieldname === 'Период ПО' || docrow.fieldname === 'Период, по' || docrow.fieldname === 'Дата ПО'">
+                                <div v-if="docrow.fieldname === 'Период С' || docrow.fieldname === 'Период, с'">
                                     <input class="form-control"
                                            type="tel"
                                            v-model="docrow.value" :disabled="addChange"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <div v-if="docrow.fieldname === 'Вид транспорта' || docrow.fieldname === 'Страна'">
+                                <div v-if="docrow.fieldname === 'Период ПО' || docrow.fieldname === 'Период, по'">
+                                    <input class="form-control"
+                                           type="tel"
+                                           v-model="docrow.value" :disabled="addChange"
+                                           v-mask="'##.##.####'"
+                                    />
+                                </div>
+                                <div v-if="docrow.fieldname === 'Дата ПО'">
+                                    <input class="form-control"
+                                           type="tel"
+                                           v-model="docrow.value" :disabled="addChange"
+                                           v-mask="'##.##.####'"
+                                    />
+                                </div>
+                                <div v-if="docrow.fieldname === 'Вид транспорта'">
                                     <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Суточные (МРП)'">
+                                <div v-if="docrow.fieldname === 'Страна'">
+                                    <input type="text"
+                                           v-model="docrow.value" :disabled="addChange" class="form-control">
+                                </div>
+                                <div v-if="docrow.fieldname === 'Суточные (МРП)' || docrow.fieldname === 'ДСИ (в т.ч. СМР)' || docrow.fieldname === 'НС Заемщика' || docrow.fieldname === 'ДС Грузы'
+                                    || docrow.fieldname === 'ДС Водного ТС' || docrow.fieldname === 'ГПО Проф.ответсвенности' || docrow.fieldname === 'ГПО Авто'
+                                    || docrow.fieldname === 'ДС гарантий и поручительств (убытки фин.орг.)' || docrow.fieldname === 'ДМС юр.лиц' || docrow.fieldname === 'ГПО водного ТС'
+                                    || docrow.fieldname === 'ДС от прочих фин. убытков' || docrow.fieldname === 'Входящее перестрахование' || docrow.fieldname === 'ДС Авто Каско'
+                                    || docrow.fieldname === 'ПреИмущество' || docrow.fieldname === 'ДМС физ.лиц' || docrow.fieldname === 'ДГПО по договору'
+                                    || docrow.fieldname === 'ДС ЖД' || docrow.fieldname === 'ДС Займов' || docrow.fieldname === 'ГПО Проф. ответ. (ЧСИ)'
+                                    || docrow.fieldname === 'Двухсторонка' || docrow.fieldname === 'ДС от НС' || docrow.fieldname === 'МСТ'
+                                    || docrow.fieldname === 'ДС Мини Каско' || docrow.fieldname === 'ДС Воздушного ТС' || docrow.fieldname === 'ДС судебных расходов'
+                                    || docrow.fieldname === 'ДС Сакта' || docrow.fieldname === 'ДСИ в залоге' || docrow.fieldname === 'ГПО воздушного ТС'
+                                    || docrow.fieldname === 'ДС Авто в залоге' || docrow.fieldname === 'ДГПО (за исключ. по договору)' || docrow.fieldname === 'Титульное страхование'">
                                     <input @keypress="onlyNumber" type="text"
                                            v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Город назначения'">
+                                <div v-if="docrow.fieldname === 'Город назначения' || docrow.fieldname === 'Город отправления'">
                                     <input type="text"
                                            v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Виды родственных отношений'">
-                                    <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="...Родственние" class="form-control">
+                                    <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="...Родственник" class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Проработанный период С' || docrow.fieldname === 'Дата отмены'">
+                                <div v-if="docrow.fieldname === 'Проработанный период С'">
                                     <input class="form-control"
                                            type="tel"
                                            v-model="docrow.value" :disabled="addChange"
@@ -361,26 +393,28 @@
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-3">
-                        <button v-show="(results.docParam.button1caption === 'Заполнить СЗ' && results.docParam.showbutton1 === 'Y') ||
-                        (results.docParam.button2caption === 'Заполнить СЗ' && results.docParam.showbutton2 === 'Y') ||
-                        (results.docParam.button3caption === 'Заполнить СЗ' && results.docParam.showbutton3 === 'Y')"
+                        <button v-show="(results.docParam.button1caption === 'Заполнить СЗ' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Заполнить СЗ' && results.docParam.showbutton2 === 'Y')"
                                 v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
                             Заполнить СЗ
+                        </button>
+                        <button v-show="(results.docParam.button1caption === 'Список должностей' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Список должностей' && results.docParam.showbutton2 === 'Y')"
+                                v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
+                            Список должностей
                         </button>
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
+                        <!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
+                        <!--                            Разослать на согласование-->
+                        <!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
                                         || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
                                 v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
+                        <!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+                        <!--                            Разослать на согласование-->
+                        <!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
@@ -391,7 +425,7 @@
                                 v-if="addChange" class="btn btn-danger btn-block2" @click="addChangeForm()">
                             Внести изменения в СЗ
                         </button>
-                        <button v-if="annul && this.docIsn !== null" class="btn btn-danger btn-block2" @click="annulSz()">
+                        <button v-if="!addChange && annul" class="btn btn-danger btn-block2" @click="annulSz()">
                             Аннулировать СЗ
                         </button>
                     </div>
@@ -427,41 +461,226 @@
                         <td>{{result.fullname}}</td>
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
-                            || result.fullname === 'Согласующий 3'">
+                                || result.fullname === 'Согласующий 3'">
                                 <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
-<!--                            <div v-else-if="result.fullname === 'Лист согласования' && results.classisn === '1461771'">-->
-<!--                                <div v-if="!result.val" class="input-group">-->
-<!--                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>-->
-<!--&lt;!&ndash;                                    <input type="text" class="form-control" v-model="result.val" placeholder="Поиск..." :disabled="addChange">&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <div class="input-group-append">&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <button class="btn btn-secondary" type="button">&ndash;&gt;-->
-<!--&lt;!&ndash;                                            <i class="fa fa-search" @click="searchDocumentJournal"></i>&ndash;&gt;-->
-<!--&lt;!&ndash;                                        </button>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
-<!--                                </div>-->
-<!--                                <div v-else-if="result.val" class="input-group">-->
-<!--                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}-->
-<!--&lt;!&ndash;                                        <i class="fa fa-search" @click="searchDocumentJournal"></i>&ndash;&gt;-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых' || result.fullname === 'Куратор агента (новый)' || result.fullname === 'Куратор агента (предыдущий, при перезакреплении)'
+                                     || result.fullname === 'Председатель комиссии' || result.fullname === 'Член комиссии 1' || result.fullname === 'Член комиссии 2'
+                                     || result.fullname === 'Член комиссии 3' || result.fullname === 'Член комиссии 4' || result.fullname === 'Член комиссии 5'
+                                    || result.fullname === 'Член комиссии 6' || result.fullname === 'Председатель комиссии (филиал)' || result.fullname === 'Секретарь комиссии'
+                                    || result.fullname === 'Подписант за первого руководителя' || result.fullname === 'Подписант за главного бухгалтера' || result.fullname === 'Подписант за главного бухгалтера (ДСП)'
+                                    || result.fullname === 'Член комиссии 1(филиалы)' || result.fullname === 'Член комиссии 2(филиалы)' || result.fullname === 'Член комиссии 3(филиалы)'">
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
+                                            :multiple="false" :options="userList" :disable-branch-nodes="true"/>
+                            </div>
+                            <div v-else-if="result.fullname === 'Вид доверенности'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="proxyType in proxyTypes" :value="proxyType[0]">{{ proxyType[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (аренда/АХД)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="ahd in typeAhd" :value="ahd[0]">{{ ahd[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (хозяйственной деятельности)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="economic in economicActivity" :value="economic[0]">{{ economic[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (основной деятельности)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="main in typeMain" :value="main[0]">{{ main[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Марка и Модель ТС'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="model in vehicleModel" :value="model[0]">{{ model[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Гос.номер авто'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="stateNumber in stateNumbers" :value="stateNumber[0]">{{ stateNumber[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Состав нарушении'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="violation in violationComposition" :value="violation[0]">{{ violation[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Цвет Авто'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="autoColor in autoColors" :value="autoColor[0]">{{ autoColor[1] }}</option>
+                                </select>
+                            </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div>
                                     <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
-                                <input type="text" v-model="result.val"
-                                       class="form-control" :disabled="addChange">
+                                <div>
+                                    <input type="text" v-model="result.val"
+                                           class="form-control" :disabled="addChange">
+                                </div>
                             </div>
-                            <div v-else-if="result.fullname === 'Срок исполнения' || result.fullname === 'Срок исполнения СЗ'">
+                            <div v-else-if="result.fullname === 'Срок исполнения СЗ' || result.fullname === 'Дата заключения договора поручения' ||
+                                result.fullname === 'Дата расторжения договора поручения' || result.fullname === 'Дата предписания' || result.fullname === 'Дата оплаты'">
                                 <input class="form-control"
                                        type="tel"
                                        v-model="result.val" :disabled="addChange"
                                        v-mask="'##.##.####'"
                                 />
+                            </div>
+                            <div v-else-if="result.fullname === 'Количество бланков' || result.fullname === 'ГСМ (Горюче-смазочные материалы)' || result.fullname === 'Совокупная сумма оказания услуг (за весь период)'
+                                    || result.fullname === 'Предоплата' || result.fullname === 'Площадь' || result.fullname === 'Сумма' || result.fullname === 'Сумма штрафа'">
+                                <input type="text"  @keypress="onlyNumber" v-model="result.val" :disabled="addChange" placeholder="..." class="form-control">
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (ДП)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="804881">Заключение договора поручения со страховым агентом</option>
+                                    <option value="804891">Перезакрепление агента</option>
+                                    <option value="804901">Расторжение договора поручения</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'НДС'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="804651">без учета НДС</option>
+                                    <option value="804661">с учетом НДС</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Период аренды'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="804681">в день</option>
+                                    <option value="804691">в месяц</option>
+                                    <option value="804701">в сутки</option>
+                                    <option value="804711">всего</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Валюта'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="9813">Тенге</option>
+                                    <option value="9716">Доллар США</option>
+                                    <option value="9721">Евро</option>
+                                    <option value="9788">Российский рубль</option>
+                                    <option value="9832">Фунт стерлингов</option>
+                                    <option value="9838">Швейцарский франк</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Порядок расчетов'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="222462">Авансовый платеж</option>
+                                    <option value="222461">По факту</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Типовой договор'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="482291">Да</option>
+                                    <option value="482301">Нет</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (гос.пошлина)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option value="812871">Оплата государственной пошлины</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Тип расчета'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control" required>
+                                    <option v-for="calculationType in calculationTypes" :value="calculationType[0]">{{ calculationType[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Форма оплаты'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="paymentForm in paymentForms" :value="paymentForm[0]">{{ paymentForm[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Порядок оплаты'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="paymentOrder in paymentOrders" :value="paymentOrder[0]">{{ paymentOrder[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Услуги по ДОУ'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="service in servicesFor" :value="service[0]">{{ service[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Вид затрат' || result.fullname === 'Вид доходов/затрат'">
+                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
+                                            :multiple="false" :options="costTypes" :disable-branch-nodes="true"/>
+                            </div>
+                            <div v-else-if="result.fullname === 'Группа подразделений'">
+                                <treeselect v-model="result.val" :multiple="false" :options="unitGroups" :disabled="addChange"/>
+                            </div>
+                            <div v-else-if="result.fullname === 'Подразделение'">
+                                <treeselect
+                                    :multiple="false" :options="options" :placeholder="'Выберите'" v-model="result.val"
+                                    :disabled="addChange"/>
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (списание)'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="topic in topicSZ" :value="topic[0]">{{ topic[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'КНП'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="knp in knps" :value="knp[0]">{{ knp[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'КБК'">
+                                <select v-model="result.val" :disabled="addChange" class="form-control">
+                                    <option v-for="kbk in kbks" :value="kbk[0]">{{ kbk[1] }}</option>
+                                </select>
+                            </div>
+                            <div v-else-if="result.fullname === 'Согласованная котировка ДА'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Согласованная котировка ДА')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Согласованная котировка ДА')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Согласованная котировка ДА')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else-if="result.fullname === 'Приложение'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Приложение')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Приложение')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Приложение')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else-if="result.fullname === 'Номер договора'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Номер договора')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Номер договора')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Номер договора')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else-if="result.fullname === 'Необходимо согласование работников АдмУ'">
+                                <input
+                                    type="checkbox"
+                                    v-model="result.val"
+                                    true-value="1"
+                                    false-value="0"
+                                >
+                            </div>
+                            <div v-else-if="result.fullname === 'Тема СЗ (бланки)'">
+                                {{ result.value }}
                             </div>
                             <div v-else>
                                 <div>
@@ -480,17 +699,27 @@
             </div>
         </div>
         <FlashMessage></FlashMessage>
-        <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target="#listDoc">Large modal</button>
+        <button v-show="false" ref="modalButton" type="button" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
         <document-modal
             :coordination="coordination"
             :isn="listDocIsn"
             :changeMatch="changeMatch"
         >
         </document-modal>
-        <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal">Large modal</button>
+        <button v-show="false" ref="modalQuotes" type="button" data-toggle="modal" data-target="#quotesJournal">Large modal</button>
+        <full-quotes-journal
+            :results="results"
+        >
+        </full-quotes-journal>
+        <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal"></button>
         <document-journal-modal
+            :results="results"
         >
         </document-journal-modal>
+        <button v-show="false" ref="modalContract" type="button" data-toggle="modal" data-target="#contractJournal"></button>
+        <contract-journal-modal
+            :results="results">
+        </contract-journal-modal>
     </div>
 </template>
 
@@ -501,9 +730,11 @@ import MaskedInput from 'vue-text-mask';
 import 'vue2-datepicker/locale/ru';
 import moment from 'moment'
 import DocumentModal from "./document-modal";
+import FullQuotesJournal from "./full-quotes-journal";
 import DocumentJournalModal from "./document-journal-modal";
+import ContractJournalModal from "./contract-journal-modal";
 export default {
-    name: "management-application-extra",
+    name: "service-sheet-sum",
     props: {
         results: Object,
         clearSum:Function,
@@ -516,6 +747,7 @@ export default {
             docDate: new Date(),
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
             userList : [],
+            proxyTypes: [],
             isLoading: false,
             loading: false,
             extraLoading: false,
@@ -526,6 +758,7 @@ export default {
             duty : "",
             dept : "",
             options: null,
+            parentId: 50,
             agrList: false,
             docIsn: null,
             button: null,
@@ -539,16 +772,32 @@ export default {
             toForm: false,
             fillIn: false,
             index: '',
-            helpTo: [],
-            relationTo: [],
-            missingProducts: [],
+            dailyMC: [],
+            calculationTypes: [],
+            paymentForms: [],
+            costTypes: [],
+            unitGroups: [],
             duties: [],
+            topicSZ: [],
             wallRows: 2,
-            reasons: [],
-            authorities: [],
-            reasonDeprivation: [],
-            counterJournal: '',
+            typeAhd: [],
+            typeMain: [],
+            paymentOrders: [],
+            servicesFor: [],
+            economicActivity: [],
+            vehicleModel: [],
+            stateNumbers: [],
+            violationComposition: [],
+            autoColors: [],
+            knps: [],
+            kbks: [],
+            recordingCounterparty: {type: ''},
             idShow: false,
+            contragent: {
+                fullName: '',
+                isn: '',
+                type: '',
+            },
             isn: '0',
             delete: '0',
         }
@@ -557,13 +806,24 @@ export default {
         this.getUserList();
         this.getUsersInfo();
         this.getBranchData();
-        this.getRelational();
-        this.getHelpTo();
-        this.getMissingProduct();
+        this.getProxyTypes();
+        this.getCostType();
+        this.getPaymentForm();
+        this.getCalculationType();
+        this.getUnitGroup();
         this.getDuty();
-        this.getReason();
-        this.getReasonDeprivation();
-        this.getDelegateAuthority();
+        this.getSzTopic();
+        this.getTypeSzAhd();
+        this.getTypeSzMain();
+        this.getPaymentOrder();
+        this.getServicesFor();
+        this.getTopicEconomicActivity();
+        this.getVehicleModel();
+        this.getCarStateNumber();
+        this.getViolationComposition();
+        this.getAutoColor();
+        this.getKNP();
+        this.getKBK();
         Vue.filter('splitNumber', function (value) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         })
@@ -581,7 +841,7 @@ export default {
             today.setHours(0, 0, 0, 0);
             return date <= today;
         },
-        changeSelected(e){
+        changeSelected(index,e){
             //console.log(this.usersInfo[parseInt(e.id)].duty);
             // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
             this.duty = this.usersInfo[parseInt(e.id)].duty
@@ -592,23 +852,79 @@ export default {
                 this.usersInfo = response.data.usersInfo;
             });
         },
-        getMissingProduct(){
-            this.axios.post('/document/getMissingProduct', {}).then((response) => {
-                if (response.data.success) {
-                    this.missingProducts = response.data.result;
-                } else {
-                    alert(response.data.error)
-                }
+        getProxyTypes(){
+            this.axios.post('/document/getProxyType', {}).then((response) => {
+                this.proxyTypes = response.data.proxyTypes;
             });
         },
-        getHelpTo() {
-            this.axios.post('/document/getHelpTo', {}).then((response) => {
-                this.helpTo = response.data.helpTo;
+        getKNP(){
+            this.axios.post('/document/getKNP', {}).then((response) => {
+                this.knps = response.data.knps;
             });
         },
-        getRelational(){
-            this.axios.post('/document/getRelational', {}).then((response) => {
-                this.relationTo = response.data.relationTo;
+        getKBK(){
+            this.axios.post('/document/getKBK', {}).then((response) => {
+                this.kbks = response.data.kbks;
+            });
+        },
+        getServicesFor(){
+            this.axios.post('/document/getServicesFor', {}).then((response) => {
+                this.servicesFor = response.data.servicesFor;
+            });
+        },
+        getTopicEconomicActivity(){
+            this.axios.post('/document/getTopicEconomicActivity', {}).then((response) => {
+                this.economicActivity = response.data.economicActivity;
+            });
+        },
+        getVehicleModel(){
+            this.axios.post('/document/getVehicleModel', {}).then((response) => {
+                this.vehicleModel = response.data.vehicleModel;
+            });
+        },
+        getCarStateNumber(){
+            this.axios.post('/document/getCarStateNumber', {}).then((response) => {
+                this.stateNumbers = response.data.stateNumbers;
+            });
+        },
+        getViolationComposition(){
+            this.axios.post('/document/getViolationComposition', {}).then((response) => {
+                this.violationComposition = response.data.violationComposition;
+            });
+        },
+        getAutoColor(){
+            this.axios.post('/document/getAutoColor', {}).then((response) => {
+                this.autoColors = response.data.autoColors;
+            });
+        },
+        getTypeSzAhd(){
+            this.axios.post('/document/getTypeSzAhd', {}).then((response) => {
+                this.typeAhd = response.data.typeAhd;
+            });
+        },
+        getTypeSzMain(){
+            this.axios.post('/document/getTypeSzMain', {}).then((response) => {
+                this.typeMain = response.data.typeMain;
+            });
+        },
+        getSzTopic(){
+            this.axios.post('/document/getSzTopic', {}).then((response) => {
+                this.topicSZ = response.data.topicSZ
+            });
+        },
+        getPaymentForm(){
+            this.axios.post('/document/getPaymentForm', {}).then((response) => {
+                this.paymentForms = response.data.paymentForms;
+            });
+        },
+        getPaymentOrder(){
+            this.axios.post('/document/getPaymentOrder', {}).then((response) => {
+                this.paymentOrders = response.data.paymentOrders;
+            });
+        },
+        getCostType(){
+            this.axios.post('/document/getCostType', {}).then((response) => {
+                this.costTypes = response.data.result;
             });
         },
         getDuty(){
@@ -616,19 +932,9 @@ export default {
                 this.duties = response.data.duties;
             });
         },
-        getReason(){
-            this.axios.post('/document/getReason', {}).then((response) => {
-                this.reasons = response.data.reasons;
-            });
-        },
-        getReasonDeprivation(){
-            this.axios.post('/document/getReasonDeprivation', {}).then((response) => {
-                this.reasonDeprivation = response.data.reasonDeprivation;
-            });
-        },
-        getDelegateAuthority(){
-            this.axios.post('/document/getDelegateAuthority', {}).then((response) => {
-                this.authorities = response.data.authorities;
+        getCalculationType(){
+            this.axios.post('/document/getCalculationType', {}).then((response) => {
+                this.calculationTypes = response.data.calculationTypes;
             });
         },
         getUserList() {
@@ -636,6 +942,15 @@ export default {
             this.axios.post('/full/getFullBranch', data).then((response) => {
                 this.userList = response.data.result;
                 this.isLoading = false;
+            });
+        },
+        getUnitGroup(){
+            this.axios.post('/document/getUnitGroup', {}).then((response) => {
+                if (response.data.success) {
+                    this.unitGroups = response.data.result;
+                } else {
+                    alert(response.data.error)
+                }
             });
         },
         getBranchData() {
@@ -654,7 +969,7 @@ export default {
                     return;
                 }
             }
-            this.extraLoading = true;
+            this.extra = true;
             this.annul = true;
             this.addChange = false;
             this.results.status = 'Аннулирован';
@@ -709,23 +1024,23 @@ export default {
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.loading = false;
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
-                        this.results.stage = response.data.stage;
-                        this.addChange = true;
-                        this.toForm = true;
-                        this.fillIn = true;
-                        this.saveDoc = false;
-                        this.annul = false;
+                        this.loading = false
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN
+                        this.results.stage = response.data.stage
+                        this.addChange = true
+                        this.toForm = true
+                        this.fillIn =true
+                        this.saveDoc = false
+                        this.annul = false
                     } else {
-                        this.addChange = false;
-                        this.loading = false;
-                        this.saveDoc = true;
+                        this.addChange = false
+                        this.loading = false
                         alert(response.data.error);
                     }
-                    this.loading = false;
+                    this.loading = false
                 })
                 .catch(function (error) {
+                    //alert(error.response);
                 });
         },
         addChangeForm() {
@@ -739,23 +1054,24 @@ export default {
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.results.status = response.data.status;
-                        this.results.stage = response.data.stage;
+                        this.results.status = response.data.status
+                        this.results.stage = response.data.stage
                         this.listDocIsn = response.data.DOCISN
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
-                                this.results.resDop[i].val = this.listDocIsn
+                                this.results.resDop[i].val = response.data.DOCISN
                             }
                         }
-                        this.extraLoading = false;
-                        this.sendOutForm = false;
-                        this.addChange = false;
-                        this.toForm = false;
-                        this.annul = true;
-                        this.saveDoc = true;
+
+                        this.extraLoading = false
+                        this.sendOutForm = false
+                        this.addChange = false
+                        this.toForm = false
+                        this.annul = true
+                        this.saveDoc = true
                     } else {
-                        this.addChange = true;
-                        this.extraLoading = false;
+                        this.addChange = true
+                        this.extraLoading = false
                     }
                 })
         },
@@ -764,16 +1080,6 @@ export default {
             let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
             if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) { // 46 is dot
                 $event.preventDefault();
-            }
-        },
-        setDoc: async function() {
-            if(this.results.result1.fullname === 'Адресат' && this.result.result1.val === ''){
-                this.errorNotify('Ошибка', 'Укажите Адресата');
-                return false;
-            }
-            if(this.results.result1.fullname === 'Исполнитель' && this.result.result1.val === ''){
-                this.errorNotify('Ошибка', 'Укажите Исполнителя');
-                return false;
             }
         },
         fillInSz(){
@@ -786,7 +1092,12 @@ export default {
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
-                    if(response.data.success) {
+                    if(response.data.error){
+                        alert(response.data.error)
+                        this.addChange = false
+                        this.loading = false
+                    }
+                    else if(response.data.success) {
                         if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
                             let dat = {
                                 docisn: this.docIsn,
@@ -794,9 +1105,10 @@ export default {
                                 button: this.button,
                             }
                             this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
-                                this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
+                                this.results.showRemark = response.data.results.showRemark ? response.data.results.showRemark :response.data.results.showRemark[0]
+                                this.results.showRemark2 = response.data.results.showRemark2 ? response.data.results.showRemark2 : response.data.results.showRemark2[0]
                                 this.results.id = response.data.results.id;
+                                this.results.amount = response.data.results.amount;
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
@@ -835,7 +1147,6 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status
                         this.results.stage = response.data.stage
-                        this.sendOutForm = true;
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
@@ -906,11 +1217,32 @@ export default {
                     }
                 });
             }
+            if(doc === 'Согласованная котировка ДА'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalQuotes.click();
+            }
+            if(doc === 'Приложение'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalDocument.click();
+            }
+            if(doc === 'Номер договора'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalContract.click();
+            }
         },
-        searchDocumentJournal(){
-            this.preloader(true);
-            this.$refs.modalDocument.click();
-            this.preloader(false);
+        clearInfo(data){
+            for(let i=0; i<this.results.resDop.length; i++){
+                console.log(this.results.resDop.length)
+
+                if(this.results.resDop[i].fullname === data){
+                    console.log(this.results.resDop[i].value)
+                    this.results.resDop[i].value = '';
+                    this.results.resDop[i].val = '';
+                }
+            }
         },
         preloader(show){
             if(show){
@@ -919,11 +1251,12 @@ export default {
                 document.getElementById('preloader').style.display = 'none';
             }
         },
-        reverseCaret: function (id) {
-            this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
-            this.caretColor = this.caretColor === 'color-black' ? 'color-blue' : 'color-black';
-        },
         // }, :key="`${index}-${docrow.value}`"
+        searchDocumentJournal(){
+            this.preloader(true);
+            this.$refs.modalQuotes.click();
+            this.preloader(false);
+        },
     },
     computed: {
         orderedDocrows: function () {
@@ -931,6 +1264,8 @@ export default {
         },
     },
     components: {
+        ContractJournalModal,
+        FullQuotesJournal,
         DocumentModal,
         DocumentJournalModal,
         DatePicker,
@@ -941,18 +1276,5 @@ export default {
 <style scoped>
 .vdp-datepicker input {
     background: none;
-}
-.input-container {
-    display: flex;
-    width: 100%;
-    margin-bottom: 15px;
-}
-.input-field {
-    width: 100%;
-    padding: 10px;
-    outline: none;
-}
-.input-field:focus {
-    border: 2px solid dodgerblue;
 }
 </style>

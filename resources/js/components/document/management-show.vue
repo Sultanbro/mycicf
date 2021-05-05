@@ -13,15 +13,16 @@
             <ApplicationBlank v-else-if="results['classisn']==='1479131' || results['classisn']==='1479141' || results['classisn']==='820621' || results['classisn']==='1011971'
                                     || results['classisn']==='1007411' || results['classisn']==='1479151' || results['classisn']==='1007391'
                                     || results['classisn']==='1011931' || results['classisn']==='1011961' || results['classisn']==='1011951' || results['classisn']==='1011941'
-                                    || results['classisn']==='1007401'" :results="results"></ApplicationBlank> <!-- Заявления -->
+                                    || results['classisn']==='1007401' || results['classisn']==='1007421'" :results="results"></ApplicationBlank> <!-- Заявления -->
             <DisciplinaryAction v-else-if="results['classisn']==='2018171'" :results="results"></DisciplinaryAction>
             <ManagementBusinessTrip v-else-if="results['classisn']==='1042311'" :results="results"></ManagementBusinessTrip>
             <ApprovalSheet v-else-if="results['classisn']==='1791111' || results['classisn']==='1783591'|| results['classisn']==='1799231' || results['classisn']==='2071791'
                                     || results['classisn']==='826591' || results['classisn']==='800781'" :results="results"></ApprovalSheet>
-            <ServiceSheet v-else-if="results['classisn']==='1287701' || results['classisn']==='826601'|| results['classisn']==='1747041' || results['classisn']==='800721'
+            <ServiceSheet v-else-if="results['classisn']==='1287701' || results['classisn']==='1747041' || results['classisn']==='800721'
                                     || results['classisn']==='800711' || results['classisn']==='800731'|| results['classisn']==='1867101' || results['classisn']==='821881'
                                     || results['classisn']==='1867091' || results['classisn']==='1440551'|| results['classisn']==='800741' || results['classisn']==='1876191'
                                     || results['classisn']==='2000751' || results['classisn']==='1326081'" :results="results"></ServiceSheet>
+            <ServiceSheetSum v-else-if="results['classisn']==='826601'" :results="results"></ServiceSheetSum>
             <div class="col-md-12 col-sm-6 flex-row pl-3 pb-4 pr-4 pointer">
 <!--                <button title="Сохранить" type="submit" class="btn btn-primary" id="saveDocument" @click="saveDocument">-->
 <!--                    Сохранитьasdasdsa-->
@@ -43,6 +44,7 @@
     import ManagementApplicationExtra from "./management-application-extra";
     import ServiceSheet from "./service-sheet";
     import CounterpartyJournal from "./counterparty-journal"
+    import ServiceSheetSum from "./service-sheet-sum";
 
     export default {
         name: "document-management-show",
@@ -52,6 +54,7 @@
             }
         },
         components: {
+            ServiceSheetSum,
             ApplicationBlank,
             ManagementSearch,
             ManagementApplication,
@@ -62,7 +65,7 @@
             DisciplinaryAction,
             ManagementApplicationExtra,
             ServiceSheet,
-            CounterpartyJournal
+            CounterpartyJournal,
         },
         props: {
             isn: Number,

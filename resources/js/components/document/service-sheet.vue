@@ -71,6 +71,26 @@
                                         </date-picker>
                                     </div>
                                 </div>
+                                <div class="col-md-2" v-if="results.classisn === '2000751'">
+                                    <label>Дата начала</label>
+                                    <div>
+                                        <input class="form-control"
+                                               type="tel"
+                                               v-model="results.dateBeg" :disabled="addChange"
+                                               v-mask="'##.##.####'"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-2" v-if="results.classisn === '2000751'">
+                                    <label>Дата оконч.</label>
+                                    <div>
+                                        <input class="form-control"
+                                               type="tel"
+                                               v-model="results.dateEnd" :disabled="addChange"
+                                               v-mask="'##.##.####'"
+                                        />
+                                    </div>
+                                </div>
                                 <div>
                                     <label>Статус</label>
                                     <div>
@@ -364,18 +384,18 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
+<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
                                         || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
                                 v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">
-                            Разослать на согласование
-                        </button>
-                        <button v-if="!addChange" class="btn btn-success btn-block2" @click="saveDocument()">
+<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+<!--                            Разослать на согласование-->
+<!--                        </button>-->
+                        <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
                     </div>
@@ -475,11 +495,8 @@
                                 </select>
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
-                                <div v-if="!result.val">
-                                    <div class="pointer" scope="col" @click="OpenModal(listDocIsn)">{{listDocIsn}}</div>
-                                </div>
-                                <div v-else>
-                                    <div class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                <div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -671,10 +688,12 @@
         </document-modal>
         <button v-show="false" ref="modalQuotes" type="button" data-toggle="modal" data-target="#quotesJournal">Large modal</button>
         <full-quotes-journal
+            :results="results"
         >
         </full-quotes-journal>
         <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal"></button>
         <document-journal-modal
+            :results="results"
         >
         </document-journal-modal>
         <button v-show="false" ref="modalContract" type="button" data-toggle="modal" data-target="#contractJournal"></button>
@@ -759,6 +778,8 @@ export default {
                 isn: '',
                 type: '',
             },
+            isn: '0',
+            delete: '0',
         }
     },
     created() {
@@ -931,7 +952,7 @@ export default {
             this.extra = true;
             this.annul = true;
             this.addChange = false;
-            this.results.status = '2515';
+            this.results.status = 'Аннулирован';
             let data = {
                 results: this.results,
                 docIsn: this.docIsn,
@@ -983,20 +1004,20 @@ export default {
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.loading = false;
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
-                        this.results.stage = response.data.stage;
-                        this.addChange = true;
-                        this.toForm = true;
-                        this.fillIn =true;
-                        this.saveDoc = false;
-                        this.annul = false;
+                        this.loading = false
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN
+                        this.results.stage = response.data.stage
+                        this.addChange = true
+                        this.toForm = true
+                        this.fillIn =true
+                        this.saveDoc = false
+                        this.annul = false
                     } else {
-                        this.addChange = false;
-                        this.loading = false;
+                        this.addChange = false
+                        this.loading = false
                         alert(response.data.error);
                     }
-                    this.loading = false;
+                    this.loading = false
                 })
                 .catch(function (error) {
                     //alert(error.response);
@@ -1004,30 +1025,33 @@ export default {
         },
         addChangeForm() {
             this.extraLoading = true;
+            if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
+            else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON3',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.results.status = response.data.status;
-                        this.results.stage = response.data.stage;
+                        this.results.status = response.data.status
+                        this.results.stage = response.data.stage
                         this.listDocIsn = response.data.DOCISN
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
                                 this.results.resDop[i].val = response.data.DOCISN
                             }
                         }
-                        this.extraLoading = false;
-                        this.sendOutForm = false;
-                        this.addChange = false;
-                        this.toForm = false;
-                        this.annul = true;
-                        this.saveDoc = true;
+
+                        this.extraLoading = false
+                        this.sendOutForm = false
+                        this.addChange = false
+                        this.toForm = false
+                        this.annul = true
+                        this.saveDoc = true
                     } else {
-                        this.addChange = true;
-                        this.extraLoading = false;
+                        this.addChange = true
+                        this.extraLoading = false
                     }
                 })
         },
@@ -1040,21 +1064,30 @@ export default {
         },
         fillInSz(){
             this.loading = true;
+            if(this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
+            else if(this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON1',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
-                    if(response.data.success) {
+                    if(response.data.error){
+                        alert(response.data.error)
+                        this.addChange = false
+                        this.loading = false
+                    }
+                    else if(response.data.success) {
                         if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
                             let dat = {
                                 docisn: this.docIsn,
                                 isn: this.results.classisn,
-                                button: '1',
+                                button: this.button,
                             }
                             this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                this.results.id = response.data.id;
+                                this.results.showRemark = response.data.results.showRemark ? response.data.results.showRemark :response.data.results.showRemark[0]
+                                this.results.showRemark2 = response.data.results.showRemark2 ? response.data.results.showRemark2 : response.data.results.showRemark2[0]
+                                this.results.id = response.data.results.id;
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
@@ -1082,17 +1115,27 @@ export default {
         },
         buttonClick() {
             this.loading = true;
+            if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
+            else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
                 docIsn: this.docIsn,
-                button: 'BUTTON2',
+                button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.sendOutForm = true;
+                        this.results.status = response.data.status
+                        this.results.stage = response.data.stage
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
+                        if(this.listDocIsn.length > 0){
+                            for(let i=0; i<this.results.resDop.length; i++){
+                                if(this.results.resDop[i].fullname === 'Лист согласования'){
+                                    this.results.resDop[i].val = this.listDocIsn
+                                }
+                            }
+                        }
                         this.result = response.data.error
                         this.saveDoc = false;
                     } else {

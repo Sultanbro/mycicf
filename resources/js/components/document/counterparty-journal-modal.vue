@@ -141,6 +141,16 @@ export default {
             classISN: '',
             type: '',
         },
+        addressee: {
+            fullName: '',
+            isn: '',
+            type: '',
+        },
+        worker: {
+            fullName: '',
+            isn: '',
+            type: '',
+        },
         contragent: {},
         previousCuratorAgent: {},
         recordingCounterparty: Object ,
@@ -172,8 +182,6 @@ export default {
     },
     methods: {
         changeCheck(res, id){
-            // console.log(res)
-            // console.log(id)
             // console.log(this.counterparty)
             if(this.searchingResult[id] !== id || this.searchingResult[id] === id){
                 this.counterparty.isn = ''
@@ -239,7 +247,7 @@ export default {
                 this.results.contragent.subjIsn = this.counterparty.isn
                 this.contragent.fullName = this.counterparty.fullName
                 this.contragent.isn = this.counterparty.isn
-            }else if(this.recordingCounterparty.type === 'Куратор агента (предыдущий, при перезакреплении)'){
+            } else if(this.recordingCounterparty.type === 'Куратор агента (предыдущий, при перезакреплении)'){
                 for(let i=0; i<this.results.resDop.length; i++){
                     if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
                         this.previousCuratorAgent.fullName = this.counterparty.fullName
@@ -247,6 +255,26 @@ export default {
                         this.previousCuratorAgent.type = this.recordingCounterparty.type
                         this.results.resDop[i].value = this.counterparty.fullName
                         this.results.resDop[i].val = this.counterparty.isn
+                    }
+                }
+            } else if(this.recordingCounterparty.type === 'Адресат' || this.recordingCounterparty.type === 'Исполнитель'){
+                for(let i=0; i<this.results.result1.length; i++){
+                    if(this.results.result1[i].fullname === this.recordingCounterparty.type){
+                        this.results.result1[i].value = this.counterparty.fullName
+                        this.results.result1[i].val = this.counterparty.isn
+                        this.addressee.fullName = this.counterparty.fullName
+                        this.addressee.isn = this.counterparty.isn
+                        this.addressee.type = this.recordingCounterparty.type
+                    }
+                }
+            } else if(this.recordingCounterparty.type === 'ФИО работника'){
+                for(let i=0; i<this.results.docrows.length; i++){
+                    if(this.results.docrows[i].fieldname === this.recordingCounterparty.type){
+                        this.results.docrows[i].value_name = this.counterparty.fullName
+                        this.results.docrows[i].value = this.counterparty.isn
+                        this.worker.isn = this.counterparty.isn
+                        this.worker.type = this.recordingCounterparty.type
+                        this.worker.fullName = this.counterparty.fullName
                     }
                 }
             }else {
