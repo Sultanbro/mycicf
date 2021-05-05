@@ -48,20 +48,25 @@ class EdsController extends Controller
     }
     public function setQr(Request $request, KiasServiceInterface $kias){
 //        dd($request->info);
+//        dd($request->ISN);
 //        dd($request);
-        $path = $request->path;
-
+        $pathh = $request->path;
+//        dd($path);
+        $trimmed = trim($pathh);
+        //dd($path);
         $info_client=[];
         foreach ($request->info as $key => $value){
            if ($value['confirmed']==1){
                 $value = $info_client;
            }
         }
+        $destinationPath=storage_path('app/public/insurance_case_docs/results/123.xlsx');
+        $success = \File::copy($pathh,$destinationPath);
 
 //        $iin = Auth::user()->iin;
 //        dd($iin);
 //        $spreadsheet = $path;
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($destinationPath);
 //        $spreadsheet= storage_path($request->path);
 //        Изменения
         $sheet = $spreadsheet->getActiveSheet();
@@ -78,6 +83,7 @@ class EdsController extends Controller
         $drawing->getShadow()->setDirection(45);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
         $writer = new Xlsx($spreadsheet);
+        $kek= 123;
         $writer->save(storage_path('app/public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx'));
 //        dd('kek');
         //       QR тут костыльным методом ложится
@@ -88,7 +94,7 @@ class EdsController extends Controller
         $writer = new Xlsx($spreadsheet);
         $attachment = new Attachment();
 
-        $writer->save(storage_path('app/public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx'));
+        $writer->save(storage_path('app/public/insurance_case_docs/results/' . $kek . '_insurance_payment.xlsx'));
         $path = 'public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx';
 
         $attachment->insurance_case_id = session('caseId');
