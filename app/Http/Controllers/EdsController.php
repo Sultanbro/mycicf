@@ -49,7 +49,8 @@ class EdsController extends Controller
     public function setQr(Request $request, KiasServiceInterface $kias){
 //        dd($request->info);
 //        dd($request);
-//        dd($request->path);
+        $path = $request->path;
+
         $info_client=[];
         foreach ($request->info as $key => $value){
            if ($value['confirmed']==1){
@@ -59,14 +60,16 @@ class EdsController extends Controller
 
 //        $iin = Auth::user()->iin;
 //        dd($iin);
-        $spreadsheet = $request->path;
-        //Изменения
+//        $spreadsheet = $path;
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+//        $spreadsheet= storage_path($request->path);
+//        Изменения
         $sheet = $spreadsheet->getActiveSheet();
         //       QR тут костыльным методом ложится
 
         $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
         $qr=QrCode::format('png')->size(300)->generate($info_client);
-        dd($qr);
+//        dd($qr);
         $drawing->setPath(storage_path('app/public/qr.png')); // put your path and image here
         $drawing->setOffsetX(110);
         $drawing->setRotation(0);
