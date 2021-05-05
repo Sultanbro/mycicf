@@ -9,6 +9,7 @@ use Tests\Feature\FeatureTestBase;
 class LoginTest extends FeatureTestBase {
     use WithFaker;
 
+    const ISN = '1115';
     protected $description = 'Авторизация';
 
     /**
@@ -25,8 +26,10 @@ class LoginTest extends FeatureTestBase {
     }
 
     protected function prepare() {
+        User::whereIsn(self::ISN)->delete();
+
         $this->user = new User();
-        $this->user->ISN = '1115';
+        $this->user->ISN = self::ISN;
         $this->user->username = 'User';
         $this->user->password_hash = \Hash::make('password');
         $this->user->level = '1111';

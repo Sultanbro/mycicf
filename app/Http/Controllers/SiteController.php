@@ -15,6 +15,7 @@ use App\User;
 use App\Dicti;
 use App\Region;
 use App\City;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -649,6 +650,40 @@ class SiteController extends Controller
         }
         \Debugbar::stopMeasure('getBirthdays');
         return response()->json(['birthdays' => $result]);
+    }
+
+    public function getBirthdays2(Request $request) {
+        $d = $request->get('d', date('d', time()));
+        $m = $request->get('m', date('m', time()));
+        return cache()->remember(sprintf("birthdays__%s.%s", $m, $d), now()->addDay(), function () use ($d, $m) {
+            return Branch::whereNotNull('birthday')
+                ->select([
+                    'id',
+                    'birthday',
+                    'kias_id',
+                    'fullname'
+                ])
+                ->with('getParent')
+                ->whereDay('birthday', '>=', $d)
+                ->whereMonth('birthday', $m)
+                ->orWhereNotNull('birthday')
+                ->whereMonth('birthday', '>', $m)
+                ->orderByRaw('MONTH(birthday)')
+                ->orderByRaw('DAY(birthday)')
+                ->limit(10)
+                ->get()
+                ->groupBy(function (Branch $branch) {
+                    /**
+                     * @var $birthday Carbon
+                     */
+                    $birthday = $branch->birthday;
+
+                    return implode('-', [
+                        str_pad($birthday->day, 2, '0', STR_PAD_LEFT),
+                        str_pad($birthday->month, 2, '0', STR_PAD_LEFT),
+                    ]);
+                });
+        });
     }
 
     public function getDicti(Request $request){

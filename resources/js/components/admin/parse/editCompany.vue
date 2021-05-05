@@ -43,7 +43,7 @@
                 })
                     .then(response => {
                         if(response.data.success){
-                            alert('Данные добавлены');
+                            alert('Данные успешно изменены');
                             location.href='/';
                         }else{
                             alert(response.data.error);

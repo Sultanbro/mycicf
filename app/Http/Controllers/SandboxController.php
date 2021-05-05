@@ -6,6 +6,7 @@ use App\Dicti;
 use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\PostsService;
 use Illuminate\Http\Request;
 
 class SandboxController extends Controller
@@ -141,5 +142,21 @@ class SandboxController extends Controller
         }
         Dicti::where('isn', $isn)->where('parent_isn', $parentIsn)->where('condition_for_property', $enum)->delete();
         dd('OKk');
+    }
+
+    public function action1(PostsService $service) {
+        return $service->getPosts('');
+    }
+
+    public function react() {
+        return view('testing.sandbox.react');
+    }
+
+    public function react2() {
+        return view('testing.sandbox.react2');
+    }
+
+    public function error() {
+        throw new \Exception();
     }
 }

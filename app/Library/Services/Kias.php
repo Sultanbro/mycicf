@@ -64,6 +64,9 @@ class Kias implements KiasServiceInterface
         Debugbar::log('Kias::Construct');
     }
 
+    /**
+     * @return \Illuminate\Support\Carbon
+     */
     private function getLifetime() {
         return now()->addMinutes(config('kias.cache.lifetime'));
     }
@@ -233,7 +236,7 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
-//                 (
+//                file_put_contents(
 //                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
 //                    $xml->asXML()
 //                );
@@ -890,12 +893,6 @@ class Kias implements KiasServiceInterface
         return $this->request('User_CicGetDocRowAttr', [
             'CLASSISN' => $class_isn,
             'DOCISN'   => $doc_isn,
-        ]);
-    }
-
-    public function User_CicGetOrSetEorderDocs($doc_isn){
-        return $this->request('User_CicGetDocRating', [
-            'docisn' => $doc_isn,
         ]);
     }
 
