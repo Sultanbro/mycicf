@@ -255,25 +255,25 @@
                                             </eds-order-document>
                                         </div>
                                         <div v-else>
-                                            <eds
+                                            <edslogin
                                                     v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
                                                     ref="eds"
                                                     :sendSolution="sendSolution"
                                                     :coordination="coordination"
                                                     :doc_row_list_inner_other="doc_row_list_inner_other"
                                                     show-view="sign">
-                                            </eds>
+                                            </edslogin>
                                         </div>
                                     </div>
                                     <div v-else>
-                                        <eds
+                                        <edslogin
                                                 v-if="coordination.DocClass === 1784781 || coordination.DocClass === '1784781' || coordination.sz_class_isn == 800711 && coordination.sz_type == 'СЗ.Выдача доверенности' || coordination.sz_class_isn == '800711' && coordination.sz_type == 'СЗ.Выдача доверенности'"
                                                 ref="eds"
                                                 :sendSolution="sendSolution"
                                                 :coordination="coordination"
                                                 :doc_row_list_inner_other="doc_row_list_inner_other"
                                                 show-view="sign">
-                                        </eds>
+                                        </edslogin>
                                     </div>
 
                                     <div class="flex-row">
