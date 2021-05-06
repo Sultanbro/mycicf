@@ -257,8 +257,12 @@ class RecruitingController extends Controller
         }
         $chiefMail = $cData->chiefMail;
         $this->TestMail($chiefMail);
-        $response =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
-        $recruiting_emails = explode(' ', $response->Mail);
+//        $response =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+//        $recruiting_emails = explode(' ', $response->Mail);
+        $response_mail =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
+//        $recruiting_emails = explode(' ', $response_mail->Mail);
+        $recruiting_emails = explode(' ' , str_replace(',','',$response_mail->Mail));
+
 //        $candidats_data->candidats_phone_number = $request->candidatsData['cityAdress'];
         $candidats_data->recruiting_id = $cData->recruitingId;
         $candidats_data->candidate_fullname = $cData->manualFullname;
@@ -625,7 +629,8 @@ class RecruitingController extends Controller
 //        Почта авторизованного человека
         $response_mail =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
 //        $recruiting_emails = explode(' ', $response_mail->Mail);
-        $recruiting_emails = explode(' ', (string)$response_mail->Mail);
+        $recruiting_emails = explode(' ' , str_replace(',','',$response_mail->Mail));
+
         if(isset($responseDriverCard->ROWSET->row)){
             foreach ($responseDriverCard->ROWSET->row as $row){
                 array_push($resultDriverCard, [
