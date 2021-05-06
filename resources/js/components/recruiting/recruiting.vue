@@ -2507,7 +2507,7 @@
                 this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
                 this.candidatsData.recruitingId =  this.candidatBackward.id;
                 this.candidatsData.documents =  this.candidatBackward.documents;
-                this.email_chief.recruiterFullname = this.user.branch.fullname;
+                this.candidatsData.recruiterFullname = this.user.branch.fullname;
                 this.candidatsData.chiefMail = this.candidatBackward.chiefMail;
                 formData.append("candidatsData", JSON.stringify(this.candidatsData));
                 return formData;
