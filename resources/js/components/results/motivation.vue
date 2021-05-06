@@ -36,6 +36,7 @@
                     <tr>
                         <th scope="col">Критерии</th>
                         <th scope="col">Расчеты</th>
+                        <th scope="col">Цифры</th>
                         <th scope="col">Выполнение</th>
                     </tr>
                     </thead>
@@ -43,6 +44,7 @@
                     <tr v-for="(motivation, index) in motivations"
                         :key="index">
                         <td>{{motivation.types}}</td>
+                        <td>{{motivation.sum}}</td>
                         <td>{{motivation.sum}}</td>
                         <td>
                             <i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i>
