@@ -6,37 +6,6 @@ let env = dotenv.config().parsed;
 
 require("laravel-mix-react-typescript-extension");
 
-class OnlyIfChanged {
-    dependencies() {
-        return [];
-    }
-
-    register() {
-        this.config = {};
-    }
-
-    webpackConfig(webpackConfig) {
-        let opts = {
-            rootDir: process.cwd(),
-            devBuild: process.env.NODE_ENV !== 'production',
-        }
-
-        let plugin = new OnlyIfChangedPlugin({
-            cacheDirectory: path.join(opts.rootDir, '.tmp/cache'),
-            cacheIdentifier: opts, // all variable opts/environment should be used in cache key
-        });
-
-        webpackConfig.plugins.push(plugin);
-    }
-
-    babelConfig() {
-        return {};
-    }
-}
-
-mix.extend('onlyIfChanged', new OnlyIfChanged());
-
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -65,7 +34,6 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/style_parse.scss', 'public/css')
     .sass('resources/sass/util.scss', 'public/css')
     .reactTypeScript('resources/jsx/app.ts', 'public/jsx')
-    .onlyIfChanged()
     .webpackConfig({
     watchOptions: {
         ignored: /public/
