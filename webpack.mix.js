@@ -65,7 +65,12 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/style_parse.scss', 'public/css')
     .sass('resources/sass/util.scss', 'public/css')
     .reactTypeScript('resources/jsx/app.ts', 'public/jsx')
-    .onlyIfChanged();
+    .onlyIfChanged()
+    .webpackConfig({
+    watchOptions: {
+        ignored: /public/
+    }
+});
 
 if (env && !mix.inProduction()) {
     mix
