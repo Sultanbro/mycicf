@@ -61,17 +61,20 @@ class MotivationController extends Controller
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
                         'sum' => ($response->Mot->row->PercPlan).'%',
+                        'PlanF' => (number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')),
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
                         'sum' => ($response->Mot->row->PlanFM).'%',
+                        'SumP' => (number_format((double)$response->Mot->row->SumP, 0, '.', ' ')),
                         'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Себестоимость',
+                        'types' => 'Себестоимость*',
                         'sum' => ($response->Mot->row->TotalProcKV).'%',
                         'color' => ((double)$response->Mot->row->TotalProcKV ?? 0) < 45 ? 'green' : 'red',
+                        'tooltip'    => 'Средневзвешенный размер комиссии и дополнительных расходов от брутто поступивших страховых премий, в %',
                     ],
                     [
                         'types' => 'Чистые сборы',

@@ -20,6 +20,9 @@
         </div>
         <!-- Rating Table Section-->
         <div class="rating-wrapper p-4 mb-3" v-if="showMotivation">
+            <div class="rating-wrapper p-4 mb-3">
+                <span>Премия начисляется при выполнении личного плана продаж по договорам страхования c размером агентского вознаграждения не более 30% от брутто поступивших страховых премий за исключением договоров ОС ГПО ВТС</span>
+            </div>
             <div class="rating-wrapper__inner">
                 <div class="d-flex align-items-center">
                     <div>
@@ -27,6 +30,7 @@
                     </div>
                 </div>
                 <div class="text-center">
+                    <span>к оплате:</span>
                     <h4 class="employee-rating">{{ motSum }}</h4>
                 </div>
             </div>
@@ -36,16 +40,18 @@
                     <tr>
                         <th scope="col">Критерии</th>
                         <th scope="col">Расчеты</th>
-                        <th scope="col">Цифры</th>
                         <th scope="col">Выполнение</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(motivation, index) in motivations"
                         :key="index">
-                        <td>{{motivation.types}}</td>
-                        <td>{{motivation.sum}}</td>
-                        <td>{{motivation.sum}}</td>
+                        <td v-tooltip.top-left="motivation.tooltip">
+
+                            {{motivation.types}}</td>
+                        <td>{{motivation.sum}} <span v-if="index === 0 || index === 1">/</span>
+                            {{motivation.PlanF}}
+                            {{motivation.SumP}}</td>
                         <td>
                             <i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i>
                         </td>
