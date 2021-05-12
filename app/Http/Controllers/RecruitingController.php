@@ -431,6 +431,26 @@ class RecruitingController extends Controller
         $Test = $kias->getTestKiadData();
         dd($Test);
     }
+    public function sendFixedMail(){
+        try{
+//            EFilimonova@cic.kz
+//            $emails = ['DJumagulov@cic.kz', 'Abylkhair@mail.ru'];
+//            $emails = array($recruiterName);
+            $emails = 'EFilimonova@cic.kz';
+
+            Mail::to($emails)->send(new EmailAmazonSes([
+                    'title' => __('shared.your_tour_polis'),
+                    'tourId' => 1,
+                ]
+            ));
+
+
+        }
+        catch (SesException $e){
+            echo $e->getMessage();
+            return false;
+        }
+    }
     public function testMail($chiefMail){
         try{
 //            EFilimonova@cic.kz
@@ -546,6 +566,7 @@ class RecruitingController extends Controller
         $recruiting->interview_stage = $request->candidat['interviewStage'];
         $recruiting->application_status = $request->candidat['status'];
         $recruiting->email_chief = $request->candidat['chief_mail'];
+        $this->sendFixedMail();
 //        $recruiting->email_chief = authEmail;
 
 //        $recruiting->candidates_fullname = $request->candidat['manualFullname'];
