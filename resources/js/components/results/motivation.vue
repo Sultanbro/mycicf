@@ -46,9 +46,11 @@
                     <tbody>
                     <tr v-for="(motivation, index) in motivations"
                         :key="index">
-                        <td v-tooltip.top-left="motivation.tooltip">
-
-                            {{motivation.types}}</td>
+                        <td v-tooltip="{
+                            content: motivation.tooltip,
+                            placement: 'bottom-end',
+                            classes: ['motivation-tooltip']
+                        }">{{motivation.types}}</td>
                         <td>{{motivation.sum}} <span v-if="index === 0 || index === 1">/</span>
                             {{motivation.PlanF}}
                             {{motivation.SumP}}</td>
@@ -225,7 +227,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     label {
         padding: 0;
         margin: 0;

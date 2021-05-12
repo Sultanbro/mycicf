@@ -2790,3 +2790,10 @@ textarea::-webkit-scrollbar-thumb {
     overflow-y: scroll;
     max-height: 550px;
 }
+
+.tooltip.motivation-tooltip {
+    .tooltip-inner {
+        max-width: none!important;
+        background-color: #6c93e5;
+    }
+}
