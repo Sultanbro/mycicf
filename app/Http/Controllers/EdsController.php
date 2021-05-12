@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Attachment;
 use App\Library\Services\KiasServiceInterface;
 use App\TblForPayEds;
+use App\TblForPayRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,10 @@ class EdsController extends Controller
     public function edsPO(KiasServiceInterface $kias){
         $po = TblForPayEds::where('filetype',"1")->orWhere('confirmed','0')->select('isn','name','date_sign','id','confirmed','plea','iin','iin_fail')->get();
         return view('eds-payout',compact('po'));
+    }
+    public function edsRP(KiasServiceInterface $kias){
+        $pr = TblForPayRequest::where('filetype',"1")->orWhere('confirmed','0')->select('isn','name','date_sign','id','confirmed','plea','iin','iin_fail')->get();
+        return view('payment-require',compact('pr'));
     }
 
     public function signQr(Request $request,KiasServiceInterface $kias){
@@ -60,13 +65,17 @@ class EdsController extends Controller
                 $value = $info_client;
            }
         }
-        $destinationPath=storage_path('app/public/insurance_case_docs/results/123.xlsx');
-        $success = \File::copy($pathh,$destinationPath);
+//        $destinationPath=storage_path('app/public/insurance_case_docs/results/123.xlsx');
+//        $success = \File::copy($pathh,$destinationPath);
+        $kek= 123;
+        $file = $request->path;
+        $destination = storage_path('app/public/insurance_case_docs/results/' . $kek .'_insurance_payment.xlsx');
+        Storage::copy($file,$destination);
 
 //        $iin = Auth::user()->iin;
 //        dd($iin);
 //        $spreadsheet = $path;
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($destinationPath);
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($destination);
 //        $spreadsheet= storage_path($request->path);
 //        Изменения
         $sheet = $spreadsheet->getActiveSheet();
@@ -83,7 +92,7 @@ class EdsController extends Controller
         $drawing->getShadow()->setDirection(45);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
         $writer = new Xlsx($spreadsheet);
-        $kek= 123;
+
         $writer->save(storage_path('app/public/insurance_case_docs/results/' . $request->ISN . '_insurance_payment.xlsx'));
 //        dd('kek');
         //       QR тут костыльным методом ложится
