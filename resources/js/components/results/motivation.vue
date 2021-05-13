@@ -26,12 +26,14 @@
             <div class="rating-wrapper__inner">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h4>{{label}}</h4>
+                        <h6 class="employee-info">{{label}}</h6>
                     </div>
                 </div>
                 <div class="text-center">
-                    <span>к оплате:</span>
-                    <h4 class="employee-rating">{{ motSum }}</h4>
+                    <span>к оплате</span>
+                    <div class="employee-sum">
+                        <h3 class="employee-rating">{{ motSum }}</h3>
+                    </div>
                 </div>
             </div>
             <div class="rating-table mt-3">
@@ -46,11 +48,27 @@
                     <tbody>
                     <tr v-for="(motivation, index) in motivations"
                         :key="index">
-                        <td v-tooltip="{
-                            content: motivation.tooltip,
-                            placement: 'bottom-end',
-                            classes: ['motivation-tooltip']
-                        }">{{motivation.types}}</td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-if="index === 4"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: stringTooltip,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 2"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td v-else>{{motivation.types}}</td>
                         <td>{{motivation.sum}} <span v-if="index === 0 || index === 1">/</span>
                             {{motivation.PlanF}}
                             {{motivation.SumP}}</td>
@@ -88,15 +106,12 @@
                 employee_isn: this.isn,
                 showMotivation: false,
                 showChart: false,
-
                 employee_info: {},
                 chart_data: {},
-
                 motivations: [],
                 category: 0,
                 motSum: null,
                 label: '',
-
                 chartOptions: {
                     xaxis: {
                         categories: [],
@@ -105,7 +120,50 @@
                 series: [{
                     name: 'Итог',
                     data: []
-                }]
+                }],
+
+                tableTooltip: '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white" width="100%">\n' +
+                    '    <tr>\n' +
+                    '        <th rowspan="2">Себестоимость</th>\n' +
+                    '        <th colspan="2">Мотивация</th>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <th>План продаж <br>80 - 100 % с нарастанием</th>\n' +
+                    '        <th>План продаж 101 % <br>и выше с нарастанием</th>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <td>0</td>\n' +
+                    '        <td>7</td>\n' +
+                    '        <td>9</td>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <td>0,01-10</td>\n' +
+                    '        <td>5</td>\n' +
+                    '        <td>7</td>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <td>10,01- 15</td>\n' +
+                    '        <td>4</td>\n' +
+                    '        <td>5</td>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <td>15,01 - 20</td>\n' +
+                    '        <td>3</td>\n' +
+                    '        <td>4</td>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <td>20,01 - 25</td>\n' +
+                    '        <td>2</td>\n' +
+                    '        <td>3</td>\n' +
+                    '    </tr>\n' +
+                    '    <tr>\n' +
+                    '        <td>25,01 - 30</td>\n' +
+                    '        <td>1</td>\n' +
+                    '        <td>2</td>\n' +
+                    '    </tr>\n' +
+                    '</table>\n',
+
+                stringTooltip: 'Средневзвешенный размер<br> комиссии и дополнительных <br>расходов от брутто поступивших <br>страховых премий, в %'
             }
         },
         mounted() {
@@ -269,7 +327,16 @@
         width: 100%;
     }
     .employee-rating {
-        color: cornflowerblue;
+        color: whitesmoke;
+        font-weight: bold;
+        margin: 0;
+    }
+    .employee-sum {
+        background-color: #4a76a8;
+        border-radius: 10px;
+        padding: 4px;
+    }
+    .employee-info {
         font-weight: bold;
     }
     .rating-avatar {

@@ -12,7 +12,7 @@ class MotivationController extends Controller
     }
 
     /*
-     * Category   - 1
+     * Category   - 1 (головной)
      * PercPlan   - Сборы с нарастанием (>80%)
      * PlanFM     - Премии оплаченные (>50%)
      * TotalProcK - VСебестоимость
@@ -52,46 +52,6 @@ class MotivationController extends Controller
                 );
         }
         $category = 0;
-        $html = '<table border="1" width="100%">
-        <tr>
-            <th rowspan="2">Себестоимость</th>
-            <th colspan="2">Мотивация</th>
-        </tr>
-        <tr>
-            <th>План продаж <br>80 - 100 % с нарастанием</th>
-            <th>План продаж 101 % <br>и выше с нарастанием</th>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>7</td>
-            <td>9</td>
-        </tr>
-        <tr>
-            <td>0,01-10</td>
-            <td>5</td>
-            <td>7</td>
-        </tr>
-        <tr>
-            <td>10,01- 15</td>
-            <td>4</td>
-            <td>5</td>
-        </tr>
-        <tr>
-            <td>15,01 - 20</td>
-            <td>3</td>
-            <td>4</td>
-        </tr>
-        <tr>
-            <td>20,01 - 25</td>
-            <td>2</td>
-            <td>3</td>
-        </tr>
-        <tr>
-            <td>25,01 - 30</td>
-            <td>1</td>
-            <td>2</td>
-        </tr>
-    </table>';
         switch ((int)$response->Category) {
             case 1 :
                 $category = 1;
@@ -113,7 +73,6 @@ class MotivationController extends Controller
                         'types' => 'Себестоимость*',
                         'sum' => ($response->Mot->row->TotalProcKV).'%',
                         'color' => ((double)$response->Mot->row->TotalProcKV ?? 0) < 45 ? 'green' : 'red',
-                        'tooltip'    => 'Средневзвешенный размер<br> комиссии и дополнительных <br>расходов от брутто поступивших <br>страховых премий, в %',
                     ],
                     [
                         'types' => 'Чистые сборы для расчета мотивации',
@@ -127,7 +86,7 @@ class MotivationController extends Controller
                         'types' => '% мотивации*',
                         'sum' => ($response->Mot->row->MotProc ?? 0).'%',
                         'color' => 'transparent',
-                        'tooltip' => $html,
+                        //'tooltip' => $html,
                     ],
 
                     [
