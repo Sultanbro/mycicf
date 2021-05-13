@@ -86,7 +86,6 @@ class MotivationController extends Controller
                         'types' => '% мотивации*',
                         'sum' => ($response->Mot->row->MotProc ?? 0).'%',
                         'color' => 'transparent',
-                        //'tooltip' => $html,
                     ],
 
                     [
