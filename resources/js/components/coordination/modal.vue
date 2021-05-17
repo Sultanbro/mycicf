@@ -355,7 +355,7 @@
         <button v-show="false" ref="informationModal" type="button" data-toggle="modal" data-target="#information-modal">Large modal</button>
         <information-modal
                 :content-inner-information = "contentInnerInformation"
-                v-if="parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831">
+                v-if="Object.keys(doc_row_list_inner_other).length > 0 && parseInt(doc_row_list_inner_other[1][0].ClassISN) == 1920831">
         </information-modal>
     </div>
 </template>
