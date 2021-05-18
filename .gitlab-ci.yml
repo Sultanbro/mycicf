@@ -1,4 +1,4 @@
-image: lorisleiva/laravel-docker:7.2
+image: php:7.2
 
 services:
   - mysql:5.7
@@ -19,6 +19,7 @@ before_script:
   - apt-get update -yqq
   - apt-get install -y libxml2-dev
   - docker-php-ext-install xml soap
+  - apt-get clean
 
 composer:
   stage: build
