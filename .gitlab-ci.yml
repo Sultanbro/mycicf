@@ -32,11 +32,11 @@ composer:
       - vendor/
       - node_modules/
 
-build
+build:
   stage: build
   script:
     - npm i
-	- npm run build
+	  - npm run build
 
 phpunit:
   stage: test
