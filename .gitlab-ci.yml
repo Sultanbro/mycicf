@@ -18,9 +18,6 @@ variables:
 composer:
   stage: build
   script:
-    - apt-get update
-    - apt-get install -y libxml2-dev php-soap
-    - apt-get clean
     - docker-php-ext-install xml soap
     - composer update --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.testing .env
