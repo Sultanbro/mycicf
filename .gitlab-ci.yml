@@ -15,6 +15,7 @@ variables:
   DB_USERNAME: root
   DB_PASSWORD: secret
 
+#
 before_script:
   - curl -fsSL https://deb.nodesource.com/setup_10.x | bash -
   - apt-get install -y nodejs
