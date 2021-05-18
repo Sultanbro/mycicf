@@ -17,7 +17,7 @@ variables:
 
 before_script:
   - apt-get update -yqq
-  - apt-get install -y libxml2-dev
+  - apt-get install -y libxml2-dev wget
   - docker-php-ext-install xml soap
   - apt-get clean
 
