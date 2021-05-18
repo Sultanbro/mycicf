@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Library\Services\KiasServiceInterface;
 use App\RatingList;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\Self_;
 
 class RatingController extends Controller
 {
@@ -178,38 +175,38 @@ class RatingController extends Controller
         }
 
         $rate_avg_a = round(RatingList::where('rating_date', $rating_date)
-            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN])
             ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
             ->whereNotIn('duty', [self::DUTY])
             ->whereIn('rate_mark', ['A', 'A+', 'A-'])
             ->avg('rate_mean'));
         $rate_avg_b = round(RatingList::where('rating_date', $rating_date)
-            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN])
             ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
             ->whereNotIn('duty', [self::DUTY])
             ->whereIn('rate_mark', ['B', 'B+', 'B-'])
             ->avg('rate_mean'));
         $rate_avg_c = round(RatingList::where('rating_date', $rating_date)
-            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN])
             ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
             ->whereNotIn('duty', [self::DUTY])
             ->where('rate_mark', 'C')
             ->avg('rate_mean'));
         $rate_avg_d = round(RatingList::where('rating_date', $rating_date)
-            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN])
             ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
             ->whereNotIn('duty', [self::DUTY])
             ->where('rate_mark', 'D')
             ->avg('rate_mean'));
 
         $rate_avg_total = round(RatingList::where('rating_date', $rating_date)
-            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN])
             ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
             ->whereNotIn('duty', [self::DUTY])
             ->avg('rate_mean'));
 
         $rate_cnt_total = RatingList::where('rating_date', $rating_date)
-            ->whereNotIn('category_isn', [self::CATEGORY_ISN, 0])
+            ->whereNotIn('category_isn', [self::CATEGORY_ISN])
             ->whereNotIn('department_isn',[self::DEPARTMENT_ISN])
             ->whereNotIn('duty', [self::DUTY])
             ->count();
