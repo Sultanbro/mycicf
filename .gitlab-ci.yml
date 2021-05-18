@@ -47,7 +47,7 @@ build:
   stage: build
   script:
     - npm i
-    - npm run develpoment
+    - npm run dev
 
 phpunit:
   stage: test
