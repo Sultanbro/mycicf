@@ -18,6 +18,7 @@ variables:
 composer:
   stage: build
   script:
+    - sudo apt-get install php7.2-soap
     - composer update --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.testing .env
     - php artisan key:generate
