@@ -52,6 +52,8 @@ before_script:
   # Generate an application key. Re-cache.
   - php artisan key:generate
   - php artisan config:cache
+  # Sleep 60s 'cause mysql server have to be runned
+  - sleep 60s
   # Run database migrations.
   - php artisan migrate
   # Run database seed
