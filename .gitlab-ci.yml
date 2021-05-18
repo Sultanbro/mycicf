@@ -18,13 +18,13 @@ variables:
 before_script:
   - apt-get update -yqq
   - apt-get install -y libxml2-dev wget zlib1g-dev
+  - docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
   - docker-php-ext-install xml soap zip gd
   - apt-get clean
 
 composer:
   stage: build
   script:
-    - docker-php-ext-install xml soap
     - wget https://getcomposer.org/composer.phar -O ./composer.phar
     - php composer.phar update --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.testing .env
