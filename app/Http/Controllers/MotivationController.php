@@ -59,14 +59,12 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
-                        'sum' => ($response->Mot->row->PercPlan).'%',
-                        'PlanF' => (number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')),
+                        'sum' => ($response->Mot->row->PercPlan).'%'.' '."/".' '.(number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')),
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
-                        'sum' => ($response->Mot->row->PlanFM).'%',
-                        'SumP' => (number_format((double)$response->Mot->row->SumP, 0, '.', ' ')),
+                        'sum' => ($response->Mot->row->PlanFM).'%'.' '."/".' '.(number_format((double)$response->Mot->row->SumP, 0, '.', ' ')),
                         'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
@@ -106,7 +104,7 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Оплаченные премии',
-                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0)."/".((double)$response->Mot->row->SharePlan ?? 0)."%",
+                        'sum' => ((double)$response->Mot->row->SharePlan ?? 0)."%".' '."/".' '.(number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0),
                         'color' => (double)$response->Mot->row->SharePlan ?? 0 > 80 ? 'green' : 'red',
                     ],
                     [

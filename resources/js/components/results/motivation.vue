@@ -69,9 +69,7 @@
                             {{motivation.types}}
                         </td>
                         <td v-else>{{motivation.types}}</td>
-                        <td>{{motivation.sum}} <span v-if="index === 0 || index === 1">/</span>
-                            {{motivation.PlanF}}
-                            {{motivation.SumP}}</td>
+                        <td>{{motivation.sum}}</td>
                         <td>
                             <i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i>
                         </td>
