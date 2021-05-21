@@ -25,15 +25,16 @@
                                 <button class="btn-info ml-2">Новый документ</button>
                             </div>
                         </div>
+<!--                        <div class="pl-5 pt-4 pb-4 pr-5">-->
+<!--                            <input type="checkbox">-->
+<!--                            <span class="ml-2">Ограничение числа строк результата</span>-->
+<!--                        </div>-->
+                        <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                            <input type="checkbox">
-                            <span class="ml-2">Ограничение числа строк результата</span>
-                        </div>
-                        <div class="pl-5 pt-4 pb-4 pr-5">
-                                <button class="btn btn-info"><i class="fa fa-check">Поиск</i></button>
+                                <button class="btn btn-info" @click="searchDocument"><i class="fa fa-check">Поиск</i></button>
                         </div>
                         <div class="tex">
-                            <button class="btn btn-success"><i class="fa fa-check">Ok</i></button>
+                            <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>
                         </div>
                         <div v-show="loading" class="loading-ellipsis">
                             <div></div>
@@ -50,35 +51,36 @@
                             <div class="col-md-2">
                                 <label>Номер документа:</label>
                                 <div>
-                                    <input v-model="document.number" type="text"
+                                    <input v-model="document.id" type="text"
                                            class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label>Внешний номер:</label>
                                 <div>
-                                    <input v-model="document.externalNumber" type="text"
+                                    <input v-model="document.extId" type="text"
                                            class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label>Тип документа:</label>
                                 <div>
-                                    <treeselect v-model="document.type" placeholder="Не выбрано"
+                                    <treeselect v-model="document.classIsn" placeholder="Не выбрано"
                                                 :multiple="false" :options="documentType" :disable-branch-nodes="true"/>
-<!--                                    <div>-->
-<!--                                        <input-->
-<!--                                            type="checkbox"-->
-<!--                                            true-value="Y"-->
-<!--                                            false-value="N"-->
-<!--                                        >Показывать аннулированные документы-->
-<!--                                    </div>-->
+                                    <div>
+                                        <input
+                                            v-model="document.showCancelled"
+                                            type="checkbox"
+                                            true-value="Y"
+                                            false-value="N"
+                                        >Показывать аннулированные документы
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <label>Дата документа с:</label>
                                 <div>
-                                    <input v-model="document.dateBeg" class="form-control"
+                                    <input v-model="document.docDateFrom" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -87,7 +89,7 @@
                             <div class="col-md-2">
                                 <label>Дата документа до:</label>
                                 <div>
-                                    <input v-model="document.dateEnd" class="form-control"
+                                    <input v-model="document.docDateTo" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -98,21 +100,21 @@
                             <div class="col-md-3">
                                 <label>Контрагент:</label>
                                 <div>
-                                    <treeselect v-model="document.contragent" placeholder="Не выбрано" :multiple="false"
+                                    <treeselect v-model="document.subjIsn" placeholder="Не выбрано" :multiple="false"
                                                 :options="userList" :disable-branch-nodes="true"/>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label>Куратор (сотрудник):</label>
                                 <div>
-                                    <treeselect v-model="document.curator" placeholder="Не выбрано" :multiple="false"
+                                    <treeselect v-model="document.emplIsn" placeholder="Не выбрано" :multiple="false"
                                                 :options="userList" :disable-branch-nodes="true"/>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label>Куратор (Подразделение):</label>
                                 <div>
-                                    <treeselect v-model="document.subdivision" placeholder="Не выбрано" :multiple="false"
+                                    <treeselect v-model="document.deptIsn" placeholder="Не выбрано" :multiple="false"
                                                 :options="options" :disable-branch-nodes="true"/>
                                 </div>
                             </div>
@@ -141,7 +143,7 @@
                                 <div class="col-md-4">
                                     <label>Сумма док. от:</label>
                                     <div>
-                                        <input v-model="document.sumBeg" class="form-control"
+                                        <input v-model="document.amountFrom" class="form-control"
                                                type="tel"
                                                v-mask="'##.##.####'"
                                         />
@@ -150,7 +152,7 @@
                                 <div class="col-md-4">
                                     <label>Сумма док. до:</label>
                                     <div>
-                                        <input v-model="document.sumEnd" class="form-control"
+                                        <input v-model="document.amountTo" class="form-control"
                                                type="tel"
                                                v-mask="'##.##.####'"
                                         />
@@ -159,7 +161,7 @@
                                 <div class="col-md-4">
                                     <label>Валюта:</label>
                                     <div>
-                                        <select v-model="document.currency" class="form-control">
+                                        <select v-model="document.currIsn" class="form-control">
                                             <option value="9716">USD Доллар США</option>
                                             <option value="9721">EUR Евро</option>
                                             <option value="9788">RUB Российский рубль</option>
@@ -184,26 +186,25 @@
                                         <tbody>
                                         <tr>
                                             <td>№</td>
-                                            <td>Номер документа</td>
+                                            <td>Тип документа</td>
                                             <td>Дата</td>
                                             <td>Сумма док-та</td>
                                             <td>Контрагент</td>
                                             <td>Статус</td>
                                             <td>Стадия</td>
-                                            <td>Подразделение</td>
                                             <td>Куратор</td>
+                                            <td>ISN</td>
                                         </tr>
                                         <tr v-for="(doc, index) in searchingDocument" :key="index">
                                             <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(doc, index)"></td>
-                                            <td><div @click="selectDocument(doc, index)">{{doc.number}}</div></td>
+                                            <td><div @click="selectDocument(doc)">{{doc.className}}</div></td>
                                             <td>{{doc.docDate}}</td>
-                                            <td>{{doc.iin}}</td>
-                                            <td>{{doc.sum}}</td>
-                                            <td>{{doc.contragent}}</td>
+                                            <td>{{doc.amount}}</td>
+                                            <td>{{doc.subjName}}</td>
                                             <td>{{doc.status}}</td>
                                             <td>{{doc.stage}}</td>
-                                            <td>{{doc.subdivision}}</td>
-                                            <td>{{doc.curator}}</td>
+                                            <td>{{doc.emplName}}</td>
+                                            <td>{{doc.isn}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -227,24 +228,31 @@ export default {
     name: "document-journal-modal",
     props: {
         results: Object,
-        recordingCounterparty: Object ,
+        recordingCounterparty: Object,
+        recordingDocument: {},
+        documentName: {},
+        application: {},
+        bypassSheet: {},
+        contractAhd: {},
+        documentBase: {},
     },
     data() {
         return {
             document: {
-                number: '',
-                type: '',
-                externalNumber: '',
+                id: '',
+                classIsn: '',
+                extId: '',
                 status: '',
-                contragent: '',
-                dateBeg: moment(new Date()).format('DD.MM.YYYY'),
-                dateEnd: '',
-                curator: '',
-                subdivision: '',
-                sumBeg: '',
-                sumEnd: '',
-                currency: '',
+                subjIsn: '',
+                docDateFrom: moment(new Date()).format('DD.MM.YYYY'),
+                docDateTo: '',
+                emplIsn: '',
+                deptIsn: '',
+                amountFrom: '',
+                amountTo: '',
+                currIsn: '',
                 stage: '',
+                showCancelled: 'N',
             },
             docDate: new Date(),
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
@@ -271,32 +279,58 @@ export default {
             let data = {
                 document: this.document,
             }
-            this.axios.post('/searchCounterparty', data).then((response) => {
+            this.axios.post('/searchDocument', data).then((response) => {
                 if(response.data.error) {
                     this.loading = false;
                     alert(response.data.error);
                 }
                 this.searchingDocument = response.data.result
                 this.loading = false;
+                if(this.searchingDocument.length === 1){
+                    if(this.searchingDocument[0].isn === null){
+                    }else{
+                        this.documentName.isn = this.searchingDocument[0].isn
+                        this.documentName.id = this.searchingDocument[0].id
+                    }
+                }
             });
         },
-        selectDocument(doc, id){
-            for(let i=0; i<this.results.docrows.length; i++){
-                if(this.results.docrows[i].fieldname === this.recordingCounterparty.type){
-                    this.results.resDop[i].val = doc.isn
-                }
+        changeCheck(res, id){
+            // console.log(this.counterparty)
+            if(this.searchingDocument[id] !== id || this.searchingDocument[id] === id){
+                this.documentName.isn = ''
+                this.documentName.id = ''
             }
-            this.$parent.$refs.modalCounterparty.click();
-            this.loading = false;
+            this.documentName.isn = res.isn
+            this.documentName.id = res.id
+        },
+        selectDocument(doc){
+            this.documentName.isn = doc.isn
+            this.documentName.id = doc.id
+            this.getInfo();
         },
         getInfo(){
             this.loading = true;
-            for(let i=0; i<this.results.docrows.length; i++){
-                if(this.results.resDop[i].fullname === 'Приложение'){
-                    this.results.resDop[i].val = this.searchingDocument.isn
+            for(let i=0; i<this.results.resDop.length; i++){
+                if(this.recordingDocument.type==='Договор АХД'){
+                    if(this.results.resDop[i].fullname === this.recordingDocument.type){
+                        this.results.resDop[i].val = this.documentName.isn
+                        this.results.resDop[i].value = this.documentName.id
+                        this.contractAhd.fullName = this.documentName.id
+                        this.contractAhd.isn = this.documentName.isn
+                    }
+                } else {
+                    this.documentBase.fullName = this.documentName.id
+                    this.documentBase.isn = this.documentName.isn
                 }
             }
-            this.$parent.$refs.modalCounterparty.click()
+            for(let i=0; i<this.results.docrows.length; i++){
+                if(this.results.docrows[i].fieldname === this.recordingDocument.type){
+                    this.results.docrows[i].value = this.documentName.isn
+                    this.results.docrows[i].value_name = this.documentName.id
+                }
+            }
+            this.$parent.$refs.modalDocument.click()
             this.loading = false;
         },
         getBranchData() {

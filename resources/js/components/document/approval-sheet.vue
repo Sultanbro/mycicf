@@ -146,7 +146,7 @@
                                     />
                                 </div>
                                 <div v-if="docrow.fieldname === 'Проживание'">
-                                    <select v-model="docrow.value"  :disabled="addChange" class="form-control" required>
+                                    <select v-model="docrow.value" :disabled="addChange" class="form-control">
                                         <option value="1042661" selected>Да</option>
                                         <option value="1042671">Нет</option>
                                     </select>
@@ -371,10 +371,10 @@
 <!--                            Разослать на согласование-->
 <!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
-                                v-if="!agrList && toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                                v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+<!--                        <button v-if="addChange" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
 <!--                            Разослать на согласование-->
 <!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
@@ -672,7 +672,6 @@
                 dept : "",
                 options: null,
                 parentId: 50,
-                agrList: false,
                 docIsn: null,
                 button: null,
                 result: null,
@@ -680,7 +679,6 @@
                 coordination: {},
                 saveDoc: true,
                 required: false,
-                sendOutForm: false,
                 type: 1,
                 toForm: false,
                 fillIn: false,
@@ -901,9 +899,7 @@
                             this.results.stage = response.data.stage;
                             this.extraLoading = false;
                             this.addChange = false;
-                            this.sendOutForm = false;
                             this.annul = false;
-                            this.agrList = false;
                             this.toForm = false;
                             this.fillIn = false;
                             this.saveDoc = false;
@@ -957,7 +953,7 @@
                         this.loading = false;
                     })
                     .catch(function (error) {
-                        //alert(error.response);
+                        // alert(response.data.error);
                     });
             },
             addChangeForm() {
@@ -983,7 +979,6 @@
                                 }
                             }
                             this.extraLoading = false;
-                            this.sendOutForm = false;
                             this.addChange = false;
                             this.toForm = false;
                             this.annul = true;
@@ -1034,7 +1029,6 @@
                                     this.saveDoc = false;
                                 })
                             } else {
-                                this.sendOutForm = false;
                                 this.fillIn = true;
                                 this.toForm = true;
                                 this.saveDoc = false;
@@ -1047,7 +1041,7 @@
                         this.addChange = true;
                     })
                     .catch(function (error) {
-                        //alert(error.response);
+                        // alert(response.data.error);
                     });
             },
             buttonClick() {
@@ -1085,36 +1079,36 @@
                         this.addChange = true;
                     })
                     .catch(function (error) {
-                        //alert(error.response);
+                        // alert(response.data.error);
                     });
             },
-            sendOut(){
-                this.loading = true;
-                this.results.status = 2522
-                let data = {
-                    docIsn: this.listDocIsn,
-                    type: this.type,
-                    results: this.results,
-                }
-                this.axios.post('/sendOut', data)
-                    .then((response) => {
-                        if(response.data.success) {
-                            this.results.status = response.data.status;
-                            this.results.stage = response.data.stage;
-                            this.loading = false;
-                            this.addChange = true;
-                            this.sendOutForm = false;
-                            this.saveDoc = false;
-                        } else {
-                            this.addChange = false;
-                            this.loading = false;
-                        }
-                        this.addChange = true;
-                    })
-                    .catch(function (error) {
-                        //alert(error.response);
-                    });
-            },
+            // sendOut(){
+            //     this.loading = true;
+            //     this.results.status = 2522
+            //     let data = {
+            //         docIsn: this.listDocIsn,
+            //         type: this.type,
+            //         results: this.results,
+            //     }
+            //     this.axios.post('/sendOut', data)
+            //         .then((response) => {
+            //             if(response.data.success) {
+            //                 this.results.status = response.data.status;
+            //                 this.results.stage = response.data.stage;
+            //                 this.loading = false;
+            //                 this.addChange = true;
+            //                 this.sendOutForm = false;
+            //                 this.saveDoc = false;
+            //             } else {
+            //                 this.addChange = false;
+            //                 this.loading = false;
+            //             }
+            //             this.addChange = true;
+            //         })
+            //         .catch(function (error) {
+            //             // alert(response.data.error);
+            //         });
+            // },
             OpenModal(doc) {
                 if(doc === this.listDocIsn){
                     this.preloader(true);

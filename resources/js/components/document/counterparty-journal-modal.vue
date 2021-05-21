@@ -43,26 +43,41 @@
                             <span class="color-blue-standart">Критерии</span>
                         </div><hr>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-if="results['classisn'] === '800721'">
+                                <label>Наименование организации:</label>
+                                <div>
+                                    <input type="text" v-model="document.orgName"
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6" v-if="results['classisn'] !== '800721'">
                                 <label>Фамилия:</label>
                                 <div>
                                     <input type="text" v-model="document.lastName"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="results['classisn'] !== '800721'">
                                 <label>Имя:</label>
                                 <div>
                                     <input type="text" v-model="document.firstName"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" v-if="results['classisn'] !== '800721'">
                                 <label>Отчество:</label>
                                 <div>
                                     <input type="text" v-model="document.parentName"
                                            class="form-control">
                                 </div>
+                            </div>
+                            <div v-if="results['classisn'] === '800721'">
+                                <input
+                                    v-model="document.juridical"
+                                    type="checkbox"
+                                    true-value="Y"
+                                    false-value="N"
+                                >    Контрагент Юр.лицо?
                             </div>
                         </div>
                         <div class="row pt-2">
@@ -154,10 +169,14 @@ export default {
         contragent: {},
         previousCuratorAgent: {},
         recordingCounterparty: Object ,
+        courtName: {},
+        beneficiary: {},
     },
     data() {
         return {
             document: {
+                juridical: this.results.classisn === '800721' ? 'Y' : 'N',
+                orgName: '',
                 iin: '',
                 firstName: '',
                 lastName: '',
@@ -253,6 +272,24 @@ export default {
                         this.previousCuratorAgent.fullName = this.counterparty.fullName
                         this.previousCuratorAgent.isn = this.counterparty.isn
                         this.previousCuratorAgent.type = this.recordingCounterparty.type
+                        this.results.resDop[i].value = this.counterparty.fullName
+                        this.results.resDop[i].val = this.counterparty.isn
+                    }
+                }
+            } else if(this.recordingCounterparty.type === 'Наименование суда'){
+                for(let i=0; i<this.results.resDop.length; i++){
+                    if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
+                        this.courtName.fullName = this.counterparty.fullName
+                        this.courtName.isn = this.counterparty.isn
+                        this.results.resDop[i].value = this.counterparty.fullName
+                        this.results.resDop[i].val = this.counterparty.isn
+                    }
+                }
+            } else if(this.recordingCounterparty.type === 'Бенефициар'){
+                for(let i=0; i<this.results.resDop.length; i++){
+                    if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
+                        this.beneficiary.fullName = this.counterparty.fullName
+                        this.beneficiary.isn = this.counterparty.isn
                         this.results.resDop[i].value = this.counterparty.fullName
                         this.results.resDop[i].val = this.counterparty.isn
                     }

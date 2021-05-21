@@ -87,7 +87,6 @@
                         .catch(function (error) {
                             alert(error.response);
                         });
-                //console.log(formData);
             },
         },
     }

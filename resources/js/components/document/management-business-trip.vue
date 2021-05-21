@@ -177,7 +177,7 @@
 <!--                            Разослать на согласование-->
 <!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
-                                v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                                v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
 <!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
@@ -237,7 +237,7 @@
                                 <div v-if="!showTravellers">
                                     <div v-model="result.val" class="pointer" scope="col" @click="listTravellers" :disabled="addChange">{{result.value}}</div>
                                 </div>
-                                <div v-if="showTravellers && idShow">
+                                <div v-else>
                                     <treeselect v-model="travellersList" :disabled="addChange" :multiple="true" :options="userList" :disable-branch-nodes="true"/>
                                 </div>
 
@@ -320,7 +320,6 @@ export default {
             dept : "",
             options: null,
             parentId: 50,
-            agrList: false,
             docIsn: null,
             button: null,
             result: null,
@@ -328,7 +327,6 @@ export default {
             coordination: {},
             saveDoc: true,
             required: false,
-            sendOutForm: false,
             type: 1,
             toForm: false,
             fillIn: false,
@@ -343,6 +341,7 @@ export default {
             traveller: false,
             isn: '0',
             delete: '0',
+            showTravellerId: false,
         }
     },
     created() {
@@ -358,7 +357,6 @@ export default {
     methods: {
         listTravellers(){
           this.showTravellers = true;
-          this.idShow = true
         },
         getDatePicker() {
             const vm = this;
@@ -433,9 +431,7 @@ export default {
                         this.results.stage = response.data.stage;
                         this.extraLoading = false;
                         this.addChange = false;
-                        this.sendOutForm = false;
                         this.annul = false;
-                        this.agrList = false;
                         this.toForm = false;
                         this.fillIn = false;
                         this.saveDoc = false;
@@ -450,7 +446,7 @@ export default {
         },
         saveDocument(){
             this.loading = true;
-            if(this.showTravellers = true){
+            if(this.showTravellers === true){
                 let data = {
                     results: this.results,
                     docIsn: this.docIsn,
@@ -466,7 +462,11 @@ export default {
                             this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
                             this.results.stage = response.data.stage;
                             this.addChange = true;
-                            this.showTravellers = false;
+                            if(this.showTravellers === true){
+                                this.showTravellers = true;
+                            }else{
+                                this.showTravellers = false;
+                            }
                             this.fillIn = true
                             this.toForm = true;
                             this.fillIn = true;
@@ -480,7 +480,7 @@ export default {
                         this.loading = false;
                     })
                     .catch(function (error) {
-                        alert(error.response);
+                        // alert(response.data.error);
                     });
             }else{
                 if(this.duty.length > 0){
@@ -510,7 +510,7 @@ export default {
                         this.loading = false;
                     })
                     .catch(function (error) {
-                        alert(error.response);
+                        // alert(response.data.error);
                     });
             }
         },
@@ -534,7 +534,11 @@ export default {
                             }
                         }
                         this.extraLoading = false;
-                        this.sendOutForm = false;
+                        if(this.showTravellers === true){
+                            this.showTravellers = true;
+                        }else{
+                            this.showTravellers = false;
+                        }
                         this.addChange = false;
                         this.toForm = false;
                         this.annul = true;
@@ -569,7 +573,6 @@ export default {
                                 isn: this.results.classisn,
                                 button: this.button,
                             }
-                            console.log('список командируемых')
                             this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
                                 this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
                                 this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
@@ -582,7 +585,7 @@ export default {
                                 if(this.results.id.length > 0){
                                     this.idShow = false;
                                 }
-                                this.showTravellers = false;
+                                this.showTravellers = true;
                                 this.addChange = false;
                                 this.toForm = false;
                                 this.saveDoc = true;
@@ -601,7 +604,7 @@ export default {
                     this.addChange = false;
                 })
                 .catch(function (error) {
-                    alert(error.response);
+                    // alert(error.response);
                 });
         },
         buttonClick() {
@@ -636,36 +639,36 @@ export default {
                     this.addChange = true;
                 })
                 .catch(function (error) {
-                    alert(error.response);
+                    // alert(error.response);
                 });
         },
-        sendOut(){
-            this.loading = true;
-            this.results.status = 2522;
-            let data = {
-                docIsn: this.listDocIsn,
-                type: this.type,
-                results: this.results,
-            }
-            this.axios.post('/sendOut', data)
-                .then((response) => {
-                    if(response.data.success) {
-                        this.results.status = response.data.status;
-                        this.results.stage = response.data.stage;
-                        this.loading = false;
-                        this.addChange = true;
-                        this.sendOutForm = false;
-                        this.saveDoc = false;
-                    } else {
-                        this.addChange = false;
-                        this.loading = false;
-                    }
-                    this.addChange = true;
-                })
-                .catch(function (error) {
-                    //alert(error.response);
-                });
-        },
+        // sendOut(){
+        //     this.loading = true;
+        //     this.results.status = 2522;
+        //     let data = {
+        //         docIsn: this.listDocIsn,
+        //         type: this.type,
+        //         results: this.results,
+        //     }
+        //     this.axios.post('/sendOut', data)
+        //         .then((response) => {
+        //             if(response.data.success) {
+        //                 this.results.status = response.data.status;
+        //                 this.results.stage = response.data.stage;
+        //                 this.loading = false;
+        //                 this.addChange = true;
+        //                 this.sendOutForm = false;
+        //                 this.saveDoc = false;
+        //             } else {
+        //                 this.addChange = false;
+        //                 this.loading = false;
+        //             }
+        //             this.addChange = true;
+        //         })
+        //         .catch(function (error) {
+        //             //alert(error.response);
+        //         });
+        // },
         OpenModal () {
             this.preloader(true);
             this.changeMatch.status = false;

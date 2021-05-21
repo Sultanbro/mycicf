@@ -149,7 +149,8 @@ class DocumentManagementController extends Controller
                 'extSignerIsn' => count(get_object_vars($show->Doc->row->EXTSIGNERISN))=== 0 ?  '' : get_object_vars($show->Doc->row->EXTSIGNERISN),
                 'docdate' => count(get_object_vars($show->Doc->row->DOCDATE)) === 0 ? $today : '',
                 'dateBeg' => count(get_object_vars($show->Doc->row->DATEBEG)) === 0 ? '' : get_object_vars($show->Doc->row->DATEBEG),
-                'dateEnd' => count(get_object_vars($show->Doc->row->DATEBEG)) === 0 ? '' : get_object_vars($show->Doc->row->DATEBEG),
+                'dateEnd' => count(get_object_vars($show->Doc->row->DATEEND)) === 0 ? '' : get_object_vars($show->Doc->row->DATEEND),
+                'earlyTerminationDate' => count(get_object_vars($show->Doc->row->DATEDENOUNCE)) === 0 ? '' : get_object_vars($show->Doc->row->DATEDENOUNCE),
                 'className' => get_object_vars($show->Doc->row->CLASSNAME)[0],
                 'id' => get_object_vars($show->Doc->row->ID) ? get_object_vars($show->Doc->row->ID)[0] : '',
                 'extID' => get_object_vars($show->Doc->row->EXTID) ? get_object_vars($show->Doc->row->EXTID)[0] : '',
@@ -237,7 +238,6 @@ class DocumentManagementController extends Controller
 
     public function getSearchChild($headData){
         $result = [];
-
         $data = Dicti::where('parent_isn', $headData['isn'])->get();
 
         foreach($data as $branchData){
@@ -325,8 +325,10 @@ class DocumentManagementController extends Controller
     }
 
     public function getProductType(Request $request){
+        //ini_set ('memory_limit', '2048M');
         $result = [];
         $headProduct = Dicti::where('parent_isn', 1994)->where('n_kids', 1)->get();
+//        dd($headProduct);
         foreach($headProduct as $type)
             array_push($result, [
                 'id' => $type['isn'],
@@ -334,22 +336,53 @@ class DocumentManagementController extends Controller
                 'parent_isn' => $type['parent_isn'],
                 'children' => $this->getProductChildType($type),
             ]);
+//            if(count(Dicti::where('parent_isn', $type['isn'])->get()) === 0){
+//                array_push($result, [
+//                    'id' => $type['isn'],
+//                    'label' => $type['fullname'],
+//                    'parent_isn' => $type['parent_isn'],
+//                ]);
+//            } else {
+//                array_push($result, [
+//                    'id' => $type['isn'],
+//                    'label' => $type['fullname'],
+//                    'parent_isn' => $type['parent_isn'],
+//                    'children' => $type->childs2(),  //$this->getProductChildType($type),
+//                ]);
+//            }
         $missingProducts = [
             'result' => $result,
             'success' => true,
         ];
+//        dd($result);
         return response()->json($missingProducts);
+
     }
 
-    public function getProductChildType($type){
+    public function getProductChildType($tip){
+        ini_set ('memory_limit', '256M');
         $result = [];
-        $child = Dicti::where('parent_isn', $type['isn'])->get();
+        $child = Dicti::where('parent_isn', $tip['isn'])->get();
         foreach($child as $branchData){
-            array_push($result, [
-                'id' => $branchData['isn'],
-                'label' => $branchData['fullname'],
-                'parent_isn' => $type['isn'],
-            ]);
+//            array_push($result, [
+//                'id' => $branchData['isn'],
+//                'label' => $branchData['fullname'],
+//                'parent_isn' => $tip['isn'],
+//            ]);
+            if(count(Dicti::where('parent_isn', $branchData['isn'])->get()) === 0){
+                array_push($result, [
+                    'id' => $branchData['isn'],
+                    'label' => $branchData['fullname'],
+                    'parent_isn' => $branchData['parent_isn'],
+                ]);
+            } else {
+                array_push($result, [
+                    'id' => $branchData['isn'],
+                    'label' => $branchData['fullname'],
+//                    'parent_isn' => $branchData['parent_isn'],
+                    'children' => $branchData->childs2,
+                ]);
+            }
         }
         return $result;
     }
@@ -838,20 +871,12 @@ class DocumentManagementController extends Controller
     public function saveDocument(Request $request, KiasServiceInterface $kias)
     {
 //        dd($request);
+        $isn = '0'; //update isn='$isn' delete='0'
+        $delete = '0'; //delete isn='$isn' delete='1'
+        $docs = ['isn' => empty($request->docIsn) ? '0' : $request->docIsn, 'delete' => $delete];
         $status1 = [
             'В работе' => '2516', 'На подписи' => '2522', 'Подписан' => '2518', 'Оплачен' => '2517', 'Аннулирован' => '2515',
         ];
-//            dd($request->results);
-        //((count($request->travellersList) !== 0) && $request->travellersDocIsn !== '') && $request->results["classisn"] === '1042311' &&
-         if($request->showTravellers === true){
-            for($i=0;$i<count($request->travellersList);$i++){
-                $doc['row'][$i] = array_merge(['isn' => '0', 'delete' => '0', 'valn1' => $request->travellersList[$i]]);
-            }
-            $traveller = $kias->userCicSaveDocument($request->travellersDocIsn ? $request->travellersDocIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
-                $request->results["extID"], $request->results["amount"], $request->results["currIsn"], $request->travellersListClassIsn, $status1['В работе'],
-                $request->results["emplisn"], '', '', isset($request->results["docdate"]) ? $request->results["docdate"] : date('d.m.Y'), '', '',
-                '', '', '', '', $doc);
-        }
         $error = "";
         $request->result = [];
         foreach ($request->results["result1"] as $result1){
@@ -891,9 +916,6 @@ class DocumentManagementController extends Controller
                 ];
             }
         }
-        $isn = '0'; //update isn='$isn' delete='0'
-        $delete = '0'; //delete isn='$isn' delete='1'
-        $docs = ['isn' => empty($request->docIsn) ? '0' : $request->docIsn, 'delete' => $delete];
         for($i=0; $i<count($docrows); $i++){
             $docs = array_merge($docs, $docrows[$i]);
         }
@@ -913,12 +935,31 @@ class DocumentManagementController extends Controller
             }
         }
         $doc['row'][] = $docs;
+         if($request->showTravellers === true){
+            for($i=0;$i<count($request->travellersList);$i++){
+                $doc['row'][$i+1] = array_merge(['isn' => empty($request->travellersDocIsn) ? '0' : $request->travellersDocIsn, 'delete' => '0', 'valn1' => $request->travellersList[$i]]);
+            }
+            $traveller = $kias->userCicSaveDocument($request->travellersDocIsn ? $request->travellersDocIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
+                $request->results["extID"], $request->results["amount"], $request->results["currIsn"], $status1['В работе'],
+                $request->results["emplisn"], '', '', isset($request->results["docdate"]) ? $request->results["docdate"] : date('d.m.Y'), '', '',
+                '', $request->results["earlyTerminationDate"], '', '', $doc);
+             if($traveller->error){
+                 $success = false;
+                 $error .= (string)$traveller->error->text;
+                 $result = [
+                     'success' => $success,
+                     'error' => (string)$error
+                 ];
+                 return response()->json($result)->withCallback($request->input('callback'));
+             };
+        }
+
         $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $status1[$request->results["status"]], $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $doc];
 //        dd($wer);
         if(!isset($request->results["status"])){
             $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
-                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["classisn"], $request->results["status"] ? $status1[$request->results["status"]] : '',
-                $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["dateBeg"], $request->results["dateEnd"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
+                $request->results["extID"], $request->results["amount"], $request->results["currIsn"], $request->results["status"] ? $status1[$request->results["status"]] : '', $request->results["classisn"],
+                $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["dateBeg"], $request->results["dateEnd"], $request->results["earlyTerminationDate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
                 $request->results['showRemark'], $row, $doc);
 //            dd($document);
             if(!empty($document->DocISN)){
@@ -941,10 +982,9 @@ class DocumentManagementController extends Controller
             ]);
         } else {
             $today = date('d.m.Y');
-
             $document = $kias->userCicSaveDocument($request->docIsn ? $request->docIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
-                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["classisn"],$request->results["status"] ? $status1[$request->results["status"]] : '',
-                $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"] ?? $today, $request->results["dateBeg"], $request->results["dateEnd"],$request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
+                $request->results["extID"], $request->results["amount"], $request->results["currIsn"],$request->results["status"] ? $status1[$request->results["status"]] : '', $request->results["classisn"],
+                $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"] ?? $today, $request->results["dateBeg"], $request->results["dateEnd"],$request->results["earlyTerminationDate"],$request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '',
                 $request->results['showRemark'],$row, $doc);
             if(!empty($document->DocISN)){
                 $docIsn = get_object_vars($document)['DocISN'];
@@ -1105,6 +1145,76 @@ class DocumentManagementController extends Controller
             ]);
     }
 
+    public function documentSearch(Request $request, KiasServiceInterface $kias) {
+        $error = "";
+        $result = [];
+        $result1 = [];
+//        dd($request['document']['docDateFrom']);
+        $searchingDocument = $kias->documentSearch($request['document']['id'], $request['document']['extId'], $request['document']['classIsn'], $request['document']['docDateFrom'], $request['document']['docDateTo'], $request['document']['showCancelled'],
+            $request['document']['subjIsn'], $request['document']['deptIsn'], $request['document']['emplIsn'], $request['document']['amountFrom'], $request['document']['amountTo'], $request['document']['currIsn'], '', '');
+//        dd($searchingDocument);
+        if($searchingDocument->error) {
+            $success = false;
+            $error .= (string)$searchingDocument->error->text;
+            $result = [
+                'success' => $success,
+                'error' => (string)$error
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+        if(!empty(get_object_vars($searchingDocument))){
+            if(count($searchingDocument->ROWSET->row) > 1){
+                if(count($searchingDocument->ROWSET->row) >= 20) {
+                    for($i=0; $i<20; $i++){
+                        array_push($result1, $searchingDocument->ROWSET->row[$i]);
+                    }
+                }
+                elseif (count($searchingDocument->ROWSET->row) < 20){
+                    for($i=0; $i<count($searchingDocument->ROWSET->row); $i++){
+                        array_push($result1, $searchingDocument->ROWSET->row[$i]);
+                    }
+                }
+                for($i=0; $i<count($result1); $i++){
+                    array_push($result, [
+                        'isn' => get_object_vars($result1[$i]->ISN) ? get_object_vars($result1[$i]->ISN)[0] : null,
+                        'id' => get_object_vars($result1[$i]->ID) ? get_object_vars($result1[$i]->ID)[0] : null,
+                        'classIsn' => get_object_vars($result1[$i]->CLASSISN) ? get_object_vars($result1[$i]->CLASSISN)[0] : null,
+                        'className' => get_object_vars($result1[$i]->CLASSNAME) ? get_object_vars($result1[$i]->CLASSNAME)[0] : null,
+                        'docDate' => get_object_vars($result1[$i]->DOCDATE) ? get_object_vars($result1[$i]->DOCDATE)[0] : null,
+                        'subjName' => get_object_vars($result1[$i]->SUBJNAME) ? get_object_vars($result1[$i]->SUBJNAME)[0] : null,
+                        'status' => get_object_vars($result1[$i]->STATUSNAME) ? get_object_vars($result1[$i]->STATUSNAME)[0] : null,
+                        'stage' => get_object_vars($result1[$i]->STAGENAME) ? get_object_vars($result1[$i]->STAGENAME)[0] : null,
+                        'emplName' => get_object_vars($result1[$i]->EMPLNAME) ? get_object_vars($result1[$i]->EMPLNAME)[0] : null,
+                    ]);
+                }
+            } elseif (count($searchingDocument->ROWSET->row) === 1){
+                $result1 = $searchingDocument->ROWSET->row;
+                array_push($result, [
+                    'isn' => get_object_vars($result1->ISN) ? get_object_vars($result1->ISN)[0] : null,
+                    'id' => get_object_vars($result1->ID) ? get_object_vars($result1->ID)[0] : null,
+                    'classIsn' => get_object_vars($result1->CLASSISN) ? get_object_vars($result1->CLASSISN)[0] : null,
+                    'className' => get_object_vars($result1->CLASSNAME) ? get_object_vars($result1->CLASSNAME)[0] : null,
+                    'docDate' => get_object_vars($result1->DOCDATE) ? get_object_vars($result1->DOCDATE)[0] : null,
+                    'subjName' => get_object_vars($result1->SUBJNAME) ? get_object_vars($result1->SUBJNAME)[0] : null,
+                    'status' => get_object_vars($result1->STATUSNAME) ? get_object_vars($result1->STATUSNAME)[0] : null,
+                    'stage' => get_object_vars($result1->STAGENAME) ? get_object_vars($result1->STAGENAME)[0] : null,
+                    'emplName' => get_object_vars($result1->EMPLNAME) ? get_object_vars($result1->EMPLNAME)[0] : null,
+                ]);
+            }
+            return response()->json([
+                'result' => $result
+            ]);
+        } else {
+            $success = false;
+            $error .= 'Документ не найден';
+            $result = [
+                'success' => $success,
+                'error' => (string)$error
+            ];
+            return response()->json($result)->withCallback($request->input('callback'));
+        }
+    }
+
     public function searchCounterparty(Request $request, KiasServiceInterface $kias) {
         $error = "";
         $result = [];
@@ -1114,10 +1224,13 @@ class DocumentManagementController extends Controller
             '800001' => 'Военкомат', '1735601' => 'Индивидуальный предприниматель', '2252' => 'Контрагент', '146320' => 'ЛПУ', '2253' => 'Медицинское учреждение',
             '1788881' => 'Сотрудник коммеска', '221079' => 'Страховщик / Перестраховщик', '225355' => 'Суд', '2260' => 'Филиалы/Подразделение', '2257' => 'Штатный содрудник',
         ];
-        $searchingResult = $kias->userCicSearchSubject($request->document['iin'], $request->document['firstName'],
+        if(empty($request->document['juridical'])){
+            $request->document['juridical'] = 'N';
+        }
+        $searchingResult = $kias->userCicSearchSubject($request->document['juridical'], $request->document['orgName'], $request->document['iin'], $request->document['firstName'],
             $request->document['lastName'], $request->document['parentName'], $request->document['classISN'], 'N');
         if(count($searchingResult->result) === 0){
-            $searchingResult = $kias->userCicSearchSubject($request->document['iin'], $request->document['firstName'],
+            $searchingResult = $kias->userCicSearchSubject($request->document['juridical'], $request->document['orgName'], $request->document['iin'], $request->document['firstName'],
                 $request->document['lastName'], $request->document['parentName'], $request->document['classISN'], 'Y');
             if($searchingResult->error){
                 $success = false;

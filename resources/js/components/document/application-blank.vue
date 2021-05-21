@@ -306,7 +306,7 @@
 <!--                            Разослать на согласование-->
 <!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
-                                v-if="!agrList && toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                                v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
 <!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
@@ -372,6 +372,19 @@
                                     <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
                                 </div>
                             </div>
+                            <div v-else-if="result.fullname === 'Обходной лист'">
+                                <div class="input-group">
+                                    <input v-model="result.value ? result.value : bypassSheet.fullName" @click="OpenModal('Обходной лист')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Обходной лист')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Обходной лист')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
                                 <div>
                                     <input type="text" v-model="result.val"
@@ -421,6 +434,13 @@
             :results="results"
         >
         </counterparty-journal-modal>
+        <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal"></button>
+        <document-journal-modal
+            :results="results"
+            :documentName="documentName"
+            :recordingDocument="recordingDocument"
+            :bypassSheet="bypassSheet"
+        ></document-journal-modal>
     </div>
 </template>
 
@@ -432,6 +452,7 @@
     import moment from 'moment'
     import DocumentModal from "./document-modal"
     import CounterpartyJournalModal from "./counterparty-journal-modal";
+    import DocumentJournalModal from "./document-journal-modal";
     export default {
     name: "application-blank",
         props: {
@@ -459,7 +480,7 @@
                 dept : "",
                 options: null,
                 parentId: 50,
-                agrList: false,
+                // agrList: false,
                 docIsn: null,
                 button: null,
                 result: null,
@@ -467,7 +488,7 @@
                 coordination: {},
                 saveDoc: true,
                 required: false,
-                sendOutForm: false,
+                // sendOutForm: false,
                 type: 1,
                 toForm: false,
                 fillIn: false,
@@ -486,6 +507,16 @@
                     isn: '',
                     type: '',
                 },
+                bypassSheet: {
+                    fullName: '',
+                    isn: '',
+                    type: '',
+                },
+                documentName: {
+                    isn: '',
+                    id: '',
+                },
+                recordingDocument: {type: ''},
                 recordingCounterparty: {type: ''},
                 isn: '0',
                 delete: '0',
@@ -573,9 +604,9 @@
                             this.results.stage = response.data.stage;
                             this.extraLoading = false;
                             this.addChange = false;
-                            this.sendOutForm = false;
+                            // this.sendOutForm = false;
                             this.annul = false;
-                            this.agrList = false;
+                            // this.agrList = false;
                             this.toForm = false;
                             this.fillIn = false;
                             this.saveDoc = false;
@@ -630,7 +661,7 @@
                         this.loading = false;
                     })
                     .catch(function (error) {
-                        //alert(error.response);
+                        // alert(response.data.error);
                     });
             },
             addChangeForm() {
@@ -660,7 +691,6 @@
                                 }
                             }
                             this.extraLoading = false;
-                            this.sendOutForm = false;
                             this.addChange = false;
                             this.toForm = false;
                             this.annul = true;
@@ -684,7 +714,8 @@
                     this.button = 'BUTTON1'
                 } else if((this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y') || (this.results.docParam.button2caption === 'Узнать количество доступных дней' && this.results.docParam.showbutton2 === 'Y')){
                     this.button = 'BUTTON2'
-                }
+                } else if((this.results.docParam.button3caption === 'Заполнить СЗ' && this.results.docParam.showbutton3 === 'Y') || (this.results.docParam.button3caption === 'Узнать количество доступных дней' && this.results.docParam.showbutton3 === 'Y')) {
+                    this.button = 'BUTTON3' }
                 let data = {
                     docIsn: this.docIsn,
                     button: this.button,
@@ -705,14 +736,12 @@
                                     if(this.results.id.length > 0){
                                         this.idShow = true;
                                     }
-                                    this.sendOutForm = false;
                                     this.addChange = false
                                     this.fillIn = false;
                                     this.toForm = false;
                                     this.saveDoc = true;
                                 })
                             } else {
-                                this.sendOutForm = false;
                                 this.addChange = false;
                                 this.fillIn = true;
                                 this.toForm = false;
@@ -726,7 +755,7 @@
                         this.addChange = true;
                     })
                     .catch(function (error) {
-                        //alert(error.response);
+                        // alert(response.data.error);
                     });
             },
             buttonClick() {
@@ -745,7 +774,6 @@
                         if(response.data.success) {
                             this.results.status = response.data.status
                             this.results.stage = response.data.stage
-                            this.sendOutForm = true;
                             this.toForm = false;
                             this.fillIn = false;
                             this.addChange = true
@@ -768,36 +796,36 @@
                         console.log('2');
                     })
                     .catch(function (error) {
-                        //alert(error.response);
+                        // alert(response.data.error);
                     });
             },
-            sendOut(){
-                this.loading = true;
-                this.results.status = 2522
-                let data = {
-                    docIsn: this.docIsn,
-                    type: this.type,
-                    results: this.results,
-                }
-                this.axios.post('/sendOut', data)
-                    .then((response) => {
-                        if(response.data.success) {
-                            this.results.status = response.data.status;
-                            this.results.stage = response.data.stage;
-                            this.loading = false;
-                            this.addChange = true;
-                            this.sendOutForm = false;
-                            this.saveDoc = false;
-                        } else {
-                            this.addChange = false;
-                            this.loading = false;
-                        }
-                        this.addChange = true;
-                    })
-                    .catch(function (error) {
-                        //alert(error.response);
-                    });
-            },
+            // sendOut(){
+            //     this.loading = true;
+            //     this.results.status = 2522
+            //     let data = {
+            //         docIsn: this.docIsn,
+            //         type: this.type,
+            //         results: this.results,
+            //     }
+            //     this.axios.post('/sendOut', data)
+            //         .then((response) => {
+            //             if(response.data.success) {
+            //                 this.results.status = response.data.status;
+            //                 this.results.stage = response.data.stage;
+            //                 this.loading = false;
+            //                 this.addChange = true;
+            //                 // this.sendOutForm = false;
+            //                 this.saveDoc = false;
+            //             } else {
+            //                 this.addChange = false;
+            //                 this.loading = false;
+            //             }
+            //             this.addChange = true;
+            //         })
+            //         .catch(function (error) {
+            //             // alert(response.data.error);
+            //         });
+            // },
             OpenModal (doc) {
                 this.preloader(true);
                 this.changeMatch.status = false;
@@ -820,11 +848,14 @@
                             this.attachments = [];
                         }
                     });
-                }
-                else if(doc === 'ФИО работника'){
+                } else if(doc === 'ФИО работника'){
                     this.preloader(false);
                     this.recordingCounterparty.type = doc
                     this.$refs.modalCounterparty.click();
+                } else if(doc === 'Обходной лист'){
+                    this.preloader(false);
+                    this.recordingDocument.type = doc
+                    this.$refs.modalDocument.click();
                 }
                 return;
             },
@@ -838,7 +869,16 @@
                             this.worker.isn = ''
                         }
                     }
-                }
+                } else if(data === 'Обходной лист'){
+                     for(let i=0; i<this.results.docrows.length; i++){
+                         if(this.results.docrows[i].fieldname === data){
+                             this.results.docrows[i].value_name = '';
+                             this.results.docrows[i].value = '';
+                             this.bypassSheet.fullName = ''
+                             this.bypassSheet.isn = ''
+                         }
+                     }
+                 }
             },
             preloader(show){
                 if(show){
@@ -868,6 +908,7 @@
             DocumentModal,
             DatePicker,
             MaskedInput,
+            DocumentJournalModal,
         },
     }
 </script>

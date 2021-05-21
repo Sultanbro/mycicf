@@ -78,10 +78,10 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <label>Сумма</label>
+                                    <label>Валюта</label>
                                     <div>
                                         <select v-model="results.currIsn" :disabled="addChange" class="form-control">
-                                            <option value="9813">Тенге</option>
+                                            <option value="9813" selected>Тенге</option>
                                             <option value="9716">Доллар США</option>
                                             <option value="9721">Евро</option>
                                             <option value="9788">Российский рубль</option>
@@ -90,7 +90,6 @@
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="col-md-2">
                                     <label>Дата начала</label>
                                     <div>
@@ -409,10 +408,10 @@
                         <!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
                                         || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
-                                v-if="!agrList &&  toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                                v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-                        <!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
+                        <!--                        <button v-if="addChange" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
                         <!--                            Разослать на согласование-->
                         <!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
@@ -759,7 +758,6 @@ export default {
             dept : "",
             options: null,
             parentId: 50,
-            agrList: false,
             docIsn: null,
             button: null,
             result: null,
@@ -767,7 +765,6 @@ export default {
             coordination: {},
             saveDoc: true,
             required: false,
-            sendOutForm: false,
             type: 1,
             toForm: false,
             fillIn: false,
@@ -984,9 +981,7 @@ export default {
                         this.results.stage = response.data.stage;
                         this.extraLoading = false;
                         this.addChange = false;
-                        this.sendOutForm = false;
                         this.annul = false;
-                        this.agrList = false;
                         this.toForm = false;
                         this.fillIn = false;
                         this.saveDoc = false;
@@ -1064,7 +1059,6 @@ export default {
                         }
 
                         this.extraLoading = false
-                        this.sendOutForm = false
                         this.addChange = false
                         this.toForm = false
                         this.annul = true
@@ -1114,13 +1108,11 @@ export default {
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
-                                this.sendOutForm = false;
                                 this.fillIn = true;
                                 this.toForm = true;
                                 this.saveDoc = false;
                             })
                         } else {
-                            this.sendOutForm = false;
                             this.fillIn = true;
                             this.toForm = true;
                             this.saveDoc = false;
@@ -1171,33 +1163,33 @@ export default {
                     //alert(error.response);
                 });
         },
-        sendOut(){
-            this.loading = true;
-            this.results.status = 2522
-            let data = {
-                docIsn: this.listDocIsn,
-                type: this.type,
-                results: this.results,
-            }
-            this.axios.post('/sendOut', data)
-                .then((response) => {
-                    if(response.data.success) {
-                        this.results.status = response.data.status;
-                        this.results.stage = response.data.stage;
-                        this.loading = false;
-                        this.addChange = true;
-                        this.sendOutForm = false;
-                        this.saveDoc = false;
-                    } else {
-                        this.addChange = false;
-                        this.loading = false;
-                    }
-                    this.addChange = true;
-                })
-                .catch(function (error) {
-                    //alert(error.response);
-                });
-        },
+        // sendOut(){
+        //     this.loading = true;
+        //     this.results.status = 2522
+        //     let data = {
+        //         docIsn: this.listDocIsn,
+        //         type: this.type,
+        //         results: this.results,
+        //     }
+        //     this.axios.post('/sendOut', data)
+        //         .then((response) => {
+        //             if(response.data.success) {
+        //                 this.results.status = response.data.status;
+        //                 this.results.stage = response.data.stage;
+        //                 this.loading = false;
+        //                 this.addChange = true;
+        //                 this.sendOutForm = false;
+        //                 this.saveDoc = false;
+        //             } else {
+        //                 this.addChange = false;
+        //                 this.loading = false;
+        //             }
+        //             this.addChange = true;
+        //         })
+        //         .catch(function (error) {
+        //             //alert(error.response);
+        //         });
+        // },
         OpenModal(doc) {
             if(doc === this.listDocIsn){
                 this.preloader(true);

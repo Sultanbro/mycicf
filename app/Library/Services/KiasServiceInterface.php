@@ -336,7 +336,7 @@ interface KiasServiceInterface
      * @param $doc
      * @return mixed
      */
-    public function userCicSaveDocument($isns, $id, $extID, $amount, $currIsn, $class_isn, $status_isn, $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $subjIsn, $remark, $row, $doc);
+    public function userCicSaveDocument($isns, $id, $extID, $amount, $currIsn, $status_isn, $class_isn,  $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $earlyTerminationDate, $subjIsn, $remark, $row, $doc);
 
     /**
      * @param $row
@@ -351,6 +351,26 @@ interface KiasServiceInterface
     public function userCicGetDictiList($tarifIsn);
 
     /**
+     * @param $id
+     * @param $extId
+     * @param $classIsn
+     * @param $docDateFrom
+     * @param $docDateTo
+     * @param $showCancelled
+     * @param $subjIsn
+     * @param $deptIsn
+     * @param $emplIsn
+     * @param $amountFrom
+     * @param $amountTo
+     * @param $currIsn
+     * @param $taskIsn
+     * @param $pageNo
+     * @return mixed
+     */
+    public function documentSearch($id, $extId, $classIsn, $docDateFrom, $docDateTo, $showCancelled, $subjIsn, $deptIsn, $emplIsn, $amountFrom, $amountTo, $currIsn, $taskIsn, $pageNo);
+
+    /**
+     * @param $juridical
      * @param $iin
      * @param $firstName
      * @param $lastName
@@ -359,7 +379,7 @@ interface KiasServiceInterface
      * @param $esbdSearch
      * @return mixed
      */
-    public function userCicSearchSubject($iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch);
+    public function userCicSearchSubject($juridical, $orgName, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch);
 
     /**
      * @param $iin

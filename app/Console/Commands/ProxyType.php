@@ -353,10 +353,21 @@ class ProxyType extends Command
                             $dictiChild->numcode = (string)$rowChild->NUMCODE;
                             $dictiChild->n_kids = (string)$rowChild->N_KIDS;
                             $dictiChild->parent_isn = (int)$row->ISN;
-                            if ($dictiChild->save()) {
-                                echo "Данные по " . (string)$rowChild->FULLNAME. $rowChild->ISN . " успешно записаны. \n";
-                            } else {
-                                echo "Ошибка записи " . (string)$rowChild->FULLNAME . " \n";
+                            $dictiChild->save();
+
+                            $response2 = $kias->getDictiList($rowChild->ISN);
+                            if(isset($response2->ROWSET->row)) {
+                                $oldDicti = Dicti::where('parent_isn', $rowChild->ISN)->delete();
+                                foreach ($response2->ROWSET->row as $rowChild2) {
+                                    $dictiChild2 = new Dicti;
+                                    $dictiChild2->isn = (int)$rowChild2->ISN;
+                                    $dictiChild2->fullname = (string)$rowChild2->FULLNAME;
+                                    $dictiChild2->code = (string)$rowChild2->CODE;
+                                    $dictiChild2->numcode = (string)$rowChild2->NUMCODE;
+                                    $dictiChild2->n_kids = (string)$rowChild2->N_KIDS;
+                                    $dictiChild2->parent_isn = (int)$rowChild->ISN;
+                                    $dictiChild2->save();
+                                }
                             }
                         }
                     }
