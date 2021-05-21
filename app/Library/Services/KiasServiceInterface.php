@@ -314,4 +314,12 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getPrintableOrderDocument($data, $dataParams);
+
+    /**
+     * Сброс пароля
+     * @param $subjIsn
+     * @param $password
+     * @return mixed
+     */
+    public function resetPassword($subjIsn, $password);
 }
