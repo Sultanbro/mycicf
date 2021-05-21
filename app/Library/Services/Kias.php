@@ -901,4 +901,11 @@ class Kias implements KiasServiceInterface
             'Classisn' => $class_isn,
         ]);
     }
+
+    public function resetPassword($subjIsn, $password){
+        return $this->request('User_ResetPassWord', [
+            'SubjectISN' => $subjIsn,
+            'NewPass' => $password
+        ]);
+    }
 }
