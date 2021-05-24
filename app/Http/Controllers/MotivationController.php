@@ -11,6 +11,26 @@ class MotivationController extends Controller
         return view('motivation');
     }
 
+    /*
+     * Category   - 1 (головной)
+     * PercPlan   - Сборы с нарастанием (>80%)
+     * PlanFM     - Премии оплаченные (>50%)
+     * TotalProcK - VСебестоимость
+     * MotProc    - % мотивации
+     * SumPVTSF   - Сборы ОГПО физ.лица
+     * (SumFJury - SumProcFJurY + SumFJurN)  - Чистые сборы
+     * EmplAgrDZ31 - Дебиторская задолженность
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
     public function getMotivationList(Request $request, KiasServiceInterface $kias){
         $success = true;
         $error = '';
@@ -40,31 +60,37 @@ class MotivationController extends Controller
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
                         'sum' => ($response->Mot->row->PercPlan).'%',
+                        'PlanF' => (number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')),
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
                         'sum' => ($response->Mot->row->PlanFM).'%',
+                        'SumP' => (number_format((double)$response->Mot->row->SumP, 0, '.', ' ')),
                         'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Себестоимость',
+                        'types' => 'Себестоимость*',
                         'sum' => ($response->Mot->row->TotalProcKV).'%',
                         'color' => ((double)$response->Mot->row->TotalProcKV ?? 0) < 45 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Чистые сборы',
-                        'sum' => (number_format((double)$response->Mot->row->NetFees,0, '.', ' ')),
+                        'types' => 'Чистые сборы для расчета мотивации',
+                        'sum' => (number_format(
+                            (double)$response->Mot->row->SumFJurY
+                            - (double)$response->Mot->row->SumProcFJurY
+                            + (double)$response->Mot->row->SumFJurN )),
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => '% мотивации',
+                        'types' => '% мотивации*',
                         'sum' => ($response->Mot->row->MotProc ?? 0).'%',
                         'color' => 'transparent',
                     ],
+
                     [
                         'types' => 'Дебиторская задолженность',
-                        'sum' => (number_format((double)$response->Mot->row->DZ, 0, '.', ' ')),
+                        'sum' => (number_format((double)$response->Mot->row->EmplAgrDZ31, 0, '.', ' ')),
                         'color' => 'transparent'
                     ],
                     [

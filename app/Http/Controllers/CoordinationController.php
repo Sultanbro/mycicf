@@ -165,6 +165,8 @@ class CoordinationController extends Controller
             }
         }
 
+        $getSubjectInformation = $kias->getSubject(null, null, null, null, $ISN);
+
         $result = [
             'success' => $success,
             'error' => $error,
@@ -177,7 +179,8 @@ class CoordinationController extends Controller
                 'AD' => $AD,
                 'RV' => $RV,
                 'VC' => $VC,
-                'other' => $other
+                'other' => $other,
+                'authorizedUserIin' => isset($getSubjectInformation->error) ? 0 : (int)$getSubjectInformation->ROWSET->row->IIN
             )
         ];
 
@@ -321,10 +324,12 @@ class CoordinationController extends Controller
                         $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
                     }
                     if(isset($row->classisn)) {
-                        if ($row->classisn == 1784771) {
+                        if ($row->classisn == 1784771 || $row->classisn == 1920831) {
                             $doc_row_inner[(string)$row->orderno][] = array(
                                 'ISN' => (string)$row->value,
-                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
+                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value,
+                                'ClassISN' => (string)$row->classisn,
+                                'DocISN' => (string)$result->Doc->row->ISN,
                             );
                         } else {
                             $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
@@ -336,6 +341,28 @@ class CoordinationController extends Controller
                     'success' => true,
                     'doc_row_list' => $doc_row_list,
                     'doc_row_inner' => $doc_row_inner,
+                ]);
+            }
+            else
+                throw new \Exception('Данные не найдены', 400);
+        }
+        catch(\Exception $e) {
+            return response()->json([
+                'success'   => false,
+                'code'      => $e->getCode(),
+                'message'   => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getEorderDocs(Request $request, KiasServiceInterface $kias){
+        try {
+            $result = $kias->getOrSetEorderDocs($request->DocISN);
+            if(!isset($result->error))
+            {
+                return response()->json([
+                    'success' => true,
+                    'doc_info' => $result
                 ]);
             }
             else
@@ -477,7 +504,8 @@ class CoordinationController extends Controller
             if($request->fileType == 'base64'){
                 $file = $request->file;
                 $extension = isset($request->fileExt) ? $request->fileExt : '';
-                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
+                $name = isset($request->fileName) ? $request->fileName : '';
+                $filename = $name.'_подписан_ЭЦП_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
             } else {
 //                $file = $request->base64_encode($request->file);
 //                $contents = $file->get();
@@ -485,8 +513,14 @@ class CoordinationController extends Controller
 //                $filename = mt_rand(1000000, 9999999).'.'.$extension;
             }
 
+            if(isset($request->refISN) && $request->refISN != '' && $request->fileExt == 'cms'){
+                $isn = $request->refISN;
+            } else {
+                $isn = $request->isn;
+            }
+
             $results = $kias->saveAttachment(
-                $request->isn,
+                $isn,
                 $filename,
                 $file,
                 $request->requestType
@@ -634,4 +668,5 @@ class CoordinationController extends Controller
             'success' => true,
         ]);
     }
+
 }

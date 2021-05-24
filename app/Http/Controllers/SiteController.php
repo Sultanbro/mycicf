@@ -15,6 +15,7 @@ use App\User;
 use App\Dicti;
 use App\Region;
 use App\City;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -651,6 +652,40 @@ class SiteController extends Controller
         return response()->json(['birthdays' => $result]);
     }
 
+    public function getBirthdays2(Request $request) {
+        $d = $request->get('d', date('d', time()));
+        $m = $request->get('m', date('m', time()));
+        return cache()->remember(sprintf("birthdays__%s.%s", $m, $d), now()->addDay(), function () use ($d, $m) {
+            return Branch::whereNotNull('birthday')
+                ->select([
+                    'id',
+                    'birthday',
+                    'kias_id',
+                    'fullname'
+                ])
+                ->with('getParent')
+                ->whereDay('birthday', '>=', $d)
+                ->whereMonth('birthday', $m)
+                ->orWhereNotNull('birthday')
+                ->whereMonth('birthday', '>', $m)
+                ->orderByRaw('MONTH(birthday)')
+                ->orderByRaw('DAY(birthday)')
+                ->limit(10)
+                ->get()
+                ->groupBy(function (Branch $branch) {
+                    /**
+                     * @var $birthday Carbon
+                     */
+                    $birthday = $branch->birthday;
+
+                    return implode('-', [
+                        str_pad($birthday->day, 2, '0', STR_PAD_LEFT),
+                        str_pad($birthday->month, 2, '0', STR_PAD_LEFT),
+                    ]);
+                });
+        });
+    }
+
     public function getDicti(Request $request){
         $kias = new Kias();
         $kias->initSystem();
@@ -937,87 +972,5 @@ class SiteController extends Controller
             Session::flush();
             echo "Пароль введен неверно";
         }
-    }
-
-    public function testEds(){
-        return view('eds');
-    }
-
-    public function getEDS(){
-        $success = false;
-        $curl = curl_init();
-        curl_setopt_array($curl,array(
-            CURLOPT_URL => "http://ncalayer.uchet.kz:8080/getSignToken",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_POSTFIELDS => "{\n\t\"company_token\":\"7006cebf-82b9-4dbf-9cca-7d35d2eaf763\"\n}",
-            CURLOPT_HTTPHEADER => array("Content-Type: application/json"),
-        ));
-        $response = curl_exec($curl);
-        curl_close($curl);
-        $response = json_decode($response);
-
-        //$response = (object)['token' => 'da41ff9e-cb0f-11ea-8948-000c296105aa'];
-        //$response = json_decode((string)$response);
-        if(isset($response->token)){
-            $success = true;
-        }
-        return response()->json([
-            'success' => $success,
-            'result' => $response
-        ]);
-//        $client = new Client();
-//        $res = $client->get('http://ncalayer.uchet.kz:8080/getSignToken', ['json' => ['company_token'=>'7006cebf-82b9-4dbf-9cca-7d35d2eaf763']]);
-//        echo $res->getBody();
-//        echo $res->getStatusCode();
-    }
-
-    public function edsByIsn(Request $request,KiasServiceInterface $kias){
-        $files = [];
-        $ISN = isset($request->isn) ? $request->isn : '';
-        $type = isset($request->type) ? $request->type : '';
-        $format = isset($request->edsType) ? $request->edsType : '';
-        $refISN = isset($request->refISN) ? $request->refISN : '';
-        $refID = isset($request->refID ) ? $request->refID  : '';
-        $docClass = isset($request->docClass ) ? $request->docClass  : '';
-
-        $sigFiles = $kias->getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN);
-        if(isset($sigFiles->error)){
-            return response()->json([
-                'success' => false,
-                'result' => (string)$sigFiles->error->text
-            ]);
-        } else {
-            foreach ($sigFiles->ROWSET->row as $file) {
-                $files[] = ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN];
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'result' => $files
-        ]);
-    }
-
-    public function saveEdsInfo(Request $request,KiasServiceInterface $kias){
-        $data = $request->data;
-        $response = $kias->cicSaveEDS($request->refIsn,$request->isn,$data['iin'],$data['name'],'',$data['tspDate'],$data['certificateValidityPeriod'],'');
-
-        if(isset($response->error)){
-            return response()->json([
-                'success' => false,
-                'result' => (string)$response->error->text
-            ]);
-        }
-        //if(isset($response->result)) {
-            return response()->json([
-                'success' => true
-            ]);
-        //}
     }
 }

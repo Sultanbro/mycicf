@@ -84,7 +84,7 @@ class User extends Authenticatable
      * @deprecated
      */
     public function checkSession(){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $response = $kias->request('User_CicHelloSvc', []);
         if(!$response->error){
             return false;
@@ -100,7 +100,7 @@ class User extends Authenticatable
      * @deprecated
      */
     public function reAuthenticate(){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $kias->init(null);
         $response = $kias->authenticate(Auth::user()->username, Auth::user()->password_hash);
         if($response->error){
@@ -262,7 +262,6 @@ class User extends Authenticatable
             'Управляющий директор - член Правления',
             'Управляющий Директор',
             'Главный Бухгалтер',
-            'Комплаенс-Контролер',
             'Риск-Менеджер',
             'Директор Департамента',
         );

@@ -1,0 +1,310 @@
+/*----------Specifications-*/
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    max-width: 85% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    height: 50%;
+}
+
+/*----------Main-*/
+.main {
+    min-height: 100vh;
+    background: url('../images/background.png') no-repeat center;
+    background-size: cover;
+    position: relative;
+}
+
+
+/*----------Header-*/
+.header {
+    /*padding-top: 70px;*/
+    padding-top: 4.375em;
+    /*padding-top: 4%;*/
+}
+
+.header__logo {
+    height: 4em;
+    /* border: 1px solid red; */
+}
+
+/*----------Content's first-column-*/
+/*--Title block-*/
+.title {
+    padding-top: 5em;
+    /*padding-top: 26%;*/
+    /*padding-top: 200px;*/
+}
+
+.title__welcome, .title__main {
+    display: block;
+    color: #FFF;
+    text-align: center;
+}
+
+.title__welcome {
+    font-size: 0.7em;
+}
+
+.title__main {
+    font-size: 2.5em;
+}
+
+/*--Social network's block-*/
+.social-network {
+    text-align: center;
+    /*margin-top: 60px;*/
+    margin-top: 3.75em;
+    /*margin-top: 8%;*/
+}
+
+.social-network__title {
+    color: #FFF;
+    font-size: 1.3em;
+}
+
+.social-network__icons {
+    margin-top: 10px;
+}
+
+.social-network__link {
+    margin-right: 50px;
+    display: inline-block;
+}
+
+.social-network__link:last-child {
+    margin-right: 0;
+}
+
+.fa {
+    font-size: 3.4em;
+    color: #FFF;
+    transition: 0.4s ease;
+}
+
+.fa-instagram:hover {
+    color: transparent;
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    transition: 0.4s ease;
+}
+
+.fa-facebook-square:hover {
+    color: #3B5998;
+    transition: 0.4s ease;
+}
+
+.fa-youtube-play:hover {
+    color: #FF0000;
+    transition: 0.4s ease;
+}
+
+/*--Line-*/
+.line {
+    /*height: 500px;*/
+    height: 100%;
+    width: 2px;
+    background-color: #FFF;
+    position: absolute;
+    left: 105%;
+    margin-left: -60px;
+    top: 25%;
+    margin-top: -50px;
+}
+
+/*----------Content's second column-*/
+/*--User's image block*/
+.users {
+    /*margin-top: 40px;*/
+    margin-top: 2.5em;
+    /*margin-top: 6%;*/
+    /*margin-top: calc(100vh - 110%);*/
+}
+
+.users__image {
+    height: 10em;
+}
+
+/*--Login form block*/
+.input-container {
+    /*margin-top: 30px;*/
+    margin-top: 1.88em;
+    /*margin-top: 2%;*/
+}
+
+.input-container__background {
+    background-color: #FFF;
+    display: flex;
+    align-items: center;
+    width: 30rem;
+}
+
+.input-container__background:focus-within {
+    transition: 0.4s ease;
+    box-shadow: 0 0 10px rgba(83, 49, 206, 0.801);
+}
+
+.fa-input {
+    font-size: 2em;
+    color: #808080;
+    padding: 0.3em;
+}
+
+.input-container__background:focus-within > .fa-input {
+    transition: 0.4s linear;
+    color: #000;
+}
+
+.input-field {
+    outline: none;
+    border: none;
+    width: 100%;
+    padding: 0.8em;
+}
+
+.fa-user-o {
+    padding-left: 0.9em;
+}
+
+.fa-lock {
+    padding-left: 1em;
+}
+
+.show-btn {
+    border: none;
+    outline: none !important;
+    background: none;
+}
+
+.show-btn:hover > .fa-eye {
+    transition: 0.4s ease;
+    color: #000;
+}
+
+.fa-eye {
+    font-size: 2em;
+    color: #808080;
+    padding-right: 0.4em;
+}
+
+.fa-eye-slash {
+    font-size: 2em;
+    color: #808080;
+    padding-right: 0.4em;
+}
+
+
+/*--Button block*/
+.btn-block {
+    margin-top: 85px;
+    height: 50px;
+    width: 30rem;
+    background-color: rgba(83, 49, 206, 0.801);
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
+    outline: none !important;
+    transition: 0.4s ease;
+    color: #FFF;
+    font-size: 1.3em;
+}
+
+.btn-block2 {
+    background-color: rgba(83, 49, 206, 0.801);
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
+    outline: none !important;
+    transition: 0.4s ease;
+    color: #FFF;
+    font-size: 1.3em;
+}
+
+.btn-block:hover {
+    background-color: rgba(72, 37, 212, 1);
+    transition: 0.4s ease;
+    color: #000;
+}
+
+/*----------Footer-*/
+
+.footer-title {
+    /*min-height: 80px;*/
+    margin-top: 14em;
+}
+
+.footer-title__inner {
+    display: block;
+    text-transform: uppercase;
+    color: #FFF;
+}
+
+
+
+/* ------------Nedia queries --------*/
+@media screen and (max-width: 1000px) {
+
+    .main {
+        margin: 0 auto;
+        /*height: 100%;*/
+        /*overflow: hidden;*/
+        display: flex;
+        align-items: center;
+    }
+
+    .header {
+        margin-top: 0;
+        padding-top: 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .column-1 {
+        display: none;
+    }
+
+    .line {
+        display: none;
+    }
+
+    .users__image {
+        display: none;
+    }
+
+    .row-3 {
+        display: none;
+    }
+}
+
+
+@media screen and (min-width: 970px) and (max-width: 1280px){
+    .line {
+        display: none;
+    }
+}
+
+@media screen and (max-height: 1440px){
+    .main {
+        margin: 0 auto;
+    }
+}
+
+/*@media screen and (min-width: 1280px){*/
+/*    .main {*/
+/*        display: flex;*/
+/*        align-items: center;*/
+/*    }*/
+/*}*/
+
+
+
+

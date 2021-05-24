@@ -19,6 +19,10 @@ class Branch extends Model
 {
     protected $table = 'branches';
 
+    protected $dates = [
+        'birthday'
+    ];
+
     public function childs() {
         return $this->hasMany('App\Branch','kias_parent_id','kias_id') ;
     }
