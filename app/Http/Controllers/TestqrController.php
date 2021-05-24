@@ -35,4 +35,27 @@ class TestqrController extends Controller
         }
         return response()->json($result)->withCallback($request->input('callback'));
     }
+
+    public function managerReportQR(Request $request)
+    {
+        $kias = new Kias();
+        Log:debug($request->all());
+        $success = true;
+        $username = $request->username;
+        $password = $request->password;
+        $qr = $request->qr;
+        $initSystem = $kias->initSystem($username, $password);    //$username,$password
+        $result = '';
+        if(isset($initSystem->error)){
+            $success = false;
+            $error = 'Ошибка авторизации';
+        } else {
+            $result = $kias->request('User_CicCreateManagerReportByQR', [
+                'SubjISN' => (int)$initSystem->UserDetails->ISN,
+                'QR' => $qr,
+                'Sid' => (string)$initSystem->Sid
+            ]);
+        }
+        return response()->json($result)->withCallback($request->input('callback'));
+    }
 }
