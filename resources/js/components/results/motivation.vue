@@ -50,7 +50,7 @@
                         :key="index">
                         <td
                             v-tooltip="{
-                                content: tableTooltip,
+                                content: tableTooltip2,
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
@@ -160,7 +160,86 @@
                     '        <td>2</td>\n' +
                     '    </tr>\n' +
                     '</table>\n',
-
+/*                tableTooltip2 : '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Показатель себестоимости</th>\n' +
+                    '            <th>Размер премии, в %</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>0%</td>\n' +
+                    '            <td>9</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 0,01% до 20%</td>\n' +
+                    '            <td>7</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 20,01% до 40%</td>\n' +
+                    '            <td>5</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 40,01% </td>\n' +
+                    '            <td>3</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',*/
+                tableTooltip2:'<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Сумма страховых премий, в тенге</th>\n' +
+                    '            <th>Ежемесячная премия (нетто),в тенге,коэффициент в %</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 1 000 001 до 1 500 000</td>\n' +
+                    '            <td>55 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 1 500 001 до 2 000 000</td>\n' +
+                    '            <td>100 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 2 000 001 до 2 500 000</td>\n' +
+                    '            <td>130 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 2 500 001 до 3 000 000</td>\n' +
+                    '            <td>145 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 3 000 001 до 3 500 000</td>\n' +
+                    '            <td>160 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 3 500 001 до 4 000 000</td>\n' +
+                    '            <td>180 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 4 000 001 до 4 500 000</td>\n' +
+                    '            <td>200 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 4 500 001 до 5 000 000</td>\n' +
+                    '            <td>220 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 5 000 001 до 6 000 000</td>\n' +
+                    '            <td>240 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 6 000 001 до 7 000 000</td>\n' +
+                    '            <td>280 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 7 000 001 до 8 000 000</td>\n' +
+                    '            <td>320 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 8 000 001 до 10 000 000</td>\n' +
+                    '            <td>400 000</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>Свыше 10 000 001</td>\n' +
+                    '            <td>4%</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',
                 stringTooltip: 'Средневзвешенный размер<br> комиссии и дополнительных <br>расходов от брутто поступивших <br>страховых премий, в %'
             }
         },
@@ -208,6 +287,8 @@
                             this.category = response.data.cat
                             if(this.category === 1){
                                 this.label = 'Менеджер по корпоративному страхованию'
+                            }else if(this.category === 1.1){
+                                this.label = 'Менеджер по корпоративному страхованию (филиалы)'
                             }else if(this.category === 2){
                                 this.label = ' Менеджеры по корпоративным продажам (филиалы)'
                             }else if(this.category === 3){
@@ -246,6 +327,8 @@
                             this.category = response.data.cat
                             if(this.category === 1){
                                 this.label = 'Менеджер по корпоративному страхованию'
+                            }else if(this.category === 1.1){
+                                this.label = 'Менеджер по корпоративному страхованию (филиалы)'
                             }else if(this.category === 2){
                                 this.label = ' Менеджеры по корпоративным продажам (филиалы)'
                             }else if(this.category === 3){

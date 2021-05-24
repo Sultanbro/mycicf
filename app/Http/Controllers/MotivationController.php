@@ -97,15 +97,63 @@ class MotivationController extends Controller
                         'color' => 'transparent'
                     ],
                 ];
+                //1 категория филиал
+                foreach ($list as $item => $elem){
+                    if($elem['sum'] === '% / 0'){
+                        $category = 1.1;
+                        $list = [
+                            [
+                                'types' => 'Премии оплаченные',
+                                'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ')),
+                                'color' => ((double)$response->Mot->row->AmountF ?? 0) > 50 ? 'green' : 'red',
+                            ],
+                            [
+                                'types' => 'План',
+                                'sum' => (number_format((double)$response->Mot->row->PlanP, 0, '.', ' ')),
+                                'color' => ((double)$response->Mot->row->PlanP ?? 0) > 50 ? 'green' : 'red',
+                            ],
+                            [
+                                'types' => 'Выполнение',
+                                'sum' => (number_format((double)$response->Mot->row->Vypolnenie, 0, '.', ' ')),
+                                'color' => ((double)$response->Mot->row->Vypolnenie ?? 0) > 50 ? 'green' : 'red',
+                            ],
+                            [
+                                'types' => 'Себестоимость*',
+                                'sum' => ($response->Mot->row->Sebestoimost).'%',
+                                'color' => ((double)$response->Mot->row->Sebestoimost ?? 0) < 45 ? 'green' : 'red',
+                            ],
+                            [
+                                'types' => 'Дебиторская задолженность',
+                                'sum' => (number_format((double)$response->Mot->row->EmplAgrDZ31Proc, 0, '.', ' ')),
+                                'color' => 'transparent'
+                            ],
+                            [
+                                'types' => '% мотивации*',
+                                'sum' => ($response->Mot->row->MotProc ?? 0).'%',
+                                'color' => 'transparent',
+                            ],
+                        ];
+                    }
+                }
                 break;
             case 2 :
                 $category = 2;
                 $mot_sum = (number_format((double)$response->Mot->row->MotPrem, 0, '.', ' ') ?? 0);
                 $list = [
                     [
-                        'types' => 'Оплаченные премии',
+                        'types' => 'Премии оплаченные',
                         'sum' => ((double)$response->Mot->row->SharePlan ?? 0)."%".' '."/".' '.(number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0),
                         'color' => (double)$response->Mot->row->SharePlan ?? 0 > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'План',
+                        'sum' => (number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0).'%',
+                        'color' => ((double)$response->Mot->row->Plan ?? 0) < 20 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Выполнение',
+                        'sum' => (number_format((double)$response->Mot->row->SharePlan, 0, '.', ' ') ?? 0).'%',
+                        'color' => ((double)$response->Mot->row->SharePlan ?? 0) < 20 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Доля ОГПО физических лиц (<20%)',
@@ -148,21 +196,20 @@ class MotivationController extends Controller
                     $mot_sum = number_format($motFirst + $motSecond, 0, '.', ' ');
                 }
                 break;
-//            case 4 :
-//                $category = 3;
-//                $motFirst = 0;
-//                $motSecond = 0;
-//                $list = [];
-//                foreach ($response->Mot->row as $mot){
-//                    array_push($list, [
-//                        'types' => 'Сборы по ОГПО ВТС',
-//                        'sum' => (number_format((double)$mot->AmountF, 0, '.', ' ') ?? 0),
-//                        'color' => 'green',
-//                    ]);
-//                    $motFirst += ((int)$mot->TotalPrem ?? 0);
-//                }
-//                break;
-//                break;
+/*            case 4 :
+                $category = 3;
+                $motFirst = 0;
+                $motSecond = 0;
+                $list = [];
+                foreach ($response->Mot->row as $mot){
+                    array_push($list, [
+                        'types' => 'Сборы по ОГПО ВТС',
+                       'sum' => (number_format((double)$mot->AmountF, 0, '.', ' ') ?? 0),
+                        'color' => 'green',
+                    ]);
+                    $motFirst += ((int)$mot->TotalPrem ?? 0);
+                }
+                break;*/
             case 5 :
 
                 break;
