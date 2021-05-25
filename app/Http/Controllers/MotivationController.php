@@ -242,7 +242,7 @@ class MotivationController extends Controller
                 break;
             case 5 :
                 $category = 5;
-                $mot_sum = (number_format((double)$response->Mot->row->MotSum, 0, '.', ' ') ?? 0);
+                $mot_sum = (number_format((double)$response->Mot->row->TotalMotSum, 0, '.', ' ') ?? 0);
                 $list = [
                     [
                         'types' => 'Премии оплаченные',
@@ -272,6 +272,11 @@ class MotivationController extends Controller
                     [
                         'types' => '% мотивации',
                         'sum' => (number_format((double)$response->Mot->row->PercMot, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Размер мотивации',
+                        'sum' => (number_format((double)$response->Mot->row->MotSum, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                 ];

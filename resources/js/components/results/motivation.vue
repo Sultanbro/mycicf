@@ -76,7 +76,7 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-if="index === 4"
+                            v-if="index === 4 && category === 1"
                         >
                             {{motivation.types}}
                         </td>
@@ -86,7 +86,67 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 2"
+                            v-else-if="index === 2 && category === 1"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip11,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 3 && category === 1.1"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip2,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 4 && category === 2"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip3,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 4 && category === 3"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip4,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 1 && category === 4"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip5,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 5 && category === 5"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: stringTooltip5,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 6 && category === 5"
                         >
                             {{motivation.types}}
                         </td>
@@ -182,7 +242,7 @@
                     '        <td>2</td>\n' +
                     '    </tr>\n' +
                     '</table>\n',
-/*                tableTooltip2 : '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                tableTooltip11 : '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
                     '        <tr>\n' +
                     '            <th>Показатель себестоимости</th>\n' +
                     '            <th>Размер премии, в %</th>\n' +
@@ -203,7 +263,7 @@
                     '            <td>от 40,01% </td>\n' +
                     '            <td>3</td>\n' +
                     '        </tr>\n' +
-                    '    </table>',*/
+                    '    </table>',
                 tableTooltip2:'<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
                     '        <tr>\n' +
                     '            <th>Сумма страховых премий, в тенге</th>\n' +
@@ -262,7 +322,60 @@
                     '            <td>4%</td>\n' +
                     '        </tr>\n' +
                     '    </table>',
-                stringTooltip: 'Средневзвешенный размер<br> комиссии и дополнительных <br>расходов от брутто поступивших <br>страховых премий, в %'
+                tableTooltip3: '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Поступившие страховые премии</th>\n' +
+                    '            <th>До 500 000</th>\n' +
+                    '            <th>500 001 – 1 000 000</th>\n' +
+                    '            <th>1 000 001 – 3 000 000</th>\n' +
+                    '            <th>3 000 001 и более</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>Размер мотивации</td>\n' +
+                    '            <td>5%</td>\n' +
+                    '            <td>7%</td>\n' +
+                    '            <td>9%</td>\n' +
+                    '            <td>11%</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',
+                tableTooltip4: '    <table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Поступившие страховые премии</th>\n' +
+                    '            <th>Размер премии, в %</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 100 000 до 1 000 000</td>\n' +
+                    '            <td>5%</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>свыше 1 000 001</td>\n' +
+                    '            <td>7%</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',
+                tableTooltip5: '    <table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Выполнение базового плана <br> по корпоративным продажам, в %</th>\n' +
+                    '            <th>Размер ежемесячной премии <br> (в должностных окладах)</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 100 до 150</td>\n' +
+                    '            <td>1 оклад</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>более 150 до 200</td>\n' +
+                    '            <td>1,25 оклада</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>более 200 до 300</td>\n' +
+                    '            <td>1,5 оклада</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>300 и более</td>\n' +
+                    '            <td>2 оклада</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',
+                stringTooltip: 'Средневзвешенный размер<br> комиссии и дополнительных <br>расходов от брутто поступивших <br>страховых премий, в %',
+                stringTooltip5: 'В случае превышения коэффициента себестоимости<br> отдела более 40%, премия выплачивается <br> в размере 50%'
             }
         },
         mounted() {
