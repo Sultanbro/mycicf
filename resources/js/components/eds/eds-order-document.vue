@@ -68,7 +68,8 @@
             doc_row_list_inner_other: Object,
             coordination: Object,
             preloader: Function,
-            authorizedUserIin: Number
+            authorizedUserIin: Number,
+            doc_row_error: String
         },
         created(){
             //var url = "\\192.168.1.36\FILESKIAS$\D\33\877\D33877881\3860618.sig";
@@ -181,18 +182,22 @@
                 }
             },
             getToken(docIndex = 0){
-                this.loader(true);
-                this.signedFile = '';
-                axios.get('/getEDS').then((response) => {
-                    if(response.data.success){
-                        this.sign.token = response.data.result.token;
-                        this.getDocumentPrintableForm(docIndex);
-                        //this.signing(signedBase64, docIsn);     // подписываем
-                    } else {
-                        alert('Ошибка получения токена. Попробуйте чуть позже');
-                        this.loader(false);
-                    }
-                });
+                if(this.doc_row_error != ''){
+                    alert(this.doc_row_error);
+                } else {
+                    this.loader(true);
+                    this.signedFile = '';
+                    axios.get('/getEDS').then((response) => {
+                        if (response.data.success) {
+                            this.sign.token = response.data.result.token;
+                            this.getDocumentPrintableForm(docIndex);
+                            //this.signing(signedBase64, docIsn);     // подписываем
+                        } else {
+                            alert('Ошибка получения токена. Попробуйте чуть позже');
+                            this.loader(false);
+                        }
+                    });
+                }
             },
             getDocumentPrintableForm(docIndex){
                 this.loader(true);

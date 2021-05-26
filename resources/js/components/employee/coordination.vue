@@ -303,6 +303,7 @@
             :doc_row_list_other="doc_row_list_other"
             :doc_row_list_inner_other="doc_row_list_inner_other"
             :authorized-user-iin="authorizedUserIin"
+            :doc_row_error="doc_row_error"
         >
         </coordination-modal>
     </div>
@@ -333,6 +334,7 @@
                 doc_row_inner: {},
                 doc_row_list_other: {},
                 doc_row_list_inner_other: {},
+                doc_row_error: '',
                 authorizedUserIin: 0
             }
         },
@@ -438,6 +440,7 @@
                 });
             },
             async getDocRowList(data, type) {
+                this.doc_row_error = '';
                 if(type === 'SZ') {
                     let response = await this.axios.post('/getDocRowList', {
                         class_isn: data.sz_class_isn,
@@ -445,6 +448,10 @@
                     });
                     if(response.data.success) {
                         this.setDocRowList(response.data, type);
+                    } else {
+                        this.doc_row_error = response.data.message;
+                        alert(response.data.message);
+                        this.preloader(false);
                     }
                 }
                 else if(type === 'AC') {
@@ -455,6 +462,10 @@
                         });
                         if(response.data.success) {
                             this.setDocRowList(response.data, type);
+                        } else {
+                            this.doc_row_error = response.data.message;
+                            alert(response.data.message);
+                            this.preloader(false);
                         }
                     }
                     else
@@ -469,7 +480,8 @@
                         if (response.data.success) {
                             this.setDocRowList(response.data, type);
                         } else {
-                            //alert(response.data.message);
+                            this.doc_row_error = response.data.message;
+                            alert(response.data.message);
                             this.preloader(false);
                         }
                     } else {

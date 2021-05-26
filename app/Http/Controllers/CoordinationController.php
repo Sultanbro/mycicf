@@ -343,7 +343,7 @@ class CoordinationController extends Controller
                 ]);
             }
             else
-                throw new \Exception('Данные не найдены', 400);
+                throw new \Exception($result->error->text, 400);
         }
         catch(\Exception $e) {
             return response()->json([
