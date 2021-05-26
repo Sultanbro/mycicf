@@ -21,29 +21,30 @@
         <!-- Rating Table Section-->
         <div class="rating-wrapper p-4 mb-3" v-if="showMotivation">
             <div class="rating-wrapper p-4 mb-3">
-                <span v-if="category === 1">Премия начисляется при выполнении личного плана продаж по договорам страхования c размером агентского вознаграждения не более 30% от брутто поступивших страховых премий за исключением договоров ОС ГПО ВТС</span>
-                <span v-else-if="category === 1.1">
+                <span v-show="category === 1">Премия начисляется при выполнении личного плана продаж по договорам страхования c размером агентского вознаграждения не более 30% от брутто поступивших страховых премий за исключением договоров ОС ГПО ВТС
+                </span>
+                <span v-show="category === 1.1">
                     Премия начисляется при выполнении работником личного плана продаж по оплаченным договорам за исключением договоров ОС ГПО ВТС физических лиц в размере не менее 100%.
                 </span>
-                <span v-else-if="category === 2">
-                1.Фиксированная премия начисляется в зависимости от объема продаж за исключением продаж по договорам ОС ГПО ВТС физических лиц.
-                <br>2.При расчете премии учитываются условия, предусмотренные п.14 р.4 Положения.<br>3.Ежемесячный базовый план продаж составляет 1 000 000 тг.<br>4. В случае превышения коэффициента себестоимости более 45% (сорока пяти процентов), рассчитанная премия выплачивается в размере 50% (пятьдесят процентов).<br>5. В случае удержания коэффициента себестоимости не более 25% (двадцати пяти процентов), рассчитанная премия выплачивается в размере 150% (сто пятьдесят процентов).
+                <span v-show="category === 2">
+                Фиксированная премия начисляется в зависимости от объема продаж за исключением продаж по договорам ОС ГПО ВТС физических лиц.
                 </span>
-                <span v-else-if="category === 3">
+                <span v-show="category === 3">
                     1.Работникам прямых продаж, выплачивается ежемесячная премия, размер которой определяется в зависимости от результатов продаж по ОС ГПО ВТС и по иным классам страхования с учетом условий п.14 р.4 Положения.<br>
     2. За заключение договоров по ОС ГПО ВТС физических лиц работникам прямых продаж выплачивается ежемесячная премия по каждому заключенному договору в размере 3% от суммы поступившей страховой премии.
                 </span>
-                <span v-else-if="category === 4">
+                <span v-show="category === 4">
                     Премия начисляется при условиях:<br>
     a) выполнения базового плана продаж страховой группы не менее чем на 80%<br>
     b) при положительной разнице между установленной себестоимостью и фактической себестоимостью страховой группы за отчетный месяц<br>
     Премия по остальным видам страхования выплачивается по договорам с размером агентского вознаграждения не более 30%<br>
                 </span>
-                <span v-else-if= "category === 5">
-                    Заместителю директора филиала премия выплачивается за выполнение личного и базового плана продаж по корпоративному страхованию от страховых брутто премий (за исключением договоров ОС ГПО ВТС физических лиц), с учетом показателя себестоимости.<br>
-    При этом размер базового плана продаж должен быть не менее суммы планов продаж менеджеров, курируемых Заместителем директора филиала.<br>
-                    В ином случае за размер базового плана принимается сумма планов продаж курируемых менеджеров.
+                <span v-show= "category === 5">
+                    Заместителю директора филиала премия выплачивается за выполнение личного и базового плана продаж по корпоративному страхованию от страховых брутто премий (за исключением договоров ОС ГПО ВТС физических лиц), с учетом показателя себестоимости.
                 </span>
+            </div>
+            <div class="footnote">
+                <p v-show="category">ячейка со знаком * содержит примечание</p>
             </div>
             <div class="rating-wrapper__inner">
                 <div class="d-flex align-items-center">
@@ -69,7 +70,7 @@
                     </thead>
                     <tbody>
                     <tr v-for="(motivation, index) in motivations"
-                        :key="index">
+                        :key="index" v-html="htmlReturningFn">
                         <td
                             v-tooltip="{
                                 content: tableTooltip,
@@ -96,7 +97,7 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 3 && category === 1.1"
+                            v-else-if="index === 2 && category === 1.1"
                         >
                             {{motivation.types}}
                         </td>
@@ -106,7 +107,17 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 4 && category === 2"
+                            v-else-if="index === 3 && category === 2"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip21,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 2 && category === 2"
                         >
                             {{motivation.types}}
                         </td>
@@ -126,7 +137,27 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 1 && category === 4"
+                            v-else-if="index === 4 && category === 4"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: stringTooltip4,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 2 && category === 4"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: tableTooltip41,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 5 && category === 4"
                         >
                             {{motivation.types}}
                         </td>
@@ -147,6 +178,26 @@
                                 classes: ['motivation-tooltip']
                             }"
                             v-else-if="index === 6 && category === 5"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: stringTooltip51,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 1 && category === 5"
+                        >
+                            {{motivation.types}}
+                        </td>
+                        <td
+                            v-tooltip="{
+                                content: stringTooltip52,
+                                placement: 'bottom-end',
+                                classes: ['motivation-tooltip']
+                            }"
+                            v-else-if="index === 4 && category === 5"
                         >
                             {{motivation.types}}
                         </td>
@@ -322,6 +373,20 @@
                     '            <td>4%</td>\n' +
                     '        </tr>\n' +
                     '    </table>',
+                tableTooltip21: '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Себестоимость</th>\n' +
+                    '            <th>Размер премии в %</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>более 45%</td>\n' +
+                    '            <td>50%</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>не более 25%</td>\n' +
+                    '            <td>150%</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',
                 tableTooltip3: '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
                     '        <tr>\n' +
                     '            <th>Поступившие страховые премии</th>\n' +
@@ -352,6 +417,24 @@
                     '            <td>7%</td>\n' +
                     '        </tr>\n' +
                     '    </table>',
+                tableTooltip41: '    <table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
+                    '        <tr>\n' +
+                    '            <th>Коэффициент выплат</th>\n' +
+                    '            <th>Размер премии в %</th>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>до 30%</td>\n' +
+                    '            <td>начисление 100%</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 31% до 40%</td>\n' +
+                    '            <td>50%</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 41%</td>\n' +
+                    '            <td>0%</td>\n' +
+                    '        </tr>\n' +
+                    '    </table>',
                 tableTooltip5: '    <table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
                     '        <tr>\n' +
                     '            <th>Выполнение базового плана <br> по корпоративным продажам, в %</th>\n' +
@@ -375,7 +458,16 @@
                     '        </tr>\n' +
                     '    </table>',
                 stringTooltip: 'Средневзвешенный размер<br> комиссии и дополнительных <br>расходов от брутто поступивших <br>страховых премий, в %',
-                stringTooltip5: 'В случае превышения коэффициента себестоимости<br> отдела более 40%, премия выплачивается <br> в размере 50%'
+                stringTooltip4: 'Премия по договорам ОС ГПО ВТС начисляется с учетом разницы между установленной <br> и фактической себестоимостью страховой группы за отчетный месяц. <br> При расчете премии учитываются следующие показатели себестоимости по категориям договоров ОС ГПО ВТС физических лиц: <br>1 категория (классы бонус-малус с 11 по 13) - не более 30%; <br>2 категория (классы бонус-малус с 8 по 10) - не более 20%; <br>3 категория (до 7 класса бонус-малус) - не более 10%.',
+                stringTooltip5: 'В случае превышения коэффициента себестоимости<br> отдела более 40%, премия выплачивается <br> в размере 50%',
+                stringTooltip51:'Размер базового плана продаж должен быть не менее суммы планов продаж менеджеров,<br> курируемых Заместителем директора филиала.<br>В ином случае за размер базового плана принимается сумма планов продаж курируемых менеджеров',
+                stringTooltip52:'В случае превышения коэффициента себестоимости отдела более 40%,<br> премия выплачивается в размере 50%'
+
+            }
+        },
+        computed:{
+            htmlReturningFn: function () {
+                return this.motivations[0].types === '<b>ОГПО<b>'
             }
         },
         mounted() {
@@ -428,6 +520,10 @@
                                 this.label = ' Менеджеры по корпоративным продажам (филиалы)'
                             }else if(this.category === 3){
                                 this.label = 'Менеджеры по прямым продажам'
+                            }else if(this.category === 4){
+                                this.label = 'Директора страховых групп (филиалы)'
+                            }else if(this.category === 5){
+                                this.label = 'Заместители директора и Директора по страхованию (филиалы)'
                             }else{
                                 this.label = ''
                             }
@@ -468,6 +564,10 @@
                                 this.label = ' Менеджеры по корпоративным продажам (филиалы)'
                             }else if(this.category === 3){
                                 this.label = 'Менеджеры по прямым продажам'
+                            }else if(this.category === 4){
+                                this.label = 'Директора страховых групп (филиалы)'
+                            }else if(this.category === 5){
+                                this.label = 'Заместители директора и Директора по страхованию (филиалы)'
                             }else{
                                 this.label = ''
                             }
@@ -576,5 +676,9 @@
     .chart-container {
         width: 100%;
         overflow: hidden;
+    }
+    .footnote {
+        font-size: 80%;
+        font-style: italic;
     }
 </style>

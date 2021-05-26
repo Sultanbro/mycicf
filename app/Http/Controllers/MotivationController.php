@@ -119,24 +119,19 @@ class MotivationController extends Controller
                         $category = 1.1;
                         $list = [
                             [
-                                'types' => 'Премии оплаченные',
-                                'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ')),
-                                'color' => ((double)$response->Mot->row->AmountF ?? 0) > 50 ? 'green' : 'red',
+                                'types' => 'Премии оплаченные / (План)',
+                                'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ')).' '.'/'.' '.(number_format((double)$response->Mot->row->PlanP, 0, '.', ' ')),
+                                'color' => ((double)$response->Mot->row->AmountF ?? 0) > 100 ? 'green' : 'red',
                             ],
                             [
-                                'types' => 'План',
-                                'sum' => (number_format((double)$response->Mot->row->PlanP, 0, '.', ' ')),
-                                'color' => ((double)$response->Mot->row->PlanP ?? 0) > 50 ? 'green' : 'red',
-                            ],
-                            [
-                                'types' => 'Выполнение',
-                                'sum' => (number_format((double)$response->Mot->row->Vypolnenie, 0, '.', ' ')),
-                                'color' => ((double)$response->Mot->row->Vypolnenie ?? 0) > 50 ? 'green' : 'red',
+                                'types' => 'Выполнение (>100%)',
+                                'sum' => (number_format((double)$response->Mot->row->Vypolnenie, 0, '.', ' ')).'%',
+                                'color' => ((double)$response->Mot->row->Vypolnenie ?? 0) > 100 ? 'green' : 'red',
                             ],
                             [
                                 'types' => 'Себестоимость*',
                                 'sum' => ($response->Mot->row->Sebestoimost).'%',
-                                'color' => ((double)$response->Mot->row->Sebestoimost ?? 0) < 45 ? 'green' : 'red',
+                                'color' => 'transparent',
                             ],
                             [
                                 'types' => 'Дебиторская задолженность',
@@ -158,35 +153,34 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Премии оплаченные',
-                        'sum' => ((double)$response->Mot->row->SharePlan ?? 0)."%".' '."/".' '.(number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0),
-                        'color' => (double)$response->Mot->row->SharePlan ?? 0 > 80 ? 'green' : 'red',
+                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
+                        'color' => (double)$response->Mot->row->SharePlan ?? 0 > 1000000 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'План',
-                        'sum' => (number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
-                        'color' => ((double)$response->Mot->row->Plan ?? 0) < 20 ? 'green' : 'red',
-                    ],
-                    [
-                        'types' => 'Выполнение',
+                        'types' => 'Выполнение (>100%)',
                         'sum' => (number_format((double)$response->Mot->row->SharePlan, 0, '.', ' ') ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->SharePlan ?? 0) < 20 ? 'green' : 'red',
-                    ],
-                    [
-                        'types' => 'Доля ОГПО физических лиц (<20%)',
-                        'sum' => (number_format((double)$response->Mot->row->DolyaVTSFis, 0, '.', ' ') ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->DolyaVTSFis ?? 0) < 20 ? 'green' : 'red',
+                        'color' => ((double)$response->Mot->row->SharePlan ?? 0) > 100 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Себестоимость',
                         'sum' => ((double)$response->Mot->row->Rentability ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->Rentability ?? 0) < 45 ? 'green' : 'red',
+                        'color' => 'transparent'
+                    ],
+                    [
+                        'types' => 'Премия',
+                        'sum' => (number_format((double)$response->Mot->row->PremMOT, 0,'.','') ?? 0),
+                        'color' => 'transparent'
                     ],
                 ];
                 break;
             case 3 :
                 $category = 3;
-                $mot_sum = (number_format((double)$response->Mot->row[0]->TypePrem + $response->Mot->row[1]->TypePrem, 0, '.', ' ') ?? 0);
+                $mot_sum = (number_format((double)$response->Mot->row[0]->TotalPrem + $response->Mot->row[1]->TotalPrem, 0, '.', ' ') ?? 0);
                 $list = [
+                    [
+                        'types' => '<b>ОГПО<b>',
+                        'color' => 'transparent',
+                    ],
                     [
                         'types' => 'Премии оплаченные',
                         'sum' => (number_format((double)$response->Mot->row[0]->AmountF, 0, '.', ' ') ?? 0),
@@ -199,7 +193,11 @@ class MotivationController extends Controller
                     ],
                     [
                         'types' => 'К оплате по ОГПО',
-                        'sum' => (number_format((double)$response->Mot->row[0]->TypePrem, 0, '.', ' ') ?? 0),
+                        'sum' => (number_format((double)$response->Mot->row[0]->TotalPrem, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Иные классы страхования',
                         'color' => 'transparent',
                     ],
                     [
@@ -214,7 +212,7 @@ class MotivationController extends Controller
                     ],
                     [
                         'types' => 'К оплате по иным классам страхования',
-                        'sum' => (number_format((double)$response->Mot->row[1]->TypePrem, 0, '.', ' ') ?? 0),
+                        'sum' => (number_format((double)$response->Mot->row[1]->TotalPrem, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                 ];
@@ -225,12 +223,33 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Премии оплаченные',
-                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0),
+                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
+                        'color' => (double)$response->Mot->row->PercPlan ?? 0 > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Выполнение(>100%)',
+                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'color' => (double)$response->Mot->row->PercPlan ?? 0 > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Сборы по ОГПО ВТС',
+                        'sum' => (number_format(
+                            (double)$response->Mot->row->SumVTS1
+                            + (double)$response->Mot->row->SumVTS1
+                            + (double)$response->Mot->row->SumVTS1)),
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => '*план',
-                        'sum' => (number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0).'/'.(number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'types' => 'Мотивация по ОГПО ВТС',
+                        'sum' => (number_format(
+                            (double)$response->Mot->row->MotVTS1
+                            + (double)$response->Mot->row->MotVTS1
+                            + (double)$response->Mot->row->MotVTS1)),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Мотивация по иным классам',
+                        'sum' => (number_format((double)$response->Mot->row->MOTOther, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                     [
@@ -250,28 +269,23 @@ class MotivationController extends Controller
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => '*план',
-                        'sum' => (number_format((double)$response->Mot->row->PlanM, 0, '.', ' ') ?? 0).'/'.(number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0),
-                        'color' => 'transparent',
-                    ],
-                    [
-                        'types' => 'личный план',
+                        'types' => 'Базовый план',
                         'sum' => (number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => 'Исполнение',
-                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'types' => 'План менеджеров',
+                        'sum' => (number_format((double)$response->Mot->row->PlanM, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Выполнение базового плана',
+                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'color' => (double)$response->Mot->row->PercPlan ?? 0 > 100 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Себестоимость',
-                        'sum' => (number_format((double)$response->Mot->row->CostPrice, 0, '.', ' ') ?? 0),
-                        'color' => 'transparent',
-                    ],
-                    [
-                        'types' => '% мотивации',
-                        'sum' => (number_format((double)$response->Mot->row->PercMot, 0, '.', ' ') ?? 0),
+                        'sum' => (number_format((double)$response->Mot->row->CostPrice, 0, '.', ' ') ?? 0).'%',
                         'color' => 'transparent',
                     ],
                     [
