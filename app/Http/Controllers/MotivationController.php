@@ -139,7 +139,7 @@ class MotivationController extends Controller
                                 'color' => 'transparent'
                             ],
                             [
-                                'types' => '% мотивации*',
+                                'types' => '% мотивации',
                                 'sum' => ($response->Mot->row->MotProc ?? 0).'%',
                                 'color' => 'transparent',
                             ],
@@ -152,7 +152,7 @@ class MotivationController extends Controller
                 $mot_sum = (number_format((double)$response->Mot->row->MotPrem, 0, '.', ' ') ?? 0);
                 $list = [
                     [
-                        'types' => 'Премии оплаченные',
+                        'types' => 'Премии оплаченные / (План)',
                         'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
                         'color' => (double)$response->Mot->row->SharePlan ?? 0 > 1000000 ? 'green' : 'red',
                     ],
@@ -162,12 +162,12 @@ class MotivationController extends Controller
                         'color' => ((double)$response->Mot->row->SharePlan ?? 0) > 100 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Себестоимость',
+                        'types' => 'Себестоимость*',
                         'sum' => ((double)$response->Mot->row->Rentability ?? 0).'%',
                         'color' => 'transparent'
                     ],
                     [
-                        'types' => 'Премия',
+                        'types' => 'Премия*',
                         'sum' => (number_format((double)$response->Mot->row->PremMOT, 0,'.','') ?? 0),
                         'color' => 'transparent'
                     ],
@@ -197,7 +197,7 @@ class MotivationController extends Controller
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => 'Иные классы страхования',
+                        'types' => '<b>Иные классы страхования<b>*',
                         'color' => 'transparent',
                     ],
                     [
@@ -222,7 +222,7 @@ class MotivationController extends Controller
                 $mot_sum = (number_format((double)$response->Mot->row->TotalMot, 0, '.', ' ') ?? 0);
                 $list = [
                     [
-                        'types' => 'Премии оплаченные',
+                        'types' => 'Премии оплаченные / (План)',
                         'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
                         'color' => (double)$response->Mot->row->PercPlan ?? 0 > 80 ? 'green' : 'red',
                     ],
@@ -232,7 +232,7 @@ class MotivationController extends Controller
                         'color' => (double)$response->Mot->row->PercPlan ?? 0 > 80 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Сборы по ОГПО ВТС',
+                        'types' => 'Сборы по ОГПО ВТС*',
                         'sum' => (number_format(
                             (double)$response->Mot->row->SumVTS1
                             + (double)$response->Mot->row->SumVTS1
@@ -248,12 +248,12 @@ class MotivationController extends Controller
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => 'Мотивация по иным классам',
+                        'types' => 'Мотивация по иным классам*',
                         'sum' => (number_format((double)$response->Mot->row->MOTOther, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => 'Коэффициент Выплат',
+                        'types' => 'Коэффициент Выплат*',
                         'sum' => (number_format((double)$response->Mot->row->QU, 0, '.', ' ') ?? 0).'%',
                         'color' => 'transparent',
                     ],
@@ -269,7 +269,7 @@ class MotivationController extends Controller
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => 'Базовый план',
+                        'types' => 'Базовый план*',
                         'sum' => (number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
@@ -284,12 +284,12 @@ class MotivationController extends Controller
                         'color' => (double)$response->Mot->row->PercPlan ?? 0 > 100 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Себестоимость',
+                        'types' => 'Себестоимость*',
                         'sum' => (number_format((double)$response->Mot->row->CostPrice, 0, '.', ' ') ?? 0).'%',
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => 'Размер мотивации',
+                        'types' => 'Размер мотивации*',
                         'sum' => (number_format((double)$response->Mot->row->MotSum, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],

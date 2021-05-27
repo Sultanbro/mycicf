@@ -70,7 +70,7 @@
                     </thead>
                     <tbody>
                     <tr v-for="(motivation, index) in motivations"
-                        :key="index" v-html="htmlReturningFn">
+                        :key="index">
                         <td
                             v-tooltip="{
                                 content: tableTooltip,
@@ -128,8 +128,8 @@
                                 classes: ['motivation-tooltip']
                             }"
                             v-else-if="index === 4 && category === 3"
+                            v-html="motivation.types"
                         >
-                            {{motivation.types}}
                         </td>
                         <td
                             v-tooltip="{
@@ -201,7 +201,7 @@
                         >
                             {{motivation.types}}
                         </td>
-                        <td v-else>{{motivation.types}}</td>
+                        <td v-else v-html="motivation.types"></td>
                         <td>{{motivation.sum}}</td>
                         <td>
                             <i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i>
@@ -463,11 +463,6 @@
                 stringTooltip51:'Размер базового плана продаж должен быть не менее суммы планов продаж менеджеров,<br> курируемых Заместителем директора филиала.<br>В ином случае за размер базового плана принимается сумма планов продаж курируемых менеджеров',
                 stringTooltip52:'В случае превышения коэффициента себестоимости отдела более 40%,<br> премия выплачивается в размере 50%'
 
-            }
-        },
-        computed:{
-            htmlReturningFn: function () {
-                return this.motivations[0].types === '<b>ОГПО<b>'
             }
         },
         mounted() {
