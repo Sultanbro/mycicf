@@ -456,7 +456,7 @@
                     </thead>
                     <tbody class="date-color">
                     <tr v-for="(result, index) in results.resDop" :key="index">
-                        <th scope="row">{{index + 1}}</th>
+                        <td scope="row">{{index + 1}}</td>
                         <td>{{result.fullname}}</td>
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
@@ -688,10 +688,10 @@
                                 </div>
                             </div>
                         </td>
-                        <th>
+                        <td>
                             <input type="text" rows="2" v-model="result.remark"
                                    class="form-control" :disabled="addChange">
-                        </th>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -966,7 +966,7 @@ export default {
                     return;
                 }
             }
-            this.extra = true;
+            this.extraLoading = true;
             this.annul = true;
             this.addChange = false;
             this.results.status = 'Аннулирован';
@@ -989,6 +989,7 @@ export default {
                         this.addChange = false;
                         this.annul = true;
                         this.extraLoading = false;
+                        alert(response.data.error)
                     }
                 });
             this.addChange = false;
@@ -1024,7 +1025,7 @@ export default {
                         this.results.stage = response.data.stage
                         this.addChange = true
                         this.toForm = true
-                        this.fillIn =true
+                        this.fillIn = true
                         this.saveDoc = false
                         this.annul = false
                     } else {

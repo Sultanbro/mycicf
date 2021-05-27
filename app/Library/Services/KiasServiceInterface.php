@@ -411,4 +411,20 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo);
+
+    /**
+     * @param $id
+     * @param $blankSerNo
+     * @param $dateBegFrom
+     * @param $dateBegTo
+     * @param $dateEndFrom
+     * @param $dateEndTo
+     * @param $dateSignFrom
+     * @param $dateSignTo
+     * @param $productIsn
+     * @param $emplIsn
+     * @param $status
+     * @return mixed
+     */
+    public function AgrSearch ($id, $blankSerNo, $dateBegFrom, $dateBegTo, $dateEndFrom, $dateEndTo, $dateSignFrom, $dateSignTo, $productIsn, $emplIsn, $status);
 }

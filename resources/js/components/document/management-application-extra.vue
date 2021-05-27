@@ -423,7 +423,7 @@
                     </thead>
                     <tbody class="date-color">
                     <tr v-for="(result, index) in results.resDop" :key="index">
-                        <th scope="row">{{index + 1}}</th>
+                        <td scope="row">{{index + 1}}</td>
                         <td>{{result.fullname}}</td>
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
@@ -470,10 +470,10 @@
                                 </div>
                             </div>
                         </td>
-                        <th>
+                        <td>
                             <input type="text" rows="2" v-model="result.remark"
                                    class="form-control" :disabled="addChange">
-                        </th>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

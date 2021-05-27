@@ -73,25 +73,23 @@
         },
         methods: {
             saveDocument: function (e) {
-                console.log('main test');
+                console.log('main test')
                 var form = document.getElementById('object-form');
-                var formData = new FormData(form);
+                var formData = new FormData(form)
                     this.axios.post('/document/saveDocument', formData)
                         .then((response) => {
                             if (!response.data.success) {
-                                alert(response.data.error);
+                                alert(response.data.error)
                             } else {
-                                alert(response.data.success);
+                                alert(response.data.success)
                             }
                         })
                         .catch(function (error) {
-                            alert(error.response);
+                            //alert(error.response)
                         });
             },
         },
     }
 </script>
-
-<style scoped>
-
-</style>
+<!--<style scoped>-->
+<!--</style>-->

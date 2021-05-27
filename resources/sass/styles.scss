@@ -718,6 +718,9 @@ ul{
 }
 .date-color{
     color: #818181;
+    //& .recruiting-striped thead th:not(:last-child),td:not(:last-child) {
+    //    border-right: none;
+    //}
 }
 .thead-border{
     border-left: 1px solid white !important;

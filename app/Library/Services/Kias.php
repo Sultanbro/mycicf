@@ -967,12 +967,31 @@ class Kias implements KiasServiceInterface
 
     public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo){
         return $this->request('AGREEMENTCALCSEARCH', [
-            'ID' => $id, 'DATESIGNFROM' => $dateSignFrom,
-            'DATESIGNTO' => $dateSignTo, 'CLASSISN' => $classIsn,
-            'DATEBEGFROM' => $dateBegFrom, 'DATEBEGTO' => $dateBegTo,
+            'ID' => $id,
+            'DATESIGNFROM' => $dateSignFrom,
+            'DATESIGNTO' => $dateSignTo,
+            'CLASSISN' => $classIsn,
+            'DATEBEGFROM' => $dateBegFrom,
+            'DATEBEGTO' => $dateBegTo,
             'DEPTISN' => $deptIsn, 'EMPLISN' => $emplIsn,
             'PRODUCTISN' => $productIsn, 'STATUSISN' => $statusIsn,
             'TASKISN' => $taskIsn, 'PAGENO' => $pageNo
+        ]);
+    }
+
+    public function AgrSearch ($id, $blankSerNo, $dateBegFrom, $dateBegTo, $dateEndFrom, $dateEndTo, $dateSignFrom, $dateSignTo, $productIsn, $emplIsn, $status){
+        return $this->request('AgrSearch', [
+            'ID' => $id,
+            'BlankSerNo' => $blankSerNo,
+            'DateBegFrom' => $dateBegFrom,
+            'DateBegTo' => $dateBegTo,
+            'DateEndFrom' => $dateEndFrom,
+            'DateEndTo' => $dateEndTo,
+            'DateSignFrom' => $dateSignFrom,
+            'DateSignTo' => $dateSignTo,
+            'ProductISN' => $productIsn,
+            'EmplISN' => $emplIsn,
+            'Status' => $status,
         ]);
     }
 }

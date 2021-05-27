@@ -466,7 +466,7 @@
                     </thead>
                     <tbody class="date-color">
                     <tr v-for="(result, index) in results.resDop" :key="index">
-                        <th scope="row">{{index + 1}}</th>
+                        <td scope="row">{{index + 1}}</td>
                         <td>{{result.fullname}}</td>
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
@@ -680,8 +680,8 @@
                                 </select>
                             </div>
                             <div v-else-if="result.fullname === 'Вид затрат' || result.fullname === 'Вид доходов/затрат'">
-                                <treeselect v-model="result.val" placeholder="Не выбрано" :disabled="addChange"
-                                            :multiple="false" :options="costTypes" :disable-branch-nodes="true"/>
+                                <treeselect v-model="result.val" :disabled="addChange"
+                                            :multiple="false" :options="costTypes" :disable-branch-nodes="true" :placeholder="get"/>
                             </div>
                             <div v-else-if="result.fullname === 'Группа подразделений'">
                                 <treeselect v-model="result.val" :multiple="false" :options="unitGroups" :disabled="addChange"/>
@@ -701,6 +701,11 @@
                                     <option v-for="knp in knps" :value="knp[0]">{{ knp[1] }}</option>
                                 </select>
                             </div>
+                            <div v-else-if="result.fullname === 'Код налогового органа'">
+                                <treeselect
+                                    :multiple="false" :options="taxAuthorityCode" :placeholder="'Выберите'" v-model="result.val"
+                                    :disabled="addChange"/>
+                            </div>
                             <div v-else-if="result.fullname === 'КБК'">
                                 <select v-model="result.val" :disabled="addChange" class="form-control">
                                     <option v-for="kbk in kbks" :value="kbk[0]">{{ kbk[1] }}</option>
@@ -708,7 +713,7 @@
                             </div>
                             <div v-else-if="result.fullname === 'Согласованная котировка ДА'">
                                 <div class="input-group">
-                                    <input v-model="result.value" @click="OpenModal('Согласованная котировка ДА')" type="text" class="form-control">
+                                    <input v-model="result.value ? result.value : agreedQuotation.fullName" @click="OpenModal('Согласованная котировка ДА')" type="text" class="form-control">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn-light" @click="OpenModal('Согласованная котировка ДА')">
                                             <i class="fa fa-search"></i>
@@ -763,10 +768,10 @@
                                 </div>
                             </div>
                         </td>
-                        <th>
+                        <td>
                             <input type="text" rows="2" v-model="result.remark"
                                    class="form-control" :disabled="addChange">
-                        </th>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -783,6 +788,8 @@
         <button v-show="false" ref="modalQuotes" type="button" data-toggle="modal" data-target="#quotesJournal">Large modal</button>
         <full-quotes-journal
             :results="results"
+            :agreedQuotation="agreedQuotation"
+            :recordingCounterparty="recordingCounterparty"
         >
         </full-quotes-journal>
         <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal"></button>
@@ -797,7 +804,10 @@
         </document-journal-modal>
         <button v-show="false" ref="modalContract" type="button" data-toggle="modal" data-target="#contractJournal"></button>
         <contract-journal-modal
-            :results="results">
+            :results="results"
+            :recordingCounterparty="recordingCounterparty"
+            :contractName="contractName"
+        >
         </contract-journal-modal>
         <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
         <counterparty-journal-modal
@@ -900,6 +910,14 @@ export default {
                 isn: '',
                 fullName: '',
             },
+            agreedQuotation: {
+                isn: '',
+                fullName: '',
+            },
+            contractName: {
+                isn: '',
+                fullName: '',
+            },
             courtName: {
                 fullName: '',
                 isn: ''
@@ -918,6 +936,8 @@ export default {
                 fullName: '',
                 classISN: '',
             },
+            notSelected: "Не выбрано",
+            taxAuthorityCode: [],
         }
     },
     created() {
@@ -942,6 +962,7 @@ export default {
         this.getAutoColor();
         this.getKNP();
         this.getKBK();
+        this.getTaxAuthorityCode();
         Vue.filter('splitNumber', function (value) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         })
@@ -951,16 +972,15 @@ export default {
             const vm = this;
             vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
         },
-        handleChangeDate() {
-            return moment(date).format('DD.MM.YYYY');
-        },
+        // handleChangeDate() {
+        //     return moment(date).format('DD.MM.YYYY');
+        // },
         disabledDates(date) {
             const today = moment(new Date()).add(-1,'days').toDate();
             today.setHours(0, 0, 0, 0);
             return date <= today;
         },
         changeSelected(index,e){
-            //console.log(this.usersInfo[parseInt(e.id)].duty);
             // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
             this.duty = this.usersInfo[parseInt(e.id)].duty
             this.dept = this.usersInfo[parseInt(e.id)].dept
@@ -983,6 +1003,11 @@ export default {
         getKBK(){
             this.axios.post('/document/getKBK', {}).then((response) => {
                 this.kbks = response.data.kbks;
+            });
+        },
+        getTaxAuthorityCode(){
+            this.axios.post('/document/getTaxAuthorityCode', {}).then((response) => {
+                this.taxAuthorityCode = response.data.result;
             });
         },
         getServicesFor(){
@@ -1087,7 +1112,7 @@ export default {
                     return;
                 }
             }
-            this.extra = true;
+            this.extraLoading = true;
             this.annul = true;
             this.addChange = false;
             this.results.status = 'Аннулирован';
@@ -1098,18 +1123,18 @@ export default {
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.results.status = response.data.status;
-                        this.results.stage = response.data.stage;
-                        this.extraLoading = false;
-                        this.addChange = false;
-                        this.annul = false;
-                        this.toForm = false;
-                        this.fillIn = false;
-                        this.saveDoc = false;
+                        this.results.status = response.data.status
+                        this.results.stage = response.data.stage
+                        this.extraLoading = false
+                        this.addChange = false
+                        this.annul = false
+                        this.toForm = false
+                        this.fillIn = false
+                        this.saveDoc = false
                     } else {
-                        this.addChange = false;
-                        this.annul = true;
-                        this.extraLoading = false;
+                        this.addChange = false
+                        this.annul = true
+                        this.extraLoading = false
                     }
                 });
             this.addChange = false;
@@ -1160,7 +1185,7 @@ export default {
                 });
         },
         addChangeForm() {
-            this.extraLoading = true;
+            this.extraLoading = true
             if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
@@ -1339,13 +1364,36 @@ export default {
         },
         clearInfo(data){
             for(let i=0; i<this.results.resDop.length; i++){
-                if(this.results.resDop[i].fullname === data){
-                    this.results.resDop[i].value = '';
-                    this.results.resDop[i].val = '';
-                    if(data==='Договор АХД'){
-                        this.contractAhd.fullName = '';
-                        this.contractAhd.isn = '';
-                    }
+                if(data === 'Договор АХД' && this.results.resDop[i].fullname === 'Договор АХД'){
+                    this.contractAhd.fullName = ''
+                    this.contractAhd.isn = ''
+                    this.results.resDop[i].value = ''
+                    this.results.resDop[i].val = ''
+                } else if(data === 'Согласованная котировка ДА' && this.results.resDop[i].fullname === 'Согласованная котировка ДА'){
+                    this.results.resDop[i].value = ''
+                    this.results.resDop[i].val = ''
+                    this.agreedQuotation.fullName = ''
+                    this.agreedQuotation.isn = ''
+                } else if(data === 'Приложение' && this.results.resDop[i].fullname === 'Приложение'){
+                    this.results.resDop[i].value = ''
+                    this.results.resDop[i].val = ''
+                    this.application.fullName = ''
+                    this.application.isn = ''
+                } else if(data === 'Номер договора' && this.results.resDop[i].fullname === 'Номер договора'){
+                    this.results.resDop[i].value = ''
+                    this.results.resDop[i].val = ''
+                    this.contractName.fullName = ''
+                    this.contractName.isn = ''
+                } else if(data === 'Наименование суда' && this.results.resDop[i].fullname === 'Наименование суда'){
+                    this.results.resDop[i].value = ''
+                    this.results.resDop[i].val = ''
+                    this.application.fullName = ''
+                    this.application.isn = ''
+                } else if(data === 'Бенефициар' && this.results.resDop[i].fullname === 'Бенефициар'){
+                    this.results.resDop[i].value = ''
+                    this.results.resDop[i].val = ''
+                    this.application.fullName = ''
+                    this.application.isn = ''
                 }
             }
         },
@@ -1362,6 +1410,10 @@ export default {
         orderedDocrows: function () {
             return _.orderBy(this.results.docrows, 'orderno')
         },
+        get () {
+            if(this.results.resDop[4].fullname === 'Вид затрат') {
+                console.log('4')
+            return this.results.resDop[4].val === '' ? null : this.results.resDop[4].val; } },
     },
     components: {
         ContractJournalModal,

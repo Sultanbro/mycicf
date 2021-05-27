@@ -497,13 +497,17 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/changeDocCoordination', 'DocumentManagementController@changeDocCoordination');
         Route::post('/document/getCounterpartyType', 'DocumentManagementController@getCounterpartyType')->name('document.get.counterparty.type');
         Route::post('/searchCounterparty', 'DocumentManagementController@searchCounterparty');
+        Route::post('/searchQuotation', 'DocumentManagementController@searchQuotation');
         Route::post('/searchDocument', 'DocumentManagementController@documentSearch');
+        Route::post('/searchContract', 'DocumentManagementController@searchContract');
         Route::post('/saveSubject', 'DocumentManagementController@saveSubject');
         Route::post('/document/getKNP', 'DocumentManagementController@getKNP')->name('document.get.knp');
         Route::post('/document/getKBK', 'DocumentManagementController@getKBK')->name('document.get.kbk');
         Route::post('/document/getCreationSources', 'DocumentManagementController@getCreationSources')->name('document.get.creation.sources');
         Route::post('/document/getStage', 'DocumentManagementController@getStage')->name('document.get.stage');
         Route::post('/document/getProductType', 'DocumentManagementController@getProductType')->name('document.product.type');
+        Route::post('/document/getProductTypeAhd', 'DocumentManagementController@getProductTypeAhd')->name('document.product.type.ahd');
+        Route::post('/document/getTaxAuthorityCode', 'DocumentManagementController@getTaxAuthorityCode')->name('document.tax.authority.code');
         Route::post('/document/getStagePassage', 'DocumentManagementController@getStagePassage')->name('document.stage.passages');
         Route::post('/document/getRegions', 'DocumentManagementController@getRegions')->name('document.get.regions');
         Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');

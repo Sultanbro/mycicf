@@ -104,7 +104,6 @@
                 none: false,
                 list: false,
                 index: 0,
-
             }
         },
         mounted() {

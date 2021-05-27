@@ -62,11 +62,26 @@
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" v-if="results.classisn !== '1287701'">
                                 <label>Тип документа:</label>
                                 <div>
                                     <treeselect v-model="document.classIsn" placeholder="Не выбрано"
                                                 :multiple="false" :options="documentType" :disable-branch-nodes="true"/>
+                                    <div>
+                                        <input
+                                            v-model="document.showCancelled"
+                                            type="checkbox"
+                                            true-value="Y"
+                                            false-value="N"
+                                        >Показывать аннулированные документы
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" v-if="results.classisn === '1287701'">
+                                <label>Тип документа:</label>
+                                <div>
+                                    <treeselect v-model="document.classIsn" placeholder="Не выбрано"
+                                                :multiple="false" :options="documentTypeAhd" :disable-branch-nodes="true"/>
                                     <div>
                                         <input
                                             v-model="document.showCancelled"
@@ -260,6 +275,7 @@ export default {
             loading: false,
             resultDoc: false,
             documentType: [],
+            documentTypeAhd: [],
             userList: [],
             options: [],
             stagePassages: [],
@@ -271,6 +287,7 @@ export default {
         this.getBranchData();
         this.getUserList();
         this.getProductType();
+        this.getProductTypeAhd();
         this.getStagePassage();
     },
     methods: {
@@ -348,6 +365,11 @@ export default {
         getProductType(){
             this.axios.post('/document/getProductType', {}).then((response) => {
                 this.documentType = response.data.result;
+            });
+        },
+        getProductTypeAhd(){
+            this.axios.post('/document/getProductTypeAhd', {}).then((response) => {
+                this.documentTypeAhd = response.data.result;
             });
         },
         getStagePassage(){

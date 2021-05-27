@@ -26,7 +26,7 @@
                         </div>
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                            <button class="btn btn-info"><i class="fa fa-check">Поиск</i></button>
+                            <button class="btn btn-info" @click="searchContract"><i class="fa fa-check">Поиск</i></button>
                         </div>
                         <div class="tex">
                             <button class="btn btn-success"><i class="fa fa-check">Ok</i></button>
@@ -60,20 +60,19 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <label>Стадия:</label>
-                                <select v-model="contract.stage" class="form-control">
-                                    <option value="">Все</option>
-                                    <option value="221101">Ввод данных</option>
-                                    <option value="221102">Подписан сторонами</option>
-                                    <option value="221103">Принят к учету</option>
-                                    <option value="221104">Утратил силу</option>
-                                    <option value="221105">Аннулирован</option>
-                                    <option value="1185361">Готов к выпуску</option>
+                                <label>Статус:</label>
+                                <select v-model="contract.status" class="form-control">
+                                    <option value="С">Оформление</option>
+                                    <option value="П">Подписан</option>
+                                    <option value="В">Выпущен</option>
+                                    <option value="Д">Прекращен страхователем</option>
+                                    <option value="Щ">Прекращен страховщиком</option>
+                                    <option value="А">Аннулирован</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <label>Страховой продукт:</label>
-                                <treeselect v-model="contract.insuranceProduct" placeholder="Не выбрано"
+                                <treeselect v-model="contract.productIsn" placeholder="Не выбрано"
                                             :multiple="false" :options="missingProducts" :disable-branch-nodes="true"/>
                             </div>
                             <div class="col-md-3">
@@ -87,7 +86,7 @@
                             <div class="col-md-2">
                                 <label>Подписан с:</label>
                                 <div>
-                                    <input v-model="contract.dateBeg" class="form-control"
+                                    <input v-model="contract.dateBegFrom" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -96,7 +95,7 @@
                             <div class="col-md-2">
                                 <label>Подписан до:</label>
                                 <div>
-                                    <input v-model="contract.dateEnd" class="form-control"
+                                    <input v-model="contract.dateBegTo" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -105,7 +104,7 @@
                             <div class="col-md-2">
                                 <label>Начало с:</label>
                                 <div>
-                                    <input v-model="contract.dateBegAction" class="form-control"
+                                    <input v-model="contract.dateEndFrom" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -114,7 +113,7 @@
                             <div class="col-md-2">
                                 <label>Начало до:</label>
                                 <div>
-                                    <input v-model="contract.dateEndAction" class="form-control"
+                                    <input v-model="contract.dateEndTo" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -143,9 +142,21 @@
                             <div class="col-md-4">
                                 <label>Куратор (подразделения/cотрудник):</label>
                                 <div>
-                                    <treeselect v-model="contract.curator" placeholder="Не выбрано" :multiple="false"
+                                    <treeselect v-model="contract.emplIsn" placeholder="Не выбрано" :multiple="false"
                                                 :options="userList" :disable-branch-nodes="true"/>
                                 </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label>Стадия:</label>
+                                <select v-model="contract.stage" class="form-control">
+                                    <option value="">Все</option>
+                                    <option value="221101">Ввод данных</option>
+                                    <option value="221102">Подписан сторонами</option>
+                                    <option value="221103">Принят к учету</option>
+                                    <option value="221104">Утратил силу</option>
+                                    <option value="221105">Аннулирован</option>
+                                    <option value="1185361">Готов к выпуску</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -160,23 +171,29 @@
                                         <tbody>
                                         <tr>
                                             <td>№</td>
-                                            <td>Стадия</td>
-                                            <td>Дата</td>
-                                            <td>Вид</td>
+                                            <td>ID</td>
                                             <td>Продукт</td>
-                                            <td>Валюта</td>
-                                            <td>Премия</td>
+                                            <td>Дата нач.</td>
+                                            <td>Дата окон.</td>
                                             <td>Страхователь</td>
+                                            <td>Статус</td>
                                             <td>Куратор</td>
-                                            <td>Подразделение</td>
-                                            <td>Дата согласования</td>
+                                            <td>Премия оплаченная</td>
+                                            <td>Премия начисленная</td>
+                                            <td>ISN</td>
                                         </tr>
                                         <tr v-for="(res, index) in searchingResult" :key="index">
                                             <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(res, index)"></td>
-                                            <td><div @click="selectCounterparty(res, index)">{{res.lastName}} {{res.firstName}} {{res.parentName}}</div></td>
-                                            <td>{{res.birthday}}</td>
-                                            <td>{{res.iin}}</td>
-                                            <td>{{res.classIsn}}</td>
+                                            <td><div @click="selectQuotes(res, index)">{{res.id}}</div></td>
+                                            <td>{{res.productName}}</td>
+                                            <td>{{res.dateBeg}}</td>
+                                            <td>{{res.dateEnd}}</td>
+                                            <td>{{res.clientName}}</td>
+                                            <td>{{res.status}}</td>
+                                            <td>{{res.emplName}}</td>
+                                            <td>{{res.factPrem}}</td>
+                                            <td>{{res.planPrem}}</td>
+                                            <td>{{res.isn}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -201,6 +218,7 @@ export default {
     props: {
         results: Object,
         recordingCounterparty: Object,
+        contractName: Object,
     },
     data() {
         return {
@@ -208,13 +226,15 @@ export default {
                 id: '',
                 blankSerNo: '',
                 stage: '',
-                dateBeg: moment(new Date()).format('DD.MM.YYYY'),
-                dateEnd: '',
-                dateBegAction: '',
-                dateEndAction: '',
+                status: '',
+                dateBegFrom: moment(new Date()).format('DD.MM.YYYY'),
+                dateBegTo: '',
+                dateEndFrom: '',
+                dateEndTo: '',
                 dateSignFrom: '',
                 dateSignTo: '',
-                curator: this.results.emplisn,
+                productIsn: '',
+                emplIsn: this.results.emplisn,
             },
             docDate: new Date(),
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
@@ -236,6 +256,56 @@ export default {
         this.getStage();
     },
     methods: {
+        searchContract() {
+            this.loading = true;
+            let data = {
+                contract: this.contract,
+            }
+            this.axios.post('/searchContract', data).then((response) => {
+                if(response.data.error) {
+                    this.loading = false;
+                    alert(response.data.error);
+                }
+                this.searchingResult = response.data.result
+                this.loading = false;
+                if(this.searchingResult.length === 1){
+                    if(this.searchingResult[0].isn === null){
+                    }
+                    this.contractName.isn = this.searchingResult[0].isn
+                    this.contractName.fullName = this.searchingResult[0].id
+                }
+            });
+        },
+        onChange(e, res){
+            this.contractName.isn = res.isn
+            this.contractName.fullName = res.id
+        },
+        selectQuotes(res, id){
+            this.contractName.isn = res.isn
+            this.contractName.fullName = res.id
+            this.getInfo();
+        },
+        changeCheck(res, id){
+            if(this.searchingResult[id] !== id || this.searchingResult[id] === id){
+                this.contractName.isn = ''
+                this.contractName.fullName = ''
+            }
+            this.contractName.isn = res.isn
+            this.contractName.fullName = res.id
+        },
+        getInfo(){
+            this.loading = true;
+            if(this.recordingCounterparty.type === 'Номер договора'){
+                for(let i=0; i<this.results.resDop.length; i++){
+                    if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
+                        this.results.resDop[i].value = this.contractName.fullName
+                        this.results.resDop[i].val = this.contractName.isn
+                    }
+                }
+            }
+            this.$parent.$refs.modalContract.click()
+            this.loading = false;
+        },
         getBranchData() {
             this.axios.post('/getSearchBranch', {}).then(response => {
                 this.options = response.data.result;

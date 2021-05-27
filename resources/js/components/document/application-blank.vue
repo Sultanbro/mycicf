@@ -359,7 +359,7 @@
                     </thead>
                     <tbody class="date-color">
                     <tr v-for="(result, index) in results.resDop" :key="index">
-                        <th scope="row">{{index + 1}}</th>
+                        <td scope="row">{{index + 1}}</td>
                         <td>{{result.fullname}}</td>
                         <td>
                             <div v-if="result.fullname === 'Согласующий 1' || result.fullname === 'Согласующий 2'
@@ -409,10 +409,10 @@
                                 </div>
                             </div>
                         </td>
-                        <th>
+                        <td>
                             <input type="text" rows="2" v-model="result.remark"
                                    class="form-control" :disabled="addChange">
-                        </th>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -827,10 +827,10 @@
             //         });
             // },
             OpenModal (doc) {
-                this.preloader(true);
-                this.changeMatch.status = false;
-                this.preloader(true);
-                this.changeMatch.status = false;
+                this.preloader(true)
+                this.changeMatch.status = false
+                this.preloader(true)
+                this.changeMatch.status = false
                 if(doc === this.listDocIsn){
                     if(this.listDocIsn === null){
                         for(let i=0; i<this.results.result.length; i++){
@@ -842,8 +842,8 @@
                     this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
                         if(response.data.success){
                             this.coordination = response.data.response;
-                            this.preloader(false);
-                            this.$refs.modalButton.click();
+                            this.preloader(false)
+                            this.$refs.modalButton.click()
                         }else{
                             this.attachments = [];
                         }
@@ -860,41 +860,26 @@
                 return;
             },
             clearInfo(data){
-                 if(data === 'ФИО работника'){
                     for(let i=0; i<this.results.docrows.length; i++){
-                        if(this.results.docrows[i].fieldname === data){
-                            this.results.docrows[i].value_name = '';
-                            this.results.docrows[i].value = '';
+                        if(this.results.docrows[i].fieldname === data && data === 'ФИО работника'){
+                            this.results.docrows[i].value_name = ''
+                            this.results.docrows[i].value = ''
                             this.worker.fullName = ''
                             this.worker.isn = ''
+                        } else if(this.results.docrows[i].fieldname === data && data === 'Обходной лист'){
+                            this.results.docrows[i].value_name = ''
+                            this.results.docrows[i].value = ''
+                            this.bypassSheet.fullName = ''
+                            this.bypassSheet.isn = ''
                         }
                     }
-                } else if(data === 'Обходной лист'){
-                     for(let i=0; i<this.results.docrows.length; i++){
-                         if(this.results.docrows[i].fieldname === data){
-                             this.results.docrows[i].value_name = '';
-                             this.results.docrows[i].value = '';
-                             this.bypassSheet.fullName = ''
-                             this.bypassSheet.isn = ''
-                         }
-                     }
-                 }
             },
             preloader(show){
                 if(show){
-                    document.getElementById('preloader').style.display = 'flex';
+                    document.getElementById('preloader').style.display = 'flex'
                 }else{
-                    document.getElementById('preloader').style.display = 'none';
+                    document.getElementById('preloader').style.display = 'none'
                 }
-            },
-            successNotify(title = 'Success notification', text = 'Some long description at search begin'){
-                this.$parent.notify('success', title, text);
-            },
-            warningNotify(title = 'Warning notification', text = 'Some long description at search begin'){
-                this.$parent.notify('warning', title, text);
-            },
-            errorNotify(title = 'Error notification', text = 'Some long description at search begin') {
-                this.$parent.notify('error', title, text);
             },
             // }, :key="`${index}-${docrow.value}`"
         },

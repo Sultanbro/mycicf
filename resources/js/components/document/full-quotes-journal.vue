@@ -42,7 +42,7 @@
                             <div class="col-md-6">
                                 <label>Номер котировки:</label>
                                 <div>
-                                    <input type="text" v-model="quotes.number"
+                                    <input type="text" v-model="quotes.id"
                                            class="form-control">
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                             <div class="col-md-2">
                                 <label>Дата котировки с:</label>
                                 <div>
-                                    <input v-model="quotes.dateBeg" class="form-control"
+                                    <input v-model="quotes.dateSignFrom" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -78,7 +78,7 @@
                             <div class="col-md-2">
                                 <label>Дата котировки до:</label>
                                 <div>
-                                    <input v-model="quotes.dateEnd" class="form-control"
+                                    <input v-model="quotes.dateSignTo" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -87,16 +87,16 @@
                             <div class="col-md-2">
                                 <label>Начало действий с:</label>
                                 <div>
-                                    <input v-model="quotes.dateBegAction" class="form-control"
+                                    <input v-model="quotes.dateBegFrom" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label>Начало действий до:</label>
+                                <label>Начало действий по:</label>
                                 <div>
-                                    <input v-model="quotes.dateEndAction" class="form-control"
+                                    <input v-model="quotes.dateBegTo" class="form-control"
                                            type="tel"
                                            v-mask="'##.##.####'"
                                     />
@@ -106,7 +106,7 @@
                         <div class="row pt-2">
                             <div class="col-md-3">
                                 <label>Страховой продукт:</label>
-                                <treeselect v-model="quotes.insuranceProduct" placeholder="Не выбрано"
+                                <treeselect v-model="quotes.productIsn" placeholder="Не выбрано"
                                             :multiple="false" :options="missingProducts" :disable-branch-nodes="true"/>
                             </div>
                             <div class="col-md-2">
@@ -134,7 +134,7 @@
                                 <label>Подразделения для расчета тарифа:</label>
                                 <div>
                                     <treeselect
-                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="quotes.subdivision"/>
+                                        :multiple="false" :options="options" :placeholder="'Выберите'" v-model="quotes.deptIsn"/>
                                 </div>
                             </div>
                         </div>
@@ -150,25 +150,22 @@
                                         <tbody>
                                         <tr>
                                             <td>№</td>
-                                            <td>Статус</td>
-                                            <td>Стадия</td>
-                                            <td>Дата</td>
-                                            <td>Вид</td>
+                                            <td>ID</td>
+                                            <td>Дата котировки</td>
                                             <td>Продукт</td>
-                                            <td>Валюта</td>
-                                            <td>Премия</td>
                                             <td>Страхователь</td>
                                             <td>Куратор</td>
-                                            <td>Подразделение</td>
-                                            <td>Дата согласования</td>
+                                            <td>ISN</td>
                                         </tr>
-<!--                                        <tr v-for="(res, index) in searchingResult" :key="index">-->
-<!--                                            <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(res, index)"></td>-->
-<!--                                            <td><div @click="selectCounterparty(res, index)">{{res.lastName}} {{res.firstName}} {{res.parentName}}</div></td>-->
-<!--                                            <td>{{res.birthday}}</td>-->
-<!--                                            <td>{{res.iin}}</td>-->
-<!--                                            <td>{{res.classIsn}}</td>-->
-<!--                                        </tr>-->
+                                        <tr v-for="(res, index) in searchingResult" :key="index">
+                                            <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(res, index)"></td>
+                                            <td><div @click="selectQuotes(res, index)">{{res.id}}</div></td>
+                                            <td>{{res.dateSign}}</td>
+                                            <td>{{res.productName}}</td>
+                                            <td>{{res.clientName}}</td>
+                                            <td>{{res.emplName}}</td>
+                                            <td>{{res.isn}}</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -192,21 +189,24 @@ name: "full-quotes-journal",
     props: {
         results: Object,
         recordingCounterparty: Object,
+        agreedQuotation: Object
     },
     data() {
         return {
             quotes: {
-                number: '',
+                id: '',
                 type: '',
                 status: '',
-                dateBeg: moment(new Date()).format('DD.MM.YYYY'),
-                dateEnd: '',
-                dateBegAction: '',
-                dateEndAction: '',
-                curator: '',
-                subdivision: '',
+                dateSignFrom: moment(new Date()).format('DD.MM.YYYY'),
+                dateSignTo: '',
+                dateBegFrom: '',
+                dateBegTo: '',
+                deptIsn: '',
                 creationSource: '',
-                insuranceProduct: '',
+                productIsn: '',
+                taskIsn: '',
+                pageNo: '',
+                emplIsn: this.results.emplisn,
             },
             docDate: new Date(),
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
@@ -217,18 +217,67 @@ name: "full-quotes-journal",
             missingProducts: [],
             stages: [],
             options: null,
+            searchingResult: {},
         }
     },
     created() {
         this.getBranchData();
-        // this.getUserList();
         this.getCreationSources();
         this.getMissingProduct();
         this.getStage();
     },
     methods: {
         searchQuotes() {
-
+            this.loading = true;
+            let data = {
+                quotes: this.quotes,
+            }
+            this.axios.post('/searchQuotation', data).then((response) => {
+                if(response.data.error) {
+                    this.loading = false;
+                    alert(response.data.error);
+                }
+                this.searchingResult = response.data.result
+                this.loading = false;
+                if(this.searchingResult.length === 1){
+                    if(this.searchingResult[0].isn === null){
+                    }
+                    this.agreedQuotation.isn = this.searchingResult[0].isn
+                    this.agreedQuotation.fullName = this.searchingResult[0].id
+                }
+            });
+        },
+        onChange(e, res){
+            this.agreedQuotation.isn = res.isn
+            this.agreedQuotation.fullName = res.id
+        },
+        selectQuotes(res, id){
+            this.agreedQuotation.isn = res.isn
+            this.agreedQuotation.fullName = res.id
+            this.getInfo();
+        },
+        changeCheck(res, id){
+            if(this.searchingResult[id] !== id || this.searchingResult[id] === id){
+                this.agreedQuotation.isn = ''
+                this.agreedQuotation.fullName = ''
+            }
+            this.agreedQuotation.isn = res.isn
+            this.agreedQuotation.fullName = res.id
+        },
+        getInfo(){
+            this.loading = true;
+            if(this.recordingCounterparty.type === 'Согласованная котировка ДА'){
+                for(let i=0; i<this.results.resDop.length; i++){
+                    if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
+                        // this.agreedQuotation.fullName = this.counterparty.fullName
+                        // this.agreedQuotation.isn = this.counterparty.isn
+                        this.results.resDop[i].value = this.agreedQuotation.fullName
+                        this.results.resDop[i].val = this.agreedQuotation.isn
+                    }
+                }
+            }
+            this.$parent.$refs.modalQuotes.click()
+            this.loading = false;
         },
         getBranchData() {
             this.axios.post('/getSearchBranch', {}).then(response => {
@@ -241,10 +290,6 @@ name: "full-quotes-journal",
                 this.userList = response.data.result;
                 this.isLoading = false;
             });
-        },
-        getDatePicker() {
-            const vm = this;
-            vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
         },
         getCreationSources(){
             this.axios.post('/document/getCreationSources', {}).then((response) => {
