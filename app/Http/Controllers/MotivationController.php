@@ -11,19 +11,19 @@ class MotivationController extends Controller
         return view('motivation');
     }
 
-    /*
-     * Category   - 1 (головной)
-     * PercPlan   - Сборы с нарастанием (>80%)
-     * PlanFM     - Премии оплаченные (>50%)
-     * TotalProcK - Себестоимость
-     * MotProc    - % мотивации
-     * SumPVTSF     - Сборы ОГПО физ.лица
-     * (SumFJury - SumProcFJurY + SumFJurN)  - Чистые сборы
-     * EmplAgrDZ31 - Дебиторская задолженность
+    /*Все что тянется с КИАС
+     * Category - 1 (головной)
+     * PercPlan         - Сборы с нарастанием (>80%)
+     * PlanFM           - Премии оплаченные (>50%)
+     * TotalProcK       - Себестоимость
+     * MotProc          - % мотивации
+     * SumPVTSF         - Сборы ОГПО физ.лица
+     * (SumFJury        - SumProcFJurY + SumFJurN)  - Чистые сборы
+     * EmplAgrDZ31      - Дебиторская задолженность
      *
      * Category - 1 (филиал)
      * AmountF           - Премии оплаченные
-     * PlanP             - План
+     * Plan              - План
      * Vypolnenie        - Выполнение
      * Sebestoimost      - Себестоимость
      * EmplAgrDZ31Proc   - Дебиторская задолженность
@@ -32,20 +32,33 @@ class MotivationController extends Controller
      * Category - 2 (филиал)
      * AmountF           - Премии оплаченные
      * PlanP             - План
-     * SharePlan        - Выполнение*
+     * SharePlan         - Выполнение
      * Rentability       - Себестоимость
      * DolyaVTSFis       - Доля ОГПО физических лиц (<20%)
      * MotProc           - % мотивации
+     * PremMOT           - Премия
      *
      * Category - 3 (головной)
      * AmountF           - Премии оплаченные
-     * TypePrem -       ОГПО
-     * Mot12
-     * TotalPrem -
+     * TotalPrem         - К оплате по ОГПО
      *
+     * Category - 4 (филиал)
+     * AmountF           - Премии оплаченные
+     * Plan              - План
+     * PercPlan          - Выполнение
+     * SumVTS123         - Сборы по ОГПО ВТС
+     * MotVTS123         - Мотивация по ОГПО ВТС
+     * DolyaVTSFis       - Доля ОГПО физических лиц (<20%)
+     * MOTOther          - Мотивация по иным классам
+     * QU                - Коэффициент Выплат
      *
-     *
-     *
+     * Category - 5 (филиал)
+     * AmountF           - Премии оплаченные
+     * Plan              - Базовый план
+     * PlanM             - План менеджеров
+     * PercPlan          - Выполнение базового плана
+     * CostPrice         - Себестоимость
+     * MotSum       - Размер мотивации
      */
     public function getMotivationList(Request $request, KiasServiceInterface $kias){
         $success = true;
