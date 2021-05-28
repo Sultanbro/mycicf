@@ -127,7 +127,7 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 4 && category === 3"
+                            v-else-if="index === 6 && category === 3"
                             v-html="motivation.types"
                         >
                         </td>
@@ -201,8 +201,12 @@
                         >
                             {{motivation.types}}
                         </td>
-                        <td v-else v-html="motivation.types"></td>
-                        <td>{{motivation.sum}}</td>
+                        <td v-else v-html="motivation.types">
+                        <td>
+                            <span v-for="sum in motivation.sum">
+                                <span v-if="sum">{{sum}}</span>
+                            </span>
+                        </td>
                         <td>
                             <i class="fa fa-lg fa-circle motivation" :style="{color : motivation.color}" aria-hidden="true"></i>
                         </td>

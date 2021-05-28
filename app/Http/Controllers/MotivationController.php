@@ -88,12 +88,12 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
-                        'sum' => ($response->Mot->row->PercPlan).'%'.' '."/".' '.(number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')),
+                        'sum' => (number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')).' '."/".' '.($response->Mot->row->PercPlan).'%',
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
-                        'sum' => ($response->Mot->row->PlanFM).'%'.' '."/".' '.(number_format((double)$response->Mot->row->SumP, 0, '.', ' ')),
+                        'sum' => (number_format((double)$response->Mot->row->SumP, 0, '.', ' ')).' '."/".' '.($response->Mot->row->PlanFM).'%',
                         'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
@@ -106,7 +106,7 @@ class MotivationController extends Controller
                         'sum' => (number_format(
                             (double)$response->Mot->row->SumFJurY
                             - (double)$response->Mot->row->SumProcFJurY
-                            + (double)$response->Mot->row->SumFJurN )),
+                            + (double)$response->Mot->row->SumFJurN, 0, '.', ' ')),
                         'color' => 'transparent',
                     ],
                     [
@@ -128,7 +128,7 @@ class MotivationController extends Controller
                 ];
                 //1 категория филиал
                 foreach ($list as $item => $elem){
-                    if($elem['sum'] === '% / 0'){
+                    if($elem['sum'] === '0 / %'){
                         $category = 1.1;
                         $list = [
                             [
@@ -188,8 +188,25 @@ class MotivationController extends Controller
                 break;
             case 3 :
                 $category = 3;
-                $mot_sum = (number_format((double)$response->Mot->row[0]->TotalPrem + $response->Mot->row[1]->TotalPrem, 0, '.', ' ') ?? 0);
+                // Премия оплаченные
+                $sumPerc  = (double)$response->Mot->row[0]->AmountF + $response->Mot->row[1]->AmountF;
+                //План / 100%, который потом будет делить $sumPerc
+                $percentPerc = (double)$response->Mot->row[0]->Plan * 0.01;
+
+                $mot_sum = (number_format((double)$response->Mot->row[0]->Plan * 0.8, 0, '.', ' ')) <
+                    (number_format((double)$sumPerc, 0, '.', ' ')) ? (number_format((double)$response->Mot->row[0]->TotalPrem + $response->Mot->row[1]->TotalPrem, 0, '.', ' ')) : 0;
+
                 $list = [
+                    [
+                        'types' => 'План',
+                        'sum' => (number_format((double)$response->Mot->row[0]->Plan, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Выполнение( >80%)',
+                        'sum' => (number_format((double)$sumPerc, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$sumPerc / $percentPerc, 0, '.', ' ') ?? 0).'%',
+                        'color' => (number_format((double)$response->Mot->row[0]->Plan * 0.8, 0, '.', ' ') ?? 0) < (number_format((double)$sumPerc, 0, '.', ' ')) ? 'green' : 'red',
+                    ],
                     [
                         'types' => '<b>ОГПО<b>',
                         'color' => 'transparent',
@@ -220,7 +237,14 @@ class MotivationController extends Controller
                     ],
                     [
                         'types' => '% мотивации',
-                        'sum' => '9%',
+                        'sum' => array (
+                                $response->Mot->row[1]->AmountF < 500000 ? '5%': false,
+                                $response->Mot->row[1]->AmountF > 500001 &&
+                                $response->Mot->row[1]->AmountF < 1000000 ? '7%':false,
+                                $response->Mot->row[1]->AmountF > 1000001 &&
+                                $response->Mot->row[1]->AmountF < 3000000 ? '9%':false,
+                                $response->Mot->row[1]->AmountF > 3000001 ? '11%':false
+                        ),
                         'color' => 'transparent',
                     ],
                     [
@@ -298,7 +322,7 @@ class MotivationController extends Controller
                     ],
                     [
                         'types' => 'Себестоимость*',
-                        'sum' => (number_format((double)$response->Mot->row->CostPrice, 0, '.', ' ') ?? 0).'%',
+                        'sum' => ((double)$response->Mot->row->CostPrise ?? 0).'%',
                         'color' => 'transparent',
                     ],
                     [
