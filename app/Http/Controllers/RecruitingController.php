@@ -91,6 +91,8 @@ class RecruitingController extends Controller
             $req->job_chart = $req->getChiefsDicti($req->job_chart);
             $req->have_car = $req->getChiefsDicti($req->have_car);
             $req->driver_category = $req->getChiefsDicti($req->driver_category);
+            $req->social_packets = $req->getChiefsDicti($req->social_packets);
+            $req->languages = $req->getChiefsDicti($req->languages);
 //            $req->email_chief = $recruiting_emails[0];
 
 
@@ -98,6 +100,7 @@ class RecruitingController extends Controller
 //            $response =  $req->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
 //            $req->recruiter_mail = explode(' ', $response->Mail);
         }
+
         return response()->json([
             'success' => $requests ? true : false,
             'result' => $requests
@@ -566,6 +569,8 @@ class RecruitingController extends Controller
         $recruiting->interview_stage = $request->candidat['interviewStage'];
         $recruiting->application_status = $request->candidat['status'];
         $recruiting->email_chief = $request->candidat['chief_mail'];
+        $recruiting->languages = $request->candidat['language'];
+        $recruiting->social_packets = $request->candidat['socPacket'];
         $this->sendFixedMail();
 //        $recruiting->email_chief = authEmail;
 

@@ -45,7 +45,7 @@ class RecruitingBranches extends Command
         try{
             $kias = new Kias();
             $kias->initSystem();
-            $data = [822411,1764941,1764881,750461,47,1777411,482281,1765371,1765281,1764851,482281,815141,482281,1765001];
+            $data = [822411,1764941,1764881,750461,47,1777411,482281,1765371,1765281,1764851,482281,815141,482281,1765001,1765311];
 
             foreach($data as $key => $value) {
                 $response = $kias->getDictiList($value);

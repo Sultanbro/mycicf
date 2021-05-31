@@ -216,11 +216,11 @@
                     <!--Язык и уровень владения-->
                     <div>
                         <div class="recruiting-tripple-block-container" v-for="newLanguageBlock in newLanguageBlocks">
-                            <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>
+                            <div class="recruiting-tripple-block col-md-4">Язык и уровень владения:</div>
                             <div class="recruiting-tripple-block col-md-4">
                                 <select class="recruiting-select" v-model="newLanguageBlock.language">
-                                    <option v-for="language in dicti.language" :value="language.Value[0]">
-                                        {{language.Label[0]}}
+                                    <option v-for="(language, index) in newLanguageBlock.languages">
+                                        {{language}}
                                     </option>
                                 </select>
                             </div>
@@ -236,7 +236,7 @@
 <!--                        <button @click="testpush">Push to array</button>-->
 
                         <div class="recruiting-simple-block-container">
-                            <div class="recruiting-simple-block ml-2 mr-2" @click="addLanguage">
+                            <div class="recruiting-simple-block ml-2 mr-2" v-if="this.newLanguageBlocks[this.languagesCounter - 1].languages.length !== 1" @click="addLanguage">
                                 <i class="fas fa-plus-circle"></i>
                                 <span>Добавить язык</span>
                             </div>
@@ -251,7 +251,7 @@
 
 
                     <!--Оплата труда-->
-                    <div>Оплата труда</div>
+                    <div class="col-md-12">Оплата труда</div>
                     <div class="recruiting-tripple-block-container">
                         <div class="recruiting-tripple-block-center col-md-7">На испытательный срок и после испытательного срока:</div>
                         <div class="recruiting-tripple-block col-md-5">
@@ -304,10 +304,10 @@
                     </div>
                     <div>
                         <div class="recruiting-tripple-block-container" v-for="newSocialpacketBlock in newSocialpacketBlocks">
-                            <div class="recruiting-tripple-block-center col-md-4">Социальный пакет</div>
+                            <div class="recruiting-tripple-block col-md-4">Социальный пакет</div>
                             <div class="recruiting-tripple-block col-md-4">
                                 <select class="recruiting-select" v-model="newSocialpacketBlock.packet">
-                                    <option v-for="packet in dicti.socPacket" :value="packet.Value[0]">
+                                    <option v-for="(packet, index) in dicti.socPacket" :value="packet.Value[0]">
                                         {{packet.Label[0]}}
                                     </option>
                                 </select>
@@ -323,7 +323,7 @@
                         </div>
                     </div>
                     <div class="recruiting-simple-block-container">
-                        <div class="recruiting-simple-block ml-2 mr-2" @click="addSocialPacket">
+                        <div class="recruiting-simple-block ml-2 mr-2" v-if="this.socialPacketCounter !== dicti.socPacket.length" @click="addSocialPacket">
                             <i class="fas fa-plus-circle"></i>
                             <span>Добавить Соц. пакет</span>
                         </div>
@@ -846,21 +846,10 @@
 
                                 <!--Язык и уровень владения-->
                                 <div>
-                                    <div class="recruiting-tripple-block-container" v-for="newLanguageBlockBackward in newLanguageBlocks">
-                                        <div class="recruiting-tripple-block-center col-md-4">Язык и уровень владения:</div>
-                                        <div class="recruiting-tripple-block col-md-4">
-                                            <select class="recruiting-select" v-model="newLanguageBlockBackward.language" disabled>
-                                                <option v-for="(language, key) in newLanguageBlockBackward.languages" :value="language" :key="key">
-                                                    {{language}}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="recruiting-tripple-block col-md-4">
-                                            <select class="recruiting-select" v-model="newLanguageBlockBackward.level" disabled>
-                                                <option v-for="(level, key) in languageLevel" :value="level" :key="key">
-                                                    {{level}}
-                                                </option>
-                                            </select>
+                                    <div class="" v-for="newLanguageBlockBackward in newLanguageBlocks">
+                                        <div class="recruiting-tripple-block col-md-4">Язык и уровень владения:</div>
+                                        <div class="recruiting-tripple-block d-flex justify-content-center">
+                                            <div class="recruiting-div-like-select">{{candidatBackward.languages}}</div>
                                         </div>
                                         <hr>
                                     </div>
@@ -912,21 +901,10 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="recruiting-tripple-block-container" v-for="newSocialpacketBlockBackward in newSocialpacketBlocksBackward">
-                                        <div class="recruiting-tripple-block-center col-md-4">Социальный пакет</div>
-                                        <div class="recruiting-tripple-block col-md-4">
-                                            <select class="recruiting-select" v-model="newSocialpacketBlockBackward.packet" disabled>
-                                                <option v-for="(packet, key) in newSocialpacketBlockBackward.packets" :value="packet" :key="key">
-                                                    {{packet}}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="recruiting-tripple-block col-md-4">
-                                            <select class="recruiting-select" v-model="newSocialpacketBlockBackward.level" disabled>
-                                                <option v-for="(level, key) in socialPacketLvl" :value="level" :key="key">
-                                                    {{level}}
-                                                </option>
-                                            </select>
+                                    <div v-for="newSocialpacketBlockBackward in newSocialpacketBlocksBackward">
+                                        <div class="recruiting-tripple-block col-md-4">Социальный пакет</div>
+                                        <div class="recruiting-tripple-block d-flex justify-content-center">
+                                            <div class="recruiting-div-like-select">{{candidatBackward.socPackets}}</div>
                                         </div>
                                         <hr>
                                     </div>
@@ -1095,7 +1073,11 @@
                     manualPhoneNumber: '',
                     status: 'Открыта',
                     chief_mail: null,
+                    language: '',
+                    socPacket: '',
                 },
+                languagesBeforeSaving: [],
+                socPacketsBeforeSaving: [],
                 recruitingData: {
                     id: '',
                     interviewDate: '',
@@ -1214,11 +1196,7 @@
                 newSocialpacketBlocks: [{
                     packet: null,
                     level: null,
-                    packets: [
-                        'Первый соц. пакет',
-                        'Второй соц. пакет',
-                        'Третий соц. пакет',
-                    ],
+                    packets: [],
                 }],
                 packets: [
                     'Первый соц. пакет',
@@ -1230,7 +1208,7 @@
                     'Средний соц.пакет',
                     'Продвинутый соц.пакет',
                 ],
-                recruitingTabs: 2,
+                recruitingTabs: 1,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1381,6 +1359,8 @@
                     dateOfConclusionDOU: '',
                     dateOfConclusionTD: '',
                     commentary: '',
+                    languages: '',
+                    socPackets: '',
                 },
                 languageAndLvlBackward:
                     [{
@@ -1900,6 +1880,8 @@
                this.candidatBackward.manualIIN = this.candidateManualDataLocal.candidate_iin;
                this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
                this.candidatBackward.chiefMail = this.person.email_chief;
+               this.candidatBackward.languages = this.person.languages;
+               this.candidatBackward.socPackets = this.person.social_packets;
                this.recruitingData.interviewDate = this.person.interview_date;
                this.recruitingData.interviewTime = this.person.interview_time;
                this.recruitingData.interviewResult = this.person.interview_result;
@@ -1981,6 +1963,8 @@
                                 this.dicti.haveCar = response.data.haveCar;
                                 this.dicti.driverCard = response.data.driverCard;
                                 this.dicti.socPacket = response.data.socPacket;
+                                this.newSocialpacketBlocks.packets = this.dicti.socPacket[0].Label[0];
+                                console.log(this.newSocialpacketBlocks.packets);
                                 // Сохранение почты шефа
                                 this.candidat.chief_mail = response.data.chief_mail[0];
                                 // this.candidat.chief_mail = 'qwerty';
@@ -2150,6 +2134,8 @@
                                 this.dicti.driverCard = response.data.driverCard;
                                 this.dicti.socPacket = response.data.socPacket;
                                 this.candidat.chief_mail = response.data.chief_mail[0];
+                                this.newSocialpacketBlocks.packets = this.dicti.socPacket[0].Label[0];
+                                console.log(this.newSocialpacketBlocks.packets);
                                 // console.log(this.dicti.driverCard[0].Label[0]);
 
                                 // this.driverCardOption = this.dicti.driverCard[0].Label[0];
@@ -2583,6 +2569,31 @@
                 // Добавляем должность и имя руководителя, заполнившего заявку
                 this.candidat.chiefsFullname = this.user.branch.fullname;
                 this.candidat.chiefsDuty = this.user.branch.duty;
+                // Запись  языков и пакет в объект candidat
+                let languagePushCounter = 0;
+                let packetPushCounter = 0;
+                for (var i = 1;i <= this.newLanguageBlocks.length; i++){
+                    console.log('Итерация');
+                    this.languagesBeforeSaving.push(this.newLanguageBlocks[languagePushCounter].language, this.newLanguageBlocks[languagePushCounter].level);
+                    languagePushCounter++;
+                    this.candidat.language = this.languagesBeforeSaving.toString();
+                    console.log(languagePushCounter + ' ' + 'Счетчик push');
+                }
+                for (var i = 1;i <= this.newSocialpacketBlocks.length; i++){
+                    console.log('Итерация');
+                    let socLabel = '';
+                    for(var t = 0; t < Object.keys(this.dicti.socPacket).length; t++){
+                        let socValue = this.dicti.socPacket[t].Value[0];
+                        if(socValue == this.newSocialpacketBlocks[packetPushCounter].packet){
+                            socLabel = this.dicti.socPacket[t].Label[0];
+                        }
+                    }
+
+                    this.socPacketsBeforeSaving.push(socLabel, this.newSocialpacketBlocks[packetPushCounter].level);
+                    packetPushCounter++;
+                    this.candidat.socPacket = this.socPacketsBeforeSaving.toString();
+                    console.log(packetPushCounter + ' ' + 'Счетчик packet push');
+                }
                 //  Отправка данных на поиск кандидата
                 for (var i = 1;i <= this.candidat.quantityPeople;i++){
                     this.axios.post('/recruiting/saveCandidat',{candidat: this.candidat, languages: this.newLanguageBlocks})
@@ -2652,13 +2663,29 @@
                 if(array.includes(type)) return true
                 else return false;
             },
+            testSaveLanguageAndPacket(){
+                let languagePushCounter = 0;
+                let packetPushCounter = 0;
+                for (var i = 1;i <= this.newLanguageBlocks.length; i++){
+                    console.log('Итерация');
+                    this.candidat.language.push(this.newLanguageBlocks[languagePushCounter].language, this.newLanguageBlocks[languagePushCounter].level);
+                    languagePushCounter++;
+                    console.log(languagePushCounter + ' ' + 'Счетчик push');
+                }
+                for (var i = 1;i <= this.newSocialpacketBlocks.length; i++){
+                    console.log('Итерация');
+                    this.candidat.socPacket.push(this.newSocialpacketBlocks[packetPushCounter].packet, this.newSocialpacketBlocks[packetPushCounter].level);
+                    packetPushCounter++;
+                    console.log(packetPushCounter + ' ' + 'Счетчик packet push');
+                }
+            },
             // Проверка на добавление языка в заявке на поиск
             addLanguage() {
-
-                if (this.newLanguageBlocks[0].language !== null){
-                    if (this.languagesCounter == 1){
+                if (this.newLanguageBlocks[this.languagesCounter - 1].language !== null){
+                    if (this.languagesCounter !== this.newLanguageBlocks.length - 1){
                         this.languagesCounter++;
                         if(this.newLanguageBlocks.length < this.languages.length) {
+                            console.log();
                             const lastBlock = this.newLanguageBlocks[this.newLanguageBlocks.length - 1];
                             this.newLanguageBlocks.push({
                                 language : null,
@@ -2667,23 +2694,23 @@
                             });
                         }
                     }
-                    else if (this.languagesCounter == 2){
-                        if (this.newLanguageBlocks[1].language !== null){
-                            console.log(this.newLanguageBlocks[0].language);
-                            this.languagesCounter++;
-                            if(this.newLanguageBlocks.length < this.languages.length) {
-                                const lastBlock = this.newLanguageBlocks[this.newLanguageBlocks.length - 1];
-                                this.newLanguageBlocks.push({
-                                    language : null,
-                                    level : null,
-                                    languages: lastBlock.languages.filter((lang) => lang !== lastBlock.language)
-                                });
-                            }
-                        }
-                    }
                 }
 
             },
+            // else if (this.languagesCounter !== this.newLanguageBlocks.length - 1){
+            //     if (this.newLanguageBlocks[1].language !== null){
+            //         console.log(this.newLanguageBlocks[0].language);
+            //         this.languagesCounter++;
+            //         if(this.newLanguageBlocks.length < this.languages.length) {
+            //             const lastBlock = this.newLanguageBlocks[this.newLanguageBlocks.length - 1];
+            //             this.newLanguageBlocks.push({
+            //                 language : null,
+            //                 level : null,
+            //                 languages: lastBlock.languages.filter((lang) => lang !== lastBlock.language)
+            //             });
+            //         }
+            //     }
+            // }
             deleteLanguage() {
                 if (this.newLanguageBlocks.length > 1) {
                     this.newLanguageBlocks.pop();
@@ -2692,10 +2719,10 @@
             },
             // Проверка на добавление социального пакета в заявке на поиск
             addSocialPacket() {
-                if (this.newSocialpacketBlocks[0].packet !== null){
-                    if (this.socialPacketCounter == 1){
-                        this.socialPacketCounter++;
+                if (this.newSocialpacketBlocks[this.socialPacketCounter - 1].packet !== null){
+                    if (this.socialPacketCounter !== this.newSocialpacketBlocks.length - 1){
                         if(this.newSocialpacketBlocks.length < this.packets.length) {
+                            this.socialPacketCounter++;
                             const lastPacketBlock = this.newSocialpacketBlocks[this.newSocialpacketBlocks.length - 1];
                             this.newSocialpacketBlocks.push({
                                 packet : null,
@@ -2704,21 +2731,20 @@
                             });
                         }
                     }
-                    else if (this.socialPacketCounter == 2){
-                        if (this.newSocialpacketBlocks[1].packet !== null){
-                            console.log(this.newSocialpacketBlocks.packet);
-                            this.socialPacketCounter++;
-
-                            if(this.newSocialpacketBlocks.length < this.packets.length) {
-                                const lastPacketBlock = this.newSocialpacketBlocks[this.newSocialpacketBlocks.length - 1];
-                                this.newSocialpacketBlocks.push({
-                                    packet : null,
-                                    level : null,
-                                    packets: lastPacketBlock.packets.filter(lang => lang !== lastPacketBlock.packet)
-                                });
-                            }
-                        }
-                    }
+                    // else if (this.socialPacketCounter == this.newSocialpacketBlocks.length - 1){
+                    //     if (this.newSocialpacketBlocks[1].packet !== null){
+                    //         console.log(this.newSocialpacketBlocks.packet);
+                    //         this.socialPacketCounter++;
+                    //         if(this.newSocialpacketBlocks.length < this.packets.length) {
+                    //             const lastPacketBlock = this.newSocialpacketBlocks[this.newSocialpacketBlocks.length - 1];
+                    //             this.newSocialpacketBlocks.push({
+                    //                 packet : null,
+                    //                 level : null,
+                    //                 packets: lastPacketBlock.packets.filter(lang => lang !== lastPacketBlock.packet)
+                    //             });
+                    //         }
+                    //     }
+                    // }
                 }
             },
             deleteSocialPacket() {
