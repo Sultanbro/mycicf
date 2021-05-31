@@ -25,6 +25,7 @@ Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
+Route::post('/api/pwreset', 'ApiController@resetPassword');
 
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
@@ -493,6 +494,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('api/booking/add', 'ApiController@addBookingData');
     Route::post('api/booking/officeList', 'ApiController@getBookingOfficeList');
 });
+
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::get('/', 'SiteController@parseAuth');
     Route::post('/login', 'SiteController@parseLogin');
@@ -538,6 +540,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+
+    Route::get('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::any('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::post('/qrmanagerreport', 'TestqrController@managerReportQR');
 });
 
 Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
@@ -552,3 +558,4 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('caching', 'Dev\CachingController@index')->name('.caching');
     Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });
+
