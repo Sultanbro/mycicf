@@ -1339,4 +1339,40 @@ class KiasMock implements KiasServiceInterface {
 </data>
         ');
     }
+
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        $this->collector->push([
+            'method' => 'getPrintableOrderDocument',
+            'params' => [
+                'data' => $data,
+                'dataParams' => $dataParams
+            ]
+        ]);
+        $this->delay();
+        // not used
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+<Bytes></Bytes>
+<FileName></FileName>
+</data>
+        ');
+    }
+
+    public function resetPassword($subjIsn, $password)
+    {
+        $this->collector->push([
+            'method' => 'resetPassword',
+            'params' => [
+                'subjIsn' => $subjIsn,
+                'password' => $password
+            ]
+        ]);
+        $this->delay();
+        // not used
+        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+<data>
+</data>
+        ');
+    }
 }
