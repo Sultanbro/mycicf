@@ -23,7 +23,6 @@ before_script:
   - docker-php-ext-install mysql && docker-php-ext-enable mysql
   - apt-get clean
   - php -v
-  - php -
   - curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
   - apt-get install -y nodejs
   - node -v
