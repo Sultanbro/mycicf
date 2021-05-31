@@ -11,7 +11,7 @@
                 </div>
             </div>
             <hr class="mt-0">
-            <div class="d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center" v-if="birthdays[index]">
                 <h4>{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[month] }}</h4>
             </div>
             <div class="pt-2 pl-4 pr-4 pb-2 relative">
@@ -96,6 +96,7 @@
                     });
             },
             next(){
+                debugger;
                 let year = new Date().getFullYear()
                 let month = new Date().getMonth() + 1
                 let lastDay = new Date(year, month, 0).getDate()

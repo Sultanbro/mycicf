@@ -1339,4 +1339,14 @@ class KiasMock implements KiasServiceInterface {
 </data>
         ');
     }
+
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        // TODO: Implement getPrintableOrderDocument() method.
+    }
+
+    public function resetPassword($subjIsn, $password)
+    {
+        // TODO: Implement resetPassword() method.
+    }
 }
