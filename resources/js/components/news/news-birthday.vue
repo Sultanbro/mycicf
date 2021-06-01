@@ -96,7 +96,6 @@
                     });
             },
             next(){
-                debugger;
                 let year = new Date().getFullYear()
                 let month = new Date().getMonth() + 1
                 let lastDay = new Date(year, month, 0).getDate()
