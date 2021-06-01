@@ -2936,3 +2936,10 @@ textarea::-webkit-scrollbar-thumb {
     width: 100%;
     height: 100%;
 }
+
+.tooltip.motivation-tooltip {
+    .tooltip-inner {
+        max-width: none !important;
+        background-color: #7abaff;
+    }
+}
