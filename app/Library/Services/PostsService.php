@@ -21,6 +21,7 @@ use Illuminate\Support\Collection;
  * @package App\Library\Services
  */
 class PostsService {
+
     /**
      * Генерируем ключ кэша для конкретного поста по его ID
      *
@@ -36,12 +37,13 @@ class PostsService {
      *
      * @param string $user_isn
      * @param $last_index
+     * @param $searchQuery
      * @param bool $boss
      * @param int $limit
      * @return array
      * @throws Exception
      */
-    public function getPosts(string $user_isn, $last_index = null, bool $boss = false, int $limit = 5) {
+    public function getPosts(string $user_isn, $last_index = null, string $searchQuery = null, bool $boss = false, int $limit = 5) {
         $response = [];
         $cacheTTL = now()->addMinutes(2);
 
@@ -61,6 +63,10 @@ class PostsService {
             ->orderBy('id', 'DESC')
             ->with('comments')
             ->limit($limit);
+
+        if ($searchQuery) {
+            $query = $query->where('post_text', 'like', '%' . trim($searchQuery) . '%');
+        }
 
         if ($boss) {
             $query = $query->where('user_isn', User::BOSS_ISN);
@@ -150,6 +156,7 @@ class PostsService {
             'postText'   => $item->getText(),
             'pinned'     => $item->pinned,
             'postId'     => $item->id,
+            'isMine'     => $item->is_mine,
             'edited'     => $item->is_edited,
             'likes'      => $item->likes_count,
             'isLiked'    => $item->likes->where('user_isn', '=', $user_isn)->count() > 0,
@@ -158,6 +165,7 @@ class PostsService {
             'comments'   => $item->comments->map(function (Comment $comment) {
                 return [
                     'commentText' => $comment->text,
+                    'isMine'     => $comment->is_mine,
                     'userISN'     => $comment->user_isn,
                     'commentId'   => $comment->id,
                     'fullname'    => $this->getFullName($comment->user_isn),
@@ -180,7 +188,9 @@ class PostsService {
      * @throws Exception
      */
     public function forget($id) {
-        cache()->flush();
+        if(cache()->flush()){
+            return true;
+        }
         // cache()->delete($this->getResponseKey($id)); // or delete();
     }
 }

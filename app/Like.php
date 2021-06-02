@@ -26,4 +26,8 @@ class Like extends Model
             ->first();
         return $model === null ? 0 : 1;
     }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_isn', 'ISN');
+    }
 }

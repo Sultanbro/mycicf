@@ -7,6 +7,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
 use Tests\WithUser;
 
+/**
+ * Class LikePostTestBase
+ * @package Tests\Feature\News\LikePost
+ * @covers \App\Http\Controllers\News\PostsController::likePost
+ */
 abstract class LikePostTestBase extends FeatureTestBase {
     use WithFaker, WithUser;
 

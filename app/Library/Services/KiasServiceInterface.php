@@ -306,4 +306,20 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getDocRating($class_isn);
+
+    /**
+     * @param $isn
+     * @param $template
+     * @param $classId
+     * @return mixed
+     */
+    public function getPrintableOrderDocument($data, $dataParams);
+
+    /**
+     * Сброс пароля
+     * @param $subjIsn
+     * @param $password
+     * @return mixed
+     */
+    public function resetPassword($subjIsn, $password);
 }

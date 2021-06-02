@@ -6,6 +6,11 @@ use App\Comment;
 use App\Post;
 use Tests\WithUser;
 
+/**
+ * Class DeleteCommentTestBase
+ * @package Tests\Feature\News\Comments\DeleteComment
+ * @covers \App\Http\Controllers\News\MyPostsController::deletePost
+ */
 class DeleteCommentToPostTest extends DeleteCommentTestBase {
     use WithUser;
 

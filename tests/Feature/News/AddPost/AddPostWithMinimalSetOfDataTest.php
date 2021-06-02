@@ -4,6 +4,11 @@ namespace Tests\Feature\News\AddPost;
 
 use Tests\WithUser;
 
+/**
+ * Class AddPostWithMinimalSetOfDataTest
+ * @package Tests\Feature\News\AddPost
+ * @covers \App\Http\Controllers\News\PostsController::addPost
+ */
 class AddPostWithMinimalSetOfDataTest extends AddPostTestBase {
     use WithUser;
 
@@ -16,6 +21,7 @@ class AddPostWithMinimalSetOfDataTest extends AddPostTestBase {
             'postText' => 'post #1',
             'isn' => $user->ISN,
         ]);
+
         $response->assertStatus(200);
         self::assertArrayHasKey('postId', $response->json());
         self::assertEquals('integer', gettype($response->json('postId')));
