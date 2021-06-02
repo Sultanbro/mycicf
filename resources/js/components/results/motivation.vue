@@ -19,7 +19,7 @@
             </div>
         </div>
         <!-- Rating Table Section-->
-        <div class="rating-wrapper p-4 mb-3" v-if="showMotivation">
+        <div class="rating-wrapper p-4 mb-3" v-if="showMotivation" v-show="category">
             <div class="rating-wrapper p-4 mb-3">
                 <span v-show="category === 1">Премия начисляется при выполнении личного плана продаж по договорам страхования c размером агентского вознаграждения не более 30% от брутто поступивших страховых премий за исключением договоров ОС ГПО ВТС
                 </span>
@@ -216,7 +216,7 @@
             </div>
         </div>
         <!-- Chart Section -->
-        <div v-if="showMotivation">
+        <div v-if="showMotivation" v-show="category">
             <div class="rating-wrapper p-4">
                 <div class="ml-3">
                     <h4 class="employee-rating">Динамика мотивации</h4>
