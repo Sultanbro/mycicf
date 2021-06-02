@@ -63,7 +63,7 @@ class BookingController extends Controller
         if($request['data']['author']!== Auth::user()->ISN) {
             return response()->json(['success'=>false, 'message'=>'Невозможно удалить!']);
         }
-        Booking::where('id', ($request['data']['id']))->delete();
+        Booking::where('id', $request['data']['id'])->delete();
         return response()->json(['success'=>true ]);
     }
 }
