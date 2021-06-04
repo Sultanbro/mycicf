@@ -9,6 +9,7 @@ use App\CentcoinHistory;
 use App\Observers\CentcoinObserver;
 use App\StoreItem;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -18,43 +19,51 @@ use App\Exports\CentcointExports;
 
 class CentcoinsController extends Controller
 {
-    public function getListView(){
+    public function getListView()
+    {
         return view('centcoins.list');
     }
 
-    public function getSpendView(){
+    public function getSpendView()
+    {
         return view('centcoins.spend');
     }
 
-    public function getReplenishView(){
+    public function getReplenishView()
+    {
         return view('centcoins.replenish');
     }
 
-    public function getHistoryView(){
+    public function getHistoryView()
+    {
         return view('centcoins.history');
     }
 
-    public function getItemsView(){
+    public function getItemsView()
+    {
         return view('centcoins.items');
     }
+
     //Заявка в Админ
-    public function getApplyView(){
+    public function getApplyView()
+    {
         return view('centcoins.apply');
     }
 
-    public function getApply(Request $request){
+    public function getApply(Request $request)
+    {
         $result = [];
-        foreach(CentcoinApply::all() as $data){
+        foreach (CentcoinApply::all() as $data) {
             array_push($result, [
                 'id' => $data->id,
-                'type'=> $data->type,
+                'type' => $data->type,
                 'full_name' => (new User)->getFullName($data->full_name),
                 'created_at' => $data->created_at->format('d-m-Y'),
-                'wasted_centcoins' =>$data->wasted_centcoins,
-                'balance' =>$data->balance,
-                'description'=>$data->description,
-                'status' =>$data->status,
-                'updated_at'=>$data->updated_at->format('d-m-Y')
+                'wasted_centcoins' => $data->wasted_centcoins,
+                'balance' => $data->balance,
+                'description' => $data->description,
+                'status' => $data->status,
+                'updated_at' => $data->updated_at->format('d-m-Y')
             ]);
         }
 
@@ -72,12 +81,12 @@ class CentcoinsController extends Controller
     public function getStatusAccept(Request $request)
     {
         $accept = CentcoinApply::findOrFail($request->id);
-        if ($accept){
-        $accept->status = 'Исполнено';
-        $accept->save();
+        if ($accept) {
+            $accept->status = 'Исполнено';
+            $accept->save();
         }
 
-        return response()->json(['success'=> true,
+        return response()->json(['success' => true,
             'message' => "Заявка Исполнена успешно"]);
     }
 
@@ -87,14 +96,15 @@ class CentcoinsController extends Controller
         $denied->status = 'Отказано';
         $denied->save();
 
-        return response()->json(['success'=> true,
+        return response()->json(['success' => true,
             'message' => "К сожалению вам Отказано"]);
     }
 
 
-    public function getUserList(Request $request){
+    public function getUserList(Request $request)
+    {
         $result = [];
-        foreach(Centcoin::all() as $data){
+        foreach (Centcoin::all() as $data) {
             array_push($result, [
                 'id' => $data->id,
                 'name' => (new User)->getFullName($data->user_isn),
@@ -113,14 +123,16 @@ class CentcoinsController extends Controller
             );
     }
 
-    public function getReport(){
-        return Excel::download(new CentcointExports, 'Сенткоины_'.date("d.m.Y H:i:s").'.xlsx');
+    public function getReport()
+    {
+        return Excel::download(new CentcointExports, 'Сенткоины_' . date("d.m.Y H:i:s") . '.xlsx');
         return back();
     }
 
-    public function getHistoryList(Request $request){
+    public function getHistoryList(Request $request)
+    {
         $result = [];
-        foreach(CentcoinHistory::all() as $data){
+        foreach (CentcoinHistory::all() as $data) {
             array_push($result, [
                 'id' => $data->id,
                 'type' => $data->type,
@@ -142,7 +154,8 @@ class CentcoinsController extends Controller
             );
     }
 
-    public function addCoins(Request $request){
+    public function addCoins(Request $request)
+    {
         $success = true;
         $error = '';
         $users = $request->users;
@@ -150,7 +163,7 @@ class CentcoinsController extends Controller
         $count = $request->count;
         $ids = [];
         DB::beginTransaction();
-        foreach ($users as $userID){
+        foreach ($users as $userID) {
             foreach ($this->getUserChilds($userID) as $user) {
                 try {
                     $history = new CentcoinHistory();
@@ -168,9 +181,9 @@ class CentcoinsController extends Controller
                 }
             }
         }
-        if($success){
+        if ($success) {
             DB::commit();
-        }else{
+        } else {
             DB::rollBack();
         }
         return response()
@@ -183,13 +196,14 @@ class CentcoinsController extends Controller
             );
     }
 
-    public function spendCoins(Request $request){
+    public function spendCoins(Request $request)
+    {
         $success = true;
         $error = '';
         $user = $request->user;
         $count = $request->count;
         $description = $request->description;
-        try{
+        try {
             $history = new CentcoinHistory();
             $history->type = 'Списание';
             $history->description = $description;
@@ -198,7 +212,7 @@ class CentcoinsController extends Controller
             $history->user_isn = Auth::user()->ISN;
             $history->changed_user_isn = $user;
             $history->save();
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             $success = false;
             $error = $ex->getMessage();
         }
@@ -212,40 +226,43 @@ class CentcoinsController extends Controller
             );
     }
 
-    public function getUserChilds($id){
+    public function getUserChilds($id)
+    {
         $result = [];
         $model = Branch::where('kias_id', $id)->first();
-        if(count($model->childs)){
+        if (count($model->childs)) {
             $result = array_merge($result, $this->getChilds($id));
-        }else{
+        } else {
             array_push($result, $id);
         }
         return $result;
     }
 
-    public function getChilds($id){
+    public function getChilds($id)
+    {
 
         $result = [];
         $model = Branch::where('kias_parent_id', $id)->get();
-        foreach($model as $branchData){
-            if(count($branchData->childs)){
-                $result = array_merge($result,$this->getChilds($branchData->kias_id));
-            }else{
+        foreach ($model as $branchData) {
+            if (count($branchData->childs)) {
+                $result = array_merge($result, $this->getChilds($branchData->kias_id));
+            } else {
                 array_push($result, $branchData->kias_id);
             }
         }
         return $result;
     }
 
-    public function addItem(Request $request){
+    public function addItem(Request $request)
+    {
         $model = new StoreItem();
-        foreach ($request->all() as $key => $value){
+        foreach ($request->all() as $key => $value) {
             $model->$key = $value;
         }
         $model->updated_by = Auth::user()->ISN;
-        try{
+        try {
             $model->save();
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             return response()
                 ->json([
                     'success' => false,
@@ -265,4 +282,26 @@ class CentcoinsController extends Controller
             );
     }
 
+    public function spendCoinAll()
+    {
+        $centcoins = Centcoin::where('user_isn')->get();
+        $centcoins->each(function (Centcoin $centcoin){
+            $cleanCoin = CentcoinHistory::whereDate('updated_at', '<', date('Y-m-d H:i:s', strtotime('01.01.2021')))
+                ->where('changed_user_isn', $centcoin->user_isn)
+                ->orderBy('updated_at', 'desc')
+                ->first();
+            if ($cleanCoin !== null){
+                dd($cleanCoin);
+                $hist = new CentcoinHistory();
+                $hist->type = 'Оплата';
+                $hist->description = 'Ежегодное обнуление';
+                $hist->quantity = $cleanCoin->total;
+                $hist->operation_type = 'minus';
+                $hist->total = 0;
+                $hist->user_isn = 1;
+                $hist->changed_user_isn = $centcoin->user_isn;
+                $hist->save();
+            }
+        });
+    }
 }
