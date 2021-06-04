@@ -113,7 +113,7 @@
                 //self.loader(true);
                 axios.post("/eds-by-isn", {
                     refISN: docIsn,
-                    type: 'D',
+                    type: 'A',
                     edsType: 'cms'
                 }).then((response) => {
                     if(response.data.success) {

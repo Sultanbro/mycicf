@@ -180,6 +180,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
     Route::get('eds/od', 'EdsController@edsOD');
     Route::get('eds/po', 'EdsController@edsPO');
+    Route::get('eds/pr' , 'EdsController@edsPR');
     Route::post('/signqr', 'EdsController@signQr');
     Route::post('/setQr', 'EdsController@setQr');
 
@@ -495,7 +496,11 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     });
 });
 Route::post('/save_document', 'EdsController@saveDocument');
+Route::post('/save_documentpr', 'EdsController@saveDocumentPR');
+Route::post('/save_documentpo', 'EdsController@saveDocumentPO');
 Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+Route::post('/save_fail_statuspr', 'EdsController@saveFailStatusPR');
+Route::post('/save_fail_statuspo', 'EdsController@saveFailStatusPO');
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');

@@ -1,13 +1,18 @@
 <template>
     <div>
         {{path}}
+        {{info}}
+        {{paths}}
+        {{tweenisn}}
         <div class="inner-wrap t-0 text-center" >
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket()">Чекнуть</button>
             </div>
             <p v-for="(item,index) in info">
                 {{ parseInt(index)+1 }}. РВ isn: {{ item.isn }}
-                <span class="text-success" v-if="item.confirmed == 1">прошел проверку</span>
+                {{item.product_family_isn}}
+                <span class="text-success" v-if="item.signed == 0 ||item.confirmed !=1">прошел проверку нужно посадить QR</span>
+                <span class="text-success" v-if="item.signed == 1 ||item.confirmed ==1">прошел проверку </span>
                 <!--span class="text-danger" v-if="item.confirmed == 0">не проверен </span-->
                 <span class="text-danger" v-if="item.iin_fail == 1">не совпадает ИИН</span>
             </p>
@@ -24,7 +29,7 @@
 <script>
     const axios = require('axios');
     export default {
-        name: "eds-payout",
+        name: "payout-request",
         data() {
             return {
                 confirmed: false,
@@ -46,6 +51,7 @@
                 selectedECPFile: '',
                 signedFile:'',
                 path:'',
+                paths:[],
                 signedFileInfo: [],
                 edsConfirmed: false,
                 hasConfirmed: false,
@@ -55,6 +61,7 @@
             showView: String,
             doc_row_list_inner_other: Object,
             info: Object,
+            info2:String,
             classIsn: Number,
             emplIsn: Number
         },
@@ -112,16 +119,19 @@
                     //console.log(msg);
                 }
             },
-            getEdsInfo(docIsn,doc_index){    // docIsn - isn документа
+            getEdsInfo(docIsn,doc_index,index){    // docIsn - isn документа
+                // debugger
                 let self = this;
                 self.signedFileInfo = [];
                 //self.loader(true);
                 axios.post("/eds-by-isn", {
-                    refISN: docIsn,
+                    refISN: docIsn,//тут надо передать близнеца
+                    // tweenisn: self.info[index].product_family_isn,//тут надо передать близнеца
+                    // tweenisn2: 123,//тут надо передать близнеца
                     type: 'D',
                     edsType: 'cms'
                 }).then((response) => {
-                    this.path = response.data.result[0].filepath;
+                    // this.path = response.data.result[0].filepath;
                     // console.log(response.data.result[0].filepath);
                     if(response.data.success) {
                         var obj = response.data.result;
@@ -225,11 +235,14 @@
             },
             saveDocument(){
                 if(this.hasConfirmed) {
-                    axios.post("/save_document", {
+                    axios.post("/save_documentpr", {
                         classISN: this.classIsn,
                         data: this.info,
                         emplISN: this.emplIsn
                     }).then((response) => {
+                        this.paths = response.data.result.map(el => el.filepath);
+                        this.path = response.data.result[0].filepath;
+                        // console.log(response.data.result.filepath);
                         if (response.data.success) {
                             this.loader(false);
                         } else {
@@ -237,7 +250,7 @@
                         }
                     });
                 } else {
-                    axios.post("/save_fail_status", {
+                    axios.post("/save_fail_statuspr", {
                         data: this.info,
                     }).then((response) => {
                         if (response.data.success) {
@@ -252,6 +265,7 @@
                 this.loader(true);
                 if(this.info.length > 0) {
                     this.getEdsInfo(this.info[0].isn,0);
+                    this.getEdsInfo(this.info[0].product_family_isn,0);
                     // for(let i = 0; Object.keys(this.info).length > i; i++){
                     //     this.getEdsInfo(this.info[i].isn,i);
                     //     if(i == Object.keys(this.info).length-1){
@@ -279,6 +293,7 @@
                     refISN: 40475701,
                     path:this.path,
                     type: 'D',
+                    paths:this.paths,
                     edsType: 'cms',
                     info:this.info,
                 }).then((response) => {
