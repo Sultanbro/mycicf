@@ -291,7 +291,6 @@ class CentcoinsController extends Controller
                 ->orderBy('updated_at', 'desc')
                 ->first();
             if ($cleanCoin !== null){
-                dd($cleanCoin);
                 $hist = new CentcoinHistory();
                 $hist->type = 'Оплата';
                 $hist->description = 'Ежегодное обнуление';
