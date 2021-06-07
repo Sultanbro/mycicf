@@ -257,6 +257,9 @@ class MotivationController extends Controller
             case 4 :
                 $category = 4;
                 $mot_sum = (number_format((double)$response->Mot->row->TotalMot, 0, '.', ' ') ?? 0);
+                $ogpo = ((double)$response->Mot->row->SumVTS1
+                    + (double)$response->Mot->row->SumVTS2
+                    + (double)$response->Mot->row->SumVTS3);
                 $list = [
                     [
                         'types' => 'Премии оплаченные / (План)',
@@ -270,18 +273,21 @@ class MotivationController extends Controller
                     ],
                     [
                         'types' => 'Сборы по ОГПО ВТС*',
-                        'sum' => (number_format(
-                            (double)$response->Mot->row->SumVTS1
-                            + (double)$response->Mot->row->SumVTS1
-                            + (double)$response->Mot->row->SumVTS1)),
+                        'sum' => (number_format((double)$response->Mot->row->SumVTS1
+                                + $response->Mot->row->SumVTS2
+                                + $response->Mot->row->SumVTS3, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Сборы по иным классам',
+                        'sum' => (number_format((double)$response->Mot->row->SumOth, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                     [
                         'types' => 'Мотивация по ОГПО ВТС',
-                        'sum' => (number_format(
-                            (double)$response->Mot->row->MotVTS1
-                            + (double)$response->Mot->row->MotVTS1
-                            + (double)$response->Mot->row->MotVTS1)),
+                        'sum' => (number_format((double)$response->Mot->row->MotVts1
+                            + $response->Mot->row->MotVts2
+                            + $response->Mot->row->MotVts3, 0, '.', ' ') ?? 0),
                         'color' => 'transparent',
                     ],
                     [

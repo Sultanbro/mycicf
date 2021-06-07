@@ -19,7 +19,8 @@
             </div>
         </div>
         <!-- Rating Table Section-->
-        <div class="rating-wrapper p-4 mb-3" v-if="showMotivation" v-show="category">
+        <div v-show="category">
+        <div class="rating-wrapper p-4 mb-3" v-if="showMotivation">
             <div class="rating-wrapper p-4 mb-3">
                 <span v-show="category === 1">Премия начисляется при выполнении личного плана продаж по договорам страхования c размером агентского вознаграждения не более 30% от брутто поступивших страховых премий за исключением договоров ОС ГПО ВТС
                 </span>
@@ -137,7 +138,7 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 4 && category === 4"
+                            v-else-if="index === 5 && category === 4"
                         >
                             {{motivation.types}}
                         </td>
@@ -157,7 +158,7 @@
                                 placement: 'bottom-end',
                                 classes: ['motivation-tooltip']
                             }"
-                            v-else-if="index === 5 && category === 4"
+                            v-else-if="index === 6 && category === 4"
                         >
                             {{motivation.types}}
                         </td>
@@ -214,6 +215,7 @@
                     </tbody>
                 </table>
             </div>
+        </div>
         </div>
         <!-- Chart Section -->
         <div v-if="showMotivation" v-show="category">
@@ -380,11 +382,15 @@
                 tableTooltip21: '<table align="center" border="1" cellpadding="5" cellspacing="0" bordercolor="white"">\n' +
                     '        <tr>\n' +
                     '            <th>Себестоимость</th>\n' +
-                    '            <th>Размер премии в %</th>\n' +
+                    '            <th>Размер премии в %. (От текущей суммы в графе Премия*)</th>\n' +
                     '        </tr>\n' +
                     '        <tr>\n' +
                     '            <td>более 45%</td>\n' +
                     '            <td>50%</td>\n' +
+                    '        </tr>\n' +
+                    '        <tr>\n' +
+                    '            <td>от 25% до 45%</td>\n' +
+                    '            <td>100%</td>\n' +
                     '        </tr>\n' +
                     '        <tr>\n' +
                     '            <td>не более 25%</td>\n' +
