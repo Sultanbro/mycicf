@@ -202,24 +202,24 @@
                     axios.post("/get_or_set_doc", {
                         data: this.info[index]
                     }).then((response) => {
-                        // if (response.data.success) {
-                        //     this.loader(false);
-                        //     this.checkContinue(index+1);
-                        // } else {
-                        //     alert(response.data.error);
-                        //     this.checkContinue(index+1);
-                        //     this.loader(false);
-                        // }
+                        if (response.data.success) {
+                            this.loader(false);
+                            this.checkContinue(index+1);
+                        } else {
+                            alert(response.data.error);
+                            this.checkContinue(index+1);
+                            this.loader(false);
+                        }
                     });
                 } else {
                     axios.post("/save_fail_status", {
                         data: this.info[index],
                     }).then((response) => {
-                        // if (response.data.success) {
-                        //     this.checkContinue(index+1);
-                        // } else {
-                        //     this.checkContinue(index+1);
-                        // }
+                        if (response.data.success) {
+                            this.checkContinue(index+1);
+                        } else {
+                            this.checkContinue(index+1);
+                        }
                     });
                 }
             },
