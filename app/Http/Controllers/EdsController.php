@@ -71,16 +71,16 @@ class EdsController extends Controller
         $success = false;
         $info = $request->data;
         if($info['confirmed'] == 1){
-            //$setStatus = $kias->getOrSetDocs($info['rv_isn'],1,2522);    // 2522 - статус на подписании
-            //if(isset($setStatus->error)){
-            //    $success = false;
-            //    $error = (string)$setStatus->error->text;
-            //} else {
-            //    if(isset($setStatus->Status)){
+            $setStatus = $kias->getOrSetDocs($info['rv_isn'],1,2522);    // 2522 - статус на подписании
+            if(isset($setStatus->error)){
+                $success = false;
+                $error = (string)$setStatus->error->text;
+            } else {
+                if(isset($setStatus->Status)){
                     $refund = Refund::find($info['id']);
                     if ($info['confirmed'] == 1) {
                         $refund->confirmed = 1;
-            //            $refund->main_doc_isn = $setStatus->Status;
+                        $refund->main_doc_isn = $setStatus->Status;
                         $response = $kias->getSubject(null, null, null, $refund->iin);
                         $data = ['email' => isset($response->ROWSET->row[0]->EMAIL) ? (string)$response->ROWSET->row[0]->EMAIL : '', 'status' => 0, 'refund' => $refund];
                         $this->sendEmailService->sendMailRefundStatus($data);
@@ -90,8 +90,8 @@ class EdsController extends Controller
                     if ($refund->save()) {
                         $success = true;
                     }
-            //    }
-            //}
+                }
+            }
         }
         return response()->json([
             'success' => isset($success) ? $success : true,
