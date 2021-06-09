@@ -254,7 +254,7 @@
                     <div class="col-md-12">Оплата труда</div>
                     <div class="recruiting-tripple-block-container">
                         <div class="recruiting-tripple-block-center col-md-7">На испытательный срок и после испытательного срока:</div>
-                        <div class="recruiting-tripple-block col-md-5">
+                        <div class="col-md-5">
                             <input type="number" onclick="this.select()" v-model="candidat.salary" class="recruiting-select">
                         </div>
                     </div>
@@ -307,8 +307,10 @@
                             <div class="recruiting-tripple-block col-md-4">Социальный пакет</div>
                             <div class="recruiting-tripple-block col-md-4">
                                 <select class="recruiting-select" v-model="newSocialpacketBlock.packet">
-                                    <option v-for="(packet, index) in dicti.socPacket" :value="packet.Value[0]">
-                                        {{packet.Label[0]}}
+                                    <option v-for="(packet, index) in newSocialpacketBlock.packets">
+<!--                                        :value="packet.Value[0]"-->
+                                        {{packet}}
+<!--                                        {{packet.Label[0]}}-->
                                     </option>
                                 </select>
                             </div>
@@ -322,16 +324,16 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="recruiting-simple-block-container">
-                        <div class="recruiting-simple-block ml-2 mr-2" v-if="this.socialPacketCounter !== dicti.socPacket.length" @click="addSocialPacket">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Добавить Соц. пакет</span>
-                        </div>
-                        <div class="recruiting-simple-block" @click="deleteSocialPacket" v-if="this.newSocialpacketBlocks.length > 1">
-                            <i class="far fa-times-circle"></i>
-                            <span>Удалить Соц. пакет</span>
-                        </div>
-                    </div>
+<!--                    <div class="recruiting-simple-block-container">-->
+<!--                        <div class="recruiting-simple-block ml-2 mr-2" v-if="this.socialPacketCounter !== dicti.socPacket.length" @click="addSocialPacket">-->
+<!--                            <i class="fas fa-plus-circle"></i>-->
+<!--                            <span>Добавить Соц. пакет</span>-->
+<!--                        </div>-->
+<!--                        <div class="recruiting-simple-block" @click="deleteSocialPacket" v-if="this.newSocialpacketBlocks.length > 1">-->
+<!--                            <i class="far fa-times-circle"></i>-->
+<!--                            <span>Удалить Соц. пакет</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div>
                         <div class="recruiting-select-header">
                             Личностные компетенции кандидата
@@ -590,11 +592,11 @@
                                         <div class="col-md-6 color-blue">Дата заключения ТД (принят в штат):</div>
                                         <div class="col-md-6"><input type="date" class="recruiting-modal-general" v-model="recruitingData.dateOfConclusionTD"></div>
                                     </div>
-                                    <div class="modal-cell-general">
-                                        <div class="col-md-6 color-blue">Комментарий:</div>
-                                        <div class="col-md-6">
-                                            <textarea cols="30" rows="4" v-model="recruitingData.commentary" class="recruiting-modal-general">Текст</textarea>
-                                        </div>
+                                </div>
+                                <div class="modal-cell-general" v-if="resultCheckCounter == 'success' || resultCheckCounter == 'failed'">
+                                    <div class="col-md-6 color-blue">Комментарий:</div>
+                                    <div class="col-md-6">
+                                        <textarea cols="30" rows="4" v-model="recruitingData.commentary" class="recruiting-modal-general">Текст</textarea>
                                     </div>
                                 </div>
 <!--                                Кнопка сохранения в разделе ВРЕМЯ-->
@@ -954,13 +956,14 @@
 <!--                        </tr>-->
 <!--                    </table>-->
 <!--                </div>-->
+                <button @click="resultSort()">qwerty</button>
                 <table class="table recruiting-striped" data-filter-control>
                     <thead>
                     <tr>
                         <th scope="col">№</th>
                         <th scope="col">ФИО Кандидата</th>
                         <th scope="col">Структурное подразделение/ФИО ответственного/Вакансия</th>
-                        <th scope="col" class="recruiting-center">Статус</th>
+                        <th scope="col" class="recruiting-center pointer" @click="resultSort()">Статус</th>
                         <th scope="col" class="recruiting-center">Ответственный рекрутер</th>
                         <th scope="col">Дата выхода кандидата по ДОУ</th>
                     </tr>
@@ -1061,12 +1064,12 @@
                     requestToCandidat: '',
                     perspectiveToCandidatSelect: '',
                     computerKnowingSelect: '',
-                    salary: '120000',
+                    salary: '',
                     motivationSelect: '',
                     jobChartSelect: '',
                     haveCarSelect: '',
                     driverCategorySelect: '',
-                    candidatsTrait: 'Ориентированный на результат, обучаемый, коммуникабельный, ответственный и системный в работе, активный и позитивный (оптимист)',
+                    candidatsTrait: '',
                     interviewStage: '',
                     manualFullname: '',
                     manualIIN: '',
@@ -1196,7 +1199,7 @@
                 newSocialpacketBlocks: [{
                     packet: null,
                     level: null,
-                    packets: [],
+                    packets: ['Больничный, мед. страхование, отпускные'],
                 }],
                 packets: [
                     'Первый соц. пакет',
@@ -1204,11 +1207,10 @@
                     'Третий соц. пакет'
                 ],
                 socialPacketLvl: [
-                    'Базовый соц. пакет',
-                    'Средний соц.пакет',
-                    'Продвинутый соц.пакет',
+                    'Да',
+                    'Нет'
                 ],
-                recruitingTabs: 1,
+                recruitingTabs: 3,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1227,7 +1229,7 @@
                 interviewMainResultModal: [
                     {
                         value: 1,
-                        label: 'В ожидании собеседования'
+                        label: 'Не пришел'
                     },
                     {
                         value : 2,
@@ -1266,7 +1268,7 @@
                         name: 'Иванов Иван Иванович',
                         structureUnit: 'Департамент развития партнерских отношений',
                         dateOfInterview: '02.01.2020',
-                        label: 'В ожидании собеседования'
+                        label: 'Не пришел'
                     },
                     {
                         id: 2,
@@ -1428,6 +1430,7 @@
                 isActiveCandidatsBase: false,
                 isDriverCard: true,
                 testvar: [],
+                sortDesc: true
             }
         },
         props: {
@@ -1462,6 +1465,30 @@
             },
         },
         methods: {
+            resultSort: function(){
+                let self = this;
+                this.candidateResultRequest.sort(function(a, b) {
+                    var keyA = new Object(a.application_status),
+                        keyB = new Object(b.application_status);
+                    if(self.sortDesc) {
+                        if (keyA > keyB) return -1;
+                        if (keyA < keyB) return 1;
+                    } else {
+                        if (keyA < keyB) return -1;
+                        if (keyA > keyB) return 1;
+                    }
+                    return 0;
+                });
+                this.sortDesc = this.sortDesc ? false : true;
+                //chetam.sort((a, b) => a.application_status.localeCompare(b.application_status))
+                //console.log('eto sort');
+                //console.log(chetam.sort((b, a) => (b['application_status'] || "").toString().localeCompare((a['application_status'] || "").toString())));
+                //console.log('eto posle sort');
+
+                // this.candidateResultRequest.sort(function(a,b){
+                //     return a.application_status - b.application_status;
+                // });
+            },
             sendMail: function(){
                 this.axios.post('/recruiting/testMail', {
                     form: {}
@@ -1881,7 +1908,10 @@
                this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
                this.candidatBackward.chiefMail = this.person.email_chief;
                this.candidatBackward.languages = this.person.languages;
-               this.candidatBackward.socPackets = this.person.social_packets;
+
+               // Здесь задается нормальный вид стркое вывода соц.пакета
+               let socPacketDefaultText = ['Больничный, мед. страхование, отпускные'];
+               this.candidatBackward.socPackets = socPacketDefaultText + ': ' + this.person.social_packets;
                this.recruitingData.interviewDate = this.person.interview_date;
                this.recruitingData.interviewTime = this.person.interview_time;
                this.recruitingData.interviewResult = this.person.interview_result;
@@ -1963,8 +1993,8 @@
                                 this.dicti.haveCar = response.data.haveCar;
                                 this.dicti.driverCard = response.data.driverCard;
                                 this.dicti.socPacket = response.data.socPacket;
-                                this.newSocialpacketBlocks.packets = this.dicti.socPacket[0].Label[0];
-                                console.log(this.newSocialpacketBlocks.packets);
+                                // this.newSocialpacketBlocks.packets = this.dicti.socPacket[0].Label[0];
+                                // console.log(this.newSocialpacketBlocks.packets);
                                 // Сохранение почты шефа
                                 this.candidat.chief_mail = response.data.chief_mail[0];
                                 // this.candidat.chief_mail = 'qwerty';
@@ -2134,8 +2164,12 @@
                                 this.dicti.driverCard = response.data.driverCard;
                                 this.dicti.socPacket = response.data.socPacket;
                                 this.candidat.chief_mail = response.data.chief_mail[0];
-                                this.newSocialpacketBlocks.packets = this.dicti.socPacket[0].Label[0];
-                                console.log(this.newSocialpacketBlocks.packets);
+                                // let socPacketArray = [];
+                                // socPacketArray.push(this.dicti.socPacket);
+                                // socPacketArray.toString();
+                                // this.newSocialpacketBlocks.packet = socPacketArray;
+                                // this.newSocialpacketBlocks.packets = this.dicti.socPacket[0].Label[0];
+                                // console.log(this.newSocialpacketBlocks.packets);
                                 // console.log(this.dicti.driverCard[0].Label[0]);
 
                                 // this.driverCardOption = this.dicti.driverCard[0].Label[0];
@@ -2427,8 +2461,8 @@
                 if (this.recruitingData.interviewResult == 'Успешно прошел собеседование'){
                     this.resultCheckCounter = 'success';
                 }
-                else if (this.recruitingData.interviewResult == 'В ожидании собеседования'){
-                    this.resultCheckCounter = 'pending';
+                else if (this.recruitingData.interviewResult == 'Не пришел'){
+                    this.resultCheckCounter = 'not_come';
                     this.numberOfUnitsModal = 1;
                 }
                 else if (this.recruitingData.interviewResult == 'Провалил собеседование'){
@@ -2526,14 +2560,14 @@
                     return 'forestgreen';
                 } else if(inner.label == 'Провалил собеседование') {
                     return 'colorRedImportant';
-                } else if(inner.label == 'В ожидании собеседования') {
+                } else if(inner.label == 'Не пришел') {
                     return 'colororange';
                 }
                 if (inner.interview_result == 'Успешно прошел собеседование'){
                     return 'forestgreen';
                 } else if(inner.interview_result == 'Провалил собеседование'){
                     return 'colorRedImportant';
-                } else if(inner.interview_result == 'В ожидании собеседования'){
+                } else if(inner.interview_result == 'Не пришел'){
                     return 'colororange';
                 }
                 if (inner.label == 'Успешно прошел стажировку'){
@@ -2549,7 +2583,7 @@
                 else if (this.recruitingData.interviewResult == 'Провалил собеседование'){
                     return 'colorRedImportant';
                 }
-                else if(this.recruitingData.interviewResult == 'В ожидании собеседования') {
+                else if(this.recruitingData.interviewResult == 'Не пришел') {
                     return 'colororange';
                 }
             },
@@ -2571,7 +2605,6 @@
                 this.candidat.chiefsDuty = this.user.branch.duty;
                 // Запись  языков и пакет в объект candidat
                 let languagePushCounter = 0;
-                let packetPushCounter = 0;
                 for (var i = 1;i <= this.newLanguageBlocks.length; i++){
                     console.log('Итерация');
                     this.languagesBeforeSaving.push(this.newLanguageBlocks[languagePushCounter].language, this.newLanguageBlocks[languagePushCounter].level);
@@ -2579,21 +2612,26 @@
                     this.candidat.language = this.languagesBeforeSaving.toString();
                     console.log(languagePushCounter + ' ' + 'Счетчик push');
                 }
-                for (var i = 1;i <= this.newSocialpacketBlocks.length; i++){
-                    console.log('Итерация');
-                    let socLabel = '';
-                    for(var t = 0; t < Object.keys(this.dicti.socPacket).length; t++){
-                        let socValue = this.dicti.socPacket[t].Value[0];
-                        if(socValue == this.newSocialpacketBlocks[packetPushCounter].packet){
-                            socLabel = this.dicti.socPacket[t].Label[0];
-                        }
-                    }
+                this.candidat.socPacket = this.newSocialpacketBlocks[0].level;
 
-                    this.socPacketsBeforeSaving.push(socLabel, this.newSocialpacketBlocks[packetPushCounter].level);
-                    packetPushCounter++;
-                    this.candidat.socPacket = this.socPacketsBeforeSaving.toString();
-                    console.log(packetPushCounter + ' ' + 'Счетчик packet push');
-                }
+
+                // Объединение полей социального пакета в массив и запись в строку объекта
+                // let packetPushCounter = 0;
+                // for (var i = 1;i <= this.newSocialpacketBlocks.length; i++){
+                //     console.log('Итерация');
+                //     let socLabel = '';
+                //     for(var t = 0; t < Object.keys(this.dicti.socPacket).length; t++){
+                //         let socValue = this.dicti.socPacket[t].Value[0];
+                //         if(socValue == this.newSocialpacketBlocks[packetPushCounter].packet){
+                //             socLabel = this.dicti.socPacket[t].Label[0];
+                //         }
+                //     }
+                //
+                //     this.socPacketsBeforeSaving.push(socLabel, this.newSocialpacketBlocks[packetPushCounter].level);
+                //     packetPushCounter++;
+                //     this.candidat.socPacket = this.socPacketsBeforeSaving.toString();
+                //     console.log(packetPushCounter + ' ' + 'Счетчик packet push');
+                // }
                 //  Отправка данных на поиск кандидата
                 for (var i = 1;i <= this.candidat.quantityPeople;i++){
                     this.axios.post('/recruiting/saveCandidat',{candidat: this.candidat, languages: this.newLanguageBlocks})
