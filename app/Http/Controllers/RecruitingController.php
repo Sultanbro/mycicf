@@ -259,7 +259,12 @@ class RecruitingController extends Controller
             $candidats_data = new RecruitingCandidatesData();
         }
         $chiefMail = $cData->chiefMail;
-        $this->TestMail($chiefMail);
+        if ($chiefMail !== 0 && $chiefMail !== '0'){
+            $this->TestMail($chiefMail);
+        }
+        else if($chiefMail == 0 || $chiefMail == '0'){
+
+        }
 //        $response =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
 //        $recruiting_emails = explode(' ', $response->Mail);
         $response_mail =  $kias->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
