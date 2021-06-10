@@ -1,6 +1,7 @@
 <template>
     <div>
         {{path}}
+        {{paths}}
         <div class="inner-wrap t-0 text-center" >
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket()">Чекнуть</button>
@@ -46,6 +47,7 @@
                 selectedECPFile: '',
                 signedFile:'',
                 path:'',
+                paths:[],
                 signedFileInfo: [],
                 edsConfirmed: false,
                 hasConfirmed: false,
@@ -225,11 +227,13 @@
             },
             saveDocument(){
                 if(this.hasConfirmed) {
-                    axios.post("/save_document", {
+                    axios.post("/save_documentpo", {
                         classISN: this.classIsn,
                         data: this.info,
                         emplISN: this.emplIsn
                     }).then((response) => {
+                        this.paths = response.data.result.map(el => el.filepath);
+                        this.path = response.data.result[0].filepath;
                         if (response.data.success) {
                             this.loader(false);
                         } else {
@@ -275,10 +279,11 @@
                 });
             },
             setQr(){
-                axios.post("/setQr", {
+                axios.post("/setQrPo", {
                     refISN: 40475701,
                     path:this.path,
                     type: 'D',
+                    paths:this.paths,
                     edsType: 'cms',
                     info:this.info,
                 }).then((response) => {

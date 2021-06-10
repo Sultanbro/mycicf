@@ -90,6 +90,8 @@ Vue.component('eds-od', require('./components/eds/eds-od').default);
 
 Vue.component('eds-payout', require('./components/eds/eds-payout').default);
 
+Vue.component('payout-request', require('./components/eds/payout-request').default);
+
 Vue.component('coordination', require('./components/employee/coordination.vue').default);
 
 Vue.component('search', require('./components/documentation/search.vue').default);

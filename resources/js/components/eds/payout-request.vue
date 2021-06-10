@@ -11,8 +11,8 @@
             <p v-for="(item,index) in info">
                 {{ parseInt(index)+1 }}. РВ isn: {{ item.isn }}
                 {{item.product_family_isn}}
-                <span class="text-success" v-if="item.signed == 0 ||item.confirmed !=1">прошел проверку нужно посадить QR</span>
-                <span class="text-success" v-if="item.signed == 1 ||item.confirmed ==1">прошел проверку </span>
+                <span class="text-success" v-if="item.signed == 0 ||item.confirmed ==1">прошел проверку нужно посадить QR</span>
+                <span class="text-success" v-if="item.signed == 1 ||item.confirmed ==1">прошел проверку и подписан </span>
                 <!--span class="text-danger" v-if="item.confirmed == 0">не проверен </span-->
                 <span class="text-danger" v-if="item.iin_fail == 1">не совпадает ИИН</span>
             </p>

@@ -23,7 +23,15 @@ class EdsController extends Controller
     }
 //file type = 1 sig.0=excel
     public function edsPO(KiasServiceInterface $kias){
-        $po = TblForPayEds::where('filetype',"1")->where('confirmed','0')->select('isn','name','date_sign','id','refundisn','refundid','confirmed','plea','iin','iin_fail')->get();
+        $po = DB::table('tbl_for_payeds AS pr')
+            ->leftJoin('tbl_for_payeds AS pf', 'pf.plea', '=', 'pr.plea')
+            ->where('pf.filetype','=','0')
+            ->distinct()
+            ->select('pr.id as id','pr.isn as isn' ,'pr.full_data as full_data','pr.plea as plea','pr.refundid as refundid','pr.refundisn as refundisn','pr.iin as iin','pf.name as product_family_name', 'pf.isn as product_family_isn')
+            ->where('pr.filetype','=','1')
+            ->where('pr.confirmed','=','0')
+            ->orderBy('pr.isn', 'desc')
+            ->get();
         return view('eds-payout',compact('po'));
     }
     public function edsPR(KiasServiceInterface $kias){
@@ -95,6 +103,7 @@ class EdsController extends Controller
                 $full_data = $value['full_data'];
                 $isn = $value['isn'];
                 $refund = TblForPayRequest::find($value['id']);
+                $full_data = $refund->full_data;
                 if ($value['confirmed'] == 1) {
                     $refund->confirmed = 1;
                     $refund->signed = 1;
@@ -144,15 +153,15 @@ class EdsController extends Controller
                     $drawing->setWorksheet($spreadsheet->getActiveSheet());
                     $writer = new Xlsx($spreadsheet);
 //
-                    $writer->save(storage_path('app/public/insurance_case_docs/results/' . $kek . '_insurance_payment.xlsx'));
+                    $writer->save(storage_path('app/public/insurance_case_docs/results/' . $isn . '_insurance_payment.xlsx'));
 //        dd('kek');
                     //       QR тут костыльным методом ложится
 
                     //Вставка в файл
 //            $writer = new Xlsx($spreadsheet);
                     $attachment = new Attachment();
-                    $writer->save(storage_path('app/public/insurance_case_docs/results/' . $kek . '_insurance_payment.xlsx'));
-                    $path = storage_path('app/public/insurance_case_docs/results/' . $kek . '_insurance_payment.xlsx');
+                    $writer->save(storage_path('app/public/insurance_case_docs/results/' . $isn . '_insurance_payment.xlsx'));
+                    $path = storage_path('app/public/insurance_case_docs/results/' . $isn . '_insurance_payment.xlsx');
 //        dd($path);
                     $attachment->insurance_case_id = session('caseId');
                     $attachment->filename = $path;
@@ -185,6 +194,128 @@ class EdsController extends Controller
                 'success' => $request->data,
                 'full-data' => $full_data,
             ]);
+
+
+    }
+    public function setQrPo(Request $request, KiasServiceInterface $kias)
+    {
+        //        dd($request->paths);
+//        var_dump(count($request->paths));
+//        dd($request->info);
+//        dd($request);
+//        dd($request->info[0]['plea']);
+//        $pathh = $request->path;
+//        $trimmed = trim($pathh);
+        //dd($path);
+        $info_client = [];
+//        dd($request);
+//        $cnt = count($request->paths);
+//        dd($cnt);
+        $plea = '';
+        $isn = '';
+
+//            var_dump($key);
+//            dd($cnt);
+//            dd($request->info);
+        foreach ($request->info as $key => $value) {
+//            dd($value);
+            $plea = $value['plea'];
+            $full_data = $value['full_data'];
+//            dd($full_data);
+            $isn = $value['isn'];
+            $refund = TblForPayEds::find($value['id']);
+            $full_data = $refund->full_data;
+            //dd($full_data);
+            if ($value['confirmed'] == 1) {
+                $refund->confirmed = 1;
+                $refund->signed = 1;
+            }
+            $kek = 321;
+//          $destinationPath=storage_path('app/public/insurance_case_docs/results/123.xlsx');
+//          $success = \File::copy($pathh,$destinationPath);
+            $repeat = count($request->paths);
+//          dd($value['plea']);
+//          dd($request);
+            foreach ($request->paths as  $allpath) {
+                $file = $allpath;
+
+
+//        $destination = storage_path('app/public/insurance_case_docs/results/' . $kek .'_insurance_payment.xlsx');
+//        Storage::copy($file,$destination);
+
+                $homepage = file_get_contents(strval($file));
+            }
+
+//        dd($homepage);
+//        $iin = Auth::user()->iin;
+//        dd($iin);
+//        $spreadsheet = $path;
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file);
+//          dd($kek);
+
+//        $spreadsheet= storage_path($request->path);
+//        Изменения
+            $sheet = $spreadsheet->getActiveSheet();
+            //       QR тут костыльным методом ложится
+
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+//        $qr=QrCode::format('png')->size(300)->generate($info_client);
+//        dd($kek);
+            $qr=QrCode::format('png')->size(300)->generate($full_data);
+//                    dd($qr);
+            Storage::disk('local')->put($isn.'_payment_request.png', $qr);
+//                    $drawing->setImageResource(imagecreatefrompng($qr));
+            $drawing->setPath(storage_path('app/'.$isn.'_payment_request.png')); // put your path and image here
+            $drawing->setOffsetX(110);
+            $drawing->setRotation(0);
+            $drawing->setCoordinates('AE48');
+            $drawing->getShadow()->setVisible(true);
+            $drawing->getShadow()->setDirection(45);
+            $drawing->setWorksheet($spreadsheet->getActiveSheet());
+            $writer = new Xlsx($spreadsheet);
+//
+            $writer->save(storage_path('app/public/insurance_case_docs/results/' . $isn . '_zayvlenie_na_ocenky.xlsx'));
+//        dd('kek');
+            //       QR тут костыльным методом ложится
+
+            //Вставка в файл
+//            $writer = new Xlsx($spreadsheet);
+            $attachment = new Attachment();
+            $writer->save(storage_path('app/public/insurance_case_docs/results/' . $isn . '_zayvlenie_na_ocenky.xlsx'));
+            $path = storage_path('app/public/insurance_case_docs/results/' . $isn . '_zayvlenie_na_ocenky.xlsx');
+//        dd($path);
+            $attachment->insurance_case_id = session('caseId');
+            $attachment->filename = $path;
+            $attachment->type = 'insurancePayment';
+            $attachment->save();
+
+//        dd(File::get($path));
+
+
+            $file = File::get($path);
+
+            $base64String = base64_encode($file);
+            //Making a Plea isn for uploading attachments
+//                dd($value);
+            $results[] = $kias->saveAttachment(
+                $plea,
+                basename($path),
+                $base64String,
+                'D'
+            );
+
+        }
+
+
+
+        return response()->json([
+            'result' => isset($results->ISN) ? (string)$results->ISN : '',
+            'results' => $results,
+            'base64String' => $base64String,
+            'success' => $request->data,
+            'full-data' => $full_data,
+        ]);
+
 
 
     }
@@ -288,7 +419,7 @@ class EdsController extends Controller
 //                    $buttonClick = $kias->buttonClick(intval($save->DocISN),'BUTTON1');
 //                    if(isset($buttonClick->error)){
 //                        $success = false;
-//                        $error = (string)$buttonClick->error->text;
+//                        $error = ( string)$buttonClick->error->text;
 //                    } else {
 
                         foreach ($request->data as $info) {
@@ -349,54 +480,61 @@ class EdsController extends Controller
             'result' => $files
         ]);
     }
-    public function saveDocumentPO(Request $request, KiasServiceInterface $kias) {
-        //$test = $kias->getDocRowAttr(1920701,'');
-        //dd($test);
+    public function saveDocumentPO(Request $request, KiasServiceInterface $kias)
+    {
         $rv = [];
-        if($request->data){
+        if ($request->data) {
             $i = 1;
-            foreach($request->data as $info){
-                if($info['confirmed'] == 1){
+            foreach ($request->data as $info) {
+                if ($info['confirmed'] == 1) {
+                    $xslfilepaths = $kias->getAttachmentPath("D", '21-001982/1', "cms", '', 551783, $info['product_family_isn']);
+//                    $sigFiles = $kias->getAttachmentPath($type,$refID,$format,$docClass,$refISN,$ISN);
+                    if (isset($xslfilepaths->error)) {
+                        return response()->json([
+                            'success' => false,
+                            'result' => (string)$xslfilepaths->error->text
+                        ]);
+                    } else {
+                        foreach ($xslfilepaths->ROWSET->row as $file) {
+                            $files[] = ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN];
+                        }
+                    }
                     $rv[] = array(
-                        "valn$i" => $info['po_isn'],
-                        //"valc$i" => '',
-                        //"vald$i" => date('d.m.Y'),
+                        "valn$i" => $info['isn'],
                     );
                     $i++;
                 }
             }
         }
-        if(count($rv) > 0){
-            $save = $kias->saveDocument($request->classISN,$request->emplISN,'',$rv,[]);
-            if(isset($save->error)){
+        if (count($rv) > 0) {
+            $save = $kias->saveDocument($request->classISN, "551783", "21-001982/1", $request->emplISN, '', $rv, []);
+            if (isset($save->error)) {
                 $success = false;
                 $error = (string)$save->error->text;
             } else {
-                if(isset($save->DocISN)){
-                    $buttonClick = $kias->buttonClick(intval($save->DocISN),'BUTTON1');
-                    if(isset($buttonClick->error)){
-                        $success = false;
-                        $error = (string)$buttonClick->error->text;
-                    } else {
-                        foreach ($request->data as $info) {
-                            $refund = Refund::find($info['id']);
-                            if ($info['confirmed'] == 1) {
-                                $refund->confirmed = 1;
-                                $refund->main_doc_isn = $save->DocISN;
-                            } else {
-                                $refund->iin_fail = 1;
-                            }
-                            if ($refund->save()) {
-                                $success = true;
-                            }
+                if (isset($save->DocISN)) {
+                    foreach ($request->data as $info) {
+                        $refund = TblForPayEds::find($info['id']);
+                        if ($info['confirmed'] == 1) {
+                            $refund->full_data = $full_data = json_encode($info);
+                            $refund->confirmed = 1;
+                        } else {
+                            $refund->iin_fail = 1;
                         }
+                        if ($refund->save()) {
+                            $success = true;
+                        }
+
                     }
                 }
             }
         }
+
         return response()->json([
+            'path'=>isset($xslfilepaths) ? $xslfilepaths : '',
             'success' => isset($success) ? $success : true,
-            'error' => isset($error) ? $error : ''
+            'error' => isset($error) ? $error : '',
+            'result' => $files
         ]);
     }
 
@@ -440,7 +578,7 @@ class EdsController extends Controller
     }
     public function saveFailStatusPO(Request $request){
         foreach($request->data as $info){
-            $refund = Refund::find($info['id']);
+            $refund = TblForPayEds::find($info['id']);
             $refund->iin_fail = 1;
             try{
                 if($refund->save()){

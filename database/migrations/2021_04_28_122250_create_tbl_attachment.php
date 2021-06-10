@@ -18,7 +18,9 @@ class CreateTblAttachment extends Migration
             $table->string('filename')->default('')->length(100);
             $table->string('filename_hash')->default('')->length(100);
             $table->string('type');
-            $table->int('create_time');
+            $table->timestamps();
+            $table->integer('create_time');
+
 
 
         });

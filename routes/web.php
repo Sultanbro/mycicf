@@ -183,6 +183,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('eds/pr' , 'EdsController@edsPR');
     Route::post('/signqr', 'EdsController@signQr');
     Route::post('/setQr', 'EdsController@setQr');
+    Route::post('/setQrPo', 'EdsController@setQrPo');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
