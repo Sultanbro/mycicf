@@ -282,19 +282,18 @@ class CentcoinsController extends Controller
             );
     }
 
-    public function spendCoinAll()
+    public function spendCoinAll(Request $request)
     {
-        $centcoins = Centcoin::where('user_isn')->get();
+        $results = $request->get('selectedCoin');
+        $centcoins = Centcoin::whereIn('user_isn',$results)->get();
         $centcoins->each(function (Centcoin $centcoin){
-            $cleanCoin = CentcoinHistory::whereDate('updated_at', '<', date('Y-m-d H:i:s', strtotime('01.01.2021')))
-                ->where('changed_user_isn', $centcoin->user_isn)
-                ->orderBy('updated_at', 'desc')
+            $cleanCoin = CentcoinHistory::where('changed_user_isn', $centcoin->user_isn)
                 ->first();
             if ($cleanCoin !== null){
                 $hist = new CentcoinHistory();
                 $hist->type = 'Оплата';
                 $hist->description = 'Ежегодное обнуление';
-                $hist->quantity = $cleanCoin->total;
+                $hist->quantity = $centcoin->centcoins;
                 $hist->operation_type = 'minus';
                 $hist->total = 0;
                 $hist->user_isn = 1;
@@ -303,4 +302,26 @@ class CentcoinsController extends Controller
             }
         });
     }
+
+    public function spendCoinData(Request $request)
+    {
+        $dateBeg = new Carbon(strtotime($request->dateBeg));
+        $dateEnd = new Carbon(strtotime($request->dateEnd));
+
+        $centcoins = Centcoin::where('updated_at','>', $dateBeg)
+            ->where('updated_at','<', $dateEnd)->get();
+        $response = [];
+        foreach ($centcoins as $item){
+            array_push($response,[
+                'id' => $item->id,
+                'isn' => $item->user_isn,
+                'user_name' => (new Branch())->getUserName($item->user_isn),
+                'centcoins' => $item->centcoins,
+                'created_at' => $item->created_at->toDateString(),
+                'updated_at' => $item->updated_at->toDateString()
+            ]);
+        }
+        return $response;
+    }
+
 }
