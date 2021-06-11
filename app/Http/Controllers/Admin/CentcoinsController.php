@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CentcointExports;
+use App\Library\CentcoinService;
 
 class CentcoinsController extends Controller
 {
@@ -282,26 +283,11 @@ class CentcoinsController extends Controller
             );
     }
 
-    public function spendCoinAll(Request $request)
+    public function spendCoinAll(Request $request, CentcoinService $service)
     {
         $results = $request->get('selectedCoin');
 
-        foreach ($results as $result) {
-            // $user = User::whereIsn($result)->first();
-            $balance = User::getBalance($result);
-
-            $hist = new CentcoinHistory();
-            $hist->type = 'Обнуление';
-            $hist->description = 'Ежегодное обнуление';
-            $hist->quantity = $balance;
-            $hist->operation_type = 'minus';
-            $hist->total = 0;
-            $hist->user_isn = auth()->user()->ISN;
-            $hist->changed_user_isn = $result;
-            $hist->save2();
-
-            Centcoin::where('user_isn', '=', $result)->update(['centcoins' => $balance]);
-        }
+        $service->spendAll($results, auth()->user());
 
         return [
             'success' => true,
