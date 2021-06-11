@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CentcoinService
 {
-    public function spendAll(array $isns, $auth_user = null) {
+    public function spendAll(array $isns) {
         foreach ($isns as $isn) {
             // $user = User::whereIsn($result)->first();
             $balance = User::getBalance($isn);
@@ -20,10 +20,11 @@ class CentcoinService
             $hist->quantity = $balance;
             $hist->operation_type = 'minus';
             $hist->total = 0;
-            $hist->user_isn = $auth_user ? $auth_user->ISN : '00';
+            $hist->user_isn = auth()->user()->ISN;
             $hist->changed_user_isn = $isn;
             $hist->save2();
 
+            $balance = User::getBalance($isn);
             Centcoin::where('user_isn', '=', $isn)->update(['centcoins' => $balance]);
         }
     }

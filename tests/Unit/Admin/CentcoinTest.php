@@ -17,6 +17,7 @@ class CentcoinTest extends TestCase
      */
     public function testExample()
     {
+        \Auth::login(User::first());
         CentcoinHistory::truncate();
         $service = app(CentcoinService::class);
 
