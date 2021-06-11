@@ -41,7 +41,9 @@
                             <table class="dosier-table centcoins-table table text-align-center mt-4">
                                 <thead>
                                 <tr class="header color-white">
-                                    <th scope="col">выбрать</th>
+                                    <th scope="col">
+                                        <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
+                                    </th>
                                     <th scope="col">#</th>
                                     <th scope="col">ФИО</th>
                                     <th scope="col">Сенткоин</th>
@@ -51,7 +53,9 @@
                                 </thead>
                                 <tbody class="date-color">
                                 <tr v-for="centcoin in centcoins">
-                                    <td><input type="checkbox" v-bind:value="centcoin" v-model="selectedCoin"></td>
+                                    <td><input type="checkbox" v-bind:value="centcoin" v-model="selectedCoin"
+                                               @change='updateCheckall()'>
+                                    </td>
                                     <td>{{centcoin.id}}</td>
                                     <td>{{centcoin.user_name}}</td>
                                     <td>{{centcoin.centcoins}}</td>
@@ -85,12 +89,32 @@
                 dateEnd: new Date().getFullYear() + '-12-31',
                 centcoins: [],
                 selectedCoin: [],
+                isCheckAll: false,
+
             }
         },
         mounted() {
             this.getUserList()
         },
         methods : {
+
+            checkAll: function(){
+                this.isCheckAll = !this.isCheckAll;
+                this.selectedCoin = [];
+                if(this.isCheckAll) {
+                    for(let key in this.centcoins) {
+                        this.selectedCoin.push(this.centcoins[key]);
+                    }
+                }
+            },
+            updateCheckall: function(){
+                if(this.selectedCoin.length == this.centcoins.length){
+                    this.isCheckAll = true;
+                }else{
+                    this.isCheckAll = false;
+                }
+            },
+
             getUserList() {
                 this.axios.post('/getFullBranch', {}).then((response) => {
                     this.userList = response.data.result;
@@ -112,6 +136,8 @@
                 let data = this.selectedCoin.map((e) => e.isn);
                 this.axios.post('/centcoins/spendCoinAll', {
                     selectedCoin: data
+                }).then(() => {
+                    this.getCentTable();
                 })
             },
             send() {
@@ -123,7 +149,7 @@
                     .then(
                         response => {
                             if(response.data.success){
-                                location.reload();
+                                this.getCentTable();
                             }else{
                                 alert(response.data.error)
                             }

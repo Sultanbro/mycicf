@@ -285,22 +285,27 @@ class CentcoinsController extends Controller
     public function spendCoinAll(Request $request)
     {
         $results = $request->get('selectedCoin');
-        $centcoins = Centcoin::whereIn('user_isn',$results)->get();
-        $centcoins->each(function (Centcoin $centcoin){
-            $cleanCoin = CentcoinHistory::where('changed_user_isn', $centcoin->user_isn)
-                ->first();
-            if ($cleanCoin !== null){
-                $hist = new CentcoinHistory();
-                $hist->type = 'Оплата';
-                $hist->description = 'Ежегодное обнуление';
-                $hist->quantity = $centcoin->centcoins;
-                $hist->operation_type = 'minus';
-                $hist->total = 0;
-                $hist->user_isn = 1;
-                $hist->changed_user_isn = $centcoin->user_isn;
-                $hist->save();
-            }
-        });
+
+        foreach ($results as $result) {
+            // $user = User::whereIsn($result)->first();
+            $balance = User::getBalance($result);
+
+            $hist = new CentcoinHistory();
+            $hist->type = 'Обнуление';
+            $hist->description = 'Ежегодное обнуление';
+            $hist->quantity = $balance;
+            $hist->operation_type = 'minus';
+            $hist->total = 0;
+            $hist->user_isn = auth()->user()->ISN;
+            $hist->changed_user_isn = $result;
+            $hist->save2();
+
+            Centcoin::where('user_isn', '=', $result)->update(['centcoins' => $balance]);
+        }
+
+        return [
+            'success' => true,
+        ];
     }
 
     public function spendCoinData(Request $request)
