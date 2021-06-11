@@ -77,6 +77,8 @@ class UpdatePayOut extends Command
             $query->po_isn = $payout->po_isn;
             $query->client_id = $payout->client_id;
             $query->filetype = $payout->filetype;
+            $query->refundisn = $payout->refundisn;
+            $query->refundid = $payout->refundid;
             if ($query->save()) {
                 echo "Новая запись po_isn $payout->po_isn успешно записана \n";
             }
