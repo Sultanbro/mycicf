@@ -59,4 +59,7 @@ class CentcoinHistory extends Model
         $this->setTotal();
         (new NotificationController(app(NotificationServiceInterface::class)))->sendCentcoinNotify($this);
     }
+    public function save2(array $options = []) {
+        parent::save($options);
+    }
 }
