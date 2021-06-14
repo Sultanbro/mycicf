@@ -256,7 +256,8 @@
                             <button v-if="addChange && editMode === -1" type="button" class="btn btn-primary" @click="editDoc(parentIndex)">Редактировать</button>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" @click="addField()">Добавить</button>
+                    <button type="button" class="btn btn-dark" @click="addField()">Добавить</button>
+                    <button type="button" class="btn btn-dark" @click="getPosts()">Проверка</button>
                 </div>
             </div>
         </div>
@@ -300,9 +301,15 @@ export default {
     methods: {
         getPosts() {
             this.preloader(true);
-            this.axios.post("contact-center/test", {labels: this.labels}).then(response => {
-
-            });
+            this.axios.post("contact-center/test", {labels: this.labels})
+                .then(response => {
+                    if (response.data.success) {
+                        return "Yes"
+                    }else{
+                        let errorText = response.data.error;
+                        return "No"
+                    }
+                });
         },
         saveDocument() {
             let texts = this.texts
