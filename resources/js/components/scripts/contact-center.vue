@@ -230,26 +230,26 @@
                     <h2>Страховой случай/Регистрация/ОГПО ВТС</h2>
                 </div>
                 <div class="mt-3">
-                    <div class="pb-2 ct-myMainCont" v-for="(text, parentIndex) in texts">
+                    <div class="pb-2 ct-myMainCont" v-for="(text, parentIndex) in texts" v-if="!text.deleted">
                         <input v-if="text.editNameMode" type="text" v-model="text.name" style="width: 75%; height: 40px;"/>
                         <button v-else type="button" class="col-md-9 ct-myBtn btn my-btn ct-myBottomSize" data-toggle="collapse" :data-target="`#hiInsIvOgpoVts_${parentIndex}`" @click="editMode1 =! editMode1">{{text.name}}</button>
-                        <i v-if="text.editNameMode" @click="text.editNameMode = false" class="ml-3 fa fa-check fa-lg" title="Сохранить"></i>
+                        <i v-if="text.editNameMode" @click="text.editNameMode = false; this.saveDocument()" class="ml-3 fa fa-check fa-lg" title="Сохранить"></i>
                         <i v-else @click="text.editNameMode = true" class="ml-3 fa fa-pencil fa-lg" title="Изменить"></i>
-                        <i @click="deleteField(parentIndex)" class="ml-3 fa fa-trash fa-lg" title="Удалить"></i>
+                        <i @click="texts[parentIndex].deleted = true; deleteField(index)" class="ml-3 fa fa-trash fa-lg" title="Удалить"></i>
                         <hr>
                         <div :id="`hiInsIvOgpoVts_${parentIndex}`" class="collapse">
                             <div v-if="editMode === parentIndex">
-                                <div v-for="(text1, index) in text.labels" :key="index">
-                                    <textarea v-model="text.labels[index]" style="width: 75%; height: 60px"></textarea>
-                                    <button @click="deleteText(text, index, parentIndex)" type="button" class="btn btn-danger ml-3">Удалить</button>
+                                <div v-for="(text1, index) in text.labels" :key="index" v-if="!text1.deleted">
+                                    <textarea v-model="text.labels[index].text" style="width: 75%; height: 60px"></textarea>
+                                    <button @click="texts[parentIndex].labels[index].deleted = true; deleteField(index)" type="button" class="btn btn-danger ml-3">Удалить</button>
                                     <hr>
                                 </div>
                                 <button v-if="saveDoc" type="button" class="btn btn-success" @click="saveDocument()">Сохранить</button>
                                 <button type="button" class="btn btn-primary" @click="addText(parentIndex)">Добавить поле</button>
                             </div>
                             <div v-else>
-                                <div v-for="text1 in text.labels">
-                                    {{text1}}
+                                <div v-for="text1 in text.labels" v-if="!text1.deleted">
+                                    {{text1.text}}
                                     <hr>
                                 </div>
                             </div>
@@ -257,7 +257,6 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-dark" @click="addField()">Добавить</button>
-                    <button type="button" class="btn btn-dark" @click="getPosts()">Проверка</button>
                 </div>
             </div>
         </div>
@@ -276,19 +275,7 @@ export default {
                 text: ''
             },
             editText: '',
-            texts: [
-                {
-                    name: "Приветствие",
-                    editNameMode : false,
-                    deleteText :false,
-                    labels: [
-                        'Добрый день, Страховая компания Сентрас Иншуранс (имя менеджера).',
-                        'Уважаемый клиент, я Вас слушаю/Чем я могу Вам помочь? / в случае, если клиент после приветствия молчит.',
-                        'Уважаемый клиент, скажите пож-та, как я могу к Вам обращатся? / Скажите пож-та, как Вас зовут?',
-                        'Имя клиента - очень приятно.'
-                    ]
-                },
-            ],
+            texts: [],
             storedString: '',
             inputString: '',
             prevText: '',
@@ -298,16 +285,29 @@ export default {
             saveDoc: false,
         }
     },
+    mounted() {
+        console.log('a')
+        this.getDocuments();
+    },
     methods: {
-        getPosts() {
-            this.preloader(true);
-            this.axios.post("contact-center/test", {labels: this.labels})
+        getDocuments(){
+            this.axios.post("/contact-center/getDocuments", {texts: this.texts})
                 .then(response => {
                     if (response.data.success) {
-                        return "Yes"
+                        this.texts = response.data.data;
+                    }else{
+                        alert("No")
+                    }
+                });
+        },
+        setDocument() {
+            this.axios.post("contact-center/setDocument", {texts: this.texts})
+                .then(response => {
+                    if (response.data.success) {
+                        // alert("Yes")
                     }else{
                         let errorText = response.data.error;
-                        return "No"
+                        alert("No")
                     }
                 });
         },
@@ -323,32 +323,39 @@ export default {
             this.addChange = true
             this.saveDoc = false
             this.editMode = -1
+            this.setDocument();
         },
         editDoc(index) {
             this.editMode = index
             this.saveDoc = true
         },
-        deleteText(text, index, parentIndex) {
-            if(confirm('Вы действительно хотите удалить?'))
-            this.texts[parentIndex].labels.splice(index, 1)
-        },
         addField() {
             this.texts.push({
                 name : 'Текст',
-                editNameMode : false,
-                labels: [
-                    'Текст'
-                ]
+                deleteText : false,
+                deleted : false,
+                editMode : false,
+                labels: [],
+                id: null
             })
         },
         addText(index) {
-            this.texts[index].labels.push('')
+            this.texts[index].labels.push({
+                'text' : '',
+                'original' : '',
+                'deleted' : false,
+                'id' : null
+            })
             this.editMode = index
             this.saveDoc = true
         },
         deleteField(index) {
             if(confirm('Вы действительно хотите удалить?'))
             this.texts.splice(index, 1)
+        },
+        deleteText(text, index, parentIndex) {
+            if(confirm('Вы действительно хотите удалить?'))
+                this.texts[parentIndex].labels.splice(index, 1)
         },
     }
 }

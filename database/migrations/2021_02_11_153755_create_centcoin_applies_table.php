@@ -45,7 +45,5 @@ class CreateCentcoinAppliesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('centcoin_applies');
-
-        $table-> dropColumn('status');
     }
 }

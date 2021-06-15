@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContactCentersTable extends Migration
+class CreateContactCenterLabelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,15 @@ class CreateContactCentersTable extends Migration
      */
     public function up()
     {
-        Schema::create('contact_centers', function (Blueprint $table) {
+        Schema::create('contact_centers', function (Blueprint $table){
             $table->bigIncrements('id');
             $table->string('name');
+            $table->timestamps();
+        });
+        Schema::create('contact_center_labels', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('parent_id');
+            $table->string('text');
             $table->timestamps();
         });
     }
@@ -27,6 +33,7 @@ class CreateContactCentersTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('contact_center_labels');
         Schema::dropIfExists('contact_centers');
     }
 }
