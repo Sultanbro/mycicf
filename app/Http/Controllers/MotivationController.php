@@ -303,7 +303,7 @@ class MotivationController extends Controller
                 ];
                 break;
             case 5 :
-                $category = 5;
+                /*$category = 5;
                 $mot_sum = (number_format((double)$response->Mot->row->TotalMotSum, 0, '.', ' ') ?? 0);
                 $list = [
                     [
@@ -337,7 +337,7 @@ class MotivationController extends Controller
                         'color' => 'transparent',
                     ],
                 ];
-                break;
+                break;*/
             default :
                 $list = [];
         }
