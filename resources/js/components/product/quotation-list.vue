@@ -16,7 +16,7 @@
         },
         methods:{
             filter(){
-                window.location.href = this.pageUrl+'?DA='+this.sendDA+'&status='+this.quotationStatus+'&type='+this.type+'&nshb='+this.nshb;
+                window.location.href = this.pageUrl+'?DA='+this.sendDA+'&status='+this.quotationStatus+'&type='+this.type+'&nshb='+this.nshb+'&isBitrix='+window.bitrixData.isBitrix;
             },
             checkStatus(id,isn,quotation_type){
                 let url = quotation_type == 'express' ? '/express/updateDocumentStatus' : '/full/updateFullStatus';

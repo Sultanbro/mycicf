@@ -13,6 +13,7 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-29153373-9');
+        window.bitrixData = { isBitrix: <?php echo json_encode($isBitrix); ?> };
     </script>
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
@@ -40,8 +41,10 @@
 @include('layouts.header')
 <main class="flex-row"  id="app">
     <div class="main_margin flex-row width100">
-        @include('layouts.sidebar')
-        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+        @if(!$isBitrix)
+            @include('layouts.sidebar')
+        @endif
+        <div class="@if($isBitrix) col-md-12 @else col-md-8 @endif news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
 
             <quotation-list inline-template
                             parametres="{{ json_encode($request) }}"
@@ -89,7 +92,7 @@
                         </div>
 
                         <div class="d-inline-flex">
-                            <a href="{{ route('full_front',['ID' => $product->id,'quotationId' => 0]) }}" target="_blank">
+                            <a href="{{ route('full_front',['ID' => $product->id,'quotationId' => 0, 'isBitrix' => $isBitrix]) }}" >
                                 <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 ml-2 pt-1 pb-1 mt-3 color-white button-accept pointer">
                                     <div>
                                         <span class="pl-2">Создать</span>

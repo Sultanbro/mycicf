@@ -1,9 +1,9 @@
 <template>
     <div @keydown.enter="login" class="col-lg-6 column-2"> <!-- Second column-->
-        <div class="users d-flex justify-content-center">
+        <div class="users d-flex justify-content-center" v-if="!bitrixData.isBitrix">
             <img src="images/users-white-image.png" alt="users image" class="users__image">
         </div>
-        <div class="login-form">
+        <div class="login-form" v-if="!bitrixData.isBitrix">
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-user-o fa-input" aria-hidden="true"></i>
@@ -39,6 +39,7 @@
                 type: 1,
                 username : '',
                 password : '',
+                bitrixData: []
             }
         },
         methods: {
@@ -72,13 +73,19 @@
                     }
                 })
                 .finally(() => {
-                    this.preloader(false)
+                    if(!window.bitrixData.isBitrix) {
+                        this.preloader(false)
+                    }
                 });
             },
 
             afterLogin: function (response) {
                 if(response.success){
-                    location.href = '/news';
+                    let url = 'news';
+                    if(window.bitrixData.isBitrix){
+                        url = 'full?isBitrix='+window.bitrixData.isBitrix;
+                    }
+                    location.href = '/'+url;
                 }else{
                     this.flashMessage.error({
                         title: "Ошибка",
@@ -135,5 +142,15 @@
         watch: {
             type : ['changeIcon', 'changeType']
         },
+
+        created: function(){
+            this.bitrixData = window.bitrixData;
+            if(window.bitrixData.isBitrix){
+                this.preloader(true);
+                this.username = window.bitrixData.bitrixAuthData.username;
+                this.password = window.bitrixData.bitrixAuthData.password;
+                this.login();
+            }
+        }
     }
 </script>

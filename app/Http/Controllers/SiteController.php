@@ -22,14 +22,40 @@ use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
+        $isBitrix = $this->isBitrixRequest($request);
+        $bitrixData = $isBitrix ? $this->getBitrixAuthData($request) : [];
+        if($isBitrix){
+            $this->logout();
+        }
+
         if(Auth::check())
         {
             return redirect(route('news.index'));
         }
 
-        return view('login');
+        return view('login',compact(['isBitrix', 'bitrixData']));
+    }
+
+    public function isBitrixRequest($request){
+        return isset($request->isBitrix) && $request->isBitrix == 'true' || isset($request->isBitrix) && $request->isBitrix == 1 ? true : false;
+//        if(isset($request->isBitrix)) {
+//            if($request->isBitrix == 'true'){
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return false;
+//        }
+    }
+
+    public function getBitrixAuthData($request){
+        return array(
+            'username' => $request->username,
+            'password' => $request->password,
+        );
     }
 
     public function postLogin(KiasServiceInterface $kias, Request $request)
@@ -464,10 +490,10 @@ class SiteController extends Controller
         }
     }
 
-    public function logout(){
+    public function logout($isBitrix = false){
         if(Auth::check())
             Auth::logout();
-        return redirect('/');
+        return $isBitrix ? true : redirect('/');
     }
 
     public function getBranchSearch(Request $request){

@@ -13,6 +13,8 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-29153373-9');
+
+        window.bitrixData = { isBitrix: <?php echo json_encode($isBitrix); ?>, bitrixAuthData: <?php echo json_encode($bitrixData); ?> };
     </script>
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">

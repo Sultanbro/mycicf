@@ -25,6 +25,12 @@ class ProductsController extends Controller
     const DICT_CURRENCY_EURO = 9721;
     const DICT_CURRENCY_TENGE = 9813;
 
+    protected $siteController;
+
+    public function __construct(){
+        $this->siteController = new SiteController();
+    }
+
     public function index($id = 1){
         $data = InsProduct::findOrFail($id);
         $consturction = json_decode($data->construction);
@@ -830,7 +836,8 @@ class ProductsController extends Controller
         }
     }
 
-    public function fullList(){
+    public function fullList(Request $request){
+        $isBitrix = $this->siteController->isBitrixRequest($request);
         $products = [];
         foreach (ExpressProduct::orderBy('ordinal','asc')->get() as $product){
             if(isset($product->constr->id)) {
@@ -841,7 +848,7 @@ class ProductsController extends Controller
                 ]);
             }
         }
-        return view('full.list', compact('products'));
+        return view('full.list', compact('products','isBitrix'));
     }
 
     public function fullQuotationList($productISN,Request $request){
@@ -860,10 +867,11 @@ class ProductsController extends Controller
 //            $quotations = $quotations->where('contract_number','');
 //        }
 
+        $isBitrix = $this->siteController->isBitrixRequest($request);
         $quotations = $quotations->orderBy('created_at','desc')->paginate(15);
         $product = ExpressProduct::where('product_isn',$productISN)->first();
         $statuses = (new SiteController())->getDictiList(json_decode($product->constr->parentisns)->formular->status);
-        return view('full.quotation_list', compact(['quotations','product','statuses']))->with('request',$request->all());
+        return view('full.quotation_list', compact(['quotations','product','statuses', 'isBitrix']))->with('request',$request->all());
     }
 
     public function expressQuotationList($productISN, Request $request){
@@ -914,7 +922,8 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function fullCreateEdit($ID,$quotationId,Request $request){
+    public function fullCreateEdit($ID, $quotationId, Request $request){
+        $isBitrix = $this->siteController->isBitrixRequest($request);
         if(($model = ExpressProduct::find($ID)) === null){
             return response()->json([
                 'success' => false,
@@ -923,7 +932,7 @@ class ProductsController extends Controller
         }
         $expressAttr = isset($request->all()['attributes']) ? json_decode($request->all()['attributes']) : (object)[];
         $productName = $model->name;
-        return view('full.create', compact(['ID','quotationId','productName','expressAttr']));
+        return view('full.create', compact(['ID','quotationId','productName','expressAttr','isBitrix']));
     }
 
     public function getFullData(Request $request, KiasServiceInterface $kias){      // Получить доп.аттрибуты, оговорки и ограничения, участники

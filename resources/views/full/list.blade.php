@@ -38,15 +38,19 @@
     {{--    <script src="{{asset('js/simple_info.js')}}"></script>--}}
 </head>
 <body >
-@include('layouts.header')
+@if(!$isBitrix)
+    @include('layouts.header')
+@endif
 <main class="flex-row"  id="app">
-    <div class="main_margin flex-row width100">
-        @include('layouts.sidebar')
-        <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
+    <div class="@if($isBitrix) row @else main_margin @endif flex-row width100">
+        @if(!$isBitrix)
+            @include('layouts.sidebar')
+        @endif
+        <div class="@if($isBitrix) col-md-12 @else col-md-8 @endif news-tape-bg radius-4px mt-3 pb-2" id="employee_info">
             <h4 class="text-center mt-2">Полная котировка</h4>
             @foreach($products as $product)
                 <div class="d-flex mt-2 bg-white border-8 product-list">
-                    <a class="d-flex p-2 justify-content-center border-8 w-100" href="{{ route('full_quotations_list',['productISN' => $product['isn']]) }}">   <!--$product['url']-->
+                    <a class="d-flex p-2 justify-content-center border-8 w-100" href="{{ route('full_quotations_list',['productISN' => $product['isn'],'isBitrix' => $isBitrix]) }}">   <!--$product['url']-->
                         <span>{{$product['name']}}</span>
                     </a>
                 </div>
