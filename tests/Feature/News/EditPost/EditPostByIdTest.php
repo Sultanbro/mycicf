@@ -4,6 +4,11 @@ namespace Tests\Feature\News\EditPost;
 
 use App\Post;
 
+/**
+ * Class EditPostByIdTest
+ * @package Tests\Feature\News\EditPost
+ * @covers \App\Http\Controllers\News\MyPostsController::editPost
+ */
 class EditPostByIdTest extends EditPostTestBase {
 
     protected $description = 'Правим пост по ID';

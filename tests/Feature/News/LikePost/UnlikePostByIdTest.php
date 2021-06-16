@@ -5,6 +5,11 @@ namespace Tests\Feature\News\LikePost;
 use App\Like;
 use App\Post;
 
+/**
+ * Class UnlikePostByIdTest
+ * @package Tests\Feature\News\LikePost
+ * @covers \App\Http\Controllers\News\PostsController::likePost
+ */
 class UnlikePostByIdTest extends LikePostTestBase {
     protected $description = 'Лайкаем пост по ID';
 

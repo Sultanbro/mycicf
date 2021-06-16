@@ -2,25 +2,12 @@
 
 namespace App\Http\Controllers\News;
 
-use App\Answer;
-use App\Comment;
 use App\Events\NewPost;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\News\AddPostRequest;
-use App\Http\Requests\News\NewsGetPostsRequest;
 use App\Library\Services\PostsService;
-use App\Like;
 use App\Post;
-use App\Question;
-use App\UserAnswer;
-use Debugbar;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Http\Testing\File;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class MyPostsController extends Controller
 {
@@ -29,6 +16,12 @@ class MyPostsController extends Controller
      */
     private $postsService;
 
+    /**
+     * MyPostsController constructor.
+     * @param PostsService $postsService
+     *
+     * @codeCoverageIgnore
+     */
     public function __construct(PostsService $postsService)
     {
         $this->postsService = $postsService;
@@ -77,8 +70,11 @@ class MyPostsController extends Controller
         ]));
         $post->setPinned();
 
-        $this->postsService->forget($id);
-
+        if($this->postsService->forget($id)){
+            return response()->json([
+                'success' => true
+            ]);
+        }
     }
 
     /**
