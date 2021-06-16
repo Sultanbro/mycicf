@@ -93,6 +93,7 @@ class RecruitingController extends Controller
             $req->driver_category = $req->getChiefsDicti($req->driver_category);
             $req->social_packets = $req->getChiefsDicti($req->social_packets);
             $req->languages = $req->getChiefsDicti($req->languages);
+            $req->salary_after_period = $req->getChiefsDicti($req->salary_after_period);
 //            $req->email_chief = $recruiting_emails[0];
 
 
@@ -312,7 +313,12 @@ class RecruitingController extends Controller
         $rec_data->commentary = $request->recruitingData['commentary'];
         $rec_data->application_status = $request->recruitingData['status'];
         $recruiterEmail = $request->recruitingData['recruiterEmail'];
-        $this->TestMail($recruiterEmail);
+        if ($recruiterEmail !== 0 && $recruiterEmail !== '0'){
+            $this->TestMail($recruiterEmail);
+        }
+        else if($recruiterEmail == 0 || $recruiterEmail == '0'){
+
+        }
 //        qnnn
 //        dd($recruiterEmail);
 //        dd($request);
@@ -576,6 +582,7 @@ class RecruitingController extends Controller
         $recruiting->email_chief = $request->candidat['chief_mail'];
         $recruiting->languages = $request->candidat['language'];
         $recruiting->social_packets = $request->candidat['socPacket'];
+        $recruiting->salary_after_period = $request->candidat['salary_after_period'];
         $this->sendFixedMail();
 //        $recruiting->email_chief = authEmail;
 

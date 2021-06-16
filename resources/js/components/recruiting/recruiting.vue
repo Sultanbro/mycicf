@@ -253,9 +253,15 @@
                     <!--Оплата труда-->
                     <div class="col-md-12">Оплата труда</div>
                     <div class="recruiting-tripple-block-container">
-                        <div class="recruiting-tripple-block-center col-md-7">На испытательный срок и после испытательного срока:</div>
+                        <div class="recruiting-tripple-block-center col-md-7">На испытательный срок:</div>
                         <div class="col-md-5">
                             <input type="number" onclick="this.select()" v-model="candidat.salary" class="recruiting-select">
+                        </div>
+                    </div>
+                    <div class="recruiting-tripple-block-container">
+                        <div class="recruiting-tripple-block-center col-md-7">После испытательного срока:</div>
+                        <div class="col-md-5">
+                            <input type="number" onclick="this.select()" v-model="candidat.salary_after_period" class="recruiting-select">
                         </div>
                     </div>
                     <div class="d-flex jc-sb mt-2">
@@ -859,11 +865,17 @@
 
 
                                 <!--Оплата труда-->
-                                <div>Оплата труда</div>
+                                <div class="col-md-12">Оплата труда</div>
                                 <div class="recruiting-tripple-block-container">
-                                    <div class="recruiting-tripple-block-center col-md-7">На испытательный срок и после испытательного срока:</div>
-                                    <div class="recruiting-tripple-block col-md-5">
+                                    <div class="recruiting-tripple-block-center col-md-7">На испытательный срок:</div>
+                                    <div class="col-md-5">
                                         <input type="number" onclick="this.select()" v-model="candidatBackward.salary" class="recruiting-select" disabled>
+                                    </div>
+                                </div>
+                                <div class="recruiting-tripple-block-container">
+                                    <div class="recruiting-tripple-block-center col-md-7">После испытательного срока:</div>
+                                    <div class="col-md-5">
+                                        <input type="number" onclick="this.select()" v-model="candidatBackward.salary_after_period" class="recruiting-select" disabled>
                                     </div>
                                 </div>
                                 <div class="d-flex jc-sb mt-2">
@@ -1078,6 +1090,7 @@
                     chief_mail: null,
                     language: '',
                     socPacket: '',
+                    salary_after_period: '',
                 },
                 languagesBeforeSaving: [],
                 socPacketsBeforeSaving: [],
@@ -1210,7 +1223,7 @@
                     'Да',
                     'Нет'
                 ],
-                recruitingTabs: 3,
+                recruitingTabs: 2,
                 languagesCounter: 1,
                 socialPacketCounter: 1,
                 resultCheckCounter: 1,
@@ -1827,6 +1840,7 @@
                 this.candidatBackward.manualIIN = this.candidateManualDataLocal.candidate_iin;
                 this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
                 this.candidatBackward.chiefMail = this.person.email_chief;
+                this.candidatBackward.salary_after_period = this.person.salary_after_period;
                 this.recruitingData.interviewDate = this.person.interview_date;
                 this.recruitingData.interviewTime = this.person.interview_time;
                 this.recruitingData.interviewResult = this.person.interview_result;
@@ -1908,6 +1922,7 @@
                this.candidatBackward.manualPhoneNumber = this.candidateManualDataLocal.candidate_phone_number;
                this.candidatBackward.chiefMail = this.person.email_chief;
                this.candidatBackward.languages = this.person.languages;
+               this.candidatBackward.salary_after_period = this.person.salary_after_period;
 
                // Здесь задается нормальный вид стркое вывода соц.пакета
                let socPacketDefaultText = ['Больничный, мед. страхование, отпускные'];
