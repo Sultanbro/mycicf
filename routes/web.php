@@ -186,6 +186,11 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/getBirthdays2', 'SiteController@getBirthdays2')->name('getBirthdays2');
 
     Route::get('eds/od', 'EdsController@edsOD');
+    Route::get('eds/po', 'EdsController@edsPO');
+    Route::get('eds/pr' , 'EdsController@edsPR');
+    Route::post('/signqr', 'EdsController@signQr');
+    Route::post('/setQr', 'EdsController@setQr');
+    Route::post('/setQrPo', 'EdsController@setQrPo');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
@@ -467,7 +472,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
 
-        //DevDev page route
+        //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
 
         Route::get('boss-news', 'NewsController@index')->name('boss-news');
@@ -511,7 +516,12 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
     });
 });
-
+Route::post('/save_document', 'EdsController@saveDocument');
+Route::post('/save_documentpr', 'EdsController@saveDocumentPR');
+Route::post('/save_documentpo', 'EdsController@saveDocumentPO');
+Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+Route::post('/save_fail_statuspr', 'EdsController@saveFailStatusPR');
+Route::post('/save_fail_statuspo', 'EdsController@saveFailStatusPO');
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
@@ -526,6 +536,13 @@ Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
 
+Route::get('test', function () {
+    return view('test');
+});
+Route::get('test3', function () {
+    echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
+});
+
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');
     Route::post('/login', 'Documentation\DocumentationAuthController@login');
@@ -537,7 +554,7 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
-
+Route::get('/payout', 'PaymentEdsController@payout');
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
@@ -560,4 +577,3 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('caching', 'Dev\CachingController@index')->name('.caching');
     Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });
-

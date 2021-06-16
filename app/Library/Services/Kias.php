@@ -862,9 +862,11 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function saveDocument($classISN,$emplISN,$subjISN,$docRow, $docParams){
+    public function saveDocument($classISN,$RefundISN,$RefundId,$emplISN,$subjISN,$docRow, $docParams){
         return $this->request('User_CicSAVEDOCUMENT', [
             'CLASSISN' => $classISN,
+            'REFUNDISN'=>$RefundISN,
+            'ID'=>$RefundId,
             'EMPLISN' => $emplISN,
             'DOCDATE' => date('d.m.Y'),
             'SUBJISN' => $subjISN,
