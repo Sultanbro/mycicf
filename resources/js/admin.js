@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -71,7 +73,9 @@ Vue.component('pdf-load', require('./components/admin/productsinfo/pdf-load.vue'
 
 Vue.component('menu-list', require('./components/admin/productsinfo/menu-list.vue').default);
 Vue.component('svg-list', require('./components/admin/productsinfo/svg-list.vue').default);
-Vue.component('word-list', require('./components/admin/productsinfo/word-list.vue').default);
+// Vue.component('word-list', require('./components/admin/productsinfo/description-list.vue').default);
+Vue.component('description-list', require('./components/admin/productsinfo/description-list.vue').default);
+// Vue.component('preloader', require('./components/common/preloader').default);
 
 
 Vue.component('rating-permission-list', require('./components/admin/rating/rating-permission-list').default);

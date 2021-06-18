@@ -190,15 +190,20 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('productsinfo/delete/svg', 'Admin\ProductsInfoController@deleteSvg');
 
             Route::get('productsinfo/word/list', 'Admin\ProductsInfoController@wordList')->name('productsinfo.word.list');
-            Route::post('productsinfo/get/wordList', 'Admin\ProductsInfoController@getWordList');
+            Route::get('productsinfo/description/list', 'Admin\ProductsInfoController@descriptionList')->name('productsinfo.description.list');
+            Route::post('productsinfo/get/descriptionList', 'Admin\ProductsInfoController@getDescriptionList');
             Route::post('productsinfo/delete/word', 'Admin\ProductsInfoController@deleteWord');
 
             Route::get('productsinfo/menu/list', 'Admin\ProductsInfoController@menuList')->name('productsinfo.menu.list');
             Route::post('productsinfo/get/menuList', 'Admin\ProductsInfoController@getMenuList');
-            Route::post('productsinfo/delete/menu', 'Admin\ProductsInfoController@deleteMenu');
+            Route::post('/productsinfo/delete/menu', 'Admin\ProductsInfoController@deleteMenu');
+            Route::post('/productsinfo/getEditMenu', 'Admin\ProductsInfoController@getEditMenu');
+            Route::post('/productsinfo/deleteItem', 'Admin\ProductsInfoController@deleteItem');
 
             Route::get('productsinfo/pdf', 'Admin\ProductsInfoController@loadPdf')->name('productsinfo.pdf');
             Route::post('productsinfo/save_pdf', 'Admin\ProductsInfoController@savePdf');
+            Route::post('/productsinfo/save_file', 'Admin\ProductsInfoController@saveFile');
+            Route::post('/productsinfo/saveDescription', 'Admin\ProductsInfoController@saveDescription');
         });
     });
 });
@@ -273,7 +278,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::get('/productsinfo', 'ProductsInfoController@index')->name('productsinfo');
         Route::post('/productsinfo/save', 'ProductsInfoController@save');
         Route::get('/productsinfo/svg', 'ProductsInfoController@admin')->name('admin/productsinfo');
-        Route::get('/productsinfo/{url}', 'ProductsInfoController@getByUrl');
+        Route::get('productsinfo/{url}', 'ProductsInfoController@getByUrl');
         Route::post('/productsinfo/search', 'ProductsInfoController@search');
 
         Route::get('/productsinfo', 'ProductsInfoController@getView')->name('productsinfo');

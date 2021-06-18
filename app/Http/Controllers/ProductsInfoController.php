@@ -10,6 +10,7 @@ use App\UploadDocs;
 use App\DocFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsInfoController extends Controller
 {
@@ -46,15 +47,18 @@ class ProductsInfoController extends Controller
         $table->save();
     }
 
-    public function getByUrl($url){
-        if(substr($url, 0, 4) === 'pdf_'){
+    public function getByUrl(Request $request){
+        $files = Storage::files($directory);
+//        dd($request);
+//        return response()->file($request->url);
+//        if(substr($url, 0, 4) === 'pdf'){
             $id = substr($url, 4);
             $data = PdfFiles::find($id);
             if(null !== $data){
 //                dd($data->file_url);
-                return \redirect($data->file_url);
+                return \redirect($data->profile);
             }
-        }
+//        }
         if(($page = UploadDocs::where('url', $url)->first())){
             return view('productsinfo_page', compact('page'));
         }elseif(($page = SvgFiles::where('url', $url)->first())){
@@ -100,32 +104,84 @@ class ProductsInfoController extends Controller
         return $result;
     }
 
-    public function getItemsList(Request $request) {
+    public function getItemsList(Request $request){
+        //ini_set ('memory_limit', '2048M');
+        $result = [];
+//        dd(auth()->user()->ISN);
         $items = ProductsInfo::where('parent_id', $request->parentId)->get();
+        foreach($items as $item)
+            array_push($result, [
+                'id' => $item['id'],
+                'label' => $item['label'],
+                'parent_id' => $item['parent_id'],
+                'children' => $this->getItemsListChild($item),
+            ]);
+        return $result;
 
+    }
+
+
+    public function getItemsListChild($item) {
+        $items = ProductsInfo::where('parent_id', $item->id)->get();
         $result = [];
         foreach ($items as $item) {
-            array_push($result, [
-                'id' => $item->id,
-                'label' => $item->label,
-                'url' => $item->url,
-                'icon_url' => $item->icon_url,
-                'description' => $item->description,
-                'documents' => $item->documents,
-                'dopinform' => $item->dopinform,
-                'docfile' => $item->docfile,
-                'profile' => $item->profile,
-                'franzhiza' => $item->franshiza,
-                'childs' => [],
-                'opened' => false,
-
-            ]);
+            if (count(ProductsInfo::where('parent_id', $item['id'])->get()) === 0) {
+                array_push($result, [
+                    'id' => $item->id,
+                    'parent_id' => $item->parent_id,
+                    'label' => $item->label,
+                    'url' => $item->url,
+                    'icon_url' => $item->icon_url,
+                    'description' => $item->description,
+                    'documents' => $item->documents,
+                    'dopinform' => $item->dopinform,
+                    'docfile' => $item->docfile,
+                    'profile' => $item->profile,
+                    'franzhiza' => $item->franshiza,
+                    'childs' => [],
+                    'opened' => false,
+                ]);
+            } else {
+                array_push($result, [
+                    'id' => $item->id,
+                    'parent_id' => $item->parent_id,
+                    'label' => $item->label,
+                    'url' => $item->url,
+                    'icon_url' => $item->icon_url,
+                    'description' => $item->description,
+                    'documents' => $item->documents,
+                    'dopinform' => $item->dopinform,
+                    'docfile' => $item->docfile,
+                    'profile' => $item->profile,
+                    'franzhiza' => $item->franshiza,
+                    'childs' => $this->getItemsListChild($item),
+                    'opened' => false,
+                ]);
+            }
         }
+
+//        foreach ($items as $item) {
+//            array_push($result, [
+//                'id' => $item->id,
+//                'parent_id' => $item->parent_id,
+//                'label' => $item->label,
+//                'url' => $item->url,
+//                'icon_url' => $item->icon_url,
+//                'description' => $item->description,
+//                'documents' => $item->documents,
+//                'dopinform' => $item->dopinform,
+//                'docfile' => $item->docfile,
+//                'profile' => $item->profile,
+//                'franzhiza' => $item->franshiza,
+//                'childs' => $item->childs,
+//                'opened' => false,
+////                'isActiveId' => $request->parentId,
+//            ]);
+//        }
         return $result;
     }
     public function getItemsFirst(Request $request){
         $items = ProductsInfo::where('parent_id', $request->parentId)->first();
-        //dd($request);
         $result = [];
         foreach ($items as $item) {
             array_push($result, [
@@ -146,8 +202,12 @@ class ProductsInfoController extends Controller
 //                'id' => $prod->id,
 //                'product_id' => $prod->product_info_id,
                 'docfile' => $prod->docfile,
-                'profile' => $prod->profile
+                'profile' => $prod->profile,
+                'product_info_id' => $prod->product_info_id,
             ]);
+        }
+        if($result == null){
+            $result = 'Нет документа';
         }
         return response()->json([
             'result' => $result

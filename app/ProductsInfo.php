@@ -4,7 +4,9 @@ namespace App;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+
 
 class ProductsInfo extends Model
 {
@@ -24,6 +26,15 @@ class ProductsInfo extends Model
         Storage::disk('local')->put("/public/menu/{$fileName}", $word);
         $this->description = "/storage/menu/{$fileName}";
         $this->documents = "/storage/menu/{$fileName}";
+    }
+
+    public function childs() {
+        return $this->hasMany('App\ProductsInfo','parent_id','id') ;
+    }
+
+    public function count($columns = '*')
+    {
+        return (int) $this->aggregate(__FUNCTION__, Arr::wrap($columns));
     }
 
     /*public function docFile(){

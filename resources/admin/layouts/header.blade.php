@@ -58,7 +58,7 @@
             @endif
             @if(App\User::isSenateAdmin())
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                    <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">Сенат</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown09">
                         <a class="dropdown-item" href="{{route('senate.post.new')}}">Новый пост</a>
@@ -108,16 +108,16 @@
             @endif
             @if(App\User::isProductsInfoAdmin())
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                    <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">ПродуктИнфо</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown09">
-                        <a class="dropdown-item" href="{{route('productsinfo.svg')}}">Загрузка SVG</a>
-                        <a class="dropdown-item" href="{{route('productsinfo.word')}}">Загрузка WORD</a>
-                        <a class="dropdown-item" href="{{route('productsinfo.pdf')}}">Загрузка PDF</a>
-                        <a class="dropdown-item" href="{{route('productsinfo.image')}}">Загрузка Фотографии</a>
-                        <a class="dropdown-item" href="{{route('productsinfo.menu')}}">Структура меню</a>
-                        <a class="dropdown-item" href="{{route('productsinfo.svg.list')}}">Список SVG</a>
-                        <a class="dropdown-item" href="{{route('productsinfo.word.list')}}">Список WORD</a>
+{{--                        <a class="dropdown-item" href="{{route('productsinfo.svg')}}">Загрузка SVG</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('productsinfo.word')}}">Загрузка WORD</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('productsinfo.pdf')}}">Загрузка PDF</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('productsinfo.image')}}">Загрузка Фотографии</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('productsinfo.menu')}}">Структура меню</a>--}}
+{{--                        <a class="dropdown-item" href="{{route('productsinfo.svg.list')}}">Список SVG</a>--}}
+                        <a class="dropdown-item" href="{{route('productsinfo.description.list')}}">Описание</a>
                         <a class="dropdown-item" href="{{route('productsinfo.menu.list')}}">Список меню</a>
                     </div>
                 </li>

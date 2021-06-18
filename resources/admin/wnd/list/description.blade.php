@@ -20,7 +20,7 @@
 <div class="container" id="app">
     @include('layouts.header')
     <main role="main">
-        <word-list></word-list>
+        <description-list></description-list>
     </main>
 </div>
 </body>
