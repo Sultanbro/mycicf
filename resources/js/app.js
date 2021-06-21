@@ -175,6 +175,8 @@ Vue.component('parse-indicators', require('./components/parse/parse-indicators.v
 
 Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
+Vue.component('my-parse', require('./components/parse/my-parse.vue').default);
+
 Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);

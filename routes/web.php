@@ -216,6 +216,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/documentation/search', 'DocumentationController@search');
             //PARSE
             Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+            Route::get('parse/my-parse', 'MyParseController@DataCompany')->name('parse/my-parse');
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
             Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
