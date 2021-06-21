@@ -53,8 +53,8 @@ class SiteController extends Controller
 
     public function getBitrixAuthData($request){
         return array(
-            'username' => $request->username,
-            'password' => $request->password,
+            'sid' => $request->sid,
+            'subjIsn' => $request->isn,
         );
     }
 
@@ -62,41 +62,49 @@ class SiteController extends Controller
     {
         $success = true;
         $error = '';
-        $username = $request->username;
-        $password = $request->password;
-        $response = $kias->authenticate($username, hash('sha512', $password));
 
-        if($response->error)
-        {
-            $success = false;
-            $error = (string)$response->error->text;
-        }
-
-        if($success && $response->UserDetails)
-        {
-            $userDetails = $response->UserDetails;
-            if(($user = User::where('ISN', $userDetails->ISN)->first()) === null)
-            {
-                $user = new User();
-                $user->ISN = $userDetails->ISN;
-            }
-            $kias->_sId = $response->Sid;
-            $user->username = $username;
-            $user->password_hash = hash('sha512', $password);
-            $user->level = $this->getUpperLevel($user->ISN, $kias);
-            $user->short_name = $userDetails->ShortName;
-            $user->full_name = $userDetails->FullName;
-            $user->session_id = $response->Sid;
-            $user->dept_isn = $userDetails->DeptISN;
-            try
-            {
-                $user->save();
-                Auth::login($user);
-            }
-            catch (\Exception $ex)
-            {
+        if($request->sid != ''){
+            try {
+                $user = User::where('ISN', $request->isn)->first();
+                $user->session_id = $request->sid;
+                if($user->save()) {
+                    Auth::login($user);
+                }
+            } catch (\Exception $ex) {
                 $success = false;
-                $error = "Ошибка при сохранении пользователя : ".$ex->getMessage();
+                $error = "Ошибка при авторизации : " . $ex->getMessage();
+            }
+        } else {
+            $username = $request->username;
+            $password = $request->password;
+            $response = $kias->authenticate($username, hash('sha512', $password));
+
+            if ($response->error) {
+                $success = false;
+                $error = (string)$response->error->text;
+            }
+
+            if ($success && $response->UserDetails) {
+                $userDetails = $response->UserDetails;
+                if (($user = User::where('ISN', $userDetails->ISN)->first()) === null) {
+                    $user = new User();
+                    $user->ISN = $userDetails->ISN;
+                }
+                $kias->_sId = $response->Sid;
+                $user->username = $username;
+                $user->password_hash = hash('sha512', $password);
+                $user->level = $this->getUpperLevel($user->ISN, $kias);
+                $user->short_name = $userDetails->ShortName;
+                $user->full_name = $userDetails->FullName;
+                $user->session_id = $response->Sid;
+                $user->dept_isn = $userDetails->DeptISN;
+                try {
+                    $user->save();
+                    Auth::login($user);
+                } catch (\Exception $ex) {
+                    $success = false;
+                    $error = "Ошибка при сохранении пользователя : " . $ex->getMessage();
+                }
             }
         }
 

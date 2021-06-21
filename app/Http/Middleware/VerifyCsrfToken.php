@@ -31,7 +31,7 @@ class VerifyCsrfToken extends Middleware
         '/testqr',
         '/login',
         '/full',
-        '/full/quotations',
-        '/full/calc'
+        '/full/quotations/*',
+        '/full/calc/*/*'
     ];
 }

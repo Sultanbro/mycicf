@@ -39,17 +39,21 @@
                 type: 1,
                 username : '',
                 password : '',
-                bitrixData: []
+                bitrixData: [],
+                sid: '',
+                subjIsn: ''
             }
         },
         methods: {
             login: function () {
                 this.preloader(true);
-                if(!this.validate()){
-                    this.preloader(false)
-                    return;
+                if(this.sid == '') {
+                    if (!this.validate()) {
+                        this.preloader(false)
+                        return;
+                    }
                 }
-                this.axios.post('/login', {username: this.username, password: this.password})
+                this.axios.post('/login', {username: this.username, password: this.password, sid: this.sid, isn: this.subjIsn})
                 .then((response) => {
                     this.afterLogin(response.data)
                 })
@@ -147,8 +151,8 @@
             this.bitrixData = window.bitrixData;
             if(window.bitrixData.isBitrix){
                 this.preloader(true);
-                this.username = window.bitrixData.bitrixAuthData.username;
-                this.password = window.bitrixData.bitrixAuthData.password;
+                this.sid = window.bitrixData.bitrixAuthData.sid;
+                this.subjIsn = window.bitrixData.bitrixAuthData.isn;
                 this.login();
             }
         }
