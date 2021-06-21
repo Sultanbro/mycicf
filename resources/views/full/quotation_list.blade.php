@@ -120,7 +120,7 @@
                                             <tr>
                                                 <td class="text-left">{{ $quotation->id }}</td>
                                                 <td>
-                                                    <a href="/full/calc/{{ $quotation->product->id }}/{{ $quotation->id }}?isBitrix={{ $isBitrix }}" target="_blank">
+                                                    <a href="/full/calc/{{ $quotation->product->id }}/{{ $quotation->id }}?isBitrix={{ $isBitrix }}" @if(!$isBitrix) target="_blank" @endif>
                                                         {{ $quotation->calc_id }}
                                                     </a>
                                                 </td>
