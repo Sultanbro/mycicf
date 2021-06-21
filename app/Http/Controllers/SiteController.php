@@ -54,7 +54,7 @@ class SiteController extends Controller
     public function getBitrixAuthData($request){
         return array(
             'sid' => $request->sid,
-            'subjIsn' => $request->isn,
+            'isn' => $request->isn,
         );
     }
 
@@ -65,10 +65,16 @@ class SiteController extends Controller
 
         if($request->sid != ''){
             try {
-                $user = User::where('ISN', $request->isn)->first();
-                $user->session_id = $request->sid;
-                if($user->save()) {
-                    Auth::login($user);
+                $checkSessionIdStatus = $kias->checkUpperLevel($request->isn,$request->sid);
+                if(isset($checkSessionIdStatus->error) && intval($checkSessionIdStatus->error->code) == 001){
+                    $success = false;
+                    $error = (string)$checkSessionIdStatus->error->text;
+                } else {
+                    $user = User::where('ISN', $request->isn)->first();
+                    $user->session_id = $request->sid;
+                    if ($user->save()) {
+                        Auth::login($user);
+                    }
                 }
             } catch (\Exception $ex) {
                 $success = false;

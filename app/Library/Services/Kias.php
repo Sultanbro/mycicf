@@ -214,7 +214,7 @@ class Kias implements KiasServiceInterface
 
     public function createRequestData($name, $params)
     {
-        $params['Sid'] = $this->_sId;
+        $params['Sid'] = isset($params['Sid']) && $params['Sid'] != null ? $params['Sid'] : $this->_sId;
         if ($name == 'Auth') {
             unset($params['Sid']);
         }
@@ -314,6 +314,21 @@ class Kias implements KiasServiceInterface
         return $this->request('User_CicGetUserLVL', [
             'EmplISN' => $ISN,
         ]);
+    }
+
+    public function checkUpperLevel($ISN,$sid)
+    {
+        $params = [
+            'EmplISN' => $ISN,
+            'Sid' => $sid
+        ];
+
+        $execResponse = $this->execProc('User_CicGetUserLVL', $params);
+
+        $xml = new SimpleXMLElement(
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . $execResponse
+        );
+        return $xml;
     }
 
     /**

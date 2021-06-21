@@ -1,9 +1,9 @@
 <template>
     <div @keydown.enter="login" class="col-lg-6 column-2"> <!-- Second column-->
-        <div class="users d-flex justify-content-center" v-if="!bitrixData.isBitrix">
+        <div class="users d-flex justify-content-center">   <!--v-if="!bitrixData.isBitrix"-->
             <img src="images/users-white-image.png" alt="users image" class="users__image">
         </div>
-        <div class="login-form" v-if="!bitrixData.isBitrix">
+        <div class="login-form">    <!-- v-if="!bitrixData.isBitrix"-->
             <div class="input-container d-flex justify-content-center">
                 <div class="input-container__background">
                     <i class="fa fa-user-o fa-input" aria-hidden="true"></i>
@@ -91,6 +91,7 @@
                     }
                     location.href = '/'+url;
                 }else{
+                    this.preloader(false);
                     this.flashMessage.error({
                         title: "Ошибка",
                         message: response.error,
