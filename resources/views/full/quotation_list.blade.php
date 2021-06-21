@@ -48,7 +48,7 @@
 
             <quotation-list inline-template
                             parametres="{{ json_encode($request) }}"
-                            page-url="{{ route('full_quotations_list',['productISN' => $product->product_isn]) }}">
+                            page-url="/full/quotations/{{ $product->product_isn }}?isBitrix={{ $isBitrix }}">
                 <div>
                     <h4 class="text-center mt-2 col-12">Полная котировка - {{ $product->name }}</h4>
                     <div class="col-md-12 mt-4 bg-white pt-3 pb-3 rounded box-shadow text-center">
@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="d-inline-flex">
-                            <a href="{{ route('full_front',['ID' => $product->id,'quotationId' => 0, 'isBitrix' => $isBitrix]) }}" >
+                            <a href="/full/calc/{{ $product->id }}/0?isBitrix={{ $isBitrix }}" >
                                 <div class="d-flex custom-primary-button-inverse border-0 pl-4 pr-4 ml-2 pt-1 pb-1 mt-3 color-white button-accept pointer">
                                     <div>
                                         <span class="pl-2">Создать</span>
@@ -120,7 +120,7 @@
                                             <tr>
                                                 <td class="text-left">{{ $quotation->id }}</td>
                                                 <td>
-                                                    <a href="{{ route('full_front', ['ID' => $quotation->product->id,'quotationId' => $quotation->id]) }}" target="_blank">
+                                                    <a href="/full/calc/{{ $quotation->product->id }}/{{ $quotation->id }}?isBitrix={{ $isBitrix }}" target="_blank">
                                                         {{ $quotation->calc_id }}
                                                     </a>
                                                 </td>

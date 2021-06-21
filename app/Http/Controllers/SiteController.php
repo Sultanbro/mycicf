@@ -63,16 +63,17 @@ class SiteController extends Controller
         $success = true;
         $error = '';
 
-        if($request->sid != ''){
+        if($request->sid != '' && $request->username == ''){
             try {
                 $checkSessionIdStatus = $kias->checkUpperLevel($request->isn,$request->sid);
-                if(isset($checkSessionIdStatus->error) && intval($checkSessionIdStatus->error->code) == 001){
+                if(isset($checkSessionIdStatus->error)){
                     $success = false;
                     $error = (string)$checkSessionIdStatus->error->text;
                 } else {
                     $user = User::where('ISN', $request->isn)->first();
                     $user->session_id = $request->sid;
                     if ($user->save()) {
+                        $kias->_sId = $request->Sid;
                         Auth::login($user);
                     }
                 }

@@ -50,7 +50,7 @@
             <h4 class="text-center mt-2">Полная котировка</h4>
             @foreach($products as $product)
                 <div class="d-flex mt-2 bg-white border-8 product-list">
-                    <a class="d-flex p-2 justify-content-center border-8 w-100" href="{{ route('full_quotations_list',['productISN' => $product['isn'],'isBitrix' => $isBitrix]) }}">   <!--$product['url']-->
+                    <a class="d-flex p-2 justify-content-center border-8 w-100" href="/full/quotations/{{  $product['isn'] }}?isBitrix={{  $isBitrix }}">   <!--$product['url']-->
                         <span>{{$product['name']}}</span>
                     </a>
                 </div>
