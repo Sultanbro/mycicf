@@ -1,5 +1,5 @@
 <template>
-    <div @keydown.enter="login" class="col-lg-6 column-2"> <!-- Second column-->
+    <div @keydown.enter="login" class="col-lg-6 column-2" :class="mAutoIfBitrix"> <!-- Second column-->
         <div class="users d-flex justify-content-center">   <!--v-if="!bitrixData.isBitrix"-->
             <img src="images/users-white-image.png" alt="users image" class="users__image">
         </div>
@@ -155,6 +155,12 @@
                 this.sid = window.bitrixData.bitrixAuthData.sid;
                 this.subjIsn = window.bitrixData.bitrixAuthData.isn;
                 this.login();
+            }
+        },
+
+        computed:{
+            mAutoIfBitrix: function(){
+                return bitrixData.isBitrix ? 'm-auto' : '';
             }
         }
     }

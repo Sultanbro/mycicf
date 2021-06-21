@@ -52,21 +52,23 @@
         <!--Second row-->
         <div class="row" id="login">
             <!-- First column-->
-            <div class="col-lg-6 column-1">
-                <h1 class="title">
-                    <span class="title__welcome">Добро пожаловать в</span>
-                    <strong class="title__main">my.cic.kz</strong>
-                </h1>
-                <div class="social-network">
-                    <p class="social-network__title">Подписывайтесь на наши обновления</p>
-                    <div class="social-network__icons">
-                        <a href="http://www.instagram.com/centras.insurance/" class="social-network__link"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                        <a href="http://www.facebook.com/kupipolis.kz/" class="social-network__link"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
-                        <a href="http://www.youtube.com/channel/UCf2GyNgEwFys5JdN4g6x4LQ" class="social-network__link"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+            @if(!$isBitrix)
+                <div class="col-lg-6 column-1">
+                    <h1 class="title">
+                        <span class="title__welcome">Добро пожаловать в</span>
+                        <strong class="title__main">my.cic.kz</strong>
+                    </h1>
+                    <div class="social-network">
+                        <p class="social-network__title">Подписывайтесь на наши обновления</p>
+                        <div class="social-network__icons">
+                            <a href="http://www.instagram.com/centras.insurance/" class="social-network__link"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="http://www.facebook.com/kupipolis.kz/" class="social-network__link"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                            <a href="http://www.youtube.com/channel/UCf2GyNgEwFys5JdN4g6x4LQ" class="social-network__link"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="line"></div>
-            </div> <!-- First column-->
+                    <div class="line"></div>
+                </div> <!-- First column-->
+            @endif
 
             <!-- Second column-->
             <login></login>
