@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="results-container mt-3 mb-3">
-            <div @click="viewType = 'rating'" class="results-item" :class="viewType === 'rating' ? 'results-item_active' : ''">
+            <div @click="viewType = 'top-company'" class="results-item" :class="viewType === 'top-company' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
                     <!--<i class="far fa-star results-icon"></i>-->
                     <span>Компания</span>
@@ -19,16 +19,19 @@
                     <span>Рынок</span>
                 </div>
             </div>
+    </div>
+        <div>
+            <top-company v-show="viewType === 'top-company'" :isn="isn" :begin="begin"></top-company>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "my-results",
+        name: "my-parse",
         data() {
             return {
-                viewType: 'rating',
+                viewType: 'top-company',
                 personIsn: null,
                 personBegin: null,
             }
@@ -90,5 +93,9 @@
         pointer-events: none;
         background-color: cornflowerblue;
         box-shadow: 0 0 20px rgba(47, 100, 187, 0.3);
+    }
+    .results-icon {
+        font-size: 1.3rem;
+        margin-right: 0.5rem;
     }
 </style>

@@ -36,7 +36,7 @@
 @include('layouts.header')
 <main class="flex-row" id="app">
     <div class="main_margin flex-row width100">
-        <div class="col-md-8 radius-4px mt-3 pb-2" id="my-parse">
+        <div class="col-md-12 radius-4px mt-3 pb-2" id="my-parse">
             @if(isset($employee_isn))
                 <my-parse :isn="{{$employee_isn}}" :begin="'{{$rating_date}}'"></my-parse>
             @else
