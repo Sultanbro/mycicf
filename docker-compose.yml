@@ -17,10 +17,10 @@ services:
   mycic_php:
     container_name: mycic_php
 
-    image: bitnami/php-fpm:latest
+    image: "php:7-fpm"
 
     ports:
-      - "8000:9000"
+      - "9000:9000"
 
     volumes:
       - .docker/php:/app
