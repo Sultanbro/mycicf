@@ -1,0 +1,41 @@
+version: "3"
+
+# Live Reloading: https://betterprogramming.pub/live-reloading-with-docker-compose-for-efficient-development-356d50e91e39
+# Docker-compose: идеальное рабочее окружение https://habr.com/ru/post/346086/
+
+services:
+  redis:
+    container_name: mycic_redis
+    image: redis
+
+    hostname: redis.docker
+
+  php-app:
+    container_name: mycic_php
+
+    image: bitnami/php-fpm:latest
+
+    ports:
+      - "8000:9000"
+
+    hostname: php.docker
+    links:
+      - redis
+
+  nginx:
+    container_name: mycic_nginx
+
+    image: nginx:latest
+
+    volumes:
+      - ./.docker/nginx:/etc/nginx/sites-available
+      - ./.docker/nginx:/etc/nginx/sites-enabled
+      - .:/app
+
+    ports:
+      - "8080:80"
+
+    hostname: nginx.docker
+
+    links:
+      - php-app
