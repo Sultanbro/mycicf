@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Comment;
+use App\Jobs\SandboxJob;
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Mail\Email;
@@ -21,6 +22,6 @@ class SandboxCommand extends Command {
     protected $description = 'Command description';
 
     public function handle() {
-        dd(123);
+        SandboxJob::dispatch();
     }
 }
