@@ -48,3 +48,5 @@ services:
 
     networks:
       - app-tier
+
+# TODO Add Node image that builds frontend in watch-mode
