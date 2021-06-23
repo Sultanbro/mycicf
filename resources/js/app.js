@@ -1,5 +1,3 @@
-
-
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -89,6 +87,10 @@ Vue.component('user-image', require('./components/employee/userImage.vue').defau
 Vue.component('edslogin', require('./components/eds/edslogin').default);
 
 Vue.component('eds-od', require('./components/eds/eds-od').default);
+
+Vue.component('eds-payout', require('./components/eds/eds-payout').default);
+
+Vue.component('payout-request', require('./components/eds/payout-request').default);
 
 Vue.component('eds', require('./components/eds/eds').default);
 
