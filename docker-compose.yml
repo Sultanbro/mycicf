@@ -22,12 +22,17 @@ services:
 
     ports:
       - "9000:9000"
+      - "9001:9001"
 
     volumes:
       - .:/app
+      - ./.docker/php/supervisord:/etc/supervisor
 
     depends_on:
       - mycic_redis
+
+    links:
+      - mycic_db
 
     networks:
       - app-tier
@@ -75,19 +80,12 @@ services:
 
     ports:
       - "33060:3306"
-    depends_on:
-      - mycic_php
 
     networks:
       - app-tier
 
-  mycic_supervisor:
-    image: kdelfour/supervisor-docker:latest
-
-    volumes:
-      - ./.docker/supervisord/conf.d:/etc/supervisor/conf.d
-
 # TODO Add Node image that builds frontend in watch-mode
 # +TODO Add MySQL
+# TODO Make MySQL available
 # TODO Add Supervisor or another
 # TODO Add ...

@@ -21,15 +21,6 @@ class SandboxCommand extends Command {
     protected $description = 'Command description';
 
     public function handle() {
-        $c = Comment::all();
-
-        $generator = new Faker();
-
-
-
-        foreach ($c as $item) {
-            dd(Faker::text());
-            $item->text = (new \Faker\Generator())->text();
-        }
+        dd(123);
     }
 }
