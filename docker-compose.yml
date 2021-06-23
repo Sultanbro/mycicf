@@ -28,8 +28,7 @@ services:
     image: nginx:latest
 
     volumes:
-      - ./.docker/nginx:/etc/nginx/sites-available
-      - ./.docker/nginx:/etc/nginx/sites-enabled
+      - ./.docker/nginx:/etc/nginx/conf.d
       - .:/app
 
     ports:
