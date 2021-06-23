@@ -5,3 +5,5 @@ RUN apt-get update -y && \
     apt-get install -y \
             iputils-ping \
             supervisor
+
+RUN pecl install redis && docker-php-ext-enable redis
