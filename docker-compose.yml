@@ -8,13 +8,13 @@ networks:
     driver: bridge
 
 services:
-  redis:
+  mycic_redis:
     container_name: mycic_redis
     image: redis
 
     hostname: redis.docker
 
-  php-app:
+  mycic_php:
     container_name: mycic_php
 
     image: bitnami/php-fpm:latest
@@ -23,16 +23,16 @@ services:
       - "8000:9000"
 
     volumes:
-      - .:/app
+      - .docker/php:/app
 
     hostname: php.docker
     depends_on:
-      - redis
+      - mycic_redis
 
     networks:
       - app-tier
 
-  nginx:
+  mycic_nginx:
     container_name: mycic_nginx
     image: nginx:latest
     volumes:
@@ -42,7 +42,7 @@ services:
      - "8080:80"
     hostname: nginx.docker
     depends_on:
-     - php-app
+     - mycic_php
 
     networks:
       - app-tier
