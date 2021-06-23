@@ -33,6 +33,7 @@ services:
     volumes:
       - .:/app
       - ./.docker/php/supervisord:/etc/supervisor
+      - ./.docker/logs/supervisord:/logs/supervisor
 
     depends_on:
       - mycic_redis
