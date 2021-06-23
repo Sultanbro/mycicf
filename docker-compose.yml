@@ -23,7 +23,7 @@ services:
       - "9000:9000"
 
     volumes:
-      - .docker/php:/app
+      - .:/app
 
     hostname: php.docker
     depends_on:
@@ -38,7 +38,7 @@ services:
     volumes:
      - .docker/nginx:/etc/nginx/conf.d
      - .docker/logs/nginx:/logs
-     - .docker/php:/app
+     - .:/app
 
     ports:
      - "8080:80"
