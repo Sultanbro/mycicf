@@ -36,8 +36,10 @@ services:
     container_name: mycic_nginx
     image: nginx:latest
     volumes:
-     - ./.docker/nginx:/etc/nginx/conf.d
-     - ./.docker/logs/nginx:/logs
+     - .docker/nginx:/etc/nginx/conf.d
+     - .docker/logs/nginx:/logs
+     - .docker/php:/app
+
     ports:
      - "8080:80"
     hostname: nginx.docker
