@@ -32,6 +32,19 @@ services:
     networks:
       - app-tier
 
+  mycic_frontend_builder:
+    container_name: mycic_frontend_builder
+    image: node:latest
+    build:
+      context: .
+      dockerfile: ./.docker/frontend/Dockerfile
+
+    command: ["ls", "app"]
+
+    volumes:
+      - .:/app
+      - ./node_modules
+
   mycic_nginx:
     container_name: mycic_nginx
     image: nginx:latest
@@ -41,10 +54,11 @@ services:
      - .:/app
 
     ports:
-     - "8080:80"
+     - "8081:80"
     hostname: nginx.docker
     depends_on:
      - mycic_php
+     - mycic_frontend_builder
 
     networks:
       - app-tier
