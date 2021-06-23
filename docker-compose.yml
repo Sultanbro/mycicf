@@ -50,3 +50,6 @@ services:
       - app-tier
 
 # TODO Add Node image that builds frontend in watch-mode
+# TODO Add MySQL
+# TODO Add Supervisor or another
+# TODO Add ...
