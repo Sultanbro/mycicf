@@ -9,15 +9,16 @@ networks:
 
 services:
   mycic_redis:
+    image: redis:latest
     container_name: mycic_redis
-    image: redis
-
     hostname: redis.docker
 
   mycic_php:
+    build:
+      context: .
+      dockerfile: ./.docker/php/Dockerfile
     container_name: mycic_php
-
-    image: "php:7-fpm"
+    hostname: php.docker
 
     ports:
       - "9000:9000"
@@ -25,29 +26,26 @@ services:
     volumes:
       - .:/app
 
-    hostname: php.docker
     depends_on:
       - mycic_redis
 
     networks:
       - app-tier
 
-  mycic_frontend_builder:
-    container_name: mycic_frontend_builder
-    image: node:latest
-    build:
-      context: .
-      dockerfile: ./.docker/frontend/Dockerfile
-
-    command: ["ls", "app"]
-
-    volumes:
-      - .:/app
-      - ./node_modules
+  # mycic_frontend_builder:
+  #   container_name: mycic_frontend_builder
+  #   image: node:latest
+  #   build:
+  #     context: ./.docker/frontend
+#
+  #   volumes:
+  #     - .:/app
+  #     - ./node_modules
 
   mycic_nginx:
-    container_name: mycic_nginx
     image: nginx:latest
+    container_name: mycic_nginx
+    hostname: nginx.docker
     volumes:
      - .docker/nginx:/etc/nginx/conf.d
      - .docker/logs/nginx:/logs
@@ -55,15 +53,41 @@ services:
 
     ports:
      - "8081:80"
-    hostname: nginx.docker
     depends_on:
      - mycic_php
-     - mycic_frontend_builder
+     - mycic_db
 
     networks:
       - app-tier
 
+  mycic_db:
+    image: mysql:latest
+    container_name: mycic_db
+    hostname: db.docker
+
+    restart: unless-stopped
+    tty: true
+
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+
+    ports:
+      - "33060:3306"
+    depends_on:
+      - mycic_php
+
+    networks:
+      - app-tier
+
+  mycic_supervisor:
+    image: kdelfour/supervisor-docker:latest
+
+    volumes:
+      - ./.docker/supervisord/conf.d:/etc/supervisor/conf.d
+
 # TODO Add Node image that builds frontend in watch-mode
-# TODO Add MySQL
+# +TODO Add MySQL
 # TODO Add Supervisor or another
 # TODO Add ...

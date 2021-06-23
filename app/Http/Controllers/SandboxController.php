@@ -7,6 +7,8 @@ use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use App\Library\Services\PostsService;
+use App\Post;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class SandboxController extends Controller
@@ -156,7 +158,7 @@ class SandboxController extends Controller
         return view('testing.sandbox.react2');
     }
 
-    public function error() {
-        throw new \Exception();
+    public function test2() {
+        return \DB::select('SELECT NOW()');
     }
 }
