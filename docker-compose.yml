@@ -30,6 +30,7 @@ services:
     volumes:
       - ./.docker/nginx:/etc/nginx/conf.d
       - .:/app
+      - ./.docker/logs/nginx:/logs
 
     ports:
       - "8080:80"
