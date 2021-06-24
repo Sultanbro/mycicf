@@ -71,7 +71,7 @@ services:
       - mycic_network
 
   mycic_db:
-    image: mysql:latest
+    image: registry-backend.cic.kz/mysql5.7:develop
     container_name: mycic_db
     hostname: db.docker
 
@@ -79,9 +79,7 @@ services:
     tty: true
 
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      MYSQL_ROOT_PASSWORD: 12345678
 
     ports:
       - "33060:3306"
