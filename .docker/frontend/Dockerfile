@@ -4,5 +4,4 @@ WORKDIR /app
 
 RUN echo 1
 
-RUN pwd
-RUN ls
+CMD ["npm", "run", "watch"]
