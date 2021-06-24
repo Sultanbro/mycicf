@@ -17,7 +17,7 @@
 
 // Роуты для Песочницы
 Route::get('/sandbox/index', 'SandboxController@index');
-Route::get('/sandbox/test', 'SandboxController@test2');
+Route::get('/sandbox/test', 'SandboxController@test');
 Route::get('/sandbox/react', 'SandboxController@react');
 Route::get('/sandbox/react2', 'SandboxController@react2');
 Route::get('/sandbox/error', 'SandboxController@error');
