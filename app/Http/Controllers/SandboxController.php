@@ -139,7 +139,6 @@ class SandboxController extends Controller
     }
 
     public function test() {
-        phpinfo(); die;
         return \DB::select('SELECT NOW();');
     }
 }
