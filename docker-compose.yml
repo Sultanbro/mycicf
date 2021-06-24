@@ -20,7 +20,7 @@ services:
       - mycic_network
 
   mycic_php:
-    image: registry-backend.cic.kz/centras-php7.4-fpm:develop
+    image: registry-backend.cic.kz/centras-php7.2-fpm:develop
     container_name: mycic_php
     hostname: php.docker
 
