@@ -43,11 +43,11 @@ services:
       - mycic_network
 
   # mycic_frontend_builder:
-  #   container_name: mycic_frontend_builder
   #   image: node:latest
+  #   container_name: mycic_frontend_builder
   #   build:
   #     context: ./.docker/frontend
-#
+  #
   #   volumes:
   #     - .:/app
   #     - ./node_modules
