@@ -2,33 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\FullConstructor;
-use App\Region;
-use App\City;
 use App\TblForPayEds;
-use DB;
-use App\Http\Controllers\ProductsController;
-use App\Http\Controllers\SiteController;
-use App\Library\Services\Kias;
-use App\Library\Services\KiasServiceInterface;
 use Illuminate\Console\Command;
 
-
-class UpdatePayOut extends Command
+class UpdatePayoutRequest extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'update:payout';
+    protected $signature = 'update:payoutrequest';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Обновить таблицу по Страховым выплатам';
+    protected $description = 'Getting payout request from kupipolis  lk';
 
     /**
      * Create a new command instance.
@@ -45,7 +36,8 @@ class UpdatePayOut extends Command
      *
      * @return mixed
      */
-    public function handle(){
+    public function handle()
+    {
         $getLastPayOut = TblForPayEds::orderBy('id', 'desc')->first();
         $last_id = isset($getLastPayOut->id) ? $getLastPayOut->id : 1;
 
