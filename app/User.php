@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Session;
  * @property string $full_name
  * @property string $session_id
  * @property integer $dept_isn
+ * @property float $balance
  */
 class User extends Authenticatable
 {
@@ -84,7 +85,7 @@ class User extends Authenticatable
      * @deprecated
      */
     public function checkSession(){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $response = $kias->request('User_CicHelloSvc', []);
         if(!$response->error){
             return false;
@@ -100,7 +101,7 @@ class User extends Authenticatable
      * @deprecated
      */
     public function reAuthenticate(){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $kias->init(null);
         $response = $kias->authenticate(Auth::user()->username, Auth::user()->password_hash);
         if($response->error){
@@ -262,9 +263,38 @@ class User extends Authenticatable
             'Управляющий директор - член Правления',
             'Управляющий Директор',
             'Главный Бухгалтер',
-            'Комплаенс-Контролер',
             'Риск-Менеджер',
             'Директор Департамента',
         );
+    }
+
+    public function getBalanceAttribute() {
+        $result = 0;
+        $list = CentcoinHistory::where('changed_user_isn', "=", $this->ISN)->get();
+
+        foreach ($list as $element) {
+            if ($element->operation_type == 'add') {
+                $result += $element->quantity;
+            } else if ($element->operation_type === 'minus') {
+                $result -= $element->quantity;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function getBalance($isn) {
+        $result = 0;
+        $list = CentcoinHistory::where('changed_user_isn', "=", $isn)->get();
+
+        foreach ($list as $element) {
+            if ($element->operation_type == 'add') {
+                $result += $element->quantity;
+            } else if ($element->operation_type === 'minus') {
+                $result -= $element->quantity;
+            }
+        }
+
+        return $result;
     }
 }

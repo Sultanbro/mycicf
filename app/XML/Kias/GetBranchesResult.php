@@ -12,5 +12,4 @@ use App\XML\Kias\GetBranchesResult\BranchEntryList;
  */
 class GetBranchesResult extends \SimpleXMLElement
 {
-
 }

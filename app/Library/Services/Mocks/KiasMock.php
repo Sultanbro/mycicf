@@ -136,6 +136,14 @@ class KiasMock implements KiasServiceInterface {
                 </data>
             ');
         }
+
+        if ($name === 'User_CicGetCoordinationList') {
+            return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+                <data>
+                </data>
+            ');
+        }
+
         dd($name, $params);
         throw new \Exception('DEPRECATED');
         try {
@@ -218,7 +226,7 @@ class KiasMock implements KiasServiceInterface {
             'method' => 'getBranches',
         ]);
         $this->delay();
-        return new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?>
+        return new \App\XML\Kias\GetBranchesResult('<?xml version="1.0" encoding="utf-8"?>
     <data>
         <LIST>
             <row>
@@ -312,6 +320,9 @@ class KiasMock implements KiasServiceInterface {
                 <remark>Lorem ipsum</remark>
             </row>
         </MISSION>
+        <Duty>Test duty</Duty>
+        <Name>Developer</Name>
+        <Birthday>01 января 1991</Birthday>
     </data>
 ');
     }
@@ -371,11 +382,21 @@ class KiasMock implements KiasServiceInterface {
                 <SZ>
                     <row>
                         <ISN>5565</ISN>
-                        <type></type>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
+                        <type>1</type>
+                        <curator>me</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>444334</id>
                         <docdate>01.01.2021</docdate>
+                        <SzISN></SzISN>
+                        <SzClassISN></SzClassISN>
+                    </row>
+                    <row>
+                        <ISN>5566</ISN>
+                        <type>1</type>
+                        <curator>me</curator>
+                        <DeptName>Develop 2</DeptName>
+                        <id>444333</id>
+                        <docdate>03.01.2021</docdate>
                         <SzISN></SzISN>
                         <SzClassISN></SzClassISN>
                     </row>
@@ -383,10 +404,34 @@ class KiasMock implements KiasServiceInterface {
                 <KV>
                     <row>
                         <ISN>5565</ISN>
-                        <empl></empl>
-                        <curator></curator>
-                        <DeptName></DeptName>
-                        <id></id>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000001</id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000002</id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000003</id>
+                        <docdate>01.01.2021</docdate>
+                    </row>
+                    <row>
+                        <ISN>5565</ISN>
+                        <empl>555</empl>
+                        <curator>666</curator>
+                        <DeptName>Develop</DeptName>
+                        <id>000004</id>
                         <docdate>01.01.2021</docdate>
                     </row>
                 </KV>
@@ -1293,5 +1338,15 @@ class KiasMock implements KiasServiceInterface {
 <data>
 </data>
         ');
+    }
+
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        // TODO: Implement getPrintableOrderDocument() method.
+    }
+
+    public function resetPassword($subjIsn, $password)
+    {
+        // TODO: Implement resetPassword() method.
     }
 }

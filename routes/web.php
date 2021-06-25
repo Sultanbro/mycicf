@@ -17,11 +17,15 @@
 
 // Роуты для Песочницы
 Route::get('/sandbox/index', 'SandboxController@index');
+Route::get('/sandbox/react', 'SandboxController@react');
+Route::get('/sandbox/react2', 'SandboxController@react2');
+Route::get('/sandbox/error', 'SandboxController@error');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
 Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
+Route::post('/api/pwreset', 'ApiController@resetPassword');
 
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
@@ -82,6 +86,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/historyList', 'Admin\CentcoinsController@getHistoryList');
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
+            Route::post('/centcoins/spendCoinAll', 'Admin\CentcoinsController@spendCoinAll');
+            Route::post('/centcoins/spendCoinData', 'Admin\CentcoinsController@spendCoinData');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
             Route::post('/centcoins/apply', 'Admin\CentcoinsController@getApply');
             Route::post('/apply/accept', 'Admin\CentcoinsController@getStatusAccept');
@@ -177,6 +183,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
+    Route::get('/getBirthdays2', 'SiteController@getBirthdays2')->name('getBirthdays2');
 
     Route::get('eds/od', 'EdsController@edsOD');
     Route::get('eds/po', 'EdsController@edsPO');
@@ -188,14 +195,19 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::group(['middleware' => 'duty'], function () {
-            Route::get('test/eds', 'SiteController@testEds');
-            Route::get('/getEDS', 'SiteController@getEds');
-            Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
-            Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
+            Route::get('test/eds', 'EdsController@testEds');
+            Route::post('/save_document', 'EdsController@saveDocument');
+            Route::post('/get_or_set_doc', 'EdsController@getOrSetDoc');
+            Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+            Route::get('/getEDS', 'EdsController@getEdsTokenForSign');
+            Route::post('/eds-by-isn', 'EdsController@edsByIsn')->name('eds-by-isn');
+            Route::post('/save_eds_info', 'EdsController@saveEdsInfo');
             Route::post('/coordinationSaveAttachment', 'CoordinationController@saveAttachment');
+            Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
             Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+            Route::post('/get-printable-order-document', 'EdsController@getPrintableOrderDocument');
             Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
             //DOSSIER
             Route::post('/emplInfo', 'SiteController@postEmplInfo');
@@ -246,13 +258,18 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             'as'     => 'news',
         ], function () {
 // TODO Постепенно перенести сюда все роуты связанные с этой группой
+            Route::get('/beta', 'News\\PostsController@getViewBeta')->name('.index');
+
             Route::get('/', 'News\\PostsController@getView')->name('.index');
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
             Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
+            Route::post('/addPost/beta', 'News\\PostsController@addPost2')->name('.addPost-beta'); // TODO use grouping
             Route::post('/likePost', 'News\\PostsController@likePost')->name('.likePost');
+            Route::post('/getLikes', 'News\\PostsController@getPostLikes')->name('.getLikes');
             Route::post('/news-birthday', 'NewsController@birthday');
             Route::post('/editPost', 'NewsController@editPost')->middleware('checkPostAccess');
             Route::post('/vote', 'News\\PostsController@vote')->name('.votePost');
+            Route::post('/getDateValidRanges', 'News\\PostsController@getDateValidRanges')->name('.getDateValidRanges');
 
             Route::group([
                 'prefix'     => 'my',
@@ -283,6 +300,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             });
 
         });
+
+        Route::post('/setPinned', 'News\\MyPostsController@setPinned')->middleware('checkPostAccess');
 
         Route::post('/setSenateVote', 'NewsController@senateVote');
 //        //RATING
@@ -482,6 +501,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('api/booking/add', 'ApiController@addBookingData');
     Route::post('api/booking/officeList', 'ApiController@getBookingOfficeList');
 });
+
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::get('/', 'SiteController@parseAuth');
     Route::post('/login', 'SiteController@parseLogin');
@@ -539,4 +559,21 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+
+    Route::get('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::any('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::post('/qrmanagerreport', 'TestqrController@managerReportQR');
+});
+
+Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
+    Route::get('code', 'Dev\CodeAnalyzeController@index')->name('.code');
+    Route::get('tests', 'Dev\TestsController@index')->name('.tests');
+    Route::get('routes', 'Dev\RoutesController@index')->name('.routes');
+    Route::get('vendor', 'Dev\VendorController@index')->name('.vendor');
+    Route::get('config', 'Dev\ConfigController@index')->name('.config');
+    Route::get('git', 'Dev\GitController@index')->name('.git');
+    Route::get('views', 'Dev\ViewsController@index')->name('.views');
+    Route::get('docs', 'Dev\DocsController@index')->name('.docs');
+    Route::get('caching', 'Dev\CachingController@index')->name('.caching');
+    Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });
