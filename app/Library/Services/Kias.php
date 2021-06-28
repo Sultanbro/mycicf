@@ -480,14 +480,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin, $subjIsn = null)
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null)
     {
         return $this->request('User_CicSearchSubject', [
             'IIN'          => $iin,
             'FIRSTNAME'    => $firstName,
             'LASTNAME'     => $lastName,
             'PARENTNAME'   => $patronymic,
-            'ISN' => $subjIsn
+            'ISN'          => $isn
         ]);
     }
 

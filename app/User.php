@@ -164,6 +164,7 @@ class User extends Authenticatable
                 'City' => (string)$response->City == "0" ? '' : (string)$response->City,
                 'Avarcom' => (string)$response->Avarcom,
                 'MyDZ' => (string)$response->MyDZ,
+                'Iin' => isset($response->IIN) ? (string)$response->IIN : '',
                 'Likes' => $likes,
                 'Dislikes' => $dislikes,
             ];
