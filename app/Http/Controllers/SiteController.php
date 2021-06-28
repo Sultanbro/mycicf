@@ -15,6 +15,7 @@ use App\User;
 use App\Dicti;
 use App\Region;
 use App\City;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -985,10 +986,11 @@ class SiteController extends Controller
                 array_push($files, ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN]);
             }
         }
-
+        $data = (new User)->getUserData($kias);
         return response()->json([
             'success' => true,
-            'result' => $files
+            'result' => $files,
+            'iin'=>$data
         ]);
     }
 

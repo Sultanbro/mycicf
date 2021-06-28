@@ -274,7 +274,7 @@ interface KiasServiceInterface
 
     public function getDictiList($parent);
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin);
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn = null);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
 
