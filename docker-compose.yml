@@ -75,6 +75,9 @@ services:
     container_name: mycic_db
     hostname: db.docker
 
+    volumes:
+      - .docker/mysql/data:/var/lib/mysql
+
     restart: unless-stopped
     tty: true
 
