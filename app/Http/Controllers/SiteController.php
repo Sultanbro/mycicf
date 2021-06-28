@@ -16,10 +16,10 @@ use App\Dicti;
 use App\Region;
 use App\City;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
@@ -28,12 +28,10 @@ class SiteController extends Controller
     {
         if(Auth::check())
         {
-            return redirect(route('news'));
+            return redirect(route('news.index'));
         }
-        else
-        {
-            return view('login');
-        }
+
+        return view('login');
     }
 
     public function postLogin(KiasServiceInterface $kias, Request $request)
@@ -43,11 +41,13 @@ class SiteController extends Controller
         $username = $request->username;
         $password = $request->password;
         $response = $kias->authenticate($username, hash('sha512', $password));
+
         if($response->error)
         {
             $success = false;
             $error = (string)$response->error->text;
         }
+
         if($success && $response->UserDetails)
         {
             $userDetails = $response->UserDetails;
@@ -89,11 +89,10 @@ class SiteController extends Controller
         {
             return 1000;
         }
-        else
-        {
-            $response = $kias->getUpperLevel($ISN);
-            return $response->ISN ?? $ISN;
-        }
+
+        $response = $kias->getUpperLevel($ISN);
+        return $response->ISN ?? $ISN;
+
     }
 
     public function postEmplInfo(KiasServiceInterface $kias, Request $request)
@@ -112,18 +111,18 @@ class SiteController extends Controller
 
             return response()->json($result)->withCallback($request->input('callback'));
         }
-        $days = (string)$response->MyDays ?? 0;
+        $days = (string)($response->MyDays ?? 0);
         $carier = $vacation = $admins = $sick = $thanks = $mission = null;
         if($success && $response->CARIER->row[0]->datebeg != 0)
         {
             $carier = array();
             foreach ($response->CARIER->row as $row){
-                array_push($carier, [
+                $carier[] = [
                     'Dept' => (string)$row->Dept,
                     'DateBeg' => (string)$row->datebeg,
                     'DateEnd' => (string)$row->dateend,
                     'DutyName' => (string)$row->fullname
-                ]);
+                ];
             }
         }
 
@@ -131,13 +130,13 @@ class SiteController extends Controller
         {
             $vacation = array();
             foreach ($response->VACATION->row as $row){
-                array_push($vacation, [
+                $vacation[] = [
                     'Fullname' => (string)$row->fullname,
                     'Period' => (string)$row->period,
                     'Duration' => (string)$row->duration,
                     'Date' => (string)$row->periodvac,
                     'Rest' => (string)$row->rest,
-                ]);
+                ];
             }
         }
 
@@ -145,11 +144,11 @@ class SiteController extends Controller
         {
             $sick = array();
             foreach ($response->SICK->row as $row){
-                array_push($sick, [
+                $sick[] = [
                     'Duration' => (string)$row->duration,
                     'Period' => (string)$row->period,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -157,11 +156,11 @@ class SiteController extends Controller
         {
             $admins = array();
             foreach ($response->ADMINS->row as $row){
-                array_push($admins, [
+                $admins[] = [
                     'Duration' => (string)$row->duration,
                     'Period' => (string)$row->period,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -169,12 +168,12 @@ class SiteController extends Controller
         {
             $thanks= array();
             foreach ($response->THANKS->row as $row){
-                array_push($thanks, [
+                $thanks[] = [
                     'FullName' => (string)$row->fullname,
                     'DocDate' => (string)$row->docdate,
                     'ExtraPay' => (string)$row->extrapay,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -182,11 +181,11 @@ class SiteController extends Controller
         {
             $mission = array();
             foreach ($response->MISSION->row as $row){
-                array_push($mission, [
+                $mission[] = [
                     'City' => (string)$row->CityName,
                     'Period' => (string)$row->period,
                     'Remark' => (string)$row->remark,
-                ]);
+                ];
             }
         }
 
@@ -239,6 +238,11 @@ class SiteController extends Controller
         return response()->json($result)->withCallback($request->input('callback'));
     }
 
+    /**
+     * TODO Вынести в сервис
+     *
+     * @return int[]
+     */
     public function getTesters()
     {
         return array(
@@ -260,7 +264,8 @@ class SiteController extends Controller
             766502 => 766502,
             3534147 => 3534147,
             801271 => 801271,
-            4555970 => 4555970
+            4555970 => 4555970,
+            1287408 => 1287408
         );
     }
 
@@ -269,16 +274,16 @@ class SiteController extends Controller
         $headData = Branch::where('kias_id', 50)->first();
         $result = [];
         if(count($headData->childs)){
-            array_push($result, [
+            $result[] = [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
                 'children' => $this->getChild($headData->kias_id),
-            ]);
+            ];
         }else{
-            array_push($result, [
+            $result[] = [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
-            ]);
+            ];
         }
         $responseData = [
             'result' => $result,
@@ -293,16 +298,16 @@ class SiteController extends Controller
         $headData = Branch::where('kias_id', $headDept)->first();
         $result = [];
         if(count($headData->childs)){
-            array_push($result, [
+            $result[] = [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
                 'children' => $this->getChild($headData->kias_id),
-            ]);
+            ];
         }else{
-            array_push($result, [
+            $result[] = [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
-            ]);
+            ];
         }
         $responseData = [
             'result' => $result,
@@ -317,16 +322,16 @@ class SiteController extends Controller
         $data = Branch::where('kias_parent_id', $parent_id)->orderBy('has_child')->get();
         foreach($data as $branchData){
             if(count($branchData->childs)){
-                array_push($result, [
+                $result[] = [
                     'id' => $branchData->kias_id,
                     'label' => $branchData->fullname,
                     'children' => $this->getChild($branchData->kias_id),
-                ]);
+                ];
             }else{
-                array_push($result, [
+                $result[] = [
                     'id' => $branchData->kias_id,
                     'label' => $branchData->fullname,
-                ]);
+                ];
             }
         }
         return $result;
@@ -418,10 +423,10 @@ class SiteController extends Controller
     public function getMonthLabel(Request $request){
         $result = [];
         foreach (parent::getMonthLabels() as $id => $value){
-            array_push($result, [
+            $result[] = [
                 'id' => $id,
                 'label' => $value
-            ]);
+            ];
         }
         $response = [
             'success' => true,
@@ -473,16 +478,16 @@ class SiteController extends Controller
             ->first();
         $result = [];
         if(count($headData->childs)){
-            array_push($result, [
+            $result[] = [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
                 'children' => $this->getSearchChild($headData->kias_id),
-            ]);
+            ];
         }else{
-            array_push($result, [
+            $result[] = [
                 'id' => $headData->kias_id,
                 'label' => $headData->fullname,
-            ]);
+            ];
         }
         $responseData = [
             'result' => $result,
@@ -498,16 +503,16 @@ class SiteController extends Controller
             ->get();
         foreach($data as $branchData){
             if(count($branchData->childs)){
-                array_push($result, [
+                $result[] = [
                     'id' => $branchData->kias_id,
                     'label' => $branchData->fullname,
                     'children' => $this->getSearchChild($branchData->kias_id),
-                ]);
+                ];
             }else{
-                array_push($result, [
+                $result[] = [
                     'id' => $branchData->kias_id,
                     'label' => $branchData->fullname,
-                ]);
+                ];
             }
         }
         return $result;
@@ -516,10 +521,10 @@ class SiteController extends Controller
     public function getMarks(){
         $result = [];
         foreach (KolesaMarks::all()as $item) {
-            array_push($result, [
+            $result[] = [
                 'id' => $item->mark_id,
                 'name' => $item->mark_label,
-            ]);
+            ];
         }
         return response()->json($result);
     }
@@ -527,11 +532,11 @@ class SiteController extends Controller
     public function getModels(){
         $result = [];
         foreach (KolesaModel::all()as $item) {
-            array_push($result, [
+            $result[] = [
                 'mark_id' => $item->parent_id,
                 'id' => $item->model_id,
                 'name' => $item->model_name,
-            ]);
+            ];
         }
         return response()->json($result);
     }
@@ -539,11 +544,13 @@ class SiteController extends Controller
     public function getPrices(){
         $result = [];
         foreach (KolesaPrices::all() as $item){
-            array_push($result, [
+            $result[] = [
                 'mark_id' => $item->mark_id,
                 'model_id' => $item->model_id,
                 'year' => $item->year,
                 'price' => $item->price,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
                 'ofprice' => $item->ofprice,
                 'city' => $item->city,
                 'body' => $item->body,
@@ -555,7 +562,7 @@ class SiteController extends Controller
                 'inkz' => $item->inkz,
                 'vin' => $item->vin,
                 'milage' => $item->milage,
-            ]);
+            ];
         }
         return response()->json($result);
     }
@@ -588,21 +595,25 @@ class SiteController extends Controller
     }
 
     public function getModerators(){
+        \Debugbar::startMeasure('SiteController@getModerators');
         $moderators = [];
         foreach (Permissions::whereIn('permission_id', [Permissions::ROLE_SUPERADMIN, Permissions::ROLE_MODERATOR])->get() as $users){
-            array_push($moderators,
-                $users->user_isn
-            );
+            $moderators[] = $users->user_isn;
         }
+        \Debugbar::stopMeasure('SiteController@getModerators');
         return response()->json(['moderators' => $moderators]);
     }
 
-    public function getBirthdays(){
+    public function getBirthdays(Request $request) {
+        \Debugbar::startMeasure('getBirthdays');
+        $d = $request->get('d', date('d', time()));
+        $m = $request->get('m', date('m', time()));
         $birthdays = Branch::whereNotNull('birthday')
-            ->whereDay('birthday', '>=', date('d', time()))
-            ->whereMonth('birthday', date('m', time()))
+            ->with('getParent')
+            ->whereDay('birthday', '>=', $d)
+            ->whereMonth('birthday', $m)
             ->orWhereNotNull('birthday')
-            ->whereMonth('birthday', '>', date('m', time()))
+            ->whereMonth('birthday', '>', $m)
             ->orderByRaw('MONTH(birthday)')
             ->orderByRaw('DAY(birthday)')
             ->limit(10)
@@ -610,34 +621,70 @@ class SiteController extends Controller
         $result = [];
         $lbDate[0] = $lbDate[1] = null;
         $similarKey = null;
+
         foreach ($birthdays as $key => $birthday){
             $bDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
 
             if($lbDate[0] == $bDate[0] && $lbDate[1] == $bDate[1]){
-                array_push($result[$similarKey]['similar'], [
-                    "fullname" => $birthday->fullname,
-                    "ISN" => $birthday->kias_id,
-                    "birthday" => date('d.m.Y', strtotime($birthday->birthday)),
-                    "fakeImage" => !Branch::checkImageExists($birthday->kias_id),
-                    "duty" => $birthday->duty,
-                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
-                    'similar' => []
-                ]);
+                $result[$similarKey]['similar'][] = [
+                    "fullname"  => $birthday->fullname,
+                    "ISN"       => $birthday->kias_id,
+                    "birthday"  => date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage" => ! Branch::checkImageExists($birthday->kias_id),
+                    "duty"      => $birthday->duty,
+                    "dept"      => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
+                    'similar'   => []
+                ];
             } else {
                 $similarKey = count($result);
-                array_push($result, [
-                    "fullname"=> $birthday->fullname,
-                    "ISN"=>$birthday->kias_id,
-                    "birthday"=>date('d.m.Y', strtotime($birthday->birthday)),
-                    "fakeImage"=> !Branch::checkImageExists($birthday->kias_id),
-                    "duty" => $birthday->duty,
-                    "dept" => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
-                    'similar' => []
-                ]);
+                $result[] = [
+                    "fullname"  => $birthday->fullname,
+                    "ISN"       => $birthday->kias_id,
+                    "birthday"  => date('d.m.Y', strtotime($birthday->birthday)),
+                    "fakeImage" => ! Branch::checkImageExists($birthday->kias_id),
+                    "duty"      => $birthday->duty,
+                    "dept"      => isset($birthday->getParent->fullname) ? $birthday->getParent->fullname : '',
+                    'similar'   => []
+                ];
                 $lbDate = explode('.',date('d.m.Y', strtotime($birthday->birthday)));
             }
         }
+        \Debugbar::stopMeasure('getBirthdays');
         return response()->json(['birthdays' => $result]);
+    }
+
+    public function getBirthdays2(Request $request) {
+        $d = $request->get('d', date('d', time()));
+        $m = $request->get('m', date('m', time()));
+        return cache()->remember(sprintf("birthdays__%s.%s", $m, $d), now()->addDay(), function () use ($d, $m) {
+            return Branch::whereNotNull('birthday')
+                ->select([
+                    'id',
+                    'birthday',
+                    'kias_id',
+                    'fullname'
+                ])
+                ->with('getParent')
+                ->whereDay('birthday', '>=', $d)
+                ->whereMonth('birthday', $m)
+                ->orWhereNotNull('birthday')
+                ->whereMonth('birthday', '>', $m)
+                ->orderByRaw('MONTH(birthday)')
+                ->orderByRaw('DAY(birthday)')
+                ->limit(10)
+                ->get()
+                ->groupBy(function (Branch $branch) {
+                    /**
+                     * @var $birthday Carbon
+                     */
+                    $birthday = $branch->birthday;
+
+                    return implode('-', [
+                        str_pad($birthday->day, 2, '0', STR_PAD_LEFT),
+                        str_pad($birthday->month, 2, '0', STR_PAD_LEFT),
+                    ]);
+                });
+        });
     }
 
     public function getDicti(Request $request){
@@ -648,10 +695,10 @@ class SiteController extends Controller
         $result = [];
         if(isset($response->ROWSET->row)){
             foreach ($response->ROWSET->row as $row){
-                array_push($result, [
+                $result[] = [
                     'Value' => $row->ISN,
                     'Label' => $row->FULLNAME
-                ]);
+                ];
             }
         }
         return response()->json([
@@ -661,30 +708,30 @@ class SiteController extends Controller
     }
 
     public function getDictiList($parent){
-        $kias = new Kias();
+        $kias = app(KiasServiceInterface::class);
         $kias->initSystem();
         $response = $kias->getDictiList($parent);
         $result = [];
-        array_push($result, [
+        $result[] = [
             'Value' => null,
             'Label' => 'Не выбрано'
-        ]);
+        ];
         if(isset($response->ROWSET->row)){
             foreach ($response->ROWSET->row as $row){
                 if($row->N_KIDS == '1'){
                     $child_response = $kias->getDictiList((string)$row->ISN);
                     if(isset($child_response->ROWSET->row)){
                         foreach ($child_response->ROWSET->row as $child_row){
-                            array_push($result, [
+                            $result[] = [
                                 'Value' => (string)$child_row->ISN,
-                                'Label' => (string)$row->FULLNAME." ".(string)$child_row->FULLNAME
-                            ]);
+                                'Label' => (string)$row->FULLNAME . " " . (string)$child_row->FULLNAME
+                            ];
                         }
                     }else{
-                        array_push($result, [
+                        $result[] = [
                             'Value' => (string)$row->ISN,
                             'Label' => (string)$row->FULLNAME
-                        ]);
+                        ];
                     }
                 }else{
                     array_push($result, [
@@ -707,10 +754,10 @@ class SiteController extends Controller
         $result = [];
         if(count($response) > 0){
             foreach ($response as $row){
-                array_push($result, [
+                $result[] = [
                     'Value' => $row->isn,
                     'Label' => isset($row->fullname) ? $row->fullname : $row->name,
-                ]);
+                ];
             }
         }
         return response()->json([
@@ -743,10 +790,10 @@ class SiteController extends Controller
         if(count($response->ROWSET->row) > 1){
             $participants = [];
             foreach ($response->ROWSET->row as $row){
-                array_push($participants, [
+                $participants[] = [
                     'ISN' => (string)$row->ISN,
-                    'Data' =>   (string)$row->ORGNAME != null ? (string)$row->ORGNAME.' ('.(string)$row->ECONOMICNAME.') '.(string)$row->COUNTRYNAME : (string)$row->FIRSTNAME.' '.(string)$row->LASTNAME.' '.(string)$row->PARENTNAME.' '.(string)$row->BIRTHDAY.' '.(string)$row->COUNTRYNAME
-                ]);
+                    'Data' => (string)$row->ORGNAME != null ? (string)$row->ORGNAME . ' (' . (string)$row->ECONOMICNAME . ') ' . (string)$row->COUNTRYNAME : (string)$row->FIRSTNAME . ' ' . (string)$row->LASTNAME . ' ' . (string)$row->PARENTNAME . ' ' . (string)$row->BIRTHDAY . ' ' . (string)$row->COUNTRYNAME
+                ];
             }
             $result = [
                 'success' => true,
@@ -967,8 +1014,12 @@ class SiteController extends Controller
     }
 
     public function edsByIsn(Request $request,KiasServiceInterface $kias){
+//        dd($request);
         $files = [];
-        $ISN = isset($request->isn) ? $request->isn : '';
+//        dd($request);
+//        $ISN = isset($request->isn) ? $request->isn : '';
+        $ISN = isset($request->refISN) ? $request->refISN : '';
+//        $ISN=3988127;
         $type = isset($request->type) ? $request->type : '';
         $format = isset($request->edsType) ? $request->edsType : '';
         $refISN = isset($request->refISN) ? $request->refISN : '';
@@ -983,7 +1034,7 @@ class SiteController extends Controller
             ]);
         } else {
             foreach ($sigFiles->ROWSET->row as $file) {
-                array_push($files, ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN]);
+                $files[] = ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN];
             }
         }
         $data = (new User)->getUserData($kias);

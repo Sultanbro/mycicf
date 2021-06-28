@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CodeAnalyzeCommand;
+use App\Console\Commands\SandboxCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -15,17 +17,19 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        SandboxCommand::class,
+        CodeAnalyzeCommand::class,
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
     {
-        try{
+        try {
             $schedule->command('kias:images')
                 ->dailyAt('03:00')
                 ->timezone('Asia/Almaty');
@@ -33,6 +37,10 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('03:00')
                 ->timezone('Asia/Almaty');
             $schedule->command('update:refunds')
+                ->everyFiveMinutes();
+            $schedule->command('update:payout')
+                ->everyFiveMinutes();
+            $schedule->command('update:payoutrequest')
                 ->everyFiveMinutes();
 //            $schedule->command('update:fullConstructor')
 //                ->dailyAt('03:00')
@@ -60,7 +68,7 @@ class Kernel extends ConsoleKernel
                 ->monthlyOn(10, '18:00')
                 ->timezone('Asia/Almaty');
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
     }
@@ -72,7 +80,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

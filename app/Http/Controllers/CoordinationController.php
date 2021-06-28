@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\NotificationServiceInterface;
 use App\Notification;
-use App\Providers\KiasServiceProvider;
-use http\Env\Response;
+use Debugbar;
 use Illuminate\Http\Request;
-use App\Comment;
 use App\Events\NewPost;
-use App\Like;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +24,11 @@ class CoordinationController extends Controller
         $success = true;
         $error = null;
         $ISN = $request->isn;
+        $key = 'Kias::myCoordinationList::' . $ISN;
+        $ttl = now()->addMinutes(10);
+        Debugbar::startMeasure($key);
         $response = $kias->myCoordinationList($ISN);
+        Debugbar::stopMeasure($key);
         if($response->error){
             $success = false;
             $error = (string)$response->text;
@@ -163,6 +165,8 @@ class CoordinationController extends Controller
             }
         }
 
+        $getSubjectInformation = $kias->getSubject(null, null, null, null, $ISN);
+
         $result = [
             'success' => $success,
             'error' => $error,
@@ -175,7 +179,8 @@ class CoordinationController extends Controller
                 'AD' => $AD,
                 'RV' => $RV,
                 'VC' => $VC,
-                'other' => $other
+                'other' => $other,
+                'authorizedUserIin' => isset($getSubjectInformation->error) ? 0 : (int)$getSubjectInformation->ROWSET->row->IIN
             )
         ];
 
@@ -318,10 +323,12 @@ class CoordinationController extends Controller
                         $doc_row_list[(string)$row->orderno]['fieldname'] = (string)$row->fieldname;
                     }
                     if(isset($row->classisn)) {
-                        if ($row->classisn == 1784771) {
+                        if ($row->classisn == 1784771 || $row->classisn == 1920831) {
                             $doc_row_inner[(string)$row->orderno][] = array(
                                 'ISN' => (string)$row->value,
-                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value
+                                'ID' => (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value,
+                                'ClassISN' => (string)$row->classisn,
+                                'DocISN' => (string)$result->Doc->row->ISN,
                             );
                         } else {
                             $doc_row_inner[(string)$row->orderno][] = (string)$row->value_name != '' ? (string)$row->value_name : (string)$row->value;
@@ -333,6 +340,28 @@ class CoordinationController extends Controller
                     'success' => true,
                     'doc_row_list' => $doc_row_list,
                     'doc_row_inner' => $doc_row_inner,
+                ]);
+            }
+            else
+                throw new \Exception($result->error->text, 400);
+        }
+        catch(\Exception $e) {
+            return response()->json([
+                'success'   => false,
+                'code'      => $e->getCode(),
+                'message'   => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getEorderDocs(Request $request, KiasServiceInterface $kias){
+        try {
+            $result = $kias->getOrSetEorderDocs($request->DocISN);
+            if(!isset($result->error))
+            {
+                return response()->json([
+                    'success' => true,
+                    'doc_info' => $result
                 ]);
             }
             else
@@ -474,7 +503,8 @@ class CoordinationController extends Controller
             if($request->fileType == 'base64'){
                 $file = $request->file;
                 $extension = isset($request->fileExt) ? $request->fileExt : '';
-                $filename = 'signed_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
+                $name = isset($request->fileName) ? $request->fileName : '';
+                $filename = $name.'_подписан_ЭЦП_'.$request->id.'_'.Auth::user()->full_name.'.'.$extension;  //.mt_rand(1000000, 9999999);
             } else {
 //                $file = $request->base64_encode($request->file);
 //                $contents = $file->get();
@@ -482,8 +512,14 @@ class CoordinationController extends Controller
 //                $filename = mt_rand(1000000, 9999999).'.'.$extension;
             }
 
+            if(isset($request->refISN) && $request->refISN != '' && $request->fileExt == 'cms'){
+                $isn = $request->refISN;
+            } else {
+                $isn = $request->isn;
+            }
+
             $results = $kias->saveAttachment(
-                $request->isn,
+                $isn,
                 $filename,
                 $file,
                 $request->requestType
@@ -512,7 +548,7 @@ class CoordinationController extends Controller
         $doc_type = $request->doc_type;
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/notification';  //'https://bots.n9.kz/notification';
-        (new NotificationController())->sendCoordinationNotify($users);
+        (new NotificationController(app(NotificationServiceInterface::class)))->sendCoordinationNotify($users);
         foreach ($users as $user){
             if($this->checkNotificationSended($user, $doc_no, $doc_type)){
                 continue;
@@ -631,4 +667,5 @@ class CoordinationController extends Controller
             'success' => true,
         ]);
     }
+
 }

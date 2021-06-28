@@ -92,7 +92,8 @@
             sendSolution: Function,
             showView: String,
             doc_row_list_inner_other: Object,
-            coordination: Object
+            coordination: Object,
+            doc_row_error: String
         },
         methods: {
             connectSocket(check){
@@ -323,17 +324,21 @@
                 });
             },
             getToken(type,solution){
-                this.loader(true);
-                this.signedFile = '';
-                axios.get('/getEDS').then((response) => {
-                    if(response.data.success){
-                        this.sign.token = response.data.result.token;
-                        this.signing(type,solution);     // подписываем
-                    } else {
-                        alert('Ошибка получения токена. Попробуйте чуть позже');
-                        this.loader(false);
-                    }
-                });
+                if(this.doc_row_error != ''){
+                    alert(this.doc_row_error);
+                } else {
+                    this.loader(true);
+                    this.signedFile = '';
+                    axios.get('/getEDS').then((response) => {
+                        if (response.data.success) {
+                            this.sign.token = response.data.result.token;
+                            this.signing(type, solution);     // подписываем
+                        } else {
+                            alert('Ошибка получения токена. Попробуйте чуть позже');
+                            this.loader(false);
+                        }
+                    });
+                }
             },
             // checkSignedFilessss(){
             //     this.signedFileInfo = [];

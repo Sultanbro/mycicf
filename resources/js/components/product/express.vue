@@ -28,6 +28,7 @@
                     <agr-attributes
                         v-for="value, key in attributes"
                         :key="key"
+                        v-if="!exceptArray.includes(value.AttrISN)"
                         :attribute="value"
                         :express-attr="{}"
                         :calc-changed="calcChanged"></agr-attributes>
@@ -52,16 +53,21 @@
 
         <div class="d-flex justify-content-end col-12 p-0 mb-5">
             <div class="col-12 text-center p-0">
-                <div class="fs-2 col-12" v-if="calculated && !nshb|| quotationId != 0 && price != 0 && !nshb || nshb && nshb_status == 2518 || nshb && nshb_status == '2518'">Сумма премий {{price}} Тенге</div>
+                <div class="fs-2 col-12" v-show="parseInt(id) != 11" v-if="calculated && !nshb|| quotationId != 0 && price != 0 && !nshb || nshb && nshb_status == 2518 || nshb && nshb_status == '2518'">Сумма премий {{price}} Тенге</div>
                 <!--div class="fs-2 col-12" v-if="calc_isn != null">ИСН котировки {{calc_isn}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request != null && nshb">ИСН заявки {{nshb_request}}</div>
                 <div class="fs-2 col-12" v-if="nshb_doc != null && nshb">ИСН НШБ {{nshb_doc}}</div-->
-                <div class="fs-2 col-12" v-if="tariff != null">Тариф {{tariff}}</div>
+                <div class="fs-2 col-12" v-show="parseInt(id) != 11" v-if="tariff != null">Тариф {{tariff}}</div>
                 <div class="fs-2 col-12" v-if="remark != null && remark != ''">Комментарии: {{remark}}</div>
                 <!--div class="fs-2 col-12" v-if="calc_id != null">№ экспресс котировки {{calc_id}}</div-->
                 <div class="fs-2 col-12" v-if="full_id != null">№ полной котировки {{full_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_id != null && nshb">№ {{nshb_id}}</div>
                 <div class="fs-2 col-12" v-if="nshb_request_id != null && nshb">№ заявки  {{nshb_request_id}}</div>
+
+                <div class="fs-2 col-12" v-if="premObject.prem_one != null">Страховая премия на одного Застрахованного:  {{ premObject.prem_one }} тг.</div>
+                <div class="fs-2 col-12" v-if="premObject.prem_fam != null">Страховая премия на одного члена семьи:  {{ premObject.prem_fam }} тг.</div>
+                <div class="fs-2 col-12" v-if="premObject.limit_sum_one != null">Страховая сумма на одного Застрахованного:  {{ premObject.limit_sum_one }} тг.</div>
+
                 <button v-if="quotationId == 0" class="btn btn-outline-info" @click="calculate" :disabled="nshb == false ? true : false">
                     Отправить нестандартный шаблон договора
                 </button>
@@ -112,6 +118,7 @@
                 participantDocs: {
                     types: []
                 },
+                exceptArray: ["501561","1756491","501571"],
                 participants: [
                     {
                         Value : null,
@@ -137,6 +144,7 @@
                     }
                 ],
                 status: null,
+                premObject: {}
             }
         },
         props: {
@@ -165,6 +173,10 @@
                         this.tariff = response.data.tariff;
                         this.remark = response.data.remark;
                         this.attributes = response.data.attributes;
+
+                        this.premObject.prem_one = response.data.prem_one;
+                        this.premObject.prem_fam = response.data.prem_fam;
+                        this.premObject.limit_sum_one = response.data.limit_sum_one;
                         if(this.quotationId !=0) {
                             this.participants = response.data.participants;
                             //this.nshb_status = response.data.status;
@@ -236,6 +248,9 @@
                         this.calc_id = response.data.calc_id;
                         this.tariff = response.data.tariff,
                         this.remark = response.data.remark,
+                        this.premObject.prem_one = response.data.prem_one;
+                        this.premObject.prem_fam = response.data.prem_fam;
+                        this.premObject.limit_sum_one = response.data.limit_sum_one;
                         this.preloader(false);
                         if(this.nshb){
                             this.nshb_doc = response.data.nshb_doc;

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App;
+use App\Debug\GitDataCollector;
+use App\Debug\KiasRequestCollector;
 use App\CentcoinHistory;
 use App\Observers\CentcoinObserver;
 use Illuminate\Support\Facades\URL;
@@ -16,7 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // \Debugbar::addCollector(new GitDataCollector('git'));
+        \Debugbar::addCollector(new KiasRequestCollector('kias'));
     }
 
     /**
@@ -26,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(!env('APP_DEBUG')){
+        if(!App::isLocal()){
             URL::forceScheme('https');
         }
 

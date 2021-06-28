@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model
 {
+    /**
+     * TODO Плохая практика. Лучше использовать relation и withCount
+     *
+     * @param $post_id
+     * @return int
+     *
+     * @deprecated
+     */
     public function getLikes($post_id){
         $model = self::where('post_id', $post_id)
         ->get();
@@ -17,5 +25,9 @@ class Like extends Model
             ->where('user_isn', $isn)
             ->first();
         return $model === null ? 0 : 1;
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_isn', 'ISN');
     }
 }

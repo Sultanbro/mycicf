@@ -2,6 +2,12 @@
 
 namespace App\Library\Services;
 
+use App\XML\Kias\GetAttachmentDataResult;
+use App\XML\Kias\GetBranchesResult;
+use App\XML\Kias\GetEmplInfoResult;
+use App\XML\Kias\GetUpperLevelResult;
+use App\XML\Kias\MyCoordinationListResult;
+
 /**
  * Interface KiasServiceInterface
  *
@@ -16,7 +22,7 @@ interface KiasServiceInterface
      * @param $username string
      * @param $password string
      *
-     * @return mixed
+     * @return \App\XML\Kias\AuthenticateResult
      */
     public function authenticate($username, $password);
 
@@ -32,7 +38,7 @@ interface KiasServiceInterface
      *
      * @param $ISN
      *
-     * @return mixed
+     * @return GetUpperLevelResult
      */
     public function getUpperLevel($ISN);
 
@@ -43,21 +49,21 @@ interface KiasServiceInterface
      * @param $dateBeg
      * @param $dateEnd
      *
-     * @return mixed
+     * @return GetEmplInfoResult
      */
     public function getEmplInfo($ISN, $dateBeg, $dateEnd);
 
     /**
      * Получить список всех подразделении и сотрудников
      *
-     * @return mixed
+     * @return GetBranchesResult
      */
     public function getBranches();
 
     /**
      * Получить вложение из документа/договора/контрагента
      *
-     * @return mixed
+     * @return GetAttachmentDataResult
      */
     public function getAttachmentData($refisn, $isn, $pictType);
 
@@ -66,7 +72,7 @@ interface KiasServiceInterface
      *
      * @param $ISN
      *
-     * @return mixed
+     * @return MyCoordinationListResult
      */
     public function myCoordinationList($ISN);
 
@@ -300,4 +306,20 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getDocRating($class_isn);
+
+    /**
+     * @param $isn
+     * @param $template
+     * @param $classId
+     * @return mixed
+     */
+    public function getPrintableOrderDocument($data, $dataParams);
+
+    /**
+     * Сброс пароля
+     * @param $subjIsn
+     * @param $password
+     * @return mixed
+     */
+    public function resetPassword($subjIsn, $password);
 }

@@ -47,7 +47,7 @@ class UpdateAttributeDicti extends Command
         try{
             $products = ExpressProduct::get();
             foreach($products as $product) {
-                $kias = new Kias();
+                $kias = app(KiasServiceInterface::class);
                 $kias->initSystem();
                 $response = $kias->getExpressAttributes($product->product_isn);
                 if (isset($response->ROWSET->row)) {

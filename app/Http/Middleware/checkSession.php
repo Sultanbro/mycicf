@@ -27,7 +27,10 @@ class checkSession
     public function handle($request, Closure $next)
     {
         $kias = $this->kias;
+
+        \Debugbar::startMeasure('checkSession::handle::kias_request::User_CicHelloSvc');
         $response = $kias->request('User_CicHelloSvc', []);
+        \Debugbar::stopMeasure('checkSession::handle::kias_request::User_CicHelloSvc');
         if($response->error){
             $kias->_sId = null;
             if(!$this->reAuthenticate()){
@@ -37,17 +40,22 @@ class checkSession
         return $next($request);
     }
 
-    public function reAuthenticate(){
+    public function reAuthenticate() {
         $kias = $this->kias;
-        $response = $kias->authenticate(Auth::user()->username, Auth::user()->password_hash);
-        if($response->error){
+        $user = Auth::user();
+        \Debugbar::startMeasure('checkSession::reAuthenticate::auth-kias');
+        $response = $kias->authenticate($user->username, $user->password_hash);
+        \Debugbar::stopMeasure('checkSession::reAuthenticate::auth-kias');
+
+        if($response->error) {
             Auth::logout();
             return false;
         }
-        $User = Auth::user();
-        $User->session_id = $response->Sid;
+
+        $user->session_id = $response->Sid;
         $kias->_sid= $response->Sid;
-        $User->save();
+        $user->save();
+
         return true;
     }
 }

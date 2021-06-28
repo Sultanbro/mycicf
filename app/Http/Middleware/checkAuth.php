@@ -2,14 +2,17 @@
 
 namespace App\Http\Middleware;
 
-use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\User;
 use Closure;
+use Debugbar;
 use Illuminate\Support\Facades\Auth;
 
 class checkAuth
 {
+    /**
+     * @var User|\Illuminate\Contracts\Auth\Authenticatable|null
+     */
     public $user;
 
     public function __construct()
@@ -26,12 +29,22 @@ class checkAuth
      */
     public function handle($request, Closure $next)
     {
+        Debugbar::startMeasure('checkAuth middleware');
         if($this->user === null){
             return redirect('/');
         }
-        $kias = new Kias();
-        $kias->initSystem();
-        (new User)->getUserData($kias);
+
+        $kias = app(KiasServiceInterface::class);
+
+        Debugbar::measure('Kias::Init in middleware', function () use ($kias) {
+            $kias->initSystem();
+        });
+
+        Debugbar::measure('Kias::Get user data', function () use ($kias) {
+            (new User)->getUserData($kias);
+        });
+
+        Debugbar::stopMeasure('checkAuth middleware');
         return $next($request);
     }
 }
