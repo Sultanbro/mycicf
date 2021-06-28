@@ -54,6 +54,11 @@
                         Библиотека
                     </li>
                 </a>
+                <a class="header-navigation" href="{{route('productsinfo')}}">
+                    <li>
+                        Продукты Инфо
+                    </li>
+                </a>
 {{--                <a class="header-navigation" href="javascript:void(0)">--}}
 {{--                    <li>--}}
 {{--                        Обучение--}}
