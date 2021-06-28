@@ -64,7 +64,7 @@
                                             <li class="flex-row pb-2" v-for="(innerItemThree, key) in itemsLevelThree" v-if="innerItem.id === innerItemThree.parent_id && levelThreeOpened" v-on:click="showDocuments(innerItemThree.id, innerItemThree.url)">
                                                 <a class="col-1">></a>
                                                 <div class="col-md-10">
-                                                    {{innerItemThree.label}}
+                                                    {{ innerItemThree.label }}
                                                 </div>
                                                 <div v-if="innerItem.childs.length > 0" v-on:click="showKeyProduct(innerItemThree)" class="col-1" data-toggle="modal" data-target="#exampleModal">
                                                     <div class="flex-attention">
