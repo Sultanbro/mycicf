@@ -27,6 +27,7 @@ class User extends Authenticatable
 {
     const SENATE_ISN = 999999999;
     const READING_CLUB_ISN = 999999998;
+    const KIAS_ISN = 1445725;
     const BOSS_ISN = 1472004;
     const DIRECTOR_LABEL = "Председатель Правления";
     use Notifiable;
@@ -126,6 +127,8 @@ class User extends Authenticatable
         if($user_isn === User::READING_CLUB_ISN){
             return 'Читательский клуб';
         }
+        if ($user_isn === self::KIAS_ISN)
+            return "Пользователь КИАС";
 
         /**
          * @var $model Branch
@@ -164,6 +167,7 @@ class User extends Authenticatable
                 'City' => (string)$response->City == "0" ? '' : (string)$response->City,
                 'Avarcom' => (string)$response->Avarcom,
                 'MyDZ' => (string)$response->MyDZ,
+                'Iin' => isset($response->IIN) ? (string)$response->IIN : '',
                 'Likes' => $likes,
                 'Dislikes' => $dislikes,
             ];
