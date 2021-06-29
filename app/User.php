@@ -128,7 +128,7 @@ class User extends Authenticatable
             return 'Читательский клуб';
         }
         if ($user_isn === self::KIAS_ISN)
-            return "Пользователь киас";
+            return "Пользователь КИАС";
 
         /**
          * @var $model Branch
