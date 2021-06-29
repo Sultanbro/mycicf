@@ -35,14 +35,17 @@ class ProductsInfoController extends Controller
         $result = [];
         $productsInfos = ProductsInfo::with('childs')->get();
         foreach ($productsInfos as $item) {
-            array_push($result, [
-                'id' => $item->id,
-                'label' => $item->label,
-                'parent' => $item->getParent(),
-                'url' => $item->url,
-                'child_count' => $item->childs->count(),
-                'icon_url' => $item->icon_url,
-            ]);
+            if($item->childs->count() === 0){
+//                $parentName = $item->getParent() !== 'Не указано' ? $item->getParent() . ' -> ' : '';
+                array_push($result, [
+                    'id' => $item->id,
+                    'label' => $item->label,
+                    'parent' => $item->getParent(),
+                    'url' => $item->url,
+                    'child_count' => $item->childs->count(),
+                    'icon_url' => $item->icon_url,
+                ]);
+            }
         }
         return response()
             ->json([
@@ -69,15 +72,18 @@ class ProductsInfoController extends Controller
         $result = [];
         $productsInfos = ProductsInfo::with('childs')->get();
         foreach ($productsInfos as $item) {
-            array_push($result, [
-                'id' => $item->id,
-                'label' => $item->label,
-                'parent' => $item->getParent(),
-                'description' => $item->description,
-                'child_count' => $item->childs->count(),
-                'documents' => $item->documents,
-                'franshiza' => $item->franshiza,
-            ]);
+            if($item->childs->count() === 0){
+                $parentName = $item->getParent() !== 'Не указано' ? $item->getParent() . ' -> ' : '';
+                array_push($result, [
+                    'id' => $item->id,
+                    'label' => $parentName . $item->label,
+                    'parent' => $item->getParent(),
+                    'description' => $item->description,
+                    'child_count' => $item->childs->count(),
+                    'documents' => $item->documents,
+                    'franshiza' => $item->franshiza,
+                ]);
+            }
         }
         return response()
             ->json([
@@ -192,7 +198,7 @@ class ProductsInfoController extends Controller
 //        dd($table);
         $table->description = $request->description;
         $table->documents = $request->documents;
-        $table->franshiza = $request->product;
+        $table->franshiza = $request->franshiza;
         if(!$table->save()){
             return response()->json([
                 'success' => false,

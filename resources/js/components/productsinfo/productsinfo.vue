@@ -59,14 +59,29 @@
                                      v-if="levelOneOpened"
                                      v-for="(innerItem, key) in itemsLevelTwo">
                                     <span class="col-md-12">
-                                        <a v-on:click="showDocuments(innerItem.id)">{{innerItem.label}}</a>
+                                        <a v-on:click="showDocuments(innerItem.id, innerItem)">{{innerItem.label}}</a>
                                         <ol>
-                                            <li class="flex-row pb-2" v-for="(innerItemThree, key) in itemsLevelThree" v-if="innerItem.id === innerItemThree.parent_id && levelThreeOpened" v-on:click="showDocuments(innerItemThree.id, innerItemThree.url)">
+                                            <li class="flex-row pb-2" v-for="(innerItemThree, key) in itemsLevelThree" v-if="innerItem.id === innerItemThree.parent_id && levelThreeOpened" v-on:click="showDocuments(innerItemThree.id, innerItemThree)">
                                                 <a class="col-1">></a>
                                                 <div class="col-md-10">
                                                     {{ innerItemThree.label }}
+                                                    <div class="row pt-2">
+                                                        <ol>
+                                                            <li class="flex-row pb-2" v-for="(innerItemFour, key) in itemsLevelFour" v-if="innerItemThree.id === innerItemFour.parent_id && levelFourOpened" v-on:click="showDocuments(innerItemFour.id, innerItemFour)">
+                                                                <a class="col-1">></a>
+                                                                <div class="col-md-10">
+                                                                    {{ innerItemFour.label }}
+                                                                </div>
+                                                                <div v-if="!innerItemFour.childs.length" v-on:click="showKeyProduct(innerItemFour)" class="col-1" data-toggle="modal" data-target="#exampleModal">
+                                                                    <div class="flex-attention">
+                                                                        <img id="myImg" src="/images/Attention.png" class="attention-size" ref="modalButton" >
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ol>
+                                                    </div>
                                                 </div>
-                                                <div v-if="innerItem.childs.length > 0" v-on:click="showKeyProduct(innerItemThree)" class="col-1" data-toggle="modal" data-target="#exampleModal">
+                                                <div v-if="!innerItemThree.childs.length" v-on:click="showKeyProduct(innerItemThree)" class="col-1" data-toggle="modal" data-target="#exampleModal">
                                                     <div class="flex-attention">
                                                         <img id="myImg" src="/images/Attention.png" class="attention-size" ref="modalButton" >
                                                     </div>
@@ -255,6 +270,9 @@
                 documentName: '',
                 checkItem: false,
                 levelThreePinned: '',
+                itemsLevelFour: [],
+                levelFourPinned: null,
+                levelFourOpened: false,
             }
         },
         props: {
@@ -347,10 +365,28 @@
             //     })
             // },
 
-             showDocuments: function(productInfoId, url) {
+             showDocuments: function(productInfoId, productInfo) {
                  // if(url !== null && url !== '') {
                  //     location.replace(`/documentation/` + url + `?id=${this.levelOnePinned}`);
                  //     return 0;
+                 // }
+                 // if(productInfo === this.itemsLevelThree && productInfo.childs.length > 0){
+                     console.log(productInfoId)
+                     for (let i = 0; i < this.itemsLevelThree.length; i++) {
+                         if(this.itemsLevelThree[i].id === productInfoId && this.itemsLevelThree[i].childs.length > 0){
+                             this.itemsLevelFour = this.itemsLevelThree[i].childs
+                             this.isOpened = true;
+                             this.levelOneOpened = true;
+                             if(this.levelFourPinned === productInfoId){
+                                 this.levelFourOpened === false ? this.levelThreeOpened = true : this.levelThreeOpened = false
+                             }else {
+                                 this.levelFourPinned = productInfoId
+                                 this.record.result = null
+                                 this.levelFourOpened = true
+                             }
+                             return
+                         }
+                     }
                  // }
                  for (let i = 0; i < this.itemsLevelTwo.length; i++) {
                      if(this.itemsLevelTwo[i].id === productInfoId && this.itemsLevelTwo[i].childs.length > 0){
@@ -370,7 +406,7 @@
                          return
                      }
                  }
-                 this.levelThreePinned = productInfoId
+                 // this.levelThreePinned = productInfoId
                  this.record.result = null
                  this.preloader(true);
                  this.axios.post('/productsinfo/showNameDocuments', {productInfoId: productInfoId}).then(response => {
@@ -585,7 +621,7 @@
                 }
                 if (this.itemsLevelTwo.length === 0){
                     this.levelThreeOpened = false
-                    this.showDocuments(innerItem.id);
+                    this.showDocuments(innerItem.id, innerItem);
                     return
                 }
                 // var vm = this;
