@@ -32,7 +32,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item,index) in companyData.companyList">
+                    <tr v-for="(item,index) in companyData.companyList" v-if="!!ranking[index]">
                         <td>{{index}}</td>
                         <td>{{(ranking[index])}}</td>
                         <td class="text-left"><span class="bold">{{item}}</span></td>
@@ -103,7 +103,6 @@
         methods: {
             mounted() {
                 debugger;
-                this.periods;
             },
         },
         computed: {

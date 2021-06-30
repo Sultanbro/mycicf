@@ -206,10 +206,12 @@
                     this.years.push(year);
                 }
 
-                this.periods.first_year = this.request.firstYear ? this.request.firstYear : response.periods.first_year;
-                this.periods.first_period = this.request.firstPeriod ? this.request.firstPeriod : response.periods.first_period;
-                this.periods.second_year = this.request.secondYear ? this.request.secondYear : response.periods.second_year;
-                this.periods.second_period = this.request.secondPeriod ? this.request.secondPeriod : response.periods.second_period;
+                if (this.request) {
+                    this.periods.first_year = this.request.firstYear ? this.request.firstYear : response.periods.first_year;
+                    this.periods.first_period = this.request.firstPeriod ? this.request.firstPeriod : response.periods.first_period;
+                    this.periods.second_year = this.request.secondYear ? this.request.secondYear : response.periods.second_year;
+                    this.periods.second_period = this.request.secondPeriod ? this.request.secondPeriod : response.periods.second_period;
+                }
             },
 
             async getNextOpu() {
