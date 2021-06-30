@@ -371,14 +371,15 @@
                  //     return 0;
                  // }
                  // if(productInfo === this.itemsLevelThree && productInfo.childs.length > 0){
-                     console.log(productInfoId)
+                 //     console.log(productInfoId)
                      for (let i = 0; i < this.itemsLevelThree.length; i++) {
                          if(this.itemsLevelThree[i].id === productInfoId && this.itemsLevelThree[i].childs.length > 0){
                              this.itemsLevelFour = this.itemsLevelThree[i].childs
                              this.isOpened = true;
                              this.levelOneOpened = true;
+                             this.levelThreeOpened = true
                              if(this.levelFourPinned === productInfoId){
-                                 this.levelFourOpened === false ? this.levelThreeOpened = true : this.levelThreeOpened = false
+                                 this.levelFourOpened ? !this.levelFourOpened : this.levelFourOpened
                              }else {
                                  this.levelFourPinned = productInfoId
                                  this.record.result = null
@@ -394,19 +395,18 @@
                          this.isOpened = true;
                          this.levelOneOpened = true;
                          if(this.levelThreePinned === productInfoId){
-                             this.levelThreeOpened === false ? this.levelThreeOpened = true : this.levelThreeOpened = false
+                             this.levelThreeOpened ? !this.levelThreeOpened : this.levelThreeOpened
                          }else {
                              this.levelThreePinned = productInfoId
                              this.record.result = null
                              this.levelThreeOpened = true
+                             this.levelFourOpened = false
+                             this.itemsLevelFour = []
+                             this.levelFourPinned = null
                          }
-
-                         // this.levelThreeOpened == !this.levelThreeOpened
-
                          return
                      }
                  }
-                 // this.levelThreePinned = productInfoId
                  this.record.result = null
                  this.preloader(true);
                  this.axios.post('/productsinfo/showNameDocuments', {productInfoId: productInfoId}).then(response => {
