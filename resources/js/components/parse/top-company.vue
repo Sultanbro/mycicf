@@ -3,6 +3,7 @@
     <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
             <div class="width100 table-responsive">
+
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
@@ -16,7 +17,7 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td class="text-left">Компания</td>
+                        <td class="text-left">{{(periods || {}).first_year}}</td>
                         <td>{{companyData.label_first}}</td>
                         <td>{{companyData.label_second}}</td>
                         <td>Доля {{companyData.label_first}}</td>
@@ -95,15 +96,18 @@
                 payout_first: this.companyData.payout_first,
                 payout_second: this.companyData.payout_second,
                 ranking: this.companyData.ranking,
+                label_first: this.companyData.label_first,
+                label_second:this.companyData.label_second
             }
         },
         props: {
             companyData: Object,
         },
         methods: {
-            mounted() {
-                debugger;
-            },
+
+        },
+        mounted() {
+
         },
         computed: {
           totalCompanyFirst (){

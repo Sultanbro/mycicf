@@ -83,12 +83,12 @@
                 company_list: [8],
                 first_company_list: [8],
 
-                periods: {
+/*                periods: {
                     first_year: 2019,
                     second_year: 2018,
                     first_period: 1,
                     second_period: 12,
-                },
+                },*/
                 months: [],
                 years: [],
 
@@ -110,7 +110,8 @@
             }
         },
         props: {
-            request: Object
+            request: Object,
+            periods: Object
         },
         methods: {
             getBalanceData(new_date = null) {
@@ -125,6 +126,12 @@
                 } else {
                     this.sendedCompanies = this.company_list;
                 }
+
+                if (this.periods.first_year=== null || this.periods.second_year=== null
+                    ||this.periods.first_period=== null || this.periods.second_period=== null) {
+                    return;
+                }
+
                 this.axios.post('/parse/balance/getData', {
                     company_list: this.first_company_list,
                     first_year: this.periods.first_year,
@@ -212,6 +219,12 @@
 
             async getNextBalance() {
                 this.preloader(true);
+
+                if (this.periods.first_year=== null || this.periods.second_year=== null
+                    || this.periods.first_period=== null || this.periods.second_period=== null) {
+                    return;
+                }
+
                 const response = await this.axios.post('/parse/balance/getData', {
                     company_list: [this.company_id],
                     first_year: this.periods.first_year,

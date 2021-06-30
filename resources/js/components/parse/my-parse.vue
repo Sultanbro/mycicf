@@ -109,7 +109,7 @@
                         </div>
                         <div class="mr-4 ml-4">
                             <div class="flex-row date-color">
-                                <div class="flex-row custom-primary-button-inverse pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
+                                <div @click="executeRequest()" class="flex-row custom-primary-button-inverse pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
                                     <div>
                                         <i class="fa fa-filter"></i>
                                     </div>
@@ -125,9 +125,14 @@
         </div>
 
         <div>
-            <top-company v-show="viewType === 'top-company'" :companyData="companyData" :periods="periods" v-if="companyData"></top-company>
-            <parse-opu v-show="viewType === 'top-company'" ref="opuRef"/>
-            <parse-indicators v-show="viewType === 'top-company'" ref="balanceRef"/>
+            <top-company v-show="viewType === 'top-company'"
+                         :dateType="dateType"
+                         :companyData="companyData"
+                         :periods="periods"
+                         v-if="companyData"></top-company>
+
+            <parse-opu v-show="viewType === 'parse-opu'" :periods="periods" ref="opuRef"/>
+            <parse-indicators v-show="viewType === 'parse-indicators'" :periods="periods" ref="balanceRef"/>
             <!--:parseData="parseData"-->
         </div>
 
@@ -137,6 +142,13 @@
 <script>
     export default {
         name: "my-parse",
+        mounted() {
+            let url = new URL(location.href);
+            let search = url.searchParams;
+            let params = [...search.entries()];
+            this.dateType = search.get('dateType');
+            let firstPeriod = search.get('firstPeriod');
+        },
         data() {
             return {
                 viewType: 'top-company',
@@ -259,10 +271,23 @@
             },
 
             Opu(){
+                this.viewType='parse-opu';
                 this.$refs.opuRef.getOpuData();
             },
             Balance(){
+                this.viewType='parse-indicators';
                 this.$refs.balanceRef.getBalanceData('new_date');
+            },
+            executeRequest(){
+                if(this.viewType =='top-company'){
+                    this.getCompanyTopSum();
+                }
+                else if(this.viewType =='parse-opu'){
+                    this.Opu();
+                }
+                else if(this.viewType =='parse-indicators'){
+                    this.Balance();
+                }
             }
         },
     }

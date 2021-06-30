@@ -429,8 +429,10 @@ class MyParseController extends Controller
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
         $dateType = $_GET['dateType'] ?? 'rise';
-        $firstPeriod = $_GET['firstPeriod'] ?? $default['first_period'];
-        $secondPeriod = $_GET['secondPeriod'] ?? $default['second_period'];
+
+        $firstPeriod = $request->get('first_period', $default['first_period']);
+        $secondPeriod = $request->get('second_period', $default['second_period']);
+
         $firstYear = $request->get('first_year', $default['first_year']);
         $secondYear = $request->get('second_year', $default['second_year']);
 
@@ -882,8 +884,8 @@ class MyParseController extends Controller
             }
             else
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if($productId == 0 && $classId == 0)
                 {
                     for($monthFirst = 1; $monthFirst<=$firstPeriod; $monthFirst++){
