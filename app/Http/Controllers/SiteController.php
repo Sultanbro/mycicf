@@ -63,7 +63,7 @@ class SiteController extends Controller
         $success = true;
         $error = '';
 
-        if($request->sid != '' && $request->username == ''){
+        if($request->sid != '' && $request->username == '' && $request->isBitrix == 1){
             try {
                 $checkSessionIdStatus = $kias->checkUpperLevel($request->isn,$request->sid);
                 if(isset($checkSessionIdStatus->error)){
