@@ -77,6 +77,11 @@ class ParseController extends Controller
         return $acceptedUsers;
     }
 
+    public function DataCompany()
+    {
+        return view('my-parse');
+    }
+
     public function company()
     {
         return view('parse/company');

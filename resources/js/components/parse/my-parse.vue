@@ -1,28 +1,136 @@
 <template>
-    <div>
+    <div class="CI-company">
         <div class="results-container mt-3 mb-3">
-            <div @click="viewType = 'top-company'" class="results-item" :class="viewType === 'top-company' ? 'results-item_active' : ''">
+            <div @click="viewType = 'parse-gogo'" class="results-item" :class="viewType === 'parse-gogo' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
-                    <!--<i class="far fa-star results-icon"></i>-->
+                    <!--<i class="fas fa-chart-pie results-icon"></i>-->
                     <span>Компания</span>
                 </div>
             </div>
-            <div @click="viewType = 'motivation'" class="results-item" :class="viewType === 'motivation' ? 'results-item_active' : ''">
+            <div @click="viewType = 'report'" class="results-item" :class="viewType === 'report' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
                     <!--<i class="far fa-grin-stars results-icon"></i>-->
                     <span>Группа</span>
                 </div>
             </div>
-            <div @click="viewType = 'report'" class="results-item" :class="viewType === 'report' ? 'results-item_active' : ''">
+            <div @click="viewType = 'top-company'" class="results-item" :class="viewType === 'top-company' ? 'results-item_active' : ''">
                 <div class="d-flex align-items-center">
-                    <!--<i class="fas fa-chart-pie results-icon"></i>-->
+                    <!--<i class="far fa-star results-icon"></i>-->
                     <span>Рынок</span>
                 </div>
             </div>
     </div>
-        <div>
-            <top-company v-show="viewType === 'top-company'" :isn="isn" :begin="begin"></top-company>
+
+        <div class="bg-white pl-3 pr-3 box-shadow border-16">
+            <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
+                <div class="flex-row jc-sb">
+                    <div @click="showData()" class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                        <i class="fa fa-chart-pie"></i>
+                        <div class="mt-1 fs-0_8">
+                            Сборы
+                        </div>
+                    </div>
+                        <div @click="Opu()" class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                            <i class="fa fa-user-friends"></i>
+                            <div class="mt-1 fs-0_8">
+                                Конкуренты
+                            </div>
+                        </div>
+
+                    <div class="d-flex">
+                            <div class="p-2">ОПУ</div>
+                        <a @click="Balance()">
+                            <div class="p-2">БАЛАНС</div>
+                        </a>
+                    </div>
+
+                </div>
+                <div>
+                    <div class="flex-row">
+                        <div class="mr-10 parse-top-company-select">
+                            <div>
+                                <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
+                                    <option v-for="dateType in dateTypes"
+                                            :value="dateType.value">
+                                        {{dateType.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex-row jc-sb" id="monthBlock">
+                            <div class="mr-4 ml-4">
+                                <select id="fYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                    <option selected disabled hidden :value="null">Не выбрано</option>
+                                    <option v-for="year in years" :value="year">{{year}}</option>
+                                </select>
+                                <select id="firstMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
+                                    <option selected disabled hidden :value="null">Не выбрано</option>
+                                    <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                </select>
+                            </div>
+
+                            <div class="mr-4 ml-4">
+                                <div>
+                                    <select id="sYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
+                                        <option selected disabled hidden :value="null">Не выбрано</option>
+                                        <option v-for="year in years" :value="year">{{year}}</option>
+                                    </select>
+                                    <select id="secondMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_period">
+                                        <option selected disabled hidden :value="null">Не выбрано</option>
+                                        <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex-row vertical-middle parse-top-company-margins jc-sb">
+                        <div class="mr-4 ml-4">
+                            <label class="vertical-middle pointer mb-0">
+                                <div class="termination-checkbox">
+                                    <input type="checkbox" id="termination">
+                                </div>
+                                <div>
+                                    <span class="ml-1">Расторжение</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="mr-4 ml-4">
+                            <div class="vertical-middle">
+                                <div class="vertical-middle color-red pl-4 pr-4">
+                        <span class="valuePadding pl-2 pr-2">
+                                    <input type="number" max="100" min="0" value="0" id="inputRRPDiscount">
+                                    %
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mr-4 ml-4">
+                            <div class="flex-row date-color">
+                                <div class="flex-row custom-primary-button-inverse pl-4 width-min-content pr-4 pt-1 pb-1 color-white button-accept pointer">
+                                    <div>
+                                        <i class="fa fa-filter"></i>
+                                    </div>
+                                    <div class="pl-2">
+                                        Показать
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div>
+            <top-company v-show="viewType === 'top-company'" :companyData="companyData" :periods="periods" v-if="companyData"></top-company>
+            <parse-opu v-show="viewType === 'top-company'" ref="opuRef"/>
+            <parse-indicators v-show="viewType === 'top-company'" ref="balanceRef"/>
+            <!--:parseData="parseData"-->
+        </div>
+
     </div>
 </template>
 
@@ -32,13 +140,130 @@
         data() {
             return {
                 viewType: 'top-company',
-                personIsn: null,
-                personBegin: null,
+                type: "rise",
+                dateTypes: [
+                    {
+                        name: "C нарастанием",
+                        value: "rise",
+                    },
+                    {
+                        name: "Месяц",
+                        value: "month",
+                    },
+                    {
+                        name: "Квартал",
+                        value: "quarter",
+                    },
+                    {
+                        name: "Год",
+                        value: "year"
+                    }
+                ],
+                company_list: [8],
+                first_company_list: [8],
+
+                periods: {
+                    first_year: null,
+                    second_year: null,
+                    first_period: null,
+                    second_period: null,
+                },
+                months: [
+                    'Январь',
+                    'Февраль',
+                    'Март',
+                    'Апрель',
+                    'Май',
+                    'Июнь',
+                    'Июль',
+                    'Август',
+                    'Сентябрь',
+                    'Октябрь',
+                    'Ноябрь',
+                    'Декабрь',
+                ],
+                years: (() => {
+                    let current = new Date().getFullYear();
+
+                    let result = [];
+
+                    for (let year = 2014; year <= current; year++) {
+                        result.push(year);
+                    }
+
+                    return result;
+                })(),
+
+                companies: [],
+                sendedCompanies: [],
+                company_id: 3,
+                header_one: '',
+                header_two: '',
+
+                centras_id: 8,
+                centrasBalanceData: [],
+                balanceCompanies: [],
+                tableHeaders: [],
+
+                index_1: 0,
+                index_2: 1,
+                current_index: null,
+                showTable: false,
+
+
+                productId: null,
+                classId: null,
+
+
+                parseData: null,
+                companyData: null
             }
         },
-        props: {
-            isn: Number,
-            begin: String
+        methods: {
+
+            async getClassTopSum() {
+                let response = await this.axios.get('/parse/my-parse/product', {
+                    company_list: this.first_company_list,
+                    first_year: this.periods.first_year,
+                    second_year: this.periods.second_year,
+                    first_period: this.periods.first_period,
+                    second_period: this.periods.second_period,
+                });
+
+                if(response.data.success) {
+                    this.parseData = response.data.data;
+                }
+            },
+
+            async getCompanyTopSum() {
+                let response = await this.axios.get('/parse/my-parse/icompany', {
+                    params: {
+                        company_list: this.first_company_list,
+                        first_year: this.periods.first_year,
+                        second_year: this.periods.second_year,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
+                        productId: this.productId,
+                        classId: this.classId,
+
+                    }
+                });
+                if (response.data.success) {
+                    this.companyData = response.data.data;
+                }
+            },
+
+            showData() {
+                //this.getClassTopSum();
+                this.getCompanyTopSum();
+            },
+
+            Opu(){
+                this.$refs.opuRef.getOpuData();
+            },
+            Balance(){
+                this.$refs.balanceRef.getBalanceData('new_date');
+            }
         },
     }
 </script>
@@ -97,5 +322,9 @@
     .results-icon {
         font-size: 1.3rem;
         margin-right: 0.5rem;
+    }
+
+    .d-flex {
+        align-items: center;
     }
 </style>

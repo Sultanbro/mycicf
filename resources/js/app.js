@@ -177,6 +177,7 @@ Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
 Vue.component('my-parse', require('./components/parse/my-parse.vue').default);
 Vue.component('top-company', require('./components/parse/top-company.vue').default);
+Vue.component('parse-market', require('./components/parse/parse-market.vue').default);
 
 Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 
@@ -213,6 +214,15 @@ Vue.component('report', require('./components/results/report').default);
 Vue.component('rating-list', require('./components/results/rating-list').default);
 
 Vue.component('employee-rate', require('./components/results/employee-rate').default);
+
+Vue.filter('numberFormat', (value) => {
+    // https://stackoverflow.com/a/59875056
+    return value.toLocaleString();
+
+    // https://stackoverflow.com/a/47219162
+    // let numberFormat = new Intl.NumberFormat();
+    // return numberFormat.format(value);
+});
 
 window.onload = function(){
     var app = new Vue({

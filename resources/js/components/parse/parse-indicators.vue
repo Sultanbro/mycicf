@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <parse-top :periods="periods" :months="months" :request="request" :years="years" :getData="showNewBalanceData"></parse-top>
+        <!--<parse-top :periods="periods" :months="months" :request="request" :years="years" :getData="showNewBalanceData"></parse-top>-->
 
         <div class="bg-white pl-3 pr-3 mt-3 mb-3 box-shadow border-16" v-if="showTable">
             <div class="d-flex justify-content-between align-items-center pr-3 pl-3">
@@ -84,10 +84,10 @@
                 first_company_list: [8],
 
                 periods: {
-                    first_year: null,
-                    second_year: null,
-                    first_period: null,
-                    second_period: null,
+                    first_year: 2019,
+                    second_year: 2018,
+                    first_period: 1,
+                    second_period: 12,
                 },
                 months: [],
                 years: [],
@@ -352,7 +352,7 @@
             preloader(show) {
                 if(show)
                 {
-                    document.getElementById("preloader").style.display = "flex";
+                    document.getElementById("preloader").style.display = "none";
                 }
                 else
                 {

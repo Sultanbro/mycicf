@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <parse-top :periods="periods" :months="months" :years="years" :request="request" :getData="showNewData"></parse-top>
+        <!--<parse-top :periods="periods" :months="months" :years="years" :request="request" :getData="showNewData"></parse-top>-->
 
         <div class="bg-white pl-3 pr-3 mt-3 mb-3 box-shadow border-16" v-if="showTable">
             <div class="d-flex justify-content-between align-items-center pr-3 pl-3">
@@ -225,8 +225,8 @@
             },
             setNextOpu(response) {
                 this.opuCompanies[this.current_index] = response.opuData[0].opuResult;
-                // this.company_list = [];
-                // this.index_1 = this.opuCompanies.length - 1;
+                //this.company_list = [];
+                //this.index_1 = this.opuCompanies.length - 1;
                 this.preloader(false);
             },
 
@@ -352,7 +352,7 @@
             preloader(show) {
                 if(show)
                 {
-                    document.getElementById("preloader").style.display = "flex";
+                    document.getElementById("preloader").style.display = "none";
                 }
                 else
                 {
