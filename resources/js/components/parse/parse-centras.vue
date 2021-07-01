@@ -7,7 +7,7 @@
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
-                        <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
+                        <td colspan="2" class="text-left fs-1_3 pl-0">Centras Insurance</td>
                         <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
                         <td class="pt-3"><a onclick="getProducts(0)"><span class="pointer">Топ по классам</span></a></td>
                         <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
@@ -88,7 +88,7 @@
 
 <script>
     export default {
-        name: "top-company",
+        name: "parse-centras",
         data() {
             return {
                 premium_first: this.companyData.premium_first,
@@ -117,15 +117,15 @@
 
         },
         computed: {
-          totalCompanyFirst (){
-              return Object.values(this.premium_first).reduce(function(sum, elem){
-                  return sum + elem
-              }, 0);
-          },
-            totalCompanySecond(){
-              return Object.values(this.premium_second).reduce(function (sum,elem) {
+            totalCompanyFirst (){
+                return Object.values(this.premium_first).reduce(function(sum, elem){
                     return sum + elem
-              }, 0);
+                }, 0);
+            },
+            totalCompanySecond(){
+                return Object.values(this.premium_second).reduce(function (sum,elem) {
+                    return sum + elem
+                }, 0);
             },
             payoutCompanyFirst(){
                 return Object.values(this.payout_first).reduce(function (sum,elem) {
