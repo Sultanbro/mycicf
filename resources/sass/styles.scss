@@ -238,6 +238,7 @@ ul{
     color: #508ff4;
     border-radius: 16px;
     padding: 8px;
+    white-space: pre;
 }
 .parse-table thead tr:nth-of-type(1) td:nth-of-type(3) span{
     background: #ffffff;
@@ -245,6 +246,7 @@ ul{
     color: #508ff4;
     border-radius: 16px;
     padding: 8px;
+    white-space: pre;
 }
 .parse-table thead tr:nth-of-type(2) td:first-child{
     border-top-left-radius: 12px;
@@ -346,6 +348,9 @@ ul{
 .attachment-bg{
     background: #dce7ff;
     color: #5d5d5e;
+    height: 100%;
+    width: 100%;
+    word-break: break-all;
 }
 .red-button{
     color: red;
@@ -659,8 +664,21 @@ ul{
 .blue-bg-all{
     background: #4267b2;
 }
-.bg-WHITE{
+.bg-WHITE
+{
     background: #fff !important;
+}
+.border-btt{
+    border-bottom:1px solid #000;
+}
+.border-t{
+    border-top: 1px solid #fff;
+}
+.border-l{
+    border-left: 1px solid #fff;;
+}
+.border-r{
+    border-right: 1px solid #fff;;
 }
 .width110{
     width: 110%;
@@ -971,7 +989,119 @@ ul{
 }
 .avatar-menu-size{
     height: 100%;
+    position: relative;
 }
+.avatar-menu-size:hover .sticker-block{
+    display: block;
+}
+
+/*Ava-border
+    Gold > 300
+    Silver > 200
+    Bronze > 100
+*/
+.ava-bord-bronze {
+    border: 2px solid #cd7f32;
+    padding: 2px;
+}
+.ava-bord-silver {
+    border: 2px solid #c0c0c0;
+    padding: 2px;
+}
+.ava-bord-gold {
+    border: 2px solid #ffd700;
+    padding: 2px;
+}
+
+.avatar-circle {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+}
+/*Crown
+    Gold > 300
+    Silver > 200
+    Bronze > 100
+*/
+
+.crown {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+}
+
+.crown-bronze {
+    color: #cd7f32;
+    text-shadow: 0 0 5px #cd7f32;
+}
+.crown-silver {
+    color: #c0c0c0;
+    text-shadow: 0 0 5px #c0c0c0;
+}
+.crown-gold {
+    color: #ffd700;
+    text-shadow: 0 0 5px #ffd700;
+}
+
+.avatar-circle {
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    font-size: 2rem;
+    top: -21px;
+}
+
+/*Sticker Coin vs Tomato*/
+.sticker-block{
+    position: absolute;
+    bottom: -5px;
+    width: 100%;
+    height: 20%;
+    display: none;
+    color: white;
+}
+.sticker-num {
+    text-align: center;
+    color: white;
+    position: absolute;
+    top: 5px;
+    font-size: 22px;
+    width: 100%;
+}
+.sticker {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    z-index: 10;
+    cursor: pointer;
+}
+.sticker-block .sticker-like {
+
+}
+.sticker-block .sticker-dislike {
+    width: 56px;
+    height: 56px;
+    right: -5px;
+    bottom: -9px;
+}
+.sticker-like{
+    width: 64px;
+    height: 64px;
+    left: -5px;
+    bottom: -10px;
+    background-image: url("/images/icons/cup.png");
+}
+/*.sticker-dislike{
+    width: 30px;
+    height: 30px;
+    background-image: url("/images/icons/sticker-tomato.png");
+}*/
+
 .radius-4px{
     border-radius: 4px;
 }
@@ -1890,6 +2020,7 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 
+
 /*Colleagues page*/
 .colleagues-section {
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -2791,9 +2922,26 @@ textarea::-webkit-scrollbar-thumb {
     max-height: 550px;
 }
 
+.dplayer-video-wrap {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    overflow: hidden;
+    width: auto!important;
+    height: 0!important;
+}
+
+.dplayer-video-wrap .dplayer-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .tooltip.motivation-tooltip {
     .tooltip-inner {
-        max-width: none!important;
+        max-width: none !important;
         background-color: #7abaff;
     }
 }

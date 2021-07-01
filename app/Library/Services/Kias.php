@@ -480,14 +480,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin, $subjIsn = null)
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null)
     {
         return $this->request('User_CicSearchSubject', [
             'IIN'          => $iin,
             'FIRSTNAME'    => $firstName,
             'LASTNAME'     => $lastName,
             'PARENTNAME'   => $patronymic,
-            'ISN' => $subjIsn
+            'ISN'          => $isn
         ]);
     }
 
@@ -862,9 +862,11 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function saveDocument($classISN,$emplISN,$subjISN,$docRow, $docParams){
+    public function saveDocument($classISN,$RefundISN,$RefundId,$emplISN,$subjISN,$docRow, $docParams){
         return $this->request('User_CicSAVEDOCUMENT', [
             'CLASSISN' => $classISN,
+            'REFUNDISN'=>$RefundISN,
+            'ID'=>$RefundId,
             'EMPLISN' => $emplISN,
             'DOCDATE' => date('d.m.Y'),
             'SUBJISN' => $subjISN,
