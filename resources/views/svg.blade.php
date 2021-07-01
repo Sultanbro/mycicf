@@ -83,9 +83,9 @@
 		</div>
 	</main-->
 </div>
-	<svg style="width: 100%;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
-         xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="99.6929in" height="10.26772in"
-         viewBox="0 0 841.89 595.276" xml:space="preserve" color-interpolation-filters="sRGB" class="st38">
+<svg style="width:100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+     xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="99.6929in" height="10.26772in"
+     viewBox="0 0 841.89 595.276" xml:space="preserve" color-interpolation-filters="sRGB" class="st37">
 	<v:documentProperties v:langID="1049" v:metric="true" v:viewMarkup="false">
         <v:custProps>
             <v:cp v:nameU="WantAutoLayout" v:langID="1049" v:cal="0" v:val="VT0(1):26"/>
