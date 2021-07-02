@@ -104,7 +104,7 @@
                             <div class="vertical-middle">
                                 <div class="vertical-middle color-red pl-4 pr-4">
                         <span class="valuePadding pl-2 pr-2">
-                                    <input type="number" max="100" min="0" value="0" id="inputRRPDiscount">
+                                    <input type="number" max="100" min="0" value="0" id="inputRRPDiscount" v-model="discount">
                                     %
                                 </span>
                                 </div>
@@ -159,6 +159,7 @@
                 viewType: 'top-company',
                 viewType: 'parse-centras',
                 type: "rise",
+                discount: 0,
                 dateTypes: [
                     {
                         name: "C нарастанием",
@@ -259,10 +260,12 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period,
-                        second_period: this.periods.second_period,
+                        first_period: this.periods.first_period + 1,
+                        second_period: this.periods.second_period + 1,
                         productId: this.productId,
                         classId: this.classId,
+                        dateType: this.type,
+                        disc: this.discount,
 
                     }
                 });

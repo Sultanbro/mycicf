@@ -582,7 +582,8 @@ class ParseController extends Controller
             self::INDIVIDUAL => 'Личное',
         ];
     }
-    public function getCompanyTopSum(){
+    public function getCompanyTopSum(Request $request){
+
         $label_first = '';
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);

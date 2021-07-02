@@ -82,10 +82,10 @@ class MyParseController extends Controller
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
         $dateType = $_GET['dateType'] ?? 'rise';
-        $firstPeriod = $_GET['firstPeriod'] ?? $default['first_period'];
-        $secondPeriod = $_GET['secondPeriod'] ?? $default['second_period'];
-        $firstYear = $_GET['firstYear'] ?? $default['first_year'];
-        $secondYear = $_GET['secondYear'] ?? $default['second_year'];
+        $firstPeriod = $_GET['first_period'] ?? $default['first_period'];
+        $secondPeriod = $_GET['second_period'] ?? $default['second_period'];
+        $firstYear = $_GET['first_year'] ?? $default['first_year'];
+        $secondYear = $_GET['second_year'] ?? $default['second_year'];
         $_GET['firstPeriod'] = $firstPeriod;
         $_GET['secondPeriod'] = $secondPeriod;
         $_GET['firstYear'] = $firstYear;
@@ -426,16 +426,16 @@ class MyParseController extends Controller
 
 
     public function getCompanyTopSum(Request $request){
+
+
         $label_first = '';
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
         $dateType = $_GET['dateType'] ?? 'rise';
-
-        $firstPeriod = $request->get('first_period', $default['first_period']);
-        $secondPeriod = $request->get('second_period', $default['second_period']);
-
-        $firstYear = $request->get('first_year', $default['first_year']);
-        $secondYear = $request->get('second_year', $default['second_year']);
+        $firstPeriod = $_GET['first_period'] ?? $default['first_period'];
+        $secondPeriod = $_GET['second_period'] ?? $default['second_period'];
+        $firstYear = $_GET['first_year'] ?? $default['first_year'];
+        $secondYear = $_GET['second_year'] ?? $default['second_year'];
 
         $_GET['firstPeriod'] = $firstPeriod;
         $_GET['secondPeriod'] = $secondPeriod;
@@ -885,8 +885,8 @@ class MyParseController extends Controller
             }
             else
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
                 if($productId == 0 && $classId == 0)
                 {
                     for($monthFirst = 1; $monthFirst<=$firstPeriod; $monthFirst++){
@@ -1047,6 +1047,7 @@ class MyParseController extends Controller
                 $ranking[$id] = $i++;
             }
         }
+
         return response()->json([
             'success' => true,
             'data' => [
