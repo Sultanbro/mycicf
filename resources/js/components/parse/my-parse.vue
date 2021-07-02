@@ -131,6 +131,7 @@
             <top-company v-show="viewType === 'top-company'"
                          :dateType="dateType"
                          :companyData="companyData"
+                         :parseData="parseData"
                          :periods="periods"
                          v-if="companyData"></top-company>
 
@@ -138,7 +139,6 @@
             <parse-indicators v-show="viewType === 'parse-indicators'" :periods="periods" ref="balanceRef"/>
 
             <parse-centras  v-show="viewType === 'parse-centras'" :dateType="dateType" :companyData="companyData" :periods="periods"  v-if="companyData"></parse-centras>
-            <!--:parseData="parseData"-->
         </div>
 
     </div>
@@ -272,7 +272,6 @@
             },
 
             showData() {
-                //this.getClassTopSum();
                 this.viewType='top-company';
                 this.getCompanyTopSum();
             },
@@ -284,9 +283,11 @@
                 this.viewType='parse-indicators';
                 this.$refs.balanceRef.getBalanceData('new_date');
             },
+
             executeRequest(){
                 if(this.viewType =='top-company'){
                     this.getCompanyTopSum();
+                    this.getClassTopSum();
                 }
                 else if(this.viewType =='parse-opu'){
                     this.Opu();

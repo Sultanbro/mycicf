@@ -178,8 +178,6 @@ Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 Vue.component('my-parse', require('./components/parse/my-parse.vue').default);
 Vue.component('top-company', require('./components/parse/top-company.vue').default);
 Vue.component('parse-centras', require('./components/parse/parse-centras.vue').default);
-Vue.component('parse-product', require('./components/parse/parse-product.vue').default);
-
 Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);

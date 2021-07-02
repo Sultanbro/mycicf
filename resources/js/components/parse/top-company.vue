@@ -1,6 +1,6 @@
 <template>
-
-    <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
+<div>
+    <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'company'">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
             <div class="width100 table-responsive">
 
@@ -8,8 +8,8 @@
                     <thead>
                     <tr class="border-table-0">
                         <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
-                        <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
-                        <td class="pt-3"><a onclick="getProducts(0)"><span class="pointer">Топ по классам</span></a></td>
+                        <td class="pt-3" @click="changeView('company')"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                        <td class="pt-3" @click="changeView('class')"><span :class="viewType === 'class' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                         <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -83,7 +83,94 @@
         </div>
     </div>
 
+    <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'class'">
+        <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
+            <div class="width100 table-responsive">
 
+                <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
+                    <thead>
+                    <tr class="border-table-0">
+                        <td colspan="2" class="text-left fs-1_3 pl-0">{{parseData.label}}</td>
+                        <td class="pt-3" @click="changeView('company')"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                        <td class="pt-3" @click="changeView('class')"><span :class="viewType === 'class' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                        <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                        <td></td>
+                        <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
+                    </tr>
+                    <tr>
+                        <th>Класс страхования</th>
+                        <th>{{parseData.label_first}}</th>
+                        <th>{{parseData.label_second}}</th>
+                        <th>доля {{parseData.label_first}}</th>
+                        <th>доля {{parseData.label_second}}</th>
+                        <th>изм %</th>
+                        <th>изм сумма</th>
+                        <th>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+                        <th>{{parseData.label_first}}</th>
+                        <th>{{parseData.label_second}}</th>
+                        <th>% изм</th>
+                        <th>{{parseData.label_first}}</th>
+                        <th>{{parseData.label_second}}</th>
+                    </tr>
+                    </thead>
+                   <!-- <tbody>
+                    <tr  class="fontbold" v-for="(item, index) in parseData.insuranceClassList">
+                        <td><strong>{{item}}</strong></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span></span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[index] || 0) | numberFormat}}</span></td>
+                    </tr>
+&lt;!&ndash;                    @foreach($premium_first as $product_id => $value)
+                    @if(in_array($product_id, $insuranceClassList[$id]))&ndash;&gt;
+                    <tr v-for="product_id in parseData.premium_first">
+
+                        <td><span>{{product_id}}>{{parseData.productList[product_id]}}</span></td>
+                        <td><span>{{(parseData.premium_first[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_second[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_second[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.premium_first[product_id] - parseData.premium_second[product_id]  || 0) | numberFormat}}</span></td>
+                        <td><span></span></td>
+                        <td><span>{{(parseData.payout_first[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.payout_second[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.payout_first[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.payout_second[product_id] || 0) | numberFormat}}</span></td>
+                        <td><span>{{(parseData.payout_second[product_id] || 0) | numberFormat}}</span></td>
+                    </tr>
+                    @endif
+                    @endforeach
+                    @endforeach
+                    <tr>
+                        <td><span>ВСЕГО</span></td>
+                        <td><span>{{number_format(array_sum($premium_first), 0, '.', ' ')}}</span></td>
+                        <td><span>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</span></td>
+                        <td><span></span></td>
+                        <td><span></span></td>
+                        <td><span>{{$controller->getChangedVal(array_sum($premium_first), array_sum($premium_second))}}</span></td>
+                        <td><span>{{number_format(array_sum($premium_first)-array_sum($premium_second), 0, '.', ' ')}}</span></td>
+                        <td><span></span></td>
+                        <td><span>{{number_format(array_sum($payout_first), 0, '.', ' ')}}</span></td>
+                        <td><span>{{number_format(array_sum($payout_second), 0, '.', ' ')}}</span></td>
+                        <td><span>{{$controller->getChangedVal(array_sum($payout_first), array_sum($payout_second))}}</span></td>
+                        <td><span>{{$controller->getPayoutChange(array_sum($payout_first), array_sum($premium_first))}}</span></td>
+                        <td><span>{{$controller->getPayoutChange(array_sum($payout_second), array_sum($premium_second))}}</span></td>
+                    </tr>
+                    </tbody>-->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
@@ -91,6 +178,7 @@
         name: "top-company",
         data() {
             return {
+                viewType: 'company',
                 premium_first: this.companyData.premium_first,
                 premium_second: this.companyData.premium_second,
                 payout_first: this.companyData.payout_first,
@@ -109,11 +197,13 @@
         },
         props: {
             companyData: Object,
+            parseData: Object,
         },
         methods: {
 
-        },
-        mounted() {
+            changeView(type) {
+                this.viewType = type;
+            },
 
         },
         computed: {

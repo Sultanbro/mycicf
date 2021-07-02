@@ -1,5 +1,4 @@
 <template>
-
     <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
             <div class="width100 table-responsive">
@@ -7,7 +6,7 @@
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
-                        <td colspan="2" class="text-left fs-1_3 pl-0">Centras Insurance</td>
+                        <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
                         <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
                         <td class="pt-3"><a onclick="getProducts(0)"><span class="pointer">Топ по классам</span></a></td>
                         <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
@@ -82,13 +81,12 @@
             </div>
         </div>
     </div>
-
-
 </template>
 
 <script>
     export default {
         name: "parse-centras",
+
         data() {
             return {
                 premium_first: this.companyData.premium_first,
@@ -97,25 +95,15 @@
                 payout_second: this.companyData.payout_second,
                 ranking: this.companyData.ranking,
                 label_first: this.companyData.label_first,
-                label_second:this.companyData.label_second,
-
-                periods: {
-                    first_year: null,
-                    second_year: null,
-                    first_period: null,
-                    second_period: null,
-                },
+                label_second:this.companyData.label_second
             }
+
         },
+
         props: {
             companyData: Object,
         },
-        methods: {
 
-        },
-        mounted() {
-
-        },
         computed: {
             totalCompanyFirst (){
                 return Object.values(this.premium_first).reduce(function(sum, elem){

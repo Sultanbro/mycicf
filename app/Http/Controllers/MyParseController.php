@@ -67,10 +67,10 @@ class MyParseController extends Controller
             'rise'
         ];
     }
-    public static function getNameByClassId($class_id){
+/*    public static function getNameByClassId($class_id){
         return self::getNameWithClassId()[$class_id];
-    }
-    public static function getNameWithClassId(){
+    }*/
+    public function getNameWithClassId(){
         return [
             self::COMPULSORY => 'Обязательное',
             self::PROPERTY => 'Имущественное',
@@ -356,6 +356,7 @@ class MyParseController extends Controller
                 'label_second' => $label_second,
                 'month' => $this->getMonthLabels(),
                 'quarter' => $this->getQuarterLabels(),
+                'insuranceClass'=> $this->getNameWithClassId(),
             ]
         ]);
     }
@@ -1060,7 +1061,6 @@ class MyParseController extends Controller
             'label_second' => $label_second,
             'month' => $this->getMonthLabels(),
             'quarter' => $this->getQuarterLabels(),
-            'controller' => $this
             ]
         ]);
     }
