@@ -21,7 +21,7 @@ class CreateProductsInfosTable extends Migration
             $table->string('icon_url')->nullable();
             $table->timestamps();
             $table->longText('description')->nullable();
-            $table->string('documents')->nullable();
+            $table->longText('documents')->nullable();
         });
     }
 

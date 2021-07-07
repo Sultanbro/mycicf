@@ -63,13 +63,13 @@
                                         <ol>
                                             <li class="flex-row pb-2" v-for="(innerItemThree, key) in itemsLevelThree" v-if="innerItem.id === innerItemThree.parent_id && levelThreeOpened" v-on:click="showDocuments(innerItemThree.id, innerItemThree)">
                                                 <a class="col-1">></a>
-                                                <div class="col-md-10">
+                                                <div class="col-md-10 inner-dashed">
                                                     {{ innerItemThree.label }}
                                                     <div class="row pt-2">
                                                         <ol>
                                                             <li class="flex-row pb-2" v-for="(innerItemFour, key) in itemsLevelFour" v-if="innerItemThree.id === innerItemFour.parent_id && levelFourOpened" v-on:click="showDocuments(innerItemFour.id, innerItemFour)">
                                                                 <a class="col-1">></a>
-                                                                <div class="col-md-10">
+                                                                <div class="col-md-10 inner-dashed">
                                                                     {{ innerItemFour.label }}
                                                                 </div>
                                                                 <div v-if="!innerItemFour.childs.length" v-on:click="showKeyProduct(innerItemFour)" class="col-1" data-toggle="modal" data-target="#exampleModal">
@@ -1056,6 +1056,10 @@
         color: #508ff4;
         border-bottom: 3px solid #508ff4;
 
+    }
+
+    .inner-dashed {
+        border-bottom: 3px dashed #508ff4;
     }
     .border-dark1 {
         border-color: #bac9d8;
