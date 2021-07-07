@@ -642,33 +642,6 @@ export default {
                     // alert(error.response);
                 });
         },
-        // sendOut(){
-        //     this.loading = true;
-        //     this.results.status = 2522;
-        //     let data = {
-        //         docIsn: this.listDocIsn,
-        //         type: this.type,
-        //         results: this.results,
-        //     }
-        //     this.axios.post('/sendOut', data)
-        //         .then((response) => {
-        //             if(response.data.success) {
-        //                 this.results.status = response.data.status;
-        //                 this.results.stage = response.data.stage;
-        //                 this.loading = false;
-        //                 this.addChange = true;
-        //                 this.sendOutForm = false;
-        //                 this.saveDoc = false;
-        //             } else {
-        //                 this.addChange = false;
-        //                 this.loading = false;
-        //             }
-        //             this.addChange = true;
-        //         })
-        //         .catch(function (error) {
-        //             //alert(error.response);
-        //         });
-        // },
         OpenModal () {
             this.preloader(true);
             this.changeMatch.status = false;
