@@ -1,7 +1,18 @@
 {
     "/js/admin.js": "/js/admin.js",
     "/js/app.js": "/js/app.js",
+    "/css/documentation/style.css": "/css/documentation/style.css",
     "/css/app.css": "/css/app.css",
+    "/css/admin.css": "/css/admin.css",
+    "/css/admin_head.css": "/css/admin_head.css",
+    "/css/main.css": "/css/main.css",
+    "/css/mobile.css": "/css/mobile.css",
+    "/css/styles.css": "/css/styles.css",
+    "/css/style_parse.css": "/css/style_parse.css",
+    "/css/util.css": "/css/util.css",
+    "/js/documentation/index.js": "/js/documentation/index.js",
+    "/js/documentation/login.js": "/js/documentation/login.js",
     "/js/login.js": "/js/login.js",
-    "/js/mobile.js": "/js/mobile.js"
+    "/js/mobile.js": "/js/mobile.js",
+    "/jsx/app.js": "/jsx/app.js"
 }

@@ -1,0 +1,10 @@
+
+### Get user data
+POST http://{{host}}/getUsersData
+
+> {%
+     client.test("Must return the user data", function() {
+       client.assert(response.body.success === true, "Success value is not true");
+       client.assert(response.body.response.Name === "Developer", "Name is not Developer");
+     });
+ %}

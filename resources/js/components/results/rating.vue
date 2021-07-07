@@ -124,6 +124,8 @@
         props: {
             isn: Number,
             begin: String,
+            personIsn: Number,
+            personBegin: String,
         },
         methods: {
             getTreeOptions() {
@@ -142,7 +144,9 @@
             setTreeOptions(data) {
                 this.treeOptions = data.result;
             },
-            getRating() {
+            getRating(isn, begin) {
+                this.$parent.personIsn = this.employee_isn;
+                this.$parent.personBegin = this.rating_date;
                 this.preloader(true);
                 this.showRating = false;
                 this.axios.post('/my-results/getRating',
