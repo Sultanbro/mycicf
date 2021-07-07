@@ -4865,9 +4865,9 @@
                       v:val="VT4(Отдел)"/>
                 <v:cp v:nameU="Telephone" v:lbl="Телефон" v:type="0" v:invis="false" v:ask="false" v:langID="1049" v:cal="0"
                       v:val="VT4(Телефон)"/>
-                <v:cp v:nameU="Name" v:lbl="Имя" v:type="0" v:invis="false" v:ask="false" v:langID="1087" v:cal="0" v:val="VT4()"/>
-                <v:cp v:nameU="Title" v:lbl="Должность" v:type="0" v:invis="false" v:ask="false" v:langID="1087" v:cal="0"
-                      v:val="VT4(Управление )"/>
+                <v:cp v:nameU="Name" v:lbl="Имя" v:type="0" v:invis="false" v:ask="false" v:langID="1049" v:cal="0" v:val="VT4( )"/>
+                <v:cp v:nameU="Title" v:lbl="Должность" v:type="0" v:invis="false" v:ask="false" v:langID="1049" v:cal="0"
+                      v:val="VT4(Департамент)"/>
                 <v:cp v:nameU="Email" v:lbl="Электронная почта" v:type="0" v:invis="false" v:ask="false" v:langID="1049" v:cal="0"
                       v:val="VT4(Электронная почта)"/>
                 <v:cp v:nameU="Calendar" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
@@ -4913,18 +4913,18 @@
                 <v:ud v:nameU="msvThemeEffects" v:val="VT0(16):26"/>
             </v:userDefs>
             <title>Должность.218</title>
-            <desc>Управление Альфы</desc>
+            <desc>Департамент Альфа</desc>
             <g id="shape218-733" v:mID="218" v:groupContext="groupContent">
                 <v:textBlock v:margins="rect(0,0,0,0)" v:tabSpace="42.5197"/>
                 <v:textRect cx="35.4331" cy="584.646" width="69.39" height="10.6299"/>
                 <g id="shadow218-734" v:groupContext="shadow" v:shadowOffsetX="1.44" v:shadowOffsetY="-1.44" v:shadowType="1"
                    transform="matrix(1,0,0,1,1.44,1.44)" class="st1">
                     <path d="M0 595.28 L0 574.02 L70.87 574.02 L70.87 595.28 L0 595.28 Z" class="st9"/>
-                    <text x="14.47" y="582.25" class="st19" v:langID="1087"><v:paragraph v:horizAlign="1"/><v:tabList/><v:space/><v:newlineChar/>Управление <tspan
-                                x="23.38" dy="1.2em" class="st7">Альфы</tspan><v:newlineChar/> </text>				</g>
+                    <text x="12.33" y="582.25" class="st19" v:langID="1049"><v:paragraph v:horizAlign="1"/><v:tabList/><v:space/><v:newlineChar/>Департамент<v:newlineChar/><tspan
+                                x="24.25" dy="1.2em" class="st7">Альфа</tspan><v:newlineChar/> </text>				</g>
                 <path d="M0 595.28 L0 574.02 L70.87 574.02 L70.87 595.28 L0 595.28 Z" class="st31"/>
-                <text x="14.47" y="582.25" class="st21" v:langID="1087"><v:paragraph v:horizAlign="1"/><v:tabList/><v:space/><v:newlineChar/>Управление <tspan
-                            x="23.38" dy="1.2em" class="st7">Альфы</tspan><v:newlineChar/> </text>			</g>
+                <text x="12.33" y="582.25" class="st21" v:langID="1049"><v:paragraph v:horizAlign="1"/><v:tabList/><v:space/><v:newlineChar/>Департамент<v:newlineChar/><tspan
+                            x="24.25" dy="1.2em" class="st7">Альфа</tspan><v:newlineChar/> </text>			</g>
         </g>
         <g id="group403-741" transform="translate(422.646,-259.37)" v:mID="403" v:groupContext="group">
             <v:custProps>
