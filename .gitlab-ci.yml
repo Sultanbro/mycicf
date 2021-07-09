@@ -26,6 +26,8 @@ before_script:
 composer:
   image: php:7.2
   stage: build
+  tags:
+    - mycic
   script:
     - wget https://getcomposer.org/composer.phar -O ./composer.phar
     - php composer.phar update 
@@ -46,6 +48,8 @@ composer:
 build:
   image: node:latest
   stage: build
+  tags:
+    - mycic
   script:
     - npm i
     - npm run dev
@@ -53,6 +57,8 @@ build:
 phpunit:
   image: php:7.2
   stage: test
+  tags:
+    - mycic
   dependencies:
     - composer
   script:
