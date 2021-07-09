@@ -52,7 +52,7 @@ phpunit:
   dependencies:
     - composer
   script:
-    - php artisan migrate -v
-    - phpunit --coverage-text --colors=never
+    - source .env.testing && php artisan migrate -v
+    - source .env.testing && phpunit --coverage-text --colors=never
 
 ####
