@@ -15,11 +15,10 @@ use App\User;
 use App\Dicti;
 use App\Region;
 use App\City;
-use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
