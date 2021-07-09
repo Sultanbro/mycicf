@@ -95,8 +95,17 @@
                 payout_second: this.companyData.payout_second,
                 ranking: this.companyData.ranking,
                 label_first: this.companyData.label_first,
-                label_second:this.companyData.label_second
+                label_second:this.companyData.label_second,
+
+                periods: {
+                    first_year: null,
+                    second_year: null,
+                    first_period: null,
+                    second_period: null,
+                },
             }
+
+
 
         },
 

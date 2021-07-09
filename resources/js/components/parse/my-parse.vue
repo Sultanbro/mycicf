@@ -178,8 +178,6 @@
                         value: "year"
                     }
                 ],
-                company_list: [8],
-                first_company_list: [8],
 
                 periods: {
                     first_year: null,
@@ -213,27 +211,6 @@
                     return result;
                 })(),
 
-                companies: [],
-                sendedCompanies: [],
-                company_id: 3,
-                header_one: '',
-                header_two: '',
-
-                centras_id: 8,
-                centrasBalanceData: [],
-                balanceCompanies: [],
-                tableHeaders: [],
-
-                index_1: 0,
-                index_2: 1,
-                current_index: null,
-                showTable: false,
-
-
-                productId: null,
-                classId: null,
-
-
                 parseData: null,
                 companyData: null
             }
@@ -242,11 +219,13 @@
 
             async getClassTopSum() {
                 let response = await this.axios.get('/parse/my-parse/product', {
-                    company_list: this.first_company_list,
-                    first_year: this.periods.first_year,
-                    second_year: this.periods.second_year,
-                    first_period: this.periods.first_period,
-                    second_period: this.periods.second_period,
+                    params: {
+                        company_list: this.first_company_list,
+                        first_year: this.periods.first_year,
+                        second_year: this.periods.second_year,
+                        first_period: this.periods.first_period + 1,
+                        second_period: this.periods.second_period + 1,
+                    }
                 });
 
                 if(response.data.success) {
@@ -270,7 +249,9 @@
                     }
                 });
                 if (response.data.success) {
-                    this.companyData = response.data.data;
+                    this.$nextTick(()=>{
+                        this.companyData = response.data.data;
+                    });
                 }
             },
 
@@ -358,7 +339,6 @@
         font-size: 1.3rem;
         margin-right: 0.5rem;
     }
-
     .d-flex {
         align-items: center;
     }
