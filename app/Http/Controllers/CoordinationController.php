@@ -575,56 +575,56 @@ class CoordinationController extends Controller
     }
 
     public function closeDecade(Request $request){
-        $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
-        $contentT .= $request->postText;
-        $isn = 1446167; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
-        $username = 'Урманов Бауыржан Абдирашитович';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
-
-        $from = date('Y-m-d 00:00:00');
-        $to = date('Y-m-d 23:59:59');
-        $post = Post::where('user_isn',$isn)->whereBetween('created_at', [$from, $to])->first();
-
-        if(!$post) {
-            try {
-                $new_post = new Post();
-                $new_post->user_isn = $isn;  //Даурен Рамазанов
-                $new_post->post_text = $contentT;
-                $new_post->pinned = 0;
-                $new_post->from_kias = 1;
-                $new_post->save();
-            } catch (\Exception $e) {
-                return false;
-            }
-
-            $response = [
-                'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
-                'edited' => false,
-                'fullname' => $username,
-                'isLiked' => 0,
-                'isn' => $new_post->user_isn,
-                'userISN' => $new_post->user_isn,
-                'likes' => 0,
-                'pinned' => 0,
-                'postText' => $new_post->getText(),
-                'postId' => $new_post->id,
-                'image' => $new_post->getImage(),
-                'documents' => $new_post->getDocuments(),
-                'youtube' => $new_post->getVideo(),
-                'videos' => $new_post->getVideoUrl(),
-                'comments' => [],
-            ];
-
-            try {
-                broadcast(new NewPost([
-                    'post' => $response,
-                    'type' => Post::NEW_POST
-                ]));
-            } catch (\Exception $e) {
-                return false;
-            }
-
-            return 'пост успешно добавлен';
-        }
+//        $contentT = '<div class="text-center"><img style="max-width:50%" src="/images/closed.jpg" /></div>';
+//        $contentT .= $request->postText;
+//        $isn = 1446167; //isset($request->isn) && $request->isn != null ? $request->isn : 1445722;
+//        $username = 'Урманов Бауыржан Абдирашитович';    //isset($request->userName) && $request->userName != null ? $request->userName : 'Кулназаров Гани Жасаганбергенович';
+//
+//        $from = date('Y-m-d 00:00:00');
+//        $to = date('Y-m-d 23:59:59');
+//        $post = Post::where('user_isn',$isn)->whereBetween('created_at', [$from, $to])->first();
+//
+//        if(!$post) {
+//            try {
+//                $new_post = new Post();
+//                $new_post->user_isn = $isn;  //Даурен Рамазанов
+//                $new_post->post_text = $contentT;
+//                $new_post->pinned = 0;
+//                $new_post->from_kias = 1;
+//                $new_post->save();
+//            } catch (\Exception $e) {
+//                return false;
+//            }
+//
+//            $response = [
+//                'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
+//                'edited' => false,
+//                'fullname' => $username,
+//                'isLiked' => 0,
+//                'isn' => $new_post->user_isn,
+//                'userISN' => $new_post->user_isn,
+//                'likes' => 0,
+//                'pinned' => 0,
+//                'postText' => $new_post->getText(),
+//                'postId' => $new_post->id,
+//                'image' => $new_post->getImage(),
+//                'documents' => $new_post->getDocuments(),
+//                'youtube' => $new_post->getVideo(),
+//                'videos' => $new_post->getVideoUrl(),
+//                'comments' => [],
+//            ];
+//
+//            try {
+//                broadcast(new NewPost([
+//                    'post' => $response,
+//                    'type' => Post::NEW_POST
+//                ]));
+//            } catch (\Exception $e) {
+//                return false;
+//            }
+//
+//            return 'пост успешно добавлен';
+//        }
     }
 
     public function checkNotificationSended($isn, $no, $type){
