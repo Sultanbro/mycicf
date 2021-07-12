@@ -968,7 +968,6 @@
 <!--                        </tr>-->
 <!--                    </table>-->
 <!--                </div>-->
-                <button @click="resultSort()">qwerty</button>
                 <table class="table recruiting-striped" data-filter-control>
                     <thead>
                     <tr>
@@ -1014,23 +1013,6 @@
         name: "recruiting",
         data() {
             return {
-                items: [
-                    { type: 1, name: 'Чехия' },
-                    { type: 1, name: 'Франция' },
-                    { type: 3, name: 'Сомали' },
-                    { type: 2, name: 'Вьетнам' },
-                    { type: 3, name: 'Сенегал' },
-                    { type: 1, name: 'Испания' },
-                    { type: 2, name: 'Таиланд' },
-                    { type: 2, name: 'Филлипины' },
-                    { type: 1, name: 'Норвегия' },
-                    { type: 3, name: 'Ангола' },
-                ].map((n, i) => ({ ...n, id: i + 1 })),
-                types: [
-                    { id: 1, name: 'Европа', color: 'red' },
-                    { id: 2, name: 'Азия',  color: 'blue' },
-                    { id: 3, name: 'Африка', color: 'green' },
-                ],
                 active: null,
                 internshipResultCheckCounter: '',
                 filesInfo: [],
@@ -1268,59 +1250,6 @@
                 dateOfTheStateContractModal: '12.01.2020',
                 commentModal: 'Текст',
                 // },
-                recruitingInterviewCluster1:[
-                    {
-                        id: 0,
-                        name: 'Иванов Иван Иванович',
-                        structureUnit: 'Департамент развития партнерских отношений',
-                        dateOfInterview: '02.01.2020',
-                        label: 'Провалил собеседование'
-                    },
-                    {
-                        id: 1,
-                        name: 'Иванов Иван Иванович',
-                        structureUnit: 'Департамент развития партнерских отношений',
-                        dateOfInterview: '02.01.2020',
-                        label: 'Не пришел'
-                    },
-                    {
-                        id: 2,
-                        name: 'Иванов Иван Иванович',
-                        structureUnit: 'Департамент развития партнерских отношений',
-                        dateOfInterview: '02.01.2020',
-                        label: 'Успешно прошел собеседование'
-                    },
-                ],
-                //     depProg: [
-                //         '0',
-                //         'Хамитов Руслан Решатович',
-                //         'Департамент программирования'
-                //     ],
-                //     depHR: [
-                //         '1',
-                //         'Руководитель департамента',
-                //         'Отдел кадров'
-                //     ],
-                recruitingInterviewCluster: [
-                    {
-                        id: 0,
-                        fullName: 'Хамитов Руслан Решатович',
-                        department: 'Департамент программирования'
-                    },
-                    {
-                        id: 1,
-                        fullName: 'Джумагулов Дмитрий Романович',
-                        department: 'Департамент программирования'
-                    },
-                    {
-                        id: 2,
-                        fullName: 'Qwerty qwerty qwerty',
-                        department: 'Департамент Непрограммирования'
-                    }
-                ],
-                faq_questions:[
-
-                ],
                 testAxios: null,
                 error: 'Произошла какая-то ошибка',
                 none: false,
@@ -1502,18 +1431,6 @@
                 //     return a.application_status - b.application_status;
                 // });
             },
-            sendMail: function(){
-                this.axios.post('/recruiting/testMail', {
-                    form: {}
-                }).then(response => {
-                    // console.log(this.options);
-                    // this.options = response.data.result;
-                    // console.log(this.options);
-                })
-            },
-            testpush: function(){
-                // this.testvar
-            },
             havecarChecking: function (){
                 if(this.candidat.haveCarSelect == 482301){
                     this.isDriverCard = false;
@@ -1522,18 +1439,6 @@
                     this.isDriverCard = true;
                     this.candidat.driverCategorySelect = '';
                 }
-            },
-            getStyle(type) {
-                return {
-                    color: this.types.find(n => n.id === type).color,
-                };
-            },
-            qwer: function() {
-                // console.log(this.candidatBackward.nameOfPostSelect);
-                console.log(this.candidatBackward)
-            },
-            qwer1: function() {
-                console.log(this.candidatBackward.nameOfPostSelect[0]);
             },
             isActiveCandidatsSaveBtn(){
               if (this.candidateBase.IIN && this.candidateBase.phone){
@@ -1596,15 +1501,6 @@
                     }).catch(error => {
                         alert("Ошибка на стороне сервера");
                     });
-            },
-            getFormData() {
-                const formData = new FormData;
-
-                this.documents.forEach(document => {
-                    formData.append('documents[]', document, document.name);
-                });
-
-                return formData;
             },
 
 
@@ -1677,9 +1573,6 @@
             sendCandidatsData(){
                 this.candidatsDataSavedSuccess();
             },
-            checkLengthIIN: function(){
-                this.manualIIN.length <= 13;
-            },
             candidatWithoutIIN: function(){
                 if (this.manualSearchIIN == true){
                     this.manualSearchIIN = false;
@@ -1687,7 +1580,6 @@
                 else if (this.manualSearchIIN == false){
                     this.manualSearchIIN = true;
                 }
-
             },
             goToTop(){
                 window.scroll({
@@ -1752,9 +1644,11 @@
                 this.candidateBase.recruiterEmail = '';
                 this.resultCheckCounter = '';
                 this.filesInfo = [];
+                //Функция проверки, есть ли данные ИИН и имени кандидата. Если нет, сразу покажет поля для заполнения
                 this.showTopModal(index,id);
                 this.isActiveCandidatsSaveBtn();
                 this.showInterviewBlock();
+                this.addCandidateBtn();
             },
             showTopModal: function(index,id){
                 this.candidateBase.IIN = '';
@@ -1941,29 +1835,18 @@
                this.recruitingData.status = this.person.application_status;
             },
             addCandidateBtn() {
-                this.showEditBtn = false;
                 // Если еще нет ИИН и номера, заявка только создана, то сразу покажет поля для ввода
                 // if(this.candidateBase.phone == null || this.candidateBase.phone == '' || this.candidateBase.IIN == null || this.candidateBase.IIN == ''){
                 //     this.manualSearchIIN = true;
                 // }
+                this.showEditBtn = false;
+                this.manualSearchIIN = false;
                 if(this.candidateBase.phone == null || this.candidateBase.phone == '' || this.candidateBase.IIN == null || this.candidateBase.IIN == ''){
                     this.showEditBtn = true;
+                    this.manualSearchIIN = true;
                 }
                 //this.candidatsData.id = this.candidatBackward.id;
             },
-            // getRequests: function(){
-            //     this.axios.post('/recruiting/getRequests')
-            //         .then(response => {
-            //             this.aftergetRequests(response.data);
-            //         });
-            // },
-            // aftergetRequests(data){
-            //     if(data.success){
-            //         this.kek = data.result;
-            //     } else {
-            //         alert('Сорян, нет данных');
-            //     }
-            // },
             getDicti(){
                 if (this.recruitingTabs == 1) {
                     let dataIsn = {
@@ -2496,8 +2379,6 @@
             fileUpload(e) {
                 const documents = e.target.files;
                 this.fileNameArr.push(e.target.files.name);
-                console.log(e);
-                console.log(this.fileNameArr);
                 const vm = this;
                 if(documents.length <= this.docMaxNumber) {
                     Array.from(documents).forEach(document => {
@@ -2542,7 +2423,7 @@
                 this.candidatsData.cityAdress =  this.candidatBackward.cityAdressSelect;
                 this.candidatsData.recruitingId =  this.candidatBackward.id;
                 this.candidatsData.documents =  this.candidatBackward.documents;
-                this.candidatsData.recruiterFullname = this.user.branch.fullname;
+                this.candidatsData.recruiterFullname = window.candidat.fullname;
                 this.candidatsData.chiefMail = this.candidatBackward.chiefMail;
                 formData.append("candidatsData", JSON.stringify(this.candidatsData));
                 return formData;
@@ -2616,8 +2497,10 @@
             },
             savedSuccess: function(){
                 // Добавляем должность и имя руководителя, заполнившего заявку
-                this.candidat.chiefsFullname = this.user.branch.fullname;
-                this.candidat.chiefsDuty = this.user.branch.duty;
+                // this.candidat.chiefsFullname = this.user.branch.fullname;
+                // this.candidat.chiefsDuty = this.user.branch.duty;
+                this.candidat.chiefsFullname = window.candidat.fullname; // todo
+                this.candidat.chiefsDuty = window.candidat.duty; // todo
                 // Запись  языков и пакет в объект candidat
                 let languagePushCounter = 0;
                 for (var i = 1;i <= this.newLanguageBlocks.length; i++){

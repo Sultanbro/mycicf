@@ -75,6 +75,10 @@
                     this.education = information.Education;
                     this.rating = information.Rating;
                     this.place_of_birth = information.City;
+                    window.candidat = {
+                        fullname: information.Name,
+                        duty: information.Duty,
+                    };
                 }else{
                     alert(response.error);
                 }
