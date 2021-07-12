@@ -102,6 +102,8 @@ Vue.component('search', require('./components/documentation/search.vue').default
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
 
+Vue.component('productsmodal-modal', require('./components/productsmodal/modal.vue').default);
+
 Vue.component('information-modal', require('./components/shared/information-modal.vue').default);
 
 Vue.component('motivation', require('./components/employee/motivation.vue').default);
@@ -213,6 +215,9 @@ Vue.component('rating-list', require('./components/results/rating-list').default
 
 Vue.component('employee-rate', require('./components/results/employee-rate').default);
 
+Vue.component('products-info', require('./components/productsinfo/productsinfo').default);
+Vue.component('step1', require('./components/productsinfo/step1').default);
+Vue.component('step2', require('./components/productsinfo/step2').default);
 window.onload = function(){
     var app = new Vue({
         el: '#app',

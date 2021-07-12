@@ -206,6 +206,10 @@ class User extends Authenticatable
         return (new Kurators())->checkUser([kurators::ROLE_KURATORS]);
     }
 
+    public static function isProductsInfoAdmin(){
+        return (new Permissions())->checkUser([Permissions::ROLE_PRODUCTSINFO]);
+    }
+
     public static function getMotivationDepartments(){
         return [
             "1445780", "1445781", "1445783", "1445783", "4100260",
