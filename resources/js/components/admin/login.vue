@@ -37,7 +37,6 @@
             return {
                 username : '',
                 password : '',
-                showErrorMessage: '',
             }
         },
         methods: {
@@ -59,10 +58,9 @@
             afterLogin (response){
                 if(response.success){
                     location.href = "/index";
+                }else{
+                    this.showErrorMessage(response.error);
                 }
-                // else{
-                //     this.showErrorMessage(response.error);
-                // }
             }
         },
     }

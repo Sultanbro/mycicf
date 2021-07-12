@@ -17,4 +17,3 @@ class Answer extends Model {
         return $this->hasMany(UserAnswer::class);
     }
 }
-

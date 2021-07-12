@@ -115,13 +115,11 @@ class Kias implements KiasServiceInterface
      */
     public function getClient()
     {
-        try {
+        if (!$this->client) {
             $this->client = new SoapClient($this->url, [
                 'cache_wsdl' => WSDL_CACHE_NONE,
-                'trace' => 1,
+                'trace'      => 1,
             ]);
-        } catch (\SoapFault $e) {
-           // dd($e->getMessage());
         }
 
         return $this->client;
