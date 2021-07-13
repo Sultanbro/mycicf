@@ -20,5 +20,3 @@ yarn-error.log
 /resources/views/apidoc
 
 .tmp
-
-/.docker/mysql/*
