@@ -65,6 +65,8 @@
         name: "edslogin",
         data() {
             return {
+                checknumber:0,
+                doppelganger: false,
                 loading: false,
                 seenmoney: false,
                 ws: null,
@@ -305,6 +307,7 @@
                 axios.post("/eds-by-isn", {
                     isn: docIsn
                 }).then((response) => {
+                    this.iin = response.data.iin['Iin'];
                     if(response.data.success) {
                         var obj = response.data.result;
                         if(obj.length > 0){
@@ -337,48 +340,48 @@
                     });
                 }
             },
-            checkSignedFilessss(){
-                this.signedFileInfo = [];
-                let self = this;
-                if(self.selectedFile != '') {
-                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
-                    self.loader(true);
-                    webSocket.onopen = function () {
-                        var responseObj = {
-                            module: 'kz.uchet.signUtil.commonUtils',
-                            lang: 'en',
-                            method: 'checkCMS',
-                            args: [self.selectedFile]
-                        };
-                        webSocket.send(JSON.stringify(responseObj));
-                    };
-
-                    webSocket.onmessage = function (msg) {
-                        var result = JSON.parse(msg.data);
-                        if(result.code) {
-                            if (result.code == 200) {
-                                if(result.responseObjects.length > 0) {
-                                    self.signedFileInfo = result.responseObjects;
-                                    //webSocket.close();
-                                    self.loader(false);
-                                }
-                            } else {
-                                alert(result.message);
-                                self.loader(false);
-                                //webSocket.close();
-                            }
-                        }
-                    }
-                    webSocket.onerror = function (msg) {
-                        // TODO PUSH ERROR
-                        //webSocket.close();
-                        this.loader(false);
-                        console.log(msg);
-                    }
-                } else {
-                    alert('Выберите пожалуйста файл');
-                }
-            },
+            // checkSignedFilessss(){
+            //     this.signedFileInfo = [];
+            //     let self = this;
+            //     if(self.selectedFile != '') {
+            //         var webSocket = new WebSocket('wss://127.0.0.1:13579');
+            //         self.loader(true);
+            //         webSocket.onopen = function () {
+            //             var responseObj = {
+            //                 module: 'kz.uchet.signUtil.commonUtils',
+            //                 lang: 'en',
+            //                 method: 'checkCMS',
+            //                 args: [self.selectedFile]
+            //             };
+            //             webSocket.send(JSON.stringify(responseObj));
+            //         };
+            //
+            //         webSocket.onmessage = function (msg) {
+            //             var result = JSON.parse(msg.data);
+            //             if(result.code) {
+            //                 if (result.code == 200) {
+            //                     if(result.responseObjects.length > 0) {
+            //                         self.signedFileInfo = result.responseObjects;
+            //                         //webSocket.close();
+            //                         self.loader(false);
+            //                     }
+            //                 } else {
+            //                     alert(result.message);
+            //                     self.loader(false);
+            //                     //webSocket.close();
+            //                 }
+            //             }
+            //         }
+            //         webSocket.onerror = function (msg) {
+            //             // TODO PUSH ERROR
+            //             //webSocket.close();
+            //             this.loader(false);
+            //             console.log(msg);
+            //         }
+            //     } else {
+            //         alert('Выберите пожалуйста файл');
+            //     }
+            // },
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
@@ -404,7 +407,12 @@
                                     //    self.signedFileInfo.push(result.responseObjects[0]);
                                     //} else {
                                         self.signedFileInfo = result.responseObjects;
-                                    //}
+                                     if (result.responseObjects[0].iin != self.iin) {
+                                         alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
+                                         self.loader(false);
+                                         this.edsConfirmed = false
+                                         return;
+                                     }
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                         self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
                                     } else {
@@ -452,6 +460,8 @@
                                         type: 'A',
                                         edsType: 'cms'
                                     }).then((response) => {
+                                        this.iin=response.data.result['Iin'];
+                                        this.iinofman=this.info[doc_index].iin;
                                         if (response.data.success) {
                                             var obj = response.data.result;
                                             if (obj.length > 0) {
@@ -481,6 +491,7 @@
                                                     type: 'A',
                                                     edsType: 'cms'
                                                 }).then((response) => {
+                                                    this.iin = response.data.result.iin;
                                                     if (response.data.success) {
                                                         var obj = response.data.result;
                                                         if (obj.length > 0) {

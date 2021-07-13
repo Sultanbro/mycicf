@@ -80,7 +80,6 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::get('/centcoins/history', 'Admin\CentcoinsController@getHistoryView')->name('centcoins.history');
             Route::get('/centcoins/items', 'Admin\CentcoinsController@getItemsView')->name('centcoins.items');
             Route::get('/centcoins/report', 'Admin\CentcoinsController@getReport')->name('centcoins.report');
-            Route::get('/centcoins/apply', 'Admin\CentcoinsController@getApplyView')->name('centcoins.apply');
 
 
             Route::post('/centcoins/userList', 'Admin\CentcoinsController@getUserList');
@@ -172,6 +171,44 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/rating/setNewUser', 'Admin\RatingPermissionController@newUser');
             Route::get('/rating/delete/{kurators}', 'Admin\RatingPermissionController@deleteById');
         });
+
+        Route::group(['middleware' => 'productsinfoAdmin'], function () {
+            Route::get('producstinfo/org_structure', 'Admin\ProductsInfoController@orgStructure')->name('productsinfo.org');
+            Route::post('productsinfo/save_struct', 'Admin\ProductsInfoController@saveStructure');
+
+            Route::get('productsinfo/svg', 'Admin\ProductsInfoController@loadSvg')->name('productsinfo.svg');
+            Route::post('productsinfo/save_svg', 'Admin\ProductsInfoController@saveSvg');
+
+            Route::get('productsinfo/word', 'Admin\ProductsInfoController@loadWord')->name('productsinfo.word');
+            Route::post('productsinfo/save_word', 'Admin\ProductsInfoController@saveWord');
+
+            Route::get('productsinfo/image', 'Admin\ProductsInfoController@loadImage')->name('productsinfo.image');
+            Route::post('productsinfo/save_image', 'Admin\ProductsInfoController@saveImage');
+
+            Route::get('productsinfo/menu', 'Admin\ProductsInfoController@menu')->name('productsinfo.menu');
+            Route::post('productsinfo/save_menu', 'Admin\ProductsInfoController@saveMenu');
+            Route::post('productsinfo/list_menu', 'Admin\ProductsInfoController@listMenu');
+
+            Route::get('productsinfo/svg/list', 'Admin\ProductsInfoController@svgList')->name('productsinfo.svg.list');
+            Route::post('productsinfo/get/svgList', 'Admin\ProductsInfoController@getSvgList');
+            Route::post('productsinfo/delete/svg', 'Admin\ProductsInfoController@deleteSvg');
+
+            Route::get('productsinfo/word/list', 'Admin\ProductsInfoController@wordList')->name('productsinfo.word.list');
+            Route::get('productsinfo/description/list', 'Admin\ProductsInfoController@descriptionList')->name('productsinfo.description.list');
+            Route::post('productsinfo/get/descriptionList', 'Admin\ProductsInfoController@getDescriptionList');
+            Route::post('productsinfo/delete/word', 'Admin\ProductsInfoController@deleteWord');
+
+            Route::get('productsinfo/menu/list', 'Admin\ProductsInfoController@menuList')->name('productsinfo.menu.list');
+            Route::post('productsinfo/get/menuList', 'Admin\ProductsInfoController@getMenuList');
+            Route::post('/productsinfo/delete/menu', 'Admin\ProductsInfoController@deleteMenu');
+            Route::post('/productsinfo/getEditMenu', 'Admin\ProductsInfoController@getEditMenu');
+            Route::post('/productsinfo/deleteItem', 'Admin\ProductsInfoController@deleteItem');
+
+            Route::get('productsinfo/pdf', 'Admin\ProductsInfoController@loadPdf')->name('productsinfo.pdf');
+            Route::post('productsinfo/save_pdf', 'Admin\ProductsInfoController@savePdf');
+            Route::post('/productsinfo/save_file', 'Admin\ProductsInfoController@saveFile');
+            Route::post('/productsinfo/saveDescription', 'Admin\ProductsInfoController@saveDescription');
+        });
     });
 });
 
@@ -225,6 +262,45 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
             Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+        Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
+        Route::post('/getBranchData', 'SiteController@postBranchData');
+        Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
+        Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+        Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
+        //DOSSIER
+        Route::post('/emplInfo', 'SiteController@postEmplInfo');
+        Route::get('/dossier', 'SiteController@dossier')->name('dossier');
+        //COORIDNATION
+        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
+        Route::post('/setCoordination', 'CoordinationController@setCoordination');
+        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
+        //DOCUMENTATION ADMIN MIDDLEWARE
+        Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
+        Route::post('/documentation/save', 'DocumentationController@save');
+        Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
+        //DOCUMENTATION
+        Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
+        Route::post('/documentation/search', 'DocumentationController@search');
+        //PRODUCTS-INFO
+        Route::get('/productsinfo', 'ProductsInfoController@index')->name('productsinfo');
+        Route::post('/productsinfo/save', 'ProductsInfoController@save');
+        Route::get('/productsinfo/svg', 'ProductsInfoController@admin')->name('admin/productsinfo');
+        Route::get('productsinfo/{url}', 'ProductsInfoController@getByUrl');
+        Route::post('/productsinfo/search', 'ProductsInfoController@search');
+
+        Route::get('/productsinfo', 'ProductsInfoController@getView')->name('productsinfo');
+        Route::post('/getItemList', 'ProductsInfoController@getItemsList');
+        Route::post('/productsinfo/showNameDocuments', 'ProductsInfoController@showNameDocuments');
+        Route::post('/productsinfo/showFullText', 'ProductsInfoController@showFullText');
+        Route::post('/productsinfo/searchName', 'ProductsInfoController@searchName');
+
+        //PARSE
+        Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+        Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
             Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
             Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
@@ -323,6 +399,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             //UNTITLED
             Route::get('/name', 'NameController@getView')->name('documentation');
             Route::post('/getItemsList', 'NameController@getItemsList');
+            Route::post('/getItemsFirst', 'NameController@getItemsFirst');
 
             Route::get('/report', 'ReportController@index')->name('report');
             Route::post('/getReport', 'ReportController@getReport');
