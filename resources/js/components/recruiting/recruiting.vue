@@ -383,23 +383,7 @@
                                                     candidat.interviewStage == '' ||
                                                     newLanguageBlocks[0].language == null ||
                                                     newSocialpacketBlocks[0].packet == null}">
-<!--                            @click="getFaqData"-->
                             Отправить
-                        </div>
-<!--                        ТЕСТОВЫЙ ЗАПРОС-->
-<!--                        <button @click="getTestData">Click here</button>-->
-<!--                        {{testArray}}-->
-<!--                        {{faq_questions}}-->
-
-
-
-<!--                        <div v-if="testArray.length > 0" v-for="answer in testArray">-->
-<!--                            Какое-то значение: {{answer.}}-->
-<!--                        </div>-->
-                        <div v-if="faq_questions.length > 0" v-for="branch in faq_questions">
-                            Имя: {{ branch.fullname }}<br>
-                            ИСН: {{ branch.id }}<br>
-                            Деп: {{ branch.duty }}<br>
                         </div>
                         <br>
 
@@ -407,43 +391,6 @@
                 </div>
             </div>
             <div v-if="recruitingTabs == 2">
-
-                <div>
-<!--                    <table>-->
-<!--                        <thead>-->
-<!--                            <tr>-->
-<!--                                <td>Умения</td>-->
-<!--                                <td>Образование</td>-->
-<!--                                <td>Наличие авто</td>-->
-<!--                                <td>График</td>-->
-<!--                                <td>Босс или нет</td>-->
-<!--                            </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                            <tr v-for="recs in kek">-->
-<!--                                <td>{{ recs.candidats_trait }}</td>-->
-<!--                                <td>{{ recs.education }}</td>-->
-<!--                                <td>{{ recs.have_car }}</td>-->
-<!--                                <td>{{ recs.job_chart }}</td>-->
-<!--                                <td>{{ recs.is_he_was_boss }}</td>-->
-<!--                            </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-
-<!--                    Вывод-->
-<!--                    <table>-->
-<!--                        <thead>-->
-<!--                            <tr>-->
-<!--                                <td>Умения</td>-->
-<!--                            </tr>-->
-<!--                        </thead>-->
-<!--                        <tbody>-->
-<!--                            <tr v-for="inner in ChiefsData">-->
-<!--                                <td>{{inner.candidats_trait}}</td>-->
-<!--                            </tr>-->
-<!--                        </tbody>-->
-<!--                    </table>-->
-                </div>
 
                 <div class="modal fade show z-9999" id="interviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                     <div class="modal-dialog recruiting-modal-size" role="document">
@@ -628,17 +575,6 @@
                             </tr>
                         </thead>
                         <tbody>
-    <!--                    Цветные примеры-->
-    <!--                        <tr v-for="inner in recruitingInterviewCluster1">-->
-    <!--                            <td scope="row">{{inner.id}}</td>-->
-    <!--                            <td>{{inner.name}}</td>-->
-    <!--                            <td>{{inner.structureUnit}}</td>-->
-    <!--                            <td>{{inner.dateOfInterview}}</td>-->
-    <!--                            <td :class="modalSelectCheck(inner)">{{inner.label}}</td>-->
-    <!--                        </tr>-->
-
-
-    <!--                        <div>{{candidateInterviewTable}}</div>-->
 
                             <!--Верхняя таблица-->
                             <tr v-for="(inner, index) in candidateInterviewTable"
@@ -652,14 +588,6 @@
                                 <td>{{ inner.interview_date }}</td>
                                 <td :class="modalSelectCheck(inner)">{{ inner.interview_result }} </td>
                             </tr>
-    <!--Последняя рабочая версия-->
-    <!--<tr v-for="(person, index) in candidatDataLocal">-->
-    <!--    <td scope="row">{{index + 1}}</td>-->
-    <!--    <td>{{person.candidate_fullname}}</td>-->
-    <!--    <td></td>-->
-    <!--    <td></td>-->
-    <!--    <td :class="modalSelectCheck(person)"></td>-->
-    <!--</tr>-->
 
                         </tbody>
                     </table>
@@ -928,8 +856,8 @@
                                         Личностные компетенции кандидата
                                     </div>
                                     <div>
-                            <textarea v-model="candidatBackward.candidatsTrait" class="recruiting-textarea" disabled>
-                            </textarea>
+                                        <textarea v-model="candidatBackward.candidatsTrait" class="recruiting-textarea" disabled>
+                                        </textarea>
                                     </div>
                                 </div>
                                 <div>
@@ -937,8 +865,8 @@
                                         Этапы интервью с кандидатом в департаменте
                                     </div>
                                     <div>
-                            <textarea v-model="candidatBackward.interviewStage" class="recruiting-textarea" disabled>
-                            </textarea>
+                                        <textarea v-model="candidatBackward.interviewStage" class="recruiting-textarea" disabled>
+                                        </textarea>
                                     </div>
                                 </div>
                                 <button @click="addCandidateBtn" type="button" class="recruiting-add-btn" data-toggle="modal" data-target="#interviewModal">
@@ -1249,7 +1177,6 @@
                 dateOfTheDOUContractModal: '12.01.2020',
                 dateOfTheStateContractModal: '12.01.2020',
                 commentModal: 'Текст',
-                // },
                 testAxios: null,
                 error: 'Произошла какая-то ошибка',
                 none: false,
