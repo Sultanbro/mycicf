@@ -219,7 +219,6 @@ export default {
         },
         addTraveller(){
             let i = this.travellersList.length ? this.travellersList.length : 0
-            console.log(this.travellersList.length)
             this.travellersList[i] = {
                 isn: "0",
                 valn1: '',

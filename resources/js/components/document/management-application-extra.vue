@@ -489,6 +489,7 @@
         </document-modal>
         <button v-show="false" ref="modalDocument" type="button" data-toggle="modal" data-target="#docJournal">Large modal</button>
         <document-journal-modal
+            :results="results"
         >
         </document-journal-modal>
     </div>
@@ -707,7 +708,8 @@ export default {
                 .then((response) => {
                     if(response.data.success) {
                         this.loading = false;
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
@@ -730,7 +732,7 @@ export default {
             if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -778,7 +780,7 @@ export default {
             else if(this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             else if(this.results.docParam.button3caption === 'Заполнить СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -823,7 +825,7 @@ export default {
             if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
             else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -845,9 +847,12 @@ export default {
                         this.saveDoc = false;
                     } else {
                         this.addChange = false;
+                        alert(response.data.error)
+                        this.toForm = false;
+                        this.saveDoc = true;
+                        this.fillIn = true;
                     }
-                    this.loading = false;
-                    this.addChange = true;
+                    this.loading = false
                 })
                 .catch(function (error) {
                     //alert(error.response);

@@ -440,6 +440,19 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div v-else-if="result.fullname === 'Список договоров  для внесение изменение'">
+                                    <div class="input-group">
+                                        <input v-model="contractList.fullName" @click="OpenModal('Список договоров  для внесение изменение')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Список договоров  для внесение изменение')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo('Список договоров  для внесение изменение')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых' || result.fullname === 'Куратор агента (новый)'
                                      || result.fullname === 'Председатель комиссии' || result.fullname === 'Член комиссии 1' || result.fullname === 'Член комиссии 2'
                                      || result.fullname === 'Член комиссии 3' || result.fullname === 'Член комиссии 4' || result.fullname === 'Член комиссии 5'
@@ -636,6 +649,13 @@
             :results="results"
         >
         </counterparty-journal-modal>
+        <button v-show="false" ref="modalContractList" type="button" data-toggle="modal" data-target="#contractListModal">Large modal</button>
+        <contract-list-modal-modal
+            :recordingCounterparty="recordingCounterparty"
+            :results="results"
+            :contractList="contractList"
+        >
+        </contract-list-modal-modal>
     </div>
 </template>
 <script>
@@ -646,6 +666,7 @@
     import moment from 'moment'
     import DocumentModal from "./document-modal";
     import CounterpartyJournalModal from "./counterparty-journal-modal";
+    import ContractListModal from "./contract-list-modal";
     export default {
         name: "approval-sheet",
         props: {
@@ -721,6 +742,12 @@
                 regions: [],
                 isn: '0',
                 delete: '0',
+                showContractList: false,
+                contractList: {
+                    fullName: '',
+                    isn: '',
+                    type: '',
+                },
             }
         },
         created() {
@@ -938,7 +965,8 @@
                     .then((response) => {
                         if(response.data.success) {
                             this.loading = false;
-                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                            this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                            this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                             this.results.stage = response.data.stage;
                             this.addChange = true;
                             this.toForm = true;
@@ -964,7 +992,7 @@
                     this.button = 'BUTTON3'
                 }
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                     button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -984,6 +1012,7 @@
                             this.annul = true;
                             this.saveDoc = true;
                         } else {
+                            alert(response.data.error)
                             this.addChange = true;
                             this.extraLoading = false;
                         }
@@ -1004,7 +1033,7 @@
                     this.button = 'BUTTON2'
                 }
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                     button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -1016,13 +1045,25 @@
                                     isn: this.results.classisn,
                                     button: this.button,
                                 }
-                                this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                    this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
-                                    this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
-                                    this.results.id = response.data.results.id;
+                                this.axios.post('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
+                                    // this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
+                                    // this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
+                                    // this.results.id = response.data.results.id == undefined || response.data.results.id == '' ? '' : response.data.results.id;
+                                    console.log(response.data)
+                                    console.log(response.data.results)
+                                    console.log(response.data.resDop)
                                     this.results.resDop = response.data.results.resDop;
                                     if(response.data.results.id.length > 0){
                                         this.idShow = true;
+                                    }
+                                    if (this.results.classisn === '1783591'){
+                                        for (let i =0; i< response.data.results.resDop.length; i++){
+                                            if (response.data.results.resDop[i].value != ''){
+                                                this.showContractList = true
+                                                this.contractList.fullName = response.data.results.resDop[i].value
+                                                this.contractList.isn = response.data.results.resDop[i].val
+                                            }
+                                        }
                                     }
                                     this.fillIn = true;
                                     this.toForm = true;
@@ -1052,7 +1093,7 @@
                     this.button = 'BUTTON2'
                 }
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                     button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -1074,9 +1115,12 @@
                             this.saveDoc = false;
                         } else {
                             this.addChange = false;
+                            alert(response.data.error)
+                            this.toForm = false;
+                            this.saveDoc = true;
+                            this.fillIn = true;
                         }
-                        this.loading = false;
-                        this.addChange = true;
+                        this.loading = false
                     })
                     .catch(function (error) {
                         // alert(response.data.error);
@@ -1140,6 +1184,11 @@
                     this.recordingCounterparty.type = doc
                     this.$refs.modalCounterparty.click();
                 }
+                if (doc === 'Список договоров  для внесение изменение') {
+                    this.preloader(false);
+                    this.recordingCounterparty.type = doc
+                    this.$refs.modalContractList.click();
+                }
             },
             clearInfo(data){
                 if(data === this.results.contragent.fullname){
@@ -1177,6 +1226,7 @@
             },
         },
         components: {
+            ContractListModal,
             DocumentModal,
             DatePicker,
             MaskedInput,

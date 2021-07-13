@@ -989,7 +989,9 @@ export default {
                         this.addChange = false;
                         this.annul = true;
                         this.extraLoading = false;
-                        alert(response.data.error)
+                        if(response.data.error){
+                            alert(response.data.error)
+                        }
                     }
                 });
             this.addChange = false;
@@ -1021,7 +1023,8 @@ export default {
                 .then((response) => {
                     if(response.data.success) {
                         this.loading = false
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage
                         this.addChange = true
                         this.toForm = true
@@ -1044,7 +1047,7 @@ export default {
             if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -1065,6 +1068,9 @@ export default {
                         this.annul = true
                         this.saveDoc = true
                     } else {
+                        if(response.data.error){
+                            alert(response.data.error)
+                        }
                         this.addChange = true
                         this.extraLoading = false
                     }
@@ -1082,7 +1088,7 @@ export default {
             if(this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
             else if(this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -1134,7 +1140,7 @@ export default {
             if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
             else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -1154,11 +1160,14 @@ export default {
                         }
                         this.result = response.data.error
                         this.saveDoc = false;
-                    } else {
+                    } else if(response.data.error) {
                         this.addChange = false;
+                        alert(response.data.error)
+                        this.toForm = false;
+                        this.saveDoc = true;
+                        this.fillIn = true;
                     }
                     this.loading = false;
-                    this.addChange = true;
                 })
                 .catch(function (error) {
                     //alert(error.response);

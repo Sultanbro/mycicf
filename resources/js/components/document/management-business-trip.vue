@@ -234,13 +234,14 @@
                                             :multiple="false" :options="userList" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Список командируемых'">
-                                <div v-if="!showTravellers">
-                                    <div v-model="result.val" class="pointer" scope="col" @click="listTravellers" :disabled="addChange">{{result.value}}</div>
+                                <div class="input-group">
+                                    <input v-model="result.value" @click="OpenModal('Список командируемых')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Список командируемых')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div v-else>
-                                    <treeselect v-model="travellersList" :disabled="addChange" :multiple="true" :options="userList" :disable-branch-nodes="true"/>
-                                </div>
-
                             </div>
                             <div v-else-if="result.fullname === 'Вид доверенности'">
                                 <select v-model="result.val" :disabled="addChange" class="form-control" required>
@@ -285,6 +286,13 @@
             :changeMatch="changeMatch"
         >
         </document-modal>
+        <button v-show="false" ref="modalTravellerList" type="button" data-toggle="modal" data-target="#travellerListModal">Large modal</button>
+        <traveller-list-modal
+            :travellersDocIsn="travellersDocIsn"
+            :results="results"
+            :userList="userList"
+        >
+        </traveller-list-modal>
     </div>
 </template>
 <script>
@@ -294,6 +302,7 @@ import MaskedInput from 'vue-text-mask';
 import 'vue2-datepicker/locale/ru';
 import moment from 'moment'
 import DocumentModal from "./document-modal";
+import TravellerListModal from "./traveller-list-modal";
 export default {
     name: "management-business-trip",
     props: {
@@ -341,7 +350,8 @@ export default {
             traveller: false,
             isn: '0',
             delete: '0',
-            showTravellerId: false,
+            travellersListCheck: [],
+            travellersListCheckBool: false,
         }
     },
     created() {
@@ -355,9 +365,6 @@ export default {
         })
     },
     methods: {
-        listTravellers(){
-          this.showTravellers = true;
-        },
         getDatePicker() {
             const vm = this;
             vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
@@ -446,80 +453,43 @@ export default {
         },
         saveDocument(){
             this.loading = true;
-            if(this.showTravellers === true){
-                let data = {
-                    results: this.results,
-                    docIsn: this.docIsn,
-                    travellersDocIsn: this.travellersDocIsn,
-                    travellersList: this.travellersList,
-                    showTravellers: this.showTravellers,
-                    travellersListClassIsn: this.travellersListClassIsn
-                }
-                this.axios.post('/document/saveDocument', data)
-                    .then((response) => {
-                        if(response.data.success) {
-                            this.loading = false;
-                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
-                            this.results.stage = response.data.stage;
-                            this.addChange = true;
-                            if(this.showTravellers === true){
-                                this.showTravellers = true;
-                            }else{
-                                this.showTravellers = false;
-                            }
-                            this.fillIn = true
-                            this.toForm = true;
-                            this.fillIn = true;
-                            this.saveDoc = false;
-                            this.annul = false;
-                        } else {
-                            this.addChange = false;
-                            this.loading = false;
-                            alert(response.data.error);
-                        }
-                        this.loading = false;
-                    })
-                    .catch(function (error) {
-                        // alert(response.data.error);
-                    });
-            }else{
-                if(this.duty.length > 0){
-                    for(let i=0; i<this.results.docrows.length; i++){
-                        if(this.results.docrows[i].fieldname === 'Должность'){
-                            this.results.docrows[i].value_name = this.duty
-                        }
+            if(this.duty.length > 0){
+                for(let i=0; i<this.results.docrows.length; i++){
+                    if(this.results.docrows[i].fieldname === 'Должность'){
+                        this.results.docrows[i].value_name = this.duty
                     }
                 }
-                let data = {
-                    results: this.results,
-                    docIsn: this.docIsn,
-                }
-                this.axios.post('/document/saveDocument', data)
-                    .then((response) => {
-                        if(response.data.success) {
-                            this.loading = false;
-                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
-                            this.results.stage = response.data.stage;
-                            this.addChange = false;
-                            this.fillIn = true
-                        } else {
-                            this.addChange = false;
-                            this.loading = false;
-                            alert(response.data.error);
-                        }
-                        this.loading = false;
-                    })
-                    .catch(function (error) {
-                        // alert(response.data.error);
-                    });
             }
+            let data = {
+                results: this.results,
+                docIsn: this.docIsn,
+            }
+            this.axios.post('/document/saveDocument', data)
+                .then((response) => {
+                    if(response.data.success) {
+                        this.loading = false;
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        this.results.stage = response.data.stage;
+                        this.addChange = false;
+                        this.fillIn = true
+                    } else {
+                        this.addChange = false;
+                        this.loading = false;
+                        alert(response.data.error);
+                    }
+                    this.loading = false;
+                })
+                .catch(function (error) {
+                    // alert(response.data.error);
+                });
         },
         addChangeForm() {
             this.extraLoading = true;
             if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -534,11 +504,6 @@ export default {
                             }
                         }
                         this.extraLoading = false;
-                        if(this.showTravellers === true){
-                            this.showTravellers = true;
-                        }else{
-                            this.showTravellers = false;
-                        }
                         this.addChange = false;
                         this.toForm = false;
                         this.annul = true;
@@ -561,7 +526,7 @@ export default {
             if(this.results.docParam.button1caption === 'Список командируемых' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
             else if(this.results.docParam.button2caption === 'Список командируемых' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -569,22 +534,24 @@ export default {
                     if(response.data.success) {
                         if((this.results.docParam.button1caption === 'Список командируемых' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Список командируемых' && this.results.docParam.showbutton2 === 'Y')){
                             let dat = {
-                                docisn: this.docIsn,
+                                docisn: this.docIsn ? this.docIsn : this.results.docIsn,
                                 isn: this.results.classisn,
                                 button: this.button,
                             }
-                            this.axios.get('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
-                                this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
-                                this.results.id = response.data.results.id;
+                            this.axios.post('/document/travellersList', dat).then((response) => {
+                                this.results.showRemark = response.data.showRemark === null ? '' : response.data.showRemark
+                                this.results.showRemark2 = response.data.showRemark2 === null ? '' : response.data.showRemark2
+                                this.results.id = response.data.id;
                                 for(let i=0; i<this.results.resDop.length; i++){
                                     if(this.results.resDop[i].fullname === 'Список командируемых'){
-                                        this.travellersDocIsn = this.results.resDop[i].val
+                                        this.travellersDocIsn = response.data.resDop[i].val
                                     }
                                 }
                                 if(this.results.id.length > 0){
                                     this.idShow = false;
                                 }
+                                this.showTravellers = true;
+                                this.showTravellers = false;
                                 this.showTravellers = true;
                                 this.addChange = false;
                                 this.toForm = false;
@@ -612,7 +579,7 @@ export default {
             if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){ this.button = 'BUTTON1' }
             else if(this.results.docParam.button2caption === 'Сформировать лист согласования' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -632,35 +599,46 @@ export default {
                         }
                         this.saveDoc = false;
                     } else {
-                        alert(response.data.error);
                         this.addChange = false;
+                        alert(response.data.error)
+                        this.toForm = false;
+                        this.saveDoc = true;
+                        this.fillIn = true;
                     }
-                    this.loading = false;
-                    this.addChange = true;
+                    this.loading = false
                 })
                 .catch(function (error) {
                     // alert(error.response);
                 });
         },
-        OpenModal () {
-            this.preloader(true);
-            this.changeMatch.status = false;
-            if(this.listDocIsn === null){
-                for(let i=0; i<this.results.result.length; i++){
-                    if(this.results.result[i].fullname === 'Лист согласования'){
-                        this.listDocIsn = this.results.result[i].val
+        OpenModal (doc) {
+            if(doc === this.listDocIsn) {
+                this.preloader(true);
+                this.changeMatch.status = false;
+                if (this.listDocIsn === null) {
+                    for (let i = 0; i < this.results.result.length; i++) {
+                        if (this.results.result[i].fullname === 'Лист согласования') {
+                            this.listDocIsn = this.results.result[i].val
+                        }
                     }
                 }
-            }
-            this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
-                if(response.data.success){
-                    this.coordination = response.data.response;
-                    this.preloader(false);
-                    this.$refs.modalButton.click();
-                }else{
-                    this.attachments = [];
+                this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
+                    if (response.data.success) {
+                        this.coordination = response.data.response;
+                        this.preloader(false);
+                        this.$refs.modalButton.click();
+                    } else {
+                        this.attachments = [];
+                    }
+                });
+            } else if(doc === 'Список командируемых'){
+                if(this.travellersDocIsn === ''){
+                    alert('Пока Вы не создали Приложения.Список командируемых!')
+                    return
                 }
-            });
+                this.preloader(false);
+                this.$refs.modalTravellerList.click();
+            }
         },
         preloader(show){
             if(show){
@@ -680,6 +658,7 @@ export default {
         DocumentModal,
         DatePicker,
         MaskedInput,
+        TravellerListModal,
     },
 }
 </script>

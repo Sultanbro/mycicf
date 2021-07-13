@@ -24,12 +24,12 @@
                             <div v-if="!isLoading && result.fullname == 'Адресат' && results['classisn'] === '1252461'" class="form-group row">
                                 <label class="col-md-4 col-form-label">{{result.fullname}}:</label>
                                 <div class="input-group col-md-8">
-                                    <input v-model="addressee.fullName ? result.value : addressee.fullName" @click="OpenModal(result.fullname)" type="text" class="form-control">
+                                    <input v-model="addressee.fullName ? result.value : addressee.fullName" @click="OpenModal(result.fullname)" type="text" class="form-control" :disabled="addChange">
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn-light" @click="OpenModal(result.fullname)">
+                                        <button type="submit" class="btn-light" @click="OpenModal(result.fullname)" :disabled="addChange">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                        <button type="submit" class="btn-light" @click="clearInfo(result.fullname)">
+                                        <button type="submit" class="btn-light" @click="clearInfo(result.fullname)" :disabled="addChange">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </div>
@@ -178,12 +178,12 @@
                                 </div>
                                 <div v-if="docrow.fieldname === 'ФИО работника' && results['classisn'] === '1440561'">
                                     <div class="input-group">
-                                        <input v-model="worker.fullName ? worker.fullName : docrow.value_name" @click="OpenModal('ФИО работника')" type="text" class="form-control">
+                                        <input v-model="worker.fullName ? worker.fullName : docrow.value_name" @click="OpenModal('ФИО работника')" type="text" class="form-control" :disabled="addChange">
                                         <div class="input-group-append">
-                                            <button type="submit" class="btn-light" @click="OpenModal('ФИО работника')">
+                                            <button type="submit" class="btn-light" @click="OpenModal('ФИО работника')" :disabled="addChange">
                                                 <i class="fa fa-search"></i>
                                             </button>
-                                            <button type="submit" class="btn-light" @click="clearInfo('ФИО работника')">
+                                            <button type="submit" class="btn-light" @click="clearInfo('ФИО работника')" :disabled="addChange">
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>
@@ -615,7 +615,8 @@ export default {
                 .then((response) => {
                     if(response.data.success) {
                         this.loading = false;
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
@@ -642,7 +643,7 @@ export default {
                 this.button = 'BUTTON3'
             }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -693,7 +694,7 @@ export default {
                 this.button = 'BUTTON2'
             }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -701,7 +702,7 @@ export default {
                     if(response.data.success) {
                         if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
                             let dat = {
-                                docisn: this.docIsn,
+                                docisn: this.docIsn ? this.docIsn : this.results.docIsn,
                                 isn: this.results.classisn,
                                 button: this.button,
                             }
@@ -742,7 +743,7 @@ export default {
                 this.button = 'BUTTON2'
             }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -762,44 +763,47 @@ export default {
                         }
                         this.result = response.data.error
                         this.saveDoc = false;
+
                     } else {
                         this.addChange = false;
-                        alert(response.data.error);
+                        alert(response.data.error)
+                        this.toForm = false;
+                        this.saveDoc = true;
+                        this.fillIn = true;
                     }
                     this.loading = false;
-                    this.addChange = true;
                 })
                 .catch(function (error) {
                     //alert(error.response);
                 });
         },
-        sendOut(){
-            this.loading = true;
-            this.results.status = 2522;
-            let data = {
-                docIsn: this.listDocIsn,
-                type: this.type,
-                results: this.results,
-            }
-            this.axios.post('/sendOut', data)
-                .then((response) => {
-                    if(response.data.success) {
-                        this.results.status = response.data.status;
-                        this.results.stage = response.data.stage;
-                        this.loading = false;
-                        this.addChange = true;
-                        this.sendOutForm = false;
-                        this.saveDoc = false;
-                    } else {
-                        this.addChange = false;
-                        this.loading = false;
-                    }
-                    this.addChange = true;
-                })
-                .catch(function (error) {
-                    //alert(error.response);
-                });
-        },
+        // sendOut(){
+        //     this.loading = true;
+        //     this.results.status = 2522;
+        //     let data = {
+        //         docIsn: this.listDocIsn,
+        //         type: this.type,
+        //         results: this.results,
+        //     }
+        //     this.axios.post('/sendOut', data)
+        //         .then((response) => {
+        //             if(response.data.success) {
+        //                 this.results.status = response.data.status;
+        //                 this.results.stage = response.data.stage;
+        //                 this.loading = false;
+        //                 this.addChange = true;
+        //                 this.sendOutForm = false;
+        //                 this.saveDoc = false;
+        //             } else {
+        //                 this.addChange = false;
+        //                 this.loading = false;
+        //             }
+        //             this.addChange = true;
+        //         })
+        //         .catch(function (error) {
+        //             //alert(error.response);
+        //         });
+        // },
         OpenModal(doc) {
             this.preloader(true);
             this.changeMatch.status = false;

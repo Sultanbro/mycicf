@@ -645,7 +645,8 @@
                     .then((response) => {
                         if(response.data.success) {
                             this.loading = false;
-                            this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                            this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn;
+                            this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                             this.results.stage = response.data.stage;
                             this.addChange = true;
                             this.toForm = true;
@@ -676,7 +677,7 @@
                     this.button = 'BUTTON3'
                 }
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                     button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -717,7 +718,7 @@
                 } else if((this.results.docParam.button3caption === 'Заполнить СЗ' && this.results.docParam.showbutton3 === 'Y') || (this.results.docParam.button3caption === 'Узнать количество доступных дней' && this.results.docParam.showbutton3 === 'Y')) {
                     this.button = 'BUTTON3' }
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                     button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -766,7 +767,7 @@
                     this.button = 'BUTTON2'
                 }
                 let data = {
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                     button: this.button,
                 }
                 this.axios.post('/document/buttonClick', data)
@@ -789,11 +790,12 @@
                             this.saveDoc = false;
                         } else {
                             this.addChange = false;
-                            console.log('1');
+                            alert(response.data.error)
+                            this.toForm = false;
+                            this.saveDoc = true;
+                            this.fillIn = true;
                         }
-                        this.loading = false;
-                        this.addChange = true;
-                        console.log('2');
+                        this.loading = false
                     })
                     .catch(function (error) {
                         // alert(response.data.error);

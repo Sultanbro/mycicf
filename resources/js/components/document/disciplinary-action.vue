@@ -421,7 +421,8 @@ export default {
                 .then((response) => {
                     if(response.data.success) {
                         this.loading = false;
-                        this.docIsn = this.docIsn ? this.docIsn : response.data.DocISN;
+                        this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage;
                         this.addChange = true;
                         this.toForm = true;
@@ -447,7 +448,7 @@ export default {
                 this.button = 'BUTTON3'
             }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -487,7 +488,7 @@ export default {
                 this.button = 'BUTTON2'
             }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -534,7 +535,7 @@ export default {
                 this.button = 'BUTTON2'
             }
             let data = {
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 button: this.button,
             }
             this.axios.post('/document/buttonClick', data)
@@ -556,9 +557,13 @@ export default {
                         this.saveDoc = false;
                     } else {
                         this.addChange = false;
+                        this.addChange = false;
+                        alert(response.data.error)
+                        this.toForm = false;
+                        this.saveDoc = true;
+                        this.fillIn = true;
                     }
                     this.loading = false;
-                    this.addChange = true;
                 })
                 .catch(function (error) {
                     //alert(error.response);

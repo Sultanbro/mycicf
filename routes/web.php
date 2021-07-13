@@ -485,7 +485,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/document/getTypeSzAhd', 'DocumentManagementController@getTypeSzAhd')->name('document.type.sz.ahd');
         Route::post('/document/getTypeSzMain', 'DocumentManagementController@getTypeSzMain')->name('document.type.sz.main');
         Route::get('/document/{isn}', 'DocumentManagementController@show')->name('document.show');
-        Route::get('/document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
+        Route::post('/document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
         Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
         Route::get('/document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
         Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
@@ -511,6 +511,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/document/getStagePassage', 'DocumentManagementController@getStagePassage')->name('document.stage.passages');
         Route::post('/document/getRegions', 'DocumentManagementController@getRegions')->name('document.get.regions');
         Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');
+        Route::post('/document/travellersList', 'DocumentManagementController@travellersList');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
