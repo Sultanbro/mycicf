@@ -650,12 +650,12 @@
         >
         </counterparty-journal-modal>
         <button v-show="false" ref="modalContractList" type="button" data-toggle="modal" data-target="#contractListModal">Large modal</button>
-        <contract-list-modal-modal
+        <contract-list-modal
             :recordingCounterparty="recordingCounterparty"
             :results="results"
             :contractList="contractList"
         >
-        </contract-list-modal-modal>
+        </contract-list-modal>
     </div>
 </template>
 <script>

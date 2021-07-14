@@ -218,7 +218,7 @@ export default {
     props: {
         results: Object,
         recordingCounterparty: Object,
-        contractName: Object,
+        contractNameTemporary: Object,
     },
     data() {
         return {

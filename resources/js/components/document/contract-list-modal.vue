@@ -38,30 +38,46 @@
 <!--                            <div></div>-->
 <!--                        </div>-->
 <!--                    </div>-->
-                    <div>
+                    <div class="col-md-6">
                         <table class="table table-responsive-sm table-stripper table-data table-bordered">
-                            <thead class="thead-inverse">
-                            <tr>
-                                <th>Номер договора</th>
-                                <th>Комментарии</th>
-                            </tr>
+                            <thead>
                             </thead>
                             <tbody>
-                                <div v-if="!editMode" v-for="name in contractName">
-                                    <tr><div class="input-group">
-                                        <input v-model="name.contractNumber" @click="OpenModal('Список договоров  для внесение изменение')" type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn-light" @click="OpenModal('Список договоров  для внесение изменение')">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                            <button type="submit" class="btn-light" @click="clearInfo('Список договоров  для внесение изменение')">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div></tr>
+                                <div class="col-md-12" v-if="!editMode">
+                                    <tr class="thead-inverse">
+                                        <th class="col-md-6">Номер договора</th>
+                                        <th class="">Комментарии</th>
+                                    </tr>
+                                </div>
+                                <div class="col-md-12" v-if="editMode">
+                                    <tr class="thead-inverse">
+                                        <th class="col-md-6">Номер договора</th>
+                                        <th class="">Комментарии</th>
+                                    </tr>
+                                    <tr v-for="name in contractName">
+                                        <td class="input-group">
+                                            <input v-model="name.contractNumber" @click="OpenModal(name)" type="text" class="form-control">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn-light" @click="OpenModal(name)">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                                <button type="submit" class="btn-light" @click="clearInfo(name)">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="col-md-6">
+                                            <input v-model="name.comment" type="text" class="form-control">
+                                        </td>
+                                    </tr>
                                 </div>
                             </tbody>
                         </table>
+                        <div>
+                            <button type="submit" class="btn btn-primary" @click="addContract">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -70,7 +86,7 @@
         <contract-journal-modal
             :recordingCounterparty="recordingCounterparty"
             :results="results"
-            :contractName="contractName"
+            :contractNameTemporary="contractNameTemporary"
         >
         </contract-journal-modal>
     </div>
@@ -87,34 +103,8 @@ export default {
 name: "contract-list-modal",
     props: {
         results: {},
-        counterparty: {
-            isn: '',
-            iin: '',
-            fullName: '',
-            classISN: '',
-        },
-        agent: {
-            isn: '',
-            iin: '',
-            fullName: '',
-            classISN: '',
-            type: '',
-        },
-        addressee: {
-            fullName: '',
-            isn: '',
-            type: '',
-        },
-        worker: {
-            fullName: '',
-            isn: '',
-            type: '',
-        },
-        contragent: {},
-        previousCuratorAgent: {},
         recordingCounterparty: Object ,
-        courtName: {},
-        beneficiary: {},
+        contractList: Object,
     },
     data() {
         return {
@@ -129,12 +119,11 @@ name: "contract-list-modal",
             index: '',
             editMode: false,
             contractName: [],
+            contractNameTemporary: {},
         }
     },
     created() {
-        this.getBranchData();
-        this.getUserList();
-        this.getCounterpartyType();
+
     },
     methods: {
         getDatePicker() {
@@ -142,22 +131,33 @@ name: "contract-list-modal",
             vm.document.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
         },
         addContract(){
+            this.editMode = true;
             let i = this.contractName.length;
             this.contractName[i] = {
                 id: i+1,
                 contractNumber: '',
                 comment: '',
             }
+            this.editMode = false;
+            this.editMode = true;
         },
         OpenModal(doc) {
-            if (doc === 'Список договоров  для внесение изменение') {
+            // if (doc === 'Список договоров  для внесение изменение') {
                 this.preloader(false);
-                this.recordingCounterparty.type = doc
-                this.$refs.modalContractList.click();
+                this.contractNameTemporary = doc
+                this.$refs.modalContract.click();
+            // }
+        },
+        clearInfo(data){
+            for(let i = 0; i< this.contractName.length; i++){
+                if(this.contractName[i] == data){
+                    this.contractName[i].contractNumber = ''
+                    this.contractName[i].comment = ''
+                }
             }
         },
         close() {
-            this.$parent.$refs.modalCounterparty.click()
+            this.$parent.$refs.modalContractList.click()
         },
         preloader(show){
             if(show){

@@ -1538,7 +1538,7 @@ class DocumentManagementController extends Controller
             ]);
         } else {
             $success = false;
-            $error .= 'Котировка не найдена';
+            $error .= 'Договор не найден';
             $result = [
                 'success' => $success,
                 'error' => (string)$error
