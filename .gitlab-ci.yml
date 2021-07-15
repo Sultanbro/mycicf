@@ -63,6 +63,7 @@ build:
 
 
 phploc:
+  image: registry-backend.cic.kz/centras/php-fpm:7.2
   stage: analysis
   image: phpqa/phploc
   
