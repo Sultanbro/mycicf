@@ -4,4 +4,6 @@ WORKDIR /app
 
 COPY ./ /app/
 
-RUN ls
+RUN php composer.phar update
+RUN npm i
+RUN npm run prod
