@@ -64,7 +64,7 @@ build:
 
 phploc:
   image: registry-backend.cic.kz/centras/php-fpm:7.2
-  stage: build
+  stage: analysis
   image: phpqa/phploc
   
   script:
@@ -74,7 +74,7 @@ phploc:
 
 cq:
   image: registry-backend.cic.kz/centras/php-fpm:7.3
-  stage: build
+  stage: analysis
   tags:
     - mycic
   script:
