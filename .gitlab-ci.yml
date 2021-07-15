@@ -70,3 +70,31 @@ phploc:
   script:
       - wget https://phar.phpunit.de/phploc.phar
       - php phploc.phar app
+
+
+cq:
+  image: registry-backend.cic.kz/centras/php-fpm:7.3
+  stage: analysis
+  tags:
+    - mycic
+  script:
+    - apt-get install ant
+    - wget https://getcomposer.org/composer.phar -O ./composer.phar
+    - php composer.phar update 
+    - cp .env.testing .env
+    - php artisan key:generate
+    - php composer.phar require --dev phpcq/all-tasks
+    - echo '<?xml version="1.0" encoding="UTF-8"?> <project name="my-project" default="build" description="Automated build of my project"><import file="vendor/phpcq/phpcq/phpcq.main.xml" /> </project>' > build.xml
+    - ant -keep-going
+  artifacts:
+    expire_in: 30 days
+    paths:
+      - vendor/
+      - node_modules/
+      - .env
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-composer
+    paths:
+      - vendor/
+      - node_modules/
+
