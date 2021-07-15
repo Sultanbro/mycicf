@@ -68,5 +68,5 @@ phploc:
   image: phpqa/phploc
   
   script:
-      - composer global require "phploc/phploc":"^7.0" --no-interaction --prefer-dist --ignore-platform-reqs --quiet
-      - /root/.composer/vendor/bin/phploc .
+      - wget https://phar.phpunit.de/phploc.phar
+      - php phploc.phar app
