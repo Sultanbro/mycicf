@@ -13,58 +13,24 @@
                                     <h5 class="m-0 p-0">Centras Insurance</h5>
                                 </div>
                             </td>
-                            <td></td>
-                            <td class="text-left" colspan="2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <button class="d-flex align-items-center pt-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showPrev('table_one')">
-                                            <i class="fas fa-angle-left m-0 fs-1_1"></i>
-                                        </button>
-                                    </div>
-                                    <div class="d-flex align-items-center pt-1 pb-1">
-                                        <h5 class="m-0">{{header_one}}</h5>
-                                    </div>
-                                    <div>
-                                        <button class="d-flex align-items-center p-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showNext('table_one')">
-                                            <i class="fas fa-angle-right m-0 fs-1_1"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td class="text-left" colspan="2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <button class="d-flex align-items-center pt-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showPrev('table_two')">
-                                            <i class="fas fa-angle-left m-0 fs-1_1"></i>
-                                        </button>
-                                    </div>
-                                    <div class="d-flex align-items-center pt-1 pb-1">
-                                        <h5 class="m-0">{{header_two}}</h5>
-                                    </div>
-                                    <div>
-                                        <button class="d-flex align-items-center p-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showNext('table_two')">
-                                            <i class="fas fa-angle-right m-0 fs-1_1"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
                         </tr>
                         <tr class="bg-grayblue color-light-gray">
-                            <td v-for="(tableHeader, index) in tableHeaders" :class="index === 0 ? 'text-left' : ''" @click="">{{tableHeader}}</td>
+                            <td></td>
+                            <td v-for="(tableHeader, index) in tableHeaders" :class="index === 0 ? 'text-left' : ''" @click=""
+                            v-if="index !== 6 && index !== 7 && index !== 8"
+                            >{{tableHeader}}</td>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="(centrasBalance, index) in centrasBalanceData" :class="textStyle(centrasBalance.label)">
+                            <td>Centras Insurance</td>
                             <td class="text-left">{{centrasBalance.label}}</td>
                             <td>{{centrasBalance.firstPeriod.toLocaleString()}}</td>
                             <td>{{centrasBalance.secondPeriod.toLocaleString()}}</td>
-                            <td class="bg-grayblue"></td>
-                            <td>{{balanceCompanies[index_1][index].firstPeriod.toLocaleString()}}</td>
-                            <td>{{balanceCompanies[index_1][index].secondPeriod.toLocaleString()}}</td>
-                            <td class="bg-grayblue"></td>
-                            <td>{{balanceCompanies[index_2][index].firstPeriod.toLocaleString()}}</td>
-                            <td>{{balanceCompanies[index_2][index].secondPeriod.toLocaleString()}}</td>
+
+                            <td class="text-left">{{centrasBalance.label}}</td>
+                            <td>{{centrasBalance.firstPeriod.toLocaleString()}}</td>
+                            <td>{{centrasBalance.secondPeriod.toLocaleString()}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -166,7 +132,6 @@
 
                 this.tableHeaders = response.tableHeaders;
                 this.header_one = this.companies[0].name;
-                this.header_two = this.companies[1].name;
                 this.showTable = true;
                 this.preloader(false);
             },
