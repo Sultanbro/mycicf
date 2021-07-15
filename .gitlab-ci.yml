@@ -1,8 +1,8 @@
 stages:
+  - docker
   - build
   # - test
   - analysis
-  - docker
 
 services:
   - mysql:5.7
