@@ -85,7 +85,7 @@ cq:
     - php artisan key:generate
     - php composer.phar require --dev phpcq/all-tasks
     - echo '<?xml version="1.0" encoding="UTF-8"?> <project name="my-project" default="build" description="Automated build of my project"><import file="vendor/phpcq/phpcq/phpcq.main.xml" /> </project>' > build.xml
-    - ant -keep-going
+    - ./vendor/bin/phing -keep-going
   artifacts:
     expire_in: 30 days
     paths:
