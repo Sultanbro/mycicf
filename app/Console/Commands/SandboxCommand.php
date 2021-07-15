@@ -24,15 +24,25 @@ class SandboxCommand extends Command {
 
     public function handle() {
 
-/*        $rows = DB::connection('oracle')->table('inslab.centras_temp_migrate')
-            ->select('f8','f10','f11','f16','f19','f20', 'group_name')
+        $last_id = ParseOracle::max('oracle_id') ?? 0;
+
+        dump($last_id);
+
+        $rows = DB::connection('oracle')->table('inslab.centras_temp_migrate')
+            ->select('*')
+            //->where('f1', '>', $last_id)
             ->where('group_name', '=', "Отчет по ежедневным сборам")
+            ->orWhere('group_name', '=', "Отчет по журналу выплат")
+            ->orWhere('f19', '=', '1445781')
             ->orderBy('group_name')
-            ->limit(1)
+            ->limit(2)
             ->get();
+
+        dd($rows);
 
         foreach ($rows as $row){
             $p = new ParseOracle();
+            $p->oracle_id = $row->f1;
             $p->CurrCode = $row->f8;
             $p->AmountP = $row->f10;
             $p->DSD = $row->f11;
@@ -43,6 +53,8 @@ class SandboxCommand extends Command {
 
             $p->save();
 
-        }*/
+            dump('Row saved');
+
+        }
     }
 }
