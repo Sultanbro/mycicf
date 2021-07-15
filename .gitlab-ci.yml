@@ -78,7 +78,7 @@ cq:
   tags:
     - mycic
   script:
-    - apt-get install ant
+    - apt-get install -y ant
     - wget https://getcomposer.org/composer.phar -O ./composer.phar
     - php composer.phar update 
     - cp .env.testing .env
