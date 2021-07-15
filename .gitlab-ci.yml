@@ -98,3 +98,13 @@ cq:
       - vendor/
       - node_modules/
 
+
+build-docker:
+  stage: docker
+  only:
+    - master
+  script:
+  script: |
+    docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    docker build --cache-from $CI_REGISTRY_IMAGE:master --tag $CI_REGISTRY_IMAGE:master .
+    docker push $CI_REGISTRY_IMAGE:master
