@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - analysis
 
 services:
   - mysql:5.7
@@ -60,4 +61,11 @@ build:
 #     - cp .env.testing .env && php artisan migrate -v
 #     - cp .env.testing .env && phpunit --coverage-text --colors=never
 
-####
+
+phploc:
+  stage: analysis
+  image: phpqa/phploc
+  
+  script:
+      - composer global require "phploc/phploc":"^7.0" --no-interaction --prefer-dist --ignore-platform-reqs --quiet
+      - /root/.composer/vendor/bin/phploc .
