@@ -73,31 +73,31 @@ phploc:
       - php phploc.phar app
 
 
-cq:
-  image: registry-backend.cic.kz/centras/php-fpm:7.3
-  stage: analysis
-  tags:
-    - mycic
-  script:
-    - apt-get install -y ant default-jre
-    - wget https://getcomposer.org/composer.phar -O ./composer.phar
-    - php composer.phar update 
-    - cp .env.testing .env
-    - php artisan key:generate
-    - php composer.phar require --dev phpcq/all-tasks
-    - echo '<?xml version="1.0" encoding="UTF-8"?> <project name="my-project" default="build" description="Automated build of my project"><import file="vendor/phpcq/phpcq/phpcq.main.xml" /> </project>' > build.xml
-    - ./vendor/bin/phing -keep-going
-  artifacts:
-    expire_in: 30 days
-    paths:
-      - vendor/
-      - node_modules/
-      - .env
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-composer
-    paths:
-      - vendor/
-      - node_modules/
+# cq:
+#   image: registry-backend.cic.kz/centras/php-fpm:7.3
+#   stage: analysis
+#   tags:
+#     - mycic
+#   script:
+#     - apt-get install -y ant default-jre
+#     - wget https://getcomposer.org/composer.phar -O ./composer.phar
+#     - php composer.phar update 
+#     - cp .env.testing .env
+#     - php artisan key:generate
+#     - php composer.phar require --dev phpcq/all-tasks
+#     - echo '<?xml version="1.0" encoding="UTF-8"?> <project name="my-project" default="build" description="Automated # build of my project"><import file="vendor/phpcq/phpcq/phpcq.main.xml" /> </project>' > build.xml
+#     - ./vendor/bin/phing -keep-going
+#   artifacts:
+#     expire_in: 30 days
+#     paths:
+#       - vendor/
+#       - node_modules/
+#       - .env
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}-composer
+#     paths:
+#       - vendor/
+#       - node_modules/
 
 
 build-docker:
