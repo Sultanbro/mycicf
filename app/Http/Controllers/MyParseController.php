@@ -114,8 +114,8 @@ class MyParseController extends Controller
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if($companyId == 0){
                     $dataPrem = ParsePremium::where('year', '=', $firstYear)
                         ->where('month', '=', $firstPeriod)
@@ -252,8 +252,8 @@ class MyParseController extends Controller
                 }
             }
             else {
-                $label_first = $this->getMonthLabel()[$firstPeriod - 1] . ' ' . $firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod - 1] . ' ' . $secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod] . ' ' . $firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod] . ' ' . $secondYear;
                 if ($companyId == 0) {
                     for ($monthFirst = 1; $monthFirst <= $firstPeriod; $monthFirst++) {
                         $dataPrem = ParsePremium::where('year', '=', $firstYear)
@@ -373,6 +373,7 @@ class MyParseController extends Controller
 
     public function getMonthLabel(){
         return [
+            '',
             'Янв',
             'Фев',
             'Мар',
@@ -467,8 +468,8 @@ class MyParseController extends Controller
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if($productId == 0 && $classId == 0)
                 {
                     if(($firstYear > 2018 || ($firstYear == 2018 && $firstPeriod >=10))){
@@ -885,8 +886,8 @@ class MyParseController extends Controller
             }
             else
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if($productId == 0 && $classId == 0)
                 {
                     for($monthFirst = 1; $monthFirst<=$firstPeriod; $monthFirst++){

@@ -1,74 +1,62 @@
 <template>
     <div class="">
-        <!--<parse-top :periods="periods" :months="months" :years="years" :request="request" :getData="showNewData"></parse-top>-->
-
         <div class="bg-white pl-3 pr-3 mt-3 mb-3 box-shadow border-16" v-if="showTable">
             <div class="d-flex justify-content-between align-items-center pr-3 pl-3">
                 <div class="w-100 table-responsive">
                     <table class="table table-hover text-align-center fs-0_8">
                         <thead>
-                            <tr class="border-table-0">
-                                <td class="text-left" colspan="4">
-                                    <div class="d-flex align-items-center pt-1 pb-1">
-                                        <h5 class="m-0 p-0">Centras Insurance</h5>
-                                    </div>
-                                </td>
-                                <td></td>
-                                <td class="text-left" colspan="3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <button class="d-flex align-items-center pt-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showPrev('table_one')">
-                                                <i class="fas fa-angle-left m-0 fs-1_1"></i>
-                                            </button>
-                                        </div>
-                                        <div class="d-flex align-items-center pt-1 pb-1">
-                                            <h5 class="m-0">{{header_one}}</h5>
-                                        </div>
-                                        <div>
-                                            <button class="d-flex align-items-center p-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showNext('table_one')">
-                                                <i class="fas fa-angle-right m-0 fs-1_1"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td></td>
-                                <td class="text-left" colspan="3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <button class="d-flex align-items-center pt-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showPrev('table_two')">
-                                                <i class="fas fa-angle-left m-0 fs-1_1"></i>
-                                            </button>
-                                        </div>
-                                        <div class="d-flex align-items-center pt-1 pb-1">
-                                            <h5 class="m-0">{{header_two}}</h5>
-                                        </div>
-                                        <div>
-                                            <button class="d-flex align-items-center p-1 pb-1 pl-2 pr-2 custom-primary-button" @click="showNext('table_two')">
-                                                <i class="fas fa-angle-right m-0 fs-1_1"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="bg-grayblue color-light-gray">
-                                <td v-for="(tableHeader, index) in tableHeaders" :class="index === 0 ? 'text-left' : ''" @click="">{{tableHeader}}</td>
-                            </tr>
+                        <tr class="border-table-0">
+                            <td class="text-left" colspan="4">
+                                <div class="d-flex align-items-center pt-1 pb-1">
+                                    <h5 class="m-0 p-0">Компании</h5>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="bold-text">
+                            <td></td>
+                            <td colspan="4">Страховая деятельность</td>
+                            <td colspan="4">Инвест деятельность</td>
+                            <td colspan="4">Прочая деятельность</td>
+                        </tr>
+                        <tr class="bg-grayblue color-light-gray">
+                            <td></td>
+                            <td v-for="(tableHeader, index) in tableHeaders" :class="index === 0 ? 'text-left' : ''" @click="">{{tableHeader}}</td>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(centrasOpu, index) in centrasOpuData" :class="textStyle(index)">
-                                <td class="text-left">{{centrasOpu.label}}</td>
-                                <td>{{centrasOpu.firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
-                                <td>{{centrasOpu.secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
-                                <td><span v-if="showPercent(index) == ''">{{centrasOpu.changes}}</span></td>
-                                <td class="bg-grayblue"></td>
-                                <td>{{opuCompanies[index_1][index].firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
-                                <td>{{opuCompanies[index_1][index].secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
-                                <td><span v-if="showPercent(index) == ''">{{opuCompanies[index_1][index].changes}}</span></td>
-                                <td class="bg-grayblue"></td>
-                                <td>{{opuCompanies[index_2][index].firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
-                                <td>{{opuCompanies[index_2][index].secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
-                                <td><span v-if="showPercent(index) == ''">{{opuCompanies[index_2][index].changes}}</span></td>
-                            </tr>
+                        <tr v-for="(centrasOpu, index) in centrasOpuData" :class="textStyle(index)"
+                            v-show="centrasOpu.label === 'ДСД' || centrasOpu.label === 'Нетто выплаты'
+                            || centrasOpu.label === 'Агентские' || centrasOpu.label === 'Нетто доход по страхованию'
+                            || centrasOpu.label === 'Изменение резервов' || centrasOpu.label === 'Финансовый результат с учетом резервов'"
+                        >
+                            <td>{{company_name[index]}}</td>
+                            <td class="text-left">{{centrasOpu.label}}</td>
+                            <td>{{centrasOpu.firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                            <td>{{centrasOpu.secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                            <td><span v-if="showPercent(index) == ''">{{opuCompanies[index_1][index].changes}}</span></td>
+
+
+                            <td v-if="index ==0">{{centrasOpuData[15].label}}</td>
+                            <td v-else></td>
+                            <td v-if="index == 0">{{centrasOpuData[15].firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                            <td v-else></td>
+                            <td v-if="index == 0">{{centrasOpuData[15].secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                            <td v-else></td>
+                            <td v-if="index == 0"><span v-if="showPercent(index) == ''">{{opuCompanies[index_1][index].changes}}</span></td>
+                            <td v-else></td>
+
+
+                            <td v-if="index == 0">{{centrasOpuData[16].label}}</td>
+                            <td v-else></td>
+                            <td v-if="index == 0">{{centrasOpuData[16].firstPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                            <td v-else></td>
+                            <td v-if="index == 0">{{centrasOpuData[16].secondPeriod.toLocaleString()}}<span>{{ showPercent(index) }}</span></td>
+                            <td v-else></td>
+                            <td v-if="index == 0"><span v-if="showPercent(index) == ''">{{opuCompanies[index_1][index].changes}}</span></td>
+                            <td v-else></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -85,12 +73,12 @@
             return {
                 company_list: [8],
                 first_company_list: [8],
-/*                periods: {
-                    first_year: null,
-                    second_year: null,
-                    first_period: null,
-                    second_period: null,
-                },*/
+                /*                periods: {
+                                    first_year: null,
+                                    second_year: null,
+                                    first_period: null,
+                                    second_period: null,
+                                },*/
                 months: [],
                 years: [],
 
@@ -99,7 +87,17 @@
                 company_id: 3,
                 header_one: '',
                 header_two: '',
-
+                company_name:[
+                    'Сентрас',
+                    'Цесна',
+                    'Евразия',
+                    'Халык',
+                    'Коммеск',
+                    'Виктория',
+                    'Basel',
+                    'Номад',
+                    'Freedom'
+                ],
                 centras_id: 8,
                 centrasOpuData: [],
                 opuCompanies: [],
@@ -400,7 +398,7 @@
 
             textStyle(index){
                 var textStyle = 'bold fs-0_9 bg-grayblue';
-                textStyle = index == 0 || index == 3 || index == 8 || index == 12 || index == 14 || index == 18 || index == 20 ? textStyle : '';
+                textStyle = index == 100 ? textStyle : '';
                 return textStyle;
             }
         },

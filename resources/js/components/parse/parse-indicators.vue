@@ -136,8 +136,8 @@
                     company_list: this.first_company_list,
                     first_year: this.periods.first_year,
                     second_year: this.periods.second_year,
-                    first_period: this.periods.first_period,
-                    second_period: this.periods.second_period,
+                    first_period: this.periods.first_period - 1,
+                    second_period: this.periods.second_period - 1,
                 }).then(response => {
                     if(response.data.success) {
                         this.setBalanceData(response.data);

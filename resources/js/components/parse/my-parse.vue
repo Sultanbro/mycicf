@@ -24,7 +24,8 @@
         <div class="bg-white pl-3 pr-3 box-shadow border-16">
             <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
 
-                <div class="flex-row jc-sb" v-if="viewType === 'top-company' || viewType === 'parse-opu' || viewType === 'parse-indicators'">
+                <div class="flex-row jc-sb" v-if="viewType === 'top-company' || viewType === 'parse-opu' || viewType === 'parse_opu2' || viewType === 'parse-indicators'
+                || viewType === 'parse_indicators2'">
                     <div @click="showData()" class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-chart-pie"></i>
                         <div class="mt-1 fs-0_8">
@@ -44,6 +45,14 @@
                         </a>
                         <a @click="Balance()">
                             <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">БАЛАНС</div>
+                        </a>
+
+                        <a @click="Opu2()">
+                            <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">Показатели</div>
+                        </a>
+
+                        <a @click="Balance2()">
+                            <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">Активы</div>
                         </a>
                     </div>
                 </div>
@@ -69,7 +78,7 @@
                                 </select>
                                 <select id="firstMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
-                                    <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                    <option v-for="(month, index) in months" :value="index + 1">{{month}}</option>
                                 </select>
                             </div>
 
@@ -81,7 +90,7 @@
                                     </select>
                                     <select id="secondMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_period">
                                         <option selected disabled hidden :value="null">Не выбрано</option>
-                                        <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                        <option v-for="(month, index) in months" :value="index + 1">{{month}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -136,7 +145,10 @@
                          v-if="companyData"></top-company>
 
             <parse-opu v-show="viewType === 'parse-opu'" :periods="periods" ref="opuRef"/>
+            <parse_opu2 v-show="viewType === 'parse_opu2'" :periods="periods" ref="opuRef2"/>
+
             <parse-indicators v-show="viewType === 'parse-indicators'" :periods="periods" ref="balanceRef"/>
+            <parse-indicators v-show="viewType === 'parse_indicators2'" :periods="periods" ref="balanceRef2"/>
 
             <parse-centras  v-show="viewType === 'parse-centras'" :dateType="dateType" :companyData="companyData" :periods="periods"  v-if="companyData"></parse-centras>
         </div>
@@ -186,6 +198,7 @@
                     second_period: null,
                 },
                 months: [
+                    '',
                     'Январь',
                     'Февраль',
                     'Март',
@@ -223,8 +236,8 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period + 1,
-                        second_period: this.periods.second_period + 1,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
                     }
                 });
 
@@ -239,8 +252,8 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period + 1,
-                        second_period: this.periods.second_period + 1,
+                        first_period: this.periods.first_period -1,
+                        second_period: this.periods.second_period -1,
                         productId: this.productId,
                         classId: this.classId,
                         dateType: this.type,
@@ -263,9 +276,17 @@
                 this.viewType='parse-opu';
                 this.$refs.opuRef.getOpuData();
             },
+            Opu2(){
+                this.viewType='parse_opu2';
+                this.$refs.opuRef2.getOpuData();
+            },
             Balance(){
                 this.viewType='parse-indicators';
                 this.$refs.balanceRef.getBalanceData('new_date');
+            },
+            Balance2(){
+                this.viewType='parse_indicators2';
+                this.$refs.balanceRef2.getBalanceData('new_date');
             },
 
             executeRequest(){
@@ -273,7 +294,7 @@
                     this.getCompanyTopSum();
                     this.getClassTopSum();
                 }
-                else if(this.viewType =='parse-opu'){
+                else if(this.viewType =='parse-opu' ){
                     this.Opu();
                 }
                 else if(this.viewType =='parse-indicators'){

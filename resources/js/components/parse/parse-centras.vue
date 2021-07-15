@@ -6,9 +6,9 @@
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
-                        <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
-                        <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
-                        <td class="pt-3"><a onclick="getProducts(0)"><span class="pointer">Топ по классам</span></a></td>
+                        <td colspan="2" class="text-left fs-1_3 pl-0">Centras Insurance</td>
+<!--                        <td class="pt-3"><span class="pointer parse-active">Топ по компаниям</span></td>
+                        <td class="pt-3"><a onclick="getProducts(0)"><span class="pointer">Топ по классам</span></a></td>-->
                         <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -17,7 +17,7 @@
                         <td></td>
                         <td></td>
                         <td class="text-left">{{(periods || {}).first_year}}</td>
-                        <td>{{companyData.label_first}}</td>
+                        <td>{{companyData.label_first}</td>
                         <td>{{companyData.label_second}}</td>
                         <td>Доля {{companyData.label_first}}</td>
                         <td>Доля {{companyData.label_second}}</td>
