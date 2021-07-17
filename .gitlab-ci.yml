@@ -26,7 +26,7 @@ variables:
 #     - mycic
 #   script:
 #     - wget https://getcomposer.org/composer.phar -O ./composer.phar
-#     - php composer.phar update 
+#     - php composer.phar update
 #     - cp .env.testing .env
 #     - php artisan key:generate
 #   artifacts:
@@ -58,8 +58,14 @@ phpunit:
   # dependencies:
   #   - composer
   script:
-    - cp .env.testing .env && php artisan migrate -v
-    - cp .env.testing .env && phpunit --coverage-text --colors=never --log-junit report.xml
+    - wget https://getcomposer.org/composer.phar -O ./composer.phar
+    - php composer.phar update
+    - php composer.phar dump-autoload
+    - cp .env.testing .env
+    - php artisan key:generate
+    - php artisan migrate -v
+    - phpunit --coverage-text --colors=never --log-junit report.xml
+
   artifacts:
     when: always
     reports:
@@ -68,8 +74,7 @@ phpunit:
 phploc:
   image: registry-backend.cic.kz/centras/php-fpm:7.2
   stage: analysis
-  image: phpqa/phploc
-  
+
   script:
       - wget https://phar.phpunit.de/phploc.phar
       - php phploc.phar app
@@ -83,7 +88,7 @@ phploc:
 #   script:
 #     - apt-get install -y ant default-jre
 #     - wget https://getcomposer.org/composer.phar -O ./composer.phar
-#     - php composer.phar update 
+#     - php composer.phar update
 #     - cp .env.testing .env
 #     - php artisan key:generate
 #     - php composer.phar require --dev phpcq/all-tasks
