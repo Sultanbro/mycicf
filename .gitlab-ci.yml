@@ -53,8 +53,8 @@ build:
 phpunit:
   image: registry-backend.cic.kz/centras/php-fpm:7.2
   stage: test
-  tags:
-    - mycic
+  # tags:
+  #   - mycic
   # dependencies:
   #   - composer
   script:
