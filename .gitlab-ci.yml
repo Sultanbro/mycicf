@@ -1,7 +1,7 @@
 stages:
+  - test
   - docker
   - build
-  - test
   - analysis
 
 services:
