@@ -50,18 +50,20 @@ build:
     - npm i
     - npm run dev
 
-# TODO Временно отключено за ненадобностью
-# phpunit:
-#   image: registry-backend.cic.kz/centras/php-fpm:7.2
-#   stage: test
-#   tags:
-#     - mycic
-#   dependencies:
-#     - composer
-#   script:
-#     - cp .env.testing .env && php artisan migrate -v
-#     - cp .env.testing .env && phpunit --coverage-text --colors=never
-
+phpunit:
+  image: registry-backend.cic.kz/centras/php-fpm:7.2
+  stage: test
+  tags:
+    - mycic
+  dependencies:
+    - composer
+  script:
+    - cp .env.testing .env && php artisan migrate -v
+    - cp .env.testing .env && phpunit --coverage-text --colors=never --log-junit report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
 
 phploc:
   image: registry-backend.cic.kz/centras/php-fpm:7.2
