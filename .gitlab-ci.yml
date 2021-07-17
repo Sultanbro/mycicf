@@ -55,8 +55,8 @@ phpunit:
   stage: test
   tags:
     - mycic
-  dependencies:
-    - composer
+  # dependencies:
+  #   - composer
   script:
     - cp .env.testing .env && php artisan migrate -v
     - cp .env.testing .env && phpunit --coverage-text --colors=never --log-junit report.xml
