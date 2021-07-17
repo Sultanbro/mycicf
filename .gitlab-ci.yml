@@ -4,8 +4,8 @@ stages:
   - build
   - analysis
 
-services:
-  - mysql:5.7
+# services:
+#   - mysql:5.7
 
 variables:
   MYSQL_ROOT_PASSWORD: secret
