@@ -7,7 +7,6 @@ use App\Library\Services\Kias;
 use App\Library\Services\KiasServiceInterface;
 use App\Mail\Email;
 use App\Post;
-use App\ProductsInfo;
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Console\Command;
@@ -22,21 +21,15 @@ class SandboxCommand extends Command {
     protected $description = 'Command description';
 
     public function handle() {
+        $c = Comment::all();
 
-        $result = [];
+        $generator = new Faker();
 
-        $productsInfos = ProductsInfo::with('childs')->get();
-        foreach ($productsInfos as $item) {
-            array_push($result, [
-                'id' => $item->id,
-                'label' => $item->label,
-                'parent' => $item->getParent(),
-                'url' => $item->url,
-                'child_count' => $item->childs->count(),
-                'icon_url' => $item->icon_url,
-            ]);
+
+
+        foreach ($c as $item) {
+            dd(Faker::text());
+            $item->text = (new \Faker\Generator())->text();
         }
-
-        dd($result);
     }
 }
