@@ -94,6 +94,9 @@ ul{
     .parse-top-company-select{
         margin-right: 3rem;
     }
+	.label-size{
+		font-size: 12px;
+	}
 }
 .flex-start{
     display: flex;
@@ -154,6 +157,10 @@ ul{
         align-items: flex-start !important;
         margin-top: 0.25rem;
     }
+    .label-size{
+        font-size: 12px;
+    }
+
 }
 @media (min-width: 900px) and (max-width: 1170px){
     .centcoins-date-indicators div{
@@ -163,6 +170,9 @@ ul{
     }
     .centcoins-date-indicators div div{
         margin-top: 0.25rem;
+    }
+    .label-size{
+        font-size: 12px;
     }
 }
 .mobile-date-contain{
@@ -569,6 +579,9 @@ ul{
     display: block;
     /*transition: .3s ease-in-out;*/
 }
+div-size{
+	width: 60%!important;
+}
 @media (min-width: 350px){
     .m-navbar{
         width: 300px;
@@ -750,6 +763,61 @@ ul{
 .centcoins-table th{
     background: #275cc7 !important;
     color: #b7bac5;
+}
+.alert {
+	position: relative;
+	padding: .75rem 1.25rem;
+	margin-bottom: 1rem;
+	border: 1px solid transparent;
+	border-radius: .50rem;
+}
+.alert-p {
+	color: #004085;
+	background-color: #f8f9fa;
+	border-color: #f8f9fa;
+}
+.flex-con {
+	/*генерирует flex-контейнер уровня строки*/
+	display: -webkit-inline-flex;
+	display: inline-flex;
+}
+
+.margin-t-5{
+	margin-top: 2%;
+}
+.img-size{
+	width: 20px;
+	height:20px
+}
+.attention-size{
+	width: 20px;
+	height:20px
+}
+.search-size{
+	width: 35px;
+	heidth:35px;
+}
+.flex-attention{
+	display: flex;
+	justify-content:flex-end !important;
+}
+.att-flex-class {
+    width: 270px !important;
+}
+.flex-start{
+	display: flex;
+	justify-content:flex-start ;
+}
+.width-80{
+	width: 80%!important;
+}
+//.width-35{
+//	width:35%;!important;
+//}
+
+.margin-r-2{
+	margin-right: 2%;
+
 }
 .centcoins-table td{
     color: #6f6f75;
@@ -975,9 +1043,27 @@ ul{
     justify-content: center;
 }
 .vertical-middle{
+	display: flex;
+	align-items: start;
+}
+.vertical-m{
+	display: flex;
+	align-items: flex-start;
+}
+.color-icon{
+	color: #100cff;
+}
+.icon-flex{
+	display: flex;
+	justify-content: flex-start;
     display: flex;
     align-items: center;
 }
+.icon-size{
+	font-size: 16px;
+	font-family: none;
+}
+
 .width100{
     width: 100%;
 }
@@ -1184,6 +1270,160 @@ ul{
     border-top: 0;
     border-bottom: 1px solid black;
 }
+.img-flex{
+	display: flex;
+	/*justify-content: flex-start;*/
+	align-items: center;
+	flex-direction: column;
+	width: 45%;
+	height:35%
+	/*position: relative;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    border-right: 1000px;
+    transition: 15s box-shadow;
+    padding: 2px;
+    heidth:40px;
+    max-width: 40px;
+    max-height: 40px;*/
+}
+.img-fx{
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	width: 27px;
+	height:30px;
+
+
+}
+.div-m{
+	margin-left:10px;
+}
+
+/*.bg-img{
+	background-color: #8fbd35;
+	border-color: #508ff4;
+	padding: 20px;
+}*/
+.img-svg path,
+.img-svg polygon {
+	fill-opacity: .5; /* прозрачность заливки */
+	stroke: #ff6c00; /* цвет обводки */
+	stroke-width: 10px; /* толщина обводки */
+	stroke-opacity: .8; /* прозрачность обводки */
+}
+#myImg {
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.btnhjcj {
+	color: #007bff;
+	background-color: transparent;
+	background-image: none;
+	border-color:#007bff;
+}
+.btnhjcj:hover {
+	color: #fff;
+	background-color: #868e96;
+	border-color: #868e96;
+}
+.m-div{
+	width: 610px;
+}
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+//.modal {
+//	display: none; /* Hidden by default */
+//	position: fixed; /* Stay in place */
+//	z-index: 1; /* Sit on top */
+//	padding-top: 200px; /* Location of the box */
+//	left: 0;
+//	top: 0;
+//	width: 100%; /* Full width */
+//	height: 100%; /* Full height */
+//	overflow: auto; /* Enable scroll if needed */
+//	background-color: rgb(0,0,0); /* Fallback color */
+//	background-color: rgba(0,0,0,.5); /* Black w/ opacity */
+//}
+//
+///* Modal Content (image) */
+//.modal-content {
+//	margin: auto;
+//	display: block;
+//	justify-content: center;
+//
+//	max-width:70%;
+//	height: 80%;
+//}
+//.modal-size{
+//	width: auto;
+//
+//}
+//.modal-flex{
+//	display: flex;
+//	justify-content: center;
+//}
+//
+///* Caption of Modal Image */
+//#caption {
+//	margin: auto;
+//	display: block;
+//	width: 80%;
+//	max-width: 100%;
+//	text-align: center;
+//	color: #ccc;
+//	padding: 10px 0;
+//	height: 150px;
+//}
+//
+///* Add Animation */
+//.modal-content, #caption {
+//	-webkit-animation-name: zoom;
+//	-webkit-animation-duration: 0.6s;
+//	animation-name: zoom;
+//	animation-duration: 0.6s;
+//}
+//
+//@-webkit-keyframes zoom {
+//	from {-webkit-transform:scale(0)}
+//	to {-webkit-transform:scale(1)}
+//}
+//
+//@keyframes zoom {
+//	from {transform:scale(0)}
+//	to {transform:scale(1)}
+//}
+//
+///* The Close Button */
+//.close {
+//	position: absolute;
+//	top: 15px;
+//	right: 35px;
+//	color: #f1f1f1;
+//	font-size: 40px;
+//	font-weight: bold;
+//	transition: 0.3s;
+//}
+//
+//.close:hover,
+//.close:focus {
+//	color: #bbb;
+//	text-decoration: none;
+//	cursor: pointer;
+//}
+//
+///* 100% Image Width on Smaller Screens */
+//@media only screen and (max-width: 700px){
+//	.modal-content {
+//		width: 90%;
+//	}
+//	.label-size{
+//		font-size: 12px;
+//	}
+//}
 /*Стили страницы входа*/
 .image{
     padding-top: 5px;
@@ -1639,6 +1879,9 @@ body {
 .width-100-imp{
     width: 100% !important;
 }
+.width-40-imp{
+    width: 50% !important;
+}
 .data-chart-pie{
     width: 100% !important;
 }
@@ -1826,6 +2069,14 @@ body {
     .show-btn-contain div:nth-of-type(2){
         margin-left: 0.50rem !important;
     }
+	.dealer-raiting-margins{
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+	}
+	.label-size{
+		font-family: "Times New Roman";
+		font-size:12px;
+	}
 }
 @media(max-width: 600px){
     .data-chart-pie{
@@ -2491,6 +2742,12 @@ textarea::-webkit-scrollbar-thumb {
     }
     .w-100{
         width:100%!important;
+    }
+    .w-90{
+        width:90%!important;
+    }
+    .h-90{
+        height:90%!important;
     }
     .flex-col-str {
         flex-direction: column;

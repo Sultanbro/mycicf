@@ -55,7 +55,7 @@ class UpdatePayOut extends Command
                 "verify_peer_name"=>false,
             ),
         );
-        $po = file_get_contents("http://127.0.0.1:8001/payout?token=ef292d4f1f2429cae344d090cc29b675&isn=506791&id=$last_id", false, stream_context_create($arrContextOptions));
+        $po = file_get_contents("https://kupipolis.kz/ru/payout?token=ef292d4f1f2429cae344d090cc29b675&isn=506791&id=$last_id", false, stream_context_create($arrContextOptions));
         if (0 === strpos(bin2hex($po), 'efbbbf')) {
             $po = substr($po, 3);
         }
