@@ -58,7 +58,7 @@ phpunit:
   # dependencies:
   #   - composer
   script:
-    - wget https://getcomposer.org/composer.phar -O ./composer.phar
+    # - wget https://getcomposer.org/composer.phar -O ./composer.phar
     - php composer.phar update
     - php composer.phar dump-autoload
     - cp .env.testing .env
