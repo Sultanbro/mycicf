@@ -41,14 +41,14 @@ composer:
       - vendor/
       - node_modules/
 
-build:
-  image: node:latest
-  stage: build
-  tags:
-    - mycic
-  script:
-    - npm i
-    - npm run dev
+# build:
+#   image: node:latest
+#   stage: build
+#   tags:
+#     - mycic
+#   script:
+#     - npm i
+#     - npm run dev
 
 phpunit:
   image: registry-backend.cic.kz/centras/php-fpm:7.2
