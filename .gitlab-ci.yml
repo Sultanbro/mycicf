@@ -19,27 +19,27 @@ variables:
   DB_USERNAME: root
   DB_PASSWORD: secret
 
-composer:
-  image: registry-backend.cic.kz/centras/php-fpm:7.2
-  stage: build
-  tags:
-    - mycic
-  script:
-    - wget https://getcomposer.org/composer.phar -O ./composer.phar
-    - php composer.phar update 
-    - cp .env.testing .env
-    - php artisan key:generate
-  artifacts:
-    expire_in: 30 days
-    paths:
-      - vendor/
-      - node_modules/
-      - .env
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}-composer
-    paths:
-      - vendor/
-      - node_modules/
+# composer:
+#   image: registry-backend.cic.kz/centras/php-fpm:7.2
+#   stage: build
+#   tags:
+#     - mycic
+#   script:
+#     - wget https://getcomposer.org/composer.phar -O ./composer.phar
+#     - php composer.phar update 
+#     - cp .env.testing .env
+#     - php artisan key:generate
+#   artifacts:
+#     expire_in: 30 days
+#     paths:
+#       - vendor/
+#       - node_modules/
+#       - .env
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}-composer
+#     paths:
+#       - vendor/
+#       - node_modules/
 
 build:
   image: node:latest
