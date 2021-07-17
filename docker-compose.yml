@@ -9,7 +9,7 @@ networks:
 
 services:
   mycic_redis:
-    image: redis:latest
+    image: registry-backend.cic.kz/centras/redis:latest
     container_name: mycic_redis
     hostname: redis.docker
 
@@ -20,7 +20,7 @@ services:
       - mycic_network
 
   mycic_php:
-    image: registry-backend.cic.kz/centras-php7.3-fpm:develop
+    image: registry-backend.cic.kz/centras-projects/laravel-sandbox:master
     container_name: mycic_php
     hostname: php.docker
 
@@ -44,7 +44,7 @@ services:
       - mycic_network
 
   mycic_frontend_builder:
-    image: node:latest
+    image: registry-backend.cic.kz/centras/node:latest
     container_name: mycic_frontend_builder
     build:
       context: .
@@ -55,19 +55,19 @@ services:
       - ./node_modules:/app/node_modules
 
   mycic_nginx:
-    image: nginx:latest
+    image: registry-backend.cic.kz/centras/nginx:latest
     container_name: mycic_nginx
     hostname: nginx.docker
     volumes:
-     - .docker/nginx:/etc/nginx/conf.d
-     - .docker/logs/nginx:/logs
-     - .:/app
+      - .docker/nginx:/etc/nginx/conf.d
+      - .docker/logs/nginx:/logs
+      - .:/app
 
     ports:
-     - "8081:80"
+      - "8081:80"
     depends_on:
-     - mycic_php
-     - mycic_db
+      - mycic_php
+      - mycic_db
 
     networks:
       - mycic_network
