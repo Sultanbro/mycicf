@@ -40,7 +40,7 @@ build:
     - echo npm run dev
 
 phpunit:
-  image: registry-backend.cic.kz/centras/php-fpm:7.2
+  image: registry-backend.cic.kz/centras/php-fpm:7.3
   stage: test
   tags:
     - mycic
