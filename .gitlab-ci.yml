@@ -47,6 +47,9 @@ phpunit:
   script:
     - phpunit --coverage-text --colors=never --log-junit report.xml
 
+  services:
+    - mysql:5.7
+
   artifacts:
     when: always
     reports:
