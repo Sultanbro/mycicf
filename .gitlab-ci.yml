@@ -7,6 +7,17 @@ stages:
 services:
   - mysql:5.7
 
+image: php:7.2
+
+before_script:
+  - ping repo.packagist.org -c 4
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install
+  - docker-php-ext-install pdo_mysql
+  - cp .env.testing .env
+  - php artisan key:generate --env=testing
+  - php artisan migrate -v --env=testing
+
 variables:
   MYSQL_ROOT_PASSWORD: secret
   MYSQL_DATABASE: my_cic_test
@@ -18,28 +29,6 @@ variables:
   DB_HOST: localhost
   DB_USERNAME: root
   DB_PASSWORD: secret
-
-# composer:
-#   image: registry-backend.cic.kz/centras/php-fpm:7.2
-#   stage: build
-#   tags:
-#     - mycic
-#   script:
-#     - wget https://getcomposer.org/composer.phar -O ./composer.phar
-#     - php composer.phar update
-#     - cp .env.testing .env
-#     - php artisan key:generate
-#   artifacts:
-#     expire_in: 30 days
-#     paths:
-#       - vendor/
-#       - node_modules/
-#       - .env
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}-composer
-#     paths:
-#       - vendor/
-#       - node_modules/
 
 build:
   image: node:latest
@@ -55,16 +44,7 @@ phpunit:
   stage: test
   tags:
     - mycic
-  # dependencies:
-  #   - composer
   script:
-    # - wget https://getcomposer.org/composer.phar -O ./composer.phar
-    - ping repo.packagist.org -c 4
-    - php composer.phar update
-    - php composer.phar dump-autoload
-    - cp .env.testing .env
-    - php artisan key:generate --env=testing
-    - php artisan migrate -v --env=testing
     - phpunit --coverage-text --colors=never --log-junit report.xml
 
   artifacts:
