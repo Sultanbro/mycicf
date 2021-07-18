@@ -7,7 +7,7 @@ stages:
 services:
   - mysql:5.7
 
-image: php:7.2
+image: php:7.3
 
 before_script:
   - ping repo.packagist.org -c 4
