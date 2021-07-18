@@ -63,8 +63,8 @@ phpunit:
     - php composer.phar update
     - php composer.phar dump-autoload
     - cp .env.testing .env
-    - php artisan key:generate
-    - php artisan migrate -v
+    - php artisan key:generate --env=testing
+    - php artisan migrate -v --env=testing
     - phpunit --coverage-text --colors=never --log-junit report.xml
 
   artifacts:
