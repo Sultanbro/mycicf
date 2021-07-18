@@ -4,18 +4,18 @@ stages:
   - build
   - analysis
 
-# services:
-#   - mysql:5.7
+services:
+  - mysql:5.7
 
 variables:
   MYSQL_ROOT_PASSWORD: secret
   MYSQL_DATABASE: my_cic_test
-  MYSQL_ROOT_HOST: db.docker
+  MYSQL_ROOT_HOST: localhost
   MYSQL_USER: user
   MYSQL_PASSWORD: secret
 
   DB_DATABASE: my_cic_test
-  DB_HOST: db.docker
+  DB_HOST: localhost
   DB_USERNAME: root
   DB_PASSWORD: secret
 
