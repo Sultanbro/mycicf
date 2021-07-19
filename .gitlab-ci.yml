@@ -34,6 +34,8 @@ variables:
 build:
   image: node:latest
   stage: build
+  only:
+    - sergey/dockerize
   tags:
     - mycic
   script:
@@ -95,7 +97,7 @@ build:
 build-docker:
   stage: docker
   only:
-    - colleagues
+    - sergey/dockerize
   tags:
     - mycic
   # https://www.cloudsigma.com/deploying-laravel-nginx-and-mysql-with-docker-compose/
@@ -111,6 +113,6 @@ docker-up:
   tags:
     - mycic-deploy
   only:
-    - colleagues
+    - sergey/dockerize
   script: |
     docker run $CI_REGISTRY_IMAGE:master
