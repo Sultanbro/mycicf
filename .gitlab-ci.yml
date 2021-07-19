@@ -40,21 +40,21 @@ build:
     - echo npm i
     - echo npm run dev
 
-phpunit:
-  image: registry-backend.cic.kz/centras/php-fpm:7.3
-  stage: test
-  tags:
-    - mycic
-  script:
-    - phpunit --coverage-text --colors=never --log-junit report.xml
-
-  services:
-    - mysql:5.7
-
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
+# phpunit:
+#   image: registry-backend.cic.kz/centras/php-fpm:7.3
+#   stage: test
+#   tags:
+#     - mycic
+#   script:
+#     - phpunit --coverage-text --colors=never --log-junit report.xml
+# 
+#   services:
+#     - mysql:5.7
+# 
+#   artifacts:
+#     when: always
+#     reports:
+#       junit: report.xml
 
 # phploc:
 #   image: registry-backend.cic.kz/centras/php-fpm:7.2
