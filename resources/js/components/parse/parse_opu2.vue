@@ -73,20 +73,10 @@
             return {
                 company_list: [8],
                 first_company_list: [8],
-                /*                periods: {
-                                    first_year: null,
-                                    second_year: null,
-                                    first_period: null,
-                                    second_period: null,
-                                },*/
                 months: [],
                 years: [],
-
                 companies: [],
                 sendedCompanies: [],
-                company_id: 3,
-                header_one: '',
-                header_two: '',
                 company_name:[
                     'Сентрас',
                     'Цесна',
@@ -105,7 +95,6 @@
 
                 index_1: 0,
                 index_2: 1,
-                current_index: null,
                 showTable: false,
             }
         },
@@ -116,12 +105,10 @@
         methods: {
             getOpuData(new_date = null) {
                 if(new_date != null){
-                    this.preloader(true);
                     this.index_1 = 0;
                     this.index_2 = 1;
                     this.opuCompanies = [];
                     this.sendedCompanies = this.first_company_list;
-                    this.current_index = null;
                     this.company_id = 3;
                 } else {
                     this.sendedCompanies = this.company_list;
@@ -143,12 +130,8 @@
                 }).then(response => {
                     if(response.data.success) {
                         this.setOpuData(response.data);
-                    } else {
-                        alert(response.data.error);
                     }
-                    this.preloader(false);
                 }).catch(error => {
-                    this.preloader(false);
                     alert(error);
                 });
             },
@@ -161,31 +144,19 @@
                         this.centrasOpuData = response.opuData[index].opuResult;
                     }
                 }
-                for(var i = 0; i < this.companies.length; i++) {
+                for(let i = 0; i < this.companies.length; i++) {
                     if(this.companies[i].id === this.centras_id) i++;
                     else {
                         this.opuCompanies.push([]);
                     }
                 }
-
                 this.tableHeaders = response.tableHeaders;
-                this.header_one = this.companies[0].name;
-                this.header_two = this.companies[1].name;
                 this.showTable = true;
-                this.preloader(false);
             },
 
             async getCurrentPeriods() {
-                this.preloader(true);
                 const response = await axios.get('/parse/getCurrentPeriods/OPU');
                 this.setCurrentPeriods(response.data);
-                // await this.axios.get('/parse/getCurrentPeriods/OPU').then(response => {
-                //     if(response.data.success) {
-                //         this.setCurrentPeriods(response.data);
-                //     }
-                // }).catch(error => {
-                //     alert(error);
-                // });
             },
             setCurrentPeriods(response) {
                 for(let company in response.companies) {
@@ -221,158 +192,10 @@
                 }
             },
 
-            async getNextOpu() {
-                this.preloader(true);
-                if (this.periods.first_year === null || this.periods.second_year === null
-                    || this.periods.first_period === null || this.periods.second_period === null) {
-                    return;
-                }
-
-                const response = await this.axios.post('/parse/opu/getData', {
-                    company_list: [this.company_id],
-                    first_year: this.periods.first_year,
-                    second_year: this.periods.second_year,
-                    first_period: this.periods.first_period,
-                    second_period: this.periods.second_period,
-                });
-                this.setNextOpu(response.data);
-            },
-            setNextOpu(response) {
-                this.opuCompanies[this.current_index] = response.opuData[0].opuResult;
-                //this.company_list = [];
-                //this.index_1 = this.opuCompanies.length - 1;
-                this.preloader(false);
-            },
-
-            showNext(type) {
-                if(type === 'table_one') {
-                    var tempIndex = this.index_1;
-                    if(this.index_1 === this.companies.length - 1) {
-                        tempIndex = 0;
-                    }
-                    else {
-                        if(this.index_1 === this.index_2 - 1) {
-                            tempIndex += 2;
-                            if(this.index_1 === this.companies.length) {
-                                tempIndex = 0;
-                            }
-                        }
-                        else tempIndex++;
-                    }
-                    this.company_id = this.companies[tempIndex].id;
-                    this.header_one = this.companies[tempIndex].name;
-                    if(!this.checkIsSended()) {
-                        this.current_index = tempIndex;
-                        this.getNextOpu().then(a => {
-                            this.sendedCompanies.push(this.company_id);
-                            this.index_1 = tempIndex;
-                        });
-                    }
-                    else {
-                        this.index_1 = tempIndex;
-                    }
-                }
-                else {
-                    var tempIndex = this.index_2;
-                    if(this.index_2 === this.companies.length - 1) {
-                        tempIndex = 0;
-                    }
-                    else {
-                        if(this.index_2 === this.index_1 - 1) {
-                            tempIndex += 2;
-                            if(this.index_2 === this.companies.length) {
-                                tempIndex = 0;
-                            }
-                        }
-                        else tempIndex++;
-                    }
-                    this.company_id = this.companies[tempIndex].id;
-                    this.header_two = this.companies[tempIndex].name;
-                    if(!this.checkIsSended()) {
-                        this.current_index = tempIndex;
-                        this.getNextOpu().then(a => {
-                            this.sendedCompanies.push(this.company_id);
-                            this.index_2 = tempIndex;
-                        });
-                    }
-                    else {
-                        this.index_2 = tempIndex;
-                    }
-                }
-            },
-            showPrev(type) {
-                if(type === 'table_one') {
-                    var tempIndex = this.index_1;
-                    if(this.index_1 === 0){
-                        tempIndex = this.companies.length - 1;
-                    }
-                    else {
-                        if(this.index_1 === this.index_2 + 1) {
-                            tempIndex -=2;
-                            if(this.index_1 === 1) {
-                                tempIndex = this.companies.length - 1;
-                            }
-                        }
-                        else
-                            tempIndex--;
-                    }
-                    console.log(tempIndex);
-                    this.company_id = this.companies[tempIndex].id;
-                    this.header_one = this.companies[tempIndex].name;
-                    if(!this.checkIsSended()) {
-                        this.current_index = tempIndex;
-                        this.getNextOpu().then(a => {
-                            this.sendedCompanies.push(this.company_id);
-                            this.index_1 = tempIndex;
-                        });
-                    }
-                    else
-                        this.index_1 = tempIndex;
-                }
-                else {
-                    var tempIndex = this.index_2;
-                    if(this.index_2 === 0) {
-                        tempIndex = this.companies.length - 1;
-                    }
-                    else {
-                        if(this.index_2 === this.index_1 + 1) {
-                            tempIndex -=2;
-                            if(this.index_2 === 1) {
-                                tempIndex = this.companies.length - 1;
-                            }
-                        }
-                        else
-                            tempIndex--;
-                    }
-
-                    this.company_id = this.companies[tempIndex].id;
-                    this.header_two = this.companies[tempIndex].name;
-                    if(!this.checkIsSended()) {
-                        this.current_index = tempIndex;
-                        this.getNextOpu().then(a => {
-                            this.sendedCompanies.push(this.company_id);
-                            this.index_2 = tempIndex;
-                        });
-                    }
-                    else
-                        this.index_2 = tempIndex;
-                }
-            },
-
             checkIsSended() {
                 return this.sendedCompanies.includes(this.company_id);
             },
 
-            preloader(show) {
-                if(show)
-                {
-                    document.getElementById("preloader").style.display = "none";
-                }
-                else
-                {
-                    document.getElementById("preloader").style.display = "none";
-                }
-            },
             showNewData(){
                 this.getOpuData('new_date');
             },
