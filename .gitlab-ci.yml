@@ -1,8 +1,9 @@
 stages:
-  - test
+   #- test
   - docker
   - build
-  - analysis
+  # - analysis
+  - deploy
 
 services:
   - mysql:5.7
@@ -55,13 +56,13 @@ phpunit:
     reports:
       junit: report.xml
 
-phploc:
-  image: registry-backend.cic.kz/centras/php-fpm:7.2
-  stage: analysis
-
-  script:
-      - wget https://phar.phpunit.de/phploc.phar
-      - php phploc.phar app
+# phploc:
+#   image: registry-backend.cic.kz/centras/php-fpm:7.2
+#   stage: analysis
+# 
+#   script:
+#       - wget https://phar.phpunit.de/phploc.phar
+#       - php phploc.phar app
 
 
 # cq:
@@ -101,3 +102,13 @@ build-docker:
     docker build --cache-from $CI_REGISTRY_IMAGE:master --tag $CI_REGISTRY_IMAGE:master .
     docker push $CI_REGISTRY_IMAGE:master
     docker rmi $CI_REGISTRY_IMAGE:master
+
+
+docker-up:
+  stage: deploy
+  tags:
+    - mycic-deploy
+  only:
+    - colleagues
+  script: |
+    docker run $CI_REGISTRY_IMAGE:master
