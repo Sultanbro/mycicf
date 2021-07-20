@@ -11,6 +11,8 @@ services:
 image: php:7.3
 
 before_script:
+  - apt update && apt upgrade
+  - apt install wget
   - wget https://getcomposer.org/composer.phar -O ./composer.phar
   - docker-php-ext-install pdo_mysql
   - php composer.phar install
@@ -48,10 +50,10 @@ build:
 #     - mycic
 #   script:
 #     - phpunit --coverage-text --colors=never --log-junit report.xml
-# 
+#
 #   services:
 #     - mysql:5.7
-# 
+#
 #   artifacts:
 #     when: always
 #     reports:
@@ -60,7 +62,7 @@ build:
 # phploc:
 #   image: registry-backend.cic.kz/centras/php-fpm:7.2
 #   stage: analysis
-# 
+#
 #   script:
 #       - wget https://phar.phpunit.de/phploc.phar
 #       - php phploc.phar app
