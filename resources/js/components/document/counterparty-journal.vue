@@ -430,7 +430,9 @@ export default {
         this.getDuty();
         this.getReason();
         this.getReasonDeprivation();
-        this.getDelegateAuthority();
+        if(this.results.classisn !=='1440561'){
+            this.getDelegateAuthority();
+        }
         Vue.filter('splitNumber', function (value) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         })
@@ -564,7 +566,6 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status;
                         this.results.stage = response.data.stage;
-                        this.extraLoading = false;
                         this.addChange = false;
                         this.sendOutForm = false;
                         this.annul = false;
@@ -575,8 +576,8 @@ export default {
                     } else {
                         this.addChange = false;
                         this.annul = true;
-                        this.extraLoading = false;
                     }
+                    this.extraLoading = false;
                 });
             this.addChange = false;
             this.extraLoading = false;
@@ -774,7 +775,6 @@ export default {
                     this.loading = false;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         // sendOut(){
@@ -848,10 +848,6 @@ export default {
                 document.getElementById('preloader').style.display = 'none';
                 this.loading = false;
             }
-        },
-        reverseCaret: function (id) {
-            this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
-            this.caretColor = this.caretColor === 'color-black' ? 'color-blue' : 'color-black';
         },
         // }, :key="`${index}-${docrow.value}`"
     },

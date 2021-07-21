@@ -29,7 +29,6 @@
                                     <div class="col-md-8">
                                         <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="addressee" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
-                                        <!--                                        <span class="text-danger" v-if="result.val === ''">*Обязательное поле</span>-->
                                     </div>
                                 </div>
                                 <div v-if="!isLoading && result.fullname == 'Исполнитель'" class="form-group row">
@@ -302,16 +301,10 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
                                 v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
@@ -480,7 +473,6 @@
                 dept : "",
                 options: null,
                 parentId: 50,
-                // agrList: false,
                 docIsn: null,
                 button: null,
                 result: null,
@@ -547,7 +539,6 @@
             },
             changeSelected(e){
                 //console.log(this.usersInfo[parseInt(e.id)].duty);
-                // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
                 this.duty = this.usersInfo[parseInt(e.id)].duty
                 this.dept = this.usersInfo[parseInt(e.id)].dept
             },
@@ -603,32 +594,19 @@
                             this.results.status = response.data.status;
                             this.results.stage = response.data.stage;
                             this.extraLoading = false;
-                            this.addChange = false;
-                            // this.sendOutForm = false;
                             this.annul = false;
-                            // this.agrList = false;
                             this.toForm = false;
                             this.fillIn = false;
                             this.saveDoc = false;
                         } else {
-                            this.addChange = false;
                             this.annul = true;
                             this.extraLoading = false;
                         }
+                        this.addChange = false;
                     });
-                this.addChange = false;
-                this.loading = false;
             },
             saveDocument(){
                 this.loading = false;
-                // if(this.results.result1[0].val === '' || this.results.docdate === '' || this.results.contragent.subjIsn === ''){
-                //     this.flashMessage.warning({
-                //         title: "!",
-                //         message: 'Пожалуйста заполните все обязательные поля',
-                //         time: 5000
-                //     });
-                //     return;
-                // }
                 this.loading = true;
                 if(this.duty.length > 0){
                     for(let i=0; i<this.results.docrows.length; i++){
@@ -644,7 +622,6 @@
                 this.axios.post('/document/saveDocument', data)
                     .then((response) => {
                         if(response.data.success) {
-                            this.loading = false;
                             this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn;
                             this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                             this.results.stage = response.data.stage;
@@ -655,14 +632,12 @@
                             this.annul = false
                         } else {
                             this.addChange = false;
-                            this.loading = false;
                             this.saveDoc = true;
                             alert(response.data.error);
                         }
                         this.loading = false;
                     })
                     .catch(function (error) {
-                        // alert(response.data.error);
                     });
             },
             addChangeForm() {
@@ -691,19 +666,17 @@
                                     this.results.resDop[i].val = response.data.DOCISN
                                 }
                             }
-                            this.extraLoading = false;
                             this.addChange = false;
                             this.toForm = false;
                             this.annul = true;
                             this.saveDoc = true;
                         } else {
                             this.addChange = true;
-                            this.extraLoading = false;
                         }
+                        this.extraLoading = false;
                     })
             },
             onlyNumber ($event) {
-                //console.log($event.keyCode); //keyCodes value
                 let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
                 if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) { // 46 is dot
                     $event.preventDefault();
@@ -750,13 +723,11 @@
                             }
                         } else {
                             this.addChange = false;
-                            this.loading = false;
                         }
                         this.loading = false;
                         this.addChange = true;
                     })
                     .catch(function (error) {
-                        // alert(response.data.error);
                     });
             },
             buttonClick() {
@@ -775,7 +746,6 @@
                         if(response.data.success) {
                             this.results.status = response.data.status
                             this.results.stage = response.data.stage
-                            this.toForm = false;
                             this.fillIn = false;
                             this.addChange = true
                             this.listDocIsn = response.data.DOCISN
@@ -791,43 +761,15 @@
                         } else {
                             this.addChange = false;
                             alert(response.data.error)
-                            this.toForm = false;
                             this.saveDoc = true;
                             this.fillIn = true;
                         }
                         this.loading = false
+                        this.toForm = false;
                     })
                     .catch(function (error) {
-                        // alert(response.data.error);
                     });
             },
-            // sendOut(){
-            //     this.loading = true;
-            //     this.results.status = 2522
-            //     let data = {
-            //         docIsn: this.docIsn,
-            //         type: this.type,
-            //         results: this.results,
-            //     }
-            //     this.axios.post('/sendOut', data)
-            //         .then((response) => {
-            //             if(response.data.success) {
-            //                 this.results.status = response.data.status;
-            //                 this.results.stage = response.data.stage;
-            //                 this.loading = false;
-            //                 this.addChange = true;
-            //                 // this.sendOutForm = false;
-            //                 this.saveDoc = false;
-            //             } else {
-            //                 this.addChange = false;
-            //                 this.loading = false;
-            //             }
-            //             this.addChange = true;
-            //         })
-            //         .catch(function (error) {
-            //             // alert(response.data.error);
-            //         });
-            // },
             OpenModal (doc) {
                 this.preloader(true)
                 this.changeMatch.status = false
@@ -900,7 +842,4 @@
     }
 </script>
 <style scoped>
-    .vdp-datepicker input {
-        background: none;
-    }
 </style>

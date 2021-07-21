@@ -413,17 +413,11 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
                                         || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
                                 v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-<!--                        <button v-if="addChange && agrList" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
@@ -972,9 +966,6 @@ export default {
             const vm = this;
             vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
         },
-        // handleChangeDate() {
-        //     return moment(date).format('DD.MM.YYYY');
-        // },
         disabledDates(date) {
             const today = moment(new Date()).add(-1,'days').toDate();
             today.setHours(0, 0, 0, 0);
@@ -1114,7 +1105,6 @@ export default {
             }
             this.extraLoading = true;
             this.annul = true;
-            this.addChange = false;
             this.results.status = 'Аннулирован';
             let data = {
                 results: this.results,
@@ -1125,32 +1115,20 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status
                         this.results.stage = response.data.stage
-                        this.extraLoading = false
-                        this.addChange = false
                         this.annul = false
                         this.toForm = false
                         this.fillIn = false
                         this.saveDoc = false
                     } else {
-                        this.addChange = false
                         this.annul = true
-                        this.extraLoading = false
                     }
+                    this.addChange = false
+                    this.extraLoading = false
                 });
             this.addChange = false;
             this.extraLoading = false;
         },
         saveDocument(){
-            this.loading = false;
-            // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-            //     this.flashMessage.warning({
-            //         title: "!",
-            //         message: 'Пожалуйста заполните все обязательные поля',
-            //         time: 5000
-            //     });
-            //     return;
-            // }
-            this.loading = true;
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
                     if(this.results.docrows[i].fieldname === 'Должность'){
@@ -1158,6 +1136,7 @@ export default {
                     }
                 }
             }
+            this.loading = true;
             let data = {
                 results: this.results,
                 docIsn: this.docIsn,
@@ -1165,7 +1144,6 @@ export default {
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.loading = false
                         this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage
@@ -1176,13 +1154,11 @@ export default {
                         this.annul = false
                     } else {
                         this.addChange = false
-                        this.loading = false
                         alert(response.data.error);
                     }
                     this.loading = false
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         addChangeForm() {
@@ -1261,14 +1237,12 @@ export default {
                             this.saveDoc = false;
                         }
                     } else {
-                        this.addChange = false;
                         this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         buttonClick() {
@@ -1284,7 +1258,6 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status
                         this.results.stage = response.data.stage
-                        this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
                         if(this.listDocIsn.length > 0){
@@ -1299,15 +1272,13 @@ export default {
                     } else {
                         this.addChange = false;
                         alert(response.data.error)
-
-                        this.toForm = false;
                         this.saveDoc = true;
                         this.fillIn = true;
                     }
                     this.loading = false
+                    this.toForm = false;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         OpenModal(doc) {
@@ -1412,10 +1383,6 @@ export default {
         orderedDocrows: function () {
             return _.orderBy(this.results.docrows, 'orderno')
         },
-        get () {
-            if(this.results.resDop[4].fullname === 'Вид затрат') {
-                console.log('4')
-            return this.results.resDop[4].val === '' ? null : this.results.resDop[4].val; } },
     },
     components: {
         ContractJournalModal,

@@ -1108,7 +1108,7 @@ class DocumentManagementController extends Controller
          if(!empty($request->travellersDocIsn)){
 //             dd($request->travellersListCheck[0]['valn1']);
              if (!empty($request->travellersListCheck)){
-                  $doc['row'][0] = array_merge(['isn' => $request->travellersListCheck['isn'],
+                  $doc['row'][0] = array_merge(['isn' => $request->travellersListCheck['isn'] ? $request->travellersListCheck['isn'] : '0',
                      'delete' => '1',
                      'valn1' => '']);
 //                 $doc['row'][0] = array_merge(['isn' => !isset($request->travellersListCheck[0]['valn1']) ? '0' : $request->travellersListCheck[0]['isn'],
@@ -1125,7 +1125,6 @@ class DocumentManagementController extends Controller
                          }
                 }
              }
-//             dd($doc);
              $traveller = $kias->userCicSaveDocument($request->travellersDocIsn ? $request->travellersDocIsn : '', isset($request->results["id"]) ? $request->results["id"] : '',
                 $request->results["extID"], $request->results["amount"], $request->results["currIsn"], $status1['В работе'], $request->travellersListClassIsn ? $request->travellersListClassIsn : '',
                 $request->results["emplisn"], '', '', isset($request->results["docdate"]) ? $request->results["docdate"] : date('d.m.Y'), '', '',
@@ -1139,10 +1138,6 @@ class DocumentManagementController extends Controller
                  ];
                  return response()->json($result)->withCallback($request->input('callback'));
              } else {
-//                 $travellersList = $request->travellersList;
-//                 for($i=0; $i<count($travellersList); $i++){
-//                     $travellersList[$i]['isn'] = '1';
-//                 }
                  $result = [
                      'success' => true,
                      'error' => '',
@@ -1150,6 +1145,43 @@ class DocumentManagementController extends Controller
                  ];
                  return response()->json($result);
              }
+        }
+
+        if(!empty($request->contractListClassIsn)){
+            if (!empty($request->contractNameCheck)){
+                $doc['row'][0] = array_merge(['isn' => $request->contractNameCheck['isn'] ? $request->contractNameCheck['isn'] : '0',
+                    'delete' => '1',
+                    'valn1' => '']);
+            }else{
+                for($i=0;$i<count($request->contractName);$i++){
+                    if (isset($request->contractName[$i]['valn1']) && $request->contractName[$i]['isn'] == '1'){
+
+                    }else{
+                        $doc['row'][$i] = array_merge(['isn' => !isset($request->contractName[$i]['valn1']) ? '0' : $request->contractName[$i]['isn'],
+                            'delete' => !isset($request->contractName[$i]['valn1']) ? '1' : $request->contractName[$i]['delete'],
+                            'valn1' => isset($request->contractName[$i]['valn1']) ? $request->contractName[$i]['valn1'] : '']);
+                    }
+                }
+            }
+            $contract = $kias->userCicSaveDocument($request->contractListDocIsn ? $request->contractListDocIsn : '', '', '', '', '', $status1['В работе'],
+                $request->contractListClassIsn ? $request->contractListClassIsn : '', $request->results["emplisn"], '', '',
+                isset($request->docdate) ? $request->docdate : date('d.m.Y'), '', '', '', '', '', '', $doc);
+            if($contract->error){
+                $success = false;
+                $error .= (string)$contract->error->text;
+                $result = [
+                    'success' => $success,
+                    'error' => (string)$error
+                ];
+                return response()->json($result)->withCallback($request->input('callback'));
+            } else {
+                $result = [
+                    'success' => true,
+                    'error' => '',
+                    'contractListCheckBool' => true
+                ];
+                return response()->json($result);
+            }
         }
 
         $wer = [$request->docIsn ? $request->docIsn : '', $request->results["classisn"], $status1[$request->results["status"]], $request->results["emplisn"], $request->results["signerIsn"], $request->results["extSignerIsn"], $request->results["docdate"], $request->results["contragent"]['subjIsn'] ? $request->results["contragent"]['subjIsn'] : '', $row, $doc];
@@ -1219,7 +1251,6 @@ class DocumentManagementController extends Controller
         $button = $request->button;
         if(isset($request->docIsn)){
             $buttonClick = $kias->buttonClick($docIsn, $button);
-//            dd($buttonClick);
             if($buttonClick->error){
                 $success = false;
                 $error .= (string)$buttonClick->error->fulltext;
@@ -1234,6 +1265,8 @@ class DocumentManagementController extends Controller
                 if(!empty($listDocIsn)){
                     $status = 'На подписи';
                     $stage = 'На согласовании';
+                }else{ $status = 'В работе';
+                    $stage = 'В работе';
                 }
                 return response()->json([
                     'DOCISN' => $listDocIsn,

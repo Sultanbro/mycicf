@@ -19,25 +19,11 @@
                             </div>
                         </div>
                     </div>
-<!--                    <div class="flex-row jc-sb flex-wrap">-->
-<!--                        <div class="pl-5 pt-4 pb-4 pr-5">-->
-<!--                            <input type="checkbox">-->
-<!--                            <span class="ml-2">Ограничение числа строк результата</span>-->
-<!--                        </div>-->
-<!--                        <i v-if="loading" class="fas fa-spinner fa-spin"></i>-->
-<!--                        <div class="pl-5 pt-4 pb-4 pr-5">-->
-<!--                            <button class="btn btn-info" @click="searchCounterparty"><i class="fa fa-check">Поиск</i></button>-->
-<!--                        </div>-->
-<!--                        <div class="tex">-->
-<!--                            <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>-->
-<!--                        </div>-->
-<!--                        <div v-show="loading" class="loading-ellipsis">-->
-<!--                            <div></div>-->
-<!--                            <div></div>-->
-<!--                            <div></div>-->
-<!--                            <div></div>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <div class="flex-row jc-sb flex-wrap">
+                        <div class="offset-md-6">
+                            <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <table class="table table-responsive-sm table-stripper table-data table-bordered">
                             <thead>
@@ -56,9 +42,9 @@
                                     </tr>
                                     <tr v-for="name in contractName">
                                         <td class="input-group">
-                                            <input v-model="name.contractNumber" @click="OpenModal(name)" type="text" class="form-control">
+                                            <input v-model="name.contractNumber" @click="OpenModal(name)" type="text" class="form-control" :disabled="name.isn == '1' && contractListCheckBool">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn-light" @click="OpenModal(name)">
+                                                <button type="submit" class="btn-light" @click="OpenModal(name)" :disabled="name.isn == '1' && contractListCheckBool">
                                                     <i class="fa fa-search"></i>
                                                 </button>
                                                 <button type="submit" class="btn-light" @click="clearInfo(name)">
@@ -73,10 +59,20 @@
                                 </div>
                             </tbody>
                         </table>
-                        <div>
+                        <div class="col-md-2">
                             <button type="submit" class="btn btn-primary" @click="addContract">
                                 <i class="fa fa-plus"></i>
                             </button>
+                        </div>
+                        <div class="offset-4 col-md-4">
+                            <button type="submit" class="btn btn-primary" @click="saveContract">Сохранить
+                            </button>
+                        </div>
+                        <div v-show="loading" class="loading-ellipsis">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
                         </div>
                     </div>
                 </div>
@@ -112,14 +108,15 @@ name: "contract-list-modal",
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
             modalHide: '',
             loading: false,
-            resultDoc: false,
-            counterpartyType: [],
             searchingResult: {},
             check:false,
             index: '',
             editMode: false,
             contractName: [],
             contractNameTemporary: {},
+            contractListClassIsn: '1784861',
+            contractNameCheck: {},
+            contractListCheckBool: false,
         }
     },
     created() {
@@ -133,30 +130,138 @@ name: "contract-list-modal",
         addContract(){
             this.editMode = true;
             let i = this.contractName.length;
+            if(this.contractName.length != 0){
+                if(this.contractName[i-1].isn == '0' && this.contractName[i-1].valn1 == ''){
+                    alert('Сначала нужно сохранить договор!')
+                    return;
+                }
+            }
             this.contractName[i] = {
                 id: i+1,
                 contractNumber: '',
                 comment: '',
+                valn1: '',
+                isn: '0',
+                delete: '0',
             }
             this.editMode = false;
             this.editMode = true;
         },
-        OpenModal(doc) {
-            // if (doc === 'Список договоров  для внесение изменение') {
-                this.preloader(false);
-                this.contractNameTemporary = doc
-                this.$refs.modalContract.click();
-            // }
-        },
-        clearInfo(data){
-            for(let i = 0; i< this.contractName.length; i++){
-                if(this.contractName[i] == data){
-                    this.contractName[i].contractNumber = ''
-                    this.contractName[i].comment = ''
+        saveContract(){
+            if(this.contractName.length == 0){
+                alert('Вы не создали документ!')
+                this.$parent.$refs.modalContractList.click()
+                return
+            }
+            for(let i=0; i<this.contractName.length; i++){
+                if(this.contractName[0].valn1 == '' && this.contractName[0].isn == '0'){
+                    alert('Вы не выбрали документ!')
+                    this.contractName = []
+                    this.$parent.$refs.modalContractList.click()
+                    return
+                }
+                if(this.contractName[i].valn1 == undefined && this.contractName[i].isn == '0' || this.contractName[i].valn1 == '' && this.contractName[i].isn == '0'){
+                    delete this.contractName[i]
+                    this.contractName.splice(i, 1)
+                    this.editMode = false
+                    this.editMode = true
+                    if(this.contractName.length == 0){
+                        this.contractName = []
+                        this.$parent.$refs.modalContractList.click()
+                        return
+                    }
                 }
             }
+            this.loading = true
+            let data = {
+                contractName: this.contractName,
+                contractNameCheck: this.contractNameCheck,
+                docDate: this.docDate,
+                contractListClassIsn: this.contractListClassIsn,
+                results: this.results,
+                contractListDocIsn: this.contractList.isn,
+            }
+            this.axios.post('/document/saveDocument', data)
+                .then((response) => {
+                    if(response.data.success) {
+                        for (let i=0; i<this.contractName.length; i++){
+                            this.contractName[i].isn = '1'
+                        }
+                        this.contractListCheckBool = true
+                        alert('Успешно сохранено!')
+                    } else {
+                        alert(response.data.error);
+                    }
+                    this.loading = false;
+                })
+                .catch(function (error) {
+                    // alert(response.data.error);
+                });
+        },
+        getInfo(){
+            if(this.contractName[0].isn == '0'){
+                alert('Вы не сохранили договор в Приложение !')
+            }
+            this.$parent.$refs.modalContractList.click();
+        },
+        OpenModal(doc) {
+                this.preloader(false);
+                this.contractNameTemporary = doc
+                this.recordingCounterparty.type = 'Список договоров  для внесение изменение'
+                this.$refs.modalContract.click();
+        },
+        clearInfo(doc){
+            for(let i=0; i<this.contractName.length; i++){
+                if(this.contractName[0].valn1 == '' && this.contractName[0].isn == '0'){
+                    this.contractName = []
+                    this.$parent.$refs.modalContractList.click()
+                }
+                if(this.contractName[i].valn1 == undefined && this.contractName[i].isn == '0' || this.contractName[i].valn1 == '' && this.contractName[i].isn == '0'){
+                    delete this.contractName[i]
+                    this.contractName.splice(i, 1)
+                    this.editMode = false
+                    this.editMode = true
+                    if(this.contractName.length == 0){
+                        this.contractName = []
+                        this.$parent.$refs.modalContractList.click()
+                    }
+                }
+            }
+            this.contractNameCheck = doc
+            let data = {
+                contractList: this.travellersList,
+                contractListCheckBool: this.contractListCheckBool,
+                contractName: this.contractName,
+                contractNameCheck: this.contractNameCheck,
+                docDate: this.docDate,
+                contractListClassIsn: this.contractListClassIsn,
+                results: this.results,
+                contractListDocIsn: this.contractList.isn,
+            }
+            this.axios.post('/document/saveDocument', data)
+                .then((response) => {
+                    if(response.data.success) {
+                        this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
+                        for (let i=0; i<this.contractName.length; i++){
+                            if(doc == this.contractName[i]){
+                                delete this.contractName[i]
+                                this.contractName.splice(i, 1)
+                            }
+                        }
+                        this.contractNameCheck = []
+                        alert('Успешно удалено!')
+                    } else {
+                        alert(response.data.error);
+                    }
+                    this.loading = false;
+                })
+                .catch(function (error) {
+                    // alert(response.data.error);
+                });
+
         },
         close() {
+            this.contractName = []
             this.$parent.$refs.modalContractList.click()
         },
         preloader(show){

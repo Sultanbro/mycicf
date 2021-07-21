@@ -667,31 +667,21 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status;
                         this.results.stage = response.data.stage;
-                        this.extraLoading = false;
-                        this.addChange = false;
                         this.annul = false;
                         this.toForm = false;
                         this.fillIn = false;
                         this.saveDoc = false;
                     } else {
-                        this.addChange = false;
                         this.annul = true;
-                        this.extraLoading = false;
+                        if(response.data.error){ alert(response.data.error) }
                     }
+                    this.extraLoading = false;
+                    this.addChange = false;
                 });
             this.addChange = false;
             this.extraLoading = false;
         },
         saveDocument(){
-            this.loading = false;
-            // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-            //     this.flashMessage.warning({
-            //         title: "!",
-            //         message: 'Пожалуйста заполните все обязательные поля',
-            //         time: 5000
-            //     });
-            //     return;
-            // }
             this.loading = true;
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
@@ -707,7 +697,6 @@ export default {
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.loading = false;
                         this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage;
@@ -718,7 +707,6 @@ export default {
                         this.annul = false;
                     } else {
                         this.addChange = false;
-                        this.loading = false;
                         this.saveDoc = true;
                         alert(response.data.error);
                     }
@@ -746,15 +734,14 @@ export default {
                                 this.results.resDop[i].val = this.listDocIsn
                             }
                         }
-                        this.extraLoading = false;
                         this.addChange = false;
                         this.toForm = false;
                         this.annul = true;
                         this.saveDoc = true;
                     } else {
                         this.addChange = true;
-                        this.extraLoading = false;
                     }
+                    this.extraLoading = false;
                 })
         },
         onlyNumber ($event) {
@@ -800,18 +787,15 @@ export default {
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
-                                this.fillIn = true;
-                                this.toForm = true;
                                 this.saveDoc = false;
                             })
                         } else {
-                            this.fillIn = true;
-                            this.toForm = true;
                             this.saveDoc = false;
                         }
+                        this.fillIn = true;
+                        this.toForm = true;
                     } else {
                         this.addChange = false;
-                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;
@@ -833,7 +817,6 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status
                         this.results.stage = response.data.stage
-                        this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
                         if(this.listDocIsn.length > 0){
@@ -848,14 +831,13 @@ export default {
                     } else {
                         this.addChange = false;
                         alert(response.data.error)
-                        this.toForm = false;
                         this.saveDoc = true;
                         this.fillIn = true;
                     }
                     this.loading = false
+                    this.toForm = false;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         // sendOut(){
@@ -918,10 +900,6 @@ export default {
             }else{
                 document.getElementById('preloader').style.display = 'none';
             }
-        },
-        reverseCaret: function (id) {
-            this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
-            this.caretColor = this.caretColor === 'color-black' ? 'color-blue' : 'color-black';
         },
         // }, :key="`${index}-${docrow.value}`"
     },

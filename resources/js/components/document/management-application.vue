@@ -935,10 +935,6 @@ export default {
                 document.getElementById('preloader').style.display = 'none';
             }
         },
-        reverseCaret: function (id) {
-            this.caretClass = this.caretClass === 'fa-chevron-down' ? 'fa-chevron-up' : 'fa-chevron-down';
-            this.caretColor = this.caretColor === 'color-black' ? 'color-blue' : 'color-black';
-        },
         // }, :key="`${index}-${docrow.value}`"
     },
     computed: {

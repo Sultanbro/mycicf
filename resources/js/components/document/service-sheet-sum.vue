@@ -36,7 +36,6 @@
                                     <div class="col-md-8">
                                         <treeselect v-model="result.val" :placeholder="'Не выбрано'" :disabled="addChange"
                                                     id="executor" :multiple="false" :options="userList" :disable-branch-nodes="true" required/>
-                                        <!--                                        <span class="text-danger" v-if="result.val !== '(unknown)'">*Обязательное поле</span>-->
                                     </div>
                                 </div>
                             </div>
@@ -135,10 +134,7 @@
                         <div class="col-4 pt-4" v-for="docrow in orderedDocrows">
                             <div>
                                 <label>{{ docrow.fieldname }}</label>
-                                <div v-if="docrow.fieldname === 'Стоимость семинара'">
-                                    <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
-                                </div>
-                                <div v-if="docrow.fieldname === 'Наименование'">
+                                <div v-if="docrow.fieldname === 'Стоимость семинара' || docrow.fieldname === 'Наименование'">
                                     <input type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
                                 <div v-if="docrow.fieldname === 'Инвентарный №'">
@@ -156,7 +152,7 @@
                                 <div v-if="docrow.fieldname === 'Итого кол-во дней' || docrow.fieldname === 'ИТОГО кол-во дней'">
                                     <input @keypress="onlyNumber" type="text" v-model="docrow.value" :disabled="addChange" placeholder="..." class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Срок по ДОУ, с'">
+                                <div v-if="docrow.fieldname === 'Срок по ДОУ, с' || docrow.fieldname === 'Срок по ДОУ, по'">
                                     <input class="form-control"
                                            type="tel"
                                            v-model="docrow.value" :disabled="addChange"
@@ -222,13 +218,6 @@
                                     <input type="text"
                                            v-model="docrow.value" :disabled="addChange" class="form-control">
                                 </div>
-                                <div v-if="docrow.fieldname === 'Срок по ДОУ, по'">
-                                    <input class="form-control"
-                                           type="tel"
-                                           v-model="docrow.value" :disabled="addChange"
-                                           v-mask="'##.##.####'"
-                                    />
-                                </div>
                                 <div v-if="docrow.fieldname === 'Подразделение' || docrow.fieldname === 'Подразделение / Филиал'">
                                     <treeselect
                                         :multiple="false" :options="options" :placeholder="'Выберите'" v-model="docrow.value"
@@ -248,7 +237,6 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <!--                                                :key="`${index}-${docrow.value}-${3}`"-->
                                 <div v-if="docrow.fieldname === 'Дата последнего рабочего дня'">
                                     <input class="form-control"
                                            type="tel"
@@ -403,17 +391,11 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                        <!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
-                        <!--                            Разослать на согласование-->
-                        <!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
                                         || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
                                 v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-                        <!--                        <button v-if="addChange" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
-                        <!--                            Разослать на согласование-->
-                        <!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
@@ -830,9 +812,6 @@ export default {
             const vm = this;
             vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
         },
-        handleChangeDate() {
-            return moment(date).format('DD.MM.YYYY');
-        },
         disabledDates(date) {
             const today = moment(new Date()).add(-1,'days').toDate();
             today.setHours(0, 0, 0, 0);
@@ -840,7 +819,6 @@ export default {
         },
         changeSelected(index,e){
             //console.log(this.usersInfo[parseInt(e.id)].duty);
-            // if(this.results.docrows[parseInt(index)+1] === 'Должность') {
             this.duty = this.usersInfo[parseInt(e.id)].duty
             this.dept = this.usersInfo[parseInt(e.id)].dept
         },
@@ -967,8 +945,6 @@ export default {
                 }
             }
             this.extraLoading = true;
-            this.annul = true;
-            this.addChange = false;
             this.results.status = 'Аннулирован';
             let data = {
                 results: this.results,
@@ -979,34 +955,21 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status;
                         this.results.stage = response.data.stage;
-                        this.extraLoading = false;
-                        this.addChange = false;
                         this.annul = false;
                         this.toForm = false;
                         this.fillIn = false;
                         this.saveDoc = false;
                     } else {
-                        this.addChange = false;
                         this.annul = true;
-                        this.extraLoading = false;
                         if(response.data.error){
                             alert(response.data.error)
                         }
                     }
+                    this.addChange = false;
+                    this.extraLoading = false;
                 });
-            this.addChange = false;
-            this.extraLoading = false;
         },
         saveDocument(){
-            this.loading = false;
-            // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-            //     this.flashMessage.warning({
-            //         title: "!",
-            //         message: 'Пожалуйста заполните все обязательные поля',
-            //         time: 5000
-            //     });
-            //     return;
-            // }
             this.loading = true;
             if(this.duty.length > 0){
                 for(let i=0; i<this.results.docrows.length; i++){
@@ -1022,7 +985,6 @@ export default {
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
                     if(response.data.success) {
-                        this.loading = false
                         this.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.docIsn = this.docIsn ? this.docIsn : response.data.docIsn
                         this.results.stage = response.data.stage
@@ -1033,13 +995,11 @@ export default {
                         this.annul = false
                     } else {
                         this.addChange = false
-                        this.loading = false
                         alert(response.data.error);
                     }
                     this.loading = false
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         addChangeForm() {
@@ -1061,19 +1021,15 @@ export default {
                                 this.results.resDop[i].val = response.data.DOCISN
                             }
                         }
-
-                        this.extraLoading = false
                         this.addChange = false
                         this.toForm = false
                         this.annul = true
                         this.saveDoc = true
                     } else {
-                        if(response.data.error){
-                            alert(response.data.error)
-                        }
+                        if(response.data.error){ alert(response.data.error) }
                         this.addChange = true
-                        this.extraLoading = false
                     }
+                    this.extraLoading = false
                 })
         },
         onlyNumber ($event) {
@@ -1097,6 +1053,7 @@ export default {
                         alert(response.data.error)
                         this.addChange = false
                         this.loading = false
+                        return;
                     }
                     else if(response.data.success) {
                         if((this.results.docParam.button1caption === 'Заполнить СЗ' && this.results.docParam.showbutton1 === 'Y') || (this.results.docParam.button2caption === 'Заполнить СЗ' && this.results.docParam.showbutton2 === 'Y')){
@@ -1115,24 +1072,18 @@ export default {
                                 if(this.results.id.length > 0){
                                     this.idShow = true;
                                 }
-                                this.fillIn = true;
-                                this.toForm = true;
-                                this.saveDoc = false;
                             })
                         } else {
-                            this.fillIn = true;
-                            this.toForm = true;
-                            this.saveDoc = false;
                         }
+                        this.fillIn = true;
+                        this.toForm = true;
+                        this.saveDoc = false;
                     } else {
-                        this.addChange = false;
-                        this.loading = false;
                     }
                     this.loading = false;
                     this.addChange = true;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
         buttonClick() {
@@ -1148,7 +1099,6 @@ export default {
                     if(response.data.success) {
                         this.results.status = response.data.status
                         this.results.stage = response.data.stage
-                        this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
                         if(this.listDocIsn.length > 0){
@@ -1163,43 +1113,15 @@ export default {
                     } else if(response.data.error) {
                         this.addChange = false;
                         alert(response.data.error)
-                        this.toForm = false;
                         this.saveDoc = true;
                         this.fillIn = true;
                     }
                     this.loading = false;
+                    this.toForm = false;
                 })
                 .catch(function (error) {
-                    //alert(error.response);
                 });
         },
-        // sendOut(){
-        //     this.loading = true;
-        //     this.results.status = 2522
-        //     let data = {
-        //         docIsn: this.listDocIsn,
-        //         type: this.type,
-        //         results: this.results,
-        //     }
-        //     this.axios.post('/sendOut', data)
-        //         .then((response) => {
-        //             if(response.data.success) {
-        //                 this.results.status = response.data.status;
-        //                 this.results.stage = response.data.stage;
-        //                 this.loading = false;
-        //                 this.addChange = true;
-        //                 this.sendOutForm = false;
-        //                 this.saveDoc = false;
-        //             } else {
-        //                 this.addChange = false;
-        //                 this.loading = false;
-        //             }
-        //             this.addChange = true;
-        //         })
-        //         .catch(function (error) {
-        //             //alert(error.response);
-        //         });
-        // },
         OpenModal(doc) {
             if(doc === this.listDocIsn){
                 this.preloader(true);
@@ -1239,10 +1161,7 @@ export default {
         },
         clearInfo(data){
             for(let i=0; i<this.results.resDop.length; i++){
-                console.log(this.results.resDop.length)
-
                 if(this.results.resDop[i].fullname === data){
-                    console.log(this.results.resDop[i].value)
                     this.results.resDop[i].value = '';
                     this.results.resDop[i].val = '';
                 }
@@ -1255,7 +1174,6 @@ export default {
                 document.getElementById('preloader').style.display = 'none';
             }
         },
-        // }, :key="`${index}-${docrow.value}`"
         searchDocumentJournal(){
             this.preloader(true);
             this.$refs.modalQuotes.click();
@@ -1278,7 +1196,4 @@ export default {
 }
 </script>
 <style scoped>
-.vdp-datepicker input {
-    background: none;
-}
 </style>

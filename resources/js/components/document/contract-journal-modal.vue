@@ -303,6 +303,16 @@ export default {
                     }
                 }
             }
+            if(this.recordingCounterparty.type === 'Список договоров  для внесение изменение'){
+                this.contractNameTemporary.contractNumber = this.contractName.fullName
+                this.contractNameTemporary.isn = this.contractName.isn
+                for(let i=0; i<this.contractName.length; i++){
+                    if(this.contractName[i].id === this.contractNameTemporary.id){
+                        this.contractName[i].contractNumber = this.contractName.fullName
+                        this.contractName[i].valn1 = this.contractName.isn
+                    }
+                }
+            }
             this.$parent.$refs.modalContract.click()
             this.loading = false;
         },

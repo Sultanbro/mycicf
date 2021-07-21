@@ -367,16 +367,10 @@
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-<!--                        <button v-if="sendOutForm" class="btn btn-primary btn-block2" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')"
                                 v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
-<!--                        <button v-if="addChange" class="btn btn-primary btn-block2" :disabled="!addChange" @click="sendOut()">-->
-<!--                            Разослать на согласование-->
-<!--                        </button>-->
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
                             Сохранить
                         </button>
@@ -446,9 +440,6 @@
                                         <div class="input-group-append">
                                             <button type="submit" class="btn-light" @click="OpenModal('Список договоров  для внесение изменение')">
                                                 <i class="fa fa-search"></i>
-                                            </button>
-                                            <button type="submit" class="btn-light" @click="clearInfo('Список договоров  для внесение изменение')">
-                                                <i class="fa fa-times"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -780,9 +771,6 @@
                 const vm = this;
                 vm.results.docdate = vm.docDate.getDate() +'.'+ ("0" + (vm.docDate.getMonth() + 1)).slice(-2) +'.'+ vm.docDate.getFullYear();
             },
-            handleChangeDate() {
-                return moment(date).format('DD.MM.YYYY');
-            },
             disabledDates(date) {
                 const today = moment(new Date()).add(-1,'days').toDate();
                 today.setHours(0, 0, 0, 0);
@@ -940,15 +928,6 @@
                 this.extraLoading = false;
             },
             saveDocument(){
-                this.loading = false;
-                // if(this.results.result1[0].val === '' || this.results.result1[1].val === '' || this.results.docdate === ''){
-                //     this.flashMessage.warning({
-                //         title: "!",
-                //         message: 'Пожалуйста заполните все обязательные поля',
-                //         time: 5000
-                //     });
-                //     return;
-                // }
                 this.loading = true;
                 if(this.duty.length > 0){
                     for(let i=0; i<this.results.docrows.length; i++){
@@ -1046,19 +1025,16 @@
                                     button: this.button,
                                 }
                                 this.axios.post('/document/'+this.results.classisn+'/'+this.docIsn, dat).then((response) => {
-                                    // this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
-                                    // this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
-                                    // this.results.id = response.data.results.id == undefined || response.data.results.id == '' ? '' : response.data.results.id;
-                                    console.log(response.data)
-                                    console.log(response.data.results)
-                                    console.log(response.data.resDop)
+                                    this.results.showRemark = response.data.results.showRemark === null ? '' : response.data.results.showRemark
+                                    this.results.showRemark2 = response.data.results.showRemark2 === null ? '' : response.data.results.showRemark2
+                                    this.results.id = response.data.results.id == undefined || response.data.results.id == '' ? '' : response.data.results.id;
                                     this.results.resDop = response.data.results.resDop;
                                     if(response.data.results.id.length > 0){
                                         this.idShow = true;
                                     }
                                     if (this.results.classisn === '1783591'){
                                         for (let i =0; i< response.data.results.resDop.length; i++){
-                                            if (response.data.results.resDop[i].value != ''){
+                                            if (response.data.results.resDop[i].fullname=='Список договоров  для внесение изменение' && response.data.results.resDop[i].value != ''){
                                                 this.showContractList = true
                                                 this.contractList.fullName = response.data.results.resDop[i].value
                                                 this.contractList.isn = response.data.results.resDop[i].val
@@ -1126,33 +1102,6 @@
                         // alert(response.data.error);
                     });
             },
-            // sendOut(){
-            //     this.loading = true;
-            //     this.results.status = 2522
-            //     let data = {
-            //         docIsn: this.listDocIsn,
-            //         type: this.type,
-            //         results: this.results,
-            //     }
-            //     this.axios.post('/sendOut', data)
-            //         .then((response) => {
-            //             if(response.data.success) {
-            //                 this.results.status = response.data.status;
-            //                 this.results.stage = response.data.stage;
-            //                 this.loading = false;
-            //                 this.addChange = true;
-            //                 this.sendOutForm = false;
-            //                 this.saveDoc = false;
-            //             } else {
-            //                 this.addChange = false;
-            //                 this.loading = false;
-            //             }
-            //             this.addChange = true;
-            //         })
-            //         .catch(function (error) {
-            //             // alert(response.data.error);
-            //         });
-            // },
             OpenModal(doc) {
                 if(doc === this.listDocIsn){
                     this.preloader(true);
@@ -1185,6 +1134,10 @@
                     this.$refs.modalCounterparty.click();
                 }
                 if (doc === 'Список договоров  для внесение изменение') {
+                    // if(this.contractList.fullName === ''){
+                    //     alert('Пока Вы не создали Приложение СЗ. На внесение изменений в договор!')
+                    //     return
+                    // }
                     this.preloader(false);
                     this.recordingCounterparty.type = doc
                     this.$refs.modalContractList.click();
