@@ -39,9 +39,9 @@ class UpdateCountries extends Command
      *
      * @return mixed
      */
-    public function handle(){
-        $kias = new Kias();
-        $kias->initSystem();
+    public function handle(KiasServiceInterface $kias){
+
+        $kias->authBySystem();
 
         try{
             $response = $kias->getDictiList(9434);
