@@ -420,13 +420,15 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     });
 });
 
-//Contact-center
-Route::get('/contact-center', 'ContactCenterController@index')->name('contact-center.manager');
-Route::post('/contact-center/getDocuments', 'ContactCenterController@getData');
-Route::post('/contact-center/setDocument', 'ContactCenterController@setData');
-
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
 });
+
+//Contact-center
+Route::get('/contact-center', 'ContactCenterController@index')->name('contact-center.manager');
+Route::post('/contact-center/getDocuments', 'ContactCenterController@getData');
+Route::post('/contact-center/setDocument', 'ContactCenterController@setData');
+Route::post('/contact-center/getNames', 'ContactCenterController@getNames');
+Route::post('/contact-center/deleteField', 'ContactCenterController@deleteField');

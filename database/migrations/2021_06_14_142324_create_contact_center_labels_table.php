@@ -13,11 +13,6 @@ class CreateContactCenterLabelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contact_centers', function (Blueprint $table){
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->timestamps();
-        });
         Schema::create('contact_center_labels', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('parent_id');
@@ -34,6 +29,5 @@ class CreateContactCenterLabelsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('contact_center_labels');
-        Schema::dropIfExists('contact_centers');
     }
 }

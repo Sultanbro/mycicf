@@ -1,11 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Branch;
+use App\Contact;
 use App\ContactCenter;
 use App\ContactCenterLabel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ContactCenterController extends Controller {
 
@@ -13,13 +12,45 @@ class ContactCenterController extends Controller {
         return view('contact-center.manager');
     }
 
-    public function getData(){
+    public function getNames() {
+        $names = Contact::select('*')->where('parent_id', '0')->get();
         $result = [];
-        $contacts = ContactCenter::all();
+        foreach ($names as $name) {
+            array_push($result, [
+                'id' => $name->id,
+                'parent_id' => $name->parent_id,
+                'name' => $name->name,
+                'child' => $this->getNamesChild($name->id),
+            ]);
+        }
+        return $result;
+    }
+
+    public function getNamesChild($id) {
+        $names = Contact::select('*')->where('parent_id', $id)->get();
+        $result = [];
+        if(count($names) === 0){
+            return $result;
+        }
+        foreach ($names as $name) {
+            array_push($result, [
+                'id' => $name->id,
+                'parent_id' => $name->parent_id,
+                'name' => $name->name,
+                'child' => $this->getNamesChild($name->id),
+            ]);
+        }
+        return $result;
+    }
+
+    public function getData(Request $request){
+        $result = [];
+        $contacts = ContactCenter::where('name_id', $request->id)->get();
         foreach ($contacts as $contact){
             $result[] = [
                 'id' => $contact->id,
                 'name' => $contact->name,
+                'name_id' => $contact->name_id,
                 'original' => $contact->name,
                 'editMode' => false,
                 'deleteText' => false,
@@ -35,20 +66,32 @@ class ContactCenterController extends Controller {
 
     public function setData(Request $request){
         $contactsData = $request->texts;
-        foreach ($contactsData as $contacts){
-            if ($contacts['name'] !== $contacts['original'] || $contacts['id'] === null)
-                $this->setContact($contacts['id'], $contacts['name']);
-            if($contacts['deleted'] && $contacts['id'] !== null)
+        foreach ($contactsData as $key => &$contacts){
+            if ($contacts['name'] !== $contacts['original'] || $contacts['id'] === null){
+                $id = $this->setContact($contacts['id'], $contacts['name'], $contacts['name_id']);
+                $contacts['id'] = $id;
+                $contacts['original'] = $contacts['name'];
+            }
+            if($contacts['deleted'] && $contacts['id'] !== null){
+                dd($contacts);
                 $this->deleteContact($contacts['id']);
-            foreach ($contacts['labels'] as $contact){
-                if ($contact['text'] !== $contact['original'] || $contact['id'] === null)
-                    $this->setDocument($contact['id'], $contact['text'], $contacts['id']);
-                if ($contact['deleted'] && $contact['id'] !== null)
+                unset($contacts);
+            }
+            foreach ($contacts['labels'] as $contactKey => &$contact){
+                if ($contact['text'] !== $contact['original'] || $contact['id'] === null){
+                    $cId = $this->setDocument($contact['id'], $contact['text'], $contacts['id']);
+                    $contact['id'] = $cId;
+                    $contact['original'] = $contact['text'];
+                }
+                if ($contact['deleted'] && $contact['id'] !== null){
                     $this->deleteDocument($contact['id']);
+                    unset($contacts[$contactKey]);
+                }
             }
         }
         return response()->json([
-            'success' => true
+            'success' => true,
+            'data' => $contactsData
         ]);
     }
 
@@ -57,12 +100,14 @@ class ContactCenterController extends Controller {
         $contact->parent_id = $parent;
         $contact->text = $text;
         $contact->save();
+        return $contact->id;
     }
-    public function setContact(&$id, $name){
+    public function setContact($id, $name, $name_id){
         $contact = ContactCenter::findOrNew($id);
         $contact->name = $name;
+        $contact->name_id = $name_id;
         $contact->save();
-        $id = $contact->id;
+        return $id;
     }
     public function deleteDocument($id){
         $contact = ContactCenterLabel::find($id);
@@ -73,5 +118,26 @@ class ContactCenterController extends Controller {
         $contact = ContactCenter::find($id);
         if($contact !== null)
             $contact->delete();
+    }
+    public function deleteField(Request $request){
+        if(isset($request->id) && !empty($request->id)){
+            $contactLabel = ContactCenterLabel::where('parent_id', $request->id)->first();
+            if($contactLabel !== null)
+                $contactLabel->delete();
+            $contact = ContactCenter::where('id', $request->id)->first();
+            if($contact !== null)
+                $contact->delete();
+        } else if(isset($request->idLabel) && !empty($request->idLabel)){
+            $contactLabel = ContactCenterLabel::where('id', $request->idLabel)->first();
+            if($contactLabel !== null)
+                $contactLabel->delete();
+        } else{
+            return response()->json([
+                'success' => false
+            ]);
+        }
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

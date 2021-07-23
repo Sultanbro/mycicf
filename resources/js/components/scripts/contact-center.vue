@@ -1,251 +1,50 @@
 <template>
     <div>
         <header class="navbar contact_header">
-            <a class="navbar-brand" href="#">Contact Center</a>
-            <a class="navbar-brand" href="#">Проверка валидности полиса</a>
-            <a class="navbar-brand" href="#">Поиск сотрудников в Киасе (выгрузка отчета)</a>
+            <a class="navbar-brand" href="/contact-center" style="font-size: 30px">Contact Center</a>
         </header>
-        <div class="d-flex">
-            <div class="contact_sidebar col-md-2">
-                <ul class="list-unstyled">
-                    <li>
-                        <button class="btn d-inline-flex align-items-center collapsed" data-toggle="collapse"
-                            href="#consultation" aria-expanded="false" aria-controls="collapseExample"><strong>Страхование</strong>
+        <div class="d-flex mb-5">
+            <div class="contact_sidebar col-md-2" style="height: min-content">
+                <div @click="getLevelOne(item)"
+                     v-for="item in itemsLevelZero">
+                    <button class="btn m-1 ml-1">
+                        <b>{{item.name}}</b>
+                    </button>
+                    <div @click="getLevelTwo(innerItem)"
+                         v-for="innerItem in itemsLevelOne"
+                         v-if="innerItem.parent_id === item.id">
+                        <button class="btn m-1 ml-2">
+                            <em>{{innerItem.name}}</em>
                         </button>
-                        <ul class="list-unstyled ps-3 collapse" id="consultation">
-                            <li>
-                                <button class="btn d-inline-flex align-items-center collapsed CC_sidebar_item"
-                                        data-toggle="collapse" href="#mustHaveType" aria-expanded="false"
-                                        aria-controls="collapseExample">
-                                    <em>Обязательные виды</em>
-                                </button>
-                                <ul class="list-unstyled ps-3 collapse" id="mustHaveType">
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОГПО ВТС</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОГПО ПП</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОГПО владельцев опасных
-                                        объектов</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОС Экологическое</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОГПО Частных нотариусов</a>
-                                    </li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОГПО аудиторских
-                                        организаций </a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОС НС</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ОС МС</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button class="btn d-inline-flex align-items-center collapsed CC_sidebar_item"
-                                        data-toggle="collapse" href="#notMustHaveTypeMed" aria-expanded="false"
-                                        aria-controls="collapseExample"><em>Добровольное медицинское</em>
-                                </button>
-                                <ul class="list-unstyled ps-3 collapse" id="notMustHaveTypeMed">
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ДМС физ. лица (Комфорт,
-                                        Конструктор долголетия, Премиум)</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ДМС юр. Лица</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Программа Малыш</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Эконом XP</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">МСТ</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button class="btn d-inline-flex align-items-center collapsed CC_sidebar_item"
-                                        data-toggle="collapse" href="#accident" aria-expanded="false"
-                                        aria-controls="collapseExample"><em>Несчастных случаев</em></button>
-                                <ul class="list-unstyled ps-3 collapse" id="accident">
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Авто НС</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">НС заемщика</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">НС водителя</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">НС выбор</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ДС пассажиров от НС (возд.,
-                                        железн.)</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ДС JUMP</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Страхование банковских
-                                        карт</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button class="btn d-inline-flex align-items-center collapsed CC_sidebar_item"
-                                        data-toggle="collapse" href="#notMustHaveTypeProperty" aria-expanded="false"
-                                        aria-controls="collapseExample"><em>Добровольное имущественное</em>
-                                </button>
-                                <ul class="list-unstyled ps-3 collapse" id="notMustHaveTypeProperty">
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Страхование грузов</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Титульное страхование</a>
-                                    </li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Страхование ГПО</a></li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Страхование имущества</a>
-                                    </li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Страхование финансовых
-                                        рисков</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button class="btn d-inline-flex align-items-center collapsed CC_sidebar_item"
-                                        data-toggle="collapse" href="#notMustHaveTypeComplex" aria-expanded="false"
-                                        aria-controls="collapseExample"><em>Добровольное комплексное</em>
-                                </button>
-                                <ul class="list-unstyled ps-3 collapse" id="notMustHaveTypeComplex">
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ДКСП</a>
-                                    </li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">ДКСП+ХКБ</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button class="btn d-inline-flex align-items-center collapsed CC_sidebar_item"
-                                        data-toggle="collapse" href="#InsurPledged" aria-expanded="false"
-                                        aria-controls="collapseExample"><em>Страхование в залоге</em></button>
-                                <ul class="list-unstyled ps-3 collapse" id="InsurPledged">
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Имущество в залоге</a>
-                                    </li>
-                                    <li><a href="#" aria-expanded="false"
-                                           aria-controls="collapseExample" class="CC_sidebar_item">Авто в залоге</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <button class="btn d-inline-flex align-items-center collapsed" data-toggle="collapse"
-                                href="#creatRequest" aria-expanded="false" aria-controls="collapseExample"><strong>Оформление
-                            заявки</strong>
-                        </button>
-                        <ul class="list-unstyled ps-3 collapse" id="creatRequest">
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Оформление заявки по покупке полиса через
-                                менеджера</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Оформление заявки по услугам карты
-                                ПНД</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Оформление заявки по услугам Авто
-                                каско</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Оформление заявки
-                                переоформление/расторжение для менеджера</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <button class="btn d-inline-flex align-items-center collapsed" data-toggle="collapse"
-                                href="#insuredEvent" aria-expanded="false" aria-controls="collapseExample"><strong>Страховой
-                            случай</strong>
-                        </button>
-                        <ul class="list-unstyled ps-3 collapse" id="insuredEvent">
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Страховой случай для ТС (ОГПО ВТС, ГПО
-                                ВТС)</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Страховой случай для ТС (Каско, Мини
-                                Каско, Двухсторонка)</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Страховой случай для имущества</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Страховой случай для грузов</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <button class="btn d-inline-flex align-items-center collapsed" data-toggle="collapse"
-                                href="#instruction" aria-expanded="false" aria-controls="collapseExample"><strong>Инструкция/скрипты</strong>
-                        </button>
-                        <ul class="list-unstyled ps-3 collapse" id="instruction">
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Антисловарь</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Как рассчитать переоформление</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Краткая инструкция подачи сообщения о
-                                страховом случае через сайт Купиполис</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Памятка от выплатников и аджастеров</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Полезные фразы</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Посмотреть ДТП по всем сотрудникам
-                                колл-центра в БД Киас</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Создание заявки на возврат денег «день в
-                                день» для УРИП</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Создание заявки. Ошибки по купиполис.</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Скрипты для входящей линии</a>
-                            </li>
-                            <li><a href="#" aria-expanded="false"
-                                   aria-controls="collapseExample" class="CC_sidebar_item">Скрипты для исходящей линии</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                        <div @click="getLevelThree(innerItem_1)"
+                             v-for="innerItem_1 in itemsLevelTwo"
+                             v-if="innerItem_1.parent_id === innerItem.id">
+                            <button class="btn m-1 ml-4">{{innerItem_1.name}}</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-9" style="margin-left: 140px">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                    <h2>Страховой случай/Регистрация/ОГПО ВТС</h2>
+                    <h3>{{ levelOneName + slash + levelTwoName + slash + levelThreeName }}</h3>
                 </div>
                 <div class="mt-3">
-                    <div class="pb-2 ct-myMainCont" v-for="(text, parentIndex) in texts" v-if="!text.deleted">
+                    <div class="pb-2 ct-myMainCont" v-for="(text, name_id) in texts">
                         <input v-if="text.editNameMode" type="text" v-model="text.name" style="width: 75%; height: 40px;"/>
-                        <button v-else type="button" class="col-md-9 ct-myBtn btn my-btn ct-myBottomSize" data-toggle="collapse" :data-target="`#hiInsIvOgpoVts_${parentIndex}`" @click="editMode1 =! editMode1">{{text.name}}</button>
-                        <i v-if="text.editNameMode" @click="text.editNameMode = false; this.saveDocument()" class="ml-3 fa fa-check fa-lg" title="Сохранить"></i>
-                        <i v-else @click="text.editNameMode = true" class="ml-3 fa fa-pencil fa-lg" title="Изменить"></i>
-                        <i @click="texts[parentIndex].deleted = true; deleteField(index)" class="ml-3 fa fa-trash fa-lg" title="Удалить"></i>
+                        <button v-else type="button" class="col-md-9 ct-myBtn btn my-btn ct-myBottomSize" data-toggle="collapse" :data-target="`#hiInsIvOgpoVts_${name_id}`" @click="editMode1 =! editMode1">{{text.name}}</button>
+                        <i v-if="editMode === name_id" @click="deleteField(text, name_id)" class="ml-3 fa fa-trash fa-lg" title="Удалить"></i>
                         <hr>
-                        <div :id="`hiInsIvOgpoVts_${parentIndex}`" class="collapse">
-                            <div v-if="editMode === parentIndex">
-                                <div v-for="(text1, index) in text.labels" :key="index" v-if="!text1.deleted">
+                        <div :id="`hiInsIvOgpoVts_${name_id}`" class="collapse">
+                            <div v-if="editMode === name_id">
+                                <div v-for="(text1, index) in text.labels" :key="index" v-if="!text1.deleted"
+                                     style="display: flex; justify-content: flex-start; align-items: center;">
                                     <textarea v-model="text.labels[index].text" style="width: 75%; height: 60px"></textarea>
-                                    <button @click="texts[parentIndex].labels[index].deleted = true; deleteField(index)" type="button" class="btn btn-danger ml-3">Удалить</button>
-                                    <hr>
+                                    <button @click="deleteText(text, index, name_id)" type="button" class="btn btn-danger ml-3">Удалить</button>
                                 </div>
-                                <button v-if="saveDoc" type="button" class="btn btn-success" @click="saveDocument()">Сохранить</button>
-                                <button type="button" class="btn btn-primary" @click="addText(parentIndex)">Добавить поле</button>
+                                <hr>
+                                <button type="button" class="btn btn-warning" @click="addText(name_id)">Добавить</button>
+                                <button v-if="text.editNameMode && saveDoc" @click="text.editNameMode = false; saveDocument()" class="btn btn-success">Сохранить</button>
                             </div>
                             <div v-else>
                                 <div v-for="text1 in text.labels" v-if="!text1.deleted">
@@ -253,10 +52,12 @@
                                     <hr>
                                 </div>
                             </div>
-                            <button v-if="addChange && editMode === -1" type="button" class="btn btn-primary" @click="editDoc(parentIndex)">Редактировать</button>
+                            <button v-if="addChange && editMode === -1" type="button" class="btn btn-primary" @click="editDoc(name_id); text.editNameMode = true; changeData(texts)">Редактировать</button>
+                            <hr>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-dark" @click="addField()">Добавить</button>
+                    <h1 v-if="showG">Добро пожаловать!</h1>
+                    <button v-if="showH" type="button" class="btn btn-dark" @click="addField()">Добавить поле</button>
                 </div>
             </div>
         </div>
@@ -283,30 +84,120 @@ export default {
             editMode1: false,
             addChange: true,
             saveDoc: false,
+            productName: '',
+            itemsLevelZero: [],
+            itemsLevelOne: [],
+            itemsLevelTwo: [],
+            selectedId: '',
+            showH: false,
+            showG: true,
+            levelOneName: '',
+            levelTwoName: '',
+            levelThreeName: '',
+            slash: '',
+            levelOnePinned: null,
+            levelTwoPinned: null,
+            loading: false,
         }
     },
     mounted() {
-        console.log('a')
-        this.getDocuments();
+        this.getNames();
     },
     methods: {
-        getDocuments(){
-            this.axios.post("/contact-center/getDocuments", {texts: this.texts})
+        getNames(){
+            let data = {
+                productName: this.productName
+            }
+            this.axios.post('/contact-center/getNames', data).then((response) => {
+                this.name = response.data
+                this.itemsLevelZero = response.data
+            });
+        },
+        getLevelOne: function(item){
+            if(item.id !== this.selectedId || this.selectedId !== ''){
+                this.texts = []
+            }
+            this.showG = false
+            this.selectedId = item.id
+            if(this.levelOnePinned === ''){
+                this.levelOnePinned = item.id
+                this.levelOneName = item.name
+                this.itemsLevelOne = item.child
+                this.showH = false
+            }else if(this.levelOnePinned !== item.id && this.levelOnePinned !== ''){
+                this.texts = []
+                this.levelOnePinned = item.id
+                this.showH = false
+                this.itemsLevelOne = item.child
+                this.levelOneName = item.name
+                this.levelTwoName = ''
+                this.levelThreeName = ''
+            }
+        },
+        getLevelTwo: function(innerItem) {
+            if(innerItem.id !== this.selectedId || this.selectedId !== ''){
+                this.texts = []
+            }
+            this.selectedId = innerItem.id
+            if(this.levelTwoPinned === ''){
+                this.levelTwoPinned = innerItem.id
+                this.levelTwoName = innerItem.name
+                this.itemsLevelTwo = innerItem.child
+                this.showH = false
+            }else if(this.levelTwoPinned !== innerItem.id && this.levelTwoPinned !== ''){
+                this.texts = []
+                this.levelTwoPinned = innerItem.id
+                this.showH = false
+                if(innerItem.child.length === 0){
+                    this.getDocuments(innerItem.id)
+                    this.levelTwoName = innerItem.name
+                    this.showH = true
+                }else{
+                    this.itemsLevelTwo = innerItem.child
+                    this.levelTwoName = innerItem.name
+                    this.levelThreeName = ''
+                }
+            }
+            this.slash = '/'
+        },
+        getLevelThree: function(innerItem_1){
+            if(innerItem_1.id !== this.selectedId || this.selectedId !== ''){
+                this.texts = []
+            }
+            this.selectedId = innerItem_1.id
+            this.itemsLevelThree = innerItem_1.child
+            this.levelThreeName = innerItem_1.name
+            this.getDocuments(innerItem_1.id)
+            this.showH = true
+        },
+        changeData(texts){
+            this.texts = [];
+            this.texts = texts;
+        },
+        getDocuments(id){
+            let data = {
+                id: id
+            }
+            this.loading = true
+            this.axios.post("/contact-center/getDocuments", data)
                 .then(response => {
                     if (response.data.success) {
                         this.texts = response.data.data;
+                        this.showH = true
+                        this.selectedId = id
                     }else{
                         alert("No")
                     }
+                    this.loading = false
                 });
         },
         setDocument() {
+            const vm = this
             this.axios.post("contact-center/setDocument", {texts: this.texts})
                 .then(response => {
                     if (response.data.success) {
-                        // alert("Yes")
+                        vm.texts = response.data.data
                     }else{
-                        let errorText = response.data.error;
                         alert("No")
                     }
                 });
@@ -332,11 +223,13 @@ export default {
         addField() {
             this.texts.push({
                 name : 'Текст',
+                original : '',
                 deleteText : false,
                 deleted : false,
                 editMode : false,
-                labels: [],
-                id: null
+                labels : [],
+                id : null,
+                name_id: this.selectedId
             })
         },
         addText(index) {
@@ -349,13 +242,42 @@ export default {
             this.editMode = index
             this.saveDoc = true
         },
-        deleteField(index) {
-            if(confirm('Вы действительно хотите удалить?'))
-            this.texts.splice(index, 1)
+        deleteField(text, index) {
+            if(confirm('Вы действительно хотите удалить?')) {
+                let data = {
+                    id: text.id
+                }
+                this.axios.post('/contact-center/deleteField', data).then(response => {
+                    if(response.data.success){
+                        // alert('Вы успешно удалили!')
+                    } else {
+                       this.loading = false
+                        alert('Не удалось удалить!')
+                    }
+                });
+                this.texts.splice(index, 1)
+            }
+            this.editMode = -1
+            text.editNameMode = false
         },
         deleteText(text, index, parentIndex) {
-            if(confirm('Вы действительно хотите удалить?'))
-                this.texts[parentIndex].labels.splice(index, 1)
+            if(confirm('Вы действительно хотите удалить?')) {
+                let data = {
+                    idLabel: this.texts[parentIndex].labels[index].id
+                }
+                this.loading = true
+                this.axios.post('/contact-center/deleteField', data).then(response => {
+                    if (response.data.success) {
+                        // alert('Вы успешно удалили!')
+                    } else {
+                        this.loading = false
+                        alert('Не удалось удалить!')
+                    }
+                });
+                text.labels.splice(index, 1)
+            }
+            this.editMode = -1
+            text.editNameMode = false
         },
     }
 }
@@ -372,12 +294,6 @@ export default {
 
 .contact_sidebar ul li {
     padding: 10px 0 10px 0;
-}
-
-.CC_sidebar_item{
-    cursor: pointer;
-    text-decoration: none;
-    color: black;
 }
 
 /* Contact Center Header */
@@ -414,7 +330,12 @@ export default {
 }
 
 hr {
-    width: 70%;
+    margin-right: 15%;
+}
+
+.contact_sidebar .btn {
+    white-space: normal;
+    text-align: left;
 }
 
 </style>
