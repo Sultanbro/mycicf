@@ -14,9 +14,9 @@ class CreateContactCentersTable extends Migration
     public function up()
     {
         Schema::create('contact_centers', function (Blueprint $table) {
-            $table->integer('id');
+            $table->bigInteger('id');
             $table->string('name');
-            $table->integer('name_id');
+            $table->bigInteger('name_id');
             $table->timestamps();
         });
     }
