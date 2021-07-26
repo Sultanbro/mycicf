@@ -9,6 +9,11 @@ use Illuminate\Http\UploadedFile;
 use Storage;
 use Tests\WithUser;
 
+/**
+ * Class AddPostWithPostFilesTest
+ * @package Tests\Feature\News\AddPost
+ * @covers \App\Http\Controllers\News\PostsController::addPost
+ */
 class AddPostWithPostFilesTest extends AddPostTestBase {
     use WithUser;
 

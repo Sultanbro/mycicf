@@ -5,6 +5,11 @@ namespace Tests\Feature\News\AddPost;
 use App\Post;
 use Tests\WithUser;
 
+/**
+ * Class AddPostWithNoDataTest
+ * @package Tests\Feature\News\AddPost
+ * @covers \App\Http\Controllers\News\PostsController::addPost
+ */
 class AddPostWithNoDataTest extends AddPostTestBase {
     use WithUser;
 

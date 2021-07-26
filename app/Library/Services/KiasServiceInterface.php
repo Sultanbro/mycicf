@@ -280,7 +280,7 @@ interface KiasServiceInterface
 
     public function getDictiList($parent);
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin);
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn = null);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
 
@@ -306,4 +306,20 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getDocRating($class_isn);
+
+    /**
+     * @param $isn
+     * @param $template
+     * @param $classId
+     * @return mixed
+     */
+    public function getPrintableOrderDocument($data, $dataParams);
+
+    /**
+     * Сброс пароля
+     * @param $subjIsn
+     * @param $password
+     * @return mixed
+     */
+    public function resetPassword($subjIsn, $password);
 }

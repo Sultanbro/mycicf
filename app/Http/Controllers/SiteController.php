@@ -18,6 +18,7 @@ use App\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
@@ -692,6 +693,40 @@ class SiteController extends Controller
         return response()->json(['birthdays' => $result]);
     }
 
+    public function getBirthdays2(Request $request) {
+        $d = $request->get('d', date('d', time()));
+        $m = $request->get('m', date('m', time()));
+        return cache()->remember(sprintf("birthdays__%s.%s", $m, $d), now()->addDay(), function () use ($d, $m) {
+            return Branch::whereNotNull('birthday')
+                ->select([
+                    'id',
+                    'birthday',
+                    'kias_id',
+                    'fullname'
+                ])
+                ->with('getParent')
+                ->whereDay('birthday', '>=', $d)
+                ->whereMonth('birthday', $m)
+                ->orWhereNotNull('birthday')
+                ->whereMonth('birthday', '>', $m)
+                ->orderByRaw('MONTH(birthday)')
+                ->orderByRaw('DAY(birthday)')
+                ->limit(10)
+                ->get()
+                ->groupBy(function (Branch $branch) {
+                    /**
+                     * @var $birthday Carbon
+                     */
+                    $birthday = $branch->birthday;
+
+                    return implode('-', [
+                        str_pad($birthday->day, 2, '0', STR_PAD_LEFT),
+                        str_pad($birthday->month, 2, '0', STR_PAD_LEFT),
+                    ]);
+                });
+        });
+    }
+
     public function getDicti(Request $request){
         $kias = new Kias();
         $kias->initSystem();
@@ -1019,8 +1054,12 @@ class SiteController extends Controller
     }
 
     public function edsByIsn(Request $request,KiasServiceInterface $kias){
+//        dd($request);
         $files = [];
-        $ISN = isset($request->isn) ? $request->isn : '';
+//        dd($request);
+//        $ISN = isset($request->isn) ? $request->isn : '';
+        $ISN = isset($request->refISN) ? $request->refISN : '';
+//        $ISN=3988127;
         $type = isset($request->type) ? $request->type : '';
         $format = isset($request->edsType) ? $request->edsType : '';
         $refISN = isset($request->refISN) ? $request->refISN : '';
@@ -1038,10 +1077,11 @@ class SiteController extends Controller
                 $files[] = ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN];
             }
         }
-
+        $data = (new User)->getUserData($kias);
         return response()->json([
             'success' => true,
-            'result' => $files
+            'result' => $files,
+            'iin'=>$data
         ]);
     }
 

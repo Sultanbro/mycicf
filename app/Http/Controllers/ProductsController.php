@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use DateTime;
 
+/**
+ * Class ProductsController
+ * @package App\Http\Controllers
+ *
+ * @group Products
+ */
 class ProductsController extends Controller
 {
     const DICT_CURRENCY_USD = 9716;

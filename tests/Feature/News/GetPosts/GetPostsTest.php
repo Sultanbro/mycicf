@@ -2,8 +2,11 @@
 
 namespace Tests\Feature\News\GetPosts;
 
-use App\Post;
-
+/**
+ * Class GetPostsTest
+ * @package Tests\Feature\News\GetPosts
+ * @covers \App\Http\Controllers\NewsController::getPosts
+ */
 class GetPostsTest extends GetPostsTestBase {
     protected $description = 'Получаем список постов';
 
@@ -30,7 +33,7 @@ class GetPostsTest extends GetPostsTestBase {
             return $foundPost['postId'] === $this->post->id;
         });
 
-        $this->assertEquals($newPost['postText'], $this->post->post_text);
+        self::assertEquals($newPost['postText'], $this->post->post_text);
 
         $response->assertStatus(200);
     }

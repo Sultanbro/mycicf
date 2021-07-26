@@ -6,6 +6,11 @@ use App\Post;
 use DB;
 use Tests\WithUser;
 
+/**
+ * Class AddCommentToPostTest
+ * @package Tests\Feature\News\Comments\AddComment
+ * @covers \App\Http\Controllers\News\PostsController::addComment
+ */
 class AddCommentToPostTest extends AddCommentTestBase {
     use WithUser;
 
