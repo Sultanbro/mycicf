@@ -32,10 +32,10 @@
                 <div class="mt-3">
                     <div class="pb-2 ct-myMainCont" v-for="(text, name_id) in texts">
                         <input v-if="text.editNameMode" type="text" v-model="text.name" style="width: 75%; height: 40px;"/>
-                        <button v-else type="button" class="col-md-9 ct-myBtn btn my-btn ct-myBottomSize" data-toggle="collapse" :data-target="`#hiInsIvOgpoVts_${name_id}`" @click="editMode1 =! editMode1">{{text.name}}</button>
+                        <button v-else type="button" class="col-md-9 ct-myBtn btn my-btn ct-myBottomSize" :data-target="`#hiInsIvOgpoVts_${name_id}`" @click="editMode1 =! editMode1">{{text.name}}</button>
                         <i v-if="editMode === name_id" @click="deleteField(text, name_id)" class="ml-3 fa fa-trash fa-lg" title="Удалить"></i>
                         <hr>
-                        <div :id="`hiInsIvOgpoVts_${name_id}`" class="collapse">
+                        <div :id="`hiInsIvOgpoVts_${name_id}`">
                             <div v-if="editMode === name_id">
                                 <div v-for="(text1, index) in text.labels" :key="index" v-if="!text1.deleted"
                                      style="display: flex; justify-content: flex-start; align-items: center;">
@@ -52,12 +52,16 @@
                                     <hr>
                                 </div>
                             </div>
-                            <button v-if="addChange && editMode === -1" type="button" class="btn btn-primary" @click="editDoc(name_id); text.editNameMode = true; changeData(texts)">Редактировать</button>
-                            <hr>
+                            <div v-if="checkIsn">
+                                <button v-if="addChange && editMode === -1" type="button" class="btn btn-primary" @click="editDoc(name_id); text.editNameMode = true; changeData(texts)">Редактировать</button>
+                                <hr>
+                            </div>
                         </div>
                     </div>
                     <h1 v-if="showG">Добро пожаловать!</h1>
-                    <button v-if="showH" type="button" class="btn btn-dark" @click="addField()">Добавить поле</button>
+                    <div v-if="checkIsn">
+                        <button v-if="showH" type="button" class="btn btn-dark" @click="addField()">Добавить поле</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,8 +71,12 @@
 <script>
 export default {
     name: "contact-center",
+    props: {
+        isn: '',
+    },
     data() {
         return {
+            checkIsn: this.isn == 3420047 || this.isn == 1287408 ? true : false,
             wallRows: 1,
             wallCount: 0,
             wallPosts: [],
@@ -198,6 +206,7 @@ export default {
                     if (response.data.success) {
                         vm.texts = response.data.data
                     }else{
+                        let errorText = response.data.error;
                         alert("No")
                     }
                 });
@@ -251,7 +260,7 @@ export default {
                     if(response.data.success){
                         // alert('Вы успешно удалили!')
                     } else {
-                       this.loading = false
+                        this.loading = false
                         alert('Не удалось удалить!')
                     }
                 });

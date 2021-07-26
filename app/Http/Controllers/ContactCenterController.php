@@ -73,7 +73,6 @@ class ContactCenterController extends Controller {
                 $contacts['original'] = $contacts['name'];
             }
             if($contacts['deleted'] && $contacts['id'] !== null){
-                dd($contacts);
                 $this->deleteContact($contacts['id']);
                 unset($contacts);
             }
@@ -107,7 +106,7 @@ class ContactCenterController extends Controller {
         $contact->name = $name;
         $contact->name_id = $name_id;
         $contact->save();
-        return $id;
+        return $contact->id;
     }
     public function deleteDocument($id){
         $contact = ContactCenterLabel::find($id);

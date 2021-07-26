@@ -6,6 +6,8 @@
 @section('title', 'Контакт-центр')
 
 @section('content')
-    <contact-center>
+    <contact-center
+        :isn="{{ Auth::user()->ISN }}"
+    >
     </contact-center>
 @endsection
