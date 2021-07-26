@@ -14,7 +14,7 @@ class CreateContactCenterLabelsTable extends Migration
     public function up()
     {
         Schema::create('contact_center_labels', function (Blueprint $table) {
-            $table->bigInteger('id');
+            $table->bigIncrements('id');
             $table->bigInteger('parent_id');
             $table->string('text');
             $table->timestamps();
