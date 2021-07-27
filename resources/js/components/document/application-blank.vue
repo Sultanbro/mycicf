@@ -773,8 +773,6 @@
             OpenModal (doc) {
                 this.preloader(true)
                 this.changeMatch.status = false
-                this.preloader(true)
-                this.changeMatch.status = false
                 if(doc === this.listDocIsn){
                     if(this.listDocIsn === null){
                         for(let i=0; i<this.results.result.length; i++){

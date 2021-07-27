@@ -489,7 +489,6 @@ class DocumentManagementController extends Controller
             'success' => true,
         ];
         return response()->json($missingProducts);
-
     }
 
     public function getProductChildType($tip){

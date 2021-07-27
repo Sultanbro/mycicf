@@ -330,6 +330,7 @@ class ProxyType extends Command
 
         try{
             $response = $kias->getDictiList(804371);
+            ini_set ('memory_limit', '-1');
             if(isset($response->ROWSET->row)) {
                 $oldDicti = Dicti::where('parent_isn',804371)->delete();
                 foreach ($response->ROWSET->row as $row) {
@@ -368,6 +369,7 @@ class ProxyType extends Command
 
         try{
             $response = $kias->getDictiList(1994);
+            ini_set ('memory_limit', '-1');
             if(isset($response->ROWSET->row)) {
                 $oldDicti = Dicti::where('parent_isn',1994)->delete();
                 foreach ($response->ROWSET->row as $row) {
@@ -463,6 +465,7 @@ class ProxyType extends Command
 
         try{
             $response = $kias->getDictiList(222517);
+            ini_set ('memory_limit', '-1');
             if(isset($response->ROWSET->row)) {
                 $oldDicti = Dicti::where('parent_isn',222517)->delete();
                 foreach ($response->ROWSET->row as $row) {
