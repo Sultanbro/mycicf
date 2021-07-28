@@ -605,8 +605,6 @@ class RecruitingController extends Controller
     }
 
     public function getRecruitingDicti(Request $request, KiasServiceInterface $kias){
-        $kias = new Kias();
-        $kias->initSystem();
         $structuralUnitAndCityIsn = $request->structuralUnitAndCity;
         $nameOfPostIsn = $request->nameOfPost;
         $reasonIsn = $request->reason;
