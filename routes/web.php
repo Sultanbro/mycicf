@@ -220,6 +220,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::get('parse/my-parse', 'ParseController@DataCompany')->name('parse/my-parse');
             Route::get('parse/my-parse/icompany', 'MyParseController@getCompanyTopSum');
             Route::get('parse/my-parse/product', 'MyParseController@getClassTopSum');
+            Route::post('parse/my-parse/opu', 'MyParseController@getOpuTopSum');
+            Route::post('parse/my-parse/balance', 'MyParseController@getBalanceTopSum');
 
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');

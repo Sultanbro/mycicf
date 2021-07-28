@@ -172,7 +172,7 @@ Vue.component('parse-opu', require('./components/parse/parse-opu.vue').default);
 Vue.component('parse-info', require('./components/parse/parse-info.vue').default);
 
 Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
-Vue.component('parse_indicators2', require('./components/parse/parse_indicators2.vue').default);
+
 
 Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
@@ -181,6 +181,7 @@ Vue.component('top-company', require('./components/parse/top-company.vue').defau
 Vue.component('parse-centras', require('./components/parse/parse-centras.vue').default);
 Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 Vue.component('parse_opu2', require('./components/parse/parse_opu2.vue').default);
+Vue.component('parse_indicators2', require('./components/parse/parse_indicators2.vue').default);
 
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);
 

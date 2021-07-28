@@ -148,7 +148,7 @@
             <parse_opu2 v-show="viewType === 'parse_opu2'" :periods="periods" ref="opuRef2"/>
 
             <parse-indicators v-show="viewType === 'parse-indicators'" :periods="periods" ref="balanceRef"/>
-            <parse-indicators v-show="viewType === 'parse_indicators2'" :periods="periods" ref="balanceRef2"/>
+            <parse_indicators2 v-show="viewType === 'parse_indicators2'" :periods="periods" ref="balanceRef2"/>
 
             <parse-centras  v-show="viewType === 'parse-centras'" :dateType="dateType" :companyData="companyData" :periods="periods"  v-if="companyData"></parse-centras>
         </div>
@@ -278,7 +278,7 @@
             },
             Opu2(){
                 this.viewType='parse_opu2';
-                this.$refs.opuRef2.getOpuData();
+                this.$refs.opuRef2.OpuCompany();
             },
             Balance(){
                 this.viewType='parse-indicators';
@@ -286,7 +286,7 @@
             },
             Balance2(){
                 this.viewType='parse_indicators2';
-                this.$refs.balanceRef2.getBalanceData('new_date');
+                this.$refs.balanceRef2.BalanceCompany();
             },
 
             executeRequest(){

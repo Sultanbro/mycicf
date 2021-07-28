@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use function Couchbase\defaultEncoder;
+use function Deployer\get;
 
 class MyParseController extends Controller
 {
@@ -423,8 +424,6 @@ class MyParseController extends Controller
         }
         return $result;
     }
-
-
 
     public function getCompanyTopSum(Request $request){
 
@@ -1076,5 +1075,171 @@ class MyParseController extends Controller
         return $result.'%';
     }
 
+    public function getOpuTopSum(Request $request){
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
+        $companyOpu = [];
+        $firstData = [];
+        $secondData = [];
+        $comp_id = [];
+
+        $model = InsuranceCompany::all();
+        $data = ParseOpu::all();
+        foreach ($model as $item) {
+
+            foreach ($data as $elem){
+                if($firstPeriod === $elem->month && $firstYear === $elem->year && $item->id === $elem->company_id){
+                    $comp_id = $elem->company_id;
+                    array_push($firstData,[
+                    'company_id' => $elem->company_id,
+                    'dsd' => $elem->dsd,
+                    'net_payout' => $elem->net_payout,
+                    'av' => $elem->av,
+                    'net_ins_income' => $elem->net_ins_income,
+                    'reserve_changes' => $elem->reserve_changes,
+                    'fin_changes' => $elem->fin_changes,
+                    'invest_income' => $elem->invest_income,
+                    'other_income' => $elem->other_income,
+                    'kpn' => $elem->kpn,
+                    'net_income' => $elem->net_income,
+                    ]);
+                }
+
+                if($secondPeriod == $elem->month && $secondYear == $elem->year && $item->id == $elem->company_id){
+                    array_push($secondData,[
+                        'company_id' => $elem->company_id,
+                        'dsd' => $elem->dsd,
+                        'net_payout' => $elem->net_payout,
+                        'av' => $elem->av,
+                        'net_ins_income' => $elem->net_ins_income,
+                        'reserve_changes' => $elem->reserve_changes,
+                        'fin_changes' => $elem->fin_changes,
+                        'invest_income' => $elem->invest_income,
+                        'other_income' => $elem->other_income,
+                        'kpn' => $elem->kpn,
+                        'net_income' => $elem->net_income,
+                    ]);
+                }
+            }
+
+            if($item->id === $comp_id ?? 0){
+                array_push($companyOpu,[
+                    'id' => $item->id,
+                    'company' => $item->short_name,
+                    'firstData' => $firstData,
+                    'secondData' => $secondData
+                ]);
+            }
+
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+            'companyOpu' => $companyOpu,
+            ]
+        ]);
+
+    }
+
+    public function getBalanceTopSum(Request $request){
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
+        $companyBalance = [];
+        $firstData = [];
+        $secondData = [];
+        $comp_id = [];
+
+        $model = InsuranceCompany::all();
+        $data = ParseBalance::all();
+        foreach ($model as $item) {
+
+            foreach ($data as $elem){
+                if($firstPeriod === $elem->month && $firstYear === $elem->year && $item->id === $elem->company_id){
+                    $comp_id = $elem->company_id;
+                    array_push($firstData,[
+                        'company_id' => $elem->company_id,
+                        'cash' => $elem->cash,
+                        'deposits' => $elem->deposits,
+                        'securities' => $elem->securities,
+                        'rev_repo' => $elem->rev_repo,
+                        'ins_dz' => $elem->ins_dz,
+                        'other_dz' => $elem->other_dz,
+                        'other_actives' => $elem->other_actives,
+
+                        'repo' => $elem->repo,
+                        'reserves' => $elem->reserves,
+                        'rnp' => $elem->rnp,
+                        'rznu' => $elem->rznu,
+                        'rpnu' => $elem->rpnu,
+                        'other_liability' => $elem->other_liability,
+                        'retained_earnings' => $elem->retained_earnings,
+                    ]);
+                }
+
+                if($secondPeriod == $elem->month && $secondYear == $elem->year && $item->id == $elem->company_id){
+                    array_push($secondData,[
+                        'company_id' => $elem->company_id,
+                        'cash' => $elem->cash,
+                        'deposits' => $elem->deposits,
+                        'securities' => $elem->securities,
+                        'rev_repo' => $elem->rev_repo,
+                        'ins_dz' => $elem->ins_dz,
+                        'other_dz' => $elem->other_dz,
+                        'other_actives' => $elem->other_actives,
+
+                        'repo' => $elem->repo,
+                        'reserves' => $elem->reserves,
+                        'rnp' => $elem->rnp,
+                        'rznu' => $elem->rznu,
+                        'rpnu' => $elem->rpnu,
+                        'other_liability' => $elem->other_liability,
+                        'retained_earnings' => $elem->retained_earnings,
+                    ]);
+                }
+            }
+
+            if($item->id === $comp_id ?? 0){
+                array_push($companyBalance,[
+                    'id' => $item->id,
+                    'company' => $item->short_name,
+                    'firstData' => $firstData,
+                    'secondData' => $secondData
+                ]);
+            }
+
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'companyBalance' => $companyBalance,
+            ]
+        ]);
+
+    }
 }
 
