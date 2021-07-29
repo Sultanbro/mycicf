@@ -6,6 +6,9 @@ use App\Dicti;
 use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
+use App\Library\Services\PostsService;
+use App\Post;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -113,26 +116,6 @@ class SandboxController extends Controller
         }
     }
 
-    private function test($inspectionsInfo)
-    {
-        $getDataWithDicts = [];
-        foreach ($inspectionsInfo['row'][0]['Details']['row'] as $key => $detail) {
-            $getDicts           = Dicti::select('id', 'isn', 'fullname')
-                ->where('parent_isn', $detail['Detailisn'])
-                ->get();
-            $getDataWithDicts[] = $detail;
-            foreach ($getDicts as $dict) {
-                $getDataWithDicts[$key]['child'][] = [
-                    'child_isn'  => $dict->isn,
-                    'child_name' => $dict->fullname,
-                ];
-            }
-        }
-        $inspectionsInfo['row'][0]['Details']['row'] = $getDataWithDicts;
-
-        return $inspectionsInfo;
-    }
-
     public function removeDicti(Request $request)
     {
         $isn       = $request->isn;
@@ -172,5 +155,7 @@ class SandboxController extends Controller
 
             dd('INSERT');
         }
+    public function test() {
+        return \DB::select('SELECT NOW();');
     }
 }

@@ -7,7 +7,6 @@
             <p v-for="(item,index) in info">
                 {{ parseInt(index)+1 }}. РВ исн: {{ item.rv_isn }}. Номер убытка : {{ item.claim_id }}
                 <span class="text-success" v-if="item.confirmed == 1">прошел проверку</span>
-                <!--span class="text-danger" v-if="item.confirmed == 0">не проверен </span-->
                 <span class="text-danger" v-if="item.iin_fail == 1">не совпадает ИИН</span>
             </p>
         </div>
@@ -81,8 +80,6 @@
                 }
                 webSocket.onerror = function(msg) {
                     // TODO PUSH ERROR
-                    //webSocket.close();
-                    //console.log(msg);
                     if(msg.type == 'error') {
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
                     }
@@ -106,12 +103,9 @@
                 }
             },
             getEdsInfo(docIsn,doc_index){    // docIsn - isn документа
-                // console.log(this.info[doc_index]);
-                // if(this.info[doc_index].iin_fail == 0) {
                     let self = this;
                     self.hasConfirmed = false;
                     self.signedFileInfo = [];
-                    //self.loader(true);
                     axios.post("/eds-by-isn", {
                         refISN: docIsn,
                         type: 'D',
@@ -124,22 +118,13 @@
                                     this.checkSignedFile(obj[index].filepath, docIsn, obj[index].docISN, doc_index, obj[index]);     // Проверить подписанные файлы  obj[index].docISN
                                 }
                             } else {
-                                //self.loader(false);
-                                //self.checkContinue(doc_index+1);
+                               //...
                             }
                         } else {
                             alert(response.data.error);
                             return false;
-                            //---self.checkContinue(doc_index+1);
-                            //self.getOrSetDoc(doc_index);
-                            //self.loader(false);
                         }
                     });
-                // } else {
-                //     if(this.info[doc_index+1].iin_fail == 0){
-                //         this.getEdsInfo(this.info[doc_index+1].rv_isn,doc_index);
-                //     }
-                // }
             },
             checkSignedFile(url,refIsn,docISN, doc_index,rv_data){        // Посмотреть подписанный файл
                 let self = this;
@@ -162,26 +147,19 @@
                             if (result.code == 200) {
                                 if(result.responseObjects.length > 0) {
                                     self.signedFileInfo = result.responseObjects;
-                                    //console.log(result.responseObjects);
-                                    //console.log(self.signedFileInfo[0].iin+'='+self.info[doc_index].iin);
                                     if(result.responseObjects[0].iin == self.info[doc_index].iin) {
                                         self.sendEdsInfoToKias(refIsn,docISN,doc_index); // Записываем в киас данные из подписанного файла
                                     } else {
                                         self.info[doc_index].iin_fail = 1;
-                                                //---self.checkContinue(doc_index+1);
                                         self.getOrSetDoc(doc_index);
-                                        //self.loader(false);
                                     }
                                 }
                             } else {
                                 alert(result.message);
-                                //self.checkContinue(doc_index+1);
-                                //self.loader(false);
                             }
                         }
                     }
                     webSocket.onerror = function (msg) {
-                        //self.loader(false);
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
                     }
                 } else {
@@ -199,19 +177,10 @@
                         refIsn: refIsn    //self.isn
                     }).then((response) => {
                         if (response.data.success) {
-                            //console.log(doc_index+'='+this.info[doc_index].iin);
                             self.info[doc_index].confirmed = 1;
                             self.hasConfirmed = true;
-                            //if(doc_index == Object.keys(self.info).length-1){
-                                //self.confirmed = true;
-                            //    this.saveDocument();
-                            //} else {
-                                    //---self.checkContinue(doc_index+1);
                             self.getOrSetDoc(doc_index);
-                            //}
-                            //self.loader(false);
                         } else {
-                                //---self.checkContinue(doc_index+1);
                             self.getOrSetDoc(doc_index);
                         }
                     });
@@ -229,7 +198,6 @@
             },
             getOrSetDoc(index){
                 if(!this.info[index].iin_fail) {
-                    //console.log(index);
                     console.log(this.info[index]);
                     axios.post("/get_or_set_doc", {
                         data: this.info[index]
@@ -237,7 +205,6 @@
                         if (response.data.success) {
                             this.loader(false);
                             this.checkContinue(index+1);
-                            //this.saveDocument(index);
                         } else {
                             alert(response.data.error);
                             this.checkContinue(index+1);
@@ -249,10 +216,8 @@
                         data: this.info[index],
                     }).then((response) => {
                         if (response.data.success) {
-                            //this.loader(false);
                             this.checkContinue(index+1);
                         } else {
-                            //this.loader(false);
                             this.checkContinue(index+1);
                         }
                     });
@@ -280,23 +245,9 @@
                 this.loader(true);
                 if(this.info.length > 0) {
                     this.getEdsInfo(this.info[0].rv_isn,0);
-                    // for(let i = 0; Object.keys(this.info).length > i; i++){
-                    //     this.getEdsInfo(this.info[i].rv_isn,i);
-                    //     if(i == Object.keys(this.info).length-1){
-                    //         this.loader(false);
-                    //     }
-                    // }
                 }
             },
             checkContinue(index){
-                // if(index > this.info.length-1) {
-                //     this.getOrSetDoc(index);
-                //     //console.log(index+'!!!');
-                // } else {
-                    ///this.getEdsInfo(this.info[index].rv_isn,index);
-                    //console.log(index+'???');
-                //}
-
                 if(index < this.info.length) {
                     this.getEdsInfo(this.info[index].rv_isn,index);
                 } else {

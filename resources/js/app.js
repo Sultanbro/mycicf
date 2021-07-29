@@ -1,5 +1,3 @@
-
-
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -93,6 +91,10 @@ Vue.component('edslogin', require('./components/eds/edslogin').default);
 
 Vue.component('eds-od', require('./components/eds/eds-od').default);
 
+Vue.component('eds-payout', require('./components/eds/eds-payout').default);
+
+Vue.component('payout-request', require('./components/eds/payout-request').default);
+
 Vue.component('eds', require('./components/eds/eds').default);
 
 Vue.component('eds-order-document', require('./components/eds/eds-order-document.vue').default);
@@ -102,6 +104,8 @@ Vue.component('coordination', require('./components/employee/coordination.vue').
 Vue.component('search', require('./components/documentation/search.vue').default);
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
+
+Vue.component('productsmodal-modal', require('./components/productsmodal/modal.vue').default);
 
 Vue.component('information-modal', require('./components/shared/information-modal.vue').default);
 
@@ -218,6 +222,9 @@ Vue.component('disciplinary-action', require('./components/document/disciplinary
 
 Vue.component('management-business-trip', require('./components/document/management-business-trip').default);
 
+Vue.component('products-info', require('./components/productsinfo/productsinfo').default);
+Vue.component('step1', require('./components/productsinfo/step1').default);
+Vue.component('step2', require('./components/productsinfo/step2').default);
 window.onload = function(){
     var app = new Vue({
         el: '#app',
@@ -259,4 +266,3 @@ window.onload = function(){
         el: '#header',
     });
 };
-

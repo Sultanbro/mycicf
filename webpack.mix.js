@@ -1,6 +1,8 @@
 const mix = require('laravel-mix');
 const dotenv = require("dotenv");
-const OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin')
+const WebpackBar = require('webpackbar');
+
+//const OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin')
 
 let env = dotenv.config().parsed;
 
@@ -34,7 +36,28 @@ class OnlyIfChanged {
     }
 }
 
-mix.extend('onlyIfChanged', new OnlyIfChanged());
+class WebpackBarPlugin {
+    dependencies() {
+        return [];
+    }
+
+    register() {
+        this.config = {};
+    }
+
+    webpackConfig(webpackConfig) {
+        let plugin = new WebpackBar();
+
+        webpackConfig.plugins.push(plugin);
+    }
+
+    babelConfig() {
+        return {};
+    }
+}
+
+//mix.extend('onlyIfChanged', new OnlyIfChanged());
+mix.extend('webpackBar', new WebpackBarPlugin());
 
 
 /*
@@ -65,10 +88,12 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/style_parse.scss', 'public/css')
     .sass('resources/sass/util.scss', 'public/css')
     .reactTypeScript('resources/jsx/app.ts', 'public/jsx')
-    .onlyIfChanged()
+    .webpackBar()
+    // .onlyIfChanged()
     .webpackConfig({
         watchOptions: {
-            ignored: /public/
+            ignored: /public/,
+            poll: true
         }
     });
 

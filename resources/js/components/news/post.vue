@@ -201,7 +201,7 @@
         data: () => ({
             showPoll: false,
             showAddAnswer: true,
-            maxAnswers: 10,
+            maxAnswers: 30,
             poll: false,
             question: null,
             answers : ["", ""],

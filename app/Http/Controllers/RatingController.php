@@ -40,11 +40,16 @@ class RatingController extends Controller
     );
 
     public function getRating(Request $request) {
+
         $rating_date = $request->rating_date;
         $rating_date = date('Y-m-t', strtotime($rating_date));
         $employee_isn = $request->employee_isn;
-
-        $rating = RatingList::where('employee_isn', $employee_isn)->orderBy('rating_date')->get()->toArray();
+        //Директора страховой группы 1-3 категории
+        $dirIsn = [455547,4874453, 1446000,1446247, 1446067, 3312042, 1446089, 1446215, 1445848, 1446021, 1446097, 4702670, 1446240, 1446107, 1446102, 1446014, 1445922, 1446199, 1404141, 3420560, 1446035, 4121398, 1445982, 4788816, 3333744, 221227, 1564129, 1446103, 866073, 1445983, 1446243, 1445941, 1445899, 1446179, 1446197, 1446184, 1445857, 1147468, 1116987, 18895, 4246502, 1445849, 1497568, 4246691, 1445850, 3289632, 1314264];
+        $rating = RatingList::where('employee_isn', $employee_isn)
+            ->whereNotIn('employee_isn',$dirIsn)
+            ->orderBy('rating_date')
+            ->get()->toArray();
 
         if($rating) {
             $employee_info = array(

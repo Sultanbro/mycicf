@@ -732,7 +732,7 @@ class KiasMock implements KiasServiceInterface {
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin) {
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn = null) {
         $this->collector->push([
             'method' => 'getSubject',
             'firstName' => $firstName,
@@ -1338,5 +1338,15 @@ class KiasMock implements KiasServiceInterface {
 <data>
 </data>
         ');
+    }
+
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        // TODO: Implement getPrintableOrderDocument() method.
+    }
+
+    public function resetPassword($subjIsn, $password)
+    {
+        // TODO: Implement resetPassword() method.
     }
 }

@@ -251,6 +251,7 @@
                                                     :coordination="coordination"
                                                     :doc_row_list_inner_other="doc_row_list_inner_other"
                                                     :preloader="preloader"
+                                                    :doc_row_error="doc_row_error"
                                                     show-view="sign">
                                             </eds-order-document>
                                         </div>
@@ -261,6 +262,7 @@
                                                     :sendSolution="sendSolution"
                                                     :coordination="coordination"
                                                     :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                    :doc_row_error="doc_row_error"
                                                     show-view="sign">
                                             </edslogin>
                                         </div>
@@ -272,6 +274,7 @@
                                                 :sendSolution="sendSolution"
                                                 :coordination="coordination"
                                                 :doc_row_list_inner_other="doc_row_list_inner_other"
+                                                :doc_row_error="doc_row_error"
                                                 show-view="sign">
                                         </edslogin>
                                     </div>
@@ -379,7 +382,8 @@
             doc_row_inner: Object,
             doc_row_list_other: Object,
             doc_row_list_inner_other: Object,
-            authorizedUserIin: Number
+            authorizedUserIin: Number,
+            doc_row_error: String
         },
         methods: {
             beforeSendSolution(solution){
