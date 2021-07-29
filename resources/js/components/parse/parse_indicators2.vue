@@ -36,40 +36,39 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(item,index) in companyBalance">
-                            <tr @click="toggle(item.id)" :class="{ opened: opened.includes(item.id)}">
-                                <td>{{item.company}}</td>
-                                <td>{{Math.floor(item.firstData[index].cash) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].deposits) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].securities) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].rev_repo) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].ins_dz) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].other_dz) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].other_actives) | numberFormat}}</td>
+                        <template v-for="(item,index) in firstData">
+                            <tr @click="toggle(item.company.id)" :class="{ opened: opened.includes(item.company.id)}">
+                                <td>{{item.company.short_name}}</td>
+                                <td>{{Math.floor(item.cash) | numberFormat}}</td>
+                                <td>{{Math.floor(item.deposits) | numberFormat}}</td>
+                                <td>{{Math.floor(item.securities) | numberFormat}}</td>
+                                <td>{{Math.floor(item.rev_repo) | numberFormat}}</td>
+                                <td>{{Math.floor(item.ins_dz) | numberFormat}}</td>
+                                <td>{{Math.floor(item.other_dz) | numberFormat}}</td>
+                                <td>{{Math.floor(item.other_actives) | numberFormat}}</td>
 
-                                <td>{{Math.floor(item.firstData[index].repo) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].reserves) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].rnp) + Math.floor(item.firstData[index].rznu)
-                                    + Math.floor(item.firstData[index].rpnu) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].other_liability) | numberFormat}}</td>
-                                <td>{{Math.floor(item.firstData[index].retained_earnings) | numberFormat}}</td>
+                                <td>{{Math.floor(item.repo) | numberFormat}}</td>
+                                <td>{{Math.floor(item.reserves) | numberFormat}}</td>
+                                <td>{{Math.floor(item.rnp) + Math.floor(item.rznu) + Math.floor(item.rpnu) | numberFormat}}</td>
+                                <td>{{Math.floor(item.other_liability) | numberFormat}}</td>
+                                <td>{{Math.floor(item.retained_earnings) | numberFormat}}</td>
                             </tr>
-                            <tr v-if="opened.includes(item.id)">
+                            <tr v-if="opened.includes(item.company.id)">
                                 <td>Второй период</td>
-                                <td>{{Math.floor(item.secondData[index].cash) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].deposits) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].securities) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].rev_repo) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].ins_dz) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].other_dz) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].other_actives) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].cash) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].deposits) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].securities) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].rev_repo) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].ins_dz) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].other_dz) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].other_actives) | numberFormat}}</td>
 
-                                <td>{{Math.floor(item.secondData[index].repo) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].reserves) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].rnp) + Math.floor(item.secondData[index].rznu)
-                                    + Math.floor(item.secondData[index].rpnu) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].other_liability) | numberFormat}}</td>
-                                <td>{{Math.floor(item.secondData[index].retained_earnings) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].repo) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].reserves) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].rnp) + Math.floor(secondData[index].rznu)
+                                    + Math.floor(secondData[index].rpnu) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].other_liability) | numberFormat}}</td>
+                                <td>{{Math.floor(secondData[index].retained_earnings) | numberFormat}}</td>
                             </tr>
                         </template>
                         </tbody>
@@ -88,7 +87,8 @@
             return {
                 opened: [],
                 vopened:[],
-                companyBalance: [],
+                firstData: [],
+                secondData: [],
             }
         },
         props: {
@@ -123,7 +123,8 @@
                     second_period: this.periods.second_period - 1,
                 }).then(response =>{
                     if(response.data.success){
-                        this.companyBalance = response.data.data.companyBalance;
+                        this.firstData = response.data.data.firstData;
+                        this.secondData = response.data.data.secondData;
                     }else {
                         alert('Ошибка');
                     }

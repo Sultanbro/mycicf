@@ -36,46 +36,49 @@
                         </tr>
                         </thead>
                        <tbody>
-                       <template v-for="(item,index) in companyOpu">
-                           <tr @click="toggle(item.id)" :class="{ opened: opened.includes(item.id)}">
-                               <td>{{item.company}}</td>
-                               <td>{{Math.floor(item.firstData[index].dsd) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].net_payout) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].av) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].net_ins_income) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].reserve_changes) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].fin_changes) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].invest_income) | numberFormat}}
-                               <td>{{Math.floor(item.firstData[index].other_income) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].kpn) | numberFormat}}</td>
-                               <td>{{Math.floor(item.firstData[index].net_income) | numberFormat}}</td>
-                           </tr>
-                           <tr v-if="opened.includes(item.id)">
-                               <td>Второй период</td>
-                               <td>{{Math.floor(item.secondData[index].dsd) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].net_payout) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].av) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].net_ins_income) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].reserve_changes) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].fin_changes) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].invest_income) | numberFormat}}
-                               <td>{{Math.floor(item.secondData[index].other_income) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].kpn) | numberFormat}}</td>
-                               <td>{{Math.floor(item.secondData[index].net_income) | numberFormat}}</td>
-                           </tr>
-                           <tr v-if="opened.includes(item.id)">
+                       <template v-for="(item,index) in firstData">
+                               <tr @click="toggle(item.company.id)" :class="{ opened: opened.includes(item.company.id)}">
+                                   <td>{{item.company.short_name}}</td>
+                                   <td>{{Math.floor(item.dsd) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.net_payout) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.av) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.net_ins_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.reserve_changes) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.fin_changes) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.invest_income) | numberFormat}}
+                                   <td>{{Math.floor(item.other_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.kpn) | numberFormat}}</td>
+                                   <td>{{Math.floor(item.net_income) | numberFormat}}</td>
+                               </tr>
+                           </template>
+                       <template v-for="elem in secondData">
+                               <tr v-if="opened.includes(elem.company.id)">
+                                   <td>Второй период</td>
+                                   <td>{{Math.floor(elem.dsd) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.net_payout) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.av) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.net_ins_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.reserve_changes) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.fin_changes) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.invest_income) | numberFormat}}
+                                   <td>{{Math.floor(elem.other_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.kpn) | numberFormat}}</td>
+                                   <td>{{Math.floor(elem.net_income) | numberFormat}}</td>
+                               </tr>
+
+<!--                           <tr v-if="opened.includes(item.id)">
                                <td class="bold fs-0_9 bg-grayblue">Изменения</td>
-                               <td>{{ Math.floor((item.firstData[index].dsd / item.secondData[index].dsd - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].net_payout / item.secondData[index].net_payout - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].av / item.secondData[index].av - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].net_ins_income / item.secondData[index].net_ins_income - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].reserve_changes / item.secondData[index].reserve_changes - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].fin_changes / item.secondData[index].fin_changes - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].invest_income / item.secondData[index].invest_income - 1) * 100 || 0)}}%
-                               <td>{{ Math.floor((item.firstData[index].other_income / item.secondData[index].other_income - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].kpn / item.secondData[index].kpn - 1) * 100 || 0)}}%</td>
-                               <td>{{ Math.floor((item.firstData[index].net_income / item.secondData[index].net_income - 1) * 100 || 0)}}%</td>
-                           </tr>
+                               <td>{{ Math.floor((item.dsd / secondData[index].dsd - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.net_payout / secondData[index].net_payout - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.av / secondData[index].av - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.net_ins_income / secondData[index].net_ins_income - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.reserve_changes / secondData[index].reserve_changes - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.fin_changes / secondData[index].fin_changes - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.invest_income / secondData[index].invest_income - 1) * 100 || 0)}}%
+                               <td>{{ Math.floor((item.other_income / secondData[index].other_income - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.kpn / secondData[index].kpn - 1) * 100 || 0)}}%</td>
+                               <td>{{ Math.floor((item.net_income / secondData[index].net_income - 1) * 100 || 0)}}%</td>
+                           </tr>-->
                        </template>
                        </tbody>
                     </table>
@@ -93,7 +96,8 @@
             return {
                 opened: [],
                 vopened:[],
-                companyOpu: [],
+                firstData: [],
+                secondData: [],
             }
         },
         props: {
@@ -128,11 +132,13 @@
                         second_period: this.periods.second_period - 1,
                 }).then(response =>{
                    if(response.data.success){
-                       this.companyOpu = response.data.data.companyOpu;
-                   }else {
-                       alert('Ошибка');
+                       this.firstData = response.data.data.firstData;
+                       this.secondData = response.data.data.secondData;
+                   }else{
+                        alert('Ошибка, часть данных не получена');
                    }
                 });
+
             },
         },
     }
