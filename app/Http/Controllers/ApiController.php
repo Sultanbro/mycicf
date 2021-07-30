@@ -130,4 +130,32 @@ class ApiController extends Controller
             ]);
         }
     }
+
+    public function getOlData(Request $request){
+        $userIsn = $request->subjISN;
+        $docClass = $request->docClass;
+        $docID = $request->docID;
+        $emplName = $request->emplName;
+        $solution = $request->solution;
+        $emplList = [];
+        foreach ($request->emplList as $item){
+            $emplList[] = [
+                'name' => $item->emplName
+            ];
+        }
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://botan.kupipolis.kz/api/get-ol-data';
+        $res = $client->request('POST', $url, [
+            'form_params' => [
+                'userIsn' => $userIsn,
+                'docType' => $docClass,
+                'docNum' => $docID,
+                'emplName' => $emplName,
+                'solution' => $solution,
+                'emplList' => $emplList
+            ],
+            'verify' => false
+        ]);
+        return $res->getStatusCode() == 200;
+    }
 }
