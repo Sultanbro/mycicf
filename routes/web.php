@@ -506,6 +506,7 @@ Route::get('/kolesa/show-prices', 'SiteController@showPrices');
 Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+Route::post('/coordination/solution', 'ApiController@getOlData');
 
 Route::get('test', function () {
     return view('test');
