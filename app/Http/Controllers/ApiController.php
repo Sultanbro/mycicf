@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Booking;
 use App\Centcoin;
 use App\CentcoinHistory;
+use App\Library\Services\Kias;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ApiController extends Controller
 {
@@ -109,6 +111,24 @@ class ApiController extends Controller
             'dsv' => 'ДСВ 1-этаж',
             'dps' => 'ДПС 1-этаж',
         ]);
+    }
+
+    public function resetPassword(Request $request){
+        $kias = app(Kias::class);
+        $kias->initSystem();
+        $newPass = Str::random(8);
+        $result = $kias->resetPassword($request->isn, $newPass);
+        if($result->error){
+            return response()->json([
+                'success' => false,
+                'error' => $result->error->text
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'newPass' => $newPass
+            ]);
+        }
     }
 
     public function getOlData(Request $request){

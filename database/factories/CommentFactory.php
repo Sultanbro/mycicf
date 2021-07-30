@@ -9,6 +9,6 @@ $factory->define(\App\Comment::class, function (Faker $faker) {
     return [
         'text' => $faker->text(50),
         'post_id' => \App\Post::inRandomOrder()->first()->id,
-        'user_isn' => '1144',
+        'user_isn' => \App\User::inRandomOrder()->first()->ISN,
     ];
 });

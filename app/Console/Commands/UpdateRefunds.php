@@ -54,7 +54,7 @@ class UpdateRefunds extends Command
                 "verify_peer_name"=>false,
             ),
         );
-        $od = file_get_contents("http://t3.kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791&id=$last_id", false, stream_context_create($arrContextOptions));
+        $od = file_get_contents("https://kupipolis.kz/refunds?token=ef292d4f1f2429cae344d090cc29b675&isn=506791&id=$last_id", false, stream_context_create($arrContextOptions));
         if (0 === strpos(bin2hex($od), 'efbbbf')) {
             $od = substr($od, 3);
         }

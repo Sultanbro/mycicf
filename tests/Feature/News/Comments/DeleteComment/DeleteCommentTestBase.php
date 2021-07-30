@@ -7,6 +7,11 @@ use App\Post;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\FeatureTestBase;
 
+/**
+ * Class DeleteCommentTestBase
+ * @package Tests\Feature\News\Comments\DeleteComment
+ * @covers \App\Http\Controllers\News\MyPostsController::deletePost
+ */
 abstract class DeleteCommentTestBase extends FeatureTestBase {
     use WithFaker;
 

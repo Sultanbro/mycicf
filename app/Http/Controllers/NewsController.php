@@ -34,12 +34,14 @@ class NewsController extends Controller
      *
      * @throws Exception
      */
-    public function getPosts(NewsGetPostsRequest $request) {
+    public function getPosts(NewsGetPostsRequest $request)
+    {
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
+        $query = $request->get('query');
 
         Debugbar::startMeasure('getPosts');
-        $response = $this->postsService->getPosts($user_isn, $last_index);
+        $response = $this->postsService->getPosts($user_isn, $last_index, $query);
 
         Debugbar::stopMeasure('getPosts');
         return $response;
@@ -50,7 +52,8 @@ class NewsController extends Controller
         return view('news-birthday');
     }
 
-    public function editComment(Request $request) {
+    public function editComment(Request $request)
+    {
         $success = false;
 
         $comment_id = $request->commentId;
@@ -78,14 +81,16 @@ class NewsController extends Controller
         return $response;
     }
 
-    public function getView() {
+    public function getView()
+    {
         return view('news');
     }
 
-    public function senateVote(Request $request){
+    public function senateVote(Request $request)
+    {
         $answers = $request->answers;
-        foreach ($answers as $answer){
-            if($answer['checked']){
+        foreach ($answers as $answer) {
+            if ($answer['checked']) {
                 $userAnswer = new UserAnswer();
                 $userAnswer->question_id = $request->question;
                 $userAnswer->answer_id = $answer['answer_id'];
@@ -101,11 +106,12 @@ class NewsController extends Controller
         ]);
     }
 
-    public function dev(Request $request) {
+    public function dev(Request $request)
+    {
         switch ($request->name) {
             case 'boss':
                 return view('dev')->with([
-                   'type' => 'boss'
+                    'type' => 'boss'
                 ]);
             case 'company':
                 return view('dev')->with([
@@ -128,16 +134,19 @@ class NewsController extends Controller
         }
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         return view('boss-says');
     }
 
-    public function getBossPosts(Request $request, PostsService $postsService) {
+    public function getBossPosts(Request $request, PostsService $postsService)
+    {
         Debugbar::startMeasure('NewsController@getBossPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
+        $query = $request->get('query');
 
-        $response = $postsService->getPosts($user_isn, $last_index, true);
+        $response = $postsService->getPosts($user_isn, $last_index, $query, true);
 
         Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;

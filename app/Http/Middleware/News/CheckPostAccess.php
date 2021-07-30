@@ -21,9 +21,9 @@ class CheckPostAccess {
          */
         $post = Post::where('id', $postId)->first();
 
-        if (!$post->is_mine) {
-            throw new AccessDeniedHttpException();
-        }
+//        if (!$post->is_mine) {
+//            throw new AccessDeniedHttpException();
+//        }
 
         $request->postEntity = $post;
 

@@ -3,6 +3,7 @@
 namespace App\Debug;
 
 use DebugBar\DataCollector\DataCollector;
+use Illuminate\Support\Str;
 
 class GitDataCollector extends DataCollector {
     public function collect() {
@@ -16,10 +17,10 @@ class GitDataCollector extends DataCollector {
     }
 
     private function getBranch() {
-        exec('git branch --show-current', $output);
+        exec('git branch', $output);
 
-        [$branch] = $output;
-
-        return $branch;
+        return collect($output)->first(function ($line) {
+            return Str::startsWith($line, '*');
+        });
     }
 }

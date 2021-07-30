@@ -11,7 +11,7 @@
                 </div>
             </div>
             <hr class="mt-0">
-            <div class="d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center"  v-if="birthdays[index]">
                 <h4>{{ birthdays[index].birthday.slice(0, 2) }} {{ monthNames[birthdays[index].birthday.slice(3, 5)] }}</h4>
             </div>
             <div class="pt-2 pl-4 pr-4 pb-2 relative">
@@ -83,24 +83,24 @@
             }
         },
         mounted () {
-            this.getBirthdaysData();
+            this.getBirthdaysData()
         },
         methods: {
             getBirthdaysData() {
                 this.axios.post('/getBirthdays', {})
                     .then(response => {
-                        this.birthdays = response.data.birthdays;
+                        this.birthdays = response.data.birthdays
                     })
                     .catch( error => {
                         alert(error);
                     });
             },
             next(){
-                let year = new Date().getFullYear();
-                let month = new Date().getMonth() + 1;
-                let lastDay = new Date(year, month, 0).getDate();
+                let year = new Date().getFullYear()
+                let month = new Date().getMonth() + 1
+                let lastDay = new Date(year, month, 0).getDate()
 
-                if(this.birthdays[this.index].birthday.slice(0, 2) === lastDay) {
+                if(+this.birthdays[this.index].birthday.slice(0, 2) === +lastDay) {
                     return;
                 }
                 else {

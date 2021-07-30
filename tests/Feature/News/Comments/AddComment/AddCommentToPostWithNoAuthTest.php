@@ -5,7 +5,13 @@ namespace Tests\Feature\News\Comments\AddComment;
 use App\Comment;
 use App\Post;
 use Tests\WithUser;
+use App\Http\Controllers\News\PostsController;
 
+/**
+ * Class AddCommentToPostWithNoAuthTest
+ * @package Tests\Feature\News\Comments\AddComment
+ * @covers \App\Http\Controllers\News\PostsController::addComment
+ */
 class AddCommentToPostWithNoAuthTest extends AddCommentTestBase {
     use WithUser;
 

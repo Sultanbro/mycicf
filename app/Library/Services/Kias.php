@@ -64,6 +64,9 @@ class Kias implements KiasServiceInterface
         Debugbar::log('Kias::Construct');
     }
 
+    /**
+     * @return \Illuminate\Support\Carbon
+     */
     private function getLifetime() {
         return now()->addMinutes(config('kias.cache.lifetime'));
     }
@@ -112,11 +115,13 @@ class Kias implements KiasServiceInterface
      */
     public function getClient()
     {
-        if (!$this->client) {
+        try {
             $this->client = new SoapClient($this->url, [
                 'cache_wsdl' => WSDL_CACHE_NONE,
-                'trace'      => 1,
+                'trace' => 1,
             ]);
+        } catch (\SoapFault $e) {
+           // dd($e->getMessage());
         }
 
         return $this->client;
@@ -186,10 +191,10 @@ class Kias implements KiasServiceInterface
                 $date  = $d->format('d-m-Y_H-i-s-u');
 
                 // TODO Use Storage::disk instead
-                file_put_contents(
-                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
-                    $xml->asXml()
-                );
+//                file_put_contents(
+//                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+//                    $xml->asXml()
+//                );
             }
         }
 
@@ -233,10 +238,10 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
-                file_put_contents(
-                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
-                    $xml->asXML()
-                );
+//                file_put_contents(
+//                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
+//                    $xml->asXML()
+//                );
             }
         }
 
@@ -393,7 +398,7 @@ class Kias implements KiasServiceInterface
 
     public function getEmplMotivation($isn, $begin)
     {
-        return $this->request('User_CicGetEmplMotivation', [
+        return $this->request('User_CicGetEmplMotivations', [
             'EmplISN' => $isn,
             'Month'   => date('m', strtotime($begin)),
             'Year'    => date('Y', strtotime($begin)),
@@ -427,6 +432,30 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        return $this->request('GetPrintableDocument', [
+            'ISN' => $data['ISN'],
+            'TemplateISN' => $data['TemplateISN'],
+            'ClassID' => $data['ClassID'],
+            'Remark' => $data['Remark'],
+            'params' => [
+                'row' => [
+                    [
+                        'paramName' => $dataParams[0]->paramName,
+                        'paramType' => $dataParams[0]->paramType,
+                        'paramValue' => $dataParams[0]->paramValue
+                    ],
+                    [
+                        'paramName' => $dataParams[1]->paramName,
+                        'paramType' => $dataParams[1]->paramType,
+                        'paramValue' => $dataParams[1]->paramValue
+                    ]
+                ]
+            ],
+        ]);
+    }
+
     public function getExpressAttributes($product){
         return $this->request('User_CicGetAttrExpress', [
             'Product' => $product,
@@ -453,13 +482,14 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin)
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null)
     {
         return $this->request('User_CicSearchSubject', [
             'IIN'          => $iin,
             'FIRSTNAME'    => $firstName,
             'LASTNAME'     => $lastName,
             'PARENTNAME'   => $patronymic,
+            'ISN'          => $isn
         ]);
     }
 
@@ -629,10 +659,11 @@ class Kias implements KiasServiceInterface
 //        ]);
 //    }
 
-    public function getPrintableDocumentList($contract_number){
+    public function getPrintableDocumentList($contract_number, $doc = 0){
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
-            'TemplateISN' => ''
+            'TemplateISN' => '',
+            'Doc' => $doc
         ]);
     }
 
@@ -647,6 +678,12 @@ class Kias implements KiasServiceInterface
             'DocISN' => $doc_isn,
             'Type' => $type, // 1 сменить статус, 2 посмотреть статус
             'Status' => $status, //2522 на подписи, 2518 подписан
+        ]);
+    }
+
+    public function getOrSetEorderDocs($doc_isn){
+        return $this->request('User_CicGetOrSetEorderDocs',[
+            'DocISN' => $doc_isn
         ]);
     }
 
@@ -827,9 +864,11 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function saveDocument($classISN,$emplISN,$subjISN,$docRow, $docParams){
+    public function saveDocument($classISN,$RefundISN,$RefundId,$emplISN,$subjISN,$docRow, $docParams){
         return $this->request('User_CicSAVEDOCUMENT', [
             'CLASSISN' => $classISN,
+            'REFUNDISN'=>$RefundISN,
+            'ID'=>$RefundId,
             'EMPLISN' => $emplISN,
             'DOCDATE' => date('d.m.Y'),
             'SUBJISN' => $subjISN,
@@ -864,6 +903,13 @@ class Kias implements KiasServiceInterface
     public function getDocRating($class_isn) {
         return $this->request('User_CicGetDocRating', [
             'Classisn' => $class_isn,
+        ]);
+    }
+
+    public function resetPassword($subjIsn, $password){
+        return $this->request('User_ResetPassWord', [
+            'SubjectISN' => $subjIsn,
+            'NewPass' => $password
         ]);
     }
 }

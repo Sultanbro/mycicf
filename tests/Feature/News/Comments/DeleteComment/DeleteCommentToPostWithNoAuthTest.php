@@ -5,6 +5,11 @@ namespace Tests\Feature\News\Comments\DeleteComment;
 use App\Post;
 use Tests\WithUser;
 
+/**
+ * Class DeleteCommentToPostWithNoAuthTest
+ * @package Tests\Feature\News\Comments\DeleteComment
+ * @covers \App\Http\Controllers\News\MyPostsController::deletePost
+ */
 class DeleteCommentToPostWithNoAuthTest extends DeleteCommentTestBase {
 
     protected $description = 'Пытаемся добавить комментарий к посту без авторизации';

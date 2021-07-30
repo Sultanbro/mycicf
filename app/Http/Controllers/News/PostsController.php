@@ -15,6 +15,7 @@ use App\Question;
 use App\UserAnswer;
 use Debugbar;
 use Exception;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Auth;
@@ -22,15 +23,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class PostsController extends Controller
-{
+class PostsController extends Controller {
     /**
      * @var PostsService
      */
     private $postsService;
 
-    public function __construct(PostsService $postsService)
-    {
+    public function __construct(PostsService $postsService) {
         $this->postsService = $postsService;
     }
 
@@ -41,25 +40,27 @@ class PostsController extends Controller
         $model = Like::where('post_id', $post_id)
             ->where('user_isn', $user_isn);
 
-        if(count($model->get()) === 0) {
+        if (count($model->get()) === 0) {
             $like = new Like();
             $like->user_isn = $user_isn;
             $like->post_id = $post_id;
             $like->save();
             $success = true;
-        }
-        else {
+        } else {
             $model->delete();
             $success = false;
         }
 
+        $likesCount = Like::where('post_id', $post_id)->count();
+
         $response = [
-          'success' => $success,
+            'success' => $success,
+            'count'   => $likesCount,
         ];
 
         broadcast(new NewPost([
             'post' => [
-                'id' => $post_id,
+                'id'    => $post_id,
                 'likes' => (new Like())->getLikes($post_id),
             ],
             'type' => Post::LIKED_POST
@@ -70,19 +71,19 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function addPost(AddPostRequest $request) {
+    public function addPost2(AddPostRequest $request) {
         $isPoll = (boolean)$request->get('poll');
-        if($isPoll) {
+        if ($isPoll) {
             $question = $request->get('question');
             $answers = $request->get('answers');
         }
         DB::beginTransaction();
 
-        if(!Auth::check()) {
+        if (! Auth::check()) {
             $error = 'Пожалуйста авторизуйтесь заново';
             $success = false;
             return [
-                'error' => $error,
+                'error'   => $error,
                 'success' => $success
             ];
         }
@@ -99,40 +100,40 @@ class PostsController extends Controller
             $error = 'Заполните поле или добавьте вложения';
             $success = false;
             return [
-                'error' => $error,
+                'error'   => $error,
                 'success' => $success
             ];
         }
 
         try {
-            ini_set("upload_max_filesize","50M");
+            ini_set("upload_max_filesize", "50M");
             $new_post = new Post();
             $new_post->user_isn = $request->isn;
             $new_post->post_text = $request->postText;
             $new_post->pinned = 0;
             $new_post->save();
 
-            if(isset($request->postFiles)) {
+            if (isset($request->postImages)) {
                 /**
-                 * @var $postFiles File[]
+                 * @var $postImages File[]
                  */
-                $postFiles = $request->postFiles;
-                foreach ($postFiles as $file) {
+                $postImages = $request->postImages;
+                foreach ($postImages as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
                     Storage::disk('local')->put("public/post_files/$new_post->id/images/$fileName", $content);
                 }
             }
 
-            if(isset($request->postDocuments)) {
-                foreach($request->postDocuments as $file) {
+            if (isset($request->postDocuments)) {
+                foreach ($request->postDocuments as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
                     Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
                 }
             }
 
-            if(isset($request->postVideos)) {
+            if (isset($request->postVideos)) {
                 foreach ($request->postVideos as $file) {
                     $fileName = $file->getClientOriginalName();
                     $content = file_get_contents($file->getRealPath());
@@ -140,7 +141,7 @@ class PostsController extends Controller
                 }
             }
 
-            if($isPoll) {
+            if ($isPoll) {
                 $poll = new Question();
                 $poll->question = $question;
                 $poll->post_id = $new_post->id;
@@ -154,53 +155,195 @@ class PostsController extends Controller
                     $answersModel->question_id = $poll->id;
                     $answersModel->save();
                     $post_answers[] = [
-                        "answer_id" => $answersModel->id,
+                        "answer_id"    => $answersModel->id,
                         "answer_title" => $answersModel->value = $answer,
                         "answer_votes" => 0,
                     ];
                     $post_poll = [
-                        "question_id" => $poll->id,
+                        "question_id"    => $poll->id,
                         "question_title" => $poll->question = $question,
-                        "total_votes" => 0,
-                        "answers" => $post_answers,
+                        "total_votes"    => 0,
+                        "answers"        => $post_answers,
                     ];
                 }
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             DB::rollBack();
             $error = $e->getMessage();
             $success = false;
             return [
                 'success' => $success,
-                'error' => $error
+                'error'   => $error
             ];
         }
         DB::commit();
 
         // TODO Придумать как перенести это в PostsService
         $response = [
-            'date' => date("d.m.Y H:i", strtotime($new_post->created_at)),
-            'edited' => false,
-            'fullname' => Auth::user()->full_name,
-            'isLiked' => false,
-            'isn' => $new_post->user_isn,
-            'userISN' => $new_post->user_isn,
-            'likes' => 0,
-            'pinned' => false,
-            'postText' => $new_post->getText(),
-            'postId' => $new_post->id,
-            'image' => $new_post->getImage(),
+            'date'      => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited'    => false,
+            'fullname'  => Auth::user()->full_name,
+            'isLiked'   => false,
+            'isn'       => $new_post->user_isn,
+            'userISN'   => $new_post->user_isn,
+            'likes'     => 0,
+            'pinned'    => false,
+            'postText'  => $new_post->getText(),
+            'postId'    => $new_post->id,
+            'image'     => $new_post->getImage(),
             'documents' => $new_post->getDocuments(),
-            'youtube' => $new_post->getVideo(),
-            'videos' => $new_post->getVideoUrl(),
-            'comments' => [],
-            "post_poll" => !empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
+            'youtube'   => $new_post->getVideo(),
+            'videos'    => $new_post->getVideoUrl(),
+            'comments'  => [],
+            "post_poll" => ! empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
                 "question_id"    => null,
                 "question_title" => null,
                 "total_votes"    => null,
                 "answers"        => null
             ],
-            "isVoted" => false,
+            "isVoted"   => false,
+        ];
+
+        broadcast(new NewPost([
+            'post' => $response,
+            'type' => Post::NEW_POST
+        ]));
+
+        cache()->clear();
+        return $response;
+    }
+
+    public function addPost(AddPostRequest $request) {
+        $isPoll = (boolean)$request->get('poll');
+        if ($isPoll) {
+            $question = $request->get('question');
+            $answers = $request->get('answers');
+        }
+        DB::beginTransaction();
+
+        if (! Auth::check()) {
+            $error = 'Пожалуйста авторизуйтесь заново';
+            $success = false;
+            return [
+                'error'   => $error,
+                'success' => $success
+            ];
+        }
+
+        // TODO Создать FormRequest для этого действия и заложить эти проверки в валидацию
+        if ($request->postText === null
+            && isset($request->postFiles)
+            && count($request->postFiles) === 0
+            && isset($request->postVideos)
+            && count($request->postVideos) === 0
+            && isset($request->postDocuments)
+            && count($request->postDocuments) === 0) {
+
+            $error = 'Заполните поле или добавьте вложения';
+            $success = false;
+            return [
+                'error'   => $error,
+                'success' => $success
+            ];
+        }
+
+        try {
+            ini_set("upload_max_filesize", "50M");
+            $new_post = new Post();
+            $new_post->user_isn = $request->isn;
+            $new_post->post_text = $request->postText;
+            $new_post->pinned = 0;
+            $new_post->save();
+
+            if (isset($request->postFiles)) {
+                /**
+                 * @var $postFiles File[]
+                 */
+                $postFiles = $request->postFiles;
+                foreach ($postFiles as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/images/$fileName", $content);
+                }
+            }
+
+            if (isset($request->postDocuments)) {
+                foreach ($request->postDocuments as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/documents/$fileName", $content);
+                }
+            }
+
+            if (isset($request->postVideos)) {
+                foreach ($request->postVideos as $file) {
+                    $fileName = $file->getClientOriginalName();
+                    $content = file_get_contents($file->getRealPath());
+                    Storage::disk('local')->put("public/post_files/$new_post->id/videos/$fileName", $content);
+                }
+            }
+
+            if ($isPoll) {
+                $poll = new Question();
+                $poll->question = $question;
+                $poll->post_id = $new_post->id;
+                $poll->save();
+                $post_poll = [];
+                $post_answers = [];
+
+                foreach ($answers as $answer) {
+                    $answersModel = new Answer();
+                    $answersModel->value = $answer;
+                    $answersModel->question_id = $poll->id;
+                    $answersModel->save();
+                    $post_answers[] = [
+                        "answer_id"    => $answersModel->id,
+                        "answer_title" => $answersModel->value = $answer,
+                        "answer_votes" => 0,
+                    ];
+                    $post_poll = [
+                        "question_id"    => $poll->id,
+                        "question_title" => $poll->question = $question,
+                        "total_votes"    => 0,
+                        "answers"        => $post_answers,
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            $error = $e->getMessage();
+            $success = false;
+            return [
+                'success' => $success,
+                'error'   => $error
+            ];
+        }
+        DB::commit();
+
+        // TODO Придумать как перенести это в PostsService
+        $response = [
+            'date'      => date("d.m.Y H:i", strtotime($new_post->created_at)),
+            'edited'    => false,
+            'fullname'  => Auth::user()->full_name,
+            'isLiked'   => false,
+            'isn'       => $new_post->user_isn,
+            'userISN'   => $new_post->user_isn,
+            'likes'     => 0,
+            'pinned'    => false,
+            'postText'  => $new_post->getText(),
+            'postId'    => $new_post->id,
+            'image'     => $new_post->getImage(),
+            'documents' => $new_post->getDocuments(),
+            'youtube'   => $new_post->getVideo(),
+            'videos'    => $new_post->getVideoUrl(),
+            'comments'  => [],
+            "post_poll" => ! empty($post_poll) ? $post_poll : [ // TODO Временное решение, позже, когда фронт приведём в порядок, заменю на null
+                "question_id"    => null,
+                "question_title" => null,
+                "total_votes"    => null,
+                "answers"        => null
+            ],
+            "isVoted"   => false,
         ];
 
         broadcast(new NewPost([
@@ -213,10 +356,10 @@ class PostsController extends Controller
     }
 
     /**
-     * @uses CheckPostAccess middleware
      * @param Request $request
      * @return bool[]
      * @throws Exception
+     * @uses CheckPostAccess middleware
      */
     public function editPost(Request $request) {
         $success = false;
@@ -224,18 +367,18 @@ class PostsController extends Controller
         $post_text = $request->postText;
 
         $model = Post::where('id', $post_id)
-                ->update([
-                    'post_text' => $post_text,
-                ]);
+            ->update([
+                'post_text' => $post_text,
+            ]);
         $response = [
-            'success' => !$success,
-            'edited' => true,
+            'success' => ! $success,
+            'edited'  => true,
         ];
 
         broadcast(new NewPost([
             'post' => [
                 'text' => $post_text,
-                'id' => $post_id,
+                'id'   => $post_id,
             ],
             'type' => Post::EDITED_POST
         ]));
@@ -254,12 +397,12 @@ class PostsController extends Controller
         $new_comment->save();
 
         $response = [
-            'userISN' => $new_comment->user_isn,
+            'userISN'     => $new_comment->user_isn,
             'commentText' => $new_comment->text,
-            'postId' => $new_comment->post_id,
-            'commentId' => $new_comment->id,
-            'date' => date("d.m.Y H:i", strtotime($new_comment->created_at)),
-            'fullname' => Auth::user()->full_name,
+            'postId'      => $new_comment->post_id,
+            'commentId'   => $new_comment->id,
+            'date'        => date("d.m.Y H:i", strtotime($new_comment->created_at)),
+            'fullname'    => Auth::user()->full_name,
         ];
 
         $this->postsService->forget($postId);
@@ -283,8 +426,7 @@ class PostsController extends Controller
         return $response;
     }
 
-    public function birthday()
-    {
+    public function birthday() {
         return view('news-birthday');
     }
 
@@ -299,8 +441,8 @@ class PostsController extends Controller
                 'text' => $comment_text,
             ]);
         $response = [
-            'success' => !$success,
-            'edited' => true,
+            'success' => ! $success,
+            'edited'  => true,
         ];
         //TODO настроить сокеты
 //        broadcast(new NewPost([
@@ -326,15 +468,14 @@ class PostsController extends Controller
             ->where('answer_id', $answer_id)
             ->where('user_isn', $user_isn);
 
-        if(count($model->get()) === 0) {
+        if (count($model->get()) === 0) {
             $vote = new UserAnswer();
             $vote->user_isn = $user_isn;
             $vote->question_id = $question_id;
             $vote->answer_id = $answer_id;
             $vote->save();
             $success = true;
-        }
-        else {
+        } else {
             $model->delete();
             $success = false;
         }
@@ -352,10 +493,14 @@ class PostsController extends Controller
         return view('news');
     }
 
-    public function senateVote(Request $request){
+    public function getViewBeta() {
+        return view('news-beta');
+    }
+
+    public function senateVote(Request $request) {
         $answers = $request->answers;
-        foreach ($answers as $answer){
-            if($answer['checked']){
+        foreach ($answers as $answer) {
+            if ($answer['checked']) {
                 $userAnswer = new UserAnswer();
                 $userAnswer->question_id = $request->question;
                 $userAnswer->answer_id = $answer['answer_id'];
@@ -375,7 +520,7 @@ class PostsController extends Controller
         switch ($request->name) {
             case 'boss':
                 return view('dev')->with([
-                   'type' => 'boss'
+                    'type' => 'boss'
                 ]);
             case 'company':
                 return view('dev')->with([
@@ -406,10 +551,29 @@ class PostsController extends Controller
         Debugbar::startMeasure('NewsController@getBossPosts');
         $user_isn = Auth::user()->ISN;
         $last_index = $request->get('lastIndex');
+        $query = $request->get('query');
 
-        $response = $postsService->getPosts($user_isn, $last_index, true);
+        $response = $postsService->getPosts($user_isn, $last_index, $query, true);
 
         Debugbar::stopMeasure('NewsController@getBossPosts');
         return $response;
+    }
+
+    public function getDateValidRanges() {
+        $model = Post::select([\DB::raw('MIN(created_at) as start'), \DB::raw('MAX(created_at) as end')])
+            ->first();
+        $array = $model->toArray();
+
+        unset($array['is_mine']);
+
+        return $array;
+    }
+
+    public function getPostLikes(Request $request) {
+        $postId = $request->get('postId');
+        return Like::wherePostId($postId)
+            ->with(['user' => function (BelongsTo $relation) {
+                $relation->select('id', 'ISN', 'username', 'full_name');
+            }])->get()->pluck('user');
     }
 }
