@@ -137,6 +137,7 @@ class ApiController extends Controller
         $docID = $request->docID;
         $emplName = $request->emplName;
         $solution = $request->solution;
+        $remark = $request->remark;
         $emplList = [];
         foreach ($request->emplList as $item){
             $emplList[] = [
@@ -146,12 +147,13 @@ class ApiController extends Controller
         $client = new \GuzzleHttp\Client();
         $url = 'https://botan.kupipolis.kz/api/get-ol-data';
         $res = $client->request('POST', $url, [
-            'form_params' => [
-                'userIsn' => $userIsn,
-                'docType' => $docClass,
-                'docNum' => $docID,
+            'form_params'  => [
+                'userIsn'  => $userIsn,
+                'docType'  => $docClass,
+                'docNum'   => $docID,
                 'emplName' => $emplName,
                 'solution' => $solution,
+                'remark'   => $remark,
                 'emplList' => $emplList
             ],
             'verify' => false
