@@ -141,7 +141,7 @@ class ApiController extends Controller
         $emplList = [];
         foreach ($request->emplList as $item){
             $emplList[] = [
-                'name' => $item->emplName
+                'name' => $item['emplName']
             ];
         }
         $client = new \GuzzleHttp\Client();
@@ -158,6 +158,6 @@ class ApiController extends Controller
             ],
             'verify' => false
         ]);
-        return $res->getStatusCode() == 200;
+        return response()->json(['success' => !($res->getStatusCode() !== 200 || !$res->success)]);
     }
 }
