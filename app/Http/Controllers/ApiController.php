@@ -158,6 +158,8 @@ class ApiController extends Controller
             ],
             'verify' => false
         ]);
-        return response()->json(['success' => !($res->getStatusCode() !== 200 || !$res->success)]);
+        return response()->json([
+            'success' => $res->getStatusCode() === 200 && $res->success
+        ]);
     }
 }
