@@ -1,29 +1,29 @@
 <template>
-<div>
-            <ul id="demo" class="config">
-                <div class="config__tools">
-                    <label for="search" class="search-container">
-                        Search
-                        <input id="search" class="search-input" type="text" v-model="search" placeholder="Search title.."/>
-                    </label>
-                    <label><select v-model="typeFilter">
-                        <option value="all">All</option>
-                        <option value="clients">Clients</option>
-                        <option value="sites">Sites</option>
-                        <option value="cameras">Camera</option>
-                    </select></label>
-                </div>
+    <div>
+        <ul id="demo" class="config">
+            <div class="config__tools">
+                <label for="search" class="search-container">
+                    Search
+                    <input id="search" class="search-input" type="text" v-model="search" placeholder="Search title.."/>
+                </label>
+                <label><select v-model="typeFilter">
+                    <option value="all">Все</option>
+                    <option value="clients">Департамент</option>
+                    <option value="sites">Управление</option>
+                    <option value="cameras">Менеджер</option>
+                </select></label>
+            </div>
 
-                <tree-folder
-                    v-for="(model, index) in filteredList"
-                    :key="index"
-                    :index="index"
-                    :model="model"
-                    :options="options"
-                    :list="model.children"
-                    :search="search"
-                    :typeFilter="typeFilter"></tree-folder>
-            </ul>
+            <tree-folder
+                v-for="(model, index) in filteredList"
+                :key="index"
+                :index="index"
+                :model="model"
+                :options="options"
+                :list="model.children"
+                :search="search"
+                :typeFilter="typeFilter"></tree-folder>
+        </ul>
     </div>
 </template>
 
@@ -35,143 +35,580 @@
         data() {
             return {
                 treeData: [{
-                    name: 'Агентские выплаты',
-                    type: 'ДКС',
-                    created: 111,
-                    sites: 333,
-                    cameras: 2,
-                    sum: 777,
-                    selected: false,
+                    //1й Деп
+                    type: 'dept', name: 'ДКС', product: 'Агентские выплаты',
+                    fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
                     children: [
-                        { name: 'Нетто Выплаты', type: 'Управление №1', created: '1000000', cameras: 222250, selected: false },
-                        { name: 'Фин. Сборы', type: 'Управление №2', created: '20000000', cameras: 6669850, selected: false },
-                        { name: 'ДСД', type: 'Управление №3', created: '7000000', cameras: 668242, selected: false },
                         {
-                            name: 'Брутто',
-                            type: 'Управление №4',
-                            created: '224568',
-                            cameras: 65647,
-                            selected: false,
-                            sum: 8876,
-                            children: [
-                                {
-                                    name: '2456874',
-                                    type: 'Калиев',
-                                    created: '238874',
-                                    active: false,
-                                    notifications: 'On',
-                                    receiver: 'NVR',
-                                    lastAlarm: 'Today',
-                                    selected: false
-                                },
-                                {
-                                    name: '77732',
-                                    type: 'Салимов',
-                                    created: '252577',
-                                    active: true,
-                                    notifications: 'On',
-                                    receiver: 'NVR',
-                                    lastAlarm: 'Today',
-                                    selected: false
-                                }
-                            ]}]
-                },{
-                    name: 'Агентские выплаты',
-                    type: 'ДСП',
-                    created: '222',
-                    sites: 333,
-                    cameras: 2,
-                    sum: 777,
-                    selected: false,
-                    children: [
-                        { name: 'Site One', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                        { name: 'Site Two', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                        {
-                            name: 'Site Three',
-                            type: 'site',
-                            created: 'Yesterday',
-                            cameras: 2,
+                            type: 'admin',
+                            name: 'Управление №1',
+                            product: 'Нетто Выплаты',
+                            fees: 1000000,
+                            AV: 222250,
+                            payments: 233412,
+                            KV: 2123324,
                             selected: false,
                             children: [
                                 {
-                                    name: 'Camera One',
-                                    type: 'camera',
-                                    created: 'yesterday',
-                                    active: false,
-                                    notifications: 'On',
-                                    receiver: 'NVR',
-                                    lastAlarm: 'Today',
-                                    selected: false
+                                    type: 'manager',
+                                    name: 'Калиев',
+                                    product: '???',
+                                    fees: 238874,
+                                    AV: 78946,
+                                    payments: 764864,
+                                    KV: 87648,
+                                    selected: false,
+                                    active: false
                                 },
                                 {
-                                    name: 'Camera Two',
-                                    type: 'camera',
-                                    created: 'yesterday',
-                                    active: true,
-                                    notifications: 'On',
-                                    receiver: 'NVR',
-                                    lastAlarm: 'Today',
-                                    selected: false
+                                    type: 'manager',
+                                    name: 'Салимов',
+                                    product: '???',
+                                    fees: 238874,
+                                    AV: 78946,
+                                    payments: 764864,
+                                    KV: 87648,
+                                    selected: false, active: false
+                                },
+                            ]
+                        },
+                        {
+                            type: 'admin',
+                            name: 'Управление №2',
+                            product: 'ДСД',
+                            fees: 1000000,
+                            AV: 222250,
+                            payments: 233412,
+                            KV: 2123324,
+                            selected: false,
+                            children: [
+                                {
+                                    type: 'manager',
+                                    name: 'Лисина',
+                                    product: '???',
+                                    fees: 238874,
+                                    AV: 78946,
+                                    payments: 764864,
+                                    KV: 87648,
+                                    selected: false,
+                                    active: false
                                 },
                                 {
-                                    name: 'Camera Three',
-                                    type: 'camera',
-                                    created: 'yesterday',
-                                    active: true,
-                                    notifications: 'On',
-                                    receiver: 'NVR',
-                                    lastAlarm: 'Today',
-                                    selected: false
-                                }
-                            ]}]
-                },{  name: 'Нетто Выплаты',
-                    type: 'ДРПО',
-                    created: '888',
-                    sites: 333,
-                    cameras: 2,
-                    sum: 888,
-                    selected: false,
-                    children: [
-                        { name: 'Site One', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                        { name: 'Site Two', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                    ]
+                                    type: 'manager', name: 'Байбориев', product: '???',
+                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                },
+                            ]
+                        },
+                        {
+                            type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
+                            fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                            children: [
+                                {
+                                    type: 'manager', name: 'Демчук', product: '???',
+                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                },
+                                {
+                                    type: 'manager', name: 'Салимова', product: '???',
+                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                },
+                            ]
+                        },
+                        {
+                            type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
+                            fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                            children: [
+                                {
+                                    type: 'manager', name: 'Сакенов', product: '???',
+                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                },
+                                {
+                                    type: 'manager', name: 'Уроборос', product: '???',
+                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                },
+                            ]
+                        },
+                    ],
                 },
                     {
-                        name: 'Нетто выплаты',
-                        type: 'ДП',
-                        created: '222',
-                        sites: 333,
-                        cameras: 2,
-                        sum: 999,
-                        selected: false,
+                        //2й Деп
+                        type: 'dept', name: 'ДСП', product: 'Агентские выплаты',
+                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
                         children: [
-                            { name: 'Site One', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                            { name: 'Site Two', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                        ]},
+                            {
+                                type: 'admin',
+                                name: 'Управление №1',
+                                product: 'Нетто Выплаты',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Калиев',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager',
+                                        name: 'Салимов',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin',
+                                name: 'Управление №2',
+                                product: 'ДСД',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Лисина',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Байбориев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Демчук', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимова', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Калиев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимов', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                        ],
+                    },
                     {
-                        name: 'Нетто выплаты',
-                        type: 'Филиалы',
-                        created: '222',
-                        sites: 333,
-                        cameras: 2,
-                        sum: 999,
-                        selected: false,
+                        //3й Деп
+                        type: 'dept', name: 'ДРПО', product: 'Агентские выплаты',
+                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
                         children: [
-                            { name: 'Site One', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                            { name: 'Site Two', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                        ]},
+                            {
+                                type: 'admin',
+                                name: 'Управление №1',
+                                product: 'Нетто Выплаты',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Калиев',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager',
+                                        name: 'Салимов',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin',
+                                name: 'Управление №2',
+                                product: 'ДСД',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Лисина',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Байбориев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Демчук', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимова', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Калиев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимов', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                        ],
+                    },
                     {
-                        name: 'Нетто выплаты',
-                        type: 'kupipolis',
-                        created: '222',
-                        sites: 333,
-                        cameras: 2,
-                        sum: 999,
-                        selected: false,
+                        //4й Деп
+                        type: 'dept', name: 'ДП', product: 'Агентские выплаты',
+                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
                         children: [
-                            { name: 'Site One', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                            { name: 'Site Two', type: 'site', created: 'Yesterday', cameras: 0, selected: false },
-                        ]}
+                            {
+                                type: 'admin',
+                                name: 'Управление №1',
+                                product: 'Нетто Выплаты',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Калиев',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager',
+                                        name: 'Салимов',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin',
+                                name: 'Управление №2',
+                                product: 'ДСД',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Лисина',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Байбориев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Демчук', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимова', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Калиев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимов', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        //5й Деп
+                        type: 'dept', name: 'Филиалы', product: 'Агентские выплаты',
+                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                        children: [
+                            {
+                                type: 'admin',
+                                name: 'Управление №1',
+                                product: 'Нетто Выплаты',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Калиев',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager',
+                                        name: 'Салимов',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin',
+                                name: 'Управление №2',
+                                product: 'ДСД',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Лисина',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Байбориев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Демчук', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимова', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Калиев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимов', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        //6й Деп
+                        type: 'dept', name: 'kupipolis', product: 'Агентские выплаты',
+                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                        children: [
+                            {
+                                type: 'admin',
+                                name: 'Управление №1',
+                                product: 'Нетто Выплаты',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Калиев',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager',
+                                        name: 'Салимов',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin',
+                                name: 'Управление №2',
+                                product: 'ДСД',
+                                fees: 1000000,
+                                AV: 222250,
+                                payments: 233412,
+                                KV: 2123324,
+                                selected: false,
+                                children: [
+                                    {
+                                        type: 'manager',
+                                        name: 'Лисина',
+                                        product: '???',
+                                        fees: 238874,
+                                        AV: 78946,
+                                        payments: 764864,
+                                        KV: 87648,
+                                        selected: false,
+                                        active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Байбориев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Демчук', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимова', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                            {
+                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
+                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                                children: [
+                                    {
+                                        type: 'manager', name: 'Калиев', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                    {
+                                        type: 'manager', name: 'Салимов', product: '???',
+                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
+                                    },
+                                ]
+                            },
+                        ],
+                    },
+                    {
+                        //6й Деп
+                        type: 'dept', name: 'Итог', product: 'Агентские выплаты',
+                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
+                    },
                 ],
                 search: '',
                 options: {},
@@ -180,13 +617,13 @@
         },
         created() {
             this.treeData.forEach((d) => {
-                d.id = Math.floor(Math.random()*999)+1;
-                if(d.children) {
+                d.id = Math.floor(Math.random() * 999) + 1;
+                if (d.children) {
                     d.children.forEach((child) => {
-                        child.id = Math.floor(Math.random()*999)+1;
-                        if(child.children) {
+                        child.id = Math.floor(Math.random() * 999) + 1;
+                        if (child.children) {
                             child.children.forEach((childChild) => {
-                                childChild.id = Math.floor(Math.random()*999)+1;
+                                childChild.id = Math.floor(Math.random() * 999) + 1;
                             });
                         }
                     });
@@ -226,7 +663,7 @@
             }
         }
     }
-    String.prototype.contains = function(needle, insensitive){
+    String.prototype.contains = function (needle, insensitive) {
         insensitive = insensitive || false;
         return (!insensitive ?
                 this.indexOf(needle) !== -1 :
@@ -235,7 +672,7 @@
     }
 </script>
 
-<style  scoped>
+<style scoped>
     .search-container {
         display: flex;
         flex-flow: column;
@@ -261,6 +698,7 @@
         background: #2D3C47;
         box-sizing: border-box;
     }
+
     .config *, .config *:before, .config *:after {
         box-sizing: inherit;
     }

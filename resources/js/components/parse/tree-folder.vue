@@ -1,7 +1,7 @@
 <template>
         <li class="item">
-            <ul class="client-headings" v-if="model.type !== 'Менеджер' && index === 0">
-                <li v-if="model.type !== 'ДКС'">
+            <ul class="client-headings" v-if="model.type !== 'manager' && index === 0">
+                <li v-if="model.type !== 'dept'">
                     <span class="straight-line"><svg width="2" height="50" viewBox="0 0 2 50" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fill-rule="evenodd">
                             <path d="M0 15h20v20H0z"/>
@@ -10,19 +10,19 @@
                 </li>
 
                 <li class="client-headings__heading client-headings__heading--select"></li>
-                <li v-if="model.type === 'ДКС'" class="client-headings__heading">Департамент</li>
-                <li v-if="model.type === 'Управление №1'" class="client-headings__heading">Управление</li>
-                <li v-if="model.type === 'Калиев'" class="client-headings__heading">Менеджер</li>
-                <li v-if="model.type === 'ДКС'" class="client-headings__heading">ДСД</li>
-                <li v-if="model.type === 'ДКС'" class="client-headings__heading">Исполнение %</li>
-                <li v-if="model.type === 'ДКС'" class="client-headings__heading">АВ</li>
-                <li v-if="model.type === 'ДКС'" class="client-headings__heading">Выплаты</li>
-                <li v-if="model.type === 'ДКС'" class="client-headings__heading">КВ %</li>
+                <li v-if="model.type === 'dept'" class="client-headings__heading">Департамент</li>
+                <li v-if="model.type === 'admin'" class="client-headings__heading">Управление</li>
+<!--                <li v-if="model.type === 'manager'" class="client-headings__heading">Менеджер</li>-->
+                <li v-if="model.type === 'dept'" class="client-headings__heading">ДСД</li>
+                <li v-if="model.type === 'dept'" class="client-headings__heading">Исполнение %</li>
+                <li v-if="model.type === 'dept'" class="client-headings__heading">АВ</li>
+                <li v-if="model.type === 'dept'" class="client-headings__heading">Выплаты</li>
+                <li v-if="model.type === 'dept'" class="client-headings__heading">КВ %</li>
 
                 <li class="client-headings__heading client-headings__heading--options"></li>
             </ul>
 
-            <ul class="client-headings" v-if="model.type === 'Менеджер' && index === 0">
+            <ul class="client-headings" v-if="model.type === 'manager' && index === 0">
                 <li>
                     <span class="straight-line"><svg width="2" height="50" viewBox="0 0 2 50" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fill-rule="evenodd">
@@ -40,13 +40,12 @@
                 </li>
 
                 <li class="client-headings__heading client-headings__heading--select"></li>
-                <li class="client-headings__heading">Type</li>
-                <li class="client-headings__heading">Name</li>
-                <li class="client-headings__heading">Created</li>
-                <li class="client-headings__heading">Status</li>
-                <li class="client-headings__heading">Notifications</li>
-                <li class="client-headings__heading">Receiver</li>
-                <li class="client-headings__heading">Last Alarm</li>
+                <li class="client-headings__heading">Менеджер</li>
+                <li class="client-headings__heading">ДСД</li>
+                <li class="client-headings__heading">Исполнение %</li>
+                <li class="client-headings__heading">АВ</li>
+                <li class="client-headings__heading">Выплаты</li>
+                <li class="client-headings__heading">КВ %</li>
                 <li class="client-headings__heading client-headings__heading--options"></li>
             </ul>
 
@@ -66,12 +65,12 @@
                     <li class="content__item content__item--select">
                         <input @change="select(model)" :checked="model.selected" class="content__check" type="checkbox" :name="model.name" v-model="model.selected"/><br>
                     </li>
-                    <li class="content__item">{{ model.type }}</li>
                     <li class="content__item">{{ model.name }}</li>
-                    <li class="content__item">{{ model.created }}</li>
-                    <li v-if="model.sites >= 0" class="content__item">{{ model.sites }}</li>
-                    <li v-if="model.cameras >= 0" class="content__item">{{ model.cameras }}</li>
-                    <li v-if="model.sum >= 0" class="content__item">{{ model.sum }}</li>
+                    <li class="content__item">{{ model.product }}</li>
+                    <li class="content__item">{{ model.fees }}</li>
+                    <li v-if="model.AV >= 0" class="content__item">{{ model.AV }}</li>
+                    <li v-if="model.payments >= 0" class="content__item">{{ model.payments }}</li>
+                    <li v-if="model.KV >= 0" class="content__item">{{ model.KV }}</li>
                     <li v-if="model.lastAlarm" class="content__item" :class="statusColor(model.active)">{{ model.active }}</li>
                     <li v-if="model.notifications" class="content__item">{{ model.notifications }}</li>
                     <li v-if="model.receiver" class="content__item">{{ model.receiver }}</li>
@@ -114,11 +113,11 @@
         <path d="M0 15h20v20H0z"/>
         <path stroke="#5BA2D4" fill="#D8D8D8" d="M.5.5h1v49h-1z"/>
         <path d="M20 24v2H0v-2z"/></g></svg></span>
-                        <span class="line">
+                        <!--<span class="line">
 <svg width="20" height="26" viewBox="0 0 20 26" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd">
     <path d="M0 15h20v20H0z"/>
     <path d="M0 0h2v50H0z"/>
-    <path stroke="#5BA2D4" d="M.5.5h1v24h-1zM19.5 24.5v1H.5v-1z"/></g></svg></span>
+    <path stroke="#5BA2D4" d="M.5.5h1v24h-1zM19.5 24.5v1H.5v-1z"/></g></svg></span>-->
                         <!--<a @click="addChild()" class="child__add">{{addText(model.type)}}</a>-->
                     </div>
                 </li>
@@ -306,6 +305,9 @@
         overflow: hidden;
         white-space: nowrap;
     }
+    .child li.content__item {
+
+    }
 
     .content__item--select {
         display: inline-flex;
@@ -339,8 +341,8 @@
         flex-flow: row;
     }
 
-    .child--hasChildren .content {
-        margin-left: 2rem;
+    .child--hasChildren ul.content {
+        margin-left: 0;
         display: inline-flex;
     }
     .child--hasChildren .content:hover {
@@ -462,6 +464,7 @@
         display: none;
     }
 
+    ul.content,
     .content {
         padding: 0;
         flex: 1;
@@ -487,7 +490,7 @@
     .child__add:hover {
         opacity: 1;
     }
-    .child .content {
+/*    .child .content {
         margin-left: 32px;
-    }
+    }*/
 </style>
