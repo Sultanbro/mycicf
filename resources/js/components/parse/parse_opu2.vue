@@ -50,23 +50,21 @@
                                    <td>{{Math.floor(item.kpn) | numberFormat}}</td>
                                    <td>{{Math.floor(item.net_income) | numberFormat}}</td>
                                </tr>
-                           </template>
-                       <template v-for="elem in secondData">
-                               <tr v-if="opened.includes(elem.company.id)">
+                               <tr v-if="opened.includes(item.company.id)">
                                    <td>Второй период</td>
-                                   <td>{{Math.floor(elem.dsd) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.net_payout) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.av) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.net_ins_income) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.reserve_changes) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.fin_changes) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.invest_income) | numberFormat}}
-                                   <td>{{Math.floor(elem.other_income) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.kpn) | numberFormat}}</td>
-                                   <td>{{Math.floor(elem.net_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].dsd) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].net_payout) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].av) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].net_ins_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].reserve_changes) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].fin_changes) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].invest_income) | numberFormat}}
+                                   <td>{{Math.floor(secondData[index].other_income) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].kpn) | numberFormat}}</td>
+                                   <td>{{Math.floor(secondData[index].net_income) | numberFormat}}</td>
                                </tr>
 
-<!--                           <tr v-if="opened.includes(item.id)">
+                           <tr v-if="opened.includes(item.company.id)">
                                <td class="bold fs-0_9 bg-grayblue">Изменения</td>
                                <td>{{ Math.floor((item.dsd / secondData[index].dsd - 1) * 100 || 0)}}%</td>
                                <td>{{ Math.floor((item.net_payout / secondData[index].net_payout - 1) * 100 || 0)}}%</td>
@@ -78,7 +76,7 @@
                                <td>{{ Math.floor((item.other_income / secondData[index].other_income - 1) * 100 || 0)}}%</td>
                                <td>{{ Math.floor((item.kpn / secondData[index].kpn - 1) * 100 || 0)}}%</td>
                                <td>{{ Math.floor((item.net_income / secondData[index].net_income - 1) * 100 || 0)}}%</td>
-                           </tr>-->
+                           </tr>
                        </template>
                        </tbody>
                     </table>

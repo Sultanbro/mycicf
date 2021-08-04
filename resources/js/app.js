@@ -179,6 +179,8 @@ Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 Vue.component('my-parse', require('./components/parse/my-parse.vue').default);
 Vue.component('top-company', require('./components/parse/top-company.vue').default);
 Vue.component('parse-centras', require('./components/parse/parse-centras.vue').default);
+Vue.component('tree-folder', require('./components/parse/tree-folder.vue').default);
+/*Vue.component('tree-folder-contents', require('./components/parse/tree-folder-contents.vue').default);*/
 Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 Vue.component('parse_opu2', require('./components/parse/parse_opu2.vue').default);
 Vue.component('parse_indicators2', require('./components/parse/parse_indicators2.vue').default);
