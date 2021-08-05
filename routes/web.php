@@ -577,3 +577,9 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('caching', 'Dev\CachingController@index')->name('.caching');
     Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });
+
+//General-application
+Route::get('/general-app', 'GeneralAppController@index');
+Route::get('/createGeneralApp', 'GeneralAppController@create')->name('createGeneralApp');
+
+
