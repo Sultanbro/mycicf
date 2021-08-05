@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade bd-example-modal-lg" :style="modalHide" id="contractListModal" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-lg" :style="modalHide" id="contractListAnnul" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content products-margin modal-lg-custom modal-custom-border-top">
@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="pt-2 pb-1 bold">
                                     <i class="far fa-file-alt"></i>
-                                    <span class="ml-2">Приложение СЗ. На внесение изменений в договор</span>
+                                    <span class="ml-2">Приложение СЗ. Список договоров для аннулирования/расторжения</span>
                                 </div>
                             </div>
                         </div>
@@ -29,34 +29,34 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <div class="col-md-12" v-if="!editMode">
-                                    <tr class="thead-inverse">
-                                        <th class="col-md-6">Номер договора</th>
-                                        <th class="">Комментарии</th>
-                                    </tr>
-                                </div>
-                                <div class="col-md-12" v-if="editMode">
-                                    <tr class="thead-inverse">
-                                        <th class="col-md-6">Номер договора</th>
-                                        <th class="">Комментарии</th>
-                                    </tr>
-                                    <tr v-for="name in contractName">
-                                        <td class="input-group">
-                                            <input v-model="name.contractNumber" @click="OpenModal(name)" type="text" class="form-control" :disabled="name.isn == '1' && contractListCheckBool">
-                                            <div class="input-group-append">
-                                                <button type="submit" class="btn-light" @click="OpenModal(name)" :disabled="name.isn == '1' && contractListCheckBool">
-                                                    <i class="fa fa-search"></i>
-                                                </button>
-                                                <button type="submit" class="btn-light" @click="clearInfo(name)">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td class="col-md-6">
-                                            <input v-model="name.comment" type="text" class="form-control">
-                                        </td>
-                                    </tr>
-                                </div>
+                            <div class="col-md-12" v-if="!editMode">
+                                <tr class="thead-inverse">
+                                    <th class="col-md-6">Номер договора</th>
+                                    <th class="">Комментарии</th>
+                                </tr>
+                            </div>
+                            <div class="col-md-12" v-if="editMode">
+                                <tr class="thead-inverse">
+                                    <th class="col-md-6">Номер договора</th>
+                                    <th class="">Комментарии</th>
+                                </tr>
+                                <tr v-for="name in contractName">
+                                    <td class="input-group">
+                                        <input v-model="name.contractNumber" @click="OpenModal(name)" type="text" class="form-control" :disabled="name.isn == '1' && contractListCheckBool">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal(name)" :disabled="name.isn == '1' && contractListCheckBool">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo(name)">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="col-md-6">
+                                        <input v-model="name.comment" type="text" class="form-control">
+                                    </td>
+                                </tr>
+                            </div>
                             </tbody>
                         </table>
                         <div class="col-md-2">
@@ -90,13 +90,12 @@
 
 <script>
 import DatePicker from "vue2-datepicker";
-import 'vue2-datepicker/index.css';
-import MaskedInput from 'vue-text-mask';
-import 'vue2-datepicker/locale/ru';
-import moment from 'moment'
+import MaskedInput from "vue-text-mask";
 import ContractJournalModal from "./contract-journal-modal";
+import 'vue2-datepicker/index.css';
+import 'vue2-datepicker/locale/ru';
 export default {
-name: "contract-list-modal",
+name: "contract-list-annul",
     props: {
         results: {},
         recordingCounterparty: Object ,
@@ -108,19 +107,16 @@ name: "contract-list-modal",
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
             modalHide: '',
             loading: false,
-            searchingResult: {},
             check:false,
             index: '',
             editMode: false,
             contractName: [],
             contractNameTemporary: {},
-            contractListClassIsn: '1784861',
+            contractListClassIsn: '826621',
             contractNameCheck: {},
             contractListCheckBool: false,
+            searchingResult: {},
         }
-    },
-    created() {
-
     },
     methods: {
         getDatePicker() {
@@ -150,14 +146,14 @@ name: "contract-list-modal",
         saveContract(){
             if(this.contractName.length == 0){
                 alert('Вы не создали документ!')
-                this.$parent.$refs.modalContractList.click()
+                this.$parent.$refs.modalContractListAnnul.click()
                 return
             }
             for(let i=0; i<this.contractName.length; i++){
                 if(this.contractName[0].valn1 == '' && this.contractName[0].isn == '0'){
                     alert('Вы не выбрали документ!')
                     this.contractName = []
-                    this.$parent.$refs.modalContractList.click()
+                    this.$parent.$refs.modalContractListAnnul.click()
                     return
                 }
                 if(this.contractName[i].valn1 == undefined && this.contractName[i].isn == '0' || this.contractName[i].valn1 == '' && this.contractName[i].isn == '0'){
@@ -167,7 +163,7 @@ name: "contract-list-modal",
                     this.editMode = true
                     if(this.contractName.length == 0){
                         this.contractName = []
-                        this.$parent.$refs.modalContractList.click()
+                        this.$parent.$refs.modalContractListAnnul.click()
                         return
                     }
                 }
@@ -202,20 +198,20 @@ name: "contract-list-modal",
             if(this.contractName[0].isn == '0'){
                 alert('Вы не сохранили договор в Приложение !')
             }
-            this.$parent.$refs.modalContractList.click();
+            this.$parent.$refs.modalContractListAnnul.click();
         },
         OpenModal(doc) {
             this.preloader(true);
             this.preloader(false);
             this.contractNameTemporary = doc
-            this.recordingCounterparty.type = 'Список договоров  для внесение изменение'
+            this.recordingCounterparty.type = 'Список договоров  для аннулирования/прекращения'
             this.$refs.modalContract.click();
         },
         clearInfo(doc){
             for(let i=0; i<this.contractName.length; i++){
                 if(this.contractName[0].valn1 == '' && this.contractName[0].isn == '0'){
                     this.contractName = []
-                    this.$parent.$refs.modalContractList.click()
+                    this.$parent.$refs.modalContractListAnnul.click()
                 }
                 if(this.contractName[i].valn1 == undefined && this.contractName[i].isn == '0' || this.contractName[i].valn1 == '' && this.contractName[i].isn == '0'){
                     delete this.contractName[i]
@@ -224,7 +220,7 @@ name: "contract-list-modal",
                     this.editMode = true
                     if(this.contractName.length == 0){
                         this.contractName = []
-                        this.$parent.$refs.modalContractList.click()
+                        this.$parent.$refs.modalContractListAnnul.click()
                     }
                 }
             }
@@ -263,7 +259,7 @@ name: "contract-list-modal",
         },
         close() {
             this.contractName = []
-            this.$parent.$refs.modalContractList.click()
+            this.$parent.$refs.modalContractListAnnul.click()
         },
         preloader(show){
             if(show){

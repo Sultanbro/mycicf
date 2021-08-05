@@ -463,17 +463,17 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null)
-    public function getSubject($firstName, $lastName, $patronymic, $iin)
-    {
-        return $this->request('User_CicSearchSubject', [
-            'IIN'          => $iin,
-            'FIRSTNAME'    => $firstName,
-            'LASTNAME'     => $lastName,
-            'PARENTNAME'   => $patronymic,
-            'ISN'          => $isn
-        ]);
-    }
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null){}
+//    public function getSubject($firstName, $lastName, $patronymic, $iin)
+//    {
+//        return $this->request('User_CicSearchSubject', [
+//            'IIN'          => $iin,
+//            'FIRSTNAME'    => $firstName,
+//            'LASTNAME'     => $lastName,
+//            'PARENTNAME'   => $patronymic,
+//            'ISN'          => $isn
+//        ]);
+//    }
 
     public function saveSubject($participant){
         return $this->request('User_CicSaveSubject', array_merge($participant,[

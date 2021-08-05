@@ -444,6 +444,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div v-else-if="result.fullname === 'Список договоров  для аннулирования/прекращения'">
+                                    <div class="input-group">
+                                        <input v-model="contractList.fullName" @click="OpenModal('Список договоров  для аннулирования/прекращения')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Список договоров  для аннулирования/прекращения')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div v-else-if="result.fullname === 'Список командируемых' || result.fullname === 'Список командируемых' || result.fullname === 'Куратор агента (новый)'
                                      || result.fullname === 'Председатель комиссии' || result.fullname === 'Член комиссии 1' || result.fullname === 'Член комиссии 2'
                                      || result.fullname === 'Член комиссии 3' || result.fullname === 'Член комиссии 4' || result.fullname === 'Член комиссии 5'
@@ -647,6 +657,13 @@
             :contractList="contractList"
         >
         </contract-list-modal>
+        <button v-show="false" ref="modalContractListAnnul" type="button" data-toggle="modal" data-target="#contractListAnnul"></button>
+        <contract-list-annul
+            :recordingCounterparty="recordingCounterparty"
+            :results="results"
+            :contractList="contractList"
+        >
+        </contract-list-annul>
     </div>
 </template>
 <script>
@@ -658,6 +675,7 @@
     import DocumentModal from "./document-modal";
     import CounterpartyJournalModal from "./counterparty-journal-modal";
     import ContractListModal from "./contract-list-modal";
+    import ContractListAnnul from "./contract-list-annul";
     export default {
         name: "approval-sheet",
         props: {
@@ -1041,6 +1059,15 @@
                                             }
                                         }
                                     }
+                                    if (this.results.classisn === '826591'){
+                                        for (let i =0; i< response.data.results.resDop.length; i++){
+                                            if (response.data.results.resDop[i].fullname=='Список договоров  для аннулирования/прекращения' && response.data.results.resDop[i].value != ''){
+                                                this.showContractList = true
+                                                this.contractList.fullName = response.data.results.resDop[i].value
+                                                this.contractList.isn = response.data.results.resDop[i].val
+                                            }
+                                        }
+                                    }
                                     this.fillIn = true;
                                     this.toForm = true;
                                     this.saveDoc = false;
@@ -1142,6 +1169,15 @@
                     this.recordingCounterparty.type = doc
                     this.$refs.modalContractList.click();
                 }
+                if (doc === 'Список договоров  для аннулирования/прекращения') {
+                    this.preloader(false);
+                    // if(this.contractList.fullName === ''){
+                    //     alert('Пока Вы не создали Приложение СЗ. Список договоров для аннулирования/прекращения!')
+                    //     return
+                    // }
+                    this.recordingCounterparty.type = doc
+                    this.$refs.modalContractListAnnul.click();
+                }
             },
             clearInfo(data){
                 if(data === this.results.contragent.fullname){
@@ -1179,6 +1215,7 @@
             },
         },
         components: {
+            ContractListAnnul,
             ContractListModal,
             DocumentModal,
             DatePicker,

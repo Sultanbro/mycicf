@@ -533,8 +533,6 @@ export default {
             listDocIsn: null,
             coordination: {},
             saveDoc: true,
-            required: false,
-            sendOutForm: false,
             type: 1,
             toForm: false,
             fillIn: false,
@@ -919,18 +917,5 @@ export default {
 <style scoped>
 .vdp-datepicker input {
     background: none;
-}
-.input-container {
-    display: flex;
-    width: 100%;
-    margin-bottom: 15px;
-}
-.input-field {
-    width: 100%;
-    padding: 10px;
-    outline: none;
-}
-.input-field:focus {
-    border: 2px solid dodgerblue;
 }
 </style>
