@@ -732,7 +732,7 @@ class KiasMock implements KiasServiceInterface {
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin) {
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn = null) {
         $this->collector->push([
             'method' => 'getSubject',
             'firstName' => $firstName,

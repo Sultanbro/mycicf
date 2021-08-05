@@ -2212,10 +2212,10 @@ fieldset[disabled] a.btn {
 }
 
 .btn-outline-primary {
-  color: #007bff;
+  color: #115c9f;
   background-color: transparent;
   background-image: none;
-  border-color: #007bff;
+  border-color: #115c9f;
 }
 
 .btn-outline-primary:hover {
@@ -4712,6 +4712,7 @@ button.close {
   }
 }
 
+
 @media (min-width: 992px) {
   .modal-lg {
     max-width: 800px;
@@ -6524,8 +6525,8 @@ a.bg-dark:focus, a.bg-dark:hover {
 }
 
 .mt-4 {
-  margin-top: 1.5rem !important;
-}
+   margin-top: 1.5rem !important;
+ }
 
 .mr-4 {
   margin-right: 1.5rem !important;

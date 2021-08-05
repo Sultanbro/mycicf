@@ -38,6 +38,10 @@ class Kernel extends ConsoleKernel
                 ->timezone('Asia/Almaty');
             $schedule->command('update:refunds')
                 ->everyFiveMinutes();
+            $schedule->command('update:payout')
+                ->everyFiveMinutes();
+            $schedule->command('update:payoutrequest')
+                ->everyFiveMinutes();
 //            $schedule->command('update:fullConstructor')
 //                ->dailyAt('03:00')
 //                ->timezone('Asia/Almaty');
