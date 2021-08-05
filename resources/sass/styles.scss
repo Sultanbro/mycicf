@@ -7,7 +7,8 @@ a:hover{
 }
 ul{
     list-style: none;
-    margin: 0 !important;
+    /*margin: 0 !important;
+    Если включить, сломается Таблица Компания Parse tree-folder.vue*/
     padding: 0;
 }
 /* FONTS  START */
@@ -1476,9 +1477,13 @@ div-size{
 .main_margin{
     margin: 0 9rem;
 }
+.main_margin1{
+    margin: 0;
+}
 .flex-row{
     display: flex;
     flex-flow: row;
+    justify-content: center;
 }
 /*Конец стилей страницы входа*/
 /*Начало главной страницы новостей*/

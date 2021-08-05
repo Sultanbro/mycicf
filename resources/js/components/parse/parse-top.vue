@@ -1,19 +1,19 @@
 <template>
     <div class="bg-white pl-3 pr-3 box-shadow border-16">
         <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
-            <div class="flex-row jc-sb">
+<!--            <div class="flex-row jc-sb">
                 <a href="/parse/company">
                     <div class="custom-primary-button-inverse pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-chart-pie"></i>
                         <div class="mt-1 fs-0_8">Сборы</div>
                     </div>
                 </a>
-                <!--a href="/parse/finance">
+                &lt;!&ndash;a href="/parse/finance">
                     <div class="custom-primary-button-inverse pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-sliders-h settings-icon-transform270"></i>
                         <div class="mt-1 fs-0_8">Показатели</div>
                     </div>
-                </a-->
+                </a&ndash;&gt;
                 <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                     <i class="fa fa-user-friends"></i>
                     <div class="mt-1 fs-0_8">Конкуренты</div>
@@ -27,10 +27,10 @@
                 <a @click="changePage('/parse/table-indicators')" href="javascript:void(0);">
                     <div class="p-2">БАЛАНС</div>
                 </a>
-<!--                <a href="/parse/table-info">-->
-<!--                    <div class="p-2">ИНФО</div>-->
-<!--                </a>-->
-            </div>
+&lt;!&ndash;                <a href="/parse/table-info">&ndash;&gt;
+&lt;!&ndash;                    <div class="p-2">ИНФО</div>&ndash;&gt;
+&lt;!&ndash;                </a>&ndash;&gt;
+            </div>-->
 
             <div class="flex-row">
                 <div class="mr-10 parse-top-company-select">

@@ -77,10 +77,15 @@ class ParseController extends Controller
         return $acceptedUsers;
     }
 
-    public function company()
+    public function DataCompany()
     {
         return view('parse/company');
     }
+
+/*    public function company()
+    {
+        return view('parse/company');
+    }*/
     public function dealerRaiting()
     {
         return view('dealerRaiting');
@@ -577,7 +582,8 @@ class ParseController extends Controller
             self::INDIVIDUAL => 'Личное',
         ];
     }
-    public function getCompanyTopSum(){
+    public function getCompanyTopSum(Request $request){
+
         $label_first = '';
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
@@ -1196,19 +1202,21 @@ class ParseController extends Controller
                 $ranking[$id] = $i++;
             }
         }
-        return view('parse.top-company', [
-            'premium_first' => $premium_first,
-            'premium_second' => $premium_second,
-            'payout_first' => $payout_first,
-            'payout_second' => $payout_second,
-            'companyList' => $this->getCompanyListWithId(),
-            'label' => $label,
-            'ranking' => $ranking,
-            'label_first' => $label_first,
-            'label_second' => $label_second,
-            'month' => $this->getMonthLabels(),
-            'quarter' => $this->getQuarterLabels(),
-            'controller' => $this
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'premium_first' => $premium_first,
+                'premium_second' => $premium_second,
+                'payout_first' => $payout_first,
+                'payout_second' => $payout_second,
+                'companyList' => $this->getCompanyListWithId(),
+                'label' => $label,
+                'ranking' => $ranking,
+                'label_first' => $label_first,
+                'label_second' => $label_second,
+                'month' => $this->getMonthLabels(),
+                'quarter' => $this->getQuarterLabels(),
+            ]
         ]);
     }
     public function getClassTopSum(){
@@ -1475,20 +1483,23 @@ class ParseController extends Controller
             $class_sum[$id]['payout_second'] = $second_payout;
         }
 
-        return view('parse.top-classes', [
-            'premium_first' => $premium_first,
-            'premium_second' => $premium_second,
-            'payout_first' => $payout_first,
-            'payout_second' => $payout_second,
-            'productList' => $this->getProductListWithId(),
-            'insuranceClassList' => $insurance_classes,
-            'class_sum' => $class_sum,
-            'label' => $label,
-            'label_first' => $label_first,
-            'label_second' => $label_second,
-            'month' => $this->getMonthLabels(),
-            'quarter' => $this->getQuarterLabels(),
-            'controller' => $this,
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'premium_first' => $premium_first,
+                'premium_second' => $premium_second,
+                'payout_first' => $payout_first,
+                'payout_second' => $payout_second,
+                'productList' => $this->getProductListWithId(),
+                'insuranceClassList' => $insurance_classes,
+                'class_sum' => $class_sum,
+                'label' => $label,
+                'label_first' => $label_first,
+                'label_second' => $label_second,
+                'month' => $this->getMonthLabels(),
+                'quarter' => $this->getQuarterLabels(),
+                'insuranceClass'=> $this->getNameWithClassId(),
+            ]
         ]);
     }
     /**
@@ -1609,6 +1620,38 @@ class ParseController extends Controller
 //                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
 //            ]);
     }
+
+    public function getOpuNewSum(Request $request){
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
+        $firstData = ParseOpu::where('month','=', $firstPeriod)->where('year','=', $firstYear)
+            ->with('company')
+            ->get(['company_id','dsd','net_payout','av','net_ins_income','reserve_changes','fin_changes','invest_income','other_income','kpn','net_income']);
+
+        $secondData = ParseOpu::where('month','=', $secondPeriod)->where('year','=', $secondYear)
+            ->get(['company_id','dsd','net_payout','av','net_ins_income','reserve_changes','fin_changes','invest_income','other_income','kpn','net_income']);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'firstData' => $firstData,
+                'secondData' => $secondData,
+            ]
+        ]);
+
+    }
+
     public function getCurrentPeriods($type) {
         try {
             switch ($type) {
@@ -1830,6 +1873,41 @@ class ParseController extends Controller
 //                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
 //            ]);
     }
+
+    public function getBalanceNewSum(Request $request){
+
+        /**
+         * Периоды с фронта
+         * $firstYear год от (INT)
+         * $secondYear год до (INT)
+         * $firstPeriod месяц от (INT)
+         * $secondPeriod месяц до (INT)
+         */
+        $firstYear = $request->first_year;
+        $secondYear = $request->second_year;
+        $firstPeriod = $request->first_period;
+        $secondPeriod = $request->second_period;
+
+        $firstData = ParseBalance::where('month','=', $firstPeriod)->where('year','=', $firstYear)
+            ->with('company')
+            ->get(['company_id','cash','deposits','securities','rev_repo','ins_dz','other_dz','other_actives',
+                'repo','reserves','rnp','rznu','rpnu','other_liability','retained_earnings']);
+
+        $secondData = ParseBalance::where('month','=', $secondPeriod)->where('year','=', $secondYear)
+            ->with('company')
+            ->get(['company_id','cash','deposits','securities','rev_repo','ins_dz','other_dz','other_actives',
+                'repo','reserves','rnp','rznu','rpnu','other_liability','retained_earnings']);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'firstData' => $firstData,
+                'secondData' => $secondData,
+            ]
+        ]);
+
+    }
+
     public function getCompanyTopInfo(Request $request) {
         $companyList = $request->company_list;
 
