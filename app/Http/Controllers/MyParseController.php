@@ -1075,7 +1075,7 @@ class MyParseController extends Controller
         return $result.'%';
     }
 
-    public function getOpuTopSum(Request $request){
+    public function getOpuNewSum(Request $request){
 
         /**
          * Периоды с фронта
@@ -1106,7 +1106,7 @@ class MyParseController extends Controller
 
     }
 
-    public function getBalanceTopSum(Request $request){
+    public function getBalanceNewSum(Request $request){
 
         /**
          * Периоды с фронта

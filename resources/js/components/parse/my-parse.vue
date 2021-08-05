@@ -231,7 +231,7 @@
         methods: {
 
             async getClassTopSum() {
-                let response = await this.axios.get('/parse/my-parse/product', {
+                let response = await this.axios.get('/parse/company/product', {
                     params: {
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
@@ -247,7 +247,7 @@
             },
 
             async getCompanyTopSum() {
-                let response = await this.axios.get('/parse/my-parse/icompany', {
+                let response = await this.axios.get('/parse/company/icompany', {
                     params: {
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
@@ -299,6 +299,10 @@
                 }
                 else if(this.viewType =='parse-indicators'){
                     this.Balance();
+                }
+                else if(this.viewType == 'parse-centras'){
+                    this.getCompanyTopSum();
+                    this.getClassTopSum();
                 }
             }
         },

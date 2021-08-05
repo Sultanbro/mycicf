@@ -215,20 +215,20 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
             Route::post('/documentation/search', 'DocumentationController@search');
             //PARSE
-            Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+            /*Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');*/
             //NEW PARSE
-            Route::get('parse/my-parse', 'ParseController@DataCompany')->name('parse/my-parse');
-            Route::get('parse/my-parse/icompany', 'MyParseController@getCompanyTopSum');
-            Route::get('parse/my-parse/product', 'MyParseController@getClassTopSum');
-            Route::post('parse/my-parse/opu', 'MyParseController@getOpuTopSum');
-            Route::post('parse/my-parse/balance', 'MyParseController@getBalanceTopSum');
+            Route::get('parse/company', 'ParseController@DataCompany')->name('parse');
+            Route::get('parse/company/icompany', 'ParseController@getCompanyTopSum');
+            Route::get('parse/company/product', 'ParseController@getClassTopSum');
+            Route::post('parse/company/opu', 'ParseController@getOpuNewSum');
+            Route::post('parse/company/balance', 'ParseController@getBalanceNewSum');
 
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
             Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
 
-            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
-            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
+/*            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
+            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');*/
             Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
 
             //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data

@@ -116,7 +116,7 @@
 
             async BalanceCompany() {
 
-                this.axios.post('/parse/my-parse/balance', {
+                this.axios.post('/parse/company/balance', {
                     first_year: this.periods.first_year,
                     second_year: this.periods.second_year,
                     first_period: this.periods.first_period - 1,

@@ -123,7 +123,7 @@
 
             async OpuCompany() {
 
-                this.axios.post('/parse/my-parse/opu', {
+                this.axios.post('/parse/company/opu', {
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
                         first_period: this.periods.first_period - 1,
