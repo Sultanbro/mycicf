@@ -2919,9 +2919,9 @@ class ParseController extends Controller
                 $request->input('callback')
             );
     }
-    public function redirectToCompany(){
+/*    public function redirectToCompany(){
         return redirect('/parse/company');
-    }
+    }*/
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
     {
