@@ -213,6 +213,10 @@ Vue.component('rating-list', require('./components/results/rating-list').default
 
 Vue.component('employee-rate', require('./components/results/employee-rate').default);
 
+Vue.component('general-app', require('./components/generalApp/generalApp').default);
+Vue.component('ga-ViewApp', require('./components/generalApp/ga-ViewApp').default);
+Vue.component('creat-general-app', require('./components/generalApp/creat-general-app').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',
@@ -254,3 +258,4 @@ window.onload = function(){
         el: '#header',
     });
 };
+

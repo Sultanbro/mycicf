@@ -28,6 +28,7 @@
                             <ul class="sub-menu">
                                 <li id="express"><a href="/express" class="item">Экспресс котировка</a></li>
                                 <li id="full"><a href="/full" class="item">Полная котировка</a></li>
+                                <li id="generalApp"><a href="/general-app" class="item">Генеральная заявка</a></li>
                             </ul>
                         </li>
                     </ul>
