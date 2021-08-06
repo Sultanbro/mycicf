@@ -650,20 +650,24 @@
             :results="results"
         >
         </counterparty-journal-modal>
-        <button v-show="false" ref="modalContractList" type="button" data-toggle="modal" data-target="#contractListModal">Large modal</button>
-        <contract-list-modal
-            :recordingCounterparty="recordingCounterparty"
-            :results="results"
-            :contractList="contractList"
-        >
-        </contract-list-modal>
-        <button v-show="false" ref="modalContractListAnnul" type="button" data-toggle="modal" data-target="#contractListAnnul"></button>
-        <contract-list-annul
-            :recordingCounterparty="recordingCounterparty"
-            :results="results"
-            :contractList="contractList"
-        >
-        </contract-list-annul>
+        <div v-if="results['classisn']==='1783591'">
+            <button v-show="false" ref="modalContractList" type="button" data-toggle="modal" data-target="#contractListModal">Large modal</button>
+            <contract-list-modal
+                :recordingCounterparty="recordingCounterparty"
+                :results="results"
+                :contractList="contractList"
+            >
+            </contract-list-modal>
+        </div>
+        <div v-if="results['classisn']==='826591'">
+            <button v-show="false" ref="modalContractListAnnul" type="button" data-toggle="modal" data-target="#contractListAnnul"></button>
+            <contract-list-annul
+                :recordingCounterparty="recordingCounterparty"
+                :results="results"
+                :contractList="contractList"
+            >
+            </contract-list-annul>
+        </div>
     </div>
 </template>
 <script>
