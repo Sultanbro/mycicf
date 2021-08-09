@@ -46,7 +46,6 @@ class NotificationService implements NotificationServiceInterface {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
             curl_close($ch);
-            echo $response;
         } else {
             // echo 'ERROR';
         }
