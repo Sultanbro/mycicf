@@ -7,22 +7,29 @@
             <div class="contact_sidebar col-md-2" style="height: min-content">
                 <div @click="getLevelOne(item)"
                      v-for="item in itemsLevelZero">
-                    <button class="btn m-1 ml-1">
+                    <button class="btn m-1" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
                         <b>{{item.name}}</b>
                     </button>
-                    <div @click="getLevelTwo(innerItem)"
+<!--                    <i v-if="showS" class="ml-3 fa fa-trash"></i>-->
+                    <div class="collapse" id="collapse1"
+                         @click="getLevelTwo(innerItem)"
                          v-for="innerItem in itemsLevelOne"
                          v-if="innerItem.parent_id === item.id">
-                        <button class="btn m-1 ml-2">
+                        <button class="btn m-1 ml-2" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
                             <em>{{innerItem.name}}</em>
                         </button>
-                        <div @click="getLevelThree(innerItem_1)"
+<!--                        <i v-if="showS" class="ml-3 fa fa-trash"></i>-->
+                        <div class="collapse" id="collapse2"
+                             @click="getLevelThree(innerItem_1)"
                              v-for="innerItem_1 in itemsLevelTwo"
                              v-if="innerItem_1.parent_id === innerItem.id">
                             <button class="btn m-1 ml-4">{{innerItem_1.name}}</button>
+<!--                            <i v-if="showS" class="ml-3 fa fa-trash"></i>-->
                         </div>
                     </div>
                 </div>
+<!--                <button type="button" class="btn btn-primary" @click="editSidebar()">Редактировать боковую панель</button>-->
+<!--                <button v-if="showS" type="button" class="btn btn-success">Сохранить</button>-->
             </div>
 
             <div class="col-md-9" style="margin-left: 140px">
@@ -31,14 +38,14 @@
                 </div>
                 <div class="mt-3">
                     <div class="pb-2 ct-myMainCont" v-for="(text, name_id) in texts">
-                        <input v-if="text.editNameMode" type="text" v-model="text.name" style="width: 75%; height: 40px;"/>
+                        <input v-if="text.editNameMode" type="text" v-model="text.name" style="width: 75%; height: 40px"/>
                         <button v-else type="button" class="col-md-9 ct-myBtn btn my-btn ct-myBottomSize" :data-target="`#hiInsIvOgpoVts_${name_id}`" @click="editMode1 =! editMode1">{{text.name}}</button>
                         <i v-if="editMode === name_id" @click="deleteField(text, name_id)" class="ml-3 fa fa-trash fa-lg" title="Удалить"></i>
                         <hr>
                         <div :id="`hiInsIvOgpoVts_${name_id}`">
                             <div v-if="editMode === name_id">
                                 <div v-for="(text1, index) in text.labels" :key="index" v-if="!text1.deleted"
-                                     style="display: flex; justify-content: flex-start; align-items: center;">
+                                     style="display: flex; justify-content: flex-start; align-items: center">
                                     <textarea v-model="text.labels[index].text" style="width: 75%; height: 60px"></textarea>
                                     <button @click="deleteText(text, index, name_id)" type="button" class="btn btn-danger ml-3">Удалить</button>
                                 </div>
@@ -99,6 +106,7 @@ export default {
             selectedId: '',
             showH: false,
             showG: true,
+            showS: false,
             levelOneName: '',
             levelTwoName: '',
             levelThreeName: '',
@@ -126,6 +134,7 @@ export default {
                 this.texts = []
             }
             this.showG = false
+            this.showH = false
             this.selectedId = item.id
             if(this.levelOnePinned === ''){
                 this.levelOnePinned = item.id
@@ -229,6 +238,9 @@ export default {
             this.editMode = index
             this.saveDoc = true
         },
+        // editSidebar() {
+        //     this.showS = true
+        // },
         addField() {
             this.texts.push({
                 name : 'Текст',
