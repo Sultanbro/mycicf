@@ -546,6 +546,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/qrmanagerreport', 'TestqrController@managerReportQR');
     Route::any('/qrmanagerreport', 'TestqrController@managerReportQR');
     Route::post('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::get('/getData', 'OracleParseController@getData');
 });
 
 Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
