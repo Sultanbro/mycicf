@@ -215,7 +215,7 @@ Vue.component('employee-rate', require('./components/results/employee-rate').def
 
 Vue.component('general-app', require('./components/generalApp/generalApp').default);
 Vue.component('ga-ViewApp', require('./components/generalApp/ga-ViewApp').default);
-Vue.component('creat-general-app', require('./components/generalApp/creat-general-app').default);
+Vue.component('create-general-app', require('./components/generalApp/create-general-app').default);
 
 window.onload = function(){
     var app = new Vue({

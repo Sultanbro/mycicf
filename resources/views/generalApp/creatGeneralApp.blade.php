@@ -31,7 +31,7 @@
 <body>
 @include('layouts.header')
 <main id="app">
-    <creat-general-app></creat-general-app>
+    <create-general-app></create-general-app>
 </main>
 
 {{--FOOTER GOES HERE--}}

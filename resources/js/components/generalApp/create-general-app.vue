@@ -8,42 +8,48 @@
                     <div class="col-md-12 col-lg-12">
                         <form class="needs-validation" novalidate>
                             <div class="row g-3">
-                                <div class="col-12">
-                                    <label for="contractor" class="form-label">Контрагент:</label>
-                                    <input type="text" class="form-control" id="contractor" placeholder="" value="" required>
+                                <div class="col-6">
+                                    <label for="contragent" class="form-label">Контрагент:</label>
+                                    <input id="contragent" type="text" class="form-control" v-model="application.contragent" placeholder="">
                                 </div>
 
-                                <div class="col-12">
-                                    <label for="CuratorDoc" class="form-label">Куратор документа:</label>
-                                    <input type="text" class="form-control" id="CuratorDoc" placeholder="" value="" required="">
+                                <div class="col-6">
+                                    <label class="form-label">Куратор документа:</label>
+<!--                                    <input type="text" class="form-control" id="CuratorDoc" placeholder="" value="" required="">-->
+<!--                                    <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>-->
+                                    <div class="col-md-12">
+                                        <treeselect v-model="application.curator" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                                    :options="userList" :disable-branch-nodes="true"/>
+                                    </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <label for="SignatoryCompany" class="form-label">Подписант от Компании:</label>
-                                    <input type="text" class="form-control" id="SignatoryCompany" placeholder="" value="" required="">
+                                    <treeselect v-model="application.signatoryCompany" placeholder="Не выбрано" id="SignatoryCompany" :disabled="addChange" :multiple="false"
+                                                :options="userList" :disable-branch-nodes="true"/>
                                 </div>
 
-                                <div class="col-sm-6">
-                                    <label for="DataReg" class="form-label">Дата рег:</label>
-                                    <input type="date" class="form-control" id="DataReg" placeholder="" value="" required="">
-                                </div>
-
-                                <div class="col-12">
+                                <div class="col-6">
                                     <label for="number" class="form-label">Номер:</label>
-                                    <input type="text" class="form-control" id="number" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="number" placeholder="" v-model="application.number" required="">
                                 </div>
 
-                                <div class="col-12">
+                                <div class="col-3">
                                     <label for="status" class="form-label">Статус:</label>
-                                    <input type="text" class="form-control" id="status" placeholder="" value="" required="">
+                                    <input type="text" class="form-control" id="status" placeholder="" v-model="application.status" required="">
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-3">
+                                    <label class="form-label">Дата рег:</label>
+                                    <input type="date" class="form-control" placeholder="" v-model="application.dateBeg" required="">
+                                </div>
+
+                                <div class="col-3">
                                     <label for="dateBeg" class="form-label">Дата начала:</label>
                                     <input type="date" class="form-control" id="dateBeg" placeholder="" value="" required="">
                                 </div>
 
-                                <div class="col-sm-6">
+                                <div class="col-3">
                                     <label for="dateEnd" class="form-label">Дата окончания:</label>
                                     <input type="date" class="form-control" id="dateEnd" placeholder="" value="" required="">
                                 </div>
@@ -219,10 +225,43 @@
 
 <script>
 export default {
-    props: {
-        username: String,
-    },
     name: "creatGeneralApp",
+        data() {
+            return {
+                options: null,
+                searchText: '',
+                parentId: 50,
+                userList : [],
+                sz: true,
+                application: {
+                    contragent: '',
+                    curator: '',
+                    signatoryCompany: '',
+                    number: '',
+                    status: '',
+                    dateBeg: new Date(),
+                    dateBegin: new Date(),
+                    dateEnd: '',
+
+                },
+                addChange: '',
+            }
+        },
+        props: {
+            username: String,
+        },
+        created() {
+            this.getUserList();
+        },
+        methods: {
+            getUserList() {
+                let data = {sz:true}
+                this.axios.post('/full/getFullBranch', data).then((response) => {
+                    this.userList = response.data.result;
+                    this.isLoading = false;
+                });
+            },
+        },
 }
 </script>
 

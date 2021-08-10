@@ -30,7 +30,9 @@
 <body>
 @include('layouts.header')
 <main id="app">
-    <general-app></general-app>
+    <div id="app">
+        <general-app></general-app>
+    </div>
 </main>
 
 {{--FOOTER GOES HERE--}}

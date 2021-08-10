@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import CreatGeneralApp from "./creat-general-app";
+import CreatGeneralApp from "./create-general-app";
 export default {
     name: "generalApp",
     components: {
