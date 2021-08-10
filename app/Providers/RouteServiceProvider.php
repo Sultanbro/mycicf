@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapBitrixApiRoutes();
     }
 
     /**
@@ -69,5 +69,13 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    protected function mapBitrixApiRoutes()
+    {
+        Route::prefix('bitrix')
+            ->middleware('bitrix')
+            ->namespace($this->namespace."\Bitrix")
+            ->group(base_path('routes/bitrix.php'));
     }
 }
