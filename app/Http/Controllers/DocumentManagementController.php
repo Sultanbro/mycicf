@@ -1332,6 +1332,7 @@ class DocumentManagementController extends Controller
     public function changeDocCoordination(Request $request, KiasServiceInterface $kias) {
         $success = true;
         $error = "";
+        $count = 0;
             for($i=0; $i < count($request->coordinationSubjISN); $i++) {
                 if($request->coordinationSubjISN[$i] === null && $request->coordinator[$i] !== null){
                     $row[$i] = [
@@ -1353,6 +1354,15 @@ class DocumentManagementController extends Controller
                         'COMMAND' => 'U',
                         'EMPLISN1' => $request->coordinationSubjISN[$i],
                     ];
+                }
+
+                elseif($request->coordinationSubjISN[$i] == $request->coordinator[$i]){
+                    $count++;
+                    if($count == count($request->coordinator)){
+                        return response()->json([
+                            'success' => true
+                        ]);
+                    }
                 }
             }
             $changeCoordination = $kias->userCicChangeDocCoordination($row);
