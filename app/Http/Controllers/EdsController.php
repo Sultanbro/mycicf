@@ -53,7 +53,7 @@ class EdsController extends Controller
             ->leftJoin('tbl_for_payrequest AS pf', 'pf.plea', '=', 'pr.plea')
             ->where('pf.filetype','=','0')
             ->distinct()
-            ->select('pr.id as id','pr.isn as isn' ,'pr.full_data as full_data','pr.pathtoxsl as pathtoxsl','pr.plea as plea','pr.refundid as refundid','pr.refundisn as refundisn','pr.iin as iin','pf.name as product_family_name', 'pf.isn as product_family_isn')
+            ->select('pr.id as id','pr.isn as isn' ,'pr.full_data as full_data','pr.plea as plea','pr.refundid as refundid','pr.refundisn as refundisn','pr.iin as iin','pf.name as product_family_name', 'pf.isn as product_family_isn')
             ->where('pr.filetype','=','1')
             ->where('pr.confirmed','=','0')
             ->orderBy('pr.isn', 'desc')
