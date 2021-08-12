@@ -28,7 +28,7 @@ class EdsController extends Controller
         return view('eds',compact('od'));
     }
 //file type = 1 sig.0=excel
-    public function edsPO(KiasServiceInterface $kias){
+    public function edsPO(){
         $po = DB::table('tbl_for_payeds AS pr')
             ->leftJoin('tbl_for_payeds AS pf', 'pf.plea', '=', 'pr.plea')
             ->where('pf.filetype','=','0')
@@ -40,7 +40,7 @@ class EdsController extends Controller
             ->get();
         return view('eds-payout',compact('po'));
     }
-    public function edsPR(KiasServiceInterface $kias){
+    public function edsPR(){
 //        $kek = var_dump(phpinfo());
 //        echo $kek;
 //        $pr = TblForPayRequest::where('confirmed', '0')->select('isn','name','date_sign','id','refundisn','refundid','confirmed','plea','iin','iin_fail','filetype')->get();
