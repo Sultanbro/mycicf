@@ -69,5 +69,10 @@
 </script>
 
 <style scoped>
-
+    div.d-flex.flex-column.vertical-middle.Birthday-margin-inner {
+        margin-left: 35px;
+    }
+    div.colleagues-info-section__main.d-flex.flex-column.vertical-middle {
+        margin-right: 30px;
+    }
 </style>
