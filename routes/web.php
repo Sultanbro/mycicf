@@ -304,6 +304,9 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('/productsinfo/searchName', 'ProductsInfoController@searchName');
 
         //PARSE
+
+        Route::get('parse/oracle','ParseOracleController@getOracleData');
+
         /*Route::get('parse/', 'ParseController@getCompanyTopSum')->name('parse');*/
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
