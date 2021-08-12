@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="bg-gray pt-5">
-<!--            v-if="showToTopBtn"-->
             <a
                href="javascript:"
                class="to-top-btn"
@@ -42,13 +41,6 @@
                 </div>
             </div>
             <div v-if="recruitingTabs == 1" class="recruiting-container">
-<!--                <input type="search"-->
-<!--                       class="colleagues-section__search-input pl-2"-->
-<!--                       placeholder="Поиск"-->
-<!--                       v-model="searchText">-->
-<!--                <treeselect class='w-50' :multiple="false" :options="options" v-model="candidat.cityAdressSelect" />-->
-<!--                <button @click="searchUser()"-->
-<!--                        class="colleagues-section__btn border-0 bg-color-blue color-white pl-3 pr-3 pt-1 pb-1"><i class="fas fa-search"></i></button>-->
                 <div class="recruiting-header">
                     <div class="recruiting-header-tab">
                         <div class="recruiting-header-tab-inner rec-active">
@@ -56,15 +48,6 @@
                         </div>
                     </div>
                 </div>
-<!--                <div class="p-4">-->
-<!--                    <div class="colleagues-section__body">-->
-<!--                        <colleagues-info-->
-<!--                            v-for="(user, index) in usersList"-->
-<!--                            :key="index"-->
-<!--                            :info="user"-->
-<!--                        ></colleagues-info>-->
-<!--                    </div>-->
-<!--                </div>-->
                 <div class="recruiting-body">
                     <div>
 <!--                        <button @click="mailTest">Click to send mail!</button>-->
@@ -233,8 +216,6 @@
                             </div>
                             <hr>
                         </div>
-<!--                        <button @click="testpush">Push to array</button>-->
-
                         <div class="recruiting-simple-block-container">
                             <div class="recruiting-simple-block ml-2 mr-2" v-if="this.newLanguageBlocks[this.languagesCounter - 1].languages.length !== 1" @click="addLanguage">
                                 <i class="fas fa-plus-circle"></i>
@@ -244,12 +225,8 @@
                                 <i class="far fa-times-circle"></i>
                                 <span>Удалить язык</span>
                             </div>
-<!--                            TEST FUNCTION-->
-<!--                            <button @click="testFunc">Click here</button>-->
                         </div>
                     </div>
-
-
                     <!--Оплата труда-->
                     <div class="col-md-12">Оплата труда</div>
                     <div class="recruiting-tripple-block-container">
@@ -398,9 +375,6 @@
                             <div class="modal-header">
                                 <div class="modal-header-general">
                                     <div class="color-blue">ФИО кандидата</div>
-<!--                                    <div>{{candidatsData.manualFullname}}</div>-->
-<!--                                    <div>{{candidatsData.manualIIN}}</div>-->
-<!--                                    <div>{{candidatsData.manualPhoneNumber}}</div>-->
                                     <strong v-if="manualSearchIIN == false && candidatsPersonalData">{{candidatsPersonalData.fullname}}</strong>
                                     <input v-if="manualSearchIIN" type="text" class="recruiting-modal-general" v-model="candidatsData.manualFullname">
                                 </div>
@@ -1321,7 +1295,6 @@
             this.getChiefsRequest();
             this.getBranchData();
         },
-        // this.getRequests();
 
         // v-for="item in dicti.socPacket"
 
@@ -2502,16 +2475,6 @@
             //         }
             //     })
             // },
-            // Данные для отправки в бэк
-            getRecruitingData() {
-                this.axios.post('/recruiting', { candidat:this.candidat }).then(response => {
-                    if (response.data.success){
-                        this.testArray = response.data.result;
-                    } else {
-                        alert('error');
-                    }
-                })
-            },
             preloader(show){
                 if(show)
                 {

@@ -39,48 +39,16 @@ class RecruitingController extends Controller
         }
         return $result;
     }
-
-    public function getRequests(Request $request){
-        $requests = Recruiting::all();
-//        Как вариант вытаскивать конкретные значения
-//        $requests = Recruiting::where('sex','Мужской')->where('education','Высшее')->first();
-
-        return response()->json([
-            'success' => $requests ? true : false,
-            'result' => $requests
-        ]);
-    }
      public function  getChiefsRequest(Request $request, KiasServiceInterface $kiasService){
-//         (new NotificationController())->sendRecruitingNotify(506791);
-//
-//         return response()->json([
-//             'success' => false,
-//             'result' => []
-//         ]);
         $requests = Recruiting::all();
         foreach ($requests as $req){
 //            $response =  $kiasService->getEmplInfo(Auth::user()->ISN, '01.01.1970', '01.01.2021');
 //            $recruiting_emails = explode(' ', $response->Mail);
 
             $req->unit_structural_name_and_city = $req->getBranchName($req->unit_structural_name_and_city);
-//            $req->name_of_post = $req->getBranchNameByIsn($req->name_of_post, $kiasService);
-//            $req->reason_to_recruiting = $req->getBranchNameByIsn($req->reason_to_recruiting, $kiasService);
-//            $req->desired_age = $req->getBranchNameByIsn($req->desired_age, $kiasService);
-//            $req->sex = $req->getBranchNameByIsn($req->sex, $kiasService);
-//            $req->education = $req->getBranchNameByIsn($req->education, $kiasService);
-//            $req->work_experience = $req->getBranchNameByIsn($req->work_experience, $kiasService);
-//            $req->is_he_was_boss = $req->getBranchNameByIsn($req->is_he_was_boss, $kiasService);
-//            $req->type_of_hire = $req->getBranchNameByIsn($req->type_of_hire, $kiasService);
-//            $req->perspective_to_candidate = $req->getBranchNameByIsn($req->perspective_to_candidate, $kiasService);
-//            $req->computer_knowing = $req->getBranchNameByIsn($req->computer_knowing, $kiasService);
-//            $req->motivation = $req->getBranchNameByIsn($req->motivation, $kiasService);
-//            $req->job_chart = $req->getBranchNameByIsn($req->job_chart, $kiasService);
-//            $req->have_car = $req->getBranchNameByIsn($req->have_car, $kiasService);
-//            $req->driver_category = $req->getBranchNameByIsn($req->driver_category, $kiasService);
             $req->name_of_post = $req->getChiefsDicti($req->name_of_post);
             $req->reason_to_recruiting = $req->getChiefsDicti($req->reason_to_recruiting);
             $req->desired_age = $req->getChiefsDicti($req->desired_age);
-//            $req->sex = $req->getChiefsDicti($req->sex);
             $req->education = $req->getChiefsDicti($req->education);
             $req->work_experience = $req->getChiefsDicti($req->work_experience);
             $req->is_he_was_boss = $req->getChiefsDicti($req->is_he_was_boss);
@@ -124,21 +92,6 @@ class RecruitingController extends Controller
         return response()->json([
             'success' => $success,
             'result' => $result
-        ]);
-    }
-
-    public function getTestData(Request $request){
-        $request->salary;
-
-
-        $success = false;
-        $result = Branch::get();
-        if(count($result) > 0){
-            $success = true;
-        }
-        return response()->json([
-           'success' => $success,
-           'result' => $result
         ]);
     }
     public function sendRequest(){
@@ -261,7 +214,7 @@ class RecruitingController extends Controller
         }
         $chiefMail = $cData->chiefMail;
         if ($chiefMail !== 0 && $chiefMail !== '0'){
-            $this->TestMail($chiefMail);
+            $this->sendMail($chiefMail);
         }
         else if($chiefMail == 0 || $chiefMail == '0'){
 
@@ -314,25 +267,18 @@ class RecruitingController extends Controller
         $rec_data->application_status = $request->recruitingData['status'];
         $recruiterEmail = $request->recruitingData['recruiterEmail'];
         if ($recruiterEmail !== 0 && $recruiterEmail !== '0'){
-            $this->TestMail($recruiterEmail);
+            $this->sendMail($recruiterEmail);
         }
         else if($recruiterEmail == 0 || $recruiterEmail == '0'){
 
         }
-//        qnnn
-//        dd($recruiterEmail);
-//        dd($request);
-//        $rec_data->recruiting_id = $request->recruitingData['recruitingId'];
-//        $rec_data->candidats_fullname = $request->recruitingData['manualFullname'];
-//        $rec_data->candidats_iin = $request->recruitingData['manualIIN'];
-//        $candidats_data->candidats_phone_number = $request->candidatsData['manualPhoneNumber'];
         if(!$rec_data->save()){
             return response()->json([
                 'success' => false,
                 'error' => 'Ошибка'
             ]);
         }
-//        $this->TestMail();
+//        $this->sendMail();
 
         return response()->json([
             'success' => true,
@@ -465,57 +411,23 @@ class RecruitingController extends Controller
             return false;
         }
     }
-    public function testMail($chiefMail){
+    public function sendMail($chiefMail){
         try{
 //            EFilimonova@cic.kz
 //            $emails = ['DJumagulov@cic.kz', 'Abylkhair@mail.ru'];
 //            $emails = array($recruiterName);
             $emails = array($chiefMail);
 
-//            $emails->email
-
-//            dd($emails);
-
             Mail::to($emails[0])->send(new EmailAmazonSes([
                 'title' => __('shared.your_tour_polis'),
                 'tourId' => 1,
             ]
-//                'tour',
-//                [
-//                    'policy.pdf' => '',
-//                    'insurer_memo.pdf' => '',
-//                    'mst_part-2.pdf' => '',
-//                ]
             ));
-
-
         }
         catch (SesException $e){
             echo $e->getMessage();
             return false;
         }
-
-        //                внутрь try
-        //'background_image' => asset('images/product/mst_product.png'),
-//                'htmlTitle' => 'tst title ',
-//                'greeting' => "Уважаемый(-ая)!",
-//                'wish' => 'Желаем Вам увлекательной, эмоциональной и безопасной поездки!',
-
-
-            //$this->email_sent = 1;
-            //$this->save();
-            //return true;
-            // dd('sended');
-
-
-
-
-
-
-
-
-
-
 /*        $q = $to_name = 'My.cic.kz';
 //        $to_email = 'zuaxxx@gmail.com';
         $to_email = 'DJumagulov@cic.kz';
@@ -542,11 +454,9 @@ class RecruitingController extends Controller
 //        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail($name, $email, $msg));
 */
     }
+
+//    Сохранения заявки на поиск кандидата
     public function saveCandidat(Request $request,KiasServiceInterface $kias){
-//        $candidate = $request->candidate;
-
-
-//        $language = new RecruitingLanguage();
 
 //        Mail::to('DJumagulov@cic.kz')->send(new \App\Mail\RecruitingMail('asdadas'));
 
@@ -583,25 +493,20 @@ class RecruitingController extends Controller
         $recruiting->languages = $request->candidat['language'];
         $recruiting->social_packets = $request->candidat['socPacket'];
         $recruiting->salary_after_period = $request->candidat['salary_after_period'];
-        $this->sendFixedMail();
 //        $recruiting->email_chief = authEmail;
 
-//        $recruiting->candidates_fullname = $request->candidat['manualFullname'];
-//        $recruiting->candidates_iin = $request->candidat['manualIIN'];
-//        $recruiting->candidates_phone_number = $request->candidat['manualPhoneNumber'];
         if(!$recruiting->save()){
             return response()->json([
                 'success' => false,
                 'error' => 'Ошибка'
             ]);
         }
-//        if($request->candidat['cityAdressSelect'] == '1'){
-//
-//        }
-        return response()->json([
-            'success' => true,
-        ]);
-
+        else if($recruiting->save()){
+            return response()->json([
+                'success' => true,
+                $this->sendFixedMail()
+            ]);
+        }
     }
 
     public function getRecruitingDicti(Request $request, KiasServiceInterface $kias){

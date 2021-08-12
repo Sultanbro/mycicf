@@ -232,7 +232,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', '127.0.0.1')], function () {
         //RECRUITING
         Route::get('/recruiting', 'RecruitingController@getRecruiting')->name('recruiting');
         Route::post('/recruiting', 'RecruitingController@getContent');
-        Route::post('/recruiting', 'RecruitingController@getTestData');
         Route::post('recruiting', 'RecruitingController@sendRequest');
         Route::post('/recruiting/saveCandidat', 'RecruitingController@saveCandidat');
         Route::post('/recruiting/getRequests', 'RecruitingController@getRequests');
