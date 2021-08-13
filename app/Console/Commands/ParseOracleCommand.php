@@ -40,7 +40,7 @@ class ParseOracleCommand extends Command
      */
     public function handle()
     {
-        $last_id = ParseCollects::max('oracle_id') ?? 0;
+        $last_id = ParseCollects::max('agrIsn') ?? 0;
         $rows = DB::connection('oracle')->table('inslab.centras_temp_migrate')
             ->select('*')
             ->where('f1', '>', $last_id)
@@ -49,7 +49,7 @@ class ParseOracleCommand extends Command
             ->limit(100)
             ->get();
 
-        $last_id2 = ParsePays::max('oracle_id') ?? 0;
+        $last_id2 = ParsePays::max('claimIsn') ?? 0;
         $rows2 = DB::connection('oracle')->table('inslab.centras_temp_migrate')
             ->select('*')
             ->where('f1', '>', $last_id2)
@@ -62,7 +62,6 @@ class ParseOracleCommand extends Command
         $pays = 0;
 
         foreach ($rows as $row) {
-
             $data = new ParseCollects();
             $data->agrIsn = $row->f1;
             $data->agrId = $row->f2;
@@ -89,13 +88,11 @@ class ParseOracleCommand extends Command
             $data->group_name = $row->group_name;
 
             $data->save();
-
             $collect++;
             dump($collect);
         }
 
-        foreach ($rows as $row) {
-
+        foreach ($rows2 as $row) {
             $data = new ParsePays();
             $data->claimIsn = $row->f1;
             $data->claimId = $row->f2;
@@ -126,7 +123,6 @@ class ParseOracleCommand extends Command
             $data->group_name = $row->group_name;
 
             $data->save();
-
             $pays++;
             dump($pays);
         }
