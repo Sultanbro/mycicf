@@ -46,7 +46,7 @@ class ParseOracleCommand extends Command
             ->where('f1', '>', $last_id)
             ->where('group_name', '=', "Отчет по ежедневным сборам")
             ->orderBy('f1')
-            ->limit(100)
+            ->limit(1000)
             ->get();
 
         $last_id2 = ParsePays::max('claimIsn') ?? 0;
@@ -55,10 +55,10 @@ class ParseOracleCommand extends Command
             ->where('f1', '>', $last_id2)
             ->where('group_name', '=', "Отчет по журналу выплат")
             ->orderBy('f1')
-            ->limit(100)
+            ->limit(1000)
             ->get();
 
-        $collect = 0;
+        //$collect = 0;
         $pays = 0;
 
         foreach ($rows as $row) {
@@ -88,8 +88,8 @@ class ParseOracleCommand extends Command
             $data->group_name = $row->group_name;
 
             $data->save();
-            $collect++;
-            dump($collect);
+            //$collect++;
+            //dump($collect);
         }
 
         foreach ($rows2 as $row) {
