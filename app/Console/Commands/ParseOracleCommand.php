@@ -14,7 +14,7 @@ class ParseOracleCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'OracleConnect';
 
     /**
      * The console command description.
