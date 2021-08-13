@@ -15,33 +15,33 @@ class CreateParseOraclePaysTable extends Migration
     {
         Schema::create('parse_oracle_pays', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('claimIsn')->default(0);; // f1
-            $table->string('claimId'); // f2
-            $table->integer('agrInsClassIsn1')->default(0);; // f3
-            $table->string('agrInsClassName'); //f4
-            $table->integer('agrProductIsn')->default(0);; // f5
-            $table->string('agrProductName'); // f6
-            $table->integer('isn')->default(0);; // f7
-            $table->string('agrId'); // f8
-            $table->string('agrDateSign'); // f9
-            $table->integer('agrClientIsn')->default(0);; // f10
-            $table->string('agrClientName'); // f11
-            $table->string('agrClientJur'); // f12
-            $table->string('territoryName'); // f13
-            $table->string('placeClaim'); // f14
-            $table->string('docDate'); // f15
-            $table->integer('totalRefundSum')->default(0);; // f16
-            $table->integer('nettoRefundSum')->default(0);; // f17
-            $table->string('remarcClaim'); // f18
-            $table->integer('agrSubject')->default(0);; // f19
-            $table->string('agrAgent'); // f20
-            $table->string('emplName'); // f21
-            $table->integer('emplIsn')->default(0);; // f22
-            $table->string('mainDeptName'); // f23
-            $table->integer('mainDeptIsn')->default(0);; // f24
-            $table->string('deptName'); // f25
-            $table->integer('deptIsn')->default(0);; // f26
-            $table->string('group_name');
+            $table->string('claimIsn')->nullable();                     //f1
+            $table->string('claimId')->nullable();                      //f2
+            $table->string('agrInsClassIsn1')->nullable();              //f3
+            $table->string('agrInsClassName')->nullable();              //f4
+            $table->string('agrProductIsn')->nullable();                //f5
+            $table->string('agrProductName')->nullable();               //f6
+            $table->string('isn')->nullable();                          //f7
+            $table->string('agrId')->nullable();                        //f8
+            $table->string('agrDateSign')->nullable();                  //f9
+            $table->string('agrClientIsn')->nullable();                 //f10
+            $table->string('agrClientName')->nullable();                //f11
+            $table->string('agrClientJur')->nullable();                 //f12
+            $table->string('territoryName')->nullable();                //f13
+            $table->string('placeClaim')->nullable();                   //f14
+            $table->string('docDate')->nullable();                      //f15
+            $table->string('totalRefundSum')->nullable();               //f16
+            $table->string('nettoRefundSum')->nullable();               //f17
+            //$table->string('remarcClaim')->nullable();                  //f18
+            $table->string('agrSubject')->nullable();                   //f19
+            $table->string('agrAgent')->nullable();                     //f20
+            $table->string('emplName')->nullable();                     //f21
+            $table->string('emplIsn')->nullable();                      //f22
+            $table->string('mainDeptName')->nullable();                 //f23
+            $table->string('mainDeptIsn')->nullable();                  //f24
+            $table->string('deptName')->nullable();                     //f25
+            $table->string('deptIsn')->nullable();                      //f26
+            $table->string('group_name')->nullable();
             $table->timestamps();
         });
     }

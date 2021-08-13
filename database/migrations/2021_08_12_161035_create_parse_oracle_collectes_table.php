@@ -15,29 +15,29 @@ class CreateParseOracleCollectesTable extends Migration
     {
         Schema::create('parse_oracle_collectes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('agrIsn')->default(0); // f1
-            $table->string('agrId'); // f2
-            $table->integer('prodIsn')->default(0);; // f3
-            $table->string('prodName'); //f4
-            $table->integer('strIsn')->default(0);; // f5
-            $table->string('insurer'); // f6
-            $table->string('jur'); // f7
-            $table->string('dateAccept'); // f8
-            $table->integer('amountP')->default(0);; // f9
-            $table->integer('DSD')->default(0);; // f10
-            $table->integer('comissionProc')->default(0);; // f11
-            $table->integer('valn')->default(0);; // f12
-            $table->integer('agrSubject')->default(0);; // f13
-            $table->integer('agrAgent')->default(0);; // f14
-            $table->integer('insCode')->default(0);; // f15
-            $table->string('insName'); // f16
-            $table->integer('mainDeptIsn')->default(0);; // f17
-            $table->string('mainDeptName'); // f18
-            $table->integer('deptIsn')->default(0);; // f19
-            $table->string('deptName'); // f20
-            $table->integer('emplISN')->default(0);; // f21
-            $table->string('emplName'); // f22
-            $table->string('group_name');
+            $table->string('agrIsn')->nullable();                           //f1
+            $table->string('agrId')->nullable();                            //f2
+            $table->string('prodIsn')->nullable();                          //f3
+            $table->string('prodName')->nullable();                         //f4
+            $table->string('strIsn')->nullable();                           //f5
+            $table->string('insurer')->nullable();                          //f6
+            $table->string('jur')->nullable();                              //f7
+            $table->string('dateAccept')->nullable();                       //f8
+            $table->string('amountP')->nullable();                          //f9
+            $table->string('DSD')->nullable();                              //f10
+            $table->string('comissionProc')->nullable();                    //f11
+            $table->string('valn')->nullable();                             //f12
+            $table->string('agrSubject')->nullable();                       //f13
+            $table->string('agrAgent')->nullable();                         //f14
+            $table->string('insCode')->nullable();                          //f15
+            $table->string('insName')->nullable();                          //f16
+            $table->string('mainDeptIsn')->nullable();                      //f17
+            $table->string('mainDeptName')->nullable();                     //f18
+            $table->string('deptIsn')->nullable();                          //f19
+            $table->string('deptName')->nullable();                         //f20
+            $table->string('emplISN')->nullable();                          //f21
+            $table->string('emplName')->nullable();                         //f22
+            $table->string('group_name')->nullable();
             $table->timestamps();
         });
     }

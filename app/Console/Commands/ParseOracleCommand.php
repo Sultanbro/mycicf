@@ -45,7 +45,7 @@ class ParseOracleCommand extends Command
             ->select('*')
             ->where('f1', '>', $last_id)
             ->where('group_name', '=', "Отчет по ежедневным сборам")
-            ->orderBy('id')
+            ->orderBy('f1')
             ->limit(100)
             ->get();
 
@@ -54,7 +54,7 @@ class ParseOracleCommand extends Command
             ->select('*')
             ->where('f1', '>', $last_id2)
             ->where('group_name', '=', "Отчет по журналу выплат")
-            ->orderBy('id')
+            ->orderBy('f1')
             ->limit(100)
             ->get();
 
@@ -111,7 +111,7 @@ class ParseOracleCommand extends Command
             $data->docDate = $row->f15;
             $data->totalRefundSum = $row->f16;
             $data->nettoRefundSum = $row->f17;
-            $data->remarcClaim = $row->f18;
+            //$data->remarcClaim = $row->f18;
             $data->agrSubject = $row->f19;
             $data->agrAgent = $row->f20;
             $data->emplName = $row->f21;
