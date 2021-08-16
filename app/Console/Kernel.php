@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CodeAnalyzeCommand;
+use App\Console\Commands\ParseOracleCommand;
 use App\Console\Commands\SandboxCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         //
         SandboxCommand::class,
         CodeAnalyzeCommand::class,
+        ParseOracleCommand::class
     ];
 
     /**
