@@ -600,6 +600,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/document/getRegions', 'DocumentManagementController@getRegions')->name('document.get.regions');
         Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');
         Route::post('/document/travellersList', 'DocumentManagementController@travellersList');
+        Route::post('/saveDoc', 'DocumentManagementController@saveDoc');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');

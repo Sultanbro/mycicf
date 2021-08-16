@@ -15,11 +15,25 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
+                                <div v-if="!isLoading && results.docParam.showSubject === 'Y' && results['classisn'] != '1007421'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
                                         <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
+                                    </div>
+                                </div>
+                                <div v-if="!isLoading && results.docParam.showSubject === 'Y' && results['classisn'] == '1007421'" class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
+                                    <div class="col-md-8 input-group">
+                                        <input v-model="results.contragent.value ? results.contragent.value : contragent.fullName" @click="OpenModal('Контрагент')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Контрагент')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo('Контрагент')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -280,6 +294,10 @@
                         </div>
                     </div>
                 </div>
+<!--                <div v-if="results['classisn'] === '1011931'" class="col-12">-->
+<!--                    <label class="btn btn-default btn-file" for="file"></label>-->
+<!--                    <input id="file && index" type="file" @change="fileUploaded" @click="fileUpload(index)" :data-index="index">-->
+<!--                </div>-->
                 <div class="pt-3" v-show="results.docParam.showRemark === 'Y'">
                     <div class="row ml-1 pb-2">Примечание</div>
                     <textarea v-model="results.showRemark" type="text pt-2 pb-2" :rows="wallRows" :disabled="addChange" placeholder="..." class="form-control"></textarea>
@@ -298,6 +316,11 @@
                                 v-if="fillIn" class="btn btn-primary btn-block2" @click="fillInSz()">
                             Узнать количество доступных дней
                         </button>
+                        <div v-if="results['classisn'] === '1011931' && addAttachmentButton && addNextDoc">
+                            <button v-if="toForm" class="btn btn-primary btn-block2" @click="attachFile()">
+                                Прикрепить файл
+                            </button>
+                        </div>
                     </div>
                     <div class="col-md-5 text-align-center">
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
@@ -337,6 +360,12 @@
                         <div></div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div v-if="results['classisn'] === '1011931' && addAttachment" class="pt-4 col-12">
+            <div class=" pt-4 border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-2 pr-2 pt-4 pb-3">
+                <label class="btn btn-default btn-file" for="file"></label>
+                <input id="file" type="file" @change="fileUploaded" @click="fileUpload()">
             </div>
         </div>
         <div class="pt-4">
@@ -422,6 +451,7 @@
         <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
         <counterparty-journal-modal
             :counterparty="counterparty"
+            :contragent="contragent"
             :worker="worker"
             :recordingCounterparty="recordingCounterparty"
             :results="results"
@@ -459,7 +489,7 @@
                 },
                 docDate: new Date(),
                 dateBeg: new Date(),
-                dateEnd: new Date('+3 days'),
+                dateEnd: new Date('+3 days') ? new Date('+3 days') : '',
                 maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
                 userList : [],
                 isLoading: false,
@@ -480,7 +510,7 @@
                 coordination: {},
                 saveDoc: true,
                 required: false,
-                // sendOutForm: false,
+                docFileNew: [],
                 type: 1,
                 toForm: false,
                 fillIn: false,
@@ -508,10 +538,21 @@
                     isn: '',
                     id: '',
                 },
+                contragent: {
+                    fullName: '',
+                    isn: '',
+                    type: '',
+                },
                 recordingDocument: {type: ''},
                 recordingCounterparty: {type: ''},
                 isn: '0',
                 delete: '0',
+                addAttachment: false,
+                addAttachmentButton: false,
+                addNextDoc: true,
+                files: null,
+                filename : 'Выберите файл',
+                clickedId: '',
             }
         },
         created() {
@@ -630,6 +671,7 @@
                             this.fillIn =true;
                             this.saveDoc = false;
                             this.annul = false
+                            this.addAttachmentButton = true
                         } else {
                             this.addChange = false;
                             this.saveDoc = true;
@@ -731,6 +773,24 @@
                     });
             },
             buttonClick() {
+                if (this.results.classisn == '1011931' && this.docFileNew[0].profile != ''){
+                    console.log('11')
+                    this.axios.post('/saveDoc', this.getFormData(), )
+                        .then(response => {
+                            if(response.data.success == false){
+                                alert(response.data.error)
+                                return
+                            } else {
+                                alert('Файл успешно сохранено!');
+                                this.buttonClick2();
+                            }
+                        })
+
+                } else {
+                    this.buttonClick2();
+                }
+            },
+            buttonClick2(){
                 this.loading = true;
                 if(this.results.docParam.button1caption === 'Сформировать лист согласования' && this.results.docParam.showbutton1 === 'Y'){
                     this.button = 'BUTTON1'
@@ -770,6 +830,24 @@
                     .catch(function (error) {
                     });
             },
+            saveFile(){
+                this.axios.post('/saveDoc', this.getFormData(), )
+                    .then(response => {
+                        if(response.data.success == false){
+                            alert(response.data.error)
+                            return
+                        } else {
+                            alert('Файл успешно сохранено!');
+                            return true;
+                        }
+                    })
+            },
+            getFormData() {
+                let formData = new FormData();
+                formData.append('file', this.files);
+                formData.append('docIsn', this.results['docIsn']);
+                return formData;
+            },
             OpenModal (doc) {
                 this.preloader(true)
                 this.changeMatch.status = false
@@ -798,8 +876,70 @@
                     this.preloader(false);
                     this.recordingDocument.type = doc
                     this.$refs.modalDocument.click();
+                } else if(doc === this.results.contragent.fullname){
+                    this.preloader(false);
+                    this.recordingCounterparty.type = doc
+                    this.$refs.modalCounterparty.click();
                 }
                 return;
+            },
+            attachFile(){
+                this.addAttachment = true;
+                let i = this.docFileNew.length
+                this.docFileNew[i] = {
+                    docfile: "",
+                    id: '',
+                    product_id: i + 1,
+                    profile: "Файл не выбран",
+                }
+                this.addNextDoc = false;
+            },
+            fileUploaded(e){
+                let data = new FormData();
+                var file = e.target.files;
+                this.filename = file[0].name;
+                this.files = file[0];
+                this.docFileNew[this.clickedId].profile = this.filename
+                var lastDotPosition = this.filename.lastIndexOf(".");
+                var fileNameWithoutExt = this.filename.slice(0, lastDotPosition)
+                this.docFileNew[this.clickedId].docfile = fileNameWithoutExt
+            },
+            fileUpload(){
+                this.clickedId = this.docFileNew.length-1;
+            },
+            savePdf(doc, index){
+                this.axios.post('/saveDoc', this.getFormData(), )
+                    .then(response => {
+                        if(response.data.success == false){
+                            alert(response.data.error)
+                        } else {
+                            // this.url = response.data.url
+                            this.savedFile = true
+                            this.savedIndex = index
+                            this.addDoc = true
+                            this.saveFile2(doc, index);
+                            alert('Файл успешно сохранено!');
+                        }
+                    })
+            },
+            saveFile2(doc, index) {
+                this.axios.post('/productsinfo/save_file', {doc})
+                    .then(response => {
+                        if(response.data.success){
+                            doc.id = response.data.id
+                            this.docFile.push(doc);
+                            if(this.docFileNew.length === 1){
+                                this.docFileNew = [];
+                            } else if(this.docFileNew.length > 1){
+                                for(let i=0; i<this.docFileNew.length; i++){
+                                    if(this.docFileNew[i].docfile === doc.docfile){
+                                        delete this.docFileNew[i]
+                                        this.docFileNew.splice(i, 1)
+                                    }
+                                }
+                            }
+                        }
+                    })
             },
             clearInfo(data){
                     for(let i=0; i<this.results.docrows.length; i++){

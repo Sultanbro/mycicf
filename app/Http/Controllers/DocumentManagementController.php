@@ -1243,6 +1243,44 @@ class DocumentManagementController extends Controller
                 ]);
             }
     }
+
+    /**
+     * @return bool
+     */
+    public function saveDoc(KiasServiceInterface $kias, Request $request)
+    {
+        $sendType = 'D';
+//        dd($request->docIsn,
+//            basename($request->file->getClientOriginalName()),
+//            base64_encode($request->file),
+//            $sendType);
+        try {
+            $results = $kias->saveAttachment(
+                $request->docIsn,
+                basename($request->file->getClientOriginalName()),
+                base64_encode($request->file),
+                $sendType
+            );
+
+            if(isset($results->error)){
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Ошибка загрузки файла, обратитесь к системному администратору',  //(string)$results->error->text
+                ]);
+            }
+            return response()->json([
+                'success' => true,
+                'error' => ''
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'result' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function buttonClick(Request $request, KiasServiceInterface $kias)
     {
         $error = "";
