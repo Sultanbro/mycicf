@@ -397,34 +397,35 @@
                         };
                         webSocket.send(JSON.stringify(responseObj));
                     };
-
-                    webSocket.onmessage = function (msg) {
-                        var result = JSON.parse(msg.data);
-                        if(result.code) {
-                            if (result.code == 200) {
-                                if(result.responseObjects.length > 0) {
-                                    //if(self.signedFileInfo.length > 0) {
-                                    //    self.signedFileInfo.push(result.responseObjects[0]);
-                                    //} else {
+                        webSocket.onmessage = function (msg) {
+                            var result = JSON.parse(msg.data);
+                            if(result.code) {
+                                if (result.code == 200) {
+                                    if(result.responseObjects.length > 0) {
+                                        //if(self.signedFileInfo.length > 0) {
+                                        //    self.signedFileInfo.push(result.responseObjects[0]);
+                                        //} else {
                                         self.signedFileInfo = result.responseObjects;
-                                     if (result.responseObjects[0].iin != self.iin) {
-                                         alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
-                                         self.loader(false);
-                                         this.edsConfirmed = false
-                                         return;
-                                     }
-                                    if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
-                                        self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
-                                    } else {
-                                        self.loader(false);
+
+                                        if (result.responseObjects[0].iin != self.iin && edsType === 'sig') {
+                                            alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
+                                            self.loader(false);
+                                            this.edsConfirmed = false
+                                            return;
+                                        }
+                                        if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
+                                            self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
+                                        } else {
+                                            self.loader(false);
+                                        }
                                     }
+                                } else {
+                                    alert(result.message);
+                                    self.loader(false);
                                 }
-                            } else {
-                                alert(result.message);
-                                self.loader(false);
                             }
                         }
-                    }
+
                     webSocket.onerror = function (msg) {
                         self.loader(false);
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");

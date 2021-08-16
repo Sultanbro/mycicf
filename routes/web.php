@@ -259,10 +259,17 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
             Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
             Route::post('/documentation/search', 'DocumentationController@search');
             //PARSE
-            Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+            /*Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');*/
+            //NEW PARSE
+            Route::get('parse', 'ParseController@DataCompany')->name('parse');
+            Route::get('parse/company/icompany', 'ParseController@getCompanyTopSum');
+            Route::get('parse/company/product', 'ParseController@getClassTopSum');
+            Route::post('parse/company/opu', 'ParseController@getOpuNewSum');
+            Route::post('parse/company/balance', 'ParseController@getBalanceNewSum');
+
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-            Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+            /*Route::get('parse', 'ParseController@redirectToCompany')->name('parse');*/
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
@@ -298,13 +305,13 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/productsinfo/searchName', 'ProductsInfoController@searchName');
 
         //PARSE
-        Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+        /*Route::get('parse/', 'ParseController@getCompanyTopSum')->name('parse');*/
         Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-        Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+        /*Route::get('parse', 'ParseController@redirectToCompany')->name('parse');*/
 
-            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
-            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
+/*            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
+            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');*/
             Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
 
             //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
@@ -477,7 +484,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
             //My results page
             Route::get('rating', 'RatingController@ratingIndex')->name('rating');
             Route::post('getTopRatingList', 'RatingController@getTopRatingList');
-            Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+            // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
             Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
             Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
@@ -611,7 +618,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         //My results page
         Route::get('rating', 'RatingController@ratingIndex')->name('rating');
         Route::post('getTopRatingList', 'RatingController@getTopRatingList');
-        Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+        // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
         Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
         Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
@@ -637,13 +644,14 @@ Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::post('/login', 'SiteController@parseLogin');
 
     Route::group(['middleware' => 'parseDomainAuth'], function () {
-        Route::get('parse/company', 'ParseController@getCompanyTopSum');
+        Route::get('parse', 'ParseController@getCompanyTopSum');
         Route::get('parse/product', 'ParseController@getClassTopSum');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators');
-        Route::get('parse', 'ParseController@redirectToCompany');
+        /*Route::get('parse', 'ParseController@redirectToCompany');*/
         Route::get('parse/table-fees', 'ParseController@getFees');
         Route::get('parse/table-indicators', 'ParseController@getIndicators');
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
+
     });
 });
 Route::post('/save_document', 'EdsController@saveDocument');

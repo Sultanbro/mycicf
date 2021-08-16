@@ -180,10 +180,17 @@ Vue.component('parse-info', require('./components/parse/parse-info.vue').default
 
 Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
 
+
 Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
-Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
+Vue.component('my-parse', require('./components/parse/my-parse.vue').default);
+Vue.component('top-company', require('./components/parse/top-company.vue').default);
+Vue.component('parse-centras', require('./components/parse/parse-centras.vue').default);
+Vue.component('tree-folder', require('./components/parse/tree-folder.vue').default);
+Vue.component('parse_opu2', require('./components/parse/parse_opu2.vue').default);
+Vue.component('parse_indicators2', require('./components/parse/parse_indicators2.vue').default);
 
+Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
@@ -222,9 +229,19 @@ Vue.component('disciplinary-action', require('./components/document/disciplinary
 
 Vue.component('management-business-trip', require('./components/document/management-business-trip').default);
 
+Vue.filter('numberFormat', (value) => {
+    // https://stackoverflow.com/a/59875056
+    return value.toLocaleString();
+
+    // https://stackoverflow.com/a/47219162
+    // let numberFormat = new Intl.NumberFormat();
+    // return numberFormat.format(value);
+});
+
 Vue.component('products-info', require('./components/productsinfo/productsinfo').default);
 Vue.component('step1', require('./components/productsinfo/step1').default);
 Vue.component('step2', require('./components/productsinfo/step2').default);
+
 window.onload = function(){
     var app = new Vue({
         el: '#app',

@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <parse-top :periods="periods" :months="months" :years="years" :request="request" :getData="showNewData"></parse-top>
+        <!--<parse-top :periods="periods" :months="months" :years="years" :request="request" :getData="showNewData"></parse-top>-->
 
         <div class="bg-white pl-3 pr-3 mt-3 mb-3 box-shadow border-16" v-if="showTable">
             <div class="d-flex justify-content-between align-items-center pr-3 pl-3">
@@ -85,12 +85,12 @@
             return {
                 company_list: [8],
                 first_company_list: [8],
-                periods: {
-                    first_year: 2019,
-                    second_year: 2018,
-                    first_period: 1,
-                    second_period: 12,
-                },
+/*                periods: {
+                    first_year: null,
+                    second_year: null,
+                    first_period: null,
+                    second_period: null,
+                },*/
                 months: [],
                 years: [],
 
@@ -112,7 +112,8 @@
             }
         },
         props: {
-            request: Object
+            request: Object,
+            periods: Object
         },
         methods: {
             getOpuData(new_date = null) {
@@ -127,12 +128,20 @@
                 } else {
                     this.sendedCompanies = this.company_list;
                 }
+
+
+                if (this.periods.first_year=== null || this.periods.second_year=== null
+                    || this.periods.first_period=== null || this.periods.second_period=== null) {
+                    return;
+                }
+
+
                 this.axios.post('/parse/opu/getData', {
                     company_list: this.first_company_list,
                     first_year: this.periods.first_year,
                     second_year: this.periods.second_year,
-                    first_period: this.periods.first_period,
-                    second_period: this.periods.second_period,
+                    first_period: this.periods.first_period - 1,
+                    second_period: this.periods.second_period - 1,
                 }).then(response => {
                     if(response.data.success) {
                         this.setOpuData(response.data);
@@ -206,14 +215,21 @@
                     this.years.push(year);
                 }
 
-                this.periods.first_year = this.request.firstYear ? this.request.firstYear : response.periods.first_year;
-                this.periods.first_period = this.request.firstPeriod ? this.request.firstPeriod : response.periods.first_period;
-                this.periods.second_year = this.request.secondYear ? this.request.secondYear : response.periods.second_year;
-                this.periods.second_period = this.request.secondPeriod ? this.request.secondPeriod : response.periods.second_period;
+                if (this.request) {
+                    this.periods.first_year = this.request.firstYear ? this.request.firstYear : response.periods.first_year;
+                    this.periods.first_period = this.request.firstPeriod ? this.request.firstPeriod : response.periods.first_period;
+                    this.periods.second_year = this.request.secondYear ? this.request.secondYear : response.periods.second_year;
+                    this.periods.second_period = this.request.secondPeriod ? this.request.secondPeriod : response.periods.second_period;
+                }
             },
 
             async getNextOpu() {
                 this.preloader(true);
+                if (this.periods.first_year === null || this.periods.second_year === null
+                    || this.periods.first_period === null || this.periods.second_period === null) {
+                    return;
+                }
+
                 const response = await this.axios.post('/parse/opu/getData', {
                     company_list: [this.company_id],
                     first_year: this.periods.first_year,
@@ -225,8 +241,8 @@
             },
             setNextOpu(response) {
                 this.opuCompanies[this.current_index] = response.opuData[0].opuResult;
-                // this.company_list = [];
-                // this.index_1 = this.opuCompanies.length - 1;
+                //this.company_list = [];
+                //this.index_1 = this.opuCompanies.length - 1;
                 this.preloader(false);
             },
 
@@ -352,7 +368,7 @@
             preloader(show) {
                 if(show)
                 {
-                    document.getElementById("preloader").style.display = "flex";
+                    document.getElementById("preloader").style.display = "none";
                 }
                 else
                 {
