@@ -1,3 +1,4 @@
+<!--
 <template>
     <div>
         <ul id="demo" class="config">
@@ -706,4 +707,215 @@
     .config__tools {
         padding: 0.5rem;
     }
+</style>
+-->
+
+<template>
+    <div class="bg-white mt-4 pl-3 pr-3 box-shadow border-16">
+        <a-table
+            :columns="columns"
+            :data-source="data"
+            :row-selection="rowSelection"
+            :expanded-row-keys.sync="expandedRowKeys"
+        />
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            let row = [1,'Сакенов',2];
+            return {
+                expandedRowKeys: [],
+                columns: [
+                    {
+                        title: 'Департамент',
+                        dataIndex: 'name',
+                        key: 'title1',
+
+                    },
+                    {
+                        title: 'ДСД',
+                        dataIndex: 'product',
+                        key: 'title2',
+                    },
+                    {
+                        title: 'АВ',
+                        dataIndex: 'AV',
+                        key: 'title3',
+                    },
+                    {
+                        title: 'Исполнение',
+                        dataIndex: 'fees',
+                        key: 'title4',
+                    },
+                    {
+                        title: 'КВ',
+                        dataIndex: 'KV',
+                        key: 'title5',
+                    },
+                    {
+                        title: 'Изменение',
+                        dataIndex: 'payments',
+                        key: 'title6',
+                    },
+                ],
+                data: [
+                    {
+                        key: 11,
+                        name: 'ДКС',
+                        product: 20,
+                        fees: '123',
+                        AV: 60,
+                        KV: 20,
+                        payments: 30,
+                        children: [
+                            {
+                                key: 1,
+                                name: 'Управление1',
+                                product: 20,
+                                fees: '123',
+                                AV: 60,
+                                KV: 20,
+                                payments: 30,
+                            },
+                            {
+                                key: 2,
+                                name: 'Управление2',
+                                product: 20,
+                                fees: '123',
+                                AV: 60,
+                                KV: 20,
+                                payments: 30,
+                                children: [
+                                    {
+                                        key: 13,
+                                        name: row[1],
+                                        product: 20,
+                                        fees: '123',
+                                        AV: 60,
+                                        KV: 20,
+                                        payments: 30,
+                                    },
+                                ],
+                            },
+                            {
+                                key: 3,
+                                name: 'Управление3',
+                                product: 20,
+                                fees: '123',
+                                AV: 60,
+                                KV: 20,
+                                payments: 30,
+                                children: [
+                                    {
+                                        key: 121,
+                                        name: 'Калиев',
+                                        product: 20,
+                                        fees: '123',
+                                        AV: 60,
+                                        KV: 20,
+                                        payments: 30,
+                                    },
+                                ],
+                            },
+
+                        ],
+                    },
+                    {
+                        key: 21,
+                        name: 'ДСП',
+                        product: 20,
+                        fees: '123',
+                        AV: 60,
+                        KV: 20,
+                        payments: 30,
+                        children: [
+                            {
+                                key: 12,
+                                name: 'Управление1',
+                                product: 20,
+                                fees: '123',
+                                AV: 60,
+                                KV: 20,
+                                payments: 30,
+                            },
+                            {
+                                key: 22,
+                                name: 'Управление2',
+                                product: 20,
+                                fees: '123',
+                                AV: 60,
+                                KV: 20,
+                                payments: 30,
+                                children: [
+                                    {
+                                        key: 132,
+                                        name: 'Салимов',
+                                        product: 20,
+                                        fees: '123',
+                                        AV: 60,
+                                        KV: 20,
+                                        payments: 30,
+                                    },
+                                ],
+                            },
+                            {
+                                key: 32,
+                                name: 'Управление3',
+                                product: 20,
+                                fees: '123',
+                                AV: 60,
+                                KV: 20,
+                                payments: 30,
+                                children: [
+                                    {
+                                        key: 122,
+                                        name: 'Калиев',
+                                        product: 20,
+                                        fees: '123',
+                                        AV: 60,
+                                        KV: 20,
+                                        payments: 30,
+                                    },
+                                ],
+                            },
+
+                        ],
+                    },
+                ],
+                rowSelection: {
+                    onChange: (selectedRowKeys, selectedRows) => {
+                        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                    },
+                    onSelect: (record, selected, selectedRows) => {
+                        console.log(record, selected, selectedRows);
+                    },
+                    onSelectAll: (selected, selectedRows, changeRows) => {
+                        console.log(selected, selectedRows, changeRows);
+                    },
+                }
+            }
+        },
+    };
+</script>
+
+
+<style>
+    .ant-spin-nested-loading {
+        margin-top: 20px;
+    }
+    .ant-table-thead > tr > th {
+        text-align: center;
+        background: #f1f4f7;
+        border-top: 1px solid #dee2e6;
+        border-right: 1px dashed #3c6ccc;
+    }
+    .ant-table-thead > tr:first-child > th:last-child {
+        border-right: 0px;
+    }
+    .ant-table-row-cell-last {
+
+    }
+
 </style>

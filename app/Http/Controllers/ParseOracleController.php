@@ -3,17 +3,14 @@
 namespace App\Http\Controllers;
 
 
-use App\ParseOracle;
+use App\ParseCollects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ParseOracleController extends Controller
 {
-    public function getOracleCollect(){
+    public function getOracleCollect(Request $request ){
 
 
-        /*        $data = DB::connection('oracle')
-            ->select('select * from inslab.centras_temp_migrate where group_name = \'Отчет по журналу выплат\'
-                and ROWNUM < 101');*/
     }
 }
