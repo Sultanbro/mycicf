@@ -13,4 +13,6 @@ return [
         'edition' => env('DB_EDITION', 'ora$base'),
         'server_version' => "12",//env('DB_SERVER_VERSION', '11g'),
     ],
+
+    'row_limit' => env('ORACLE_SYNC_ROW_LIMIT', 1000)
 ];
