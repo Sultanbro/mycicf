@@ -322,4 +322,10 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function resetPassword($subjIsn, $password);
+
+    /**
+     * @param $dictiName
+     * @return mixed
+     */
+    public function userGetDictiToBitrix($dictiName);
 }

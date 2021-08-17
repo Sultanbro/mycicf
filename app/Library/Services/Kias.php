@@ -912,4 +912,10 @@ class Kias implements KiasServiceInterface
             'NewPass' => $password
         ]);
     }
+
+    public function userGetDictiToBitrix($dictiName){
+        return $this->request('User_GetDictiToBitrix', [
+            'DictiName' => $dictiName,
+        ]);
+    }
 }

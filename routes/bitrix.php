@@ -17,4 +17,6 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 
-Route::get('test', 'SiteController@getTest');
+Route::post('/login', 'SiteController@authorization');
+Route::get('/renewal', 'SiteController@renewal');
+Route::get('/getTransactionStatus', 'SiteController@getTransactionStatus');
