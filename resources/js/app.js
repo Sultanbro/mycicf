@@ -32,6 +32,8 @@ Vue.use(moment);
 
 Vue.use(vmodal);
 
+Vue.use(VueTreeselect);
+
 import Toastr from 'vue-toastr'
 
 Vue.use(FlashMessage);
@@ -63,6 +65,7 @@ Vue.directive('linkified', linkify);
 // Vue.component('login', require('./components/registration/login.vue').default);
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
+Vue.component('treeselect-value', VueTreeselect.TreeselectValue);
 
 Vue.component('simple-info', require('./components/employee/simple-info.vue').default);
 
@@ -208,19 +211,23 @@ Vue.component('dsv', require('./components/booking/dsv').default);
 
 Vue.component('statistics', require('./components/employee/statistics').default);
 
-Vue.component('boss-news', require('./components/news/boss-news').default);
+Vue.component('management-main', require('./components/document/management-main').default);
 
-Vue.component('my-results', require('./components/results/my-results').default);
+Vue.component('management-search', require('./components/document/management-search').default);
 
-Vue.component('rating', require('./components/results/rating').default);
+Vue.component('management-show', require('./components/document/management-show').default);
 
-Vue.component('motivation', require('./components/results/motivation').default);
+Vue.component('management-employee', require('./components/document/management-employee').default);
 
-Vue.component('report', require('./components/results/report').default);
+Vue.component('management-application', require('./components/document/management-application').default);
 
-Vue.component('rating-list', require('./components/results/rating-list').default);
+Vue.component('management-application-extra', require('./components/document/management-application-extra').default);
 
-Vue.component('employee-rate', require('./components/results/employee-rate').default);
+Vue.component('application-blank', require('./components/document/application-blank').default);
+
+Vue.component('disciplinary-action', require('./components/document/disciplinary-action').default);
+
+Vue.component('management-business-trip', require('./components/document/management-business-trip').default);
 
 Vue.filter('numberFormat', (value) => {
     // https://stackoverflow.com/a/59875056

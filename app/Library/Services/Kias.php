@@ -64,9 +64,6 @@ class Kias implements KiasServiceInterface
         Debugbar::log('Kias::Construct');
     }
 
-    /**
-     * @return \Illuminate\Support\Carbon
-     */
     private function getLifetime() {
         return now()->addMinutes(config('kias.cache.lifetime'));
     }
@@ -191,10 +188,10 @@ class Kias implements KiasServiceInterface
                 $date  = $d->format('d-m-Y_H-i-s-u');
 
                 // TODO Use Storage::disk instead
-//                file_put_contents(
-//                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
-//                    $xml->asXml()
-//                );
+                file_put_contents(
+                    storage_path()."/kias_logs/{$date}_kias_agent_result_{$name}_.xml",
+                    $xml->asXml()
+                );
             }
         }
 
@@ -238,10 +235,10 @@ class Kias implements KiasServiceInterface
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
                 $d     = new \DateTime(date('Y-m-d H:i:s.'.$micro, $t));
                 $date  = $d->format('d-m-Y_H-i-s-u');
-//                file_put_contents(
-//                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
-//                    $xml->asXML()
-//                );
+                file_put_contents(
+                    storage_path()."/kias_logs/".$date."_kias_agent_".$name."_.xml",
+                    $xml->asXML()
+                );
             }
         }
 
@@ -432,30 +429,6 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getPrintableOrderDocument($data, $dataParams)
-    {
-        return $this->request('GetPrintableDocument', [
-            'ISN' => $data['ISN'],
-            'TemplateISN' => $data['TemplateISN'],
-            'ClassID' => $data['ClassID'],
-            'Remark' => $data['Remark'],
-            'params' => [
-                'row' => [
-                    [
-                        'paramName' => $dataParams[0]->paramName,
-                        'paramType' => $dataParams[0]->paramType,
-                        'paramValue' => $dataParams[0]->paramValue
-                    ],
-                    [
-                        'paramName' => $dataParams[1]->paramName,
-                        'paramType' => $dataParams[1]->paramType,
-                        'paramValue' => $dataParams[1]->paramValue
-                    ]
-                ]
-            ],
-        ]);
-    }
-
     public function getExpressAttributes($product){
         return $this->request('User_CicGetAttrExpress', [
             'Product' => $product,
@@ -472,8 +445,16 @@ class Kias implements KiasServiceInterface
     {
         return $this->request('GETDICTILIST', [
             'DictiISN' => $parent,
-            'Mode' => 0
+            'Mode' => 0,
         ]);
+    }
+
+    public function userCicGetDictiList($tarifISN)
+    {
+        return $this->request('User_CicGetDictiList', [
+            'TariffISN' => $tarifISN,
+        ]);
+
     }
 
     public function getRegions($parent){
@@ -482,16 +463,17 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null)
-    {
-        return $this->request('User_CicSearchSubject', [
-            'IIN'          => $iin,
-            'FIRSTNAME'    => $firstName,
-            'LASTNAME'     => $lastName,
-            'PARENTNAME'   => $patronymic,
-            'ISN'          => $isn
-        ]);
-    }
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn=null){}
+//    public function getSubject($firstName, $lastName, $patronymic, $iin)
+//    {
+//        return $this->request('User_CicSearchSubject', [
+//            'IIN'          => $iin,
+//            'FIRSTNAME'    => $firstName,
+//            'LASTNAME'     => $lastName,
+//            'PARENTNAME'   => $patronymic,
+//            'ISN'          => $isn
+//        ]);
+//    }
 
     public function saveSubject($participant){
         return $this->request('User_CicSaveSubject', array_merge($participant,[
@@ -659,11 +641,10 @@ class Kias implements KiasServiceInterface
 //        ]);
 //    }
 
-    public function getPrintableDocumentList($contract_number, $doc = 0){
+    public function getPrintableDocumentList($contract_number){
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
-            'TemplateISN' => '',
-            'Doc' => $doc
+            'TemplateISN' => ''
         ]);
     }
 
@@ -678,12 +659,6 @@ class Kias implements KiasServiceInterface
             'DocISN' => $doc_isn,
             'Type' => $type, // 1 сменить статус, 2 посмотреть статус
             'Status' => $status, //2522 на подписи, 2518 подписан
-        ]);
-    }
-
-    public function getOrSetEorderDocs($doc_isn){
-        return $this->request('User_CicGetOrSetEorderDocs',[
-            'DocISN' => $doc_isn
         ]);
     }
 
@@ -864,6 +839,24 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+//    public function saveDocument($isns,$classISN,$statusIsn,$emplISN,$docDate,$subjISN, $remark, $docRow, $docParams){
+//        return $this->request('User_CicSAVEDOCUMENT', [
+//            'ISN' => $isns,
+//            'CLASSISN' => $classISN,
+//            'STATUSISN' => $statusIsn,
+//            'EMPLISN' => $emplISN,
+//            'DOCDATE' => $docDate ? $docDate : date('d.m.Y'),
+//            'SUBJISN' => $subjISN,
+//            'REMARK' => $remark,
+//            'DocParams' => [
+//                'row' => $docParams
+//            ],
+//            'DocRow' => [
+//                'row' => $docRow,
+//                'row' => $travellers
+//            ]
+//        ]);
+//    }
     public function saveDocument($classISN,$RefundISN,$RefundId,$emplISN,$subjISN,$docRow, $docParams){
         return $this->request('User_CicSAVEDOCUMENT', [
             'CLASSISN' => $classISN,
@@ -905,11 +898,120 @@ class Kias implements KiasServiceInterface
             'Classisn' => $class_isn,
         ]);
     }
+    public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status) {
+        return $this->request('User_CicGetMySZ', [
+            'EMPLISN' => $emplIsn,
+            'DATEBEG' => date('d.m.Y', strtotime($dateBeg)),
+            'DATEEND' => date('d.m.Y', strtotime($dateEnd)),
+            'STATUS' => $status,
+        ]);
+    }
 
-    public function resetPassword($subjIsn, $password){
-        return $this->request('User_ResetPassWord', [
-            'SubjectISN' => $subjIsn,
-            'NewPass' => $password
+    public function userCicSaveDocument($isns, $id, $extId, $amount, $currIsn, $status_isn, $class_isn, $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $earlyTerminationDate, $subjIsn, $remark, $row, $doc) {
+        return $this->request('User_CicSAVEDOCUMENT', [
+            'ISN' => $isns,
+            'ID' => $id,
+            'EXTID' => $extId == array($extId) || 'undefined' || null ? '' : $extId,
+            'AMOUNT' => $amount,
+            'CURRISN' => $currIsn,
+            'STATUSISN' => $status_isn,
+            'CLASSISN' => $class_isn,
+            'EMPLISN' => $emplIsn,
+            'SIGNERISN' => $signerIsn,
+            'EXTSIGNERISN' => $extSignerIsn,
+            'DOCDATE' => $docDate,
+            'DATEBEG' => $dateBeg,
+            'DATEEND' => $dateEnd,
+            'DATEDENOUNCE' => $earlyTerminationDate,
+            'SUBJISN' => $subjIsn,
+            'REMARK' => $remark,
+            'DocParams' => [
+                'row' => $row
+            ],
+            'DocRow' => $doc
+        ]);
+    }
+
+    public function userCicChangeDocCoordination($row) {
+        return $this->request('User_CicChangeDocCoordination', [
+            'row' => $row,
+        ]);
+    }
+
+    public function userCicSearchSubject($juridical, $orgName, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch)
+    {
+        return $this->request('User_CicSearchSubject', [
+            'JURIDICAL' => $juridical,
+            'ORGNAME' => $orgName,
+            'IIN' => $iin,
+            'FIRSTNAME' => $firstName,
+            'LASTNAME' => $lastName,
+            'PARENTNAME' => $parentName,
+            'CLASSISN' => $classISN,
+            'ESBDSEARCH' => $esbdSearch,
+        ]);
+    }
+
+    public function documentSearch($id, $extId, $classIsn, $docDateFrom, $docDateTo, $showCancelled, $subjIsn, $deptIsn, $emplIsn, $amountFrom, $amountTo, $currIsn, $taskIsn, $pageNo){
+        return $this->request('DOCUMENTSEARCH', [
+            'ID' => $id,
+            'EXTID' => $extId,
+            'CLASSISN' => $classIsn,
+            'DOCDATEFROM' => $docDateFrom,
+            'DOCDATETO' => $docDateTo,
+            'SHOWCANCELED' => $showCancelled,
+            'SUBJISN' => $subjIsn,
+            'DEPTISN' => $deptIsn,
+            'EMPLISN' => $emplIsn,
+            'AMOUNTFROM' => $amountFrom,
+            'AMOUNTTO' => $amountTo,
+            'CURRISN' => $currIsn,
+            'TASKISN' => $taskIsn,
+            'PAGENO' => $pageNo,
+        ]);
+    }
+
+    public function userCicSaveSubject($iin, $firstName, $lastName, $parentName, $birthday, $juridical, $resident, $sexId, $countryIsn){
+        return $this->request('User_CicSaveSubject', [
+            'IIN' => $iin,
+            'FIRSTNAME' => $firstName,
+            'LASTNAME' => $lastName,
+            'PARENTNAME' => $parentName,
+            'BIRTHDAY' => $birthday,
+            'JURIDICAL' => $juridical,
+            'RESIDENT' => $resident,
+            'SEXID' => $sexId,
+            'COUNTRYISN' => $countryIsn,
+        ]);
+    }
+
+    public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo){
+        return $this->request('AGREEMENTCALCSEARCH', [
+            'ID' => $id,
+            'DATESIGNFROM' => $dateSignFrom,
+            'DATESIGNTO' => $dateSignTo,
+            'CLASSISN' => $classIsn,
+            'DATEBEGFROM' => $dateBegFrom,
+            'DATEBEGTO' => $dateBegTo,
+            'DEPTISN' => $deptIsn, 'EMPLISN' => $emplIsn,
+            'PRODUCTISN' => $productIsn, 'STATUSISN' => $statusIsn,
+            'TASKISN' => $taskIsn, 'PAGENO' => $pageNo
+        ]);
+    }
+
+    public function AgrSearch ($id, $blankSerNo, $dateBegFrom, $dateBegTo, $dateEndFrom, $dateEndTo, $dateSignFrom, $dateSignTo, $productIsn, $emplIsn, $status){
+        return $this->request('AgrSearch', [
+            'ID' => $id,
+            'BlankSerNo' => $blankSerNo,
+            'DateBegFrom' => $dateBegFrom,
+            'DateBegTo' => $dateBegTo,
+            'DateEndFrom' => $dateEndFrom,
+            'DateEndTo' => $dateEndTo,
+            'DateSignFrom' => $dateSignFrom,
+            'DateSignTo' => $dateSignTo,
+            'ProductISN' => $productIsn,
+            'EmplISN' => $emplIsn,
+            'Status' => $status,
         ]);
     }
 }

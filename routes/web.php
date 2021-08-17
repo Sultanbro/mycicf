@@ -23,11 +23,12 @@ Route::get('/sandbox/react2', 'SandboxController@react2');
 Route::get('/sandbox/error', 'SandboxController@error');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
 Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
+Route::get('/sandbox/upload', 'SandboxController@upload');
+Route::post('/sandbox/uploadDocs', 'SandboxController@uploadDocs');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
-Route::post('/api/pwreset', 'ApiController@resetPassword');
-
+Route::post('/document/test', 'SiteController@test');
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/', 'Admin\SiteController@showLoginForm');
@@ -216,12 +217,14 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
  */
-Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function () {
+
+    Route::get('/document-isn', 'DocumentManagementController@getDocumentIsn')->name('document.show');
+    Route::post('/createUser', 'DocumentManagementController@createUser');
     Route::get('/', 'SiteController@getIndex')->name('index');
     Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
     Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
-    Route::get('/getBirthdays2', 'SiteController@getBirthdays2')->name('getBirthdays2');
 
     Route::get('eds/od', 'EdsController@edsOD');
     Route::get('eds/po', 'EdsController@edsPO');
@@ -233,19 +236,17 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::group(['middleware' => 'duty'], function () {
-            Route::get('test/eds', 'EdsController@testEds');
+            Route::get('test/eds', 'SiteController@testEds');
             Route::post('/save_document', 'EdsController@saveDocument');
             Route::post('/get_or_set_doc', 'EdsController@getOrSetDoc');
             Route::post('/save_fail_status', 'EdsController@saveFailStatus');
-            Route::get('/getEDS', 'EdsController@getEdsTokenForSign');
-            Route::post('/eds-by-isn', 'EdsController@edsByIsn')->name('eds-by-isn');
-            Route::post('/save_eds_info', 'EdsController@saveEdsInfo');
+            Route::get('/getEDS', 'SiteController@getEds');
+            Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
+            Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
             Route::post('/coordinationSaveAttachment', 'CoordinationController@saveAttachment');
-            Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
             Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
-            Route::post('/get-printable-order-document', 'EdsController@getPrintableOrderDocument');
             Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
             //DOSSIER
             Route::post('/emplInfo', 'SiteController@postEmplInfo');
@@ -345,18 +346,13 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             'as'     => 'news',
         ], function () {
 // TODO Постепенно перенести сюда все роуты связанные с этой группой
-            Route::get('/beta', 'News\\PostsController@getViewBeta')->name('.index');
-
             Route::get('/', 'News\\PostsController@getView')->name('.index');
             Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
             Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
-            Route::post('/addPost/beta', 'News\\PostsController@addPost2')->name('.addPost-beta'); // TODO use grouping
             Route::post('/likePost', 'News\\PostsController@likePost')->name('.likePost');
-            Route::post('/getLikes', 'News\\PostsController@getPostLikes')->name('.getLikes');
             Route::post('/news-birthday', 'NewsController@birthday');
             Route::post('/editPost', 'NewsController@editPost')->middleware('checkPostAccess');
             Route::post('/vote', 'News\\PostsController@vote')->name('.votePost');
-            Route::post('/getDateValidRanges', 'News\\PostsController@getDateValidRanges')->name('.getDateValidRanges');
 
             Route::group([
                 'prefix'     => 'my',
@@ -559,6 +555,62 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
         Route::post('upload', 'PreInsuranceInspectionController@upload');
         Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
         Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+        //Application
+        Route::get('document/management', 'DocumentManagementController@index')->name('document.index');
+        Route::post('/document/getUserInfo', 'DocumentManagementController@getUserInfo')->name('document.get.user.info');
+        Route::post('/document/getProxyType', 'DocumentManagementController@getProxyType')->name('document.get.proxy.type');
+        Route::post('/document/getDailyMc', 'DocumentManagementController@getDailyMc')->name('document.get.daily.MC');
+        Route::post('/document/getCountriesList', 'DocumentManagementController@getCountriesList')->name('document.get.countries.list');
+        Route::post('/document/getRelational', 'DocumentManagementController@getRelational')->name('document.get.relational');
+        Route::post('/document/getHelpTo', 'DocumentManagementController@getHelpTo')->name('document.get.help.to');
+        Route::post('/document/getCalculationType', 'DocumentManagementController@getCalculationType')->name('document.get.calculation.type');
+        Route::post('/document/getPaymentForm', 'DocumentManagementController@getPaymentForm')->name('document.get.payment.form');
+        Route::post('/document/getPaymentOrder', 'DocumentManagementController@getPaymentOrder')->name('document.get.payment.order');
+        Route::post('/document/getServicesFor', 'DocumentManagementController@getServicesFor')->name('document.get.services.for');
+        Route::post('/document/getCostType', 'DocumentManagementController@getCostType')->name('document.get.cost.type');
+        Route::post('/document/getAutoColor', 'DocumentManagementController@getAutoColor')->name('document.get.auto.color');
+        Route::post('/document/getTopicEconomicActivity', 'DocumentManagementController@getTopicEconomicActivity')->name('document.get.topic.economic.activity');
+        Route::post('/document/getMissingProduct', 'DocumentManagementController@getMissingProduct')->name('document.get.missing.product');
+        Route::post('/document/getVehicleModel', 'DocumentManagementController@getVehicleModel')->name('document.get.vehicle.model');
+        Route::post('/document/getCarStateNumber', 'DocumentManagementController@getCarStateNumber')->name('document.get.car.state.number');
+        Route::post('/document/getViolationComposition', 'DocumentManagementController@getViolationComposition')->name('document.get.violation.composition');
+        Route::post('/document/getUnitGroup', 'DocumentManagementController@getUnitGroup')->name('document.get.unit.group');
+        Route::post('/document/getDuty', 'DocumentManagementController@getDuty')->name('document.get.duty');
+        Route::post('/document/getSzTopic', 'DocumentManagementController@getSzTopic')->name('document.sz.topic');
+        Route::post('/document/getReason', 'DocumentManagementController@getReason')->name('document.reason');
+        Route::post('/document/getDelegateAuthority', 'DocumentManagementController@getDelegateAuthority')->name('document.delegate.authority');
+        Route::post('/document/getReasonDeprivation', 'DocumentManagementController@getReasonDeprivation')->name('document.reason.deprivation');
+        Route::post('/document/getTypeSzAhd', 'DocumentManagementController@getTypeSzAhd')->name('document.type.sz.ahd');
+        Route::post('/document/getTypeSzMain', 'DocumentManagementController@getTypeSzMain')->name('document.type.sz.main');
+        Route::get('/document/{isn}', 'DocumentManagementController@show')->name('document.show');
+        Route::post('/document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
+        Route::get('/document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
+        Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
+        Route::get('showMySZ', 'DocumentManagementController@showMySZ')->name('document.show');
+        Route::post('/document/saveDocument', 'DocumentManagementController@saveDocument');
+        Route::post('/document/buttonClick', 'DocumentManagementController@buttonClick');
+        Route::get('documents', 'DocumentManagementController@documents')->name('document.documents');
+        Route::post('/sendOut', 'DocumentManagementController@getOrSetDocs');
+        Route::post('/changeDocCoordination', 'DocumentManagementController@changeDocCoordination');
+        Route::post('/document/getCounterpartyType', 'DocumentManagementController@getCounterpartyType')->name('document.get.counterparty.type');
+        Route::post('/searchCounterparty', 'DocumentManagementController@searchCounterparty');
+        Route::post('/searchQuotation', 'DocumentManagementController@searchQuotation');
+        Route::post('/searchDocument', 'DocumentManagementController@documentSearch');
+        Route::post('/searchContract', 'DocumentManagementController@searchContract');
+        Route::post('/saveSubject', 'DocumentManagementController@saveSubject');
+        Route::post('/document/getKNP', 'DocumentManagementController@getKNP')->name('document.get.knp');
+        Route::post('/document/getKBK', 'DocumentManagementController@getKBK')->name('document.get.kbk');
+        Route::post('/document/getCreationSources', 'DocumentManagementController@getCreationSources')->name('document.get.creation.sources');
+        Route::post('/document/getStage', 'DocumentManagementController@getStage')->name('document.get.stage');
+        Route::post('/document/getProductType', 'DocumentManagementController@getProductType')->name('document.product.type');
+        Route::post('/document/getProductTypeAhd', 'DocumentManagementController@getProductTypeAhd')->name('document.product.type.ahd');
+        Route::post('/document/getTaxAuthorityCode', 'DocumentManagementController@getTaxAuthorityCode')->name('document.tax.authority.code');
+        Route::post('/document/getStagePassage', 'DocumentManagementController@getStagePassage')->name('document.stage.passages');
+        Route::post('/document/getRegions', 'DocumentManagementController@getRegions')->name('document.get.regions');
+        Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');
+        Route::post('/document/travellersList', 'DocumentManagementController@travellersList');
+        Route::post('/saveDoc', 'DocumentManagementController@saveDoc');
 
         //Dev page route
         Route::get('development/{name}', 'NewsController@dev')->name('development');
@@ -633,6 +685,9 @@ Route::get('test3', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
 
+Route::post('/check-test', 'DocumentManagementController@checkTest');
+
+
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');
     Route::post('/login', 'Documentation\DocumentationAuthController@login');
@@ -649,10 +704,6 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
-
-    Route::get('/qrmanagerreport', 'TestqrController@managerReportQR');
-    Route::any('/qrmanagerreport', 'TestqrController@managerReportQR');
-    Route::post('/qrmanagerreport', 'TestqrController@managerReportQR');
 });
 
 Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
