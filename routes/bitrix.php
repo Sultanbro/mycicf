@@ -20,3 +20,4 @@ use Illuminate\Http\Request;
 Route::post('/login', 'SiteController@authorization');
 Route::get('/renewal', 'SiteController@renewal');
 Route::get('/getTransactionStatus', 'SiteController@getTransactionStatus');
+Route::get('/getUserList', 'SiteController@getUserList');

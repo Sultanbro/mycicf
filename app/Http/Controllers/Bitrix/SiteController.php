@@ -96,4 +96,32 @@ class SiteController extends Controller
             return response()->json($renew)->withCallback($request->input('callback'));
         }
     }
+
+    public function getUserList(Request $request, KiasServiceInterface $kias){
+        $error = '';
+        $success = true;
+        $response = $kias->request('User_CicGetUserList', [
+            'Sid' => 'c83986e2-75ba-45e0-b713-860daed87b10'
+        ]);
+//        dd($response);
+        if($response->error) {
+            $success = false;
+            $response = array(
+                'success' => $success,
+                'error' => (string)$response->error->text,
+            );
+        }
+        if($response->result->state == 'ok') {
+            $renew = array(
+                'success' => $success,
+                'error' => $error,
+                'data' => [
+                    'auth_token' => (string)$request->Sid,
+                ]
+            );
+        }
+        if($response->result->state == 'ok'){
+            return response()->json($renew)->withCallback($request->input('callback'));
+        }
+    }
 }
