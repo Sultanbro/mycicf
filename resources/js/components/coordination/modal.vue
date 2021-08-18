@@ -25,7 +25,7 @@
                                                     <span class="ml-2">Тип документа</span>
                                                 </div>
                                                 <div class="pt-2 pb-2">
-                                                    <span>{{ coordination.Fullname }}</span>
+                                                    <span>{{coordination.Fullname}}</span>
                                                 </div>
                                             </div>
                                         </div>
