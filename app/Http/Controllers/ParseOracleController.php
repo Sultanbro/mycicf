@@ -24,106 +24,151 @@ class ParseOracleController extends Controller
         $jambyl = [];
         $koksh = [];
 
-/*        foreach ($pays as $item){
-            array_push($result, $item->deptName);
-        }
-
-        $department = array_unique($result);
-        dd($department);*/
 
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по Карагандинской области'){
-                array_push($karaganda, [
-                    'key' => $item->id,
-                    'isn' => $item->emplISN,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
-            }
-        }
-
-        foreach ($collect as $item){
-            if($item->deptName === 'Филиал по г.Нур-Султан'){
-                array_push($nur_sultan, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по Карагандинской области' && $elem->deptName === 'Филиал по Карагандинской области'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($karaganda, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
                     ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по г. Актобе'){
-                array_push($aktobe, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по г.Нур-Султан' && $elem->deptName === 'Филиал по г.Нур-Султан'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($nur_sultan, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по Восточно-Казахстанской области'){
-                array_push($vko, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по г. Актобе' && $elem->deptName === 'Филиал по г. Актобе'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($aktobe, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по г.Шымкент'){
-                array_push($shym, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по Восточно-Казахстанской области' && $elem->deptName === 'Филиал по Восточно-Казахстанской области'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($vko, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по Северо-Казахстанской области'){
-                array_push($sko, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по г.Шымкент' && $elem->deptName === 'Филиал по г.Шымкент'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($shym, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по Павлодарской области'){
-                array_push($pavlo, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по Северо-Казахстанской области' && $elem->deptName === 'Филиал по Северо-Казахстанской области'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($sko, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по Жамбылской области'){
-                array_push($jambyl, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по Павлодарской области' && $elem->deptName === 'Филиал по Павлодарской области'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($pavlo, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
         foreach ($collect as $item){
-            if($item->deptName === 'Филиал по г.Кокшетау'){
-                array_push($koksh, [
-                    'key' => $item->id,
-                    'name' => $item->emplName,
-                    'DSD' => $item->DSD,
-                    'comissionProc'=> $item->comissionProc,
-                ]);
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по Жамбылской области' && $elem->deptName === 'Филиал по Жамбылской области'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($jambyl, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
             }
         }
-
+        foreach ($collect as $item){
+            foreach ($pays as $elem){
+                if($item->deptName === 'Филиал по г.Кокшетау' && $elem->deptName === 'Филиал по г.Кокшетау'
+                    && $item->emplISN === $elem->emplIsn){
+                    array_push($koksh, [
+                        'key' => $item->id,
+                        'isn' => $item->emplISN,
+                        'name' => $item->emplName,
+                        'DSD' => $item->DSD,
+                        'comissionProc'=> $item->comissionProc,
+                        'totalRefundSum' => $elem->totalRefundSum,
+                        'nettoRefundSum' => $elem->nettoRefundSum,
+                    ]);
+                }
+            }
+        }
 
         $filials = [];
         $aaa = [];
