@@ -199,7 +199,7 @@ class Kias implements KiasServiceInterface
         }
 
         if (isset($xml->error)) {
-            if (isset($xml->error->code) && $xml->error->code == '001') {
+            if (isset($xml->error->code) && $xml->error->code == '001' && Auth::check()) {
                 $response = $this->authenticate(Auth::user()->username, Auth::user()->password_hash);
                 if ($response->error) {
                     Auth::logout();

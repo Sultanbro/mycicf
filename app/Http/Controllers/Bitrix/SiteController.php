@@ -40,70 +40,58 @@ class SiteController extends Controller
     }
 
     public function renewal(Request $request, KiasServiceInterface $kias) {
-        $request->auth_token = '601d6bb9-3d7d-42f8-a756-7773cc4d559c';
-        $error = '';
-        $success = true;
+//        $request->Sid = 'c8e68d48-358f-48af-ac2f-64ee722153bb';
         $renew = $kias->request('User_CicHelloSvc', [
-            'Sid' => $request->auth_token
+            'Sid' => $request->Sid
         ]);
+//        dd($renew);
         if($renew->error) {
             $success = false;
-            $response = array(
-                'success' => $success,
+            return response()->json([
+                'success' => false,
                 'error' => (string)$renew->error->text,
-            );
+            ]);
         }
         if($renew->result->state == 'ok') {
             $renew = array(
-                'success' => $success,
-                'error' => $error,
-                'data' => [
-                    'auth_token' => (string)$request->auth_token,
-                ]
+                'success' => true,
+                'state' =>  (string)$renew->result->state,
             );
-        }
-        if($renew->result->state == 'ok'){
-            return response()->json($renew)->withCallback($request->input('callback'));
         }
     }
 
     public function getTransactionStatus(Request $request, KiasServiceInterface $kias){
         $request->dictiName = 'CalcStatus';
-        $error = '';
-        $success = true;
-        $response = $kias->request('User_GetDictiToBitrix', [
-            'DictiName' => $request->dictiName,
-            'Sid' => 'c83986e2-75ba-45e0-b713-860daed87b10'
-        ]);
-//        dd($response);
+        $kias->_sId = $request->sid;
+        $response = $kias->userGetDictiToBitrix($request->dictiName);
         if($response->error) {
-            $success = false;
-            $response = array(
-                'success' => $success,
+            return response()->json([
+                'success' => false,
                 'error' => (string)$response->error->text,
-            );
+            ]);
         }
-        if($response->result->state == 'ok') {
-            $renew = array(
-                'success' => $success,
-                'error' => $error,
+        if($response->StatusList->row){
+            return response()->json([
+                'success' => true,
                 'data' => [
-                    'auth_token' => (string)$request->Sid,
+                    'row' => $response->StatusList,
                 ]
-            );
+            ]);
         }
-        if($response->result->state == 'ok'){
-            return response()->json($renew)->withCallback($request->input('callback'));
-        }
+        return response()->json([
+            'success' => false,
+            'error' => 'Произошла ошибка'
+        ]);
     }
 
     public function getUserList(Request $request, KiasServiceInterface $kias){
         $error = '';
         $success = true;
-        $response = $kias->request('User_CicGetUserList', [
-            'Sid' => 'c83986e2-75ba-45e0-b713-860daed87b10'
-        ]);
-//        dd($response);
+//        $response = $kias->request('User_CicGetUserList', [
+//            'Sid' => 'c83986e2-75ba-45e0-b713-860daed87b10'
+//        ]);
+        $response = $kias->getBranches();
+        dd($response);
         if($response->error) {
             $success = false;
             $response = array(
