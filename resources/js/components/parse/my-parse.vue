@@ -150,7 +150,8 @@
             <parse-indicators v-show="viewType === 'parse-indicators'" :periods="periods" ref="balanceRef"/>
             <parse_indicators2 v-show="viewType === 'parse_indicators2'" :periods="periods" ref="balanceRef2"/>
 
-            <parse-centras  v-show="viewType === 'parse-centras'" :dateType="dateType" :companyData="companyData" :periods="periods"  v-if="companyData"></parse-centras>
+            <parse-centras  v-show="viewType === 'parse-centras'" :dateType="dateType"
+                            :oracleData="oracleData" :periods="periods"  v-if="oracleData"></parse-centras>
         </div>
 
     </div>
@@ -190,7 +191,6 @@
                         value: "year"
                     }
                 ],
-
                 periods: {
                     first_year: null,
                     second_year: null,
@@ -223,12 +223,24 @@
 
                     return result;
                 })(),
+                filials: [],
 
                 parseData: null,
-                companyData: null
+                companyData: null,
+                oracleData: null,
             }
         },
         methods: {
+            async getOracleData() {
+                let response = await this.axios.get('/parse/company/collects', {
+                    params: {
+                        filials: this.filials
+                    }
+                });
+                if(response.data.success) {
+                    this.oracleData = response.data.data;
+                }
+            },
 
             async getClassTopSum() {
                 let response = await this.axios.get('/parse/company/product', {
@@ -301,8 +313,9 @@
                     this.Balance();
                 }
                 else if(this.viewType == 'parse-centras'){
-                    this.getCompanyTopSum();
-                    this.getClassTopSum();
+                    //this.getCompanyTopSum();
+                    //this.getClassTopSum();
+                    this.getOracleData();
                 }
             }
         },

@@ -1,5 +1,4 @@
-<!--
-<template>
+<!--<template>
     <div>
         <ul id="demo" class="config">
             <div class="config__tools">
@@ -23,7 +22,8 @@
                 :options="options"
                 :list="model.children"
                 :search="search"
-                :typeFilter="typeFilter"></tree-folder>
+                :typeFilter="typeFilter"
+                :oracleData = "oracleData"></tree-folder>
         </ul>
     </div>
 </template>
@@ -32,7 +32,9 @@
 <script>
     export default {
         name: "parse-centras",
-
+        props: {
+            oracleData: Object,
+        },
         data() {
             return {
                 treeData: [{
@@ -707,14 +709,13 @@
     .config__tools {
         padding: 0.5rem;
     }
-</style>
--->
+</style>-->
 
 <template>
     <div class="bg-white mt-4 pl-3 pr-3 box-shadow border-16">
         <a-table
             :columns="columns"
-            :data-source="data"
+            :data-source="oracleData"
             :row-selection="rowSelection"
             :expanded-row-keys.sync="expandedRowKeys"
         />
@@ -723,8 +724,11 @@
 
 <script>
     export default {
+        props: {
+            oracleData: Array,
+        },
+
         data() {
-            let row = [1,'Сакенов',2];
             return {
                 expandedRowKeys: [],
                 columns: [
@@ -732,39 +736,38 @@
                         title: 'Департамент',
                         dataIndex: 'name',
                         key: 'title1',
-
                     },
                     {
                         title: 'ДСД',
-                        dataIndex: 'product',
+                        dataIndex: 'DSD',
                         key: 'title2',
                     },
                     {
-                        title: 'АВ',
-                        dataIndex: 'AV',
-                        key: 'title3',
-                    },
-                    {
                         title: 'Исполнение',
-                        dataIndex: 'fees',
+                        dataIndex: 'isn',
                         key: 'title4',
                     },
                     {
-                        title: 'КВ',
-                        dataIndex: 'KV',
-                        key: 'title5',
+                        title: 'АВ',
+                        dataIndex: 'comissionProc',
+                        key: 'title3',
                     },
                     {
-                        title: 'Изменение',
-                        dataIndex: 'payments',
+                        title: 'Нетто Выплаты',
+                        dataIndex: 'nettoRefundSum',
                         key: 'title6',
                     },
+                    {
+                        title: 'КВ',
+                        dataIndex: 'totalRefundSum',
+                        key: 'title5',
+                    },
                 ],
-                data: [
+/*                data: [
                     {
                         key: 11,
-                        name: 'ДКС',
-                        product: 20,
+                        name: 'Филилалы',
+                        product: 'sadad',
                         fees: '123',
                         AV: 60,
                         KV: 20,
@@ -772,16 +775,7 @@
                         children: [
                             {
                                 key: 1,
-                                name: 'Управление1',
-                                product: 20,
-                                fees: '123',
-                                AV: 60,
-                                KV: 20,
-                                payments: 30,
-                            },
-                            {
-                                key: 2,
-                                name: 'Управление2',
+                                name: 'Карагандинская область',
                                 product: 20,
                                 fees: '123',
                                 AV: 60,
@@ -789,8 +783,8 @@
                                 payments: 30,
                                 children: [
                                     {
-                                        key: 13,
-                                        name: row[1],
+                                        key: 1.1,
+                                        name: '',
                                         product: 20,
                                         fees: '123',
                                         AV: 60,
@@ -799,91 +793,10 @@
                                     },
                                 ],
                             },
-                            {
-                                key: 3,
-                                name: 'Управление3',
-                                product: 20,
-                                fees: '123',
-                                AV: 60,
-                                KV: 20,
-                                payments: 30,
-                                children: [
-                                    {
-                                        key: 121,
-                                        name: 'Калиев',
-                                        product: 20,
-                                        fees: '123',
-                                        AV: 60,
-                                        KV: 20,
-                                        payments: 30,
-                                    },
-                                ],
-                            },
-
                         ],
                     },
-                    {
-                        key: 21,
-                        name: 'ДСП',
-                        product: 20,
-                        fees: '123',
-                        AV: 60,
-                        KV: 20,
-                        payments: 30,
-                        children: [
-                            {
-                                key: 12,
-                                name: 'Управление1',
-                                product: 20,
-                                fees: '123',
-                                AV: 60,
-                                KV: 20,
-                                payments: 30,
-                            },
-                            {
-                                key: 22,
-                                name: 'Управление2',
-                                product: 20,
-                                fees: '123',
-                                AV: 60,
-                                KV: 20,
-                                payments: 30,
-                                children: [
-                                    {
-                                        key: 132,
-                                        name: 'Салимов',
-                                        product: 20,
-                                        fees: '123',
-                                        AV: 60,
-                                        KV: 20,
-                                        payments: 30,
-                                    },
-                                ],
-                            },
-                            {
-                                key: 32,
-                                name: 'Управление3',
-                                product: 20,
-                                fees: '123',
-                                AV: 60,
-                                KV: 20,
-                                payments: 30,
-                                children: [
-                                    {
-                                        key: 122,
-                                        name: 'Калиев',
-                                        product: 20,
-                                        fees: '123',
-                                        AV: 60,
-                                        KV: 20,
-                                        payments: 30,
-                                    },
-                                ],
-                            },
+                ],*/
 
-                        ],
-                    },
-                ],
                 rowSelection: {
                     onChange: (selectedRowKeys, selectedRows) => {
                         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -894,10 +807,10 @@
                     onSelectAll: (selected, selectedRows, changeRows) => {
                         console.log(selected, selectedRows, changeRows);
                     },
-                }
+                },
             }
         },
-    };
+    }
 </script>
 
 
