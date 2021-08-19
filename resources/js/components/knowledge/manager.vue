@@ -85,7 +85,7 @@
                             <label class="custom-control-label" for="customCheck44">Выбор материала</label>
                         </div>
                             <input type="date" class="form-control" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
-
+                            <hr>
                         <table class="table table-dark">
                             <thead>
                             <tr>
@@ -166,6 +166,7 @@
                                       <div><label>Обратная связь (заполняется вручную) <textarea v-model="description" class="form-control " id="exampleFormControlTextarea1" rows="3"></textarea></label></div>
                                   </form>
 
+                                        <hr>
 
                                     <table class="table">
 
@@ -255,7 +256,7 @@
                                     <div class="d-flex justify-content-end">
                                          <button type="submit" class="btn btn-primary">Назначить</button>
                                     </div>
-
+                                    <hr>
                                     <table class="table">
 
 
@@ -453,6 +454,9 @@
 
                         </div>
 
+
+                             <hr>
+
                         <table class="table table-dark mt-3">
 
                             <thead>
@@ -515,6 +519,7 @@
                                 <button type="submit" class="btn btn-primary">Добавить</button>
                                 <button type="submit" class="btn btn-primary">Изменить</button>
                             </div>
+                            <hr>
                         <table class="table table-dark">
 
 
@@ -578,6 +583,7 @@
 
                         <div class="container ">
                             <h2 class="text-align-center">Программа обучения</h2>
+                            <hr>
                             <table class="table table-primary">
                                 <thead>
                                 <tr>
@@ -783,6 +789,10 @@ label {
 
 
 /* Btn styles */
+hr {
+    height: 4px;
+    background: #4200ff;
+}
 
 button.btn.btn-primary:hover {
     background: #17a2b8;
