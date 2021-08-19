@@ -407,12 +407,12 @@
                                         //} else {
                                         self.signedFileInfo = result.responseObjects;
 
-                                        // if (result.responseObjects[0].iin != self.iin && edsType === 'sig') {
-                                        //     alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
-                                        //     self.loader(false);
-                                        //     this.edsConfirmed = false
-                                        //     return;
-                                        // }
+                                        if (result.responseObjects[0].iin != self.iin && edsType === 'sig') {
+                                             alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
+                                             self.loader(false);
+                                             this.edsConfirmed = false
+                                             return;
+                                        }
                                         if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                             self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
                                         } else {
