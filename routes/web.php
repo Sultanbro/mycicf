@@ -666,3 +666,4 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
 });
 
 Route::get('knowledge', 'Dev\KiasController@index')->name('.kias');
+Route::get('knowledge', 'KnowledgeController@know')->name('know');
