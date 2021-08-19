@@ -60,6 +60,7 @@
 
 
                 <div class="tab-content" id="v-pills-tabContent">
+
                     <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                         <div class="container">
                             <h2 class="text-align-center">Назначить обучение</h2>
@@ -149,9 +150,16 @@
                                         <h2 class="text-align-center"> Хочу провести обучение</h2>
                                         <div class="d-flex justify-content-end align-items-end mt-5"><button type="submit" class="btn btn-primary bg-primary">Назначить</button></div>
 
-                                   <div class="d-flex"><h2>Фильтр: период...</h2> <input type="checkbox" class="form-check-input" id="exampleCheck1"></div>
+                                        <div class=d-flex >
 
-                                  <form action="" method="post">
+                                            <div class=order-0> <h2 class=mt-1 >Фильтр: период...</h2> </div>
+                                            <div  class=order-1> <input type="checkbox" class=form-check-input  id=exampleCheck33></div>
+
+
+                                        </div>
+
+
+                                        <form action="" method="post">
                                       <div><label>Данные отправителя<input v-model="name" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Имя"></label></div>
                                       <div><label>Тема  <input v-model="topic" type="text" class="form-control" id="exampleFormControlInput2" placeholder="name@example.com"></label></div>
                                       <div><label>Дата<input v-model="date" type="date" class="form-control" id="exampleFormControlInput3" placeholder="day month year"></label></div>
@@ -223,7 +231,11 @@
                     <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
 
                                 <div class="container">
+
+
                         <!------------------------------------------------- Хочу пройти обучение  -------------------------------------------->
+
+
                                     <h2 class="text-align-center">Хочу пройти обучение</h2>
                                     <form action="" method="post">
                                           <input v-model="sname" type="text" class="form-control" id="exampleFormControlInput111" placeholder="Данные отправителя">
@@ -233,7 +245,12 @@
                                           <textarea v-model="description" class="form-control " id="exampleFormControlTextarea123" rows="3">Обратная связь (заполняется вручную)</textarea>
                                     </form>
 
-                                     <h2>Фильтр: период...</h2> <input type="checkbox" class="form-check-input" id="exampleChec32">
+                                    <div class=d-flex >
+
+                                        <div class=order-0> <h2 class=mt-1 >Фильтр: период...</h2> </div>
+                                        <div  class=order-1> <input type="checkbox" class=form-check-input  id=exampleChec32></div>
+
+                                    </div>
 
                                     <div class="d-flex justify-content-end">
                                          <button type="submit" class="btn btn-primary">Назначить</button>
@@ -494,7 +511,7 @@
 
 
 
-                            <div class="d-flex">
+                            <div class="d-flex mt-3">
                                 <button type="submit" class="btn btn-primary">Добавить</button>
                                 <button type="submit" class="btn btn-primary">Изменить</button>
                             </div>
