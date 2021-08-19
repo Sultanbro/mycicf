@@ -12,11 +12,7 @@ use \App\User;
 class SiteController extends Controller
 {
     public function authorization(Request $request, KiasServiceInterface $kias){
-        $error = '';
-        $success = true;
-        $username = $request->username;
-        $password = $request->password;
-        $response = $kias->authenticate($username, hash('sha512', $password));
+        $response = $kias->authenticate($request->username, hash('sha512', $request->password));
         if($response->error) {
             $success = false;
             $response = array(
@@ -24,12 +20,11 @@ class SiteController extends Controller
                 'error' => (string)$response->error->text,
             );
         }
-        if($success && $response->UserDetails) {
+        if($response->UserDetails) {
             $ISN = $response->UserDetails->ISN;
             $sid = $response->Sid;
             $response = array(
-                'success' => $success,
-                'error' => $error,
+                'success' => true,
                 'data' => [
                     'isn' => (string)$ISN,
                     'auth_token' => (string)$sid,
@@ -40,29 +35,24 @@ class SiteController extends Controller
     }
 
     public function renewal(Request $request, KiasServiceInterface $kias) {
-//        $request->Sid = 'c8e68d48-358f-48af-ac2f-64ee722153bb';
-        $renew = $kias->request('User_CicHelloSvc', [
-            'Sid' => $request->Sid
-        ]);
-//        dd($renew);
-        if($renew->error) {
-            $success = false;
+        $kias->_sId = $request->Sid;
+        $response = $kias->request('User_CicHelloSvc', []);
+        if($response->error) {
             return response()->json([
                 'success' => false,
-                'error' => (string)$renew->error->text,
+                'error' => (string)$response->error->text,
             ]);
         }
-        if($renew->result->state == 'ok') {
-            $renew = array(
+        if((string)$response->state == 'OK' || (string)$response->result->state == 'OK') {
+            return response()->json([
                 'success' => true,
-                'state' =>  (string)$renew->result->state,
-            );
+                'state' => (string)$response->state,
+            ]);
         }
     }
 
     public function getTransactionStatus(Request $request, KiasServiceInterface $kias){
-        $request->dictiName = 'CalcStatus';
-        $kias->_sId = $request->sid;
+        $kias->_sId = $request->Sid;
         $response = $kias->userGetDictiToBitrix($request->dictiName);
         if($response->error) {
             return response()->json([
@@ -73,9 +63,7 @@ class SiteController extends Controller
         if($response->StatusList->row){
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'row' => $response->StatusList,
-                ]
+                'row' => $response->StatusList,
             ]);
         }
         return response()->json([
@@ -85,31 +73,23 @@ class SiteController extends Controller
     }
 
     public function getUserList(Request $request, KiasServiceInterface $kias){
-        $error = '';
-        $success = true;
-//        $response = $kias->request('User_CicGetUserList', [
-//            'Sid' => 'c83986e2-75ba-45e0-b713-860daed87b10'
-//        ]);
-        $response = $kias->getBranches();
-        dd($response);
+        $kias->_sId = $request->Sid;
+        $response = $kias->request('User_CicGetUserList', []);
         if($response->error) {
-            $success = false;
-            $response = array(
-                'success' => $success,
+            return response()->json([
+                'success' => false,
                 'error' => (string)$response->error->text,
-            );
+            ]);
         }
-        if($response->result->state == 'ok') {
-            $renew = array(
-                'success' => $success,
-                'error' => $error,
-                'data' => [
-                    'auth_token' => (string)$request->Sid,
-                ]
-            );
+        if($response->LIST){
+            return response()->json([
+                'success' => true,
+                'row' => $response->LIST,
+            ]);
         }
-        if($response->result->state == 'ok'){
-            return response()->json($renew)->withCallback($request->input('callback'));
-        }
+        return response()->json([
+            'success' => false,
+            'error' => 'Произошла ошибка'
+        ]);
     }
 }
