@@ -13,8 +13,7 @@
 <!--            <a href="#" class="btn bg-secondary mt-3 ml-3">Отчеты</a>-->
 <!--        </div>-->
 
-        <p>
-
+<div class="container">
             <h1>Админка</h1>
 
 
@@ -24,10 +23,9 @@
 
 
 
-        </p>
 
 
-        <div>
+
 
 
 
@@ -49,42 +47,44 @@
 
             <div class="d-flex align-items-start">
                 <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
                     <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Назначение обучения</button>
                     <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Хочу провести обучение</button>
                     <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Хочу пройти обучение</button>
                     <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Загрузки</button>
                     <button class="nav-link" id="v-pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#v-pills-announcements" type="button" role="tab" aria-controls="v-pills-announcements" aria-selected="false">Анонсы обучения</button>
                     <button class="nav-link" id="v-pills-res-tab" data-bs-toggle="pill" data-bs-target="#v-pills-res" type="button" role="tab" aria-controls="v-pills-res" aria-selected="false">Отчеты</button>
-
                     <button class="nav-link" id="v-pills-download-tab" data-bs-toggle="pill" data-bs-target="#v-pills-download" type="button" role="tab" aria-controls="v-pills-download" aria-selected="false">Программа обучения</button>
 
                 </div>
+
+
                 <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        <div class="container">
+                            <h2 class="text-align-center">Назначить обучение</h2>
+                           <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" id="customCheck11">
+                              <label class="custom-control-label" for="customCheck11">Департамент/филиал</label>
+                           </div>
 
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="customCheck11">
-                            <label class="custom-control-label" for="customCheck11">Департамент/филиал</label>
-                        </div>
-
-                        <div class="custom-control custom-checkbox">
+                          <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="customCheck22">
                             <label class="custom-control-label" for="customCheck22">Список сотрудников</label>
-                        </div>
+                          </div>
 
-                        <div class="custom-control custom-checkbox">
+                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="customCheck33">
                             <label class="custom-control-label" for="customCheck33">Выбор даты</label>
-                        </div>
+                         </div>
 
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="customCheck44">
                             <!--                        <Check-this-custom-checkbox></Check-this-custom-checkbox>-->
                             <!--                        x>-->
-                            <label class="custom-control-label px-4" for="customCheck44">Выбор материала</label>
+                            <label class="custom-control-label" for="customCheck44">Выбор материала</label>
                         </div>
-
-                        <h2>Назначить обучение</h2>
+                            <input type="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
 
                         <table class="table table-dark">
                             <thead>
@@ -102,7 +102,7 @@
                                 <td>Programmers</td>
                                 <td>Mark</td>
                                 <td>Otto</td>
-                                <td>@mdo <input type="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"></td>
+                                <td>@mdo</td>
                             </tr>
                             <tr>
                                 <th scope="row">2</th>
@@ -122,7 +122,7 @@
                                 <td>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input " id=customCheck1>
-                                        <label class="custom-control-label px-5" for="customCheck1">Выбрать заявку</label>
+                                        <label class="custom-control-label" for="customCheck1">Выбрать заявку</label>
 
                                     </div>
 
@@ -132,17 +132,19 @@
                                 <td>{{user.name}}</td>
                                 <td>{{user.learn}}</td>
                                 <td>{{user.deadline}}</td>
-                                <td><input type="date" class="form-control" id="formGroupExampleInput" placeholder="Example input"></td>
+                             
 
 
                             </tr>
                             </tbody>
                             <button type="submit" class="btn btn-primary">Назначить</button>
                         </table>
+                        </div>
                     </div>
+
                     <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
 
-
+                                    <div class="container">
                         <!------------------------------------------------- Хочу провести обучение -------------------------------------------->
                                                            <h2 class="text-align-center"> Хочу провести обучение</h2>
 
@@ -218,25 +220,27 @@
                                         </tbody>
                                     </table>
 
-
-
-
-
+                                    </div>
                     </div>
 
 
                     <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
 
-
+                                <div class="container">
                         <!------------------------------------------------- Хочу пройти обучение  -------------------------------------------->
 
                                                         <h2 class="text-align-center">Хочу пройти обучение</h2>
 
 
                                     <form action="" method="post">
-                                          <input v-model="name2" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name">
-                                          <input v-model="value" type="text" class="form-control" id="exampleFormControlInput2" placeholder="Value">
+                                          <input v-model="sname" type="text" class="form-control" id="exampleFormControlInput111" placeholder="Данные отправителя">
+                                          <input v-model="value" type="text" class="form-control" id="exampleFormControlInput222" placeholder="Чем будет полезна">
+                                          <input v-model="date" type="text" class="form-control" id="exampleFormControlInput333" placeholder="доп. Комментарий">
+                                          <input v-model="audience" type="date" class="form-control" id="exampleFormControlInput444" placeholder="name@example.com">
+                                          <textarea v-model="description" class="form-control " id="exampleFormControlTextarea123" rows="3">Обратная связь (заполняется вручную)</textarea>
                                     </form>
+
+                                     <h2>Фильтр: период...</h2> <input type="checkbox" class="form-check-input" id="exampleChec32">
 
                                     <div class="d-flex justify-content-end">
                                          <button type="submit" class="btn btn-primary">Назначить</button>
@@ -248,16 +252,14 @@
 
                                         <thead>
 
-                                        <tr>
-                                            <th><p><h2>Фильтр: период...</h2> <input type="checkbox" class="form-check-input" id="exampleCheck1"></p></th>
-
+                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Данные отправителя  </th>
                                             <th scope="col">Чем будет полезна  </th>
-                                            <th scope="col"> Доп. Комментарий<input v-model="date" type="text" class="form-control" id="exampleFormControlInput3" placeholder="name@example.com"></th>
+                                            <th scope="col"> Доп. Комментарий</th>
 
-                                            <th scope="col"> Дата<input v-model="audience" type="date" class="form-control" id="exampleFormControlInput4" placeholder="name@example.com"></th>
-                                            <th scope="col">  Обратная связь (заполняется вручную) <textarea v-model="description" class="form-control " id="exampleFormControlTextarea1" rows="3"></textarea></th>
+                                            <th scope="col"> Дата</th>
+                                            <th scope="col">  Обратная связь (заполняется вручную) </th>
 
 
 
@@ -307,11 +309,13 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                </div>
 
                     </div>
 
 
                     <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                        <div class="container">
 
                         <!------------------------------------------------- Загрузки  -------------------------------------------->
 
@@ -383,12 +387,12 @@
                             </tbody>
                         </table>
 
-
+                      </div>
                     </div>
 
 
                     <div class="tab-pane fade" id="v-pills-res" role="tabpanel" aria-labelledby="v-pills-res-tab">
-
+                         <div class="container">
                         <!------------------------------------------------- Отчеты -------------------------------------------->
 
 
@@ -399,7 +403,7 @@
                                 <label class="custom-control-label" for="customCheck01">По всем тестированиям</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input " id="customCheck-02">
+                                <input type="checkbox" class="custom-control-input" id="customCheck-02">
                                 <label class="custom-control-label" for="customCheck-02">По результатам тестирования</label>
                             </div>
                             <div class="custom-control custom-checkbox">
@@ -407,29 +411,28 @@
                                 <label class="custom-control-label" for="customCheck03">Заявки на обучение</label>
                             </div>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input " id="customCheck04">
-                                <!--                        <Check-this-custom-checkbox></Check-this-custom-checkbox>-->
-                                <!--                        x>-->
+                                <input type="checkbox" class="custom-control-input" id="customCheck04">
+
                                 <label class="custom-control-label" for="customCheck04">Анкеты обратной связи</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input " id="customCheck05">
+                                <input type="checkbox" class="custom-control-input" id="customCheck05">
                                 <label class="custom-control-label" for="customCheck05">По загрузкам</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input "  id="customCheck06">
+                                <input type="checkbox" class="custom-control-input"  id="customCheck06">
                                 <label class="custom-control-label " for="customCheck06">Популярные учебные материалы</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input "  id="customCheck07">
+                                <input type="checkbox" class="custom-control-input"  id="customCheck07">
                                 <label class="custom-control-label " for="customCheck07">Популярные учебные материалы</label>
                             </div>
 
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input "  id="customCheck08">
+                                <input type="checkbox" class="custom-control-input"  id="customCheck08">
                                 <label class="custom-control-label " for="customCheck08">Популярные учебные материалы</label>
                             </div>
 
@@ -473,30 +476,41 @@
                             </tbody>
                         </table>
 
-
+                         </div>
                     </div>
 
 
                     <div class="tab-pane fade" id="v-pills-announcements" role="tabpanel" aria-labelledby="v-pills-announcements-tab">
 
-
+                              <div class="container">
                         <!------------------------------------------------- Анонсы обучения  -------------------------------------------->
+                        <form action="">
+                         <div><label>Тема обучения</label> <input type="text" class="form-control" id="exampleInputEmail132" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Cпикер</label> <input type="text" class="form-control" id="exampleInputEmail113" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Описание</label> <textarea class="form-control" id="exampleFormControlTextarea22" rows="3"></textarea></div>
+                         <div><label>Дата и время </label>  <input type="date" class="form-control" id="exampleInputEmail101" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Формат обучения </label>  <input type="text" class="form-control" id="exampleInputEmail134" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Место обучения очно </label><input type="text" class="form-control" id="exampleInputEmail124" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Место обучения онлайн</label>   <input type="text" class="form-control" id="exampleInputEmail12" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Тип обучения</label>    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                        </form>
 
 
+                        <h2>Анонсы обучения </h2>
                         <table class="table table-dark">
-                            <h2>Анонсы обучения </h2>
+
+
                             <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Тема обучения   <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-                                <th scope="col">Cпикер  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-                                <th scope="col">Описание   <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea></th>
-                                <th scope="col">Дата и время <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-                                <th scope="col">Формат обучения <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-                                <th scope="col">Место обучения очно <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-                                <th scope="col">Место обучения онлайн <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-                                <th scope="col">Тип обучения <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></th>
-
+                                <th scope="col">Тема обучения   </th>
+                                <th scope="col">Cпикер  </th>
+                                <th scope="col">Описание   </th>
+                                <th scope="col">Дата и время </th>
+                                <th scope="col">Формат обучения </th>
+                                <th scope="col">Место обучения очно </th>
+                                <th scope="col">Место обучения онлайн </th>
+                                <th scope="col">Тип обучения </th>
 
 
                             </tr>
@@ -539,6 +553,8 @@
 
                         </table>
 
+                              </div>
+
                     </div>
 
                     <div class="tab-pane fade" id="v-pills-download" role="tabpanel" aria-labelledby="v-pills-res-tab">
@@ -548,20 +564,15 @@
 
                     </div>
 
-
-
-
-
-
-
-
-
                 </div>
 
-
             </div>
+</div>
 
-        </div>
+
+    </div>
+
+
 
 
 
@@ -591,42 +602,6 @@
 <!--                                &lt;!&ndash;                        x>&ndash;&gt;-->
 <!--                                <label class="custom-control-label px-4" for="customCheck44">Выбор материала</label>-->
 <!--                            </div>-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -666,6 +641,7 @@
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                    </div>-->
+
 
 </template>
 
@@ -712,33 +688,53 @@ name: "manager",
 </script>
 
 <style scoped>
+
+/* Main block style */
+
+#manager {
+    min-width: 1320px;
+}
+
+.nav-link {
+    width: 200px;
+}
+
+/* Forms styles  */
+
 #multiCollapseExample7 label {
-
     padding-left: 20px;
-
 }
 
 .left-check * {
     margin-right: 200px;
 }
-.left-check label {
 
-    padding-left: 100px;
-    display: block;
+
+
+input, textarea {
+    margin-top: 10px;
 }
 
+label {
+    padding-left: 30px;
+}
+
+
+/* Btn styles */
 
 button.btn.btn-primary:hover {
     background: #17a2b8;
     transition: all .1s ease-in;
 }
 
-
-table {
-    margin-top: 20px;
-}
-
 .btn {
     margin-left: 20px;
 }
+
+
+table {
+    margin-top: 10px;
+}
+
+
 </style>
