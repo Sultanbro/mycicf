@@ -234,7 +234,7 @@
                                 // --------------------------------
                                 let curr_isn = self.coordination.ISN;   //self.doc_row_list_inner_other[1][i].ISN;
                                 self.axios.post("/coordinationSaveAttachment", {
-                                    isn: curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
+                                    isn: +curr_isn,  //self.doc_row_list_inner_other[1][i].ISN,
                                     //isn: self.$parent.coordination.ISN,
                                     //id: self.$parent.coordination.ID,
                                     requestType: 'D',
@@ -305,7 +305,7 @@
                 self.signedFileInfo = [];
                 self.loader(true);
                 axios.post("/eds-by-isn", {
-                    isn: docIsn
+                    isn: +docIsn
                 }).then((response) => {
                     this.iin = response.data.iin['Iin'];
                     if(response.data.success) {
@@ -407,12 +407,12 @@
                                         //} else {
                                         self.signedFileInfo = result.responseObjects;
 
-                                        if (result.responseObjects[0].iin != self.iin && edsType === 'sig') {
-                                            alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
-                                            self.loader(false);
-                                            this.edsConfirmed = false
-                                            return;
-                                        }
+                                        // if (result.responseObjects[0].iin != self.iin && edsType === 'sig') {
+                                        //     alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
+                                        //     self.loader(false);
+                                        //     this.edsConfirmed = false
+                                        //     return;
+                                        // }
                                         if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                             self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
                                         } else {
@@ -441,7 +441,7 @@
                 for (let index in obj) {
                     axios.post("/save_eds_info", {
                         data: obj[index],
-                        isn: docIsn,
+                        isn: +docIsn,
                         refIsn: agreementISN    //self.isn
                     }).then((response) => {
                         if (response.data.success) {
@@ -457,7 +457,7 @@
                                     let agrIsn = self.coordination.RefAgrISN;
                                     axios.post("/eds-by-isn", {
                                         isn: '',
-                                        refISN: agrIsn,
+                                        refISN: +agrIsn,
                                         type: 'A',
                                         edsType: 'cms'
                                     }).then((response) => {
@@ -488,7 +488,7 @@
                                                 let agrIsn = self.doc_row_list_inner_other[1][i].ISN;
                                                 axios.post("/eds-by-isn", {
                                                     isn: '',
-                                                    refISN: agrIsn,
+                                                    refISN: +agrIsn,
                                                     type: 'A',
                                                     edsType: 'cms'
                                                 }).then((response) => {
