@@ -664,3 +664,5 @@ Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
     Route::get('caching', 'Dev\CachingController@index')->name('.caching');
     Route::get('kias', 'Dev\KiasController@index')->name('.kias');
 });
+
+Route::get('knowledge', 'Dev\KiasController@index')->name('.kias');
