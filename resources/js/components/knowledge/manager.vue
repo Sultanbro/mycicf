@@ -80,11 +80,10 @@
 
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="customCheck44">
-                            <!--                        <Check-this-custom-checkbox></Check-this-custom-checkbox>-->
-                            <!--                        x>-->
+
                             <label class="custom-control-label" for="customCheck44">Выбор материала</label>
                         </div>
-                            <input type="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                            <input type="date" class="form-control" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
 
                         <table class="table table-dark">
                             <thead>
@@ -132,7 +131,7 @@
                                 <td>{{user.name}}</td>
                                 <td>{{user.learn}}</td>
                                 <td>{{user.deadline}}</td>
-                             
+
 
 
                             </tr>
@@ -146,12 +145,9 @@
 
                                     <div class="container">
                         <!------------------------------------------------- Хочу провести обучение -------------------------------------------->
-                                                           <h2 class="text-align-center"> Хочу провести обучение</h2>
 
-
-
-
-                    <div class="d-flex justify-content-end align-items-end mt-5"><button type="submit" class="btn btn-primary bg-primary">Назначить</button></div>
+                                        <h2 class="text-align-center"> Хочу провести обучение</h2>
+                                        <div class="d-flex justify-content-end align-items-end mt-5"><button type="submit" class="btn btn-primary bg-primary">Назначить</button></div>
 
                                    <div class="d-flex"><h2>Фильтр: период...</h2> <input type="checkbox" class="form-check-input" id="exampleCheck1"></div>
 
@@ -228,10 +224,7 @@
 
                                 <div class="container">
                         <!------------------------------------------------- Хочу пройти обучение  -------------------------------------------->
-
-                                                        <h2 class="text-align-center">Хочу пройти обучение</h2>
-
-
+                                    <h2 class="text-align-center">Хочу пройти обучение</h2>
                                     <form action="" method="post">
                                           <input v-model="sname" type="text" class="form-control" id="exampleFormControlInput111" placeholder="Данные отправителя">
                                           <input v-model="value" type="text" class="form-control" id="exampleFormControlInput222" placeholder="Чем будет полезна">
@@ -315,13 +308,14 @@
 
 
                     <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+
                         <div class="container">
 
                         <!------------------------------------------------- Загрузки  -------------------------------------------->
 
 
 
-
+                            <h2 class="text-align-center">Загрузки</h2>
 
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="customCheck0">
@@ -392,9 +386,10 @@
 
 
                     <div class="tab-pane fade" id="v-pills-res" role="tabpanel" aria-labelledby="v-pills-res-tab">
+
                          <div class="container">
                         <!------------------------------------------------- Отчеты -------------------------------------------->
-
+                             <h2 class="text-align-center">Отчеты</h2>
 
                         <div class="col  left-check">
                             <h3>Создать отчет по:</h3>
@@ -442,7 +437,7 @@
                         </div>
 
                         <table class="table table-dark mt-3">
-                            <h2>Отчеты</h2>
+
                             <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -482,21 +477,27 @@
 
                     <div class="tab-pane fade" id="v-pills-announcements" role="tabpanel" aria-labelledby="v-pills-announcements-tab">
 
-                              <div class="container">
+                        <div class="container">
                         <!------------------------------------------------- Анонсы обучения  -------------------------------------------->
+
+                            <h2 class="mt-3">Анонсы обучения </h2>
                         <form action="">
-                         <div><label>Тема обучения</label> <input type="text" class="form-control" id="exampleInputEmail132" aria-describedby="emailHelp" placeholder="Enter email"></div>
-                         <div><label>Cпикер</label> <input type="text" class="form-control" id="exampleInputEmail113" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Тема обучения</label> <input type="text" class="form-control" id="exampleInputEmail132" aria-describedby="emailHelp" placeholder="Тема"></div>
+                         <div><label>Cпикер</label> <input type="text" class="form-control" id="exampleInputEmail113" aria-describedby="emailHelp" placeholder="Спикер"></div>
                          <div><label>Описание</label> <textarea class="form-control" id="exampleFormControlTextarea22" rows="3"></textarea></div>
-                         <div><label>Дата и время </label>  <input type="date" class="form-control" id="exampleInputEmail101" aria-describedby="emailHelp" placeholder="Enter email"></div>
-                         <div><label>Формат обучения </label>  <input type="text" class="form-control" id="exampleInputEmail134" aria-describedby="emailHelp" placeholder="Enter email"></div>
-                         <div><label>Место обучения очно </label><input type="text" class="form-control" id="exampleInputEmail124" aria-describedby="emailHelp" placeholder="Enter email"></div>
-                         <div><label>Место обучения онлайн</label>   <input type="text" class="form-control" id="exampleInputEmail12" aria-describedby="emailHelp" placeholder="Enter email"></div>
-                         <div><label>Тип обучения</label>    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"></div>
+                         <div><label>Дата и время </label>  <input type="date" class="form-control" id="exampleInputEmail101" aria-describedby="emailHelp" placeholder="Описание"></div>
+                         <div><label>Формат обучения </label>  <input type="text" class="form-control" id="exampleInputEmail134" aria-describedby="emailHelp" placeholder="Формат"></div>
+                         <div><label>Место обучения очно </label><input type="text" class="form-control" id="exampleInputEmail124" aria-describedby="emailHelp" placeholder="Место где очное обучение"></div>
+                         <div><label>Место обучения онлайн</label>   <input type="text" class="form-control" id="exampleInputEmail12" aria-describedby="emailHelp" placeholder="Место где онлайн обучение"></div>
+                         <div><label>Тип обучения</label>    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Тип"></div>
                         </form>
 
 
-                        <h2>Анонсы обучения </h2>
+
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-primary">Добавить</button>
+                                <button type="submit" class="btn btn-primary">Изменить</button>
+                            </div>
                         <table class="table table-dark">
 
 
@@ -548,8 +549,7 @@
                                 <td>@mdo</td>
                             </tr>
                             </tbody>
-                            <button type="submit" class="btn btn-primary mt-2">Добавить</button>
-                            <button type="submit" class="btn btn-primary mt-3">Изменить</button>
+
 
                         </table>
 
@@ -559,7 +559,45 @@
 
                     <div class="tab-pane fade" id="v-pills-download" role="tabpanel" aria-labelledby="v-pills-res-tab">
 
+                        <div class="container ">
+                            <h2 class="text-align-center">Программа обучения</h2>
+                            <table class="table table-primary">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Название</th>
+                                    <th scope="col">Описание</th>
+                                    <th scope="col">Содержание</th>
+                                    <th scope="col">Дата</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Larry the Bird</td>
+                                    <td>@twitter</td>
+                                    <td>@mdo</td>
+                                    <td>@mdo</td>
 
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
 
 
                     </div>
@@ -715,7 +753,14 @@ input, textarea {
     margin-top: 10px;
 }
 
+.custom-file {
+    margin-top: 20px;
+}
+
+
+
 label {
+    margin-top: 10px;
     padding-left: 30px;
 }
 
