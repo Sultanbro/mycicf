@@ -7,10 +7,45 @@ use App\ParseCollects;
 use App\ParsePays;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\DocBlock\Tags\Formatter;
 
 class ParseOracleController extends Controller
 {
-    public function getOracleCollect(){
+    public function getOracleCollect(Request $request){
+        /*
+         * Департамент корпоративного страхования   1445780
+         * Управление корпоративного развития       4784106
+         * Управление корпоративного страхования №1 1445781
+         * Управление корпоративного страхования №2 1445783
+         * Управление корпоративного страхования №3 1445784
+         * Управление корпоративного страхования №4 4989735
+         * Управление корпоративного страхования №5 4989736
+         *
+         * Департамент страхового посредничества   3436143
+         * г.Алматы 1445824
+         * Управление активных продаж   4559142
+         * Управление страхования №1    1445789
+         * Управление страхования №2    1445790
+         * Управление страхования №3    1445791
+         * Управление страхования №4    1445792
+         * Управление страхования №5    1445793
+         * Управление страхования №6    3492324
+         * Управление страхования №7    3492327
+         *
+         *
+         * Департамент развития партнерских отношений   3629955
+         * Управление партнерских продаж    3991836
+         *
+         *
+         * Департамент перестрахования  1445737
+         * Филиалы  2000
+         * kupipolis
+         *
+         * */
+
+
+
+
 
         $collect = ParseCollects::all();
         $pays = ParsePays::all();
@@ -25,9 +60,24 @@ class ParseOracleController extends Controller
         $koksh = [];
 
 
-        foreach ($collect as $item){
+
+        //$result = date('Y-m-d',strtotime("01-JAN-19"));
+
+
+        foreach ($collect as $item) {
+            $date_collect_year = date('Y-m-d',strtotime($item->dateAccept));
+
+            if($date_collect_year === $request->first_year){
+                dd($date_collect_year);
+            }
+        }
+
+
+
+
+/*        foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по Карагандинской области' && $elem->deptName === 'Филиал по Карагандинской области'
+                if($item->deptIsn === '1445801' && $elem->deptIsn === '1445801'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($karaganda, [
                         'key' => $item->id,
@@ -43,7 +93,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по г.Нур-Султан' && $elem->deptName === 'Филиал по г.Нур-Султан'
+                if($item->deptIsn === '1445735' && $elem->deptIsn === '1445735'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($nur_sultan, [
                         'key' => $item->id,
@@ -59,7 +109,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по г. Актобе' && $elem->deptName === 'Филиал по г. Актобе'
+                if($item->deptIsn === '1445823' && $elem->deptIsn === '1445823'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($aktobe, [
                         'key' => $item->id,
@@ -75,7 +125,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по Восточно-Казахстанской области' && $elem->deptName === 'Филиал по Восточно-Казахстанской области'
+                if($item->deptIsn === '1445827' && $elem->deptIsn === '1445827'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($vko, [
                         'key' => $item->id,
@@ -91,7 +141,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по г.Шымкент' && $elem->deptName === 'Филиал по г.Шымкент'
+                if($item->deptIsn === '1445828' && $elem->deptIsn === '1445828'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($shym, [
                         'key' => $item->id,
@@ -107,7 +157,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по Северо-Казахстанской области' && $elem->deptName === 'Филиал по Северо-Казахстанской области'
+                if($item->deptIsn === '1445821' && $elem->deptIsn === '1445821'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($sko, [
                         'key' => $item->id,
@@ -123,7 +173,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по Павлодарской области' && $elem->deptName === 'Филиал по Павлодарской области'
+                if($item->deptIsn === '1445820' && $elem->deptIsn === '1445820'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($pavlo, [
                         'key' => $item->id,
@@ -139,7 +189,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по Жамбылской области' && $elem->deptName === 'Филиал по Жамбылской области'
+                if($item->deptIsn === '1445825' && $elem->deptIsn === '1445825'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($jambyl, [
                         'key' => $item->id,
@@ -155,7 +205,7 @@ class ParseOracleController extends Controller
         }
         foreach ($collect as $item){
             foreach ($pays as $elem){
-                if($item->deptName === 'Филиал по г.Кокшетау' && $elem->deptName === 'Филиал по г.Кокшетау'
+                if($item->deptIsn === '1445805' && $elem->deptIsn === '1445805'
                     && $item->emplISN === $elem->emplIsn){
                     array_push($koksh, [
                         'key' => $item->id,
@@ -271,6 +321,6 @@ class ParseOracleController extends Controller
         return response()->json([
             'success' => true,
             'data' => $filials,
-        ]);
+        ]);*/
     }
 }

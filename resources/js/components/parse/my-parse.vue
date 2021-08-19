@@ -234,7 +234,10 @@
             async getOracleData() {
                 let response = await this.axios.get('/parse/company/collects', {
                     params: {
-                        filials: this.filials
+                        first_year: this.periods.first_year,
+                        second_year: this.periods.second_year,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
                     }
                 });
                 if(response.data.success) {
