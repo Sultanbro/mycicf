@@ -211,6 +211,20 @@ Vue.component('dsv', require('./components/booking/dsv').default);
 
 Vue.component('statistics', require('./components/employee/statistics').default);
 
+Vue.component('boss-news', require('./components/news/boss-news').default);
+
+Vue.component('my-results', require('./components/results/my-results').default);
+
+Vue.component('rating', require('./components/results/rating').default);
+
+Vue.component('motivation', require('./components/results/motivation').default);
+
+Vue.component('report', require('./components/results/report').default);
+
+Vue.component('rating-list', require('./components/results/rating-list').default);
+
+Vue.component('employee-rate', require('./components/results/employee-rate').default);
+
 Vue.component('management-main', require('./components/document/management-main').default);
 
 Vue.component('management-search', require('./components/document/management-search').default);
