@@ -7,7 +7,8 @@
                         <div @click="getLevelOne(item.id, item.url)"
                              v-for="item in itemsLevelZero"
                              class="dropbtn d-flex p-3 ml-2"
-                            :class="item.id === levelOnePinned ? 'active' : ''">
+                            :class="item.id === levelOnePinned ? 'active' : ''"
+                        >
                             <img :src="item.icon_url">
                             <span>{{item.label}}</span>
                         </div>
@@ -21,10 +22,10 @@
                         <div class="dropdown-content mb-4 flex-row" >
                             <!--Column 1-->
                             <div class="dropdown-content__list">
-                                <div v-for="innerItem in itemsLevelOne"
+                                    <div v-for="innerItem in itemsLevelOne"
                                      @click="getLevelTwo(innerItem.id, innerItem.url)"
                                      class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
-                                     :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
+                                     :class="innerItem.id === levelTwoPinned  ? 'inner-active' : ''">
                                     <img :src="innerItem.icon_url"
                                          class="items-icons mr-2">
                                     <span class="d-flex">{{innerItem.label}}</span>
@@ -69,7 +70,7 @@
                 itemsLevelTwo: [],
                 itemsLevelThree: [],
                 levelOnePinned: null,
-                levelTwoPinned: null,
+                levelTwoPinned: 21,
             }
         },
         props: {
@@ -230,7 +231,7 @@
                         }
                     }
                 }
-                vm.pushUrl(id,'two',url);
+                vm.pushUrl(id,'ten',url);
             },
             fetchLevelTwo: function(response, id) {
                 var vm = this;
