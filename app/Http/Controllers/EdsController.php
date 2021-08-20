@@ -29,7 +29,7 @@ class EdsController extends Controller
         return view('eds',compact('od'));
     }
 //file type = 1 sig.0=excel
-    public function edsPO(KiasServiceInterface $kias){
+    public function edsPO(){
         $po = DB::table('tbl_for_payeds AS pr')
             ->leftJoin('tbl_for_payeds AS pf', 'pf.plea', '=', 'pr.plea')
             ->where('pf.filetype','=','0')
@@ -41,7 +41,7 @@ class EdsController extends Controller
             ->get();
         return view('eds-payout',compact('po'));
     }
-    public function edsPR(KiasServiceInterface $kias){
+    public function edsPR(){
 //        $kek = var_dump(phpinfo());
 //        echo $kek;
 //        $pr = TblForPayRequest::where('confirmed', '0')->select('isn','name','date_sign','id','refundisn','refundid','confirmed','plea','iin','iin_fail','filetype')->get();
@@ -54,7 +54,7 @@ class EdsController extends Controller
             ->leftJoin('tbl_for_payrequest AS pf', 'pf.plea', '=', 'pr.plea')
             ->where('pf.filetype','=','0')
             ->distinct()
-            ->select('pr.id as id','pr.isn as isn' ,'pr.full_data as full_data','pr.pathtoxsl as pathtoxsl','pr.plea as plea','pr.refundid as refundid','pr.refundisn as refundisn','pr.iin as iin','pf.name as product_family_name', 'pf.isn as product_family_isn')
+            ->select('pr.id as id','pr.isn as isn' ,'pr.full_data as full_data','pr.plea as plea','pr.refundid as refundid','pr.refundisn as refundisn','pr.iin as iin','pf.name as product_family_name', 'pf.isn as product_family_isn')
             ->where('pr.filetype','=','1')
             ->where('pr.confirmed','=','0')
             ->orderBy('pr.isn', 'desc')

@@ -45,9 +45,7 @@
                         :empl-isn="{{ json_decode(Auth::user())->ISN }}"
                         show-view="sign"
                         :doc_row_list_inner_other="{}">
-
                 </payout-request>
-                {!! QrCode::size(300)->generate('MyNotePaper'); !!}
             </div>
         @else
             <div class="col-md-8 news-tape-bg radius-4px mt-3 pb-2" id="employee_info">

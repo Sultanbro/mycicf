@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Branch;
 use App\Dictionary;
 use App\Http\Controllers\Controller;
+use App\Library\Services\KiasServiceInterface;
 use App\RatingPermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class RatingPermissionController extends Controller
         $success = true;
         $error = '';
         $result = [];
+
         $list = RatingPermission::all();
         foreach ($list as $item){
             array_push($result, [

@@ -750,6 +750,9 @@ div-size{
 }
 .date-color{
     color: #818181;
+    //& .recruiting-striped thead th:not(:last-child),td:not(:last-child) {
+    //    border-right: none;
+    //}
 }
 .thead-border{
     border-left: 1px solid white !important;
@@ -1649,6 +1652,11 @@ body {
     transition: 0.4s ease;
 }
 
+.fa-search:hover {
+    color: #3b984e;
+    transition: 0.4s ease;
+}
+
 .fa-youtube-play:hover {
     color: #FF0000;
     transition: 0.4s ease;
@@ -1711,6 +1719,16 @@ body {
     margin-top: 85px;
     height: 50px;
     max-width: 60%;
+    background-color: rgba(83, 49, 206, 0.801);
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
+    outline: none !important;
+    transition: 0.4s ease;
+    color: #fff;
+}
+
+.btn-block2 {
+    width: 80%;
     background-color: rgba(83, 49, 206, 0.801);
     border: none;
     box-shadow: 0 0 5px rgba(0, 0,0, 0.5);
@@ -3206,4 +3224,36 @@ textarea::-webkit-scrollbar-thumb {
         max-width: none !important;
         background-color: #7abaff;
     }
+}
+
+.vdp-datepicker {
+    display: flex;
+    align-items: center;
+}
+
+.vdp-datepicker div {
+    width: 100%;
+}
+
+.vdp-datepicker--gray input.form-control {
+    background-color: #e9ecef;
+}
+
+.vdp-datepicker--gray input.form-control:focus {
+    background-color: #fff;
+}
+
+.vdp-datepicker__calendar-button {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: red;
+    z-index: 1;
+}
+
+.input-datepicker {
+    background: transparent;
+    padding: 10px 50px 10px 10px;
+    cursor: pointer;
 }
