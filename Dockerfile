@@ -1,4 +1,4 @@
-FROM registry-backend.cic.kz/centras/php-fpm:7.2
+FROM registry-backend.cic.kz/centras/php-fpm:mycic
 
 WORKDIR /app
 
