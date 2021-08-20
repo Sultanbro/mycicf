@@ -337,7 +337,7 @@
                     });
                 }
             },
-            checkSignedFilessss(){
+         /*   checkSignedFilessss(){
                 this.signedFileInfo = [];
                 let self = this;
                 if(self.selectedFile != '') {
@@ -378,7 +378,7 @@
                 } else {
                     alert('Выберите пожалуйста файл');
                 }
-            },
+            },*/
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
