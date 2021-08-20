@@ -23,4 +23,8 @@ class Dicti extends Model
     public function childs() {
         return $this->hasMany('App\Dicti','parent_isn','isn') ;
     }
+
+    public function childs2() {
+        return $this->hasMany('App\Dicti','parent_isn','isn')->select(array('isn as id', 'fullname as label'));
+    }
 }

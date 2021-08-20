@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Refund;
+use App\User;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Library\Services\SendEmailService;
@@ -63,8 +64,6 @@ class EdsController extends Controller
 
     public function signQr(Request $request,KiasServiceInterface $kias){
         $files = [];
-        dd($request);
-//        $ISN = isset($request->isn) ? $request->isn : '';
         $ISN = 3948353;
         $type = isset($request->type) ? $request->type : '';
         $format = isset($request->edsType) ? $request->edsType : '';
@@ -698,10 +697,11 @@ class EdsController extends Controller
                 ]);
             }
         }
-
+        $data = (new User)->getUserData($kias);
         return response()->json([
             'success' => true,
-            'result' => $files
+            'result' => $files,
+            'iin'=>$data
         ]);
     }
 
