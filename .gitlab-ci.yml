@@ -23,7 +23,7 @@ deploy-app:
   only:
     - sergey/rancher
   script: |
-    rancher up -d --stack Larakup --file .deploy/docker-compose.yml --rancher-file .deploy/rancher-compose.yml
-    rancher up -d --file .deploy/docker-compose.yml --rancher-file .deploy/rancher-compose.yml --force-upgrade --pull --stack Larakup --confirm-upgrade app
+    rancher up -d --stack MyCIC --file .deploy/docker-compose.yml --rancher-file .deploy/rancher-compose.yml
+    rancher up -d --file .deploy/docker-compose.yml --rancher-file .deploy/rancher-compose.yml --force-upgrade --pull --stack MyCIC --confirm-upgrade app
 
 ###
