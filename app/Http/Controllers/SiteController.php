@@ -15,10 +15,10 @@ use App\User;
 use App\Dicti;
 use App\Region;
 use App\City;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Storage;
 
 class SiteController extends Controller
@@ -264,7 +264,9 @@ class SiteController extends Controller
             3534147 => 3534147,
             801271 => 801271,
             4555970 => 4555970,
-            1287408 => 1287408
+            1287408 => 1287408,
+            4774025 => 4774025,
+            5565 => 5565,
         );
     }
 
@@ -1036,10 +1038,11 @@ class SiteController extends Controller
                 $files[] = ['filepath' => (string)$file->FILEPATH, 'docISN' => (string)$file->ISN];
             }
         }
-
+        $data = (new User)->getUserData($kias);
         return response()->json([
             'success' => true,
-            'result' => $files
+            'result' => $files,
+            'iin'=>$data
         ]);
     }
 

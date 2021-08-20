@@ -54,6 +54,13 @@
                         Библиотека
                     </li>
                 </a>
+                @if(Auth::user()->ISN == 3609898 || Auth::user()->ISN == 1287408)
+                    <a class="header-navigation" href="{{route('productsinfo')}}">
+                        <li>
+                            Продукты Инфо
+                        </li>
+                    </a>
+                @endif
 {{--                <a class="header-navigation" href="javascript:void(0)">--}}
 {{--                    <li>--}}
 {{--                        Обучение--}}

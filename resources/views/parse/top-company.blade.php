@@ -244,6 +244,7 @@ use App\Http\Controllers\ParseController;
                             <td class="text-left"><span class="bold"><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
                             <td>{{number_format($key, 0, '.', ' ')}}</td>
                             <td>{{number_format($premium_second[$id],0,  '.', ' ')}}</td>
+                            {{--Это проценты 'Доля Мар 2021'--}}
                             <td>
                                 @if(strstr(strval($controller->getPercentOfMarker($key, array_sum($premium_first))),'-'))
                                     0%
@@ -251,6 +252,7 @@ use App\Http\Controllers\ParseController;
                                     {{$controller->getPercentOfMarker($key, array_sum($premium_first))}}
                                 @endif
                             </td>
+                            {{--Это проценты 'Доля Мар 2020'--}}
                             <td>
                                 @if(strstr(strval($controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))),'-'))
                                     0%
@@ -258,11 +260,15 @@ use App\Http\Controllers\ParseController;
                                     {{$controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))}}
                                 @endif
                             </td>
+                            {{--Изм %--}}
                             <td>{{$controller->getChangedVal($key, $premium_second[$id])}}</td>
+                            {{--Изм сумма--}}
                             <td>{{number_format($key - $premium_second[$id], 0, '.', ' ') }}</td>
                             <td></td>
+
                             <td>{{number_format($payout_first[$id], 0, '.', ' ')}}</td>
                             <td>{{number_format($payout_second[$id], 0, '.', ' ')}}</td>
+
                             <td>{{$controller->getChangedVal($payout_first[$id], $payout_second[$id])}}</td>
                             <td>{{$controller->getPayoutChange($payout_first[$id], $premium_first[$id])}}</td>
                             <td>{{$controller->getPayoutChange($payout_second[$id], $premium_second[$id])}}</td>

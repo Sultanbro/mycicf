@@ -28,6 +28,7 @@ class VerifyCsrfToken extends Middleware
         '/setToken',
         '/serviceCenter/notify',
         '/api/*',
-        '/testqr'
+        '/testqr',
+        '/coordination/solution'
     ];
 }

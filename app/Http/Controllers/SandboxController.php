@@ -7,7 +7,11 @@ use App\Helpers\Enum;
 use App\Helpers\Helper;
 use App\Library\Services\KiasServiceInterface;
 use App\Library\Services\PostsService;
+use App\Post;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SandboxController extends Controller
 {
@@ -112,26 +116,6 @@ class SandboxController extends Controller
         }
     }
 
-    private function test($inspectionsInfo)
-    {
-        $getDataWithDicts = [];
-        foreach ($inspectionsInfo['row'][0]['Details']['row'] as $key => $detail) {
-            $getDicts           = Dicti::select('id', 'isn', 'fullname')
-                ->where('parent_isn', $detail['Detailisn'])
-                ->get();
-            $getDataWithDicts[] = $detail;
-            foreach ($getDicts as $dict) {
-                $getDataWithDicts[$key]['child'][] = [
-                    'child_isn'  => $dict->isn,
-                    'child_name' => $dict->fullname,
-                ];
-            }
-        }
-        $inspectionsInfo['row'][0]['Details']['row'] = $getDataWithDicts;
-
-        return $inspectionsInfo;
-    }
-
     public function removeDicti(Request $request)
     {
         $isn       = $request->isn;
@@ -144,19 +128,34 @@ class SandboxController extends Controller
         dd('OKk');
     }
 
-    public function action1(PostsService $service) {
-        return $service->getPosts('');
+    public function upload()
+    {
+        $html = '<form method="POST" action="/sandbox/uploadDocs" enctype="multipart/form-data">
+                    <input type="hidden" name="_token" value="'.csrf_token().'">
+                    <input type="file" name="upload" multiple />
+                    <input type="submit" name="send" value="Загрузить">
+                </form>';
+        echo $html;
     }
 
-    public function react() {
-        return view('testing.sandbox.react');
-    }
+    public function uploadDocs(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $realPath = $request->file('upload')->getRealPath();
+            $rows = array_map(function ($v) {
+                return str_getcsv($v, ';');
+            }, file($realPath));
 
-    public function react2() {
-        return view('testing.sandbox.react2');
-    }
+            foreach ($rows as $row) {
+                $contains = Str::contains($row[2], 'Заявление');
+                DB::table('dicti')->insert([
+                   ['isn' => $row[1], 'fullname' => $row[2], 'numcode' => $row[0], 'code' => $contains ? 'application' : 'sz']
+                ]);
+            }
 
-    public function error() {
-        throw new \Exception();
+            dd('INSERT');
+        }
+    public function test() {
+        return \DB::select('SELECT NOW();');
     }
 }

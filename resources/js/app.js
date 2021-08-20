@@ -32,6 +32,8 @@ Vue.use(moment);
 
 Vue.use(vmodal);
 
+Vue.use(VueTreeselect);
+
 import Toastr from 'vue-toastr'
 
 Vue.use(FlashMessage);
@@ -63,6 +65,7 @@ Vue.directive('linkified', linkify);
 // Vue.component('login', require('./components/registration/login.vue').default);
 
 Vue.component('treeselect', VueTreeselect.Treeselect);
+Vue.component('treeselect-value', VueTreeselect.TreeselectValue);
 
 Vue.component('simple-info', require('./components/employee/simple-info.vue').default);
 
@@ -101,6 +104,8 @@ Vue.component('coordination', require('./components/employee/coordination.vue').
 Vue.component('search', require('./components/documentation/search.vue').default);
 
 Vue.component('coordination-modal', require('./components/coordination/modal.vue').default);
+
+Vue.component('productsmodal-modal', require('./components/productsmodal/modal.vue').default);
 
 Vue.component('information-modal', require('./components/shared/information-modal.vue').default);
 
@@ -175,10 +180,17 @@ Vue.component('parse-info', require('./components/parse/parse-info.vue').default
 
 Vue.component('parse-indicators', require('./components/parse/parse-indicators.vue').default);
 
+
 Vue.component('parse-top', require('./components/parse/parse-top.vue').default);
 
-Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
+Vue.component('my-parse', require('./components/parse/my-parse.vue').default);
+Vue.component('top-company', require('./components/parse/top-company.vue').default);
+Vue.component('parse-centras', require('./components/parse/parse-centras.vue').default);
+Vue.component('tree-folder', require('./components/parse/tree-folder.vue').default);
+Vue.component('parse_opu2', require('./components/parse/parse_opu2.vue').default);
+Vue.component('parse_indicators2', require('./components/parse/parse_indicators2.vue').default);
 
+Vue.component('insurance-inspection', require('./components/employee/insurance-inspection').default);
 Vue.component('inspection-info', require('./components/employee/inspection-info').default);
 
 Vue.component('upload-image', require('./components/common/upload-image').default);
@@ -212,6 +224,37 @@ Vue.component('report', require('./components/results/report').default);
 Vue.component('rating-list', require('./components/results/rating-list').default);
 
 Vue.component('employee-rate', require('./components/results/employee-rate').default);
+
+Vue.component('management-main', require('./components/document/management-main').default);
+
+Vue.component('management-search', require('./components/document/management-search').default);
+
+Vue.component('management-show', require('./components/document/management-show').default);
+
+Vue.component('management-employee', require('./components/document/management-employee').default);
+
+Vue.component('management-application', require('./components/document/management-application').default);
+
+Vue.component('management-application-extra', require('./components/document/management-application-extra').default);
+
+Vue.component('application-blank', require('./components/document/application-blank').default);
+
+Vue.component('disciplinary-action', require('./components/document/disciplinary-action').default);
+
+Vue.component('management-business-trip', require('./components/document/management-business-trip').default);
+
+Vue.filter('numberFormat', (value) => {
+    // https://stackoverflow.com/a/59875056
+    return value.toLocaleString();
+
+    // https://stackoverflow.com/a/47219162
+    // let numberFormat = new Intl.NumberFormat();
+    // return numberFormat.format(value);
+});
+
+Vue.component('products-info', require('./components/productsinfo/productsinfo').default);
+Vue.component('step1', require('./components/productsinfo/step1').default);
+Vue.component('step2', require('./components/productsinfo/step2').default);
 
 window.onload = function(){
     var app = new Vue({
