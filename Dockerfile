@@ -7,8 +7,6 @@ WORKDIR /app
 
 COPY ./ /app/
 
-RUN apt-get update
-
 RUN wget https://getcomposer.org/composer.phar
 RUN php composer.phar update
 RUN php composer.phar dump-autoload
