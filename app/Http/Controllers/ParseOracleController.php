@@ -5,12 +5,39 @@ namespace App\Http\Controllers;
 
 use App\ParseCollects;
 use App\ParsePays;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ParseOracleController extends Controller
 {
+
+    public function getCollectDeptName($deptIsn)
+    {
+        $departmentNames = [
+            //ДКС
+            1445781 => 'uks1',
+            1445783 => 'uks2',
+            1445784 => 'uks3',
+            4989735 => 'uks4',
+            4784106 => 'ukr',
+            //Филиалы
+            1445801 => 'karaganda',
+            1445735 => 'nur_sultan',
+            1445823 => 'aktobe',
+            1445827=> 'vko',
+            1445828 => 'shym',
+            1445821 => 'sko',
+            1445820 => 'pavlo',
+            1445825 => 'jambyl',
+            1445805 => 'koksh',
+            //Сайт
+            3991842 => 'kupipolis',
+        ];
+        return array_key_exists($deptIsn, $departmentNames) ? $departmentNames[$deptIsn] : false;
+    }
+
+
     public function getOracleCollect(Request $request){
-        //dd($request);
         /*
          * Департамент корпоративного страхования   1445780
          * Управление корпоративного развития       4784106
@@ -36,308 +63,217 @@ class ParseOracleController extends Controller
          * Управление партнерских продаж    3991836
          *
          *
+         *
          * Департамент перестрахования  1445737
          * Филиалы  2000
          * kupipolis
-         *
+         *Управление электронных продаж 3991842
          * */
-
-        $collect = ParseCollects::all();
-        $pays = ParsePays::all();
-        $karaganda = [];
-        $nur_sultan = [];
-        $aktobe = [];
-        $vko = [];
-        $shym = [];
-        $sko = [];
-        $pavlo = [];
-        $jambyl = [];
-        $koksh = [];
-
         //$result = date('Y-m',strtotime("01-JAN-19"));
+        //$result = date('d-M-y',strtotime("2019-01-01"));
+
 
         $first_date = $request->first_year.'-'.'0'.$request->first_period;
+        $firstDate = date('d-M-y',strtotime($first_date));
         $second_date = $request->second_year.'-'.'0'.$request->second_period;
 
+        $collects = ParseCollects::where('dateAccept', $firstDate)
+            ->orderby('id', 'desc')
+            ->get(['id','emplIsn','deptIsn', 'emplName','DSD','comissionProc'])
+            ->toArray();
 
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445801' && $elem->deptIsn === '1445801'
-                    && $item->emplISN === $elem->emplIsn
-                && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                && date('Y-m',strtotime($elem->docDate) === $first_date)
-                && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($karaganda, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
+        $deptCollectData = [];
+        foreach ($collects as $collect) {
+            $arrName = $this->getCollectDeptName($collect['deptIsn']);
+            if (!$arrName)
+                continue;
+            if (!array_key_exists($arrName, $deptCollectData))
+                $deptCollectData[$arrName] = [];
+                $deptCollectData[$arrName] = $collect;
         }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445735' && $elem->deptIsn === '1445735'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($nur_sultan, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445823' && $elem->deptIsn === '1445823'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($aktobe, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445827' && $elem->deptIsn === '1445827'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($vko, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445828' && $elem->deptIsn === '1445828'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($shym, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445821' && $elem->deptIsn === '1445821'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($sko, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445820' && $elem->deptIsn === '1445820'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($pavlo, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445825' && $elem->deptIsn === '1445825'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($jambyl, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
-        foreach ($collect as $item){
-            foreach ($pays as $elem){
-                if($item->deptIsn === '1445805' && $elem->deptIsn === '1445805'
-                    && $item->emplISN === $elem->emplIsn
-                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
-                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
-                    && date('Y-m',strtotime($elem->docDate) === $first_date)
-                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
-                    array_push($koksh, [
-                        'key' => $item->id,
-                        'isn' => $item->emplISN,
-                        'name' => $item->emplName,
-                        'DSD' => $item->DSD,
-                        'comissionProc'=> $item->comissionProc,
-                        'totalRefundSum' => $elem->totalRefundSum,
-                        'nettoRefundSum' => $elem->nettoRefundSum,
-                    ]);
-                }
-            }
-        }
+
+        //dd($deptCollectData['kupipolis']);
+        // 'totalRefundSum'
+        // 'nettoRefundSum'
 
         $filials = [];
         $aaa = [];
-        array_push($aaa,[
+        $dks = [];
+        $polis = [];
+        if(isset($deptCollectData[$arrName]))
+            array_push(
+                $dks,
+                [
+                    'key'=> 001,
+                    'emplName'=> 'Управление страхования №1',
+                    'DSD'=> 20,
+                    'comissionProc'=> 'sum',
+                    'nettoRefundSum'=> 'sum',
+                    'totalRefundSum'=> 'sum',
+                    'children' => $deptCollectData['uks1']
+                ],
+                [
+                    'key'=> 002,
+                    'emplName'=> 'Управление страхования №2',
+                    'DSD'=> 20,
+                    'comissionProc'=> 'sum',
+                    'nettoRefundSum'=> 'sum',
+                    'totalRefundSum'=> 'sum',
+                    'children' => $deptCollectData['uks2']
+                ],
+                [
+                    'key'=> 003,
+                    'emplName'=> 'Управление страхования №3',
+                    'DSD'=> 20,
+                    'comissionProc'=> 'sum',
+                    'nettoRefundSum'=> 'sum',
+                    'totalRefundSum'=> 'sum',
+                    'children' => $deptCollectData['uks3']
+                ],
+                [
+                    'key'=> 004,
+                    'emplName'=> 'Управление страхования №4',
+                    'DSD'=> 20,
+                    'comissionProc'=> 'sum',
+                    'nettoRefundSum'=> 'sum',
+                    'totalRefundSum'=> 'sum',
+                    'children' => $deptCollectData['uks4']
+                ],
+                [
+                    'key'=> 005,
+                    'emplName'=> 'Управление страхования №5',
+                    'DSD'=> 20,
+                    'comissionProc'=> 'sum',
+                    'nettoRefundSum'=> 'sum',
+                    'totalRefundSum'=> 'sum',
+                    'children' => $deptCollectData['uks5']
+                ],
+                [
+                    'key'=> 005,
+                    'emplName'=> 'Управление корпоративного развития',
+                    'DSD'=> 20,
+                    'comissionProc'=> 'sum',
+                    'nettoRefundSum'=> 'sum',
+                    'totalRefundSum'=> 'sum',
+                    'children' => $deptCollectData['ukr']
+                ]
+            );
+        if(isset($deptCollectData[$arrName]))
+        array_push(
+            $aaa,[
             'key'=> 111,
-            'name'=> 'Караганда',
+            'emplName'=> 'Караганда',
             'DSD'=> 20,
             'comissionProc'=> 'sum',
             'nettoRefundSum'=> 'sum',
             'totalRefundSum'=> 'sum',
-            'children' => $karaganda
+            'children' => $deptCollectData['karaganda']
         ],
         [
             'key'=> 121,
-            'name'=> 'Нур-Султан',
+            'emplName'=> 'Нур-Султан',
             'DSD'=> 20,
             'comissionProc'=> 'sum',
             'nettoRefundSum'=> 'sum',
             'totalRefundSum'=> 'sum',
-            'children' => $nur_sultan
+            'children' => $deptCollectData['nur_sultan']
         ],
             [
                 'key'=> 131,
-                'name'=> 'Актобе',
+                'emplName'=> 'Актобе',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $aktobe
+                'children' => $deptCollectData['aktobe']
             ],
             [
                 'key'=> 141,
-                'name'=> 'ВКО',
+                'emplName'=> 'ВКО',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $vko
+                'children' => $deptCollectData['vko']
             ],
             [
                 'key'=> 151,
-                'name'=> 'Шымкент',
+                'emplName'=> 'Шымкент',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $shym
+                'children' => $deptCollectData['shym']
             ],
             [
                 'key'=> 161,
-                'name'=> 'СКО',
+                'emplName'=> 'СКО',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $sko
+                'children' => $deptCollectData['sko']
             ],
             [
                 'key'=> 171,
-                'name'=> 'Павлодар',
+                'emplName'=> 'Павлодар',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $pavlo
+                'children' => $deptCollectData['pavlo']
             ],
             [
                 'key'=> 181,
-                'name'=> 'Жамбыл',
+                'emplName'=> 'Жамбыл',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $jambyl
+                'children' => $deptCollectData['jambyl']
             ],
             [
                 'key'=> 191,
-                'name'=> 'Кокшетау',
+                'emplName'=> 'Кокшетау',
                 'DSD'=> 20,
                 'comissionProc'=> 'sum',
                 'nettoRefundSum'=> 'sum',
                 'totalRefundSum'=> 'sum',
-                'children' => $koksh
+                'children' => $deptCollectData['koksh']
             ]
         );
 
+        array_push($polis,$deptCollectData['kupipolis']);
 
-        array_push($filials,[
+        array_push($filials,
+            [
+                'key'=> 302,
+                'emplName'=> 'Департамент корпоративного страхования',
+                'DSD'=> 20,
+                'comissionProc'=> 'sum',
+                'nettoRefundSum'=> 'sum',
+                'totalRefundSum'=> 'sum',
+                'children' => $dks
+            ],
+            [
             'key'=> 11,
-            'name'=> 'Филилалы',
+            'emplName'=> 'Филилалы',
             'DSD'=> 20,
             'comissionProc'=> 'sum',
             'nettoRefundSum'=> 'sum',
             'totalRefundSum'=> 'sum',
             'children'=> $aaa
-        ]);
-
-
+        ],
+            [
+                'key'=> 404,
+                'emplName'=> 'kupipolis',
+                'DSD'=> 20,
+                'comissionProc'=> 'sum',
+                'nettoRefundSum'=> 'sum',
+                'totalRefundSum'=> 'sum',
+                'children' => $polis
+            ]
+        );
 
         return response()->json([
             'success' => true,

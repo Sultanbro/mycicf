@@ -734,7 +734,7 @@
                 columns: [
                     {
                         title: 'Департамент',
-                        dataIndex: 'name',
+                        dataIndex: 'emplName',
                         key: 'title1',
                     },
                     {
@@ -763,40 +763,6 @@
                         key: 'title5',
                     },
                 ],
-/*                data: [
-                    {
-                        key: 11,
-                        name: 'Филилалы',
-                        product: 'sadad',
-                        fees: '123',
-                        AV: 60,
-                        KV: 20,
-                        payments: 30,
-                        children: [
-                            {
-                                key: 1,
-                                name: 'Карагандинская область',
-                                product: 20,
-                                fees: '123',
-                                AV: 60,
-                                KV: 20,
-                                payments: 30,
-                                children: [
-                                    {
-                                        key: 1.1,
-                                        name: '',
-                                        product: 20,
-                                        fees: '123',
-                                        AV: 60,
-                                        KV: 20,
-                                        payments: 30,
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],*/
-
                 rowSelection: {
                     onChange: (selectedRowKeys, selectedRows) => {
                         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);

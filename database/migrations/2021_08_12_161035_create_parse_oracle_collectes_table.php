@@ -35,7 +35,7 @@ class CreateParseOracleCollectesTable extends Migration
             $table->string('mainDeptName')->nullable();                     //f18
             $table->string('deptIsn')->nullable();                          //f19
             $table->string('deptName')->nullable();                         //f20
-            $table->string('emplISN')->nullable();                          //f21
+            $table->string('emplIsn')->nullable();                          //f21
             $table->string('emplName')->nullable();                         //f22
             $table->string('group_name')->nullable();
             $table->timestamps();
