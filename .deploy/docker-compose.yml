@@ -56,6 +56,10 @@ services:
       - MIX_PUSHER_APP_KEY=7be3a303223fdcdf62d5
       - MIX_PUSHER_APP_CLUSTER=ap2
 
+      - KIAS_URL="http://192.168.1.26:8083/kiassvctest/kiassvc.asmx?wsdl"
+      - KIAS_LOGIN=MyCIC
+      - KIAS_PASSWORD=mycickz321
+
     networks:
       - app_network
 
