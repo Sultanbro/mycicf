@@ -46,8 +46,7 @@ services:
       - MAIL_FROM_ADDRESS=laravel@mycompany.com
       - MAIL_FROM_NAME=Laravel
 
-      - Main_domain=https://doc.kupipolis.kz
-      - www_domain=https://www.doc.kupipolis.kz
+      - FRONTEND_DOMAIN=192.168.30.7
     networks:
       - app_network
 
