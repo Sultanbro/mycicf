@@ -1,29 +1,5 @@
 <template>
     <div>
-        <!--div class="inner-wrap t-0 text-center">
-            <div class="mt-1 mb-1">Какое действие желаете выполнить?</div>
-            <button class="btn btn-primary mt-2" v-on:click="showView = 'sign',clearData()">Подписать</button>
-            <button class="btn btn-primary mt-2" v-on:click="showView = 'check',clearData()">Проверить</button>
-        </div-->
-
-        <!--div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
-            <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="connectSocket" >Выбрать файл для подписания</button>
-                <div class="mt-1 mb-1" v-if="selectedFile != ''">Выбранный файл {{ selectedFile }}</div>
-                <div class="mt-1" v-if="selectedFileDir != ''">Выбранный файл сохранится сюда {{ selectedFileDir }}</div>
-            </div>
-            <div class="form-group mt-1">
-                <button class="btn btn-primary mt-2" v-on:click="getKey" >Выбрать ключ для подписания</button>
-                <div class="mt-2 mb-1" v-if="selectedECPFile != ''">Выбранный ключ {{ selectedECPFile }}</div>
-                <div class="mt-1 mb-1">
-                    <label class="mt-1 mb-1 col-md-12">Пароль для ключа</label>
-                    <input class="mt-1 mb-1" placeholder="Введите пароль" type="text" v-model="sign.password">
-                </div>
-                <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
-                <div class="mt-2 mb-1" v-if="signedFile != ''">Подписанный файл находится здесь: {{ signedFile }}</div>
-            </div>
-        </div-->
-
         <div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket('check')">Выберите файл для проверки</button>
