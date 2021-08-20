@@ -77,9 +77,7 @@
                                     </span>
                                 </div>
                                 <ul :id="`document-kind-${index}`" class="document-kinds pl-5 pr-5 collapse in">
-                                    <li v-for="(item, index) in document.children" :key="index"  v-if="item.isn == '1011961' || item.isn == '1479131' || item.isn == '1479141'
-                                        || item.isn == '820621' || item.isn == '1011971' || item.isn == '1007411' || item.isn == '1007391' || item.isn == '1479151'
-                                        || item.isn == '1011931' || item.isn == '1011951' || item.isn == '1011941' || item.isn == '1007421' || item.isn == '1007401'">
+                                    <li v-for="(item, index) in document.children" :key="index">
                                         <button class="btn" @click="isnShow(item.isn, index)">{{ item.fullname }}</button>
                                     </li>
                                 </ul>
