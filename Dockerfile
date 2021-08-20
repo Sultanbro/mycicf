@@ -16,12 +16,12 @@ COPY ./ /app/
 
 # RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN time wget https://getcomposer.org/composer.phar
-RUN time php composer.phar update
-RUN time php composer.phar dump-autoload
+RUN wget https://getcomposer.org/composer.phar
+RUN php composer.phar update
+RUN php composer.phar dump-autoload
 
-RUN time npm i
-RUN time npm run dev
+RUN npm i
+RUN npm run dev
 
 RUN chmod 0777 storage -R
 
