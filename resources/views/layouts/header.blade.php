@@ -49,7 +49,7 @@
                         Рейтинг
                     </li>
                 </a>
-                <a class="header-navigation" href="{{route('documentation')}}">
+                <a class="header-navigation" href="{{route('documentation')}}?parentId=10&childId=21">
                     <li>
                         Библиотека
                     </li>
