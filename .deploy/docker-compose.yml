@@ -1,0 +1,132 @@
+version: '2'
+
+###
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  app_db1:
+    external: true
+    driver: local
+
+services:
+  app:
+    image: registry-backend.cic.kz/centras-projects/mycic:master
+    container_name: Application
+    ports:
+      - 5556:8000/tcp
+    labels:
+      io.rancher.container.pull_image: always
+
+    environment:
+      - APP_DEBUG=true
+      - APP_KEY=base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ=
+      - APP_ENV=local
+      - APP_URL=https://doc.kupipolis.kz/
+
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+      - DB_PORT=3306
+      - DB_DATABASE=application
+
+      - REDIS_HOST=redis
+      - CACHE_DRIVER=file
+      - QUEUE_CONNECTION=sync
+
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=mailtrap
+      - MAIL_PORT=25
+      - MAIL_USERNAME=mailtrap
+      - MAIL_PASSWORD=mailtrap
+      - MAIL_ENCRYPTION=null
+      - MAIL_FROM_ADDRESS=laravel@mycompany.com
+      - MAIL_FROM_NAME=Laravel
+
+      - Main_domain=https://doc.kupipolis.kz
+      - www_domain=https://www.doc.kupipolis.kz
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+  db:
+    image: registry-backend.cic.kz/centras/mysql:5.7
+    container_name: Database
+
+    networks:
+      - app_network
+
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=application
+
+  redis:
+    image: registry-backend.cic.kz/centras/redis:latest
+
+    networks:
+      - app_network
+
+    # volumes:
+    #  - app_redis:/data
+
+  pma:
+    image: registry-backend.cic.kz/centras/phpmyadmin:latest
+    container_name: pma
+    privileged: true
+
+    links:
+      - db
+
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=
+
+    restart: unless-stopped
+    tty: true
+
+    ports:
+      - "8082:80"
+
+    networks:
+      - app_network
+
+
+  # PHPRedisAdmin
+  pra:
+    image: registry-backend.cic.kz/centras/phpredisadmin:latest
+    container_name: pra
+    restart: unless-stopped
+
+    environment:
+      - REDIS_1_HOST=redis
+      - REDIS_1_NAME=AppRedis
+
+    links:
+      - redis
+
+    ports:
+      - "8083:80"
+
+    networks:
+      - app_network
+
+  # Перехватчик писем (нужен для локальной разработки)
+  mailtrap:
+    image: registry-backend.cic.kz/centras/mailtrap:latest
+    container_name: mailtrap
+    restart: unless-stopped
+
+    ports:
+      - "8086:80"
+
+    networks:
+      - app_network
