@@ -6,12 +6,11 @@ namespace App\Http\Controllers;
 use App\ParseCollects;
 use App\ParsePays;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\DocBlock\Tags\Formatter;
 
 class ParseOracleController extends Controller
 {
     public function getOracleCollect(Request $request){
+        //dd($request);
         /*
          * Департамент корпоративного страхования   1445780
          * Управление корпоративного развития       4784106
@@ -43,10 +42,6 @@ class ParseOracleController extends Controller
          *
          * */
 
-
-
-
-
         $collect = ParseCollects::all();
         $pays = ParsePays::all();
         $karaganda = [];
@@ -59,26 +54,20 @@ class ParseOracleController extends Controller
         $jambyl = [];
         $koksh = [];
 
+        //$result = date('Y-m',strtotime("01-JAN-19"));
+
+        $first_date = $request->first_year.'-'.'0'.$request->first_period;
+        $second_date = $request->second_year.'-'.'0'.$request->second_period;
 
 
-        //$result = date('Y-m-d',strtotime("01-JAN-19"));
-
-
-        foreach ($collect as $item) {
-            $date_collect_year = date('Y-m-d',strtotime($item->dateAccept));
-
-            if($date_collect_year === $request->first_year){
-                dd($date_collect_year);
-            }
-        }
-
-
-
-
-/*        foreach ($collect as $item){
+        foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445801' && $elem->deptIsn === '1445801'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                && date('Y-m',strtotime($elem->docDate) === $first_date)
+                && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($karaganda, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -94,7 +83,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445735' && $elem->deptIsn === '1445735'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($nur_sultan, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -110,7 +103,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445823' && $elem->deptIsn === '1445823'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($aktobe, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -126,7 +123,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445827' && $elem->deptIsn === '1445827'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($vko, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -142,7 +143,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445828' && $elem->deptIsn === '1445828'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($shym, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -158,7 +163,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445821' && $elem->deptIsn === '1445821'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($sko, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -174,7 +183,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445820' && $elem->deptIsn === '1445820'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($pavlo, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -190,7 +203,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445825' && $elem->deptIsn === '1445825'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($jambyl, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -206,7 +223,11 @@ class ParseOracleController extends Controller
         foreach ($collect as $item){
             foreach ($pays as $elem){
                 if($item->deptIsn === '1445805' && $elem->deptIsn === '1445805'
-                    && $item->emplISN === $elem->emplIsn){
+                    && $item->emplISN === $elem->emplIsn
+                    && date('Y-m',strtotime($item->dateAccept) === $first_date)
+                    && date('Y-m',strtotime($item->dateAccept) === $second_date)
+                    && date('Y-m',strtotime($elem->docDate) === $first_date)
+                    && date('Y-m',strtotime($elem->docDate) === $second_date)){
                     array_push($koksh, [
                         'key' => $item->id,
                         'isn' => $item->emplISN,
@@ -321,6 +342,6 @@ class ParseOracleController extends Controller
         return response()->json([
             'success' => true,
             'data' => $filials,
-        ]);*/
+        ]);
     }
 }
