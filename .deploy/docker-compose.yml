@@ -52,6 +52,10 @@ services:
       - PUSHER_APP_KEY=7be3a303223fdcdf62d5
       - PUSHER_APP_SECRET=91d7feb674c6a3f29d46
       - PUSHER_APP_CLUSTER=ap2
+
+      - MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+      - MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
     networks:
       - app_network
 
