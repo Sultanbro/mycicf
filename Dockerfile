@@ -7,7 +7,7 @@ WORKDIR /app
 
 COPY ./ /app/
 
-RUN apt-get update && apt-get install -y procps
+RUN apt-get update
 
 RUN wget https://getcomposer.org/composer.phar
 RUN php composer.phar update
