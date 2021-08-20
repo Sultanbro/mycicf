@@ -1,7 +1,5 @@
 <template>
     <div>
-        {{path}}
-        {{paths}}
         <div class="inner-wrap t-0 text-center" >
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket()">Чекнуть</button>

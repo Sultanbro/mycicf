@@ -340,48 +340,48 @@
                     });
                 }
             },
-            // checkSignedFilessss(){
-            //     this.signedFileInfo = [];
-            //     let self = this;
-            //     if(self.selectedFile != '') {
-            //         var webSocket = new WebSocket('wss://127.0.0.1:13579');
-            //         self.loader(true);
-            //         webSocket.onopen = function () {
-            //             var responseObj = {
-            //                 module: 'kz.uchet.signUtil.commonUtils',
-            //                 lang: 'en',
-            //                 method: 'checkCMS',
-            //                 args: [self.selectedFile]
-            //             };
-            //             webSocket.send(JSON.stringify(responseObj));
-            //         };
-            //
-            //         webSocket.onmessage = function (msg) {
-            //             var result = JSON.parse(msg.data);
-            //             if(result.code) {
-            //                 if (result.code == 200) {
-            //                     if(result.responseObjects.length > 0) {
-            //                         self.signedFileInfo = result.responseObjects;
-            //                         //webSocket.close();
-            //                         self.loader(false);
-            //                     }
-            //                 } else {
-            //                     alert(result.message);
-            //                     self.loader(false);
-            //                     //webSocket.close();
-            //                 }
-            //             }
-            //         }
-            //         webSocket.onerror = function (msg) {
-            //             // TODO PUSH ERROR
-            //             //webSocket.close();
-            //             this.loader(false);
-            //             console.log(msg);
-            //         }
-            //     } else {
-            //         alert('Выберите пожалуйста файл');
-            //     }
-            // },
+         /*   checkSignedFilessss(){
+                this.signedFileInfo = [];
+                let self = this;
+                if(self.selectedFile != '') {
+                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                    self.loader(true);
+                    webSocket.onopen = function () {
+                        var responseObj = {
+                            module: 'kz.uchet.signUtil.commonUtils',
+                            lang: 'en',
+                            method: 'checkCMS',
+                            args: [self.selectedFile]
+                        };
+                        webSocket.send(JSON.stringify(responseObj));
+                    };
+
+                    webSocket.onmessage = function (msg) {
+                        var result = JSON.parse(msg.data);
+                        if(result.code) {
+                            if (result.code == 200) {
+                                if(result.responseObjects.length > 0) {
+                                    self.signedFileInfo = result.responseObjects;
+                                    //webSocket.close();
+                                    self.loader(false);
+                                }
+                            } else {
+                                alert(result.message);
+                                self.loader(false);
+                                //webSocket.close();
+                            }
+                        }
+                    }
+                    webSocket.onerror = function (msg) {
+                        // TODO PUSH ERROR
+                        //webSocket.close();
+                        this.loader(false);
+                        console.log(msg);
+                    }
+                } else {
+                    alert('Выберите пожалуйста файл');
+                }
+            },*/
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
