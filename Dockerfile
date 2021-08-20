@@ -9,8 +9,8 @@ ENV PUSHER_APP_CLUSTER=ap2
 ENV MIX_PUSHER_APP_KEY=7be3a303223fdcdf62d5
 ENV MIX_PUSHER_APP_CLUSTER=ap2
 
-VOLUME /root/shared/vendor /vendor
-VOLUME /root/shared/node_modules /node_modules
+VOLUME /root/shared/vendor /app/vendor
+VOLUME /root/shared/node_modules /app/node_modules
 
 COPY ./ /app/
 
