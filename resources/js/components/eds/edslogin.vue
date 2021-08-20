@@ -1,5 +1,29 @@
 <template>
     <div>
+        <!--div class="inner-wrap t-0 text-center">
+            <div class="mt-1 mb-1">Какое действие желаете выполнить?</div>
+            <button class="btn btn-primary mt-2" v-on:click="showView = 'sign',clearData()">Подписать</button>
+            <button class="btn btn-primary mt-2" v-on:click="showView = 'check',clearData()">Проверить</button>
+        </div-->
+
+        <!--div class="inner-wrap t-0 text-center" v-if="showView == 'sign'">
+            <div class="form-group mt-1">
+                <button class="btn btn-primary mt-2" v-on:click="connectSocket" >Выбрать файл для подписания</button>
+                <div class="mt-1 mb-1" v-if="selectedFile != ''">Выбранный файл {{ selectedFile }}</div>
+                <div class="mt-1" v-if="selectedFileDir != ''">Выбранный файл сохранится сюда {{ selectedFileDir }}</div>
+            </div>
+            <div class="form-group mt-1">
+                <button class="btn btn-primary mt-2" v-on:click="getKey" >Выбрать ключ для подписания</button>
+                <div class="mt-2 mb-1" v-if="selectedECPFile != ''">Выбранный ключ {{ selectedECPFile }}</div>
+                <div class="mt-1 mb-1">
+                    <label class="mt-1 mb-1 col-md-12">Пароль для ключа</label>
+                    <input class="mt-1 mb-1" placeholder="Введите пароль" type="text" v-model="sign.password">
+                </div>
+                <button class="btn btn-primary mt-2" v-on:click="getToken">Подписать</button>
+                <div class="mt-2 mb-1" v-if="signedFile != ''">Подписанный файл находится здесь: {{ signedFile }}</div>
+            </div>
+        </div-->
+
         <div class="inner-wrap t-0 text-center" v-if="showView == 'check'">
             <div class="form-group mt-1">
                 <button class="btn btn-primary mt-2" v-on:click="connectSocket('check')">Выберите файл для проверки</button>
@@ -41,8 +65,6 @@
         name: "edslogin",
         data() {
             return {
-                checknumber:0,
-                doppelganger: false,
                 loading: false,
                 seenmoney: false,
                 ws: null,
@@ -283,7 +305,6 @@
                 axios.post("/eds-by-isn", {
                     isn: docIsn
                 }).then((response) => {
-                    this.iin = response.data.iin['Iin'];
                     if(response.data.success) {
                         var obj = response.data.result;
                         if(obj.length > 0){
@@ -316,48 +337,48 @@
                     });
                 }
             },
-         /*   checkSignedFilessss(){
-                this.signedFileInfo = [];
-                let self = this;
-                if(self.selectedFile != '') {
-                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
-                    self.loader(true);
-                    webSocket.onopen = function () {
-                        var responseObj = {
-                            module: 'kz.uchet.signUtil.commonUtils',
-                            lang: 'en',
-                            method: 'checkCMS',
-                            args: [self.selectedFile]
-                        };
-                        webSocket.send(JSON.stringify(responseObj));
-                    };
+            /*   checkSignedFilessss(){
+                   this.signedFileInfo = [];
+                   let self = this;
+                   if(self.selectedFile != '') {
+                       var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                       self.loader(true);
+                       webSocket.onopen = function () {
+                           var responseObj = {
+                               module: 'kz.uchet.signUtil.commonUtils',
+                               lang: 'en',
+                               method: 'checkCMS',
+                               args: [self.selectedFile]
+                           };
+                           webSocket.send(JSON.stringify(responseObj));
+                       };
 
-                    webSocket.onmessage = function (msg) {
-                        var result = JSON.parse(msg.data);
-                        if(result.code) {
-                            if (result.code == 200) {
-                                if(result.responseObjects.length > 0) {
-                                    self.signedFileInfo = result.responseObjects;
-                                    //webSocket.close();
-                                    self.loader(false);
-                                }
-                            } else {
-                                alert(result.message);
-                                self.loader(false);
-                                //webSocket.close();
-                            }
-                        }
-                    }
-                    webSocket.onerror = function (msg) {
-                        // TODO PUSH ERROR
-                        //webSocket.close();
-                        this.loader(false);
-                        console.log(msg);
-                    }
-                } else {
-                    alert('Выберите пожалуйста файл');
-                }
-            },*/
+                       webSocket.onmessage = function (msg) {
+                           var result = JSON.parse(msg.data);
+                           if(result.code) {
+                               if (result.code == 200) {
+                                   if(result.responseObjects.length > 0) {
+                                       self.signedFileInfo = result.responseObjects;
+                                       //webSocket.close();
+                                       self.loader(false);
+                                   }
+                               } else {
+                                   alert(result.message);
+                                   self.loader(false);
+                                   //webSocket.close();
+                               }
+                           }
+                       }
+                       webSocket.onerror = function (msg) {
+                           // TODO PUSH ERROR
+                           //webSocket.close();
+                           this.loader(false);
+                           console.log(msg);
+                       }
+                   } else {
+                       alert('Выберите пожалуйста файл');
+                   }
+               },*/
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
@@ -373,35 +394,29 @@
                         };
                         webSocket.send(JSON.stringify(responseObj));
                     };
-                        webSocket.onmessage = function (msg) {
-                            var result = JSON.parse(msg.data);
-                            if(result.code) {
-                                if (result.code == 200) {
-                                    if(result.responseObjects.length > 0) {
-                                        //if(self.signedFileInfo.length > 0) {
-                                        //    self.signedFileInfo.push(result.responseObjects[0]);
-                                        //} else {
-                                        self.signedFileInfo = result.responseObjects;
 
-                                        if (result.responseObjects[0].iin != self.iin && edsType === 'sig') {
-                                            alert("ИИН сотрудника и Ключ ЭЦП не совпадают!");
-                                            self.loader(false);
-                                            this.edsConfirmed = false
-                                            return;
-                                        }
-                                        if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
-                                            self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
-                                        } else {
-                                            self.loader(false);
-                                        }
+                    webSocket.onmessage = function (msg) {
+                        var result = JSON.parse(msg.data);
+                        if(result.code) {
+                            if (result.code == 200) {
+                                if(result.responseObjects.length > 0) {
+                                    //if(self.signedFileInfo.length > 0) {
+                                    //    self.signedFileInfo.push(result.responseObjects[0]);
+                                    //} else {
+                                    self.signedFileInfo = result.responseObjects;
+                                    //}
+                                    if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
+                                        self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
+                                    } else {
+                                        self.loader(false);
                                     }
-                                } else {
-                                    alert(result.message);
-                                    self.loader(false);
                                 }
+                            } else {
+                                alert(result.message);
+                                self.loader(false);
                             }
                         }
-
+                    }
                     webSocket.onerror = function (msg) {
                         self.loader(false);
                         alert("Убедитесь пожалуйста что у Вас установлена программа NCLayer и она запущена. Программу можно скачать по адресу https://pki.gov.kz/ncalayer/");
@@ -422,7 +437,7 @@
                     }).then((response) => {
                         if (response.data.success) {
                             //if(type == 'coordination' && solution != undefined){
-                                //self.$parent.sendSolution(1);
+                            //self.$parent.sendSolution(1);
                             //}
                             if(edsType != 'cms') {
                                 if(self.coordination.RefAgrISN != 0 && self.coordination.RefAgrISN != undefined){
@@ -437,8 +452,6 @@
                                         type: 'A',
                                         edsType: 'cms'
                                     }).then((response) => {
-                                        this.iin=response.data.result['Iin'];
-                                        this.iinofman=this.info[doc_index].iin;
                                         if (response.data.success) {
                                             var obj = response.data.result;
                                             if (obj.length > 0) {
@@ -468,7 +481,6 @@
                                                     type: 'A',
                                                     edsType: 'cms'
                                                 }).then((response) => {
-                                                    this.iin = response.data.result.iin;
                                                     if (response.data.success) {
                                                         var obj = response.data.result;
                                                         if (obj.length > 0) {
