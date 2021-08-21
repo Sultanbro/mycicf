@@ -93,56 +93,56 @@ services:
     # volumes:
     #  - app_redis:/data
 
-  pma:
-    image: reg.cic.kz/centras/phpmyadmin:latest
-    container_name: pma
-    privileged: true
-
-    links:
-      - db
-
-    environment:
-      - PMA_HOST=db
-      - PMA_USER=root
-      - PMA_PASSWORD=
-
-    restart: unless-stopped
-    tty: true
-
-    ports:
-      - "8082:80"
-
-    networks:
-      - app_network
-
-
-  # PHPRedisAdmin
-  pra:
-    image: reg.cic.kz/centras/phpredisadmin:latest
-    container_name: pra
-    restart: unless-stopped
-
-    environment:
-      - REDIS_1_HOST=redis
-      - REDIS_1_NAME=AppRedis
-
-    links:
-      - redis
-
-    ports:
-      - "8083:80"
-
-    networks:
-      - app_network
-
-  # Перехватчик писем (нужен для локальной разработки)
-  mailtrap:
-    image: reg.cic.kz/centras/mailtrap:latest
-    container_name: mailtrap
-    restart: unless-stopped
-
-    ports:
-      - "8086:80"
-
-    networks:
-      - app_network
+  #pma:
+  #  image: reg.cic.kz/centras/phpmyadmin:latest
+  #  container_name: pma
+  #  privileged: true
+#
+  #  links:
+  #    - db
+#
+  #  environment:
+  #    - PMA_HOST=db
+  #    - PMA_USER=root
+  #    - PMA_PASSWORD=
+#
+  #  restart: unless-stopped
+  #  tty: true
+#
+  #  ports:
+  #    - "8082:80"
+#
+  #  networks:
+  #    - app_network
+#
+#
+  ## PHPRedisAdmin
+  #pra:
+  #  image: reg.cic.kz/centras/phpredisadmin:latest
+  #  container_name: pra
+  #  restart: unless-stopped
+#
+  #  environment:
+  #    - REDIS_1_HOST=redis
+  #    - REDIS_1_NAME=AppRedis
+#
+  #  links:
+  #    - redis
+#
+  #  ports:
+  #    - "8083:80"
+#
+  #  networks:
+  #    - app_network
+#
+  ## Перехватчик писем (нужен для локальной разработки)
+  #mailtrap:
+  #  image: reg.cic.kz/centras/mailtrap:latest
+  #  container_name: mailtrap
+  #  restart: unless-stopped
+#
+  #  ports:
+  #    - "8086:80"
+#
+  #  networks:
+  #    - app_network
