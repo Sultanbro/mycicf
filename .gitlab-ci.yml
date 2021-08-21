@@ -44,5 +44,3 @@ sonarqube-check:
   only:
     - merge_requests
     - colleagues
-
-###
