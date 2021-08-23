@@ -667,6 +667,7 @@ Route::post('/save_fail_statuspo', 'EdsController@saveFailStatusPO');
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
 Route::post('/serviceCenter/notify', 'CoordinationController@serviceCenterNotify');
 Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');

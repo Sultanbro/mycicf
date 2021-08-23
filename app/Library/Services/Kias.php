@@ -684,6 +684,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getOrSetEorderDocs($doc_isn){
+        return $this->request('User_CicGetOrSetEorderDocs',[
+            'DocISN' => $doc_isn
+        ]);
+    }
+
     /**
      * @param $agrisn
      * @param $agrcalcisn

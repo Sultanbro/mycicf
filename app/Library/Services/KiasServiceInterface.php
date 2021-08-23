@@ -427,4 +427,10 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function AgrSearch ($id, $blankSerNo, $dateBegFrom, $dateBegTo, $dateEndFrom, $dateEndTo, $dateSignFrom, $dateSignTo, $productIsn, $emplIsn, $status);
+
+    /**
+     * @param $doc_isn
+     * @return mixed
+     */
+    public function getOrSetEorderDocs($doc_isn);
 }
