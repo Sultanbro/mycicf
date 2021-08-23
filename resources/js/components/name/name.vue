@@ -10,7 +10,7 @@
                             :class="item.id === levelOnePinned ? 'active' : ''"
                         >
                             <img :src="item.icon_url">
-                            <span>{{item.label}}</span>
+                            <span @click="tabs(item.label)">{{item.label}}</span>
                         </div>
                     </div>
                 </div>
@@ -56,6 +56,8 @@
 
         mounted: function() {
             this.getItems(0);
+
+
         },
 
         data() {
@@ -77,6 +79,41 @@
             pinned_id: Number
         },
         methods: {
+
+            /*
+            *
+            *
+            *
+            * Method for default display the first column
+            * thanks to document.location interface for url handling by label from loop!
+            *
+            *
+            * */
+
+            tabs ( label ) {
+                if ( label === 'Бизнес процессы' ) {
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=11&childId=13')
+
+                } else if ( label === 'Инструкции КИАС' ){
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=37&childId=38')
+
+                } else if ( label === 'Протоколы' ) {
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=64&childId=65')
+                } else if ( label === 'Внутренние нормативные документы' ) {
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=10&childId=21')
+                }
+
+
+            },
+
+
+
+
+
             showDropdown: function() {
                 this.isOpened = false;
                 this.levelOneOpened = false;
@@ -285,7 +322,7 @@
                     window.history.pushState({}, null, newUrl);
                 }
             }
-        },
+        }
     }
 </script>
 
