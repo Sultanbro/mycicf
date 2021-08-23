@@ -1,806 +1,1419 @@
-<!--<template>
-    <div>
-        <ul id="demo" class="config">
-            <div class="config__tools">
-                <label for="search" class="search-container">
-                    Search
-                    <input id="search" class="search-input" type="text" v-model="search" placeholder="Search title.."/>
-                </label>
-                <label><select v-model="typeFilter">
-                    <option value="all">Все</option>
-                    <option value="clients">Департамент</option>
-                    <option value="sites">Управление</option>
-                    <option value="cameras">Менеджер</option>
-                </select></label>
-            </div>
+<template>
+    <div class="bg-white mt-4 pl-3 pr-3 box-shadow border-16">
+        <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
+            <thead>
+            <tr class="border-table-0">
+                <td colspan="2" class="text-left fs-1_3 pl-0">Компания</td>
+                <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                <td></td>
+                <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="text-left">Департамент</td>
+                <td>ДСД</td>
+                <td>АВ</td>
+                <td>Нетто выплаты</td>
+                <td>КВ</td>
+                <td>Изм %</td>
+                <td>Изм сумма</td>
+                <td></td>
+                <td>АВ</td>
+                <td>КВ</td>
+                <td>Изм %</td>
+                <td>Сборы</td>
+                <td>Исполнение</td>
+            </tr>
+            </thead>
 
-            <tree-folder
-                v-for="(model, index) in filteredList"
-                :key="index"
-                :index="index"
-                :model="model"
-                :options="options"
-                :list="model.children"
-                :search="search"
-                :typeFilter="typeFilter"
-                :oracleData = "oracleData"></tree-folder>
-        </ul>
+            <tbody>
+            <!--ДКС-->
+            <tr @click="dks">
+                <td><span></span></td>
+                <td></td>
+                <td class="text-left"><span class="bold">ДКС</span></td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dksBranch">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.dks.emplName || 'Данных нет'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dksBranch" @click="uks1Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.uks1.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №1'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="uks1" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.uks1.emplName || 'Данных по менеджеру нет' }}</td>
+                <td>{{oracleData.uks1.DSD || 0}}</td>
+                <td>{{oracleData.uks1.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dksBranch" @click="uks2Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.uks2.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №2'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="uks2" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.uks2.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.uks2.DSD || 0}}</td>
+                <td>{{oracleData.uks2.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dksBranch" @click="uks3Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.uks3.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №3'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="uks3" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.uks3.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.uks3.DSD || 0}}</td>
+                <td>{{oracleData.uks3.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dksBranch" @click="uks4Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.uks4.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №4'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="uks4" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.uks4.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.uks4.DSD || 0}}</td>
+                <td>{{oracleData.uks4.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dksBranch" @click="ukrManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.ukr.deptName || 'Данных нет'*/ 'Управление корпоративного развития'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="ukr" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.ukr.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.ukr.DSD || 0}}</td>
+                <td>{{oracleData.ukr.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+
+            <!--ДСП-->
+            <tr @click="dsp">
+                <td><span></span></td>
+                <td></td>
+                <td class="text-left"><span class="bold">ДСП</span></td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.dsp.emplName || 'Данных нет'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="almatyManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.almaty.deptName || 'Данных нет'*/ 'Филиал по г.Алматы'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="almaty" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.almaty.emplName || 'Данных по менеджеру нет' }}</td>
+                <td>{{oracleData.almaty.DSD || 0}}</td>
+                <td>{{oracleData.almaty.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="uapManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.uap.deptName || 'Данных нет'*/ 'Управление активных продаж'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="uap">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.uap.emplName || 'Данных по менеджеру нет' }}</td>
+                <td>{{oracleData.uap.DSD || 0}}</td>
+                <td>{{oracleData.uap.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us1Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us1.deptName || 'Данных нет'*/ 'Управление страхования №1'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us1" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us1.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us1.DSD || 0}}</td>
+                <td>{{oracleData.us1.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us2Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us2.deptName || 'Данных нет'*/ 'Управление страхования №2'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us2" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us2.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us2.DSD || 0}}</td>
+                <td>{{oracleData.us2.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us3Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us3.deptName || 'Данных нет'*/ 'Управление страхования №3'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us3" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us3.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us3.DSD || 0}}</td>
+                <td>{{oracleData.us3.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us4Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us4.deptName || 'Данных нет'*/ 'Управление страхования №4'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us4" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us4.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us4.DSD || 0}}</td>
+                <td>{{oracleData.us4.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us5Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us5.deptName || 'Данных нет'*/ 'Управление страхования №5'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us5" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us5.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us5.DSD || 0}}</td>
+                <td>{{oracleData.us5.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us6Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us6.deptName || 'Данных нет'*/ 'Управление страхования №6'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us6" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us6.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us6.DSD || 0}}</td>
+                <td>{{oracleData.us6.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dspBranch" @click="us7Manager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.us7.deptName || 'Данных нет'*/ 'Управление страхования №7'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="us7" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.us7.emplName || 'Данных по менеджеру нет'}}</td>
+                <td>{{oracleData.us7.DSD || 0}}</td>
+                <td>{{oracleData.us7.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+
+            <!--ДРПО-->
+            <tr @click="drpo">
+                <td><span></span></td>
+                <td></td>
+                <td class="text-left"><span class="bold">ДРПО</span></td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="drpoBranch">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.drpo.emplName || 'Данных нет'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="drpoBranch" @click="uppManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{/*oracleData.almaty.deptName || 'Данных нет'*/ 'Управление партнерских продаж'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="upp" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.upp.emplName || 'Данных по менеджеру нет' }}</td>
+                <td>{{oracleData.upp.DSD || 0}}</td>
+                <td>{{oracleData.upp.comissionProc || 0}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+
+            <!--ДП-->
+            <tr @click="dp">
+                <td><span></span></td>
+                <td></td>
+                <td class="text-left"><span class="bold">ДП</span></td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="dpBranch">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.dp.emplName || 'Данных нет'}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+
+            <!--Филиалы-->
+            <tr @click="firstBranch">
+                <td><span></span></td>
+                <td></td>
+                <td class="text-left"><span class="bold">Филиалы</span></td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <!--Актобе-->
+            <tr v-if="showBranches" @click="aktobeManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.aktobe.deptName}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="aktobe" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.aktobe.emplName}}</td>
+                <td>{{oracleData.aktobe.DSD}}</td>
+                <td>{{oracleData.aktobe.comissionProc}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <!--Нур-Султан-->
+            <tr v-if="showBranches" @click="nur_sultanManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.nur_sultan.deptName}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="nur_sultan" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.nur_sultan.emplName}}</td>
+                <td>{{oracleData.nur_sultan.DSD}}</td>
+                <td>{{oracleData.nur_sultan.comissionProc}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <!--Шымкент-->
+            <tr v-if="showBranches" @click="shymkentManager">
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.shym.deptName}}</td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="shymkent" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.shym.emplName}}</td>
+                <td>{{oracleData.shym.DSD}}</td>
+                <td>{{oracleData.shym.comissionProc}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+
+            <!--kupipolis-->
+            <tr @click="kupipolisWeb">
+                <td><span></span></td>
+                <td></td>
+                <td class="text-left"><span class="bold">kupipolis</span></td>
+                <td>4</td>
+                <td>5</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr v-if="polisBranch" >
+                <td><span>1</span></td>
+                <td>2</td>
+                <td class="text-left">{{oracleData.kupipolis.emplName}}</td>
+                <td>{{oracleData.kupipolis.DSD}}</td>
+                <td>{{oracleData.kupipolis.comissionProc}}</td>
+                <!--Это проценты 'Доля Мар 2021'-->
+                <td>%</td>
+                <!--Это проценты 'Доля Мар 2020'-->
+                <td>%</td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Изм сумма-->
+                <td></td>
+                <td></td>
+                <!--Мар 2021-->
+                <td></td>
+                <!--Мар 2020-->
+                <td></td>
+                <!--Изм %-->
+                <td>%</td>
+                <!--Мар 2021 проценты-->
+                <td>%</td>
+                <!--Мар 2020 проценты-->
+                <td>%</td>
+            </tr>
+            <tr>
+                <td>Итог</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
 
 <script>
-    export default {
+ export default {
         name: "parse-centras",
         props: {
             oracleData: Object,
         },
         data() {
             return {
-                treeData: [{
-                    //1й Деп
-                    type: 'dept', name: 'ДКС', product: 'Агентские выплаты',
-                    fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                    children: [
-                        {
-                            type: 'admin',
-                            name: 'Управление №1',
-                            product: 'Нетто Выплаты',
-                            fees: 1000000,
-                            AV: 222250,
-                            payments: 233412,
-                            KV: 2123324,
-                            selected: false,
-                            children: [
-                                {
-                                    type: 'manager',
-                                    name: 'Калиев',
-                                    product: '???',
-                                    fees: 238874,
-                                    AV: 78946,
-                                    payments: 764864,
-                                    KV: 87648,
-                                    selected: false,
-                                    active: false
-                                },
-                                {
-                                    type: 'manager',
-                                    name: 'Салимов',
-                                    product: '???',
-                                    fees: 238874,
-                                    AV: 78946,
-                                    payments: 764864,
-                                    KV: 87648,
-                                    selected: false, active: false
-                                },
-                            ]
-                        },
-                        {
-                            type: 'admin',
-                            name: 'Управление №2',
-                            product: 'ДСД',
-                            fees: 1000000,
-                            AV: 222250,
-                            payments: 233412,
-                            KV: 2123324,
-                            selected: false,
-                            children: [
-                                {
-                                    type: 'manager',
-                                    name: 'Лисина',
-                                    product: '???',
-                                    fees: 238874,
-                                    AV: 78946,
-                                    payments: 764864,
-                                    KV: 87648,
-                                    selected: false,
-                                    active: false
-                                },
-                                {
-                                    type: 'manager', name: 'Байбориев', product: '???',
-                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                },
-                            ]
-                        },
-                        {
-                            type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
-                            fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                            children: [
-                                {
-                                    type: 'manager', name: 'Демчук', product: '???',
-                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                },
-                                {
-                                    type: 'manager', name: 'Салимова', product: '???',
-                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                },
-                            ]
-                        },
-                        {
-                            type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
-                            fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                            children: [
-                                {
-                                    type: 'manager', name: 'Сакенов', product: '???',
-                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                },
-                                {
-                                    type: 'manager', name: 'Уроборос', product: '???',
-                                    fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                },
-                            ]
-                        },
-                    ],
-                },
-                    {
-                        //2й Деп
-                        type: 'dept', name: 'ДСП', product: 'Агентские выплаты',
-                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                        children: [
-                            {
-                                type: 'admin',
-                                name: 'Управление №1',
-                                product: 'Нетто Выплаты',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Калиев',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager',
-                                        name: 'Салимов',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin',
-                                name: 'Управление №2',
-                                product: 'ДСД',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Лисина',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Байбориев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Демчук', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимова', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Калиев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимов', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                        ],
-                    },
-                    {
-                        //3й Деп
-                        type: 'dept', name: 'ДРПО', product: 'Агентские выплаты',
-                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                        children: [
-                            {
-                                type: 'admin',
-                                name: 'Управление №1',
-                                product: 'Нетто Выплаты',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Калиев',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager',
-                                        name: 'Салимов',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin',
-                                name: 'Управление №2',
-                                product: 'ДСД',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Лисина',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Байбориев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Демчук', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимова', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Калиев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимов', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                        ],
-                    },
-                    {
-                        //4й Деп
-                        type: 'dept', name: 'ДП', product: 'Агентские выплаты',
-                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                        children: [
-                            {
-                                type: 'admin',
-                                name: 'Управление №1',
-                                product: 'Нетто Выплаты',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Калиев',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager',
-                                        name: 'Салимов',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin',
-                                name: 'Управление №2',
-                                product: 'ДСД',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Лисина',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Байбориев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Демчук', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимова', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Калиев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимов', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                        ],
-                    },
-                    {
-                        //5й Деп
-                        type: 'dept', name: 'Филиалы', product: 'Агентские выплаты',
-                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                        children: [
-                            {
-                                type: 'admin',
-                                name: 'Управление №1',
-                                product: 'Нетто Выплаты',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Калиев',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager',
-                                        name: 'Салимов',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin',
-                                name: 'Управление №2',
-                                product: 'ДСД',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Лисина',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Байбориев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Демчук', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимова', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Калиев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимов', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                        ],
-                    },
-                    {
-                        //6й Деп
-                        type: 'dept', name: 'kupipolis', product: 'Агентские выплаты',
-                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                        children: [
-                            {
-                                type: 'admin',
-                                name: 'Управление №1',
-                                product: 'Нетто Выплаты',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Калиев',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager',
-                                        name: 'Салимов',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin',
-                                name: 'Управление №2',
-                                product: 'ДСД',
-                                fees: 1000000,
-                                AV: 222250,
-                                payments: 233412,
-                                KV: 2123324,
-                                selected: false,
-                                children: [
-                                    {
-                                        type: 'manager',
-                                        name: 'Лисина',
-                                        product: '???',
-                                        fees: 238874,
-                                        AV: 78946,
-                                        payments: 764864,
-                                        KV: 87648,
-                                        selected: false,
-                                        active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Байбориев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №3', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Демчук', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимова', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                            {
-                                type: 'admin', name: 'Управление №4', product: 'Нетто Выплаты',
-                                fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                                children: [
-                                    {
-                                        type: 'manager', name: 'Калиев', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                    {
-                                        type: 'manager', name: 'Салимов', product: '???',
-                                        fees: 238874, AV: 78946, payments: 764864, KV: 87648, selected: false, active: false
-                                    },
-                                ]
-                            },
-                        ],
-                    },
-                    {
-                        //6й Деп
-                        type: 'dept', name: 'Итог', product: 'Агентские выплаты',
-                        fees: 1000000, AV: 222250, payments: 233412, KV: 2123324, selected: false,
-                    },
-                ],
                 search: '',
                 options: {},
-                typeFilter: 'all'
+                typeFilter: 'all',
+                /*ДКС*/
+                dksBranch: false,
+                uks1: false,
+                uks2: false,
+                uks3: false,
+                uks4: false,
+                ukr: false,
+
+                /*ДСП*/
+                dspBranch: false,
+                almaty: false,
+                uap: false,
+                us1: false,
+                us2: false,
+                us3: false,
+                us4: false,
+                us5: false,
+                us6: false,
+                us7: false,
+                /*ДРПО*/
+                drpoBranch: false,
+                upp: false,
+
+                /*ДП*/
+                dpBranch: false,
+
+                /*Филиалы*/
+                showBranches: false,
+                aktobe: false,
+                nur_sultan: false,
+                shymkent: false,
+
+                /*kupipolis*/
+                polisBranch: false,
+
+
             }
         },
-        created() {
-            this.treeData.forEach((d) => {
-                d.id = Math.floor(Math.random() * 999) + 1;
-                if (d.children) {
-                    d.children.forEach((child) => {
-                        child.id = Math.floor(Math.random() * 999) + 1;
-                        if (child.children) {
-                            child.children.forEach((childChild) => {
-                                childChild.id = Math.floor(Math.random() * 999) + 1;
-                            });
-                        }
-                    });
-                }
-            });
-            document.body.addEventListener('click', () => {
-                for (const option in this.options) {
-                    this.$set(this.options, option, false);
-                }
-            })
-        },
         methods: {
-            toggleOptions(index) {
-                for (const option in this.options) {
-                    if (option != index) {
-                        this.$set(this.options, option, false);
-                    }
-                }
-                this.$set(this.options, index, true)
+            dks(){
+                this.dksBranch = !this.dksBranch;
             },
-        },
-        computed: {
-            filteredList() {
-                return this.treeData.filter(topBranch => {
-                    if (topBranch.children) {
-                        return topBranch.children.filter(childBranch => {
-                            if (childBranch.children) {
-                                return childBranch.children.filter(childsChildBranch => {
-                                    return childsChildBranch.name.contains(this.search, true);
-                                })
-                            }
-                            return childBranch.name.contains(this.search, true);
-                        })
-                    }
-                    return topBranch.name.contains(this.search, true);
-                })
-            }
-        }
-    }
-    String.prototype.contains = function (needle, insensitive) {
-        insensitive = insensitive || false;
-        return (!insensitive ?
-                this.indexOf(needle) !== -1 :
-                this.toLowerCase().indexOf(needle.toLowerCase()) !== -1
-        );
-    }
-</script>
+            dksManager() {
+                this.dksDept = !this.dksDept;
+            },
+            uks1Manager() {
+                this.uks1 = !this.uks1;
+            },
+            uks2Manager() {
+                this.uks2 = !this.uks2;
+            },
+            uks3Manager() {
+                this.uks3 = !this.uks3;
+            },
+            uks4Manager() {
+                this.uks4 = !this.uks3;
+            },
+            ukrManager() {
+                this.ukr = !this.ukr;
+            },
 
-<style scoped>
-    .search-container {
-        display: flex;
-        flex-flow: column;
-        max-width: 20rem;
-    }
+            /*ДСП*/
+            dsp(){
+                this.dspBranch = !this.dspBranch;
+            },
+            almatyManager() {
+                this.almaty = !this.almaty;
+            },
+            uapManager() {
+                this.uap = !this.uap;
+            },
+            us1Manager() {
+                this.us1 = !this.us1;
+            },
+            us2Manager() {
+                this.us2 = !this.us2;
+            },
+            us3Manager() {
+                this.us3 = !this.us3;
+            },
+            us4Manager() {
+                this.us4 = !this.us4;
+            },
+            us5Manager() {
+                this.us5 = !this.us5;
+            },
+            us6Manager() {
+                this.us6 = !this.us6;
+            },
+            us7Manager() {
+                this.us7 = !this.us7;
+            },
 
-    .search-input {
-        border-radius: 3px;
-        border: 0;
-        background: #3C4D58;
-        border-radius: 5px;
-        font-size: 0.9rem;
-        color: #C5CFD6;
-        padding: 0.5rem 1rem;
-        margin: 0.5rem 0;
-    }
+            /*ДРПО*/
+            drpo(){
+                this.drpoBranch = !this.drpoBranch;
+            },
+            uppManager() {
+                this.upp = !this.upp;
+            },
 
-    .config {
-        color: #C5CFD6;
-        padding: 1rem;
-        list-style: none;
-        min-width: 52rem;
-        background: #2D3C47;
-        box-sizing: border-box;
-    }
+            /*ДП*/
+            dp(){
+                this.dpBranch = !this.dpBranch;
+            },
 
-    .config *, .config *:before, .config *:after {
-        box-sizing: inherit;
-    }
+            /*Филиалы*/
+            firstBranch() {
+                this.showBranches = !this.showBranches;
+            },
+            aktobeManager() {
+                this.aktobe = !this.aktobe;
+            },
+            nur_sultanManager() {
+                this.nur_sultan = !this.nur_sultan;
+            },
+            shymkentManager() {
+                this.shymkent = !this.shymkent;
+            },
 
-    .config__tools {
-        padding: 0.5rem;
-    }
-</style>-->
-
-<template>
-    <div class="bg-white mt-4 pl-3 pr-3 box-shadow border-16">
-        <a-table
-            :columns="columns"
-            :data-source="oracleData"
-            :row-selection="rowSelection"
-            :expanded-row-keys.sync="expandedRowKeys"
-        />
-    </div>
-</template>
-
-<script>
-    export default {
-        props: {
-            oracleData: Array,
-        },
-
-        data() {
-            return {
-                expandedRowKeys: [],
-                columns: [
-                    {
-                        title: 'Департамент',
-                        dataIndex: 'emplName',
-                        key: 'title1',
-                    },
-                    {
-                        title: 'ДСД',
-                        dataIndex: 'DSD',
-                        key: 'title2',
-                    },
-                    {
-                        title: 'Исполнение',
-                        dataIndex: 'isn',
-                        key: 'title4',
-                    },
-                    {
-                        title: 'АВ',
-                        dataIndex: 'comissionProc',
-                        key: 'title3',
-                    },
-                    {
-                        title: 'Нетто Выплаты',
-                        dataIndex: 'nettoRefundSum',
-                        key: 'title6',
-                    },
-                    {
-                        title: 'КВ',
-                        dataIndex: 'totalRefundSum',
-                        key: 'title5',
-                    },
-                ],
-                rowSelection: {
-                    onChange: (selectedRowKeys, selectedRows) => {
-                        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-                    },
-                    onSelect: (record, selected, selectedRows) => {
-                        console.log(record, selected, selectedRows);
-                    },
-                    onSelectAll: (selected, selectedRows, changeRows) => {
-                        console.log(selected, selectedRows, changeRows);
-                    },
-                },
-
-
-
-            }
-        },
-        methods: {
+            /*kupipolis*/
+            kupipolisWeb() {
+                this.polisBranch = !this.polisBranch;
+            },
 
         }
-    }
+ }
+
 </script>
-
-
-<style>
-    .ant-spin-nested-loading {
-        margin-top: 20px;
-    }
-    .ant-table-thead > tr > th {
-        text-align: center;
-        background: #f1f4f7;
-        border-top: 1px solid #dee2e6;
-        border-right: 1px dashed #3c6ccc;
-    }
-    .ant-table-thead > tr:first-child > th:last-child {
-        border-right: 0px;
-    }
-    .ant-table-row-cell-last {
-
-    }
-
-</style>
