@@ -247,6 +247,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
             Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+            Route::post('/get-printable-order-document', 'EdsController@getPrintableOrderDocument');
             Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
             //DOSSIER
             Route::post('/emplInfo', 'SiteController@postEmplInfo');
