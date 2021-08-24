@@ -15,8 +15,6 @@ services:
   app:
     image: reg.cic.kz/centras-projects/mycic:master
     container_name: Application
-    ports:
-      - 5556:8000/tcp
     labels:
       io.rancher.container.pull_image: always
 
@@ -65,6 +63,16 @@ services:
 
     depends_on:
       - db
+
+  lb:
+    image: rancher/lb-service-haproxy:v0.9.14
+    ports:
+    - 5556:5556/tcp
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+      io.rancher.container.agent.role: environmentAdmin,agent
+      io.rancher.container.agent_service.drain_provider: 'true'
+      io.rancher.container.create_agent: 'true'
 
   db:
     image: reg.cic.kz/centras/mysql:5.7
