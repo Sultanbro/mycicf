@@ -30,6 +30,7 @@
 
             <tbody>
             <!--ДКС-->
+            <template>
             <tr @click="dks">
                 <td class="empty-td"></td>
                 <td class="text-left">
@@ -109,31 +110,33 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="uks1" >
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.uks1.emplName || 'Данных по менеджеру нет' }}</td>
-                <td>{{oracleData.uks1.DSD || 0}}</td>
-                <td>{{oracleData.uks1.comissionProc || 0}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
+                <template v-if="dksBranch === true">
+                    <tr v-if="uks1">
+                        <td class="empty-td"></td>
+                        <td class="text-left">{{oracleData.uks1.emplName || 'Данных по менеджеру нет' }}</td>
+                        <td>{{oracleData.uks1.DSD || 0}}</td>
+                        <td>{{oracleData.uks1.comissionProc || 0}}</td>
+                        <!--Это проценты 'Доля Мар 2021'-->
+                        <td>%</td>
+                        <!--Это проценты 'Доля Мар 2020'-->
+                        <td>%</td>
+                        <!--Изм %-->
+                        <td>%</td>
+                        <!--Изм сумма-->
+                        <td></td>
+                        <td></td>
+                        <!--Мар 2021-->
+                        <td></td>
+                        <!--Мар 2020-->
+                        <td></td>
+                        <!--Изм %-->
+                        <td>%</td>
+                        <!--Мар 2021 проценты-->
+                        <td>%</td>
+                        <!--Мар 2020 проценты-->
+                        <td>%</td>
+                    </tr>
+                </template>
             <tr v-if="dksBranch" @click="uks2Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.uks2.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №2'}}</td>
@@ -159,31 +162,33 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="uks2" >
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.uks2.emplName || 'Данных по менеджеру нет'}}</td>
-                <td>{{oracleData.uks2.DSD || 0}}</td>
-                <td>{{oracleData.uks2.comissionProc || 0}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
+                <template v-if="dksBranch === true">
+                <tr v-if="uks2" >
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.uks2.emplName || 'Данных по менеджеру нет'}}</td>
+                    <td>{{oracleData.uks2.DSD || 0}}</td>
+                    <td>{{oracleData.uks2.comissionProc || 0}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                </template>
             <tr v-if="dksBranch" @click="uks3Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.uks3.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №3'}}</td>
@@ -209,31 +214,33 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="uks3" >
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.uks3.emplName || 'Данных по менеджеру нет'}}</td>
-                <td>{{oracleData.uks3.DSD || 0}}</td>
-                <td>{{oracleData.uks3.comissionProc || 0}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
+                <template v-if="dksBranch === true">
+                <tr v-if="uks3">
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.uks3.emplName || 'Данных по менеджеру нет'}}</td>
+                    <td>{{oracleData.uks3.DSD || 0}}</td>
+                    <td>{{oracleData.uks3.comissionProc || 0}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                </template>
             <tr v-if="dksBranch" @click="uks4Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.uks4.deptName || 'Данных нет'*/ 'Управление корпоративного страхования №4'}}</td>
@@ -259,31 +266,33 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="uks4" >
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.uks4.emplName || 'Данных по менеджеру нет'}}</td>
-                <td>{{oracleData.uks4.DSD || 0}}</td>
-                <td>{{oracleData.uks4.comissionProc || 0}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
+                <template v-if="dksBranch === true">
+                <tr v-if="uks4" >
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.uks4.emplName || 'Данных по менеджеру нет'}}</td>
+                    <td>{{oracleData.uks4.DSD || 0}}</td>
+                    <td>{{oracleData.uks4.comissionProc || 0}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                </template>
             <tr v-if="dksBranch" @click="ukrManager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.ukr.deptName || 'Данных нет'*/ 'Управление корпоративного развития'}}</td>
@@ -309,33 +318,37 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="ukr">
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.ukr.emplName || 'Данных по менеджеру нет'}}</td>
-                <td>{{oracleData.ukr.DSD || 0}}</td>
-                <td>{{oracleData.ukr.comissionProc || 0}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
+                <template v-if="dksBranch === true">
+                <tr v-if="ukr">
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.ukr.emplName || 'Данных по менеджеру нет'}}</td>
+                    <td>{{oracleData.ukr.DSD || 0}}</td>
+                    <td>{{oracleData.ukr.comissionProc || 0}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                </template>
+            </template>
 
             <!--ДСП-->
+            <template>
             <tr @click="dsp">
                 <td class="empty-td"></td>
                 <td class="text-left">
@@ -415,7 +428,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="almaty" >
+                <template v-if="dspBranch === true">
+                    <tr v-if="almaty" >
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.almaty.emplName || 'Данных по менеджеру нет' }}</td>
                 <td>{{oracleData.almaty.DSD || 0}}</td>
@@ -440,6 +454,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="uapManager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.uap.deptName || 'Данных нет'*/ 'Управление активных продаж'}}</td>
@@ -465,7 +480,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="uap">
+                <template v-if="dspBranch === true">
+                    <tr v-if="uap">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.uap.emplName || 'Данных по менеджеру нет' }}</td>
                 <td>{{oracleData.uap.DSD || 0}}</td>
@@ -490,6 +506,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us1Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us1.deptName || 'Данных нет'*/ 'Управление страхования №1'}}</td>
@@ -515,7 +532,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="us1" >
+                <template v-if="dspBranch === true">
+                    <tr v-if="us1" >
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us1.emplName || 'Данных по менеджеру нет'}}</td>
                 <td>{{oracleData.us1.DSD || 0}}</td>
@@ -540,6 +558,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us2Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us2.deptName || 'Данных нет'*/ 'Управление страхования №2'}}</td>
@@ -565,6 +584,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                <template v-if="dspBranch === true">
             <tr v-if="us2">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us2.emplName || 'Данных по менеджеру нет'}}</td>
@@ -590,6 +610,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us3Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us3.deptName || 'Данных нет'*/ 'Управление страхования №3'}}</td>
@@ -615,7 +636,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="us3">
+                <template v-if="dspBranch === true">
+                    <tr v-if="us3">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us3.emplName || 'Данных по менеджеру нет'}}</td>
                 <td>{{oracleData.us3.DSD || 0}}</td>
@@ -640,6 +662,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us4Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us4.deptName || 'Данных нет'*/ 'Управление страхования №4'}}</td>
@@ -665,7 +688,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="us4">
+                <template v-if="dspBranch === true">
+                    <tr v-if="us4">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us4.emplName || 'Данных по менеджеру нет'}}</td>
                 <td>{{oracleData.us4.DSD || 0}}</td>
@@ -690,6 +714,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us5Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us5.deptName || 'Данных нет'*/ 'Управление страхования №5'}}</td>
@@ -715,7 +740,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="us5">
+                <template v-if="dspBranch === true">
+                     <tr v-if="us5">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us5.emplName || 'Данных по менеджеру нет'}}</td>
                 <td>{{oracleData.us5.DSD || 0}}</td>
@@ -740,6 +766,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us6Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us6.deptName || 'Данных нет'*/ 'Управление страхования №6'}}</td>
@@ -765,7 +792,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="us6">
+                <template v-if="dspBranch === true">
+                    <tr v-if="us6">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us6.emplName || 'Данных по менеджеру нет'}}</td>
                 <td>{{oracleData.us6.DSD || 0}}</td>
@@ -790,6 +818,7 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
             <tr v-if="dspBranch" @click="us7Manager">
                 <td class="empty-td"></td>
                 <td class="text-left">{{/*oracleData.us7.deptName || 'Данных нет'*/ 'Управление страхования №7'}}</td>
@@ -815,7 +844,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="us7">
+                <template v-if="dspBranch === true">
+                    <tr v-if="us7">
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.us7.emplName || 'Данных по менеджеру нет'}}</td>
                 <td>{{oracleData.us7.DSD || 0}}</td>
@@ -840,8 +870,11 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
+            </template>
 
             <!--ДРПО-->
+            <template>
             <tr @click="drpo">
                 <td class="empty-td"></td>
                 <td class="text-left">
@@ -921,7 +954,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
-            <tr v-if="upp" >
+                <template v-if="drpoBranch === true">
+                    <tr v-if="upp" >
                 <td class="empty-td"></td>
                 <td class="text-left">{{oracleData.upp.emplName || 'Данных по менеджеру нет' }}</td>
                 <td>{{oracleData.upp.DSD || 0}}</td>
@@ -946,8 +980,11 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+                </template>
+            </template>
 
             <!--ДП-->
+            <template>
             <tr @click="dp">
                 <td class="empty-td"></td>
                 <td class="text-left">
@@ -1002,192 +1039,204 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+            </template>
 
             <!--Филиалы-->
-            <tr @click="firstBranch">
-                <td class="empty-td"></td>
-                <td class="text-left">
-                    <span class="fa fa-plus" v-show="showBranches === false"></span>
-                    <span class="fa fa-minus" v-show="showBranches === true"></span>
-                    <span class="bold">Филиалы</span>
-                </td>
-                <td>4</td>
-                <td>5</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
-            <!--Актобе-->
-            <tr v-if="showBranches" @click="aktobeManager">
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.aktobe.deptName}}</td>
-                <td>4</td>
-                <td>5</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
-            <tr v-if="aktobe">
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.aktobe.emplName}}</td>
-                <td>{{oracleData.aktobe.DSD}}</td>
-                <td>{{oracleData.aktobe.comissionProc}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
-            <!--Нур-Султан-->
-            <tr v-if="showBranches" @click="nur_sultanManager">
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.nur_sultan.deptName}}</td>
-                <td>4</td>
-                <td>5</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
-            <tr v-if="nur_sultan" >
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.nur_sultan.emplName}}</td>
-                <td>{{oracleData.nur_sultan.DSD}}</td>
-                <td>{{oracleData.nur_sultan.comissionProc}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
-            <!--Шымкент-->
-            <tr v-if="showBranches" @click="shymkentManager">
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.shym.deptName}}</td>
-                <td>4</td>
-                <td>5</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
-            <tr v-if="shymkent" >
-                <td class="empty-td"></td>
-                <td class="text-left">{{oracleData.shym.emplName}}</td>
-                <td>{{oracleData.shym.DSD}}</td>
-                <td>{{oracleData.shym.comissionProc}}</td>
-                <!--Это проценты 'Доля Мар 2021'-->
-                <td>%</td>
-                <!--Это проценты 'Доля Мар 2020'-->
-                <td>%</td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Изм сумма-->
-                <td></td>
-                <td></td>
-                <!--Мар 2021-->
-                <td></td>
-                <!--Мар 2020-->
-                <td></td>
-                <!--Изм %-->
-                <td>%</td>
-                <!--Мар 2021 проценты-->
-                <td>%</td>
-                <!--Мар 2020 проценты-->
-                <td>%</td>
-            </tr>
+            <template>
+                <tr @click="firstBranch">
+                    <td class="empty-td"></td>
+                    <td class="text-left">
+                        <span class="fa fa-plus" v-show="showBranches === false"></span>
+                        <span class="fa fa-minus" v-show="showBranches === true"></span>
+                        <span class="bold">Филиалы</span>
+                    </td>
+                    <td>4</td>
+                    <td>5</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                <!--Актобе-->
+                <tr v-if="showBranches" @click="aktobeManager">
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.aktobe.deptName}}</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                    <template v-if="showBranches === true">
+                        <tr v-if="aktobe">
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.aktobe.emplName}}</td>
+                    <td>{{oracleData.aktobe.DSD}}</td>
+                    <td>{{oracleData.aktobe.comissionProc}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                    </template>
+
+                <!--Нур-Султан-->
+                <tr v-if="showBranches" @click="nur_sultanManager">
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.nur_sultan.deptName}}</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                    <template v-if="showBranches === true">
+                       <tr v-if="nur_sultan" >
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.nur_sultan.emplName}}</td>
+                    <td>{{oracleData.nur_sultan.DSD}}</td>
+                    <td>{{oracleData.nur_sultan.comissionProc}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                    </template>
+
+                <!--Шымкент-->
+                <tr v-if="showBranches" @click="shymkentManager">
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.shym.deptName}}</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                    <template v-if="showBranches === true">
+                       <tr v-if="shymkent" >
+                    <td class="empty-td"></td>
+                    <td class="text-left">{{oracleData.shym.emplName}}</td>
+                    <td>{{oracleData.shym.DSD}}</td>
+                    <td>{{oracleData.shym.comissionProc}}</td>
+                    <!--Это проценты 'Доля Мар 2021'-->
+                    <td>%</td>
+                    <!--Это проценты 'Доля Мар 2020'-->
+                    <td>%</td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Изм сумма-->
+                    <td></td>
+                    <td></td>
+                    <!--Мар 2021-->
+                    <td></td>
+                    <!--Мар 2020-->
+                    <td></td>
+                    <!--Изм %-->
+                    <td>%</td>
+                    <!--Мар 2021 проценты-->
+                    <td>%</td>
+                    <!--Мар 2020 проценты-->
+                    <td>%</td>
+                </tr>
+                    </template>
+            </template>
 
             <!--kupipolis-->
+            <template>
             <tr @click="kupipolisWeb">
                 <td class="empty-td"></td>
                 <td class="text-left">
@@ -1242,6 +1291,8 @@
                 <!--Мар 2020 проценты-->
                 <td>%</td>
             </tr>
+            </template>
+
             <tr>
                 <td class="empty-td"></td>
                 <td>Итог</td>
@@ -1322,7 +1373,7 @@
                 this.uks3 = !this.uks3;
             },
             uks4Manager() {
-                this.uks4 = !this.uks3;
+                this.uks4 = !this.uks4;
             },
             ukrManager() {
                 this.ukr = !this.ukr;
