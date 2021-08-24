@@ -1075,7 +1075,7 @@
                 <!--Актобе-->
                 <tr v-if="showBranches" @click="aktobeManager">
                     <td class="empty-td"></td>
-                    <td class="text-left">{{oracleData.aktobe.deptName}}</td>
+                    <td class="text-left">Актобе</td>
                     <td>4</td>
                     <td>5</td>
                     <!--Это проценты 'Доля Мар 2021'-->
@@ -1099,11 +1099,11 @@
                     <td>%</td>
                 </tr>
                     <template v-if="showBranches === true">
-                        <tr v-if="aktobe">
+                        <tr v-if="aktobe" v-for="(elem, index) in oracleData.aktobe">
                     <td class="empty-td"></td>
-                    <td class="text-left">{{oracleData.aktobe.emplName}}</td>
-                    <td>{{oracleData.aktobe.DSD}}</td>
-                    <td>{{oracleData.aktobe.comissionProc}}</td>
+                    <td class="text-left">{{elem.emplName}}</td>
+                    <td>{{elem.DSD}}</td>
+                    <td>{{elem.comissionProc}}</td>
                     <!--Это проценты 'Доля Мар 2021'-->
                     <td>%</td>
                     <!--Это проценты 'Доля Мар 2020'-->
@@ -1443,7 +1443,7 @@
                 this.polisBranch = !this.polisBranch;
             },
 
-        }
+        },
  }
 
 </script>

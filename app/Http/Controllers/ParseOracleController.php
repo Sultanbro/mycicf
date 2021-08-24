@@ -81,12 +81,14 @@ class ParseOracleController extends Controller
             $arrName = $this->getCollectDeptName($collect['deptIsn']);
             if (!$arrName)
                 continue;
-            $deptCollectData[$arrName] = $collect;
+            //$deptCollectData[$arrName] = $collect;
+            array_push($deptCollectData[$arrName], $collect);
         }
 
         return response()->json([
             'success' => true,
             'data' => $deptCollectData,
         ]);
+
     }
 }
