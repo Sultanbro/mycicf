@@ -429,6 +429,31 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getPrintableOrderDocument($data, $dataParams)
+    {
+        return $this->request('GetPrintableDocument', [
+            'ISN' => $data['ISN'],
+            'TemplateISN' => $data['TemplateISN'],
+            'ClassID' => $data['ClassID'],
+            'Remark' => $data['Remark'],
+            'params' => [
+                'row' => [
+                    [
+                        'paramName' => $dataParams[0]->paramName,
+                        'paramType' => $dataParams[0]->paramType,
+                        'paramValue' => $dataParams[0]->paramValue
+                    ],
+                    [
+                        'paramName' => $dataParams[1]->paramName,
+                        'paramType' => $dataParams[1]->paramType,
+                        'paramValue' => $dataParams[1]->paramValue
+                    ]
+                ]
+            ],
+        ]);
+    }
+
+
     public function getExpressAttributes($product){
         return $this->request('User_CicGetAttrExpress', [
             'Product' => $product,
@@ -684,6 +709,12 @@ class Kias implements KiasServiceInterface
         ]);
     }
 
+    public function getOrSetEorderDocs($doc_isn){
+        return $this->request('User_CicGetOrSetEorderDocs',[
+            'DocISN' => $doc_isn
+        ]);
+    }
+
     /**
      * @param $agrisn
      * @param $agrcalcisn
@@ -898,6 +929,14 @@ class Kias implements KiasServiceInterface
             'Classisn' => $class_isn,
         ]);
     }
+
+    public function resetPassword($subjIsn, $password){
+        return $this->request('User_ResetPassWord', [
+            'SubjectISN' => $subjIsn,
+            'NewPass' => $password
+        ]);
+    }
+
     public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status) {
         return $this->request('User_CicGetMySZ', [
             'EMPLISN' => $emplIsn,

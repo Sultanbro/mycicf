@@ -247,6 +247,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
             Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+            Route::post('/get-printable-order-document', 'EdsController@getPrintableOrderDocument');
             Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
             //DOSSIER
             Route::post('/emplInfo', 'SiteController@postEmplInfo');
@@ -667,6 +668,7 @@ Route::post('/save_fail_statuspo', 'EdsController@saveFailStatusPO');
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
 Route::post('/serviceCenter/notify', 'CoordinationController@serviceCenterNotify');
 Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
