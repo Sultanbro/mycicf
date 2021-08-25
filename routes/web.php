@@ -706,6 +706,10 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+
+    Route::get('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::any('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::post('/qrmanagerreport', 'TestqrController@managerReportQR');
 });
 
 Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
