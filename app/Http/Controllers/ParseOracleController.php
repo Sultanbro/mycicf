@@ -60,12 +60,52 @@ class ParseOracleController extends Controller
         return array_key_exists($deptIsn, self::$departmentNames) ? self::$departmentNames[$deptIsn] : false;
     }
 
+    /*public function dateTypes(){
+        return [
+            'year',
+            'month',
+            'days',
+        ];
+    }*/
+
     public function getOracleCollect(Request $request){
 
-        $first_date = $request->first_year.'-'.'0'.$request->first_period;
-        $firstDate = date('d-M-y',strtotime($first_date));
-        $second_date = $request->second_year.'-'.'0'.$request->second_period;
-        $secondDate = date('d-M-y',strtotime($second_date));
+
+
+            //фильтр даты
+/*            if($request->first_period < '10'){
+                $first_date = $request->days.'-'.'0'.$request->first_period.'-'.$request->first_year;
+            }else {
+                $first_date = $request->days.'-'.$request->first_period.'-'.$request->first_year;
+            }
+            $firstDate = date('d-M-y',strtotime($first_date));
+            if($request->second_period < '10'){
+                $second_date = $request->days.'-'.'0'.$request->second_period.'-'.$request->second_year;
+            }else {
+                $second_date = $request->days.'-'.$request->second_period.'-'.$request->second_year;
+            }
+            $secondDate = date('d-M-y',strtotime($second_date));*/
+
+            switch ($request){
+                case $request->days == null:
+                    //$first_date = '01'.'-'.'0'.$request->first_period.'-'.$request->first_year;
+                    $firstDate = date('M-y',strtotime($first_date));
+                    break;
+                case $request->first_period < '10':
+                    $first_date = $request->days.'-'.'0'.$request->first_period.'-'.$request->first_year;
+                    break;
+
+                case $request->first_period > '10':
+                    $first_date = $request->days.'-'.$request->first_period.'-'.$request->first_year;
+                    break;
+            }
+            $firstDate = date('d-M-y',strtotime($first_date));
+            dd($firstDate);
+
+
+
+
+
 
         $collects = ParseCollects::where('dateAccept', $firstDate)
             ->orderby('id', 'desc')

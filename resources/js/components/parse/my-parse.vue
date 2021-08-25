@@ -60,12 +60,18 @@
                 <div>
                     <div class="flex-row">
                         <div class="mr-10 parse-top-company-select">
-                            <div>
+                            <div v-show="viewType === 'top-company'">
                                 <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
                                     <option v-for="dateType in dateTypes"
                                             :value="dateType.value">
                                         {{dateType.name}}
                                     </option>
+                                </select>
+                            </div>
+                            <div v-show="viewType === 'parse-centras'">
+                                <select id="day" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                    <option selected disabled hidden :value="null">День</option>
+                                    <option v-for="day in days" :value="day">{{day}}</option>
                                 </select>
                             </div>
                         </div>
@@ -196,7 +202,11 @@
                     second_year: null,
                     first_period: null,
                     second_period: null,
+                    days: null
                 },
+                days: ['01', '02', '03', '04', '05', '06', '07', '08', '09', 10, 11,
+                    12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                    22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
                 months: [
                     '',
                     'Январь',
@@ -238,6 +248,7 @@
                         second_year: this.periods.second_year,
                         first_period: this.periods.first_period -1,
                         second_period: this.periods.second_period -1,
+                        days: this.periods.days,
                     }
                 });
                 if(response.data.success) {
