@@ -669,7 +669,8 @@ class Kias implements KiasServiceInterface
     public function getPrintableDocumentList($contract_number){
         return $this->request('User_CicGetPrintableDocumentList', [
             'AgrISN' => $contract_number,
-            'TemplateISN' => ''
+            'TemplateISN' => '',
+            'Doc' => '1'
         ]);
     }
 
