@@ -72,9 +72,17 @@ class ParseOracleController extends Controller
             ->get(['id','emplIsn','deptIsn','deptName', 'emplName','DSD','comissionProc'])
             ->toArray();
 
-        $deptCollectData = [];
+        $collects2 = ParseCollects::where('dateAccept', $secondDate)
+            ->orderby('id', 'desc')
+            ->get(['id','emplIsn','deptIsn','deptName', 'emplName','DSD','comissionProc'])
+            ->toArray();
+
+
+        $deptCollectFirst = [];
+        $deptCollectSecond = [];
         foreach (self::$departmentNames as $departmentName) {
-            $deptCollectData[$departmentName] = [];
+            $deptCollectFirst[$departmentName] = [];
+            $deptCollectSecond[$departmentName] = [];
         }
 
         foreach ($collects as $collect) {
@@ -82,12 +90,27 @@ class ParseOracleController extends Controller
             if (!$arrName)
                 continue;
             //$deptCollectData[$arrName] = $collect;
-            array_push($deptCollectData[$arrName], $collect);
+            array_push($deptCollectFirst[$arrName], $collect);
         }
+
+        foreach ($collects2 as $collect) {
+            $arrName = $this->getCollectDeptName($collect['deptIsn']);
+            if (!$arrName)
+                continue;
+            //$deptCollectData[$arrName] = $collect;
+            array_push($deptCollectSecond[$arrName], $collect);
+        }
+
+//Общая сумма
+/*            $key = 'DSD';
+            $sum = array_sum(array_column($deptCollectData['aktobe'],$key));*/
+
 
         return response()->json([
             'success' => true,
-            'data' => $deptCollectData,
+            'data' => $deptCollectFirst,
+            'data1' => $deptCollectSecond,
+
         ]);
 
     }

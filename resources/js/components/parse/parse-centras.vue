@@ -6,14 +6,15 @@
                 <td colspan="2" class="text-left fs-1_3 pl-5">Сентрас Иншуранс</td>
                 <td></td>
                 <td></td>
-                <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                <td colspan="5" class="text-right border-r-top-16 pt-3">Сборы <i class="fa fa-info-circle ml-3"></i></td>
                 <td></td>
                 <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
             </tr>
             <tr>
                 <td class="empty-td"></td>
                 <td class="text-left">Департамент</td>
-                <td>ДСД</td>
+                <td>ДСД - {{label_first}}</td>
+                <td>ДСД - {{label_second}}</td>
                 <td>АВ</td>
                 <td>Нетто выплаты</td>
                 <td>КВ</td>
@@ -1300,6 +1301,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             </tbody>
         </table>
@@ -1312,9 +1321,11 @@
         name: "parse-centras",
         props: {
             oracleData: Object,
+            periods: Object
         },
         data() {
             return {
+                labels : ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек',],
                 search: '',
                 options: {},
                 typeFilter: 'all',
@@ -1352,7 +1363,6 @@
 
                 /*kupipolis*/
                 polisBranch: false,
-
 
             }
         },
@@ -1444,6 +1454,14 @@
             },
 
         },
+     computed: {
+         label_first(){
+             return this.labels[this.periods.first_period - 2]+ ' ' + this.periods.first_year;
+         },
+         label_second(){
+             return this.labels[this.periods.second_period - 2]+ ' ' + this.periods.second_year;
+         }
+     },
  }
 
 </script>

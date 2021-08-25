@@ -1212,8 +1212,8 @@ class ParseController extends Controller
                 'companyList' => $this->getCompanyListWithId(),
                 'label' => $label,
                 'ranking' => $ranking,
-                'label_first' => $label_first,
-                'label_second' => $label_second,
+                //'label_first' => $label_first,
+                //'label_second' => $label_second,
                 'month' => $this->getMonthLabels(),
                 'quarter' => $this->getQuarterLabels(),
             ]

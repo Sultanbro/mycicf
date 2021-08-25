@@ -17,19 +17,19 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td class="text-left">{{(periods || {}).first_year}}Компания</td>
-                        <td>{{companyData.label_first}}</td>
-                        <td>{{companyData.label_second}}</td>
-                        <td>Доля {{companyData.label_first}}</td>
-                        <td>Доля {{companyData.label_second}}</td>
+                        <td class="text-left">Компания</td>
+                        <td>{{label_first}}</td>
+                        <td>{{label_second}}</td>
+                        <td>Доля {{label_first}}</td>
+                        <td>Доля {{label_second}}</td>
                         <td>Изм %</td>
                         <td>Изм сумма</td>
                         <td></td>
-                        <td>{{companyData.label_first}}</td>
-                        <td>{{companyData.label_second}}</td>
+                        <td>{{label_first}}</td>
+                        <td>{{label_second}}</td>
                         <td>Изм %</td>
-                        <td>{{companyData.label_first}}</td>
-                        <td>{{companyData.label_second}}</td>
+                        <td>{{label_first}}</td>
+                        <td>{{label_second}}</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -83,6 +83,8 @@
         </div>
     </div>
 
+
+
     <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'class'">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
             <div class="width100 table-responsive">
@@ -93,24 +95,24 @@
         <td colspan="2" class="text-left fs-1_3 pl-0">{{parseData.label}}</td>
         <td class="pt-3" @click="changeView('company')"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
         <td class="pt-3" @click="changeView('class')"><span :class="viewType === 'class' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
-        <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+        <td colspan="3" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
         <td></td>
         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
             </tr>
             <tr>
-            <td class="text-left">{{(periods || {}).first_year}}Класс страхования</td>
-            <td>{{parseData.label_first}}</td>
-            <td>{{parseData.label_second}}</td>
-            <td>Доля {{parseData.label_first}}</td>
-            <td>Доля {{parseData.label_second}}</td>
+            <td class="text-left">Классы</td>
+            <td>{{label_first}}</td>
+            <td>{{label_second}}</td>
+            <td>Доля {{label_first}}</td>
+            <td>Доля {{label_second}}</td>
             <td>Изм %</td>
             <td>Изм сумма</td>
             <td class="bg-grayblue"></td>
-            <td>{{parseData.label_first}}</td>
-            <td>{{parseData.label_second}}</td>
+            <td>{{label_first}}</td>
+            <td>{{label_second}}</td>
             <td>Изм %</td>
-            <td>{{parseData.label_first}}</td>
-            <td>{{parseData.label_second}}</td>
+            <td>{{label_first}}</td>
+            <td>{{label_second}}</td>
             </tr>
         </thead>
         <tbody>
@@ -160,13 +162,8 @@
         name: "top-company",
         data() {
             return {
+                labels : ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек',],
                 viewType: 'company',
-                periods: {
-                    first_year: null,
-                    second_year: null,
-                    first_period: null,
-                    second_period: null,
-                },
                 productArr:[],
                 productKey:[],
                 productValue:[],
@@ -200,6 +197,7 @@
         props: {
             companyData: Object,
             parseData: Object,
+            periods: Object
         },
         methods: {
             changeView(type) {
@@ -371,6 +369,13 @@
             payoutClassSecond(){
                 return this.PayoutSecond[0] + this.PayoutSecond[10] + this.PayoutSecond[14];
             },
+
+            label_first(){
+                return this.labels[this.periods.first_period - 2]+ ' ' + this.periods.first_year;
+            },
+            label_second(){
+                return this.labels[this.periods.second_period - 2]+ ' ' + this.periods.second_year;
+            }
         },
     }
 </script>
