@@ -449,7 +449,7 @@
 <!--                            </div>-->
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div>
-                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.value)">{{result.value}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -484,6 +484,7 @@
         <document-modal
             :coordination="coordination"
             :isn="listDocIsn"
+            :listDocId="listDocId"
             :changeMatch="changeMatch"
         >
         </document-modal>
@@ -531,6 +532,7 @@ export default {
             button: null,
             result: null,
             listDocIsn: null,
+            listDocId: '',
             coordination: {},
             saveDoc: true,
             type: 1,
@@ -690,7 +692,7 @@ export default {
             }
             let data = {
                 results: this.results,
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
             }
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
@@ -727,9 +729,11 @@ export default {
                         this.results.status = response.data.status;
                         this.results.stage = response.data.stage;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
                                 this.results.resDop[i].val = this.listDocIsn
+                                this.results.resDop[i].value = response.data.listDocId ? response.data.listDocId : ''
                             }
                         }
                         this.addChange = false;
@@ -817,10 +821,12 @@ export default {
                         this.results.stage = response.data.stage
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         if(this.listDocIsn.length > 0){
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
                                     this.results.resDop[i].val = this.listDocIsn
+                                    this.results.resDop[i].value = this.listDocId
                                 }
                             }
                         }
@@ -866,13 +872,14 @@ export default {
         //         });
         // },
         OpenModal(doc) {
-            if(doc === this.listDocIsn){
+            if(doc === this.listDocId){
                 this.preloader(true);
                 this.changeMatch.status = false;
-                if(this.listDocIsn === null){
+                if(this.listDocId === null){
                     for(let i=0; i<this.results.result.length; i++){
                         if(this.results.result[i].fullname === 'Лист согласования'){
                             this.listDocIsn = this.results.result[i].val
+                            this.listDocId = this.results.result[i].value
                         }
                     }
                 }

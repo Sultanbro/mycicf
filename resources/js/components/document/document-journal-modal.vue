@@ -31,10 +31,10 @@
 <!--                        </div>-->
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                                <button class="btn btn-info" @click="searchDocument"><i class="fa fa-check">Поиск</i></button>
+                                <button class="btn btn-info" @click="searchDocument">Поиск</button>
                         </div>
                         <div class="tex">
-                            <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>
+                            <button class="btn btn-success" @click="getInfo">Ok</button>
                         </div>
                         <div v-show="loading" class="loading-ellipsis">
                             <div></div>
@@ -62,7 +62,7 @@
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-3" v-if="results.classisn !== '1287701'">
+                            <div class="col-md-3" v-show="results.classisn !== '1287701'">
                                 <label>Тип документа:</label>
                                 <div>
                                     <treeselect v-model="document.classIsn" placeholder="Не выбрано"
@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3" v-if="results.classisn === '1287701'">
+                            <div class="col-md-3" v-show="results.classisn === '1287701'">
                                 <label>Тип документа:</label>
                                 <div>
                                     <treeselect v-model="document.classIsn" placeholder="Не выбрано"
@@ -112,11 +112,25 @@
                             </div>
                         </div>
                         <div class="row justify-content-between pt-2">
-                            <div class="col-md-3">
+                            <div v-if="results['classisn'] != '1287701'" class="col-md-3">
                                 <label>Контрагент:</label>
                                 <div>
                                     <treeselect v-model="document.subjIsn" placeholder="Не выбрано" :multiple="false"
                                                 :options="userList" :disable-branch-nodes="true"/>
+                                </div>
+                            </div>
+                            <div v-if="results['classisn'] == '1287701'" class="col-md-3">
+                                <label>Контрагент:</label>
+                                <div class="input-group">
+                                    <input v-model="contragent.fullName" @click="OpenModal('Контрагент')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Контрагент')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Контрагент')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -230,6 +244,16 @@
                 </div>
             </div>
         </div>
+        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+        <div v-if="openCounterpartyModal">
+            <counterparty-journal-modal
+                :contragent="contragent"
+                :recordingCounterparty="recordingCounterparty"
+                :results="results"
+                :counterparty="counterparty"
+            >
+            </counterparty-journal-modal>
+        </div>
     </div>
 </template>
 
@@ -239,17 +263,18 @@ import 'vue2-datepicker/index.css';
 import MaskedInput from 'vue-text-mask';
 import 'vue2-datepicker/locale/ru';
 import moment from 'moment'
+import CounterpartyJournalModal from "./counterparty-journal-modal";
 export default {
     name: "document-journal-modal",
     props: {
         results: Object,
-        recordingCounterparty: Object,
         recordingDocument: {},
         documentName: {},
         application: {},
         bypassSheet: {},
         contractAhd: {},
         documentBase: {},
+        openCounterpartyModal: false,
     },
     data() {
         return {
@@ -259,6 +284,7 @@ export default {
                 extId: '',
                 status: '',
                 subjIsn: '',
+                subjName: '',
                 docDateFrom: moment(new Date()).format('DD.MM.YYYY'),
                 docDateTo: '',
                 emplIsn: '',
@@ -281,6 +307,15 @@ export default {
             stagePassages: [],
             index: '',
             searchingDocument: {},
+            contragent: {
+                fullName: '',
+                isn: '',
+            },
+            recordingCounterparty: {type: ''},
+            counterparty: {
+                isn: '',
+                fullName: '',
+            },
         }
     },
     created() {
@@ -293,6 +328,10 @@ export default {
     methods: {
         searchDocument() {
             this.loading = true;
+            if(this.contragent.fullName != '' && this.contragent.isn != ''){
+                this.document.subjName = this.contragent.fullName;
+                this.document.isn = this.contragent.isn
+            }
             let data = {
                 document: this.document,
             }
@@ -384,6 +423,21 @@ export default {
         close() {
             this.$parent.$refs.modalDocument.click();
         },
+        OpenModal(doc) {
+            this.preloader(true);
+            if(doc === 'Контрагент'){
+                this.openCounterpartyModal = true;
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalCounterparty.click();
+            }
+        },
+        clearInfo(data){
+            if(data === 'Контрагент'){
+                this.contragent.fullName = ''
+                this.contragent.isn = ''
+            }
+        },
         preloader(show){
             if(show){
                 document.getElementById('preloader').style.display = 'flex';
@@ -395,6 +449,7 @@ export default {
         }
     },
     components: {
+        CounterpartyJournalModal,
         DatePicker,
         MaskedInput,
     }

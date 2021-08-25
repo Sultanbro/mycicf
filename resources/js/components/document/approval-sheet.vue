@@ -508,7 +508,7 @@
                                 </div>
                                 <div v-else-if="result.fullname === 'Лист согласования'">
                                     <div>
-                                        <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                        <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.value)">{{result.value}}</div>
                                     </div>
                                 </div>
                                 <div v-else-if="result.fullname === 'Список договоров  для внесение изменение'">
@@ -638,6 +638,7 @@
         <document-modal
             :coordination="coordination"
             :isn="listDocIsn"
+            :listDocId="listDocId"
             :changeMatch="changeMatch"
         >
         </document-modal>
@@ -710,6 +711,7 @@
                 button: null,
                 result: null,
                 listDocIsn: null,
+                listDocId: '',
                 coordination: {},
                 saveDoc: true,
                 required: false,
@@ -960,7 +962,7 @@
                 }
                 let data = {
                     results: this.results,
-                    docIsn: this.docIsn,
+                    docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
                 }
                 this.axios.post('/document/saveDocument', data)
                     .then((response) => {
@@ -1002,9 +1004,11 @@
                             this.results.status = response.data.status;
                             this.results.stage = response.data.stage;
                             this.listDocIsn = response.data.DOCISN
+                            this.listDocId = response.data.listDocId;
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
                                     this.results.resDop[i].val = response.data.DOCISN
+                                    this.results.resDop[i].value = response.data.listDocId ? response.data.listDocId : ''
                                 }
                             }
                             this.extraLoading = false;
@@ -1111,10 +1115,12 @@
                             this.toForm = false;
                             this.fillIn = false;
                             this.listDocIsn = response.data.DOCISN
+                            this.listDocId =response.data.listDocId;
                             if(this.listDocIsn.length > 0){
                                 for(let i=0; i<this.results.resDop.length; i++){
                                     if(this.results.resDop[i].fullname === 'Лист согласования'){
                                         this.results.resDop[i].val = this.listDocIsn
+                                        this.results.resDop[i].value = this.listDocId
                                     }
                                 }
                             }
@@ -1134,13 +1140,14 @@
                     });
             },
             OpenModal(doc) {
-                if(doc === this.listDocIsn){
+                if(doc === this.listDocId){
                     this.preloader(true);
                     this.changeMatch.status = false;
-                    if(this.listDocIsn === null){
+                    if(this.listDocId === null){
                         for(let i=0; i<this.results.result.length; i++){
                             if(this.results.result[i].fullname === 'Лист согласования'){
                                 this.listDocIsn = this.results.result[i].val
+                                this.listDocId = this.results.result[i].value
                             }
                         }
                     }
@@ -1155,30 +1162,26 @@
                     });
                 }
                 if(doc === this.results.contragent.fullname){
-                    this.preloader(false);
                     this.recordingCounterparty.type = doc
                     this.$refs.modalCounterparty.click();
                 }
                 if (doc === 'Куратор агента (предыдущий, при перезакреплении)') {
-                    this.preloader(false);
                     this.recordingCounterparty.type = doc
                     this.$refs.modalCounterparty.click();
                 }
                 if (doc === 'Список договоров  для внесение изменение') {
-                    // if(this.contractList.fullName === ''){
-                    //     alert('Пока Вы не создали Приложение СЗ. На внесение изменений в договор!')
-                    //     return
-                    // }
-                    this.preloader(false);
+                    if(this.contractList.fullName === ''){
+                        alert('Пока Вы не создали Приложение СЗ. На внесение изменений в договор!')
+                        return
+                    }
                     this.recordingCounterparty.type = doc
                     this.$refs.modalContractList.click();
                 }
                 if (doc === 'Список договоров  для аннулирования/прекращения') {
-                    this.preloader(false);
-                    // if(this.contractList.fullName === ''){
-                    //     alert('Пока Вы не создали Приложение СЗ. Список договоров для аннулирования/прекращения!')
-                    //     return
-                    // }
+                    if(this.contractList.fullName === ''){
+                        alert('Пока Вы не создали Приложение СЗ. Список договоров для аннулирования/прекращения!')
+                        return
+                    }
                     this.recordingCounterparty.type = doc
                     this.$refs.modalContractListAnnul.click();
                 }

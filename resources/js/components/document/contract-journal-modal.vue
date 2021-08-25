@@ -26,10 +26,10 @@
                         </div>
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                            <button class="btn btn-info" @click="searchContract"><i class="fa fa-check">Поиск</i></button>
+                            <button class="btn btn-info" @click="searchContract">Поиск</button>
                         </div>
                         <div class="tex">
-                            <button class="btn btn-success"><i class="fa fa-check">Ok</i></button>
+                            <button class="btn btn-success">Ok</button>
                         </div>
                         <div v-show="loading" class="loading-ellipsis">
                             <div></div>

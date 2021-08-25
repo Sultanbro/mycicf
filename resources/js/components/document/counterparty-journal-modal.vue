@@ -26,10 +26,10 @@
                         </div>
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                            <button class="btn btn-info" @click="searchCounterparty"><i class="fa fa-check">Поиск</i></button>
+                            <button class="btn btn-info" @click="searchCounterparty">Поиск</button>
                         </div>
                         <div class="tex">
-                            <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>
+                            <button class="btn btn-success" @click="getInfo">Ok</button>
                         </div>
                         <div v-show="loading" class="loading-ellipsis">
                             <div></div>
@@ -167,6 +167,7 @@ export default {
             type: '',
         },
         contragent: {},
+        contragentAhd: {},
         previousCuratorAgent: {},
         recordingCounterparty: Object ,
         courtName: {},
@@ -262,11 +263,18 @@ export default {
         getInfo(){
             this.loading = true;
             if (this.recordingCounterparty.type === 'Контрагент'){
-                this.results.contragent.value = this.counterparty.fullName
-                this.results.contragent.subjIsn = this.counterparty.isn
+                if(this.results['classisn'] != '1287701'){
+                    this.results.contragent.value = this.counterparty.fullName
+                    this.results.contragent.subjIsn = this.counterparty.isn
+                }
                 this.contragent.fullName = this.counterparty.fullName
                 this.contragent.isn = this.counterparty.isn
-            } else if(this.recordingCounterparty.type === 'Куратор агента (предыдущий, при перезакреплении)'){
+            } else if (this.recordingCounterparty.type === 'КонтрагентАхд'){
+                this.results.contragent.value = this.counterparty.fullName
+                this.results.contragent.subjIsn = this.counterparty.isn
+                this.contragentAhd.fullName = this.counterparty.fullName
+                this.contragentAhd.isn = this.counterparty.isn
+            }else if(this.recordingCounterparty.type === 'Куратор агента (предыдущий, при перезакреплении)'){
                 for(let i=0; i<this.results.resDop.length; i++){
                     if(this.results.resDop[i].fullname === this.recordingCounterparty.type){
                         this.previousCuratorAgent.fullName = this.counterparty.fullName

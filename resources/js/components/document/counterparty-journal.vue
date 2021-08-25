@@ -295,7 +295,7 @@
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div>
-                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.value)">{{result.value}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -324,6 +324,7 @@
             :coordination="coordination"
             :isn="listDocIsn"
             :changeMatch="changeMatch"
+            :listDocId="listDocId"
         >
         </document-modal>
         <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
@@ -418,6 +419,7 @@ export default {
             idShow: false,
             isn: '0',
             delete: '0',
+            listDocId: '',
         }
     },
     created() {
@@ -600,17 +602,9 @@ export default {
                     }
                 }
             }
-            // if(this.agent.fullname !== ''){
-            //     for(let i=0; i<this.results.docrows.length; i++){
-            //         if(this.results.docrows[i].fieldname === this.agent.type){
-            //             this.results.docrows[i].value_name = this.agent.fullName
-            //             this.results.docrows[i].value = this.agent.isn
-            //         }
-            //     }
-            // }
             let data = {
                 results: this.results,
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
             }
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
@@ -653,9 +647,11 @@ export default {
                         this.results.status = response.data.status;
                         this.results.stage = response.data.stage;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
                                 this.results.resDop[i].val = response.data.DOCISN
+                                this.results.resDop[i].value = response.data.listDocId ? response.data.listDocId : ''
                             }
                         }
                         this.extraLoading = false;
@@ -755,10 +751,12 @@ export default {
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         if(this.listDocIsn.length > 0){
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
                                     this.results.resDop[i].val = this.listDocIsn
+                                    this.results.resDop[i].value = this.listDocId
                                 }
                             }
                         }
@@ -777,41 +775,15 @@ export default {
                 .catch(function (error) {
                 });
         },
-        // sendOut(){
-        //     this.loading = true;
-        //     this.results.status = 2522;
-        //     let data = {
-        //         docIsn: this.listDocIsn,
-        //         type: this.type,
-        //         results: this.results,
-        //     }
-        //     this.axios.post('/sendOut', data)
-        //         .then((response) => {
-        //             if(response.data.success) {
-        //                 this.results.status = response.data.status;
-        //                 this.results.stage = response.data.stage;
-        //                 this.loading = false;
-        //                 this.addChange = true;
-        //                 this.sendOutForm = false;
-        //                 this.saveDoc = false;
-        //             } else {
-        //                 this.addChange = false;
-        //                 this.loading = false;
-        //             }
-        //             this.addChange = true;
-        //         })
-        //         .catch(function (error) {
-        //             //alert(error.response);
-        //         });
-        // },
         OpenModal(doc) {
             this.preloader(true);
             this.changeMatch.status = false;
-            if(doc === this.listDocIsn){
-                if(this.listDocIsn === null){
+            if(doc === this.listDocId){
+                if(this.listDocId === null){
                     for(let i=0; i<this.results.result.length; i++){
                         if(this.results.result[i].fullname === 'Лист согласования'){
                             this.listDocIsn = this.results.result[i].val
+                            this.listDocId = this.results.result[i].value
                         }
                     }
                 }

@@ -21,7 +21,7 @@
                     </div>
                     <div class="flex-row jc-sb flex-wrap">
                         <div class="offset-md-6">
-                            <button class="btn btn-success" @click="getInfo"><i class="fa fa-check">Ok</i></button>
+                            <button class="btn btn-success" @click="getInfo">Ok</button>
                         </div>
                     </div>
                     <div class="col-md-6">

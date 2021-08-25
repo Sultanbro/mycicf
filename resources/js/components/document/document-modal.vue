@@ -215,6 +215,7 @@
             changeMatch: Object,
             coordination: Object,
             isn: String,
+            listDocId: String,
         },
         mounted() {
             //...

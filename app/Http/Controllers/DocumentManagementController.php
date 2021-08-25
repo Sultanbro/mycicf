@@ -79,7 +79,6 @@ class DocumentManagementController extends Controller
                 'CLASSISN' => $request->isn ? $request->isn : '',
                 'DOCISN' => $request->docisn ? $request->docisn : '',
             ]);
-//        dd($show);
             $result = [];
             $contragent = [
                 'fullname' => 'Контрагент',
@@ -201,8 +200,9 @@ class DocumentManagementController extends Controller
                     'results' => $results,
                     'success' => true,
                 ];
-                return response()->json($responseData);
-//                return view('document.management.show', compact('results'));
+//                dd($responseData);
+//                return response()->json($responseData);
+                return view('document.management.show', compact('results'));
             }else{
                 return view('document.management.show', compact('results'));
             }
@@ -1288,6 +1288,7 @@ class DocumentManagementController extends Controller
         $button = $request->button;
         if(isset($request->docIsn)){
             $buttonClick = $kias->buttonClick($docIsn, $button);
+//            dd($buttonClick);
             if($buttonClick->error){
                 $success = false;
                 $error .= (string)$buttonClick->error->fulltext;
@@ -1299,6 +1300,7 @@ class DocumentManagementController extends Controller
             }
             if(isset($buttonClick->DOCISN)){
                 $listDocIsn = get_object_vars($buttonClick->DOCISN)[0];
+                $listDocId = (string)$buttonClick->DOCID;
                 if(!empty($listDocIsn)){
                     $status = 'На подписи';
                     $stage = 'На согласовании';
@@ -1307,6 +1309,7 @@ class DocumentManagementController extends Controller
                 }
                 return response()->json([
                     'DOCISN' => $listDocIsn,
+                    'listDocId' => $listDocId,
                     'status' => $status,
                     'stage' => $stage,
                     'success' => true,
@@ -1317,6 +1320,7 @@ class DocumentManagementController extends Controller
                 $stage = 'В работе';
                 return response()->json([
                     'DOCISN' => $listDocIsn,
+                    'listDocId' => '',
                     'status' => $status,
                     'stage' => $stage,
                     'success' => true,
@@ -1327,6 +1331,7 @@ class DocumentManagementController extends Controller
             $buttonClick = $kias->buttonClick($docIsn, $button);
             return response()->json([
                 'DOCISN' => '',
+                'listDocId' => '',
                 'success' => true,
             ]);
         }
@@ -1423,8 +1428,9 @@ class DocumentManagementController extends Controller
         $error = "";
         $result = [];
         $result1 = [];
-        $searchingDocument = $kias->documentSearch($request['document']['id'], $request['document']['extId'], $request['document']['classIsn'], $request['document']['docDateFrom'], $request['document']['docDateTo'], $request['document']['showCancelled'],
+        $searchingDocument = $kias->documentSearch($request['document']['id'], $request['document']['extId'], $request['document']['classIsn'], $request['document']['docDateFrom'], $request['document']['docDateTo'], 'Y',
             $request['document']['subjIsn'], $request['document']['deptIsn'], $request['document']['emplIsn'], $request['document']['amountFrom'], $request['document']['amountTo'], $request['document']['currIsn'], '', '');
+        dd($searchingDocument);
         if($searchingDocument->error) {
             $success = false;
             $error .= (string)$searchingDocument->error->text;

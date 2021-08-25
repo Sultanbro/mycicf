@@ -15,11 +15,26 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
+                                <div v-if="results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
-                                    <div class="col-md-8">
-                                        <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
-                                                    :options="userList" :disable-branch-nodes="true"/>
+                                    <div class="col-8" v-if="results['classisn'] !== '1287701'">
+                                        <div class="col-md-8">
+                                            <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
+                                                        :options="userList" :disable-branch-nodes="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-8" v-if="results['classisn'] === '1287701'">
+                                        <div class="col-md-12 input-group">
+                                            <input v-model="results.contragent.value ? results.contragent.value : contragentAhd.fullName" @click="OpenModal('КонтрагентАхд')" type="text" class="form-control">
+                                            <div class="input-group-append">
+                                                <button type="submit" class="btn-light" @click="OpenModal('КонтрагентАхд')">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                                <button type="submit" class="btn-light" @click="clearInfo('КонтрагентАхд')">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +273,6 @@
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
-                                <!--                                                :key="`${index}-${docrow.value}-${3}`"-->
                                 <div v-if="docrow.fieldname === 'Дата последнего рабочего дня'">
                                     <input class="form-control"
                                            type="tel"
@@ -415,7 +429,7 @@
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <button v-show="(results.docParam.button1caption === 'Сформировать лист согласования' && results.docParam.showbutton1 === 'Y') || (results.docParam.button2caption === 'Сформировать лист согласования' && results.docParam.showbutton2 === 'Y')
                                         || (results.docParam.button3caption === 'Сформировать лист согласования' && results.docParam.showbutton3 === 'Y')"
-                                v-if="toForm" class="btn btn-primary btn-block2" :disabled="!addChange" @click="buttonClick()">
+                                v-if="toForm" class="btn btn-primary btn-block2" @click="buttonClick()">
                             Сформировать лист согласования
                         </button>
                         <button v-if="saveDoc" class="btn btn-success btn-block2" @click="saveDocument()">
@@ -424,7 +438,8 @@
                     </div>
                     <div class="col-md-4">
                         <i v-if="extraLoading" class="fas fa-spinner fa-spin"></i>
-                        <button v-show="(results.docParam.button2caption === 'Внести изменения в СЗ' && results.docParam.showbutton2 === 'Y') || (results.docParam.button3caption === 'Внести изменения в СЗ' && results.docParam.showbutton3 === 'Y')"
+                        <button v-show="(results.docParam.button2caption === 'Внести изменения в СЗ' && results.docParam.showbutton2 === 'Y') || (results.docParam.button3caption === 'Внести изменения в СЗ' && results.docParam.showbutton3 === 'Y')
+                            || (results.docParam.button2caption === 'Внести изменения' && results.docParam.showbutton2 === 'Y')"
                                 v-if="addChange" class="btn btn-danger btn-block2" @click="addChangeForm()">
                             Внести изменения в СЗ
                         </button>
@@ -519,7 +534,7 @@
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div>
-                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.value)">{{result.value}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Документ'">
@@ -574,19 +589,19 @@
                                     </div>
                                 </div>
                             </div>
-<!--                            <div v-else-if="result.fullname === 'Документ основание'">-->
-<!--                                <div class="input-group">-->
-<!--                                    <input v-model="result.value ? result.value : documentBase.fullName" @click="OpenModal('Документ основание')" type="text" class="form-control">-->
-<!--                                    <div class="input-group-append">-->
-<!--                                        <button type="submit" class="btn-light" @click="OpenModal('Документ основание')">-->
-<!--                                            <i class="fa fa-search"></i>-->
-<!--                                        </button>-->
-<!--                                        <button type="submit" class="btn-light" @click="clearInfo('Документ основание')">-->
-<!--                                            <i class="fa fa-times"></i>-->
-<!--                                        </button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div v-else-if="result.fullname === 'Документ основание'">
+                                <div class="input-group">
+                                    <input v-model="result.value ? result.value : documentBase.fullName" @click="OpenModal('Документ основание')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Документ основание')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Документ основание')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
                                 <div>
                                     <input type="text" v-model="result.val"
@@ -675,7 +690,7 @@
                             </div>
                             <div v-else-if="result.fullname === 'Вид затрат' || result.fullname === 'Вид доходов/затрат'">
                                 <treeselect v-model="result.val" :disabled="addChange"
-                                            :multiple="false" :options="costTypes" :disable-branch-nodes="true" :placeholder="get"/>
+                                            :multiple="false" :options="costTypes" :disable-branch-nodes="true"/>
                             </div>
                             <div v-else-if="result.fullname === 'Группа подразделений'">
                                 <treeselect v-model="result.val" :multiple="false" :options="unitGroups" :disabled="addChange"/>
@@ -776,6 +791,7 @@
         <document-modal
             :coordination="coordination"
             :isn="listDocIsn"
+            :listDocId="listDocId"
             :changeMatch="changeMatch"
         >
         </document-modal>
@@ -794,6 +810,7 @@
             :application="application"
             :contractAhd="contractAhd"
             :documentBase="documentBase"
+            :openCounterpartyModal="openCounterpartyModal"
         >
         </document-journal-modal>
         <button v-show="false" ref="modalContract" type="button" data-toggle="modal" data-target="#contractJournal"></button>
@@ -803,15 +820,28 @@
             :contractName="contractName"
         >
         </contract-journal-modal>
-        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
-        <counterparty-journal-modal
-            :counterparty="counterparty"
-            :recordingCounterparty="recordingCounterparty"
-            :results="results"
-            :courtName="courtName"
-            :beneficiary="beneficiary"
-        >
-        </counterparty-journal-modal>
+        <div v-if="recordingCounterparty.type === 'КонтрагентАхд'">
+            <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+            <counterparty-journal-modal
+                :counterparty="counterparty"
+                :recordingCounterparty="recordingCounterparty"
+                :contragentAhd="contragentAhd"
+                :results="results"
+            >
+            </counterparty-journal-modal>
+        </div>
+        <div v-if="recordingCounterparty.type !== 'КонтрагентАхд'">
+            <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+            <counterparty-journal-modal
+                :counterparty="counterparty"
+                :recordingCounterparty="recordingCounterparty"
+                :contragentAhd="contragentAhd"
+                :results="results"
+                :courtName="courtName"
+                :beneficiary="beneficiary"
+            >
+            </counterparty-journal-modal>
+        </div>
     </div>
 </template>
 
@@ -856,6 +886,7 @@ export default {
             button: null,
             result: null,
             listDocIsn: null,
+            listDocId: '',
             coordination: {},
             saveDoc: true,
             required: false,
@@ -889,6 +920,10 @@ export default {
                 fullName: '',
                 isn: '',
                 type: '',
+            },
+            contragentAhd: {
+                fullName: '',
+                isn: '',
             },
             isn: '0',
             delete: '0',
@@ -932,6 +967,7 @@ export default {
             },
             notSelected: "Не выбрано",
             taxAuthorityCode: [],
+            openCounterpartyModal: false,
         }
     },
     created() {
@@ -1139,7 +1175,7 @@ export default {
             this.loading = true;
             let data = {
                 results: this.results,
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
             }
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
@@ -1164,6 +1200,7 @@ export default {
         addChangeForm() {
             this.extraLoading = true
             if(this.results.docParam.button2caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
+            else if(this.results.docParam.button2caption === 'Внести изменения' && this.results.docParam.showbutton2 === 'Y'){ this.button = 'BUTTON2' }
             else if(this.results.docParam.button3caption === 'Внести изменения в СЗ' && this.results.docParam.showbutton3 === 'Y'){ this.button = 'BUTTON3' }
             let data = {
                 docIsn: this.docIsn ? this.docIsn: this.results.docIsn,
@@ -1175,9 +1212,11 @@ export default {
                         this.results.status = response.data.status
                         this.results.stage = response.data.stage
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
                                 this.results.resDop[i].val = response.data.DOCISN
+                                this.results.resDop[i].value = response.data.listDocId ? response.data.listDocId : ''
                             }
                         }
                         this.extraLoading = false
@@ -1260,10 +1299,12 @@ export default {
                         this.results.stage = response.data.stage
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         if(this.listDocIsn.length > 0){
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
                                     this.results.resDop[i].val = this.listDocIsn
+                                    this.results.resDop[i].value = this.listDocId
                                 }
                             }
                         }
@@ -1282,13 +1323,14 @@ export default {
                 });
         },
         OpenModal(doc) {
-            if(doc === this.listDocIsn){
+            if(doc === this.listDocId){
                 this.preloader(true);
                 this.changeMatch.status = false;
-                if(this.listDocIsn === null){
+                if(this.listDocId === null){
                     for(let i=0; i<this.results.result.length; i++){
                         if(this.results.result[i].fullname === 'Лист согласования'){
                             this.listDocIsn = this.results.result[i].val
+                            this.listDocId = this.results.result[i].value
                         }
                     }
                 }
@@ -1333,40 +1375,56 @@ export default {
                 this.preloader(false);
                 this.recordingCounterparty.type = doc
                 this.$refs.modalCounterparty.click();
+            } else if(doc === 'КонтрагентАхд'){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalCounterparty.click();
             }
         },
         clearInfo(data){
-            for(let i=0; i<this.results.resDop.length; i++){
-                if(data === 'Договор АХД' && this.results.resDop[i].fullname === 'Договор АХД'){
-                    this.contractAhd.fullName = ''
-                    this.contractAhd.isn = ''
-                    this.results.resDop[i].value = ''
-                    this.results.resDop[i].val = ''
-                } else if(data === 'Согласованная котировка ДА' && this.results.resDop[i].fullname === 'Согласованная котировка ДА'){
-                    this.results.resDop[i].value = ''
-                    this.results.resDop[i].val = ''
-                    this.agreedQuotation.fullName = ''
-                    this.agreedQuotation.isn = ''
-                } else if(data === 'Приложение' && this.results.resDop[i].fullname === 'Приложение'){
-                    this.results.resDop[i].value = ''
-                    this.results.resDop[i].val = ''
-                    this.application.fullName = ''
-                    this.application.isn = ''
-                } else if(data === 'Номер договора' && this.results.resDop[i].fullname === 'Номер договора'){
-                    this.results.resDop[i].value = ''
-                    this.results.resDop[i].val = ''
-                    this.contractName.fullName = ''
-                    this.contractName.isn = ''
-                } else if(data === 'Наименование суда' && this.results.resDop[i].fullname === 'Наименование суда'){
-                    this.results.resDop[i].value = ''
-                    this.results.resDop[i].val = ''
-                    this.application.fullName = ''
-                    this.application.isn = ''
-                } else if(data === 'Бенефициар' && this.results.resDop[i].fullname === 'Бенефициар'){
-                    this.results.resDop[i].value = ''
-                    this.results.resDop[i].val = ''
-                    this.application.fullName = ''
-                    this.application.isn = ''
+            if(data === 'КонтрагентАхд'){
+                this.contragentAhd.fullName = ''
+                this.contragentAhd.isn = ''
+                this.results.contragent.value = ''
+                this.results.contragent.subjIsn = ''
+            }else{
+                for(let i=0; i<this.results.resDop.length; i++){
+                    if(data === 'Договор АХД' && this.results.resDop[i].fullname === 'Договор АХД'){
+                        this.contractAhd.fullName = ''
+                        this.contractAhd.isn = ''
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                    } else if(data === 'Согласованная котировка ДА' && this.results.resDop[i].fullname === 'Согласованная котировка ДА'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.agreedQuotation.fullName = ''
+                        this.agreedQuotation.isn = ''
+                    } else if(data === 'Приложение' && this.results.resDop[i].fullname === 'Приложение'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.application.fullName = ''
+                        this.application.isn = ''
+                    } else if(data === 'Номер договора' && this.results.resDop[i].fullname === 'Номер договора'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.contractName.fullName = ''
+                        this.contractName.isn = ''
+                    } else if(data === 'Наименование суда' && this.results.resDop[i].fullname === 'Наименование суда'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.application.fullName = ''
+                        this.application.isn = ''
+                    } else if(data === 'Бенефициар' && this.results.resDop[i].fullname === 'Бенефициар'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.application.fullName = ''
+                        this.application.isn = ''
+                    } else if(data === 'Документ основание' && this.results.resDop[i].fullname === 'Документ основание'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.documentBase.fullName = ''
+                        this.documentBase.isn = ''
+                    }
                 }
             }
         },
@@ -1377,7 +1435,6 @@ export default {
                 document.getElementById('preloader').style.display = 'none';
             }
         },
-        // }, :key="`${index}-${docrow.value}`"
     },
     computed: {
         orderedDocrows: function () {

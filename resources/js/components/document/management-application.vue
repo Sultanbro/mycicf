@@ -475,7 +475,7 @@
                             </div>
                             <div v-else-if="result.fullname === 'Лист согласования'">
                                 <div>
-                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.val)">{{result.val}}</div>
+                                    <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.value)">{{result.value}}</div>
                                 </div>
                             </div>
                             <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
@@ -510,6 +510,7 @@
         <document-modal
             :coordination="coordination"
             :isn="listDocIsn"
+            :listDocId="listDocId"
             :changeMatch="changeMatch"
         >
         </document-modal>
@@ -551,6 +552,7 @@ export default {
             button: null,
             result: null,
             listDocIsn: null,
+            listDocId: '',
             coordination: {},
             saveDoc: true,
             required: false,
@@ -720,7 +722,7 @@ export default {
             }
             let data = {
                 results: this.results,
-                docIsn: this.docIsn,
+                docIsn: this.docIsn ? this.docIsn : this.results.docIsn,
             }
             this.axios.post('/document/saveDocument', data)
                 .then((response) => {
@@ -760,9 +762,11 @@ export default {
                         this.results.status = response.data.status;
                         this.results.stage = response.data.stage;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         for(let i=0; i<this.results.resDop.length; i++){
                             if(this.results.resDop[i].fullname === 'Лист согласования'){
                                 this.results.resDop[i].val = response.data.DOCISN
+                                this.results.resDop[i].value = response.data.listDocId ? response.data.listDocId : ''
                             }
                         }
                         this.extraLoading = false;
@@ -856,10 +860,12 @@ export default {
                         this.toForm = false;
                         this.fillIn = false;
                         this.listDocIsn = response.data.DOCISN
+                        this.listDocId = response.data.listDocId;
                         if(this.listDocIsn.length > 0){
                             for(let i=0; i<this.results.resDop.length; i++){
                                 if(this.results.resDop[i].fullname === 'Лист согласования'){
                                     this.results.resDop[i].val = this.listDocIsn
+                                    this.results.resDop[i].value = this.listDocId
                                 }
                             }
                         }
@@ -910,14 +916,15 @@ export default {
             console.log(this.listDocIsn);
             this.preloader(true);
             this.changeMatch.status = false;
-            // console.log(this.listDocIsn)
-            if(this.listDocIsn === null || doc !== this.listDocIsn){
-                for(let i=0; i<this.results.result.length; i++){
-                    if(this.results.result[i].fullname === 'Лист согласования'){
-                        this.listDocIsn = this.results.result[i].val
+            if(doc === this.listDocId){
+                if(this.listDocId === null){
+                    for(let i=0; i<this.results.result.length; i++){
+                        if(this.results.result[i].fullname === 'Лист согласования'){
+                            this.listDocIsn = this.results.result[i].val
+                            this.listDocId = this.results.result[i].value
+                        }
                     }
                 }
-            }
                 this.axios.post('/getCoordinationInfo', {docIsn: this.listDocIsn}).then(response => {
                     if(response.data.success){
                         this.coordination = response.data.response;
@@ -927,6 +934,7 @@ export default {
                         this.attachments = [];
                     }
                 });
+            }
         },
         preloader(show){
             if(show){
