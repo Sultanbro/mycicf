@@ -13,19 +13,23 @@
             <tr>
                 <td class="empty-td"></td>
                 <td class="text-left">Департамент</td>
+                <td>План - {{label_first}}</td>
+                <td>План - {{label_second}}</td>
+                <td>Брутто Премии - {{label_first}}</td>
+                <td>Брутто Премии - {{label_second}}</td>
                 <td>ДСД - {{label_first}}</td>
                 <td>ДСД - {{label_second}}</td>
-                <td>АВ</td>
-                <td>Нетто выплаты</td>
-                <td>КВ</td>
+                <td>АВ/Рейтинг - {{label_first}}</td>
+                <td>АВ/Рейтинг - {{label_second}}</td>
                 <td>Изм %</td>
                 <td>Изм сумма</td>
-                <td>АВ</td>
                 <td></td>
-                <td>КВ</td>
+                <td>Брутто выплаты - {{label_first}}</td>
+                <td>Брутто выплаты - {{label_second}}</td>
+                <td>Нетто выплаты - {{label_first}}</td>
+                <td>Нетто выплаты - {{label_second}}</td>
                 <td>Изм %</td>
-                <td>Сборы</td>
-                <td>Исполнение</td>
+                <td>Изм сумма</td>
             </tr>
             </thead>
 
@@ -1100,7 +1104,7 @@
                     <td>%</td>
                 </tr>
                     <template v-if="showBranches === true">
-                        <tr v-if="aktobe" v-for="(elem, index) in oracleData.aktobe">
+                        <tr v-if="aktobe" v-for="elem in oracleData.aktobe">
                     <td class="empty-td"></td>
                     <td class="text-left">{{elem.emplName}}</td>
                     <td>{{elem.DSD}}</td>
@@ -1470,7 +1474,6 @@
     span.fa {
         color: white;
         line-height: 13px;
-        border-radius: 2px;
         border-radius: 2px;
     }
     .fa-plus {
