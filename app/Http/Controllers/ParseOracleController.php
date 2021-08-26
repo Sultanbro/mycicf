@@ -70,41 +70,35 @@ class ParseOracleController extends Controller
 
     public function getOracleCollect(Request $request){
 
-
-
-            //фильтр даты
-/*            if($request->first_period < '10'){
-                $first_date = $request->days.'-'.'0'.$request->first_period.'-'.$request->first_year;
-            }else {
-                $first_date = $request->days.'-'.$request->first_period.'-'.$request->first_year;
-            }
-            $firstDate = date('d-M-y',strtotime($first_date));
-            if($request->second_period < '10'){
-                $second_date = $request->days.'-'.'0'.$request->second_period.'-'.$request->second_year;
-            }else {
-                $second_date = $request->days.'-'.$request->second_period.'-'.$request->second_year;
-            }
-            $secondDate = date('d-M-y',strtotime($second_date));*/
-
+            //фильтр Даты
             switch ($request){
-                case $request->days == null:
-                    //$first_date = '01'.'-'.'0'.$request->first_period.'-'.$request->first_year;
+                case empty($request->days):
+                    $first_date = $request->first_year.'-'.$request->first_period;
+                    $second_date = $request->second_year.'-'.$request->second_period;
                     $firstDate = date('M-y',strtotime($first_date));
+                    $secondDate = date('M-y',strtotime($second_date));
                     break;
-                case $request->first_period < '10':
-                    $first_date = $request->days.'-'.'0'.$request->first_period.'-'.$request->first_year;
-                    break;
-
-                case $request->first_period > '10':
+                case $request->first_period >= '10' || $request->second_period >= '10':
                     $first_date = $request->days.'-'.$request->first_period.'-'.$request->first_year;
+                    $second_date = $request->days.'-'.$request->second_period.'-'.$request->second_year;
+                    $firstDate = date('d-M-y',strtotime($first_date));
+                    $secondDate = date('d-M-y',strtotime($second_date));
                     break;
             }
-            $firstDate = date('d-M-y',strtotime($first_date));
-            dd($firstDate);
-
-
-
-
+            switch ($request){
+                case empty($request->days):
+                    $first_date = $request->first_year.'-'.$request->first_period;
+                    $second_date = $request->second_year.'-'.$request->second_period;
+                    $firstDate = date('M-y',strtotime($first_date));
+                    $secondDate = date('M-y',strtotime($second_date));
+                    break;
+                case $request->first_period < '10' || $request->second_period < '10':
+                    $first_date = $request->days.'-'.'0'.$request->first_period.'-'.$request->first_year;
+                    $second_date = $request->days.'-'.'0'.$request->second_period.'-'.$request->second_year;
+                    $firstDate = date('d-M-y',strtotime($first_date));
+                    $secondDate = date('d-M-y',strtotime($second_date));
+                    break;
+            }
 
 
         $collects = ParseCollects::where('dateAccept', $firstDate)
