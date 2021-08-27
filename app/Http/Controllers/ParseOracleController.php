@@ -7,6 +7,7 @@ use App\ParseCollects;
 use App\ParsePays;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ParseOracleController extends Controller
 {
@@ -37,7 +38,7 @@ class ParseOracleController extends Controller
         //Филиалы
         1445735 => 'nur_sultan',
         1445823 => 'aktobe',
-        1445828 => 'shym',
+        1445828 => 'shymkent',
         1445805 => 'koksh',
         1445822 => 'semei',
         1445799 => 'atyrau_obl',
@@ -49,10 +50,26 @@ class ParseOracleController extends Controller
         1445820 => 'pavlo_obl',
         1445825 => 'jambyl_obl',
         1445821 => 'sko',
-        1445827=> 'vko',
+        1445827 => 'vko',
 
         //Сайт
         3991842 => 'kupipolis',
+        //Служба доставки и заявок
+        1445755 => 'sdz', //emplName - kupipolis
+
+
+        //Отделение страхования
+        1445778 => 'os6',
+        1445773 => 'os1',
+        1445775 => 'os3',
+
+        //Депт страховых выплат
+        1445739 => 'dsv',
+
+        //Управление сопровождения ДМС
+        5004 => 'dms',
+
+
     ];
 
     public function getCollectDeptName($deptIsn)
@@ -68,48 +85,108 @@ class ParseOracleController extends Controller
         ];
     }*/
 
-    public function getOracleCollect(Request $request){
+    public function getOracleCollect(Request $request)
+    {
 
-            //фильтр Даты
-            switch ($request){
-                case empty($request->days):
-                    $first_date = $request->first_year.'-'.$request->first_period;
-                    $second_date = $request->second_year.'-'.$request->second_period;
-                    $firstDate = date('M-y',strtotime($first_date));
-                    $secondDate = date('M-y',strtotime($second_date));
-                    break;
-                case $request->first_period >= '10' || $request->second_period >= '10':
-                    $first_date = $request->days.'-'.$request->first_period.'-'.$request->first_year;
-                    $second_date = $request->days.'-'.$request->second_period.'-'.$request->second_year;
-                    $firstDate = date('d-M-y',strtotime($first_date));
-                    $secondDate = date('d-M-y',strtotime($second_date));
-                    break;
+        //фильтр Даты
+        if (empty($request->days)) {
+            if ($request->first_period < '10') {
+                $first_date = '0' . $request->first_period . '.' . $request->first_year;
+            } else {
+                $first_date = $request->first_period . '.' . $request->first_year;
             }
-            switch ($request){
-                case empty($request->days):
-                    $first_date = $request->first_year.'-'.$request->first_period;
-                    $second_date = $request->second_year.'-'.$request->second_period;
-                    $firstDate = date('M-y',strtotime($first_date));
-                    $secondDate = date('M-y',strtotime($second_date));
-                    break;
-                case $request->first_period < '10' || $request->second_period < '10':
-                    $first_date = $request->days.'-'.'0'.$request->first_period.'-'.$request->first_year;
-                    $second_date = $request->days.'-'.'0'.$request->second_period.'-'.$request->second_year;
-                    $firstDate = date('d-M-y',strtotime($first_date));
-                    $secondDate = date('d-M-y',strtotime($second_date));
-                    break;
+            if ($request->second_period < '10') {
+                $second_date = $request->second_period . '.' . $request->second_year;
+            } else {
+                $second_date = $request->second_period . '.' . $request->second_year;
             }
+            if ($request->first_period >= '10') {
+                $first_date = $request->first_period . '.' . $request->first_year;
+            } else {
+                $first_date = '0' . $request->first_period . '.' . $request->first_year;
+            }
+            if ($request->second_period >= '10') {
+                $second_date = $request->second_period . '.' . $request->second_year;
+            } else {
+                $second_date = '0' . $request->second_period . '.' . $request->second_year;
+            }
+        } else {
+            if ($request->first_period < '10') {
+                $first_date = $request->days . '.' . '0' . $request->first_period . '.' . $request->first_year;
+            } else {
+                $first_date = $request->days . '.' . $request->first_period . '.' . $request->first_year;
+            }
+            if ($request->second_period < '10') {
+                $second_date = $request->days . '.' . $request->second_period . '.' . $request->second_year;
+            } else {
+                $second_date = $request->days . '.' . $request->second_period . '.' . $request->second_year;
+            }
+            if ($request->first_period >= '10') {
+                $first_date = $request->days . '.' . $request->first_period . '.' . $request->first_year;
+            } else {
+                $first_date = $request->days . '.' . '0' . $request->first_period . '.' . $request->first_year;
+            }
+            if ($request->second_period >= '10') {
+                $second_date = $request->days . '.' . $request->second_period . '.' . $request->second_year;
+            } else {
+                $second_date = $request->days . '.' . '0' . $request->second_period . '.' . $request->second_year;
+            }
+        }
 
 
-        $collects = ParseCollects::where('dateAccept', $firstDate)
-            ->orderby('id', 'desc')
-            ->get(['id','emplIsn','deptIsn','deptName', 'emplName','DSD','comissionProc'])
-            ->toArray();
+        $builder = DB::table('parse_oracle_collects')
+            ->select(
+                'parse_oracle_collects.id',
+                'parse_oracle_collects.dateAccept',
+                'parse_oracle_collects.empl_isn',
+                'parse_oracle_collects.dept_isn',
+                'parse_oracle_collects.dept_name',
+                'parse_oracle_collects.empl_name',
+                'parse_oracle_collects.dsd',
+                'parse_oracle_collects.comission_and_rating',
+                'parse_oracle_pays.dateAccept',
+                'parse_oracle_pays.total_refund_sum',
+                'parse_oracle_pays.netto_refund_sum')
+            ->join('parse_oracle_pays', function ($join) {
+                $join->on('parse_oracle_collects.dateAccept', '=','parse_oracle_pays.dateAccept');
+                //$join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
+            });
+        $collects = $builder->where(\DB::raw('parse_oracle_collects.dateAccept'), '=', $first_date)
+            ->get()->toArray();
+        dd($collects);
 
-        $collects2 = ParseCollects::where('dateAccept', $secondDate)
-            ->orderby('id', 'desc')
-            ->get(['id','emplIsn','deptIsn','deptName', 'emplName','DSD','comissionProc'])
-            ->toArray();
+/*                if(date('d.m.Y', strtotime($first_date)) === $first_date
+                    && date('d.m.Y', strtotime($second_date)) === $second_date ){
+                    dd($first_date,$second_date,'yes');
+                }else {
+                    $builder = DB::table('parse_oracle_collects')
+                        ->select(\DB::raw('substr(parse_oracle_collects.dateAccept, 4) as table_1'), 'parse_oracle_collects.empl_isn as isn',
+                            'parse_oracle_collects.id',
+                            'parse_oracle_collects.empl_isn',
+                            'parse_oracle_collects.dept_isn',
+                            'parse_oracle_collects.dept_name',
+                            'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.dsd',
+                            'parse_oracle_collects.comission_and_rating',
+                            'parse_oracle_pays.total_refund_sum',
+                            'parse_oracle_pays.netto_refund_sum')
+                        ->join('parse_oracle_pays', function ($join) {
+                            $join->on(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', DB::raw('substr(parse_oracle_pays.dateAccept, 4)'));
+                            $join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
+                        });
+                    $collects = $builder->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $first_date)
+                        ->get()->toArray();
+                    $collects2 = $builder->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $second_date)
+                        ->get()->toArray();
+                }*/
+
+        /*        $query = 'select substr(parse_oracle_collects.dateAccept, 4) as table_1, `parse_oracle_collects`.`empl_isn` as `isn` from `parse_oracle_collects` inner join `parse_oracle_pays` on substr(parse_oracle_collects.dateAccept, 4) = substr(parse_oracle_pays.dateAccept, 4)
+                            AND parse_oracle_collects.empl_isn = parse_oracle_pays.empl_isn';*/
+
+
+
+
+
 
 
         $deptCollectFirst = [];
@@ -134,10 +211,11 @@ class ParseOracleController extends Controller
             //$deptCollectData[$arrName] = $collect;
             array_push($deptCollectSecond[$arrName], $collect);
         }
+        dd($deptCollectFirst, $deptCollectSecond);
 
 //Общая сумма
-/*            $key = 'DSD';
-            $sum = array_sum(array_column($deptCollectData['aktobe'],$key));*/
+        /*            $key = 'DSD';
+                    $sum = array_sum(array_column($deptCollectData['aktobe'],$key));*/
 
 
         return response()->json([

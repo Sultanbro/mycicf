@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ParseCollects extends Model
 {
-    protected $table = 'parse_oracle_collectes';
+    protected $table = 'parse_oracle_collects';
 }

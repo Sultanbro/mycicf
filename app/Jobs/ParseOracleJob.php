@@ -33,7 +33,7 @@ class ParseOracleJob implements ShouldQueue
     public function handle()
     {
         $limit = config('oracle.row_limit');
-        $last_id = ParseCollects::max('agrIsn') ?? 0;
+        $last_id = ParseCollects::max('agr_isn') ?? 0;
         $rows = DB::connection('oracle')->table('inslab.centras_temp_migrate')
             ->select('*')
             ->where('f1', '>', $last_id)
@@ -42,7 +42,7 @@ class ParseOracleJob implements ShouldQueue
             ->limit($limit)
             ->get();
 
-        $last_id2 = ParsePays::max('claimIsn') ?? 0;
+        $last_id2 = ParsePays::max('claim_isn') ?? 0;
         $rows2 = DB::connection('oracle')->table('inslab.centras_temp_migrate')
             ->select('*')
             ->where('f1', '>', $last_id2)
@@ -61,7 +61,7 @@ class ParseOracleJob implements ShouldQueue
             $data->prod_name = $row->f4;
             $data->client_isn = $row->f5;
             $data->client = $row->f6;
-            $data->date_accept = $row->f8;
+            $data->dateAccept = $row->f8;
             $data->brutto_prem = $row->f9;
             $data->dsd = $row->f10;
             $data->comission_and_rating = $row->f11;
@@ -89,7 +89,7 @@ class ParseOracleJob implements ShouldQueue
             $data->agrProductName = $row->f6;
             $data->agr_client_isn = $row->f10;
             $data->agr_client_name = $row->f11;
-            $data->date_accept = $row->f15;
+            $data->dateAccept = $row->f15;
             $data->total_refund_sum = $row->f16;
             $data->netto_refund_sum = $row->f17;
             $data->empl_name = $row->f21;

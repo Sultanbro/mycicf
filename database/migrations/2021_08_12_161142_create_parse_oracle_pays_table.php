@@ -22,7 +22,7 @@ class CreateParseOraclePaysTable extends Migration
             $table->string('agrProductName')->nullable();               //f6
             $table->string('agr_client_isn')->nullable();               //f10
             $table->string('agr_client_name')->nullable();              //f11
-            $table->string('date_accept')->nullable();                  //f15
+            $table->string('dateAccept')->nullable();                  //f15
             $table->string('total_refund_sum')->nullable();             //f16
             $table->string('netto_refund_sum')->nullable();             //f17
             $table->string('empl_name')->nullable();                    //f21
