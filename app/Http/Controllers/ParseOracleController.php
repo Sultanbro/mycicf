@@ -134,33 +134,13 @@ class ParseOracleController extends Controller
         }
 
 
-        $builder = DB::table('parse_oracle_collects')
-            ->select(
-                'parse_oracle_collects.id',
-                'parse_oracle_collects.dateAccept',
-                'parse_oracle_collects.empl_isn',
-                'parse_oracle_collects.dept_isn',
-                'parse_oracle_collects.dept_name',
-                'parse_oracle_collects.empl_name',
-                'parse_oracle_collects.dsd',
-                'parse_oracle_collects.comission_and_rating',
-                'parse_oracle_pays.dateAccept',
-                'parse_oracle_pays.total_refund_sum',
-                'parse_oracle_pays.netto_refund_sum')
-            ->join('parse_oracle_pays', function ($join) {
-                $join->on('parse_oracle_collects.dateAccept', '=','parse_oracle_pays.dateAccept');
-                //$join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
-            });
-        $collects = $builder->where(\DB::raw('parse_oracle_collects.dateAccept'), '=', $first_date)
-            ->get()->toArray();
-        dd($collects);
-
-/*                if(date('d.m.Y', strtotime($first_date)) === $first_date
+                if(date('d.m.Y', strtotime($first_date)) === $first_date
                     && date('d.m.Y', strtotime($second_date)) === $second_date ){
-                    dd($first_date,$second_date,'yes');
-                }else {
+
                     $builder = DB::table('parse_oracle_collects')
-                        ->select(\DB::raw('substr(parse_oracle_collects.dateAccept, 4) as table_1'), 'parse_oracle_collects.empl_isn as isn',
+                        ->select(
+                            'parse_oracle_collects.dateAccept',
+                            'parse_oracle_collects.empl_isn',
                             'parse_oracle_collects.id',
                             'parse_oracle_collects.empl_isn',
                             'parse_oracle_collects.dept_isn',
@@ -170,22 +150,69 @@ class ParseOracleController extends Controller
                             'parse_oracle_collects.comission_and_rating',
                             'parse_oracle_pays.total_refund_sum',
                             'parse_oracle_pays.netto_refund_sum')
-                        ->join('parse_oracle_pays', function ($join) {
-                            $join->on(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', DB::raw('substr(parse_oracle_pays.dateAccept, 4)'));
-                            $join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
+                        ->leftJoin('parse_oracle_pays', function ($join) {
+                            $join->on('parse_oracle_pays.empl_isn','=','parse_oracle_collects.empl_isn');
+                            $join->on('parse_oracle_pays.dateAccept','=','parse_oracle_collects.dateAccept');
                         });
-                    $collects = $builder->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $first_date)
-                        ->get()->toArray();
-                    $collects2 = $builder->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $second_date)
-                        ->get()->toArray();
-                }*/
+                    $collects = $builder->where('parse_oracle_collects.dateAccept', '=', $first_date)->get()->toArray();
 
-        /*        $query = 'select substr(parse_oracle_collects.dateAccept, 4) as table_1, `parse_oracle_collects`.`empl_isn` as `isn` from `parse_oracle_collects` inner join `parse_oracle_pays` on substr(parse_oracle_collects.dateAccept, 4) = substr(parse_oracle_pays.dateAccept, 4)
-                            AND parse_oracle_collects.empl_isn = parse_oracle_pays.empl_isn';*/
+                    $model = DB::table('parse_oracle_collects')
+                        ->select(
+                            'parse_oracle_collects.dateAccept',
+                            'parse_oracle_collects.empl_isn',
+                            'parse_oracle_collects.id',
+                            'parse_oracle_collects.empl_isn',
+                            'parse_oracle_collects.dept_isn',
+                            'parse_oracle_collects.dept_name',
+                            'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.dsd',
+                            'parse_oracle_collects.comission_and_rating',
+                            'parse_oracle_pays.total_refund_sum',
+                            'parse_oracle_pays.netto_refund_sum')
+                        ->leftJoin('parse_oracle_pays', function ($join) {
+                            $join->on('parse_oracle_pays.empl_isn','=','parse_oracle_collects.empl_isn');
+                            $join->on('parse_oracle_pays.dateAccept','=','parse_oracle_collects.dateAccept');
+                        });
+                    $collects2 = $model->where('parse_oracle_collects.dateAccept', '=', $second_date)->get()->toArray();
+                }else {
+                $builder = DB::table('parse_oracle_collects')
+                    ->select(
+                        'parse_oracle_collects.id',
+                        'parse_oracle_collects.empl_isn',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dsd',
+                        'parse_oracle_collects.comission_and_rating',
+                        'parse_oracle_pays.total_refund_sum',
+                        'parse_oracle_pays.netto_refund_sum')
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', DB::raw('substr(parse_oracle_pays.dateAccept, 4)'));
+                        $join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
+                    });
+                $collects = $builder->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $first_date)
+                    ->get()->toArray();
 
-
-
-
+                $model = DB::table('parse_oracle_collects')
+                    ->select(
+                        'parse_oracle_collects.id',
+                        'parse_oracle_collects.empl_isn',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dsd',
+                        'parse_oracle_collects.comission_and_rating',
+                        'parse_oracle_pays.total_refund_sum',
+                        'parse_oracle_pays.netto_refund_sum')
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', DB::raw('substr(parse_oracle_pays.dateAccept, 4)'));
+                        $join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
+                    });
+                $collects2 = $model->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $second_date)
+                    ->get()->toArray();
+                }
+                $firstResults = json_decode(json_encode($collects), true);
+                $secondResilts = json_decode(json_encode($collects2), true);
 
 
 
@@ -196,20 +223,20 @@ class ParseOracleController extends Controller
             $deptCollectSecond[$departmentName] = [];
         }
 
-        foreach ($collects as $collect) {
-            $arrName = $this->getCollectDeptName($collect['deptIsn']);
+        foreach ($firstResults as $result) {
+            $arrName = $this->getCollectDeptName($result['dept_isn']);
             if (!$arrName)
                 continue;
             //$deptCollectData[$arrName] = $collect;
-            array_push($deptCollectFirst[$arrName], $collect);
+            array_push($deptCollectFirst[$arrName], $result);
         }
 
-        foreach ($collects2 as $collect) {
-            $arrName = $this->getCollectDeptName($collect['deptIsn']);
+        foreach ($secondResilts as $result) {
+            $arrName = $this->getCollectDeptName($result['dept_isn']);
             if (!$arrName)
                 continue;
             //$deptCollectData[$arrName] = $collect;
-            array_push($deptCollectSecond[$arrName], $collect);
+            array_push($deptCollectSecond[$arrName], $result);
         }
         dd($deptCollectFirst, $deptCollectSecond);
 
@@ -220,9 +247,10 @@ class ParseOracleController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $deptCollectFirst,
-            'data1' => $deptCollectSecond,
-
+            'data' =>[
+                'firstCollect' => $deptCollectFirst,
+                'secondCollect' => $deptCollectSecond,
+            ]
         ]);
 
     }
