@@ -3,7 +3,7 @@ terminal:
   image: node:10-alpine
   before_script:
     - apt-get update
-  script: sleep 60
+  script: echo test
   variables:
     RAILS_ENV: "test"
     NODE_ENV: "test"
