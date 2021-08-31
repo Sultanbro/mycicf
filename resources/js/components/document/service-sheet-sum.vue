@@ -15,11 +15,25 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <div v-if="!isLoading && results.docParam.showSubject === 'Y'" class="form-group row">
+                                <div v-if="!isLoading && results.docParam.showSubject === 'Y' && results['classisn'] !== '826601'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
                                         <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                     :options="userList" :disable-branch-nodes="true"/>
+                                    </div>
+                                </div>
+                                <div v-if="!isLoading && results.docParam.showSubject === 'Y' && results['classisn'] === '826601'" class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
+                                    <div class="col-md-8 input-group">
+                                        <input v-model="contragent.fullName ? contragent.fullName : results.contragent.value" @click="OpenModal('Контрагент')" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn-light" @click="OpenModal('Контрагент')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="submit" class="btn-light" @click="clearInfo('Контрагент')">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -702,6 +716,16 @@
         <contract-journal-modal
             :results="results">
         </contract-journal-modal>
+        <div v-if="results['classisn'] === '826601'">
+            <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+            <counterparty-journal-modal
+                :counterparty="counterparty"
+                :contragent="contragent"
+                :recordingCounterparty="recordingCounterparty"
+                :results="results"
+            >
+            </counterparty-journal-modal>
+        </div>
     </div>
 </template>
 
@@ -715,6 +739,7 @@ import DocumentModal from "./document-modal";
 import FullQuotesJournal from "./full-quotes-journal";
 import DocumentJournalModal from "./document-journal-modal";
 import ContractJournalModal from "./contract-journal-modal";
+import CounterpartyJournalModal from "./counterparty-journal-modal";
 export default {
     name: "service-sheet-sum",
     props: {
@@ -773,6 +798,12 @@ export default {
             knps: [],
             kbks: [],
             recordingCounterparty: {type: ''},
+            counterparty: {
+                isn: '',
+                iin: '',
+                fullName: '',
+                classISN: '',
+            },
             idShow: false,
             contragent: {
                 fullName: '',
@@ -1164,9 +1195,19 @@ export default {
                 this.preloader(false);
                 this.recordingCounterparty.type = doc
                 this.$refs.modalContract.click();
+            } else if(doc === this.results.contragent.fullname){
+                this.preloader(false);
+                this.recordingCounterparty.type = doc
+                this.$refs.modalCounterparty.click();
             }
         },
         clearInfo(data){
+            if (data === 'Контрагент'){
+                this.results.contragent.subjIsn = '';
+                this.results.contragent.value = '';
+                this.contragent.fullName = '';
+                this.contragent.isn = '';
+            }
             for(let i=0; i<this.results.resDop.length; i++){
                 if(this.results.resDop[i].fullname === data){
                     this.results.resDop[i].value = '';
@@ -1197,6 +1238,7 @@ export default {
         FullQuotesJournal,
         DocumentModal,
         DocumentJournalModal,
+        CounterpartyJournalModal,
         DatePicker,
         MaskedInput,
     },

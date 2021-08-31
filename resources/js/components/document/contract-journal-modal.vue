@@ -219,6 +219,8 @@ export default {
         results: Object,
         recordingCounterparty: Object,
         contractNameTemporary: Object,
+        contractName: {},
+        documentCounterparty: {},
     },
     data() {
         return {

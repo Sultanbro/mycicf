@@ -18,14 +18,12 @@
                                 <div v-if="results.docParam.showSubject === 'Y'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-8" v-if="results['classisn'] !== '1287701'">
-                                        <div class="col-md-8">
                                             <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
                                                         :options="userList" :disable-branch-nodes="true"/>
-                                        </div>
                                     </div>
                                     <div class="col-8" v-if="results['classisn'] === '1287701'">
                                         <div class="col-md-12 input-group">
-                                            <input v-model="results.contragent.value ? results.contragent.value : contragentAhd.fullName" @click="OpenModal('КонтрагентАхд')" type="text" class="form-control">
+                                            <input v-model="contragent.fullName ? contragent.fullName : results.contragent.value" @click="OpenModal('КонтрагентАхд')" type="text" class="form-control">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn-light" @click="OpenModal('КонтрагентАхд')">
                                                     <i class="fa fa-search"></i>
@@ -748,12 +746,25 @@
                             </div>
                             <div v-else-if="result.fullname === 'Номер договора'">
                                 <div class="input-group">
-                                    <input v-model="result.val" @click="OpenModal('Номер договора')" type="text" class="form-control">
+                                    <input v-model="contractName.fullName ? contractName.fullName : result.val" @click="OpenModal('Номер договора')" type="text" class="form-control">
                                     <div class="input-group-append">
                                         <button type="submit" class="btn-light" @click="OpenModal('Номер договора')">
                                             <i class="fa fa-search"></i>
                                         </button>
                                         <button type="submit" class="btn-light" @click="clearInfo('Номер договора')">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else-if="result.fullname === 'Распоряжение на выплату'">
+                                <div class="input-group">
+                                    <input v-model="result.val" @click="OpenModal('Распоряжение на выплату')" type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn-light" @click="OpenModal('Распоряжение на выплату')">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button type="submit" class="btn-light" @click="clearInfo('Распоряжение на выплату')">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </div>
@@ -810,7 +821,6 @@
             :application="application"
             :contractAhd="contractAhd"
             :documentBase="documentBase"
-            :openCounterpartyModal="openCounterpartyModal"
         >
         </document-journal-modal>
         <button v-show="false" ref="modalContract" type="button" data-toggle="modal" data-target="#contractJournal"></button>
@@ -820,8 +830,8 @@
             :contractName="contractName"
         >
         </contract-journal-modal>
+        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
         <div v-if="recordingCounterparty.type === 'КонтрагентАхд'">
-            <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
             <counterparty-journal-modal
                 :counterparty="counterparty"
                 :recordingCounterparty="recordingCounterparty"
@@ -842,6 +852,10 @@
             >
             </counterparty-journal-modal>
         </div>
+        <button v-show="false" ref="modalPaymentCommand" type="button" data-toggle="modal" data-target="#paymentModal">Large modal</button>
+        <payment-journal-modal>
+
+        </payment-journal-modal>
     </div>
 </template>
 
@@ -905,6 +919,10 @@ export default {
             typeAhd: [],
             typeMain: [],
             paymentOrders: [],
+            paymentCommand: {
+                fullName: '',
+                isn: '',
+            },
             servicesFor: [],
             economicActivity: [],
             vehicleModel: [],
@@ -913,7 +931,7 @@ export default {
             autoColors: [],
             knps: [],
             kbks: [],
-            recordingCounterparty: {type: ''},
+            recordingCounterparty: {type: this.results.classisn == '1287701' ? 'КонтрагентАхд' : ''},
             recordingDocument: {type: ''},
             idShow: false,
             contragent: {
@@ -967,7 +985,7 @@ export default {
             },
             notSelected: "Не выбрано",
             taxAuthorityCode: [],
-            openCounterpartyModal: false,
+            openCounterpartyAhd: false,
         }
     },
     created() {
@@ -1367,7 +1385,11 @@ export default {
                 this.preloader(false);
                 this.recordingDocument.type = doc
                 this.$refs.modalDocument.click();
-            } else if(doc === 'Наименование суда'){
+            }else if(doc === 'Распоряжение на выплату'){
+                this.preloader(false);
+                this.recordingDocument.type = doc
+                this.$refs.modalPaymentCommand.click();
+            }else if(doc === 'Наименование суда'){
                 this.preloader(false);
                 this.recordingCounterparty.type = doc
                 this.$refs.modalCounterparty.click();

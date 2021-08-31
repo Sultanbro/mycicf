@@ -294,7 +294,7 @@ class Kias implements KiasServiceInterface
             throw new Exception('Authentication failed', '419');
         }
 
-        $this->_sId = $response->Sid;
+//        $this->_sId = $response->Sid;
     }
 
     /**

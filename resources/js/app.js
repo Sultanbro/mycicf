@@ -243,6 +243,8 @@ Vue.component('disciplinary-action', require('./components/document/disciplinary
 
 Vue.component('management-business-trip', require('./components/document/management-business-trip').default);
 
+Vue.component('payment-journal-modal', require('./components/document/payment-journal-modal').default);
+
 Vue.filter('numberFormat', (value) => {
     // https://stackoverflow.com/a/59875056
     return value.toLocaleString();

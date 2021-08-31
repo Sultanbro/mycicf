@@ -122,12 +122,12 @@
                             <div v-if="results['classisn'] == '1287701'" class="col-md-3">
                                 <label>Контрагент:</label>
                                 <div class="input-group">
-                                    <input v-model="contragent.fullName" @click="OpenModal('Контрагент')" type="text" class="form-control">
+                                    <input v-model="contragent.fullName" @click="OpenModal('КонтрагентДокумент')" type="text" class="form-control">
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn-light" @click="OpenModal('Контрагент')">
+                                        <button type="submit" class="btn-light" @click="OpenModal('КонтрагентДокумент')">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                        <button type="submit" class="btn-light" @click="clearInfo('Контрагент')">
+                                        <button type="submit" class="btn-light" @click="clearInfo('КонтрагентДокумент')">
                                             <i class="fa fa-times"></i>
                                         </button>
                                     </div>
@@ -244,13 +244,15 @@
                 </div>
             </div>
         </div>
-        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
+<!--        recordingCounterparty.type === 'КонтрагентДокумент'-->
         <div v-if="openCounterpartyModal">
+            <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
             <counterparty-journal-modal
                 :contragent="contragent"
                 :recordingCounterparty="recordingCounterparty"
                 :results="results"
                 :counterparty="counterparty"
+                :documentCounterparty="document"
             >
             </counterparty-journal-modal>
         </div>
@@ -274,7 +276,6 @@ export default {
         bypassSheet: {},
         contractAhd: {},
         documentBase: {},
-        openCounterpartyModal: false,
     },
     data() {
         return {
@@ -299,7 +300,6 @@ export default {
             maskDate: [/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/],
             modalHide: '',
             loading: false,
-            resultDoc: false,
             documentType: [],
             documentTypeAhd: [],
             userList: [],
@@ -316,6 +316,8 @@ export default {
                 isn: '',
                 fullName: '',
             },
+            // openCounterpartyModal: this.recordingCounterparty.type === 'Договор АХД' ? true : false,
+            openCounterpartyModal: false,
         }
     },
     created() {
@@ -324,6 +326,7 @@ export default {
         this.getProductType();
         this.getProductTypeAhd();
         this.getStagePassage();
+        this.openCounterpartyModal = true;
     },
     methods: {
         searchDocument() {
@@ -425,15 +428,14 @@ export default {
         },
         OpenModal(doc) {
             this.preloader(true);
-            if(doc === 'Контрагент'){
-                this.openCounterpartyModal = true;
-                this.preloader(false);
+            if(doc === 'КонтрагентДокумент'){
                 this.recordingCounterparty.type = doc
+                this.preloader(false);
                 this.$refs.modalCounterparty.click();
             }
         },
         clearInfo(data){
-            if(data === 'Контрагент'){
+            if(data === 'КонтрагентДокумент'){
                 this.contragent.fullName = ''
                 this.contragent.isn = ''
             }

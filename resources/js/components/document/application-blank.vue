@@ -19,13 +19,13 @@
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8">
                                         <treeselect v-model="results.contragent.subjIsn" placeholder="Не выбрано" :disabled="addChange" :multiple="false"
-                                                    :options="userList" :disable-branch-nodes="true"/>
+                                                    :options="getUserByLevel" :disable-branch-nodes="true"/>
                                     </div>
                                 </div>
                                 <div v-if="!isLoading && results.docParam.showSubject === 'Y' && results['classisn'] == '1007421'" class="form-group row">
                                     <label class="col-md-4 col-form-label">{{results.contragent.fullname}}:</label>
                                     <div class="col-md-8 input-group">
-                                        <input v-model="results.contragent.value ? results.contragent.value : contragent.fullName" @click="OpenModal('Контрагент')" type="text" class="form-control">
+                                        <input v-model="contragent.fullName ? contragent.fullName : results.contragent.value" @click="OpenModal('Контрагент')" type="text" class="form-control">
                                         <div class="input-group-append">
                                             <button type="submit" class="btn-light" @click="OpenModal('Контрагент')">
                                                 <i class="fa fa-search"></i>
@@ -555,6 +555,7 @@
                 filename : 'Выберите файл',
                 clickedId: '',
                 listDocId: '',
+                getUserByLevel: [],
             }
         },
         created() {
@@ -563,6 +564,7 @@
             this.getBranchData();
             this.getRelational();
             this.getDuty();
+            this.getOptions();
             Vue.filter('splitNumber', function (value) {
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             })
@@ -600,11 +602,17 @@
                     this.duties = response.data.duties;
                 });
             },
+            getOptions() {
+                this.axios.post('/getBranchData', {}).then((response) => {
+                    this.getUserByLevel = response.data.result;
+                    // _.orderBy(this.getUserByLevel[0].children, 'children')
+                    // this.getUserByLevel = 'getUserByLevel'
+                });
+            },
             getUserList() {
                 let data = {sz:true}
                 this.axios.post('/full/getFullBranch', data).then((response) => {
                     this.userList = response.data.result;
-                    this.isLoading = false;
                 });
             },
             getBranchData() {
@@ -949,6 +957,12 @@
                     })
             },
             clearInfo(data){
+                if (data === 'Контрагент'){
+                    this.results.contragent.subjIsn = '';
+                    this.results.contragent.value = '';
+                    this.contragent.fullName = '';
+                    this.contragent.isn = '';
+                }
                     for(let i=0; i<this.results.docrows.length; i++){
                         if(this.results.docrows[i].fieldname === data && data === 'ФИО работника'){
                             this.results.docrows[i].value_name = ''

@@ -43,28 +43,28 @@
                             <span class="color-blue-standart">Критерии</span>
                         </div><hr>
                         <div class="row">
-                            <div class="col-md-6" v-if="results['classisn'] === '800721'">
+                            <div class="col-md-6" v-if="document.juridical === 'Y'">
                                 <label>Наименование организации:</label>
                                 <div>
                                     <input type="text" v-model="document.orgName"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6" v-if="results['classisn'] !== '800721'">
+                            <div class="col-md-6" v-if="document.juridical === 'N'">
                                 <label>Фамилия:</label>
                                 <div>
                                     <input type="text" v-model="document.lastName"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-4" v-if="results['classisn'] !== '800721'">
+                            <div class="col-md-4" v-if="document.juridical === 'N'">
                                 <label>Имя:</label>
                                 <div>
                                     <input type="text" v-model="document.firstName"
                                            class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-4" v-if="results['classisn'] !== '800721'">
+                            <div class="col-md-4" v-if="document.juridical === 'N'">
                                 <label>Отчество:</label>
                                 <div>
                                     <input type="text" v-model="document.parentName"
@@ -176,7 +176,7 @@ export default {
     data() {
         return {
             document: {
-                juridical: this.results.classisn === '800721' ? 'Y' : 'N',
+                juridical: 'N',
                 orgName: '',
                 iin: '',
                 firstName: '',

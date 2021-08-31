@@ -511,11 +511,11 @@
                                         <div v-model="result.val" class="pointer" scope="col" @click="OpenModal(result.value)">{{result.value}}</div>
                                     </div>
                                 </div>
-                                <div v-else-if="result.fullname === 'Список договоров  для внесение изменение'">
-                                    <div>
-                                        <div v-model="result.val" class="pointer" scope="col">{{result.value}}</div>
-                                    </div>
-                                </div>
+<!--                                <div v-else-if="result.fullname === 'Список договоров  для внесение изменение'">-->
+<!--                                    <div>-->
+<!--                                        <div v-model="result.val" class="pointer" scope="col">{{result.value}}</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                 <div v-else-if="result.fullname === 'Причина аннулирования СЗ'">
                                     <div>
                                         <input type="text" v-model="result.val"

@@ -310,6 +310,24 @@ class SiteController extends Controller
                 'label' => $headData->fullname,
             ];
         }
+
+        $res1 = [];
+        $res2 = [];
+        for($i=0; $i<count($result[0]['children']); $i++){
+            if(count($result[0]['children'][$i]) == 2){
+                $res1[] = $result[0]['children'][$i];
+            }else{
+                $res2[] = $result[0]['children'][$i];
+            }
+        }
+        $result = [];
+        for ($i=0; $i<count($res1); $i++){
+            array_push($result, $res1[$i]);
+        }
+        for ($i=0; $i<count($res2); $i++){
+            array_push($result, $res2[$i]);
+        }
+        array_push($result, $res1, $res2);
         $responseData = [
             'result' => $result,
             'value' => Auth::user()->ISN,
