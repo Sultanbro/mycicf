@@ -34,7 +34,7 @@
                 return formData;
             },
             send() {
-                this.axios.post('/productsinfo/save_struct', this.getFormData())
+                this.axios.post('/wnd/save_struct', this.getFormData())
                     .then(response => {
                         if(response.data.success){
                             location.href = '/'

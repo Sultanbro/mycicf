@@ -37,7 +37,7 @@
         },
         methods: {
             send() {
-                this.axios.post('/productsinfo/save_svg', {
+                this.axios.post('/wnd/save_svg', {
                     url : this.url,
                     body: this.body,
                     title: this.title,
