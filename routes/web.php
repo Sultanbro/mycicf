@@ -174,14 +174,14 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
         });
 
         Route::group(['middleware' => 'productsinfoAdmin'], function () {
-            Route::get('producstinfo/org_structure', 'Admin\ProductsInfoController@orgStructure')->name('productsinfo.org');
-            Route::post('productsinfo/save_struct', 'Admin\ProductsInfoController@saveStructure');
+//            Route::get('/productsinfo/org_structure', 'Admin\DocumentationController@orgStructure')->name('productsinfo.org');
+//            Route::post('productsinfo/save_struct', 'Admin\ProductsInfoController@saveStructure');
 
-            Route::get('productsinfo/svg', 'Admin\ProductsInfoController@loadSvg')->name('productsinfo.svg');
-            Route::post('productsinfo/save_svg', 'Admin\ProductsInfoController@saveSvg');
-
-            Route::get('productsinfo/word', 'Admin\ProductsInfoController@loadWord')->name('productsinfo.word');
-            Route::post('productsinfo/save_word', 'Admin\ProductsInfoController@saveWord');
+//            Route::get('productsinfo/svg', 'Admin\ProductsInfoController@loadSvg')->name('productsinfo.svg');
+//            Route::post('productsinfo/save_svg', 'Admin\ProductsInfoController@saveSvg');
+//
+//            Route::get('productsinfo/word', 'Admin\ProductsInfoController@loadWord')->name('productsinfo.word');
+//            Route::post('productsinfo/save_word', 'Admin\ProductsInfoController@saveWord');
 
             Route::get('productsinfo/image', 'Admin\ProductsInfoController@loadImage')->name('productsinfo.image');
             Route::post('productsinfo/save_image', 'Admin\ProductsInfoController@saveImage');
