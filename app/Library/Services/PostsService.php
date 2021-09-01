@@ -3,7 +3,9 @@
 namespace App\Library\Services;
 
 use App\Answer;
+use App\Branch;
 use App\Comment;
+use App\Dicti;
 use App\Post;
 use App\Question;
 use App\User;
@@ -11,6 +13,7 @@ use Debugbar;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**+
@@ -192,5 +195,40 @@ class PostsService {
             return true;
         }
         // cache()->delete($this->getResponseKey($id)); // or delete();
+    }
+
+    public function getPosts2(){
+        $isn = '800701';
+        return Dicti::where('parent_isn', $isn)->get();
+    }
+
+    public function getPosts3(){
+        $users = Branch::where('has_child',0)->get();
+        $result = [];
+        foreach($users as $user){
+            $user['dept'] = isset($user->getParent->fullname) ? $user->getParent->fullname : '';
+            $result[$user->kias_id] = $user;
+        }
+        return $result;
+    }
+
+    public function getDuty(){
+        $dutys = Dicti::where('parent_isn',2147381)->get();
+        $result = [];
+        foreach($dutys as $duty){
+            $result = $duty->fullname;
+        }
+        return response()->json([$result]);
+    }
+
+    public function getCounterpartyType(){
+        $types = Dicti::where('parent_isn',25)->get();
+//        dd($types);
+        $result = [];
+        foreach($types as $type){
+            $type['fullname'] = $type->fullname;
+            $result = $type['fullname'];
+        }
+        return response()->json([$result]);
     }
 }

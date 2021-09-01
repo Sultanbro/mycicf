@@ -35,9 +35,9 @@
         <server name="SESSION_DRIVER" value="array" />
 
         <server name="DB_CONNECTION" value="mysql" />
-        <server name="DB_HOST" value="mysql" />
+        <server name="DB_HOST" value="127.0.0.1" />
         <server name="DB_USERNAME" value="root" />
-        <server name="DB_PASSWORD" value="secret" />
+        <server name="DB_PASSWORD" value="root" />
 
         <server name="APP_CONFIG_CACHE" value="bootstrap/cache/config.phpunit.php" />
         <server name="APP_SERVICES_CACHE" value="bootstrap/cache/services.phpunit.php" />
