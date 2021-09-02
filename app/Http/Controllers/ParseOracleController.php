@@ -8,6 +8,7 @@ use App\ParsePays;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function Webmozart\Assert\Tests\StaticAnalysis\uniqueValues;
 
 class ParseOracleController extends Controller
 {
@@ -146,6 +147,7 @@ class ParseOracleController extends Controller
                             'parse_oracle_collects.dept_isn',
                             'parse_oracle_collects.dept_name',
                             'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.brutto_prem',
                             'parse_oracle_collects.dsd',
                             'parse_oracle_collects.comission_and_rating',
                             'parse_oracle_pays.total_refund_sum',
@@ -165,6 +167,7 @@ class ParseOracleController extends Controller
                             'parse_oracle_collects.dept_isn',
                             'parse_oracle_collects.dept_name',
                             'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.brutto_prem',
                             'parse_oracle_collects.dsd',
                             'parse_oracle_collects.comission_and_rating',
                             'parse_oracle_pays.total_refund_sum',
@@ -182,6 +185,7 @@ class ParseOracleController extends Controller
                         'parse_oracle_collects.dept_isn',
                         'parse_oracle_collects.dept_name',
                         'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.brutto_prem',
                         'parse_oracle_collects.dsd',
                         'parse_oracle_collects.comission_and_rating',
                         'parse_oracle_pays.total_refund_sum',
@@ -200,6 +204,7 @@ class ParseOracleController extends Controller
                         'parse_oracle_collects.dept_isn',
                         'parse_oracle_collects.dept_name',
                         'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.brutto_prem',
                         'parse_oracle_collects.dsd',
                         'parse_oracle_collects.comission_and_rating',
                         'parse_oracle_pays.total_refund_sum',
@@ -212,9 +217,7 @@ class ParseOracleController extends Controller
                     ->get()->toArray();
                 }
                 $firstResults = json_decode(json_encode($collects), true);
-                $secondResilts = json_decode(json_encode($collects2), true);
-
-
+                $secondResults = json_decode(json_encode($collects2), true);
 
         $deptCollectFirst = [];
         $deptCollectSecond = [];
@@ -223,34 +226,1355 @@ class ParseOracleController extends Controller
             $deptCollectSecond[$departmentName] = [];
         }
 
-        foreach ($firstResults as $result) {
-            $arrName = $this->getCollectDeptName($result['dept_isn']);
+        foreach ($firstResults as $collect) {
+            $arrName = $this->getCollectDeptName($collect['dept_isn']);
             if (!$arrName)
                 continue;
-            //$deptCollectData[$arrName] = $collect;
-            array_push($deptCollectFirst[$arrName], $result);
+            $deptCollectFirst[$arrName][] = $collect;
         }
 
-        foreach ($secondResilts as $result) {
-            $arrName = $this->getCollectDeptName($result['dept_isn']);
+        foreach ($secondResults as $collect) {
+            $arrName = $this->getCollectDeptName($collect['dept_isn']);
             if (!$arrName)
                 continue;
-            //$deptCollectData[$arrName] = $collect;
-            array_push($deptCollectSecond[$arrName], $result);
+            $deptCollectSecond[$arrName][] = $collect;
         }
-        dd($deptCollectFirst, $deptCollectSecond);
 
-//Общая сумма
-        /*            $key = 'DSD';
-                    $sum = array_sum(array_column($deptCollectData['aktobe'],$key));*/
+//Рабочий вариант 1
+        //dks
+        $total_netto = array_values(array_reduce($deptCollectFirst['dks'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $dks = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
 
+        $total_netto = array_values(array_reduce($deptCollectFirst['uks1'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $uks1 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['uks2'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $uks2 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['uks3'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $uks3 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['uks4'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $uks4 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['ukr'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $ukr = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        //*******************
+        //dsp
+        $total_netto = array_values(array_reduce($deptCollectFirst['dsp'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $dsp = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['almaty'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $almaty = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['uap'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $uap = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us1'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us1 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us2'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us2 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us3'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us3 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us4'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us4 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us5'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us5 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us6'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us6 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['us7'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $us7 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        //*******************
+        //drpo
+        $total_netto = array_values(array_reduce($deptCollectFirst['drpo'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $drpo = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['upp'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $upp = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        //*******************
+        //dp
+        $total_netto = array_values(array_reduce($deptCollectFirst['dp'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $dp = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        //Филиалы
+        $total_netto = array_values(array_reduce($deptCollectFirst['nur_sultan'],
+                    function ($a, $v){
+                        $k = $v['id'];
+                        if(!array_key_exists($k,$a)){
+                            $a[$k] = $v;
+                        }else {
+                            $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                            $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                        }
+                        return $a;
+                    },
+                    array()
+                ));
+        $nur_sultan = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['aktobe'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $aktobe = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['shymkent'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $shymkent = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['koksh'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $koksh = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['semei'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $semei = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['atyrau_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $atyrau_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['aktobe_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $aktobe_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['kar_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $kar_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['kos_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $kos_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['kyz_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $kyz_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['mang_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $mang_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['pavlo_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $pavlo_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['jambyl_obl'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $jambyl_obl = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['sko'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $sko = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['vko'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $vko = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['kupipolis'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $kupipolis = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['sdz'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $sdz = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['os6'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $os6 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['os1'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $os1 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['os3'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $os3 = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['dsv'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $dsv = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $total_netto = array_values(array_reduce($deptCollectFirst['dms'],
+            function ($a, $v){
+                $k = $v['id'];
+                if(!array_key_exists($k,$a)){
+                    $a[$k] = $v;
+                }else {
+                    $a[$k]['total_refund_sum'] += $v['total_refund_sum'];
+                    $a[$k]['netto_refund_sum'] += $v['netto_refund_sum'];
+                }
+                return $a;
+            },
+            array()
+        ));
+        $dms = array_values(array_reduce($total_netto,
+            function ($b, $c){
+                $k = $c['empl_name'];
+                if(!array_key_exists($k,$b)){
+                    $b[$k] = $c;
+                }else {
+                    $b[$k]['brutto_prem'] += $c['brutto_prem'];
+                    $b[$k]['dsd'] += $c['dsd'];
+                    $b[$k]['comission_and_rating'] += $c['comission_and_rating'];
+                }
+                return $b;
+            },
+            array()
+        ));
+
+        $data = [
+            [
+                'empl_name' => 'ДКС',
+                'id' => 1,
+                'children' => [
+                        0 => [
+                            'empl_name' => 'Менеджеры ДКС',
+                            'id' => 2,
+                            'brutto_prem' => 1,
+                            'dsd' => 2,
+                            'comission_and_rating' => 3,
+                            'total_refund_sum' => 4,
+                            'netto_refund_sum' => 5,
+                            'children' => $dks,
+                        ],
+                    1 => [
+                        'empl_name' => 'УКС №1',
+                        'id' => 3,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $uks1,
+                    ],
+                    2 => [
+                        'empl_name' => 'УКС №2',
+                        'id' => 4,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $uks2,
+                    ],
+                    3 => [
+                        'empl_name' => 'УКС №3',
+                        'id' => 5,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $uks3,
+                    ],
+                    4 => [
+                        'empl_name' => 'УКС №4',
+                        'id' => 6,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $uks4,
+                    ],
+                    5 => [
+                        'empl_name' => 'УКР',
+                        'id' => 7,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $ukr,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДСП',
+                'id' => 101,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДСП',
+                        'id' => 2,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $dsp,
+                    ],
+                    1 => [
+                        'empl_name' => 'г.Алматы',
+                        'id' => 3,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $almaty,
+                    ],
+                    2 => [
+                        'empl_name' => 'УАП',
+                        'id' => 4,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $uap,
+                    ],
+                    3 => [
+                        'empl_name' => 'УС №1',
+                        'id' => 5,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us1,
+                    ],
+                    4 => [
+                        'empl_name' => 'УС №2',
+                        'id' => 6,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us2,
+                    ],
+                    5 => [
+                        'empl_name' => 'УС №3',
+                        'id' => 7,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us3,
+                    ],
+                    6 => [
+                        'empl_name' => 'УС №4',
+                        'id' => 8,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us4,
+                    ],
+                    7 => [
+                        'empl_name' => 'УС №5',
+                        'id' => 9,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us5,
+                    ],
+                    8 => [
+                        'empl_name' => 'УС №6',
+                        'id' => 10,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us6,
+                    ],
+                    9 => [
+                        'empl_name' => 'УС №7',
+                        'id' => 11,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $us7,
+                    ],
+                ]
+            ],
+        ];
 
         return response()->json([
             'success' => true,
-            'data' =>[
-                'firstCollect' => $deptCollectFirst,
-                'secondCollect' => $deptCollectSecond,
-            ]
+            'data' => $data
         ]);
 
     }
