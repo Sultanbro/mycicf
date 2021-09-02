@@ -4,16 +4,16 @@
             <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                 <div class="flex-row jc-sb">
                     <div>
-                        <input v-model="dateBeg" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                        <input v-model="dateBeg" type="date" min="2015-04-15" max="2023-04-23" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
                     <div>
-                        <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                        <input v-model="dateEnd" type="date" min="2015-04-15" max="2023-04-23" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                     </div>
                     <div>
                         <div class="flex-row date-color pl-2 pr-2">
-                            <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
+                            <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 button ">
                                 <div><i class="far fa-eye"></i></div>
-                                <div class="ml-2" @click="getOperations()">Показать</div>
+                                <div class="ml-2 " @click="getOperations()">Показать</div>
                             </div>
                         </div>
                     </div>
@@ -114,6 +114,12 @@
 </script>
 
 <style scoped>
+
+.button:hover {
+    background: #4267b2;
+    color: white;
+}
+
     .buy-btn {
         color: #FFF;
         background-color: #0051f3;
