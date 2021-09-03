@@ -64,6 +64,7 @@
         },
         props: {
             oracleData: Array,
+            periods: Object
         }
     };
 </script>

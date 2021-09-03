@@ -1201,6 +1201,7 @@ class ParseOracleController extends Controller
             array()
         ));
 
+
         $total_netto = array_values(array_reduce($deptCollectFirst['kupipolis'],
             function ($a, $v){
                 $k = $v['id'];
@@ -1257,6 +1258,7 @@ class ParseOracleController extends Controller
             array()
         ));
 
+        //Отделение страхования
         $total_netto = array_values(array_reduce($deptCollectFirst['os6'],
             function ($a, $v){
                 $k = $v['id'];
@@ -1424,7 +1426,7 @@ class ParseOracleController extends Controller
                     ],
                     2 => [
                         'empl_name' => 'УКС №2',
-                        'id' => 4,
+                        'id' => 23454,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1434,7 +1436,7 @@ class ParseOracleController extends Controller
                     ],
                     3 => [
                         'empl_name' => 'УКС №3',
-                        'id' => 5,
+                        'id' => 52345,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1454,7 +1456,7 @@ class ParseOracleController extends Controller
                     ],
                     5 => [
                         'empl_name' => 'УКР',
-                        'id' => 7,
+                        'id' => 324257,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1470,7 +1472,7 @@ class ParseOracleController extends Controller
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДСП',
-                        'id' => 2,
+                        'id' => 102,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1480,7 +1482,7 @@ class ParseOracleController extends Controller
                     ],
                     1 => [
                         'empl_name' => 'г.Алматы',
-                        'id' => 3,
+                        'id' => 103,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1490,7 +1492,7 @@ class ParseOracleController extends Controller
                     ],
                     2 => [
                         'empl_name' => 'УАП',
-                        'id' => 4,
+                        'id' => 104,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1500,7 +1502,7 @@ class ParseOracleController extends Controller
                     ],
                     3 => [
                         'empl_name' => 'УС №1',
-                        'id' => 5,
+                        'id' => 105,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1510,7 +1512,7 @@ class ParseOracleController extends Controller
                     ],
                     4 => [
                         'empl_name' => 'УС №2',
-                        'id' => 6,
+                        'id' => 106,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1520,7 +1522,7 @@ class ParseOracleController extends Controller
                     ],
                     5 => [
                         'empl_name' => 'УС №3',
-                        'id' => 7,
+                        'id' => 107,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1530,7 +1532,7 @@ class ParseOracleController extends Controller
                     ],
                     6 => [
                         'empl_name' => 'УС №4',
-                        'id' => 8,
+                        'id' => 108,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1540,7 +1542,7 @@ class ParseOracleController extends Controller
                     ],
                     7 => [
                         'empl_name' => 'УС №5',
-                        'id' => 9,
+                        'id' => 109,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1550,7 +1552,7 @@ class ParseOracleController extends Controller
                     ],
                     8 => [
                         'empl_name' => 'УС №6',
-                        'id' => 10,
+                        'id' => 110,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1560,7 +1562,7 @@ class ParseOracleController extends Controller
                     ],
                     9 => [
                         'empl_name' => 'УС №7',
-                        'id' => 11,
+                        'id' => 111,
                         'brutto_prem' => 1,
                         'dsd' => 2,
                         'comission_and_rating' => 3,
@@ -1570,7 +1572,300 @@ class ParseOracleController extends Controller
                     ],
                 ]
             ],
+            [
+                'empl_name' => 'ДРПО',
+                'id' => 121,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДРПО',
+                        'id' => 122,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $drpo,
+                    ],
+                    1 => [
+                        'empl_name' => 'г.Алматы',
+                        'id' => 123,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $upp,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДП',
+                'id' => 131,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДП',
+                        'id' => 132,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $dp,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'Филиалы',
+                'id' => 3032441,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Нур-Султан',
+                        'id' => 302,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $nur_sultan,
+                    ],
+                    1 => [
+                        'empl_name' => 'Актобе',
+                        'id' => 303,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $aktobe,
+                    ],
+                    2 => [
+                        'empl_name' => 'Шымкент',
+                        'id' => 304,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $shymkent,
+                    ],
+                    3 => [
+                        'empl_name' => 'Кокшетау',
+                        'id' => 305,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $koksh,
+                    ],
+                    4 => [
+                        'empl_name' => 'Семей',
+                        'id' => 306,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $semei,
+                    ],
+                    5 => [
+                        'empl_name' => 'Атырауская обл.',
+                        'id' => 307,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $atyrau_obl,
+                    ],
+                    6 => [
+                        'empl_name' => 'Актюбинская обл.',
+                        'id' => 308,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $aktobe_obl,
+                    ],
+                    7 => [
+                        'empl_name' => 'Карагандинская обл.',
+                        'id' => 309,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $kar_obl,
+                    ],
+                    8 => [
+                        'empl_name' => 'Костанайская обл.',
+                        'id' => 310,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $kos_obl,
+                    ],
+                    9 => [
+                        'empl_name' => 'Кызылординская обл.',
+                        'id' => 31321441,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $kyz_obl,
+                    ],
+                    10 => [
+                        'empl_name' => 'Мангыстауская обл.',
+                        'id' => 312,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $mang_obl,
+                    ],
+                    11 => [
+                        'empl_name' => 'Павлодарская обл.',
+                        'id' => 313,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $pavlo_obl,
+                    ],
+                    12 => [
+                        'empl_name' => 'Жамбылская обл.',
+                        'id' => 314,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $jambyl_obl,
+                    ],
+                    13=> [
+                        'empl_name' => 'СКО',
+                        'id' => 315,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $sko,
+                    ],
+                    14=> [
+                        'empl_name' => 'ВКО',
+                        'id' => 316,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $vko,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'kupipolis',
+                'id' => 772347,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'kupipolis',
+                        'id' => 778,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $kupipolis,
+                    ],
+                    1 => [
+                        'empl_name' => 'Служба доставки и заявок',
+                        'id' => 779,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $sdz,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'Отдел страхования',
+                'id' => 432401,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Отдел страхования №1',
+                        'id' => 402,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $os1,
+                    ],
+                    1 => [
+                        'empl_name' => 'Отдел страхования №3',
+                        'id' => 403,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $os3,
+                    ],
+                    1 => [
+                        'empl_name' => 'Отдел страхования №6',
+                        'id' => 404,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $os6,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДСВ',
+                'id' => 501,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДСВ',
+                        'id' => 502,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $dsv,
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДМС',
+                'id' => 601,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДМС',
+                        'id' => 602,
+                        'brutto_prem' => 1,
+                        'dsd' => 2,
+                        'comission_and_rating' => 3,
+                        'total_refund_sum' => 4,
+                        'netto_refund_sum' => 5,
+                        'children' => $dms,
+                    ],
+                ]
+            ],
         ];
+
 
         return response()->json([
             'success' => true,
