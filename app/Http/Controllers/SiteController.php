@@ -591,7 +591,7 @@ class SiteController extends Controller
         }
         return response()->json([
             'code' => 200,
-            'price' => $model->ofprice
+            'price' => $model->price
         ]);
     }
 
