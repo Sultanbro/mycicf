@@ -28,9 +28,9 @@ class CreateParseOracleCollectesTable extends Migration
             $table->string('ins_name')->nullable();                         //f16
             $table->string('main_dept_isn')->nullable();                    //f17
             $table->string('main_dept_name')->nullable();                   //f18
-            $table->string('dept_isn')->nullable();                         //f19
+            $table->string('dept_isn')->index()->nullable();                         //f19
             $table->string('dept_name')->nullable();                        //f20
-            $table->string('empl_isn')->nullable();                         //f21
+            $table->string('empl_isn')->index()->nullable();                         //f21
             $table->string('empl_name')->nullable();                        //f22
             $table->string('group_name')->nullable();
             $table->timestamps();

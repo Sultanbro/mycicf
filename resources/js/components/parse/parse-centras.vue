@@ -4,7 +4,7 @@
         :data-source="oracleData"
         :row-selection="rowSelection"
         :expanded-row-keys.sync="expandedRowKeys"
-        rowKey="id"
+        rowKey="agrempl"
         />
 </template>
 <script>
@@ -12,32 +12,32 @@
         {
             title: 'Департамент',
             dataIndex: "empl_name",
-            id: 'id',
+            agrempl: 'agrempl',
         },
         {
             title: 'Брутто Премии',
             dataIndex: 'brutto_prem',
-            id: 'id',
+            agrempl: 'agrempl',
         },
         {
             title: 'ДСД',
             dataIndex: 'dsd',
-            id: 'id',
+            agrempl: 'agrempl',
         },
         {
             title: 'АВ/Рейтинг',
             dataIndex: 'comission_and_rating',
-            id: 'id',
+            agrempl: 'agrempl',
         },
         {
             title: 'Брутто Выплаты',
             dataIndex: 'total_refund_sum',
-            id: 'id',
+            agrempl: 'agrempl',
         },
         {
             title: 'Нетто Выплаты',
             dataIndex: 'netto_refund_sum',
-            id: 'id',
+            agrempl: 'agrempl',
         },
     ];
 

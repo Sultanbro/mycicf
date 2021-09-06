@@ -15,9 +15,9 @@ class CreateParseOraclePlansTable extends Migration
     {
         Schema::create('parse_oracle_plans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('agrempl');
+            $table->integer('agrempl')->index();
             $table->integer('feesplan');
-            $table->integer('year');
+            $table->integer('year')->index();
             $table->integer('month');
             $table->timestamps();
         });

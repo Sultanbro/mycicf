@@ -78,14 +78,6 @@ class ParseOracleController extends Controller
         return array_key_exists($deptIsn, self::$departmentNames) ? self::$departmentNames[$deptIsn] : false;
     }
 
-    /*public function dateTypes(){
-        return [
-            'year',
-            'month',
-            'days',
-        ];
-    }*/
-
     public function getOracleCollect(Request $request)
     {
 
@@ -134,87 +126,137 @@ class ParseOracleController extends Controller
             }
         }
 
+                if(!empty($request->days)){
 
-                if(date('d.m.Y', strtotime($first_date)) === $first_date
-                    && date('d.m.Y', strtotime($second_date)) === $second_date ){
-
-                    $builder = DB::table('parse_oracle_collects')
+                    $builder = DB::table('parse_oracle_plans')
                         ->select(
+                            'parse_oracle_plans.feesplan',
+                            'parse_oracle_plans.agrempl',
+                            'parse_oracle_collects.empl_name',
                             'parse_oracle_collects.dateAccept',
-                            'parse_oracle_collects.empl_isn',
-                            'parse_oracle_collects.id',
-                            'parse_oracle_collects.empl_isn',
                             'parse_oracle_collects.dept_isn',
                             'parse_oracle_collects.dept_name',
-                            'parse_oracle_collects.empl_name',
-                            'parse_oracle_collects.brutto_prem',
-                            'parse_oracle_collects.dsd',
-                            'parse_oracle_collects.comission_and_rating',
-                            'parse_oracle_pays.total_refund_sum',
-                            'parse_oracle_pays.netto_refund_sum')
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                        ->leftJoin('parse_oracle_collects', function ($join) {
+                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                        })
                         ->leftJoin('parse_oracle_pays', function ($join) {
-                            $join->on('parse_oracle_pays.empl_isn','=','parse_oracle_collects.empl_isn');
-                            $join->on('parse_oracle_pays.dateAccept','=','parse_oracle_collects.dateAccept');
-                        });
-                    $collects = $builder->where('parse_oracle_collects.dateAccept', '=', $first_date)->get()->toArray();
+                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
 
-                    $model = DB::table('parse_oracle_collects')
+                        });
+                    $collects = $builder->where('parse_oracle_collects.dateAccept','=', $first_date)
+                        ->where('parse_oracle_plans.year','=', $request->first_year)
+                        ->where('parse_oracle_plans.month','=',$request->first_period)
+                        ->groupBy(
+                            DB::raw('parse_oracle_plans.agrempl'),
+                            DB::raw('parse_oracle_plans.feesplan'),
+                            DB::raw('parse_oracle_collects.empl_name'),
+                            DB::raw('parse_oracle_collects.dateAccept'),
+                            DB::raw('parse_oracle_collects.dept_isn'),
+                            DB::raw('parse_oracle_collects.dept_name'))
+                        ->get()->toArray();
+
+                    $model = DB::table('parse_oracle_plans')
                         ->select(
+                            'parse_oracle_plans.feesplan',
+                            'parse_oracle_plans.agrempl',
+                            'parse_oracle_collects.empl_name',
                             'parse_oracle_collects.dateAccept',
-                            'parse_oracle_collects.empl_isn',
-                            'parse_oracle_collects.id',
-                            'parse_oracle_collects.empl_isn',
                             'parse_oracle_collects.dept_isn',
                             'parse_oracle_collects.dept_name',
-                            'parse_oracle_collects.empl_name',
-                            'parse_oracle_collects.brutto_prem',
-                            'parse_oracle_collects.dsd',
-                            'parse_oracle_collects.comission_and_rating',
-                            'parse_oracle_pays.total_refund_sum',
-                            'parse_oracle_pays.netto_refund_sum')
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                        ->leftJoin('parse_oracle_collects', function ($join) {
+                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                        })
                         ->leftJoin('parse_oracle_pays', function ($join) {
-                            $join->on('parse_oracle_pays.empl_isn','=','parse_oracle_collects.empl_isn');
-                            $join->on('parse_oracle_pays.dateAccept','=','parse_oracle_collects.dateAccept');
+                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+
                         });
-                    $collects2 = $model->where('parse_oracle_collects.dateAccept', '=', $second_date)->get()->toArray();
+                    $collects2 = $model->where('parse_oracle_collects.dateAccept','=', $second_date)
+                        ->where('parse_oracle_plans.year','=', $request->second_year)
+                        ->where('parse_oracle_plans.month','=',$request->second_period)
+                        ->groupBy(
+                            DB::raw('parse_oracle_plans.agrempl'),
+                            DB::raw('parse_oracle_plans.feesplan'),
+                            DB::raw('parse_oracle_collects.empl_name'),
+                            DB::raw('parse_oracle_collects.dateAccept'),
+                            DB::raw('parse_oracle_collects.dept_isn'),
+                            DB::raw('parse_oracle_collects.dept_name'))
+                        ->get()->toArray();
                 }else {
-                $builder = DB::table('parse_oracle_collects')
-                    ->select(
-                        'parse_oracle_collects.id',
-                        'parse_oracle_collects.empl_isn',
-                        'parse_oracle_collects.dept_isn',
-                        'parse_oracle_collects.dept_name',
-                        'parse_oracle_collects.empl_name',
-                        'parse_oracle_collects.brutto_prem',
-                        'parse_oracle_collects.dsd',
-                        'parse_oracle_collects.comission_and_rating',
-                        'parse_oracle_pays.total_refund_sum',
-                        'parse_oracle_pays.netto_refund_sum')
-                    ->leftJoin('parse_oracle_pays', function ($join) {
-                        $join->on(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', DB::raw('substr(parse_oracle_pays.dateAccept, 4)'));
-                        $join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
-                    });
-                $collects = $builder->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $first_date)
-                    ->get()->toArray();
+                    $builder = DB::table('parse_oracle_plans')
+                        ->select(
+                            'parse_oracle_plans.feesplan',
+                            'parse_oracle_plans.agrempl',
+                            'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.dept_isn',
+                            'parse_oracle_collects.dept_name',
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                        ->leftJoin('parse_oracle_collects', function ($join) {
+                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                        })
+                        ->leftJoin('parse_oracle_pays', function ($join) {
+                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
 
-                $model = DB::table('parse_oracle_collects')
-                    ->select(
-                        'parse_oracle_collects.id',
-                        'parse_oracle_collects.empl_isn',
-                        'parse_oracle_collects.dept_isn',
-                        'parse_oracle_collects.dept_name',
-                        'parse_oracle_collects.empl_name',
-                        'parse_oracle_collects.brutto_prem',
-                        'parse_oracle_collects.dsd',
-                        'parse_oracle_collects.comission_and_rating',
-                        'parse_oracle_pays.total_refund_sum',
-                        'parse_oracle_pays.netto_refund_sum')
-                    ->leftJoin('parse_oracle_pays', function ($join) {
-                        $join->on(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', DB::raw('substr(parse_oracle_pays.dateAccept, 4)'));
-                        $join->on('parse_oracle_collects.empl_isn', '=', 'parse_oracle_pays.empl_isn');
-                    });
-                $collects2 = $model->where(\DB::raw('substr(parse_oracle_collects.dateAccept, 4)'), '=', $second_date)
-                    ->get()->toArray();
+                        });
+                    $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $first_date)
+                        ->where('parse_oracle_plans.year','=', $request->first_year)
+                        ->where('parse_oracle_plans.month','=',$request->first_period)
+                        ->groupBy(
+                            DB::raw('parse_oracle_plans.agrempl'),
+                            DB::raw('parse_oracle_plans.feesplan'),
+                            DB::raw('parse_oracle_collects.empl_name'),
+                            //DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                            DB::raw('parse_oracle_collects.dept_isn'),
+                            DB::raw('parse_oracle_collects.dept_name'))
+                        ->get()->toArray();
+
+                    $model = DB::table('parse_oracle_plans')
+                        ->select(
+                            'parse_oracle_plans.feesplan',
+                            'parse_oracle_plans.agrempl',
+                            'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.dept_isn',
+                            'parse_oracle_collects.dept_name',
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                        ->leftJoin('parse_oracle_collects', function ($join) {
+                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                        })
+                        ->leftJoin('parse_oracle_pays', function ($join) {
+                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+
+                        });
+                    $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $second_date)
+                        ->where('parse_oracle_plans.year','=', $request->second_year)
+                        ->where('parse_oracle_plans.month','=',$request->second_period)
+                        ->groupBy(
+                            DB::raw('parse_oracle_plans.agrempl'),
+                            DB::raw('parse_oracle_plans.feesplan'),
+                            DB::raw('parse_oracle_collects.empl_name'),
+                            DB::raw('parse_oracle_collects.dateAccept'),
+                            DB::raw('parse_oracle_collects.dept_isn'),
+                            DB::raw('parse_oracle_collects.dept_name'))
+                        ->get()->toArray();
                 }
                 $firstResults = json_decode(json_encode($collects), true);
                 $secondResults = json_decode(json_encode($collects2), true);
@@ -240,7 +282,489 @@ class ParseOracleController extends Controller
             $deptCollectSecond[$arrName][] = $collect;
         }
 
-//Рабочий вариант 1
+        $data = [
+            [
+                'empl_name' => 'ДКС',
+                'agrempl' => 1,
+                'brutto_prem' => 122,
+                'dsd' => 12,
+                'comission_and_rating' => 33,
+                'total_refund_sum' => 1123,
+                'netto_refund_sum' =>23,
+                'children' => [
+                        0 => [
+                            'empl_name' => 'Менеджеры ДКС',
+                            'agrempl' => 2,
+                            'brutto_prem' => array_sum(array_column($deptCollectFirst['dks'], 'brutto_prem')),
+                            'dsd' => array_sum(array_column($deptCollectFirst['dks'], 'dsd')),
+                            'comission_and_rating' => array_sum(array_column($deptCollectFirst['dks'], 'comission_and_rating')),
+                            'total_refund_sum' => array_sum(array_column($deptCollectFirst['dks'], 'total_refund_sum')),
+                            'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dks'], 'netto_refund_sum')),
+                            'children' => $deptCollectFirst['dks'],
+                        ],
+                    1 => [
+                        'empl_name' => 'УКС №1',
+                        'agrempl' => 3,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['uks1'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['uks1'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks1'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks1'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks1'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['uks1'],
+                    ],
+                    2 => [
+                        'empl_name' => 'УКС №2',
+                        'agrempl' => 23454,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['uks2'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['uks2'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks2'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks2'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks2'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['uks2'],
+                    ],
+                    3 => [
+                        'empl_name' => 'УКС №3',
+                        'agrempl' => 52345,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['uks3'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['uks3'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks3'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks3'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks3'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['uks3'],
+                    ],
+                    4 => [
+                        'empl_name' => 'УКС №4',
+                        'agrempl' => 6,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['uks4'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['uks4'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks4'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks4'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks4'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['uks4'],
+                    ],
+                    5 => [
+                        'empl_name' => 'УКР',
+                        'agrempl' => 324257,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['ukr'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['ukr'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['ukr'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['ukr'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['ukr'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['ukr'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДСП',
+                'agrempl' => 101,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДСП',
+                        'agrempl' => 102,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dsp'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['dsp'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsp'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dsp'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dsp'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['dsp'],
+                    ],
+                    1 => [
+                        'empl_name' => 'г.Алматы',
+                        'agrempl' => 103,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['almaty'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['almaty'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['almaty'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['almaty'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['almaty'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['almaty'],
+                    ],
+                    2 => [
+                        'empl_name' => 'УАП',
+                        'agrempl' => 104,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['uap'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['uap'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['uap'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['uap'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uap'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['uap'],
+                    ],
+                    3 => [
+                        'empl_name' => 'УС №1',
+                        'agrempl' => 105,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us1'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us1'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us1'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us1'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us1'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us1'],
+                    ],
+                    4 => [
+                        'empl_name' => 'УС №2',
+                        'agrempl' => 106,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us2'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us2'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us2'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us2'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us2'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us2'],
+                    ],
+                    5 => [
+                        'empl_name' => 'УС №3',
+                        'agrempl' => 107,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us3'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us3'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us3'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us3'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us3'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us3'],
+                    ],
+                    6 => [
+                        'empl_name' => 'УС №4',
+                        'agrempl' => 108,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us4'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us4'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us4'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us4'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us4'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us4'],
+                    ],
+                    7 => [
+                        'empl_name' => 'УС №5',
+                        'agrempl' => 109,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us5'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us5'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us5'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us5'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us5'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us5'],
+                    ],
+                    8 => [
+                        'empl_name' => 'УС №6',
+                        'agrempl' => 110,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us6'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us6'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us6'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us6'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us6'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us6'],
+                    ],
+                    9 => [
+                        'empl_name' => 'УС №7',
+                        'agrempl' => 111,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['us7'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['us7'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['us7'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['us7'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us7'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['us7'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДРПО',
+                'agrempl' => 121,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДРПО',
+                        'agrempl' => 122,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['drpo'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['drpo'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['drpo'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['drpo'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['drpo'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['drpo'],
+                    ],
+                    1 => [
+                        'empl_name' => 'г.Алматы',
+                        'agrempl' => 123,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['upp'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['upp'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['upp'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['upp'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['upp'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['upp'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДП',
+                'agrempl' => 131,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДП',
+                        'agrempl' => 132,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dp'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['dp'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dp'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dp'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dp'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['dp'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'Филиалы',
+                'agrempl' => 3032441,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Нур-Султан',
+                        'agrempl' => 302,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['nur_sultan'],
+                    ],
+                    1 => [
+                        'empl_name' => 'Актобе',
+                        'agrempl' => 303,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['aktobe'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['aktobe'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['aktobe'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['aktobe'],
+                    ],
+                    2 => [
+                        'empl_name' => 'Шымкент',
+                        'agrempl' => 304,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['shymkent'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['shymkent'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['shymkent'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['shymkent'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['shymkent'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['shymkent'],
+                    ],
+                    3 => [
+                        'empl_name' => 'Кокшетау',
+                        'agrempl' => 305,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['koksh'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['koksh'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['koksh'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['koksh'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['koksh'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['koksh'],
+                    ],
+                    4 => [
+                        'empl_name' => 'Семей',
+                        'agrempl' => 306,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['semei'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['semei'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['semei'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['semei'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['semei'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['semei'],
+                    ],
+                    5 => [
+                        'empl_name' => 'Атырауская обл.',
+                        'agrempl' => 307,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['atyrau_obl'],
+                    ],
+                    6 => [
+                        'empl_name' => 'Актюбинская обл.',
+                        'agrempl' => 308,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['aktobe_obl'],
+                    ],
+                    7 => [
+                        'empl_name' => 'Карагандинская обл.',
+                        'agrempl' => 309,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['kar_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['kar_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['kar_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['kar_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kar_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['kar_obl'],
+                    ],
+                    8 => [
+                        'empl_name' => 'Костанайская обл.',
+                        'agrempl' => 310,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['kos_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['kos_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['kos_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['kos_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kos_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['kos_obl'],
+                    ],
+                    9 => [
+                        'empl_name' => 'Кызылординская обл.',
+                        'agrempl' => 31321441,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['kyz_obl'],
+                    ],
+                    10 => [
+                        'empl_name' => 'Мангыстауская обл.',
+                        'agrempl' => 312,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['mang_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['mang_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['mang_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['mang_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['mang_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['mang_obl'],
+                    ],
+                    11 => [
+                        'empl_name' => 'Павлодарская обл.',
+                        'agrempl' => 313,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['pavlo_obl'],
+                    ],
+                    12 => [
+                        'empl_name' => 'Жамбылская обл.',
+                        'agrempl' => 314,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['jambyl_obl'],
+                    ],
+                    13=> [
+                        'empl_name' => 'СКО',
+                        'agrempl' => 315,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['sko'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['sko'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['sko'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['sko'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['sko'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['sko'],
+                    ],
+                    14=> [
+                        'empl_name' => 'ВКО',
+                        'agrempl' => 316,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['vko'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['vko'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['vko'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['vko'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['vko'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['vko'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'kupipolis',
+                'agrempl' => 772347,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'kupipolis',
+                        'agrempl' => 778,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['kupipolis'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['kupipolis'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['kupipolis'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['kupipolis'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kupipolis'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['kupipolis'],
+                    ],
+                    1 => [
+                        'empl_name' => 'Служба доставки и заявок',
+                        'agrempl' => 779,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['sdz'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['sdz'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['sdz'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['sdz'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['sdz'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['sdz'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'Отдел страхования',
+                'agrempl' => 432401,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Отдел страхования №1',
+                        'agrempl' => 402,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['os1'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['os1'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['os1'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['os1'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os1'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['os1'],
+                    ],
+                    1 => [
+                        'empl_name' => 'Отдел страхования №3',
+                        'agrempl' => 403,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['os3'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['os3'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['os3'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['os3'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os3'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['os3'],
+                    ],
+                    1 => [
+                        'empl_name' => 'Отдел страхования №6',
+                        'agrempl' => 404,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['os6'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['os6'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['os3'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['os6'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os6'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['os6'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДСВ',
+                'agrempl' => 501,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДСВ',
+                        'agrempl' => 502,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dsv'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['dsv'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsv'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dsv'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dsv'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['dsv'],
+                    ],
+                ]
+            ],
+            [
+                'empl_name' => 'ДМС',
+                'agrempl' => 601,
+                'children' => [
+                    0 => [
+                        'empl_name' => 'Менеджеры ДМС',
+                        'agrempl' => 602,
+                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dms'], 'brutto_prem')),
+                        'dsd' => array_sum(array_column($deptCollectFirst['dms'], 'dsd')),
+                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsv'], 'comission_and_rating')),
+                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dms'], 'total_refund_sum')),
+                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dms'], 'netto_refund_sum')),
+                        'children' => $deptCollectFirst['dms'],
+                    ],
+                ]
+            ],
+        ];
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+
+    }
+}
+
+
+/*//Рабочий вариант 1
         //dks
         $total_netto = array_values(array_reduce($deptCollectFirst['dks'],
             function ($a, $v){
@@ -1397,480 +1921,4 @@ class ParseOracleController extends Controller
                 return $b;
             },
             array()
-        ));
-
-        $data = [
-            [
-                'empl_name' => 'ДКС',
-                'id' => 1,
-                'children' => [
-                        0 => [
-                            'empl_name' => 'Менеджеры ДКС',
-                            'id' => 2,
-                            'brutto_prem' => 1,
-                            'dsd' => 2,
-                            'comission_and_rating' => 3,
-                            'total_refund_sum' => 4,
-                            'netto_refund_sum' => 5,
-                            'children' => $dks,
-                        ],
-                    1 => [
-                        'empl_name' => 'УКС №1',
-                        'id' => 3,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $uks1,
-                    ],
-                    2 => [
-                        'empl_name' => 'УКС №2',
-                        'id' => 23454,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $uks2,
-                    ],
-                    3 => [
-                        'empl_name' => 'УКС №3',
-                        'id' => 52345,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $uks3,
-                    ],
-                    4 => [
-                        'empl_name' => 'УКС №4',
-                        'id' => 6,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $uks4,
-                    ],
-                    5 => [
-                        'empl_name' => 'УКР',
-                        'id' => 324257,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $ukr,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДСП',
-                'id' => 101,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДСП',
-                        'id' => 102,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $dsp,
-                    ],
-                    1 => [
-                        'empl_name' => 'г.Алматы',
-                        'id' => 103,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $almaty,
-                    ],
-                    2 => [
-                        'empl_name' => 'УАП',
-                        'id' => 104,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $uap,
-                    ],
-                    3 => [
-                        'empl_name' => 'УС №1',
-                        'id' => 105,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us1,
-                    ],
-                    4 => [
-                        'empl_name' => 'УС №2',
-                        'id' => 106,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us2,
-                    ],
-                    5 => [
-                        'empl_name' => 'УС №3',
-                        'id' => 107,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us3,
-                    ],
-                    6 => [
-                        'empl_name' => 'УС №4',
-                        'id' => 108,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us4,
-                    ],
-                    7 => [
-                        'empl_name' => 'УС №5',
-                        'id' => 109,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us5,
-                    ],
-                    8 => [
-                        'empl_name' => 'УС №6',
-                        'id' => 110,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us6,
-                    ],
-                    9 => [
-                        'empl_name' => 'УС №7',
-                        'id' => 111,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $us7,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДРПО',
-                'id' => 121,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДРПО',
-                        'id' => 122,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $drpo,
-                    ],
-                    1 => [
-                        'empl_name' => 'г.Алматы',
-                        'id' => 123,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $upp,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДП',
-                'id' => 131,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДП',
-                        'id' => 132,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $dp,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'Филиалы',
-                'id' => 3032441,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Нур-Султан',
-                        'id' => 302,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $nur_sultan,
-                    ],
-                    1 => [
-                        'empl_name' => 'Актобе',
-                        'id' => 303,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $aktobe,
-                    ],
-                    2 => [
-                        'empl_name' => 'Шымкент',
-                        'id' => 304,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $shymkent,
-                    ],
-                    3 => [
-                        'empl_name' => 'Кокшетау',
-                        'id' => 305,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $koksh,
-                    ],
-                    4 => [
-                        'empl_name' => 'Семей',
-                        'id' => 306,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $semei,
-                    ],
-                    5 => [
-                        'empl_name' => 'Атырауская обл.',
-                        'id' => 307,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $atyrau_obl,
-                    ],
-                    6 => [
-                        'empl_name' => 'Актюбинская обл.',
-                        'id' => 308,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $aktobe_obl,
-                    ],
-                    7 => [
-                        'empl_name' => 'Карагандинская обл.',
-                        'id' => 309,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $kar_obl,
-                    ],
-                    8 => [
-                        'empl_name' => 'Костанайская обл.',
-                        'id' => 310,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $kos_obl,
-                    ],
-                    9 => [
-                        'empl_name' => 'Кызылординская обл.',
-                        'id' => 31321441,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $kyz_obl,
-                    ],
-                    10 => [
-                        'empl_name' => 'Мангыстауская обл.',
-                        'id' => 312,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $mang_obl,
-                    ],
-                    11 => [
-                        'empl_name' => 'Павлодарская обл.',
-                        'id' => 313,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $pavlo_obl,
-                    ],
-                    12 => [
-                        'empl_name' => 'Жамбылская обл.',
-                        'id' => 314,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $jambyl_obl,
-                    ],
-                    13=> [
-                        'empl_name' => 'СКО',
-                        'id' => 315,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $sko,
-                    ],
-                    14=> [
-                        'empl_name' => 'ВКО',
-                        'id' => 316,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $vko,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'kupipolis',
-                'id' => 772347,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'kupipolis',
-                        'id' => 778,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $kupipolis,
-                    ],
-                    1 => [
-                        'empl_name' => 'Служба доставки и заявок',
-                        'id' => 779,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $sdz,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'Отдел страхования',
-                'id' => 432401,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Отдел страхования №1',
-                        'id' => 402,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $os1,
-                    ],
-                    1 => [
-                        'empl_name' => 'Отдел страхования №3',
-                        'id' => 403,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $os3,
-                    ],
-                    1 => [
-                        'empl_name' => 'Отдел страхования №6',
-                        'id' => 404,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $os6,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДСВ',
-                'id' => 501,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДСВ',
-                        'id' => 502,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $dsv,
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДМС',
-                'id' => 601,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДМС',
-                        'id' => 602,
-                        'brutto_prem' => 1,
-                        'dsd' => 2,
-                        'comission_and_rating' => 3,
-                        'total_refund_sum' => 4,
-                        'netto_refund_sum' => 5,
-                        'children' => $dms,
-                    ],
-                ]
-            ],
-        ];
-
-
-        return response()->json([
-            'success' => true,
-            'data' => $data
-        ]);
-
-    }
-}
+        ));*/

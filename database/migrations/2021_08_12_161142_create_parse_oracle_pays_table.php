@@ -26,11 +26,11 @@ class CreateParseOraclePaysTable extends Migration
             $table->string('total_refund_sum')->nullable();             //f16
             $table->string('netto_refund_sum')->nullable();             //f17
             $table->string('empl_name')->nullable();                    //f21
-            $table->string('empl_isn')->nullable();                     //f22
+            $table->string('empl_isn')->nullable()->index();                     //f22
             $table->string('main_dept_name')->nullable();               //f23
             $table->string('main_dept_isn')->nullable();                //f24
             $table->string('dept_name')->nullable();                    //f25
-            $table->string('dept_isn')->nullable();                     //f26
+            $table->string('dept_isn')->nullable()->index();                     //f26
             $table->string('group_name')->nullable();
             $table->timestamps();
         });
