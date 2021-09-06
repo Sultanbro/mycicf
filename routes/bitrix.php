@@ -21,3 +21,5 @@ Route::post('/login', 'SiteController@authorization');
 Route::post('/renewal', 'SiteController@renewal');
 Route::post('/get-transaction-status', 'SiteController@getTransactionStatus');
 Route::post('/get-user-list', 'SiteController@getUserList');
+Route::post('/get-subject', 'SiteController@getSubject');
+Route::post('/set-subject', 'SiteController@setSubject');

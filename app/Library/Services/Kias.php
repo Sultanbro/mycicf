@@ -1020,4 +1020,9 @@ class Kias implements KiasServiceInterface
             'DictiName' => $dictiName,
         ]);
     }
+
+    public function resetPassword($subjIsn, $password)
+    {
+        // TODO: Implement resetPassword() method.
+    }
 }
