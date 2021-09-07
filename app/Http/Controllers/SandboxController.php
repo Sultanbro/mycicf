@@ -17,17 +17,17 @@ class SandboxController extends Controller
 {
     public function index(Request $request, KiasServiceInterface $kiasService)
     {
-        $isn        = $request['isn'];
-        $doscisn    = $request['doscisn'] != 0 ? $request['doscisn'] : '';
+        $isn = $request['isn'];
+        $doscisn = $request['doscisn'] != 0 ? $request['doscisn'] : '';
         $agrcalcisn = $request['argcalcisn'] != 0 ? $request['argcalcisn'] : '';
-        $agrisn     = $request['agrisn'] != 0 ? $request['agrisn'] : '';
+        $agrisn = $request['agrisn'] != 0 ? $request['agrisn'] : '';
         try {
             $getInspectionsInfo = $kiasService->getInsuranceInspectionInfo($agrisn, $agrcalcisn, $isn, $doscisn);
-            $inspectionsInfo    = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
+            $inspectionsInfo = Helper::simpleXmlToArray($getInspectionsInfo->ROWSET);
         } catch (\Exception $e) {
             $result = [
                 'success' => false,
-                'error'   => $e->getMessage(),
+                'error' => $e->getMessage(),
             ];
 
             return response()->json($result);
@@ -35,27 +35,27 @@ class SandboxController extends Controller
 
         if ($getInspectionsInfo->error) {
             $this->success = false;
-            $this->error   = (string) $getInspectionsInfo->text;
+            $this->error = (string)$getInspectionsInfo->text;
         }
         foreach ($inspectionsInfo['row'] as $inspection) {
             foreach ($inspection['details']['row'] as $detail) {
                 $data = Dicti::where('isn', $detail['detailisn'])->first();
                 if (empty($data)) {
-                    $dicti           = new Dicti();
-                    $dicti->isn      = $detail['detailisn'];
+                    $dicti = new Dicti();
+                    $dicti->isn = $detail['detailisn'];
                     $dicti->fullname = $detail['detail'];
-                    $dicti->type     = 'online_inspection';
-                    $dicti->code     = '';
-                    $dicti->numcode  = '';
-                    $dicti->n_kids   = !empty($detail['dicti']) ? 1 : 0;
+                    $dicti->type = 'online_inspection';
+                    $dicti->code = '';
+                    $dicti->numcode = '';
+                    $dicti->n_kids = !empty($detail['dicti']) ? 1 : 0;
                     $dicti->save();
                 } else {
-                    $data->isn      = $detail['detailisn'];
+                    $data->isn = $detail['detailisn'];
                     $data->fullname = $detail['detail'];
-                    $data->type     = 'online_inspection';
-                    $data->code     = '';
-                    $data->numcode  = '';
-                    $data->n_kids   = !empty($detail['dicti']) ? 1 : 0;
+                    $data->type = 'online_inspection';
+                    $data->code = '';
+                    $data->numcode = '';
+                    $data->n_kids = !empty($detail['dicti']) ? 1 : 0;
                     $data->save();
                 }
                 if (!empty($detail['dicti'])) {
@@ -73,7 +73,7 @@ class SandboxController extends Controller
 
     public function avarkom(KiasServiceInterface $kias)
     {
-        $avarkom  = $kias->getAvarkomByDept(1000);
+        $avarkom = $kias->getAvarkomByDept(1000);
         $getArray = Helper::simpleXmlToArray($avarkom);
         dd($getArray);
     }
@@ -88,29 +88,29 @@ class SandboxController extends Controller
     private function getDataWithDicti(KiasServiceInterface $kiasService, $detail, $detail_dicti, $enum)
     {
         $getDicts = $kiasService->getDictList($detail_dicti, 0);
-        $dicts    = Helper::simpleXmlToArray($getDicts->ROWSET);
+        $dicts = Helper::simpleXmlToArray($getDicts->ROWSET);
         foreach ($dicts['row'] as $dict) {
             $getData = Dicti::where('isn', $dict['ISN'])->where('parent_isn', $detail['detailisn'])->first();
             if (empty($getData)) {
-                $model                         = new Dicti();
-                $model->isn                    = $dict['ISN'];
-                $model->fullname               = $dict['FULLNAME'];
-                $model->parent_isn             = $detail['detailisn'];
-                $model->parent_name            = $dict['FULLNAME'];
+                $model = new Dicti();
+                $model->isn = $dict['ISN'];
+                $model->fullname = $dict['FULLNAME'];
+                $model->parent_isn = $detail['detailisn'];
+                $model->parent_name = $dict['FULLNAME'];
                 $model->condition_for_property = $enum;
-                $model->type                   = 'online_inspection';
-                $model->code                   = '';
-                $model->numcode                = '';
+                $model->type = 'online_inspection';
+                $model->code = '';
+                $model->numcode = '';
                 $model->save();
             } else {
-                $getData->isn                    = $dict['ISN'];
-                $getData->fullname               = $dict['FULLNAME'];
-                $getData->parent_isn             = $detail['detailisn'];
-                $getData->parent_name            = $dict['FULLNAME'];
+                $getData->isn = $dict['ISN'];
+                $getData->fullname = $dict['FULLNAME'];
+                $getData->parent_isn = $detail['detailisn'];
+                $getData->parent_name = $dict['FULLNAME'];
                 $getData->condition_for_property = $enum;
-                $getData->type                   = 'online_inspection';
-                $getData->code                   = '';
-                $getData->numcode                = '';
+                $getData->type = 'online_inspection';
+                $getData->code = '';
+                $getData->numcode = '';
                 $getData->save();
             }
         }
@@ -118,9 +118,9 @@ class SandboxController extends Controller
 
     public function removeDicti(Request $request)
     {
-        $isn       = $request->isn;
+        $isn = $request->isn;
         $parentIsn = $request->parentIsn;
-        $enum      = $request->enum;
+        $enum = $request->enum;
         if (empty($isn) || empty($parentIsn) || empty($enum)) {
             //dd('Не хватает параметры');
         }
@@ -131,7 +131,7 @@ class SandboxController extends Controller
     public function upload()
     {
         $html = '<form method="POST" action="/sandbox/uploadDocs" enctype="multipart/form-data">
-                    <input type="hidden" name="_token" value="'.csrf_token().'">
+                    <input type="hidden" name="_token" value="' . csrf_token() . '">
                     <input type="file" name="upload" multiple />
                     <input type="submit" name="send" value="Загрузить">
                 </form>';
@@ -149,13 +149,15 @@ class SandboxController extends Controller
             foreach ($rows as $row) {
                 $contains = Str::contains($row[2], 'Заявление');
                 DB::table('dicti')->insert([
-                   ['isn' => $row[1], 'fullname' => $row[2], 'numcode' => $row[0], 'code' => $contains ? 'application' : 'sz']
+                    ['isn' => $row[1], 'fullname' => $row[2], 'numcode' => $row[0], 'code' => $contains ? 'application' : 'sz']
                 ]);
             }
 
             dd('INSERT');
         }
-    public function test() {
-        return \DB::select('SELECT NOW();');
     }
+        public function test()
+        {
+            return \DB::select('SELECT NOW();');
+        }
 }

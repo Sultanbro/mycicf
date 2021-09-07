@@ -451,9 +451,9 @@ abstract class FeatureTestBase extends TestCase {
                 $this->cli->color($this->cli->bold($routes['routes']['controller']), CLI::CLI_COLOR_RED),
                 isset($routes['controller']['location']) ? '(' . $routes['controller']['location']['count'] . ' lines)' : '');
 
-            $result .= sprintf("\t\t%s\n\n",
-                $this->cli->color($this->cli->bold($this->getFullPath($routes['routes']['file'])), CLI::CLI_COLOR_RED),
-            );
+//            $result .= sprintf("\t\t%s\n\n",
+//                $this->cli->color($this->cli->bold($this->getFullPath($routes['routes']['file'])), CLI::CLI_COLOR_RED),
+//            );
 
             $count = $this->count();
             $plural = Str::pluralStudly('assertion', $count);

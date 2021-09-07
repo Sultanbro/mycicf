@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\QuizDownloadRequest;
 use App\Http\Requests\QuizParametrsRequest;
 use App\Http\Requests\QuizUpdateRequest;
+use App\Http\Requests\SaveQuizForKiasRequst;
 use App\Http\Resources\QuestionAnswerResource;
 use App\Http\Resources\QuestionAnswersResource;
 use App\Http\Resources\QuizСontentResource;
@@ -13,13 +14,19 @@ use App\Http\Resources\QuizResource;
 use App\Imports\UsersImport;
 use App\Library\Services\Quiz\QuizSaveServiceInterface;
 use App\Repository\Eloquent\QuizAnswerRepository;
+use App\Repository\Eloquent\QuizForKiasRepository;
 use App\Repository\Eloquent\QuizQuestionRepository;
 use App\Repository\Eloquent\QuizRepository;
+use App\Repository\QuestionMaterialRepositoryInterface;
+use App\Repository\QuizAnswerRepositoryInterface;
+use App\Repository\QuizForKiasRepositoryInterface;
+use App\Repository\QuizQuestionRepositoryInterface;
 use App\Repository\QuizRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class QuizController extends Controller
@@ -33,12 +40,27 @@ class QuizController extends Controller
     private $quizRepository;
     private $quizAnswersRepository;
     private $quizQuestionsRepository;
+    private $quizForKiasRepository;
+    /**
+     * @var QuestionMaterialRepositoryInterface
+     */
+    private $questionMaterialRepository;
 
-    public function __construct(QuizRepositoryInterface $quizRepository, QuizQuestionRepository $quizQuestionsRepository, QuizAnswerRepository $quizAnswersRepository)
+    /**
+     * QuizController constructor.
+     * @param QuizRepositoryInterface $quizRepository
+     * @param QuizQuestionRepositoryInterface $quizQuestionsRepository
+     * @param QuizAnswerRepositoryInterface $quizAnswersRepository
+     * @param QuizForKiasRepositoryInterface $quizForKiasRepository
+     * @param QuestionMaterialRepositoryInterface $questionMaterialRepository
+     */
+    public function __construct(QuizRepositoryInterface $quizRepository, QuizQuestionRepositoryInterface $quizQuestionsRepository, QuizAnswerRepositoryInterface $quizAnswersRepository, QuizForKiasRepositoryInterface $quizForKiasRepository, QuestionMaterialRepositoryInterface $questionMaterialRepository)
     {
         $this->quizQuestionsRepository = $quizQuestionsRepository;
         $this->quizAnswersRepository = $quizAnswersRepository;
         $this->quizRepository = $quizRepository;
+        $this->quizForKiasRepository = $quizForKiasRepository;
+        $this->questionMaterialRepository = $questionMaterialRepository;
     }
 
     /**
@@ -138,10 +160,7 @@ class QuizController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->quizRepository->delete($id)) {
-            return response()->json(true);
-        }
-        return response()->json(false);
+        return response()->json($this->quizRepository->delete($id));
     }
 
     /**
@@ -173,8 +192,37 @@ class QuizController extends Controller
      */
     public function deleteQuestionAnswers(int $id)
     {
-        if ($this->quizQuestionsRepository->delete($id)) {
-            return response()->json(true);
+        $this->questionMaterialRepository->deleteByQuestionId($id);
+        return response()->json($this->quizQuestionsRepository->delete($id));
+    }
+
+    /**
+     * @param Request $request
+     * @param $questionId
+     * @return \Illuminate\Database\Eloquent\Model|JsonResponse
+     */
+    public function saveMaterialByQuestion(Request $request, $questionId)
+    {
+        if (!empty($this->quizQuestionsRepository->find($questionId))) {
+
+            $result = Storage::disk('local')->put("/public/question", $request->file);
+            return $this->questionMaterialRepository->create(['question_id' => $questionId, 'link' => $result]);
+
+        }
+        return response()->json(false);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function deleteMaterial($id)
+    {
+        if (!empty($material = $this->questionMaterialRepository->find($id))) {
+
+            Storage::delete($material->link);
+            return response()->json($this->questionMaterialRepository->delete($id));
+
         }
         return response()->json(false);
     }

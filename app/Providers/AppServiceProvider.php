@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // \Debugbar::addCollector(new GitDataCollector('git'));
         \Debugbar::addCollector(new KiasRequestCollector('kias'));
+        $this->app->register(RepositoryServiceProvider::class);
     }
 
     /**
@@ -30,9 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(!App::isLocal()){
-            URL::forceScheme('https');
-        }
+        // if(!App::isLocal()){
+            // URL::forceScheme('https');
+        // }
 
         CentcoinHistory::observe(CentcoinObserver::class);
     }

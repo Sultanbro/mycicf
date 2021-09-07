@@ -161,7 +161,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -180,6 +179,8 @@ return [
          * Own Service Providers...
          */
         App\Providers\KiasServiceProvider::class,
+        App\Providers\QuizServiceProvider::class,
+        App\Providers\KiasBranchServiceProvider::class,
         App\Providers\NotificationServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,

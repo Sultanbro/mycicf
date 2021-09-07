@@ -2,9 +2,11 @@
 
 namespace App\Library\Services\Quiz;
 
+use App\Library\Services\KiasBranch\KiasBranchServiceInterface;
 use App\Quiz;
 use App\QuizAnswers;
 use App\QuizQuestion;
+use App\Repository\QuizForKiasRepositoryInterface;
 use App\Repository\QuizRepositoryInterface;
 
 // Сервис для сохранение теста с параметрами
@@ -16,10 +18,17 @@ class QuizSaveService implements QuizSaveServiceInterface
      * @var QuizRepositoryInterface
      */
     private $quizRepository;
+    private $kiasBranchService;
+    /**
+     * @var QuizForKiasRepositoryInterface
+     */
+    private $quizForKiasRepository;
 
-    public function __construct(QuizRepositoryInterface $quizRepository)
+    public function __construct(QuizRepositoryInterface $quizRepository, KiasBranchServiceInterface $kiasBranchService, QuizForKiasRepositoryInterface $quizForKiasRepository)
     {
         $this->quizRepository = $quizRepository;
+        $this->kiasBranchService = $kiasBranchService;
+        $this->quizForKiasRepository = $quizForKiasRepository;
     }
 
     // $req = параметры теста
@@ -75,6 +84,17 @@ class QuizSaveService implements QuizSaveServiceInterface
                 ]);
             }
 
+        }
+    }
+
+    public function saveQuizForKias(array $array)
+    {
+        $users_id = $this->kiasBranchService->getUserChilds($array['user_id']);
+
+        foreach ($users_id as $user_id) {
+            $array['user_id'] = $user_id;
+            $array['training_program_id'] = isset($array['training_program_id']) ? $array['training_program_id'] : null;
+            $this->quizForKiasRepository->create($array);
         }
     }
 }
