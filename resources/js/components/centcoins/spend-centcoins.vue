@@ -24,8 +24,6 @@
                         :disabled="centcoins < price">Купить</button>
             </div>
         </div>
-
-        <FlashMessage></FlashMessage>
     </div>
 </template>
 
@@ -80,6 +78,7 @@
 
             buyItem: function() {
                 this.axios.post('/buyItem', {isn: this.isn, itemId: this.itemId}).then(response => {
+<<<<<<< HEAD
                     if (response.data.success) {
                         this.fetchBuyItem(response.data);
                     } else {
@@ -90,6 +89,12 @@
                         });
                     }
                 }).catch(error => {})
+=======
+                    this.fetchBuyItem(response.data);
+                }).catch(error => {
+                    alert('Ошибка на стороне сервера');
+                })
+>>>>>>> origin/master
             },
 
             fetchBuyItem: function() {

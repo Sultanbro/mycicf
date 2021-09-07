@@ -55,7 +55,7 @@
         name: "simple-info",
         data() {
             return {
-                datebeg: '1990-01-01',
+                datebeg: '2018-01-01',
                 dateend: '2019-09-10',
                 carier: null,
                 vacation: null,

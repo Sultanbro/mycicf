@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
  * @property $kias_parent_id int
  * @property $has_child int
  * @property $verified int
- * @property $duty string
  * @package App
  */
 class Branch extends Model
@@ -29,10 +28,6 @@ class Branch extends Model
 
     public function getUserName($isn){
         return $isn === 0 ? "ADMIN" : (self::where('kias_id', $isn)->first()->fullname ?? "DELETED");
-    }
-
-    public static function getParentId($ISN){
-        return self::where('kias_id', $ISN)->first()->kias_parent_id;
     }
 
     protected $attributes = [

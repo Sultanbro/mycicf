@@ -1,5 +1,6 @@
 <template>
     <div class="news-tape-bg radius-4px mt-3 pb-2">
+<<<<<<< HEAD
         <div class="p-2" >
             <button @click="getAgreedCoordinationList" class="btn btn-primary">Список согласованных документов АС</button>
         </div>
@@ -37,6 +38,8 @@
                 </div>
             </div>
         </div>
+=======
+>>>>>>> origin/master
         <div class="ml-2 mr-2" v-show="SZ !== null">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2">
@@ -327,7 +330,6 @@
                 VC: null,
                 agreedAC: null,
                 other: null,
-                none: false,
                 coordination: {},
                 attachments: [] ,
                 doc_row_list: {},
@@ -369,9 +371,6 @@
                     this.authorizedUserIin = response.result.authorizedUserIin;
                 }else{
                     alert(response.error);
-                }
-                if(this.AC === null && this.SP === null && this.SZ === null && this.KV === null && this.OL === null && this.AD === null && this.RV === null && this.other === null){
-                    this.none = true;
                 }
                 this.preloader(false);
             },

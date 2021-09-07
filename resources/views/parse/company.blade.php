@@ -34,10 +34,242 @@
 </head>
 <body>
 @include('layouts.header')
+<<<<<<< HEAD
 <main class="flex-row" id="app">
     <div class="main_margin1 flex-row width100">
         <div class="col-md-12 radius-4px mt-3 pb-2" id="my-parse">
                 <my-parse></my-parse>
+=======
+
+@include('layouts.parse.header')
+
+<main class="flex-row"  id="app">
+    <div class="width100">
+        <div class="col-12">
+            <style>
+                input[type=number]::-webkit-inner-spin-button,
+                input[type=number]::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                table td:nth-child(10){
+                    border: 0 !important;
+                }
+                table th:nth-child(10){
+                    border: 0 !important;
+                }
+            </style>
+            <div class="majorMargin flex showColumnfix_icon contentmargin">	<!--Начало кнопок-->
+                <div class="butcontain1">
+                    <div class="but_contain">
+                        <div class="dropdown open gem width50adaptive minwidth105">
+                            <select class="btn btnfix" name="period" id="period" >
+                                <option class="but_opacity" value="month" @if(($_GET['dateType'] ?? 'rise') == 'month') selected @endif>месяц</option>
+                                <option class="but_opacity" value="quarter" @if(($_GET['dateType'] ?? 'rise') == 'quarter') selected @endif>квартал</option>
+                                <option class="but_opacity" value="year" @if(($_GET['dateType'] ?? 'rise') == 'year') selected @endif>год</option>
+                                <option class="but_opacity" value="rise" @if(($_GET['dateType'] ?? 'rise') == 'rise') selected @endif>с нарастанием</option>
+                            </select>
+                        </div>
+                        <div class="flex">
+                            <form class="h_flex margtop20 padtop7"><label class="h_flex labelcheck">
+                                    <input type="checkbox" name="check" id="checkJs" @if(($_GET['disc'] ?? 0) != 0) checked @endif>
+                                    <div class="margleft10">расторжения</div></label>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="but_contain">
+                        <div class="flexrowClear">
+                            <div class="dropdown open gem minwidth105">
+                                <select class="btn" id="firstYear">             <!--Первое поле-->
+                                    @for($i = 2014; $i<=(integer)date("Y");$i++)
+                                        <option value="{{$i}}" @if($i == ($_GET['firstYear'] ?? '2019')) selected @endif>{{$i}}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="dropdown open gem margleft10 minwidth105" id="item1" @if(($_GET['dateType'] ?? 'month') == 'year') style="display: none;" @endif>
+                                <select class="btn" id="firstPeriod">			<!--Второе поле-->
+                                    @if(($_GET['dateType'] ?? 'month') == 'month')
+                                        @foreach($month as $val => $key)
+                                            <option value="{{$val}}" @if(($_GET['firstPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
+                                        @endforeach
+                                    @elseif($_GET['dateType'] == 'quarter')
+                                        @foreach ($quarters as $val => $key)
+                                            <option value="{{$val}}" @if($_GET['firstPeriod'] == $val) selected @endif>{{$key}}</option>
+                                        @endforeach
+                                    @elseif(($_GET['dateType'] ?? 'month') == 'rise')
+                                        @foreach($month as $val => $key)
+                                            <option value="{{$val}}" @if(($_GET['firstPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <form class="flexrowClear margtop20 flexvertcenter">
+                            <div class="absolute">%</div>
+                            <input type="text" class="payment" id="disc" value="{{$_GET['disc'] ?? 0}}">
+                        </form>
+                    </div>
+                    <div class="but_contain">
+                        <form class="showColumnfix">
+                            <div class="flexrowClear">
+                                <div class="dropdown open gem minwidth105">
+                                    <select class="btn" id="secondYear">
+                                        @for($i = 2014; $i<=(integer)date("Y");$i++)
+                                            <option value="{{$i}}" @if($i == ($_GET['secondYear'] ?? '2019')) selected @endif>{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="dropdown open gem margleft10 minwidth105"  id="item2" @if(($_GET['dateType'] ?? 'month') == 'year') style="display: none;" @endif>
+                                    <select class="btn" id="secondPeriod">
+                                        @if(($_GET['dateType'] ?? 'month') == 'month')
+                                            @foreach($month as $val => $key)
+                                                <option value="{{$val}}" @if(($_GET['secondPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
+                                            @endforeach
+                                        @elseif($_GET['dateType'] == 'quarter')
+                                            @foreach ($quarters as $val => $key)
+                                                <option value="{{$val}}" @if($_GET['secondPeriod'] == $val) selected @endif>{{$key}}</option>
+                                            @endforeach
+                                        @elseif(($_GET['dateType'] ?? 'month') == 'rise')
+                                            @foreach($month as $val => $key)
+                                                <option value="{{$val}}" @if(($_GET['secondPeriod'] ?? '1') == $val) selected @endif>{{$key}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <a onclick="load({{$_GET['productId'] ?? 0}})"><div class="showbut margleft20 flexvertcenter pointer">
+                                        показать
+                                    </div></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="butcontain1 butcontain2">
+                    <div class="but_contain download pointer">
+                        <i class="fas fa-download"></i>
+                    </div>
+                </div>
+            </div> <!--Конец кнопок-->
+            <hr class="hr">
+            <div class="majorMargin flex_colclear contentmargin">
+                <div class="flex_colclear">	<!--Кнопка переключения таблиц-->
+                    <div class="flexrowClear">
+                        <a href="javascript:void(0)"><div class="topButton pointer">
+                                топ по компаниям
+                            </div></a>
+                        <a onclick="getProducts(0)"><div class="topButton pointer">
+                                топ по классам
+                            </div></a>
+                    </div>
+                    <div>
+                        <h1 class="h1">{{$label}}</h1>
+                    </div>
+                </div>
+                <div>	<!--Таблицы-->
+                    <div>
+                        <div>
+                            <div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover t_table" style="text-align: right;">
+                                        <thead>
+                                        <tr><th colspan="9" class="textRight tableTopMarkup">премии</th><th colspan="6" class="textRight tableTopMarkup">выплаты</th></tr>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th style="text-align: left;">Компания</th>
+                                            <th>{{$label_first}}</th>
+                                            <th>{{$label_second}}</th>
+                                            <th>доля {{strtolower($label_first)}}</th>
+                                            <th>доля {{strtolower($label_second)}}</th>
+                                            <th>изм %</th>
+                                            <th>изм сумма</th>
+                                            <th>&nbsp</th>
+                                            <th>{{$label_first}}</th>
+                                            <th>{{$label_second}}</th>
+                                            <th>% изм</th>
+                                            <th>{{$label_first}}</th>
+                                            <th>{{$label_second}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $other['premium_first'] = 0;
+                                        $other['premium_second'] = 0;
+                                        $other['payout_first'] = 0;
+                                        $other['payout_second'] = 0;
+                                        $i = 0;
+                                        ?>
+                                        @foreach($premium_first as $id=>$val)
+                                            <tr>
+                                                <td style="text-align: left;"><span>{{$i+1}}</span></td>
+                                                <td style="text-align: left;"><span>{{$ranking[$id]}}</span></td>
+                                                <td style="text-align: left;"><span><a onclick="getProducts({{$id}})">{{$companyList[$id]}}</a></span></td>
+                                                <td><span>{{number_format($val, 0, '.', ' ')}}</span></td>
+                                                <td><span>{{number_format($premium_second[$id],0,  '.', ' ')}}</span></td>
+                                                <td><span>{{$controller->getPercentOfMarker($val, array_sum($premium_first))}}</span></td>
+                                                <td><span>{{$controller->getPercentOfMarker($premium_second[$id], array_sum($premium_second))}}</span></td>
+                                                <td><span>{{$controller->getChangedVal($val, $premium_second[$id])}}</span></td>
+                                                <td><span>{{number_format($val - $premium_second[$id], 0, '.', ' ') }}</span></td>
+                                                <td><span></span></td>
+                                                <td><span>{{number_format($payout_first[$id], 0, '.', ' ')}}</span></td>
+                                                <td><span>{{number_format($payout_second[$id], 0, '.', ' ')}}</span></td>
+                                                <td><span>{{$controller->getChangedVal($payout_first[$id], $payout_second[$id])}}</span></td>
+                                                <td><span>{{$controller->getPayoutChange($payout_first[$id], $premium_first[$id])}}</span></td>
+                                                <td><span>{{$controller->getPayoutChange($payout_second[$id], $premium_second[$id])}}</span></td>
+                                            </tr>
+                                            @if($i>=10)
+                                                <?php
+                                                $other['premium_first'] += $premium_first[$id];
+                                                $other['premium_second'] += $premium_second[$id];
+                                                $other['payout_first'] += $payout_first[$id];
+                                                $other['payout_second'] += $payout_second[$id];
+                                                ?>
+                                            @endif
+                                            <?php $i++; ?>
+                                        @endforeach
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: left;"><span>ВСЕГО</span></td>
+                                            <td><span>{{number_format(array_sum($premium_first), 0, '.', ' ')}}</span></td>
+                                            <td><span>{{number_format(array_sum($premium_second), 0, '.', ' ')}}</span></td>
+                                            <td><span></span></td>
+                                            <td><span></span></td>
+                                            <td><span>{{$controller->getChangedVal(array_sum($premium_first), array_sum($premium_second))}}</span></td>
+                                            <td><span>{{number_format(array_sum($premium_first)-array_sum($premium_second), 0, '.', ' ')}}</span></td>
+                                            <td><span></span></td>
+                                            <td><span>{{number_format(array_sum($payout_first), 0, '.', ' ')}}</span></td>
+                                            <td><span>{{number_format(array_sum($payout_second), 0, '.', ' ')}}</span></td>
+                                            <td><span>{{$controller->getChangedVal(array_sum($payout_first), array_sum($payout_second))}}</span></td>
+                                            <td><span>{{$controller->getPayoutChange(array_sum($payout_first), array_sum($premium_first))}}</span></td>
+                                            <td><span>{{$controller->getPayoutChange(array_sum($payout_second), array_sum($premium_second))}}</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>	<!--Гугл графики-->
+                    <div class="col-12 row">
+                        <div class="col-md-6 col-lg-6">
+                            <div id="pieFirst" style="width: 100%; height: 500px;"></div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div id="pieSecond" style="width: 100%; height: 500px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 row">
+                        <div class="col-12">
+                            <div id="chart_div" style="height: 500px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+>>>>>>> origin/master
         </div>
     </div>
 </main>

@@ -6,8 +6,11 @@ use App\Branch;
 use App\Centcoin;
 use App\CentcoinApply;
 use App\CentcoinHistory;
+<<<<<<< HEAD
 use App\Observers\CentcoinObserver;
 use App\StoreItem;
+=======
+>>>>>>> origin/master
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -40,6 +43,7 @@ class CentcoinsController extends Controller
         return view('centcoins.history');
     }
 
+<<<<<<< HEAD
     public function getItemsView()
     {
         return view('centcoins.items');
@@ -53,6 +57,9 @@ class CentcoinsController extends Controller
 
     public function getApply(Request $request)
     {
+=======
+    public function getUserList(Request $request){
+>>>>>>> origin/master
         $result = [];
         foreach (CentcoinApply::all() as $data) {
             array_push($result, [
@@ -253,6 +260,7 @@ class CentcoinsController extends Controller
         }
         return $result;
     }
+<<<<<<< HEAD
 
     public function addItem(Request $request)
     {
@@ -315,4 +323,6 @@ class CentcoinsController extends Controller
         return $response;
     }
 
+=======
+>>>>>>> origin/master
 }

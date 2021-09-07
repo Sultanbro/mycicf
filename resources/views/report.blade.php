@@ -38,10 +38,15 @@
     <div class="main_margin flex-row width100">
         @include('layouts.sidebar')
 
+<<<<<<< HEAD
         <div class="col-md-8" id="employee_info">
             <report
                 :isn = "{{auth()->user()->ISN}}"
             ></report>
+=======
+        <div class="col-md-6" id="employee_info">
+            <info></info>
+>>>>>>> origin/master
         </div>
 
         {{--RIGHT SIDE BAR GOES HERE--}}

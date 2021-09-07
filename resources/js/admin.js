@@ -37,8 +37,11 @@ Vue.component('centcoin-list', require('./components/admin/centcoins/list.vue').
 Vue.component('centcoin-history', require('./components/admin/centcoins/history.vue').default);
 Vue.component('centcoin-spend', require('./components/admin/centcoins/spend.vue').default);
 Vue.component('centcoin-replenish', require('./components/admin/centcoins/relpenish.vue').default);
+<<<<<<< HEAD
 Vue.component('centcoin-items', require('./components/admin/centcoins/items.vue').default);
 Vue.component('centcoin-apply', require('./components/admin/centcoins/apply.vue').default);//выпадающая вкладка "заявка" в админке
+=======
+>>>>>>> origin/master
 
 Vue.component('org-structure', require('./components/admin/documentation/org-structure.vue').default);
 Vue.component('svg-load', require('./components/admin/documentation/svg-load.vue').default);

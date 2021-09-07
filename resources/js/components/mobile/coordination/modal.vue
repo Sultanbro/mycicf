@@ -1,9 +1,7 @@
 <template>
     <div class="">
-        <div class="modal fade bd-example-modal-lg" id="mainModal" tabindex="-1" role="dialog"
-             aria-labelledby="myLargeModalLabel" aria-hidden="true"
-            ref="mainModal"
-        >
+        <div class="modal fade bd-example-modal-lg" id="test" tabindex="-1" role="dialog"
+             aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content products-margin modal-custom-border-top">
                     <div class="bg-blue-standart pt-3">
@@ -54,17 +52,16 @@
                     <div class="bg-white">
                         <div>
                             <div class="table-responsive width100">
-                                <table class="table table-striped-white-blue mobile-coordination-table mobile-matching-active-table-contain table-striped text-align-center">
+                                <table class="table table-striped-white-blue mobile-matching-active-table-contain table-striped text-align-center">
                                     <thead>
                                     <tr class="color-blue bg-white">
                                         <th colspan="2">Дополнительные сведения</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="attribute in coordination.Attributes" :class="[{ModalColorfulText: attribute.Value.length > 200}, {cursor : attribute.Value.length > 200}]" class="coordinationModalTr">
-                                        <td>{{attribute.Name}}</td>
-                                        <td v-if="attribute.Value.length > 200" @click="openLongText(attribute.Name, attribute.Value)">{{attribute.Value.substring(0,200)}}...</td>
-                                        <td v-else>{{attribute.Value}}</td>
+                                    <tr class="color-blue" v-for="attribute in coordination.Attributes">
+                                        <td><strong>{{attribute.Name}}</strong></td>
+                                        <td><strong>{{attribute.Value}}</strong></td>
                                     </tr>
                                     <tr v-if="coordination.DocClass === '1010031'" class="coordinationModalTr">
                                         <td>Куратор документа</td>
@@ -148,7 +145,7 @@
                                             <i class="far fa-times-circle"></i>
                                         </div>
                                     </div>
-                                    <div class="flex-row pb-4 pr-4 pointer"  v-if='coordination.DocClass === "883011"'>
+                                    <div class="flex-row pb-4 pr-4 pointer">
                                         <div title="Согласовать"
                                              class="vertical-middle button-neutral matching-buttons width100 jc-center pl-4 pr-4 pt-1 pb-1" @click="sendSolution(2)">
                                             <i class="far fa-circle"></i>
@@ -171,19 +168,19 @@
                                         </div>
                                         <!--                                        <div><i class="fas fa-chevron-up"></i></div>-->
                                     </div>
-                                    <div class="mb-2 collapse" :id="'visa-date-unit_'+index">
+                                    <div class="mb-2 collapse show" :id="'visa-date-unit_'+index">
                                         <div class="table-responsive width100">
                                             <table class="dosier-table color-blue mobile-matching-second-table-contain box-shadow table text-align-center mb-0">
                                                 <tbody>
-                                                <!--<tr>-->
-                                                    <!--<td>Виза</td>-->
-                                                    <!--<td>-->
-                                                        <!--<i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>-->
-                                                        <!--<i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>-->
-                                                        <!--<i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>-->
-                                                        <!--<i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>-->
-                                                    <!--</td>-->
-                                                <!--</tr>-->
+                                                <tr>
+                                                    <td>Виза</td>
+                                                    <td>
+                                                        <i v-if="users.Solution === '-1'" class="far fa-question-circle blue-button"></i>
+                                                        <i v-if="users.Solution === '0'" class="far fa-times-circle red-button"></i>
+                                                        <i v-if="users.Solution === '1'" class="far fa-check-circle green-button"></i>
+                                                        <i v-if="users.Solution === '2'" class="far fa-dot-circle yellow-button"></i>
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td>Дата</td>
                                                     <td>{{users.Date}}</td>
@@ -191,10 +188,6 @@
                                                 <tr>
                                                     <td>Подразделение</td>
                                                     <td>{{users.Dept}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Примечание</td>
-                                                    <td>{{users.Remark}}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -207,28 +200,6 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="btn btn-primary" style="display: none;" ref="longTextButton" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>
-
-        <div class="modal fade bd-example-modal-sm" id="qwe" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm modal-margin">
-                <div class="modal-content border-rad-20">
-                    <div>
-                        <div class="flex-row border-top-rad-20 bg-blue-standart jc-center vertical-middle">
-                            <span class="color-white mt-2 mb-2">{{longTitle}}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div>
-                            <div class="color-dimgray mt-4 ml-5 mr-5 mb-2">{{longText}}</div>
-                        </div>
-                    </div>
-                    <div class="modal-footer border-top-0">
-                        <button type="button" class="btn color-white width100 bg-notification-center ml-4 mr-4" data-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </template>
 
@@ -238,9 +209,12 @@
         data() {
             return {
                 Remark: "",
+<<<<<<< HEAD
                 longText: "",
                 longTitle: "",
                 resolution: "0",
+=======
+>>>>>>> origin/master
             }
         },
         props: {
@@ -267,6 +241,7 @@
                 }
             },
             close() {
+<<<<<<< HEAD
                 this.$parent.$refs.modalButton.click();
             },
             openLongText (title, longText) {
@@ -286,6 +261,9 @@
             },
             checkIsDir(){
                 return this.$parent.isDirector;
+=======
+                this.$parent.$refs.modalButton.click()
+>>>>>>> origin/master
             }
         },
     }

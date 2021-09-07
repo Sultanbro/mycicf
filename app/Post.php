@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+<<<<<<< HEAD
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+=======
+>>>>>>> origin/master
 
 /**
  * App\Post
@@ -173,6 +176,7 @@ class Post extends Model
         }
     }
 
+<<<<<<< HEAD
     public function comments() {
         return $this->hasMany(Comment::class);
     }
@@ -317,4 +321,6 @@ class Post extends Model
         parent::save();
         (new NotificationController(app(NotificationServiceInterface::class)))->sendNewPostNotify($this);
     }
+=======
+>>>>>>> origin/master
 }

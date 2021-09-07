@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
+<<<<<<< HEAD
     use SoftDeletes;
 
     public function getIsMineAttribute() {
@@ -16,4 +16,7 @@ class Comment extends Model
 
         return $this->user_isn === auth()->user()->ISN;
     }
+=======
+    //
+>>>>>>> origin/master
 }

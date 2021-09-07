@@ -9,6 +9,7 @@
         <ul class="navbar-nav mr-auto">
             @if(App\User::isParseAdmin())
                 <li class="nav-item dropdown">
+<<<<<<< HEAD
                 <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">PARSE</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown09">
@@ -23,6 +24,19 @@
             </li>
             @endif
             @if(App\User::isOtdeKadrovAdmin())
+=======
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Отдел кадров</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown09">
+                        <a class="dropdown-item" href="{{route('centcoins.list')}}">Сенткойн - Список</a>
+                        <a class="dropdown-item" href="{{route('centcoins.history')}}">Сенткойн - История</a>
+                        <a class="dropdown-item" href="{{route('centcoins.replenish')}}">Сенткойн - Начисление</a>
+                        <a class="dropdown-item" href="{{route('centcoins.spend')}}">Сенткойн - Списывание</a>
+                        <a class="dropdown-item" href="#">Обучение - Справочник</a>
+                        <a class="dropdown-item" href="#">Обучение - Оценка</a>
+                    </div>
+                </li>
+>>>>>>> origin/master
                 <li class="nav-item dropdown">
                 <a class="nav-nav dropdown-toggle" href="#" id="dropdown09" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">Отдел кадров</a>

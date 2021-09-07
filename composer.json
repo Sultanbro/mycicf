@@ -13,10 +13,12 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "ext-soap": "*",
+<<<<<<< HEAD
         "aws/aws-sdk-php": "^3.148",
         "doctrine/dbal": "^2.10",
+=======
+>>>>>>> origin/master
         "fideloper/proxy": "^4.0",
-        "guzzlehttp/guzzle": "^6.4",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",

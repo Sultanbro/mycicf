@@ -61,6 +61,16 @@ class Branches extends Command
             Branch::where('verified', '=', '0')->delete();
             echo "Данные успешно обновлены\n";
         }
+<<<<<<< HEAD
+=======
+        echo "Меняем статус старых данных\n";
+        Branch::where('verified', '=', '1')->update(['verified' => '0']);
+        echo "Меняем статус новых данных\n";
+        Branch::where('verified', '=', '2')->update(['verified' => '1']);
+        echo "Удаляем старые данные\n";
+        Branch::where('verified', '=', '0')->delete();
+        echo "Данные успешно обновлены";
+>>>>>>> origin/master
         $responseTime = time() - $time;
         echo "Выпонено за {$responseTime} секунд\n";
         $time = time();
@@ -79,12 +89,15 @@ class Branches extends Command
         $model->kias_parent_id = $subject->ParentISN;
         $model->has_child = $subject->Kids;
         $model->verified = 2;
+<<<<<<< HEAD
         $model->duty = $subject->Duty;
         if($subject->Birthday != "0"){
             $model->birthday = date('Y-m-d H:i:s', strtotime($subject->Birthday));
         }else{
             $model->birthday = null;
         }
+=======
+>>>>>>> origin/master
         try{
             if($model->save()){
                 return true;

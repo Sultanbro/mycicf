@@ -461,6 +461,7 @@ class CoordinationController extends Controller
         ];
         return response()->json($result)->withCallback($request->input('callback'));
     }
+<<<<<<< HEAD
 
     public function getAgreedCoordination(Request $request, KiasServiceInterface $kias){
         $ISN = $request->ISN;
@@ -668,4 +669,6 @@ class CoordinationController extends Controller
         ]);
     }
 
+=======
+>>>>>>> origin/master
 }

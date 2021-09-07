@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div class="box-shadow radius-4px mt-3 pb-2">
         <div class="pt-4">
             <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
@@ -14,6 +15,31 @@
                             <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
                                 <div><i class="far fa-eye"></i></div>
                                 <div class="ml-2" @click="getOperations()">Показать</div>
+=======
+        <div class="box-shadow radius-4px mt-3 pb-2">
+            <div>
+                <span>
+                    <h4 class="ml-2">
+                        <strong>История операций</strong>
+                    </h4>
+                </span>
+            </div>
+            <div class="pt-4">
+                <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
+                    <div class="flex-row jc-sb">
+                        <div>
+                            <input v-model="dateBeg" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                        </div>
+                        <div>
+                            <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                        </div>
+                        <div>
+                            <div class="flex-row date-color pl-2 pr-2">
+                                <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
+                                    <div><i class="far fa-eye"></i></div>
+                                    <div class="ml-2" @click="getOperations()">Показать</div>
+                                </div>
+>>>>>>> origin/master
                             </div>
                         </div>
                     </div>
@@ -56,19 +82,11 @@
                 dateBeg: (new Date().getFullYear() - 1) + '-01-01',
                 dateEnd: new Date().getFullYear() + '-12-31',
                 operations: [],
-                centcoins: null,
             }
         },
-
-        props: {
-            isn: Number,
-        },
-
         mounted() {
             this.getOperations();
-            this.getCentcoins();
         },
-
         methods: {
             getOperations: function () {
                 this.axios.post('/getOperationsList', {
@@ -79,10 +97,10 @@
                     this.fetchOperations(response.data);
                 });
             },
-
             fetchOperations: function (response) {
                 this.operations = response;
             },
+<<<<<<< HEAD
 
             getCentcoins: function () {
                 this.axios.post('/getCentcoins', {isn: this.isn}).then(response => {
@@ -109,11 +127,14 @@
             itemIndex: function () {
                 this.price = this.itemsStorage[this.itemIndex].price;
             },
+=======
+>>>>>>> origin/master
         }
     }
 </script>
 
 <style scoped>
+<<<<<<< HEAD
     .buy-btn {
         color: #FFF;
         background-color: #0051f3;
@@ -135,5 +156,7 @@
     .buy-btn[disabled]:hover {
         box-shadow: none;
     }
+=======
+>>>>>>> origin/master
 
 </style>

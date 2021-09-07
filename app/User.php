@@ -189,6 +189,7 @@ class User extends Authenticatable
     public static function isWNDAdmin(){
         return (new Permissions())->checkUser([Permissions::ROLE_WND]);
     }
+<<<<<<< HEAD
 
     public static function isSenateAdmin(){
         return (new Permissions())->checkUser([Permissions::ROLE_SENATE]);
@@ -305,4 +306,6 @@ class User extends Authenticatable
 
         return $result;
     }
+=======
+>>>>>>> origin/master
 }
