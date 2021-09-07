@@ -21,20 +21,6 @@
 
 
 
-
-
-
-
-
-
-
-
-<!--
-
-
-
-
-
 <!--            <div class="custom-control custom-checkbox">-->
 <!--            <input type="checkbox" class="custom-control-input" name="Mytoggle" id="customCheck5" @click="toggleFunc(5)">-->
 <!--            <label class="custom-control-label" for="customCheck5">Программа обучения</label>-->
@@ -57,6 +43,10 @@
                     <button class="nav-link" id="v-pills-download-tab" data-bs-toggle="pill" data-bs-target="#v-pills-download" type="button" role="tab" aria-controls="v-pills-download" aria-selected="false">Программа обучения</button>
 
                 </div>
+
+
+
+ <!--_______________________________Назначить обучение____________________________-->
 
 
                 <div class="tab-content" id="v-pills-tabContent">
@@ -579,11 +569,16 @@
 
                     </div>
 
+
+
+                    <!--______________________________________________Программа обучения__________________________________________________-->
+
                     <div class="tab-pane fade" id="v-pills-download" role="tabpanel" aria-labelledby="v-pills-res-tab">
 
                         <div class="container ">
                             <h2 class="text-align-center">Программа обучения</h2>
                             <hr>
+                             <todoForm @added="addProgram"></todoForm>
                             <table class="table table-primary">
                                 <thead>
                                 <tr>
@@ -595,28 +590,18 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry the Bird</td>
-                                    <td>@twitter</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
+<!--                                <tr v-for="item in users">-->
+<!--                                    <th scope="row"></th>-->
+<!--                                    <td>Mark</td>-->
+<!--                                    <td>Otto</td>-->
+<!--                                    <td>@mdo</td>-->
+<!--                                    <td>@mdo</td>-->
+<!--                                </tr>-->
+                                   <tr>
+                                       <td v-for="user in users" :key="user.id">{{user.name}}</td>
+                                   </tr>
 
-                                </tr>
+
                                 </tbody>
                             </table>
 
@@ -707,14 +692,28 @@
 </template>
 
 <script>
+import todoForm from './form.vue'
 
 export default {
 
 name: "manager",
+    components: {
+    todoForm
+    },
+    methods: {
+
+
+
+        addProgram(toDoLabel) {
+            this.users.push(  {id: 1, name: toDoLabel, learn: 'Eng', deadline: '2021' },)
+        }
+
+    },
 
     data() {
 
     return {
+
 
 
         // Form info for a teacher
@@ -744,6 +743,7 @@ name: "manager",
 
 
     },
+
 
 }
 </script>

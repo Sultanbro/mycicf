@@ -1,0 +1,28 @@
+.font-size-0_7 {
+  font-size: 13px;
+}
+
+.font-size-0_8 {
+  font-size: 14px;
+}
+
+/* MEDIA QUERY */
+
+@media (min-width: 320px) and (max-width: 768px) {
+  textarea.min-width-50 {
+    width: 100% !important;
+  }
+
+  .uploader {
+    padding: 15px !important;
+    font-size: 15px !important;
+  }
+
+  .uploader .images-preview {
+    margin-top: 40px !important;
+    justify-content: center;
+  }
+}
+
+/* MEDIA QUERY */
+
