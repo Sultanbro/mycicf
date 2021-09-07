@@ -7,9 +7,10 @@
                         <div @click="getLevelOne(item.id, item.url)"
                              v-for="item in itemsLevelZero"
                              class="dropbtn d-flex p-3 ml-2"
-                            :class="item.id === levelOnePinned ? 'active' : ''">
+                            :class="item.id === levelOnePinned ? 'active' : ''"
+                        >
                             <img :src="item.icon_url">
-                            <span>{{item.label}}</span>
+                            <span @click="tabs(item.label)">{{item.label}}</span>
                         </div>
                     </div>
                 </div>
@@ -21,10 +22,10 @@
                         <div class="dropdown-content mb-4 flex-row" >
                             <!--Column 1-->
                             <div class="dropdown-content__list">
-                                <div v-for="innerItem in itemsLevelOne"
+                                    <div v-for="innerItem in itemsLevelOne"
                                      @click="getLevelTwo(innerItem.id, innerItem.url)"
                                      class="flex-row pl-4 pt-3 pb-3 dropbtn-inner"
-                                     :class="innerItem.id === levelTwoPinned ? 'inner-active' : ''">
+                                     :class="innerItem.id === levelTwoPinned  ? 'inner-active' : ''">
                                     <img :src="innerItem.icon_url"
                                          class="items-icons mr-2">
                                     <span class="d-flex">{{innerItem.label}}</span>
@@ -55,6 +56,8 @@
 
         mounted: function() {
             this.getItems(0);
+
+
         },
 
         data() {
@@ -69,13 +72,48 @@
                 itemsLevelTwo: [],
                 itemsLevelThree: [],
                 levelOnePinned: null,
-                levelTwoPinned: null,
+                levelTwoPinned: 21,
             }
         },
         props: {
             pinned_id: Number
         },
         methods: {
+
+            /*
+            *
+            *
+            *
+            * Method for default display the first column
+            * thanks to document.location interface for url handling by label from loop!
+            *
+            *
+            * */
+
+            tabs ( label ) {
+                if ( label === 'Бизнес процессы' ) {
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=11&childId=13')
+
+                } else if ( label === 'Инструкции КИАС' ){
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=37&childId=38')
+
+                } else if ( label === 'Протоколы' ) {
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=64&childId=65')
+                } else if ( label === 'Внутренние нормативные документы' ) {
+
+                    document.location.assign('http://127.0.0.1:8000/name?parentId=10&childId=21')
+                }
+
+
+            },
+
+
+
+
+
             showDropdown: function() {
                 this.isOpened = false;
                 this.levelOneOpened = false;
@@ -230,7 +268,7 @@
                         }
                     }
                 }
-                vm.pushUrl(id,'two',url);
+                vm.pushUrl(id,'ten',url);
             },
             fetchLevelTwo: function(response, id) {
                 var vm = this;
@@ -284,7 +322,7 @@
                     window.history.pushState({}, null, newUrl);
                 }
             }
-        },
+        }
     }
 </script>
 
