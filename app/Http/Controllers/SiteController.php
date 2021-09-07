@@ -580,7 +580,9 @@ class SiteController extends Controller
      */
     public function getPriceByData(Request $request){
         $result = [];
-        $model = KolesaPrices::where('link', $request->link)
+        $model = KolesaPrices::where('mark_id', $request->mark_id)
+            ->where('model_id', $request->model_id)
+            ->where('year', $request->year)
             ->latest()
             ->first();
         if($model === null){
