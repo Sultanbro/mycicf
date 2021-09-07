@@ -80,7 +80,6 @@ class ParseOracleController extends Controller
 
     public function getOracleCollect(Request $request)
     {
-
         //фильтр Даты
         if (empty($request->days)) {
             if ($request->first_period < '10') {
@@ -277,16 +276,9 @@ class ParseOracleController extends Controller
                 continue;
             $deptCollectSecond[$arrName][] = $collect;
         }
-
         $dept_data = [
             [
                 'empl_name' => 'ДКС',
-                'agrempl' => 1,
-                'brutto_prem' => 122,
-                'dsd' => 12,
-                'comission_and_rating' => 33,
-                'total_refund_sum' => 1123,
-                'netto_refund_sum' =>23,
                 'children' => [
                         0 => [
                             'empl_name' => 'Менеджеры ДКС',
@@ -296,6 +288,7 @@ class ParseOracleController extends Controller
                             'comission_and_rating' => array_sum(array_column($deptCollectFirst['dks'], 'comission_and_rating')),
                             'total_refund_sum' => array_sum(array_column($deptCollectFirst['dks'], 'total_refund_sum')),
                             'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dks'], 'netto_refund_sum')),
+                            'feesplan' => array_sum(array_column($deptCollectFirst['dks'], 'feesplan')),
                             'children' => $deptCollectFirst['dks'],
                         ],
                     1 => [
@@ -306,6 +299,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks1'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks1'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks1'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks1'], 'feesplan')),
                         'children' => $deptCollectFirst['uks1'],
                     ],
                     2 => [
@@ -316,6 +310,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks2'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks2'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks2'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks2'], 'feesplan')),
                         'children' => $deptCollectFirst['uks2'],
                     ],
                     3 => [
@@ -326,6 +321,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks3'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks3'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks3'], 'feesplan')),
                         'children' => $deptCollectFirst['uks3'],
                     ],
                     4 => [
@@ -336,6 +332,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks4'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks4'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks4'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks4'], 'feesplan')),
                         'children' => $deptCollectFirst['uks4'],
                     ],
                     5 => [
@@ -346,13 +343,13 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['ukr'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['ukr'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['ukr'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['ukr'], 'feesplan')),
                         'children' => $deptCollectFirst['ukr'],
                     ],
                 ]
             ],
             [
                 'empl_name' => 'ДСП',
-                'agrempl' => 101,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДСП',
@@ -362,6 +359,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsp'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['dsp'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dsp'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['dsp'], 'feesplan')),
                         'children' => $deptCollectFirst['dsp'],
                     ],
                     1 => [
@@ -372,6 +370,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['almaty'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['almaty'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['almaty'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['almaty'], 'feesplan')),
                         'children' => $deptCollectFirst['almaty'],
                     ],
                     2 => [
@@ -382,6 +381,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uap'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uap'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uap'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uap'], 'feesplan')),
                         'children' => $deptCollectFirst['uap'],
                     ],
                     3 => [
@@ -392,6 +392,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us1'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us1'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us1'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us1'], 'feesplan')),
                         'children' => $deptCollectFirst['us1'],
                     ],
                     4 => [
@@ -402,6 +403,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us2'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us2'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us2'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us2'], 'feesplan')),
                         'children' => $deptCollectFirst['us2'],
                     ],
                     5 => [
@@ -412,6 +414,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us3'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us3'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us3'], 'feesplan')),
                         'children' => $deptCollectFirst['us3'],
                     ],
                     6 => [
@@ -422,6 +425,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us4'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us4'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us4'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us4'], 'feesplan')),
                         'children' => $deptCollectFirst['us4'],
                     ],
                     7 => [
@@ -432,6 +436,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us5'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us5'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us5'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us5'], 'feesplan')),
                         'children' => $deptCollectFirst['us5'],
                     ],
                     8 => [
@@ -442,6 +447,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us6'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us6'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us6'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us6'], 'feesplan')),
                         'children' => $deptCollectFirst['us6'],
                     ],
                     9 => [
@@ -452,13 +458,13 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us7'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us7'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us7'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us7'], 'feesplan')),
                         'children' => $deptCollectFirst['us7'],
                     ],
                 ]
             ],
             [
                 'empl_name' => 'ДРПО',
-                'agrempl' => 121,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДРПО',
@@ -468,6 +474,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['drpo'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['drpo'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['drpo'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['drpo'], 'feesplan')),
                         'children' => $deptCollectFirst['drpo'],
                     ],
                     1 => [
@@ -478,13 +485,13 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['upp'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['upp'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['upp'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['upp'], 'feesplan')),
                         'children' => $deptCollectFirst['upp'],
                     ],
                 ]
             ],
             [
                 'empl_name' => 'ДП',
-                'agrempl' => 131,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДП',
@@ -494,13 +501,13 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['dp'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['dp'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dp'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['dp'], 'feesplan')),
                         'children' => $deptCollectFirst['dp'],
                     ],
                 ]
             ],
             [
                 'empl_name' => 'Филиалы',
-                'agrempl' => 3032441,
                 'children' => [
                     0 => [
                         'empl_name' => 'Нур-Султан',
@@ -510,6 +517,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'feesplan')),
                         'children' => $deptCollectFirst['nur_sultan'],
                     ],
                     1 => [
@@ -520,6 +528,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['aktobe'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['aktobe'], 'feesplan')),
                         'children' => $deptCollectFirst['aktobe'],
                     ],
                     2 => [
@@ -530,6 +539,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['shymkent'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['shymkent'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['shymkent'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['shymkent'], 'feesplan')),
                         'children' => $deptCollectFirst['shymkent'],
                     ],
                     3 => [
@@ -540,6 +550,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['koksh'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['koksh'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['koksh'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['koksh'], 'feesplan')),
                         'children' => $deptCollectFirst['koksh'],
                     ],
                     4 => [
@@ -550,6 +561,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['semei'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['semei'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['semei'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['semei'], 'feesplan')),
                         'children' => $deptCollectFirst['semei'],
                     ],
                     5 => [
@@ -560,6 +572,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['atyrau_obl'],
                     ],
                     6 => [
@@ -570,6 +583,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['aktobe_obl'],
                     ],
                     7 => [
@@ -580,6 +594,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kar_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kar_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kar_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kar_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['kar_obl'],
                     ],
                     8 => [
@@ -590,6 +605,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kos_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kos_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kos_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kos_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['kos_obl'],
                     ],
                     9 => [
@@ -600,6 +616,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['kyz_obl'],
                     ],
                     10 => [
@@ -610,6 +627,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['mang_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['mang_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['mang_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['mang_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['mang_obl'],
                     ],
                     11 => [
@@ -620,6 +638,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['pavlo_obl'],
                     ],
                     12 => [
@@ -630,6 +649,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['jambyl_obl'],
                     ],
                     13=> [
@@ -640,6 +660,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['sko'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['sko'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['sko'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['sko'], 'feesplan')),
                         'children' => $deptCollectFirst['sko'],
                     ],
                     14=> [
@@ -650,13 +671,13 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['vko'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['vko'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['vko'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['vko'], 'feesplan')),
                         'children' => $deptCollectFirst['vko'],
                     ],
                 ]
             ],
             [
                 'empl_name' => 'kupipolis',
-                'agrempl' => 772347,
                 'children' => [
                     0 => [
                         'empl_name' => 'kupipolis',
@@ -666,6 +687,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kupipolis'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kupipolis'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kupipolis'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kupipolis'], 'feesplan')),
                         'children' => $deptCollectFirst['kupipolis'],
                     ],
                     1 => [
@@ -676,13 +698,13 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['sdz'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['sdz'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['sdz'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['sdz'], 'feesplan')),
                         'children' => $deptCollectFirst['sdz'],
                     ],
                 ]
             ],
             [
                 'empl_name' => 'Отдел страхования',
-                'agrempl' => 432401,
                 'children' => [
                     0 => [
                         'empl_name' => 'Отдел страхования №1',
@@ -692,6 +714,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['os1'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['os1'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os1'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['os1'], 'feesplan')),
                         'children' => $deptCollectFirst['os1'],
                     ],
                     1 => [
@@ -702,6 +725,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['os3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['os3'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os3'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['os3'], 'feesplan')),
                         'children' => $deptCollectFirst['os3'],
                     ],
                     2 => [
@@ -712,96 +736,61 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['os3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['os6'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os6'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['os6'], 'feesplan')),
                         'children' => $deptCollectFirst['os6'],
                     ],
                 ]
             ],
-            [
-                'empl_name' => 'ДСВ',
-                'agrempl' => 501,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДСВ',
-                        'agrempl' => 502,
-                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dsv'], 'brutto_prem')),
-                        'dsd' => array_sum(array_column($deptCollectFirst['dsv'], 'dsd')),
-                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsv'], 'comission_and_rating')),
-                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dsv'], 'total_refund_sum')),
-                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dsv'], 'netto_refund_sum')),
-                        'children' => $deptCollectFirst['dsv'],
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДМС',
-                'agrempl' => 601,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДМС',
-                        'agrempl' => 602,
-                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dms'], 'brutto_prem')),
-                        'dsd' => array_sum(array_column($deptCollectFirst['dms'], 'dsd')),
-                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsv'], 'comission_and_rating')),
-                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dms'], 'total_refund_sum')),
-                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dms'], 'netto_refund_sum')),
-                        'children' => $deptCollectFirst['dms'],
-                    ],
-                ]
-            ],
         ];
+
         $dksb = array_sum(array_column($dept_data[0]['children'], 'brutto_prem'));
         $dksd = array_sum(array_column($dept_data[0]['children'], 'dsd'));
         $cr = array_sum(array_column($dept_data[0]['children'], 'comission_and_rating'));
         $total = array_sum(array_column($dept_data[0]['children'], 'total_refund_sum'));
         $netto = array_sum(array_column($dept_data[0]['children'], 'netto_refund_sum'));
+        $dksp = array_sum(array_column($dept_data[0]['children'], 'feesplan'));
 
         $dsp_b = array_sum(array_column($dept_data[1]['children'], 'brutto_prem'));
         $dsp_d = array_sum(array_column($dept_data[1]['children'], 'dsd'));
         $dsp_c = array_sum(array_column($dept_data[1]['children'], 'comission_and_rating'));
         $dsp_t = array_sum(array_column($dept_data[1]['children'], 'total_refund_sum'));
         $dsp_n = array_sum(array_column($dept_data[1]['children'], 'netto_refund_sum'));
+        $dsp_p = array_sum(array_column($dept_data[1]['children'], 'feesplan'));
 
         $drpo_b = array_sum(array_column($dept_data[2]['children'], 'brutto_prem'));
         $drpo_d = array_sum(array_column($dept_data[2]['children'], 'dsd'));
         $drpo_c = array_sum(array_column($dept_data[2]['children'], 'comission_and_rating'));
         $drpo_t = array_sum(array_column($dept_data[2]['children'], 'total_refund_sum'));
         $drpo_n = array_sum(array_column($dept_data[2]['children'], 'netto_refund_sum'));
+        $drpo_p = array_sum(array_column($dept_data[2]['children'], 'feesplan'));
 
         $dp_b = array_sum(array_column($dept_data[3]['children'], 'brutto_prem'));
         $dp_d = array_sum(array_column($dept_data[3]['children'], 'dsd'));
         $dp_c = array_sum(array_column($dept_data[3]['children'], 'comission_and_rating'));
         $dp_t = array_sum(array_column($dept_data[3]['children'], 'total_refund_sum'));
         $dp_n = array_sum(array_column($dept_data[3]['children'], 'netto_refund_sum'));
+        $dp_p = array_sum(array_column($dept_data[3]['children'], 'feesplan'));
 
         $fil_b = array_sum(array_column($dept_data[4]['children'], 'brutto_prem'));
         $fil_d = array_sum(array_column($dept_data[4]['children'], 'dsd'));
         $fil_c = array_sum(array_column($dept_data[4]['children'], 'comission_and_rating'));
         $fil_t = array_sum(array_column($dept_data[4]['children'], 'total_refund_sum'));
         $fil_n = array_sum(array_column($dept_data[4]['children'], 'netto_refund_sum'));
+        $fil_p = array_sum(array_column($dept_data[4]['children'], 'feesplan'));
 
         $kupi_b = array_sum(array_column($dept_data[5]['children'], 'brutto_prem'));
         $kupi_d = array_sum(array_column($dept_data[5]['children'], 'dsd'));
         $kupi_c = array_sum(array_column($dept_data[5]['children'], 'comission_and_rating'));
         $kupi_t = array_sum(array_column($dept_data[5]['children'], 'total_refund_sum'));
         $kupi_n = array_sum(array_column($dept_data[5]['children'], 'netto_refund_sum'));
+        $kupi_p = array_sum(array_column($dept_data[5]['children'], 'feesplan'));
 
         $os_b = array_sum(array_column($dept_data[6]['children'], 'brutto_prem'));
         $os_d = array_sum(array_column($dept_data[6]['children'], 'dsd'));
         $os_c = array_sum(array_column($dept_data[6]['children'], 'comission_and_rating'));
         $os_t = array_sum(array_column($dept_data[6]['children'], 'total_refund_sum'));
         $os_n = array_sum(array_column($dept_data[6]['children'], 'netto_refund_sum'));
-
-        $dsv_b = array_sum(array_column($dept_data[7]['children'], 'brutto_prem'));
-        $dsv_d = array_sum(array_column($dept_data[7]['children'], 'dsd'));
-        $dsv_c = array_sum(array_column($dept_data[7]['children'], 'comission_and_rating'));
-        $dsv_t = array_sum(array_column($dept_data[7]['children'], 'total_refund_sum'));
-        $dsv_n = array_sum(array_column($dept_data[7]['children'], 'netto_refund_sum'));
-
-        $dms_b = array_sum(array_column($dept_data[8]['children'], 'brutto_prem'));
-        $dms_d = array_sum(array_column($dept_data[8]['children'], 'dsd'));
-        $dms_c = array_sum(array_column($dept_data[8]['children'], 'comission_and_rating'));
-        $dms_t = array_sum(array_column($dept_data[8]['children'], 'total_refund_sum'));
-        $dms_n = array_sum(array_column($dept_data[8]['children'], 'netto_refund_sum'));
+        $os_p = array_sum(array_column($dept_data[6]['children'], 'feesplan'));
 
         $data = [
             [
@@ -812,6 +801,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $cr,
                 'total_refund_sum' => $total,
                 'netto_refund_sum' =>$netto,
+                'feesplan' => $dksp,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДКС',
@@ -821,6 +811,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['dks'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['dks'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dks'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['dks'], 'feesplan')),
                         'children' => $deptCollectFirst['dks'],
                     ],
                     1 => [
@@ -831,6 +822,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks1'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks1'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks1'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks1'], 'feesplan')),
                         'children' => $deptCollectFirst['uks1'],
                     ],
                     2 => [
@@ -841,6 +833,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks2'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks2'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks2'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks2'], 'feesplan')),
                         'children' => $deptCollectFirst['uks2'],
                     ],
                     3 => [
@@ -851,6 +844,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks3'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks3'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks3'], 'feesplan')),
                         'children' => $deptCollectFirst['uks3'],
                     ],
                     4 => [
@@ -861,6 +855,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uks4'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uks4'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uks4'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uks4'], 'feesplan')),
                         'children' => $deptCollectFirst['uks4'],
                     ],
                     5 => [
@@ -871,6 +866,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['ukr'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['ukr'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['ukr'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['ukr'], 'feesplan')),
                         'children' => $deptCollectFirst['ukr'],
                     ],
                 ]
@@ -883,6 +879,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $dsp_c,
                 'total_refund_sum' => $dsp_t,
                 'netto_refund_sum' =>$dsp_n,
+                'feesplan' => $dsp_p,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДСП',
@@ -892,6 +889,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsp'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['dsp'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dsp'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['dsp'], 'feesplan')),
                         'children' => $deptCollectFirst['dsp'],
                     ],
                     1 => [
@@ -902,6 +900,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['almaty'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['almaty'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['almaty'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['almaty'], 'feesplan')),
                         'children' => $deptCollectFirst['almaty'],
                     ],
                     2 => [
@@ -912,6 +911,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['uap'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['uap'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['uap'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['uap'], 'feesplan')),
                         'children' => $deptCollectFirst['uap'],
                     ],
                     3 => [
@@ -922,6 +922,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us1'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us1'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us1'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us1'], 'feesplan')),
                         'children' => $deptCollectFirst['us1'],
                     ],
                     4 => [
@@ -932,6 +933,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us2'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us2'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us2'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us2'], 'feesplan')),
                         'children' => $deptCollectFirst['us2'],
                     ],
                     5 => [
@@ -942,6 +944,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us3'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us3'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us3'], 'feesplan')),
                         'children' => $deptCollectFirst['us3'],
                     ],
                     6 => [
@@ -952,6 +955,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us4'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us4'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us4'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us4'], 'feesplan')),
                         'children' => $deptCollectFirst['us4'],
                     ],
                     7 => [
@@ -962,6 +966,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us5'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us5'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us5'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us5'], 'feesplan')),
                         'children' => $deptCollectFirst['us5'],
                     ],
                     8 => [
@@ -972,6 +977,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us6'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us6'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us6'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us6'], 'feesplan')),
                         'children' => $deptCollectFirst['us6'],
                     ],
                     9 => [
@@ -982,6 +988,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['us7'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['us7'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['us7'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['us7'], 'feesplan')),
                         'children' => $deptCollectFirst['us7'],
                     ],
                 ]
@@ -994,6 +1001,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $drpo_c,
                 'total_refund_sum' => $drpo_t,
                 'netto_refund_sum' =>$drpo_n,
+                'feesplan' => $drpo_p,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДРПО',
@@ -1003,6 +1011,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['drpo'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['drpo'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['drpo'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['drpo'], 'feesplan')),
                         'children' => $deptCollectFirst['drpo'],
                     ],
                     1 => [
@@ -1013,6 +1022,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['upp'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['upp'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['upp'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['upp'], 'feesplan')),
                         'children' => $deptCollectFirst['upp'],
                     ],
                 ]
@@ -1025,6 +1035,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $dp_c,
                 'total_refund_sum' => $dp_t,
                 'netto_refund_sum' =>$dp_n,
+                'feesplan'=> $dp_p,
                 'children' => [
                     0 => [
                         'empl_name' => 'Менеджеры ДП',
@@ -1034,6 +1045,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['dp'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['dp'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dp'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['dp'], 'feesplan')),
                         'children' => $deptCollectFirst['dp'],
                     ],
                 ]
@@ -1046,6 +1058,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $fil_c,
                 'total_refund_sum' => $fil_t,
                 'netto_refund_sum' =>$fil_n,
+                'feesplan' => $fil_p,
                 'children' => [
                     0 => [
                         'empl_name' => 'Нур-Султан',
@@ -1055,6 +1068,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['nur_sultan'], 'feesplan')),
                         'children' => $deptCollectFirst['nur_sultan'],
                     ],
                     1 => [
@@ -1065,6 +1079,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['aktobe'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['aktobe'], 'feesplan')),
                         'children' => $deptCollectFirst['aktobe'],
                     ],
                     2 => [
@@ -1075,6 +1090,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['shymkent'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['shymkent'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['shymkent'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['shymkent'], 'feesplan')),
                         'children' => $deptCollectFirst['shymkent'],
                     ],
                     3 => [
@@ -1085,6 +1101,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['koksh'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['koksh'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['koksh'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['koksh'], 'feesplan')),
                         'children' => $deptCollectFirst['koksh'],
                     ],
                     4 => [
@@ -1095,6 +1112,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['semei'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['semei'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['semei'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['semei'], 'feesplan')),
                         'children' => $deptCollectFirst['semei'],
                     ],
                     5 => [
@@ -1105,6 +1123,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['atyrau_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['atyrau_obl'],
                     ],
                     6 => [
@@ -1115,6 +1134,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['aktobe_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['aktobe_obl'],
                     ],
                     7 => [
@@ -1125,6 +1145,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kar_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kar_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kar_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kar_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['kar_obl'],
                     ],
                     8 => [
@@ -1135,6 +1156,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kos_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kos_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kos_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kos_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['kos_obl'],
                     ],
                     9 => [
@@ -1145,6 +1167,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kyz_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['kyz_obl'],
                     ],
                     10 => [
@@ -1155,6 +1178,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['mang_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['mang_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['mang_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['mang_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['mang_obl'],
                     ],
                     11 => [
@@ -1165,6 +1189,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['pavlo_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['pavlo_obl'],
                     ],
                     12 => [
@@ -1175,6 +1200,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['jambyl_obl'], 'feesplan')),
                         'children' => $deptCollectFirst['jambyl_obl'],
                     ],
                     13=> [
@@ -1185,6 +1211,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['sko'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['sko'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['sko'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['sko'], 'feesplan')),
                         'children' => $deptCollectFirst['sko'],
                     ],
                     14=> [
@@ -1195,6 +1222,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['vko'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['vko'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['vko'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['vko'], 'feesplan')),
                         'children' => $deptCollectFirst['vko'],
                     ],
                 ]
@@ -1207,6 +1235,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $kupi_c,
                 'total_refund_sum' => $kupi_t,
                 'netto_refund_sum' =>$kupi_n,
+                'feesplan' => $kupi_p,
                 'children' => [
                     0 => [
                         'empl_name' => 'kupipolis',
@@ -1216,6 +1245,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['kupipolis'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['kupipolis'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['kupipolis'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['kupipolis'], 'feesplan')),
                         'children' => $deptCollectFirst['kupipolis'],
                     ],
                     1 => [
@@ -1226,6 +1256,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['sdz'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['sdz'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['sdz'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['sdz'], 'feesplan')),
                         'children' => $deptCollectFirst['sdz'],
                     ],
                 ]
@@ -1238,6 +1269,7 @@ class ParseOracleController extends Controller
                 'comission_and_rating' => $os_c,
                 'total_refund_sum' => $os_t,
                 'netto_refund_sum' =>$os_n,
+                'feesplan' => $os_p,
                 'children' => [
                     0 => [
                         'empl_name' => 'Отдел страхования №1',
@@ -1247,6 +1279,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['os1'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['os1'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os1'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['os1'], 'feesplan')),
                         'children' => $deptCollectFirst['os1'],
                     ],
                     1 => [
@@ -1257,6 +1290,7 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['os3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['os3'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os3'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['os3'], 'feesplan')),
                         'children' => $deptCollectFirst['os3'],
                     ],
                     2 => [
@@ -1267,49 +1301,8 @@ class ParseOracleController extends Controller
                         'comission_and_rating' => array_sum(array_column($deptCollectFirst['os3'], 'comission_and_rating')),
                         'total_refund_sum' => array_sum(array_column($deptCollectFirst['os6'], 'total_refund_sum')),
                         'netto_refund_sum' => array_sum(array_column($deptCollectFirst['os6'], 'netto_refund_sum')),
+                        'feesplan' => array_sum(array_column($deptCollectFirst['os6'], 'feesplan')),
                         'children' => $deptCollectFirst['os6'],
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДСВ',
-                'agrempl' => 501,
-                'brutto_prem' => $dsv_b,
-                'dsd' => $dsv_d,
-                'comission_and_rating' => $dsv_c,
-                'total_refund_sum' => $dsv_t,
-                'netto_refund_sum' =>$dsv_n,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДСВ',
-                        'agrempl' => 502,
-                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dsv'], 'brutto_prem')),
-                        'dsd' => array_sum(array_column($deptCollectFirst['dsv'], 'dsd')),
-                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsv'], 'comission_and_rating')),
-                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dsv'], 'total_refund_sum')),
-                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dsv'], 'netto_refund_sum')),
-                        'children' => $deptCollectFirst['dsv'],
-                    ],
-                ]
-            ],
-            [
-                'empl_name' => 'ДМС',
-                'agrempl' => 601,
-                'brutto_prem' => $dms_b,
-                'dsd' => $dms_d,
-                'comission_and_rating' => $dms_c,
-                'total_refund_sum' => $dms_t,
-                'netto_refund_sum' =>$dms_n,
-                'children' => [
-                    0 => [
-                        'empl_name' => 'Менеджеры ДМС',
-                        'agrempl' => 602,
-                        'brutto_prem' => array_sum(array_column($deptCollectFirst['dms'], 'brutto_prem')),
-                        'dsd' => array_sum(array_column($deptCollectFirst['dms'], 'dsd')),
-                        'comission_and_rating' => array_sum(array_column($deptCollectFirst['dsv'], 'comission_and_rating')),
-                        'total_refund_sum' => array_sum(array_column($deptCollectFirst['dms'], 'total_refund_sum')),
-                        'netto_refund_sum' => array_sum(array_column($deptCollectFirst['dms'], 'netto_refund_sum')),
-                        'children' => $deptCollectFirst['dms'],
                     ],
                 ]
             ],

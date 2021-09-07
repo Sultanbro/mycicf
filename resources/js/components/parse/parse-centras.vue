@@ -8,8 +8,8 @@
             style="padding: 8px"
         >
             <a-input
-                v-ant-ref="c => (searchInput = c+ $children)"
-                :placeholder="`Search ${column.dataIndex}`"
+                v-ant-ref="c => (searchInput = c)"
+                :placeholder="`поиск по имени`"
                 :value="selectedKeys[0]"
                 style="width: 188px; margin-bottom: 8px; display: block;"
                 @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
@@ -57,56 +57,6 @@
     </a-table>
 </template>
 <script>
-    const columns = [
-        {
-            title: 'Департамент',
-            dataIndex: "empl_name",
-            agrempl: 'agrempl',
-            scopedSlots: {
-                filterDropdown: 'filterDropdown',
-                filterIcon: 'filterIcon',
-                customRender: 'customRender',
-            },
-            onFilter: (value, record) =>
-                record.empl_name
-                    .toString()
-                    .toLowerCase()
-                    .includes(value.toLowerCase()),
-            onFilterDropdownVisibleChange: visible => {
-                if (visible) {
-                    setTimeout(() => {
-                        this.searchInput.focus();
-                    }, 0);
-                }
-            },
-        },
-        {
-            title: 'Брутто Премии',
-            dataIndex: 'brutto_prem',
-            agrempl: 'agrempl',
-        },
-        {
-            title: 'ДСД',
-            dataIndex: 'dsd',
-            agrempl: 'agrempl',
-        },
-        {
-            title: 'АВ/Рейтинг',
-            dataIndex: 'comission_and_rating',
-            agrempl: 'agrempl',
-        },
-        {
-            title: 'Брутто Выплаты',
-            dataIndex: 'total_refund_sum',
-            agrempl: 'agrempl',
-        },
-        {
-            title: 'Нетто Выплаты',
-            dataIndex: 'netto_refund_sum',
-            agrempl: 'agrempl',
-        },
-    ];
-
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -123,7 +73,62 @@
         name:'parse-centras',
         data() {
             return {
-                columns,
+                columns: [
+                    {
+                        title: 'Департамент',
+                        dataIndex: "empl_name",
+                        agrempl: 'agrempl',
+                        width: 400,
+                        scopedSlots: {
+                            filterDropdown: 'filterDropdown',
+                            filterIcon: 'filterIcon',
+                            customRender: 'customRender',
+                        },
+
+                        onFilter: (value, record) =>
+                            record.empl_name
+                                .toString()
+                                .toLowerCase()
+                                .includes(value.toLowerCase()),
+                        onFilterDropdownVisibleChange: visible => {
+                            if (visible) {
+                                setTimeout(() => {
+                                    this.searchInput.focus();
+                                }, 0);
+                            }
+                        },
+                    },
+                    {
+                        title: 'План',
+                        dataIndex: 'feesplan',
+                        agrempl: 'agrempl',
+                    },
+                    {
+                        title: 'Брутто Премии',
+                        dataIndex: 'brutto_prem',
+                        agrempl: 'agrempl',
+                    },
+                    {
+                        title: 'ДСД',
+                        dataIndex: 'dsd',
+                        agrempl: 'agrempl',
+                    },
+                    {
+                        title: 'АВ/Рейтинг',
+                        dataIndex: 'comission_and_rating',
+                        agrempl: 'agrempl',
+                    },
+                    {
+                        title: 'Брутто Выплаты',
+                        dataIndex: 'total_refund_sum',
+                        agrempl: 'agrempl',
+                    },
+                    {
+                        title: 'Нетто Выплаты',
+                        dataIndex: 'netto_refund_sum',
+                        agrempl: 'agrempl',
+                    },
+                ],
                 rowSelection,
                 expandedRowKeys: [],
                 searchText: '',
