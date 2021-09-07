@@ -1,5 +1,6 @@
 <?php
 
+use \App\Http\Controllers\Api\QuizController;
 use Illuminate\Http\Request;
 
 /*
@@ -16,3 +17,15 @@ use Illuminate\Http\Request;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+
+    Route::resource('quiz', 'Api\QuizController');
+    Route::get('question/right/{id}', 'Api\QuizController@oneQuestionRightAnswers');
+    Route::get('question/{id}', 'Api\QuizController@oneQuestionAnswers');
+    Route::put('one/quiz/{id}', 'Api\QuizController@quizParametrsUpdate');
+    Route::put('question/material/{id}', 'Api\QuizController@saveMaterialByQuestion');
+    Route::delete('question/material/{id}', 'Api\QuizController@deleteMaterial');
+    Route::delete('question/{id}', 'Api\QuizController@deleteQuestionAnswers');
+    Route::resource('for_kias', 'Api\QuizForKiasController');
+    Route::resource('material', 'Api\EducationalMaterialController');
+    Route::resource('training_program', 'Api\TrainingProgramController');
+
