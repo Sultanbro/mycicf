@@ -13,7 +13,7 @@
                         <div class="flex-row date-color pl-2 pr-2">
                             <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
                                 <div><i class="far fa-eye"></i></div>
-                                <div class="ml-2" @click="getOperations()">Показать</div>
+                                <button class="ml-2 show-btn" @click="getOperations()">Показать</button>
                             </div>
                         </div>
                     </div>
@@ -114,6 +114,13 @@
 </script>
 
 <style scoped>
+.show-btn {
+    background: red !important;
+}
+     .show-btn:hover {
+         background: #00f7a5 !important;
+     }
+
     .buy-btn {
         color: #FFF;
         background-color: #0051f3;

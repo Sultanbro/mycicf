@@ -255,6 +255,7 @@ Vue.filter('numberFormat', (value) => {
 Vue.component('products-info', require('./components/productsinfo/productsinfo').default);
 Vue.component('step1', require('./components/productsinfo/step1').default);
 Vue.component('step2', require('./components/productsinfo/step2').default);
+Vue.component('manager', require('./components/knowledge/manager').default);
 
 window.onload = function(){
     var app = new Vue({
