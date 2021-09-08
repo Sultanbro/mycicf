@@ -830,31 +830,22 @@
             :contractName="contractName"
         >
         </contract-journal-modal>
-        <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
-        <div v-if="recordingCounterparty.type === 'КонтрагентАхд'">
-            <counterparty-journal-modal
-                :counterparty="counterparty"
-                :recordingCounterparty="recordingCounterparty"
-                :contragentAhd="contragentAhd"
-                :results="results"
-            >
-            </counterparty-journal-modal>
-        </div>
-        <div v-if="recordingCounterparty.type !== 'КонтрагентАхд'">
-            <button v-show="false" ref="modalCounterparty" type="button" data-toggle="modal" data-target="#counterpartyModal">Large modal</button>
-            <counterparty-journal-modal
-                :counterparty="counterparty"
-                :recordingCounterparty="recordingCounterparty"
-                :contragentAhd="contragentAhd"
-                :results="results"
-                :courtName="courtName"
-                :beneficiary="beneficiary"
-            >
-            </counterparty-journal-modal>
-        </div>
+        <button v-show="false" ref="modalCounterparty1" type="button" data-toggle="modal" :data-target=modalId.type>Large modal</button>
+        <counterparty-journal-modal
+            :counterparty="counterparty"
+            :recordingCounterparty="recordingCounterparty"
+            :contragentAhd="contragentAhd"
+            :results="results"
+            :courtName="courtName"
+            :beneficiary="beneficiary"
+            :modal-id="modalId"
+        >
+        </counterparty-journal-modal>
         <button v-show="false" ref="modalPaymentCommand" type="button" data-toggle="modal" data-target="#paymentModal">Large modal</button>
-        <payment-journal-modal>
-
+        <payment-journal-modal
+            :results="results"
+            :paymentCommand="paymentCommand"
+        >
         </payment-journal-modal>
     </div>
 </template>
@@ -985,7 +976,11 @@ export default {
             },
             notSelected: "Не выбрано",
             taxAuthorityCode: [],
-            openCounterpartyAhd: false,
+            modalId: {
+                type: "#counterpartyModal1",
+                id: "counterpartyModal1",
+                required : true
+            },
         }
     },
     created() {
@@ -1400,7 +1395,7 @@ export default {
             } else if(doc === 'КонтрагентАхд'){
                 this.preloader(false);
                 this.recordingCounterparty.type = doc
-                this.$refs.modalCounterparty.click();
+                this.$refs.modalCounterparty1.click();
             }
         },
         clearInfo(data){
@@ -1446,6 +1441,11 @@ export default {
                         this.results.resDop[i].val = ''
                         this.documentBase.fullName = ''
                         this.documentBase.isn = ''
+                    } else if(data === 'Распоряжение на выплату' && this.results.resDop[i].fullname === 'Распоряжение на выплату'){
+                        this.results.resDop[i].value = ''
+                        this.results.resDop[i].val = ''
+                        this.paymentCommand.fullName = ''
+                        this.paymentCommand.isn = ''
                     }
                 }
             }

@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade bd-example-modal-lg" :style="modalHide" id="counterpartyModal" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-lg" :style="modalHide" :id=modalId.id tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content products-margin modal-lg-custom modal-custom-border-top">
@@ -142,6 +142,7 @@ import moment from 'moment'
 export default {
     name: "counterparty-journal-modal",
     props: {
+        modalId: {},
         results: {},
         counterparty: {
             isn: '',
@@ -202,7 +203,6 @@ export default {
     },
     methods: {
         changeCheck(res, id){
-            // console.log(this.counterparty)
             if(this.searchingResult[id] !== id || this.searchingResult[id] === id){
                 this.counterparty.isn = ''
                 this.counterparty.fullName = ''
@@ -333,11 +333,20 @@ export default {
                     }
                 }
             }
-            this.$parent.$refs.modalCounterparty.click()
+            if (this.modalId.id == 'counterpartyModal2'){
+                this.$parent.$refs.modalCounterparty2.click()
+            } else if (this.modalId.id == 'counterpartyModal'){
+                this.$parent.$refs.modalCounterparty1.click()
+            }
+
             this.loading = false;
         },
         close() {
-            this.$parent.$refs.modalCounterparty.click()
+            if (this.modalId.id == 'counterpartyModal2'){
+                this.$parent.$refs.modalCounterparty2.click()
+            } else if (this.modalId.id == 'counterpartyModal1'){
+                this.$parent.$refs.modalCounterparty1.click()
+            }
         },
         preloader(show){
             if(show){

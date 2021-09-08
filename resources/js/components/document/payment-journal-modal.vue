@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade bd-example-modal-lg" :style="modalHide" id="docJournal" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-lg" :style="modalHide" id="paymentModal" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content products-margin modal-lg-custom modal-custom-border-top">
@@ -14,24 +14,19 @@
                                 </div>
                                 <div class="pt-2 pb-1 bold">
                                     <i class="far fa-file-alt"></i>
-                                    <span class="ml-2">Журнал документов</span>
+                                    <span class="ml-2">Журнал выплат</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="flex-row jc-sb flex-wrap">
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                            <div class="flex-column pt-2 pb-2 flex-row">
-                                <button class="btn-info ml-2">Новый документ</button>
-                            </div>
+                            <input type="checkbox">
+                            <span class="ml-2">Ограничение числа строк результата</span>
                         </div>
-<!--                        <div class="pl-5 pt-4 pb-4 pr-5">-->
-<!--                            <input type="checkbox">-->
-<!--                            <span class="ml-2">Ограничение числа строк результата</span>-->
-<!--                        </div>-->
                         <i v-if="loading" class="fas fa-spinner fa-spin"></i>
                         <div class="pl-5 pt-4 pb-4 pr-5">
-                                <button class="btn btn-info" @click="searchDocument">Поиск</button>
+                            <button class="btn btn-info" @click="searchPayment">Поиск</button>
                         </div>
                         <div class="tex">
                             <button class="btn btn-success" @click="getInfo">Ok</button>
@@ -47,79 +42,68 @@
                         <div class="border-bottom: 1px solid grey">
                             <span class="color-blue-standart">Критерии</span>
                         </div><hr>
-                        <div class="row justify-content-between">
-                            <div class="col-md-2">
+                        <div class="row">
+                            <div class="col-md-6">
                                 <label>Номер документа:</label>
                                 <div>
-                                    <input v-model="document.id" type="text"
+                                    <input type="text" v-model="document.number"
                                            class="form-control">
+                                </div>
+                            <div class="col-md-6">
+                                <label>Тип выплаты:</label>
+                                <div>
+                                    <select v-model="document.paymentType" class="form-control">
+                                        <option v-for="type in counterpartyType" :value="type[0]">{{ type[1] }}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label>Внешний номер:</label>
+                                <label>Приоритет:</label>
                                 <div>
-                                    <input v-model="document.extId" type="text"
-                                           class="form-control">
+                                    <select v-model="document.priority" class="form-control">
+                                        <option v-for="type in counterpartyType" :value="type[0]">{{ type[1] }}</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-3" v-show="results.classisn !== '1287701'">
-                                <label>Тип документа:</label>
+                            <div class="col-md-3">
+                                <label>Дата док. с:</label>
                                 <div>
-                                    <treeselect v-model="document.classIsn" placeholder="Не выбрано"
-                                                :multiple="false" :options="documentType" :disable-branch-nodes="true"/>
-                                    <div>
-                                        <input
-                                            v-model="document.showCancelled"
-                                            type="checkbox"
-                                            true-value="Y"
-                                            false-value="N"
-                                        >Показывать аннулированные документы
-                                    </div>
+                                    <input v-model="document.docDateFrom"
+                                           class="form-control"
+                                           type="tel" v-mask="'##.##.####'">
                                 </div>
                             </div>
-                            <div class="col-md-3" v-show="results.classisn === '1287701'">
-                                <label>Тип документа:</label>
+                            <div class="col-md-3">
+                                <label>Дата док. до:</label>
                                 <div>
-                                    <treeselect v-model="document.classIsn" placeholder="Не выбрано"
-                                                :multiple="false" :options="documentTypeAhd" :disable-branch-nodes="true"/>
-                                    <div>
-                                        <input
-                                            v-model="document.showCancelled"
-                                            type="checkbox"
-                                            true-value="Y"
-                                            false-value="N"
-                                        >Показывать аннулированные документы
-                                    </div>
+                                    <input v-model="document.docDateTo"
+                                           class="form-control"
+                                           type="tel" v-mask="'##.##.####'">
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label>Дата документа с:</label>
+                                <label>Дата платежа с.</label>
                                 <div>
-                                    <input v-model="document.docDateFrom" class="form-control"
+                                    <input class="form-control"
                                            type="tel"
+                                           v-model="document.datePaymentTo"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label>Дата документа до:</label>
+                                <label>Дата платежа до</label>
                                 <div>
-                                    <input v-model="document.docDateTo" class="form-control"
+                                    <input class="form-control"
                                            type="tel"
+                                           v-model="document.datePaymentTo"
                                            v-mask="'##.##.####'"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-between pt-2">
-                            <div v-if="results['classisn'] != '1287701'" class="col-md-3">
-                                <label>Контрагент:</label>
-                                <div>
-                                    <treeselect v-model="document.subjIsn" placeholder="Не выбрано" :multiple="false"
-                                                :options="userList" :disable-branch-nodes="true"/>
-                                </div>
-                            </div>
-                            <div v-if="results['classisn'] == '1287701'" class="col-md-3">
+                        <div class="row pt-2">
+                            <div class="col-md-3">
                                 <label>Контрагент:</label>
                                 <div class="input-group">
                                     <input v-model="contragent.fullName" @click="OpenModal('КонтрагентДокумент')" type="text" class="form-control">
@@ -134,106 +118,56 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label>Куратор (сотрудник):</label>
+                                <label>Сумма документа с:</label>
                                 <div>
-                                    <treeselect v-model="document.emplIsn" placeholder="Не выбрано" :multiple="false"
-                                                :options="userList" :disable-branch-nodes="true"/>
+                                    <input type="text" v-model="document.amountFrom"
+                                           class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label>Куратор (Подразделение):</label>
+                                <label>Сумма документа до:</label>
                                 <div>
-                                    <treeselect v-model="document.deptIsn" placeholder="Не выбрано" :multiple="false"
-                                                :options="options" :disable-branch-nodes="true"/>
+                                    <input type="text" v-model="document.amountTo"
+                                           class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label>Статус документа:</label>
-                                <select v-model="document.status" class="form-control">
-                                    <option value="">Все</option>
-                                    <option value="2515">Аннулирован</option>
-                                    <option value="2516">В работе</option>
-                                    <option value="2522">На подписи</option>
-                                    <option value="2517">Оплачен</option>
-                                    <option value="2518">Подписан</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row justify-content-between pt-2">
-                            <div class="col-md-3">
-                                <label>Стадия прохождения документа:</label>
+                            <div class="col-md-2">
+                                <label>Валюта</label>
                                 <div>
-                                    <select v-model="document.stage" class="form-control">
-                                        <option v-for="stagePassage in stagePassages" :value="stagePassage[0]">{{ stagePassage[1] }}</option>
+                                    <select v-model="document.currIsn" :disabled="addChange" class="form-control">
+                                        <option value="9813" selected>Тенге</option>
+                                        <option value="9716">Доллар США</option>
+                                        <option value="9721">Евро</option>
+                                        <option value="9788">Российский рубль</option>
+                                        <option value="9832">Фунт стерлингов</option>
+                                        <option value="9838">Швейцарский франк</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="row col-md-6 offset-md-3">
-                                <div class="col-md-4">
-                                    <label>Сумма док. от:</label>
-                                    <div>
-                                        <input v-model="document.amountFrom" class="form-control"
-                                               type="tel"
-                                               v-mask="'##.##.####'"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label>Сумма док. до:</label>
-                                    <div>
-                                        <input v-model="document.amountTo" class="form-control"
-                                               type="tel"
-                                               v-mask="'##.##.####'"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label>Валюта:</label>
-                                    <div>
-                                        <select v-model="document.currIsn" class="form-control">
-                                            <option value="9716">USD Доллар США</option>
-                                            <option value="9721">EUR Евро</option>
-                                            <option value="9788">RUB Российский рубль</option>
-                                            <option value="9813">KZT Тенге</option>
-                                            <option value="9832">GBP Фунт стерлингов</option>
-                                            <option value="9838">Швейцарский франк</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-
                     </div>
                     <div class="pl-5 pb-4 pr-5">
                         <div class="border-bottom: 1px solid grey">
                             <span class="color-blue-standart">Результат</span>
                         </div><hr>
                         <div class="fadeInRight">
-                            <div class="scrollable pb-4">
-                                <div class="table-responsive-sm pb-8">
+                            <div class="scrollable">
+                                <div class="table-responsive-sm pb-5">
                                     <table class="table table-bordered table-striped">
                                         <tbody>
                                         <tr>
                                             <td>№</td>
-                                            <td>Тип документа</td>
-                                            <td>Дата</td>
-                                            <td>Сумма док-та</td>
-                                            <td>Контрагент</td>
-                                            <td>Статус</td>
-                                            <td>Стадия</td>
-                                            <td>Куратор</td>
-                                            <td>ISN</td>
+                                            <td>Фамилия Имя Отчество</td>
+                                            <td>Дата рождения</td>
+                                            <td>ИИН</td>
+                                            <td>Тип контрагента</td>
                                         </tr>
-                                        <tr v-for="(doc, index) in searchingDocument" :key="index">
-                                            <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(doc, index)"></td>
-                                            <td><div @click="selectDocument(doc)">{{doc.className}}</div></td>
-                                            <td>{{doc.docDate}}</td>
-                                            <td>{{doc.amount}}</td>
-                                            <td>{{doc.subjName}}</td>
-                                            <td>{{doc.status}}</td>
-                                            <td>{{doc.stage}}</td>
-                                            <td>{{doc.emplName}}</td>
-                                            <td>{{doc.isn}}</td>
+                                        <tr v-for="(res, index) in searchingResult" :key="index">
+                                            <td><input type="radio" :id="index" :value="index" name="currentuser" @click="changeCheck(res, index)"></td>
+                                            <td><div @click="selectCounterparty(res, index)">{{res.lastName}} {{res.firstName}} {{res.parentName}}</div></td>
+                                            <td>{{res.birthday}}</td>
+                                            <td>{{res.iin}}</td>
+                                            <td>{{res.classIsn}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -244,36 +178,21 @@
                 </div>
             </div>
         </div>
-        <button v-show="false" ref="modalCounterparty2" type="button" data-toggle="modal" :data-target=modalId.type>Large modal</button>
-        <counterparty-journal-modal
-            :contragent="contragent"
-            :recordingCounterparty="recordingCounterparty"
-            :results="results"
-            :counterparty="counterparty"
-            :documentCounterparty="document"
-            :modal-id="modalId"
-        >
-        </counterparty-journal-modal>
+    </div>
     </div>
 </template>
 
 <script>
-import DatePicker from "vue2-datepicker";
-import 'vue2-datepicker/index.css';
-import MaskedInput from 'vue-text-mask';
-import 'vue2-datepicker/locale/ru';
-import moment from 'moment'
+import moment from "moment";
 import CounterpartyJournalModal from "./counterparty-journal-modal";
+import DatePicker from "vue2-datepicker";
+import MaskedInput from "vue-text-mask";
+
 export default {
-    name: "document-journal-modal",
+name: "payment-journal-modal",
     props: {
         results: Object,
-        recordingDocument: {},
-        documentName: {},
-        application: {},
-        bypassSheet: {},
-        contractAhd: {},
-        documentBase: {},
+        paymentCommand: {},
     },
     data() {
         return {
@@ -330,7 +249,7 @@ export default {
         this.getStagePassage();
     },
     methods: {
-        searchDocument() {
+        searchPayment() {
             this.loading = true;
             if(this.contragent.fullName != '' && this.contragent.isn != ''){
                 this.document.subjName = this.contragent.fullName;
@@ -459,7 +378,5 @@ export default {
 </script>
 
 <style scoped>
-    .scrollable {
-        overflow: scroll;
-    }
+
 </style>
