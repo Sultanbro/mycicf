@@ -11,12 +11,62 @@ class MotivationController extends Controller
         return view('motivation');
     }
 
+    /*Все что тянется с КИАС
+     * Category - 1 (головной)
+     * PercPlan         - Сборы с нарастанием (>80%)
+     * PlanFM           - Премии оплаченные (>50%)
+     * TotalProcK       - Себестоимость
+     * MotProc          - % мотивации
+     * SumPVTSF         - Сборы ОГПО физ.лица
+     * (SumFJury        - SumProcFJurY + SumFJurN)  - Чистые сборы
+     * EmplAgrDZ31      - Дебиторская задолженность
+     *
+     * Category - 1 (филиал)
+     * AmountF           - Премии оплаченные
+     * Plan              - План
+     * Vypolnenie        - Выполнение
+     * Sebestoimost      - Себестоимость
+     * EmplAgrDZ31Proc   - Дебиторская задолженность
+     * MotProc           - % мотивации
+     *
+     * Category - 2 (филиал)
+     * AmountF           - Премии оплаченные
+     * PlanP             - План
+     * SharePlan         - Выполнение
+     * Rentability       - Себестоимость
+     * DolyaVTSFis       - Доля ОГПО физических лиц (<20%)
+     * MotProc           - % мотивации
+     * PremMOT           - Премия
+     *
+     * Category - 3 (головной)
+     * AmountF           - Премии оплаченные
+     * TotalPrem         - К оплате по ОГПО
+     *
+     * Category - 4 (филиал)
+     * AmountF           - Премии оплаченные
+     * Plan              - План
+     * PercPlan          - Выполнение
+     * SumVTS123         - Сборы по ОГПО ВТС
+     * MotVTS123         - Мотивация по ОГПО ВТС
+     * DolyaVTSFis       - Доля ОГПО физических лиц (<20%)
+     * MOTOther          - Мотивация по иным классам
+     * QU                - Коэффициент Выплат
+     *
+     * Category - 5 (филиал)
+     * AmountF           - Премии оплаченные
+     * Plan              - Базовый план
+     * PlanM             - План менеджеров
+     * PercPlan          - Выполнение базового плана
+     * CostPrice         - Себестоимость
+     * MotSum       - Размер мотивации
+     */
     public function getMotivationList(Request $request, KiasServiceInterface $kias){
         $success = true;
         $error = '';
         $ISN = $request->isn;
         $begin = $request->begin;
         $motivations = [];
+        $mot_sum = '';
         $response = $kias->getEmplMotivation($ISN, $begin);
         if($response->error) {
             return response()
@@ -38,32 +88,36 @@ class MotivationController extends Controller
                 $list = [
                     [
                         'types' => 'Сборы с нарастанием (>80%)',
-                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'sum' => (number_format((double)$response->Mot->row->PlanF, 0, '.', ' ')).' '."/".' '.($response->Mot->row->PercPlan).'%',
                         'color' => (double)$response->Mot->row->PercPlan > 80 ? 'green' : 'red',
                     ],
                     [
                         'types' => 'Премии оплаченные (>50%)',
-                        'sum' => (number_format((double)$response->Mot->row->PlanFM ?? 0)).'%',
+                        'sum' => (number_format((double)$response->Mot->row->SumP, 0, '.', ' ')).' '."/".' '.($response->Mot->row->PlanFM).'%',
                         'color' => ((double)$response->Mot->row->PlanFM ?? 0) > 50 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Себестоимость',
-                        'sum' => (number_format((double)$response->Mot->row->TotalProcKV ?? 0)).'%',
+                        'types' => 'Себестоимость*',
+                        'sum' => ($response->Mot->row->TotalProcKV).'%',
                         'color' => ((double)$response->Mot->row->TotalProcKV ?? 0) < 45 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Чистые сборы',
-                        'sum' => (number_format((double)$response->Mot->row->NetFees, 0, '.', ' ') ?? 0),
+                        'types' => 'Чистые сборы для расчета мотивации',
+                        'sum' => (number_format(
+                            (double)$response->Mot->row->SumFJurY
+                            - (double)$response->Mot->row->SumProcFJurY
+                            + (double)$response->Mot->row->SumFJurN, 0, '.', ' ')),
                         'color' => 'transparent',
                     ],
                     [
-                        'types' => '% мотивации',
-                        'sum' => ((double)$response->Mot->row->MotProc ?? 0).'%',
+                        'types' => '% мотивации*',
+                        'sum' => ($response->Mot->row->MotProc ?? 0).'%',
                         'color' => 'transparent',
                     ],
+
                     [
                         'types' => 'Дебиторская задолженность',
-                        'sum' => (number_format((double)$response->Mot->row->DZ, 0, '.', ' ')),
+                        'sum' => (number_format((double)$response->Mot->row->EmplAgrDZ31, 0, '.', ' ')),
                         'color' => 'transparent'
                     ],
                     [
@@ -72,78 +126,223 @@ class MotivationController extends Controller
                         'color' => 'transparent'
                     ],
                 ];
+                //1 категория филиал
+                foreach ($list as $item => $elem){
+                    if($elem['sum'] === '0 / %'){
+                        $category = 1.1;
+                        $list = [
+                            [
+                                'types' => 'Премии оплаченные / (План)',
+                                'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ')).' '.'/'.' '.(number_format((double)$response->Mot->row->PlanP, 0, '.', ' ')),
+                                'color' => ((double)$response->Mot->row->AmountF ?? 0) > 100 ? 'green' : 'red',
+                            ],
+                            [
+                                'types' => 'Выполнение (>100%)',
+                                'sum' => (number_format((double)$response->Mot->row->Vypolnenie, 0, '.', ' ')).'%',
+                                'color' => ((double)$response->Mot->row->Vypolnenie ?? 0) > 100 ? 'green' : 'red',
+                            ],
+                            [
+                                'types' => 'Себестоимость*',
+                                'sum' => ($response->Mot->row->Sebestoimost).'%',
+                                'color' => 'transparent',
+                            ],
+                            [
+                                'types' => 'Дебиторская задолженность',
+                                'sum' => (number_format((double)$response->Mot->row->EmplAgrDZ31Proc, 0, '.', ' ')),
+                                'color' => 'transparent'
+                            ],
+                            [
+                                'types' => '% мотивации',
+                                'sum' => ($response->Mot->row->MotProc ?? 0).'%',
+                                'color' => 'transparent',
+                            ],
+                        ];
+                    }
+                }
                 break;
             case 2 :
                 $category = 2;
                 $mot_sum = (number_format((double)$response->Mot->row->MotPrem, 0, '.', ' ') ?? 0);
                 $list = [
                     [
-                        'types' => 'Оплаченные премии',
-                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0)."/".((double)$response->Mot->row->SharePlan ?? 0)."%",
-                        'color' => (double)$response->Mot->row->SharePlan ?? 0 > 80 ? 'green' : 'red',
+                        'types' => 'Премии оплаченные / (План)',
+                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
+                        'color' => (double)$response->Mot->row->SharePlan ?? 0 > 1000000 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Доля ОГПО физических лиц (<20%)',
-                        'sum' => (number_format((double)$response->Mot->row->DolyaVTSFis, 0, '.', ' ') ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->DolyaVTSFis ?? 0) < 20 ? 'green' : 'red',
+                        'types' => 'Выполнение (>100%)',
+                        'sum' => (number_format((double)$response->Mot->row->SharePlan, 0, '.', ' ') ?? 0).'%',
+                        'color' => ((double)$response->Mot->row->SharePlan ?? 0) > 100 ? 'green' : 'red',
                     ],
                     [
-                        'types' => 'Себестоимость',
+                        'types' => 'Себестоимость*',
                         'sum' => ((double)$response->Mot->row->Rentability ?? 0).'%',
-                        'color' => ((double)$response->Mot->row->Rentability ?? 0) < 45 ? 'green' : 'red',
+                        'color' => 'transparent'
+                    ],
+                    [
+                        'types' => 'Премия*',
+                        'sum' => (number_format((double)$response->Mot->row->PremMOT, 0,'.','') ?? 0),
+                        'color' => 'transparent'
                     ],
                 ];
                 break;
             case 3 :
                 $category = 3;
-                $motFirst = 0;
-                $motSecond = 0;
-                $list = [];
-                foreach ($response->Mot->row as $mot){
-                    if((string)$mot->OGPO == 'Y'){
-                        array_push($list, [
-                            'types' => 'Сборы по ОГПО ВТС',
-                            'sum' => (number_format((double)$mot->AmountF, 0, '.', ' ') ?? 0),
-                            'color' => 'green',
-                        ]);
-                        $motFirst += ((int)$mot->TotalPrem ?? 0);
-                    }else{
-                        array_push($list, [
-                            'types' => 'Сборы по иным классам',
-                            'sum' => (number_format((double)$mot->AmountF, 0, '.', ' ') ?? 0),
-                            'color' => 'green',
-                        ]);
-                        array_push($list, [
-                            'types' => 'Кросс-продажи',
-                            'sum' => (number_format((double)$mot->CrossSum, 0, '.', ' ') ?? 0),
-                            'color' => 'green',
-                        ]);
-                        $motSecond += ((int)$mot->TotalPrem ?? 0);
-                    }
-                    $mot_sum = number_format($motFirst + $motSecond, 0, '.', ' ');
-                }
-                break;
-//            case 4 :
-//                $category = 3;
-//                $motFirst = 0;
-//                $motSecond = 0;
-//                $list = [];
-//                foreach ($response->Mot->row as $mot){
-//                    array_push($list, [
-//                        'types' => 'Сборы по ОГПО ВТС',
-//                        'sum' => (number_format((double)$mot->AmountF, 0, '.', ' ') ?? 0),
-//                        'color' => 'green',
-//                    ]);
-//                    $motFirst += ((int)$mot->TotalPrem ?? 0);
-//                }
-//                break;
-//                break;
-            case 5 :
+                // Премия оплаченные
+                $sumPerc  = (double)$response->Mot->row[0]->AmountF + $response->Mot->row[1]->AmountF;
+                //План / 100%, который потом будет делить $sumPerc
+                $percentPerc = (double)$response->Mot->row[0]->Plan * 0.01;
 
+                $mot_sum = (number_format((double)$response->Mot->row[0]->Plan * 0.8, 0, '.', ' ')) <
+                    (number_format((double)$sumPerc, 0, '.', ' ')) ? (number_format((double)$response->Mot->row[0]->TotalPrem + $response->Mot->row[1]->TotalPrem, 0, '.', ' ')) : 0;
+
+                $list = [
+                    [
+                        'types' => 'План',
+                        'sum' => (number_format((double)$response->Mot->row[0]->Plan, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Выполнение( >80%)',
+                        'sum' => (number_format((double)$sumPerc, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$sumPerc / $percentPerc, 0, '.', ' ') ?? 0).'%',
+                        'color' => (number_format((double)$response->Mot->row[0]->Plan * 0.8, 0, '.', ' ') ?? 0) < (number_format((double)$sumPerc, 0, '.', ' ')) ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => '<b>ОГПО<b>',
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Премии оплаченные',
+                        'sum' => (number_format((double)$response->Mot->row[0]->AmountF, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => '% мотивации',
+                        'sum' => '3%',
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'К оплате по ОГПО',
+                        'sum' => (number_format((double)$response->Mot->row[0]->TotalPrem, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => '<b>Иные классы страхования<b>*',
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Премии оплаченные',
+                        'sum' => (number_format((double)$response->Mot->row[1]->AmountF, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => '% мотивации',
+                        'sum' => array (
+                                $response->Mot->row[1]->AmountF < 500000 ? '5%': false,
+                                $response->Mot->row[1]->AmountF > 500001 &&
+                                $response->Mot->row[1]->AmountF < 1000000 ? '7%':false,
+                                $response->Mot->row[1]->AmountF > 1000001 &&
+                                $response->Mot->row[1]->AmountF < 3000000 ? '9%':false,
+                                $response->Mot->row[1]->AmountF > 3000001 ? '11%':false
+                        ),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'К оплате по иным классам страхования',
+                        'sum' => (number_format((double)$response->Mot->row[1]->TotalPrem, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                ];
                 break;
+            case 4 :
+                $category = 4;
+                $mot_sum = (number_format((double)$response->Mot->row->TotalMot, 0, '.', ' ') ?? 0);
+                $ogpo = ((double)$response->Mot->row->SumVTS1
+                    + (double)$response->Mot->row->SumVTS2
+                    + (double)$response->Mot->row->SumVTS3);
+                $list = [
+                    [
+                        'types' => 'Премии оплаченные / (План)',
+                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0).' '.'/'.' '.(number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
+                        'color' => (double)$response->Mot->row->PercPlan ?? 0 > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Выполнение(>100%)',
+                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'color' => (double)$response->Mot->row->PercPlan ?? 0 > 80 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Сборы по ОГПО ВТС*',
+                        'sum' => (number_format((double)$response->Mot->row->SumVTS1
+                                + $response->Mot->row->SumVTS2
+                                + $response->Mot->row->SumVTS3, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Сборы по иным классам',
+                        'sum' => (number_format((double)$response->Mot->row->SumOth, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Мотивация по ОГПО ВТС',
+                        'sum' => (number_format((double)$response->Mot->row->MotVts1
+                            + $response->Mot->row->MotVts2
+                            + $response->Mot->row->MotVts3, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Мотивация по иным классам*',
+                        'sum' => (number_format((double)$response->Mot->row->MOTOther, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Коэффициент Выплат*',
+                        'sum' => (number_format((double)$response->Mot->row->QU, 0, '.', ' ') ?? 0).'%',
+                        'color' => 'transparent',
+                    ],
+                ];
+                break;
+            case 5 :
+                /*$category = 5;
+                $mot_sum = (number_format((double)$response->Mot->row->TotalMotSum, 0, '.', ' ') ?? 0);
+                $list = [
+                    [
+                        'types' => 'Премии оплаченные',
+                        'sum' => (number_format((double)$response->Mot->row->AmountF, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Базовый план*',
+                        'sum' => (number_format((double)$response->Mot->row->Plan, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'План менеджеров',
+                        'sum' => (number_format((double)$response->Mot->row->PlanM, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Выполнение базового плана',
+                        'sum' => (number_format((double)$response->Mot->row->PercPlan, 0, '.', ' ') ?? 0).'%',
+                        'color' => (double)$response->Mot->row->PercPlan ?? 0 > 100 ? 'green' : 'red',
+                    ],
+                    [
+                        'types' => 'Себестоимость*',
+                        'sum' => ((double)$response->Mot->row->CostPrise ?? 0).'%',
+                        'color' => 'transparent',
+                    ],
+                    [
+                        'types' => 'Размер мотивации*',
+                        'sum' => (number_format((double)$response->Mot->row->MotSum, 0, '.', ' ') ?? 0),
+                        'color' => 'transparent',
+                    ],
+                ];
+                break;*/
             default :
                 $list = [];
         }
+        $x_axis = array();
+        $y_axis = array();
         if(isset($mot_sum)) {
             $finded = false;
             if(isset($response->MOTLIST->row)) {
@@ -153,6 +352,8 @@ class MotivationController extends Controller
                         'Date' => date('m.Y', strtotime($value->Date)),
                         'Sum' => (int)$value->Motivation
                     ]);
+                    array_push($x_axis, date('m.Y', strtotime($value->Date)));
+                    array_push($y_axis, (int)$value->Motivation);
                 }
             }
             if(!$finded){
@@ -162,6 +363,11 @@ class MotivationController extends Controller
                 ]);
             }
         }
+        $chart_data = array(
+            'x_axis' => array_reverse($x_axis),
+            'y_axis' => array_reverse($y_axis),
+        );
+
         return response()
             ->json([
                 'success' => true,
@@ -169,8 +375,9 @@ class MotivationController extends Controller
                 'list' => $list,
                 'motivations' => array_reverse($motivations),
                 'cat' => $category,
-                'mot_sum' => $mot_sum
-        ])
+                'mot_sum' => $mot_sum,
+                'chart_data' => $chart_data,
+            ])
             ->withCallback(
                 $request->input(
                     'callback'

@@ -29,7 +29,8 @@ class Permissions extends Model
     const ROLE_MODERATOR = 5;
     const ROLE_SENATE = 6;
     const ROLE_READING_CLUB = 7;
-    const ROLE_PRODUCTS = 7;
+    const ROLE_PRODUCTS = 7; // 8
+    const ROLE_PRODUCTSINFO = 9;
     const ROLE_KURATORS = 8;
 
     public function __construct(array $attributes = [])
@@ -56,6 +57,15 @@ class Permissions extends Model
 
     }
 
+    /**
+     * TODO Метод лучше сделать статическим
+     *
+     * Пользователя можно передавать аргументом с дефолтным значением null ($user = null).
+     * В этом случае использовать Auth::user()
+     *
+     * @param $roles
+     * @return bool
+     */
     public function checkUser($roles){
         array_push($roles, Permissions::ROLE_SUPERADMIN);
         $data = Permissions::whereIn('permission_id', $roles)

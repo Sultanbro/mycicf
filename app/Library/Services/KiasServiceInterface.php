@@ -2,6 +2,12 @@
 
 namespace App\Library\Services;
 
+use App\XML\Kias\GetAttachmentDataResult;
+use App\XML\Kias\GetBranchesResult;
+use App\XML\Kias\GetEmplInfoResult;
+use App\XML\Kias\GetUpperLevelResult;
+use App\XML\Kias\MyCoordinationListResult;
+
 /**
  * Interface KiasServiceInterface
  *
@@ -16,7 +22,7 @@ interface KiasServiceInterface
      * @param $username string
      * @param $password string
      *
-     * @return mixed
+     * @return \App\XML\Kias\AuthenticateResult
      */
     public function authenticate($username, $password);
 
@@ -32,7 +38,7 @@ interface KiasServiceInterface
      *
      * @param $ISN
      *
-     * @return mixed
+     * @return GetUpperLevelResult
      */
     public function getUpperLevel($ISN);
 
@@ -43,21 +49,21 @@ interface KiasServiceInterface
      * @param $dateBeg
      * @param $dateEnd
      *
-     * @return mixed
+     * @return GetEmplInfoResult
      */
     public function getEmplInfo($ISN, $dateBeg, $dateEnd);
 
     /**
      * Получить список всех подразделении и сотрудников
      *
-     * @return mixed
+     * @return GetBranchesResult
      */
     public function getBranches();
 
     /**
      * Получить вложение из документа/договора/контрагента
      *
-     * @return mixed
+     * @return GetAttachmentDataResult
      */
     public function getAttachmentData($refisn, $isn, $pictType);
 
@@ -66,7 +72,7 @@ interface KiasServiceInterface
      *
      * @param $ISN
      *
-     * @return mixed
+     * @return MyCoordinationListResult
      */
     public function myCoordinationList($ISN);
 
@@ -274,7 +280,7 @@ interface KiasServiceInterface
 
     public function getDictiList($parent);
 
-    public function getSubject($firstName, $lastName, $patronymic, $iin);
+    public function getSubject($firstName, $lastName, $patronymic, $iin, $isn = null);
 
     public function expressCalculator($ISN, $SubjISN, $addAttr, $nshb);
 
@@ -300,4 +306,146 @@ interface KiasServiceInterface
      * @return mixed
      */
     public function getDocRating($class_isn);
+
+    /**
+     * @param $data
+     * @param $dataParams
+     * @return mixed
+     */
+    public function getPrintableOrderDocument($data, $dataParams);
+
+    /**
+     * Сброс пароля
+     * @param $subjIsn
+     * @param $password
+     * @return mixed
+     */
+    public function resetPassword($subjIsn, $password);
+
+    /**
+     * @param $emplIsn
+     * @param $dateBeg
+     * @param $dateEnd
+     * @param $status
+     * @return mixed
+     */
+    public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status);
+
+    /**
+     * @param $isns
+     * @param $id
+     * @param $extID
+     * @param $amount
+     * @param $currIsn
+     * @param $class_isn
+     * @param $status_isn
+     * @param $emplIsn
+     * @param $signerIsn
+     * @param $extSignerIsn
+     * @param $docDate
+     * @param $dateBeg
+     * @param $dateEnd
+     * @param $subjIsn
+     * @param $remark
+     * @param $row
+     * @param $doc
+     * @return mixed
+     */
+    public function userCicSaveDocument($isns, $id, $extID, $amount, $currIsn, $status_isn, $class_isn,  $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $earlyTerminationDate, $subjIsn, $remark, $row, $doc);
+
+    /**
+     * @param $row
+     * @return mixed
+     */
+    public function userCicChangeDocCoordination($row);
+
+    /**
+     * @param $tarifIsn
+     * @return mixed
+     */
+    public function userCicGetDictiList($tarifIsn);
+
+    /**
+     * @param $id
+     * @param $extId
+     * @param $classIsn
+     * @param $docDateFrom
+     * @param $docDateTo
+     * @param $showCancelled
+     * @param $subjIsn
+     * @param $deptIsn
+     * @param $emplIsn
+     * @param $amountFrom
+     * @param $amountTo
+     * @param $currIsn
+     * @param $taskIsn
+     * @param $pageNo
+     * @return mixed
+     */
+    public function documentSearch($id, $extId, $classIsn, $docDateFrom, $docDateTo, $showCancelled, $subjIsn, $deptIsn, $emplIsn, $amountFrom, $amountTo, $currIsn, $taskIsn, $pageNo);
+
+    /**
+     * @param $juridical
+     * @param $iin
+     * @param $firstName
+     * @param $lastName
+     * @param $parentName
+     * @param $classISN
+     * @param $esbdSearch
+     * @return mixed
+     */
+    public function userCicSearchSubject($juridical, $orgName, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch);
+
+    /**
+     * @param $iin
+     * @param $firstName
+     * @param $lastName
+     * @param $parentName
+     * @param $birthday
+     * @param $juridical
+     * @param $resident
+     * @param $sexId
+     * @param $countryIsn
+     * @return mixed
+     */
+    public function userCicSaveSubject($iin, $firstName, $lastName, $parentName, $birthday, $juridical, $resident, $sexId, $countryIsn);
+
+    /**
+     * @param $id
+     * @param $dateSignFrom
+     * @param $dateSignTo
+     * @param $classIsn
+     * @param $dateBegFrom
+     * @param $dateBegTo
+     * @param $deptIsn
+     * @param $emplIsn
+     * @param $productIsn
+     * @param $statusIsn
+     * @param $taskIsn
+     * @param $pageNo
+     * @return mixed
+     */
+    public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo);
+
+    /**
+     * @param $id
+     * @param $blankSerNo
+     * @param $dateBegFrom
+     * @param $dateBegTo
+     * @param $dateEndFrom
+     * @param $dateEndTo
+     * @param $dateSignFrom
+     * @param $dateSignTo
+     * @param $productIsn
+     * @param $emplIsn
+     * @param $status
+     * @return mixed
+     */
+    public function AgrSearch ($id, $blankSerNo, $dateBegFrom, $dateBegTo, $dateEndFrom, $dateEndTo, $dateSignFrom, $dateSignTo, $productIsn, $emplIsn, $status);
+
+    /**
+     * @param $doc_isn
+     * @return mixed
+     */
+    public function getOrSetEorderDocs($doc_isn);
 }

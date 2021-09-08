@@ -17,16 +17,23 @@
 
 // Роуты для Песочницы
 Route::get('/sandbox/index', 'SandboxController@index');
+Route::get('/sandbox/test', 'SandboxController@test');
+Route::get('/sandbox/react', 'SandboxController@react');
+Route::get('/sandbox/react2', 'SandboxController@react2');
+Route::get('/sandbox/error', 'SandboxController@error');
 Route::get('/sandbox/avarkom', 'SandboxController@avarkom');
 Route::get('/sandbox/removeDicti', 'SandboxController@removeDicti');
+Route::get('/sandbox/upload', 'SandboxController@upload');
+Route::post('/sandbox/uploadDocs', 'SandboxController@uploadDocs');
 Route::get('/inspection/storage', 'PreInsuranceInspectionController@storage')->name('inspection.storage');
 
 Route::get('/sendNotification', 'NotificationController@sendNotify');
-
+Route::post('/document/test', 'SiteController@test');
 Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function () {
     Route::get('/dima', 'Admin\SiteController@dimaAdmin');
     Route::get('/', 'Admin\SiteController@showLoginForm');
-    Route::post('/login', 'Admin\SiteController@checkLogin');
+    Route::post('/login', 'Admin\SiteController@checkLogin')->name('login');
+    Route::post('/login', 'Admin\SiteController@checkLogin')->name('dusk.login');
     Route::group(['middleware' => ['checkAuth', 'checkSession', 'checkAdminAuth']], function () {
         Route::get('index', 'Admin\SiteController@index');
         Route::get('/logout', 'SiteController@logout');
@@ -81,6 +88,8 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/centcoins/historyList', 'Admin\CentcoinsController@getHistoryList');
             Route::post('/centcoins/addCoins', 'Admin\CentcoinsController@addCoins');
             Route::post('/centcoins/spendCoins', 'Admin\CentcoinsController@spendCoins');
+            Route::post('/centcoins/spendCoinAll', 'Admin\CentcoinsController@spendCoinAll');
+            Route::post('/centcoins/spendCoinData', 'Admin\CentcoinsController@spendCoinData');
             Route::post('/centcoins/addItem', 'Admin\CentcoinsController@addItem');
             Route::post('/centcoins/apply', 'Admin\CentcoinsController@getApply');
             Route::post('/apply/accept', 'Admin\CentcoinsController@getStatusAccept');
@@ -164,6 +173,44 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
             Route::post('/rating/setNewUser', 'Admin\RatingPermissionController@newUser');
             Route::get('/rating/delete/{kurators}', 'Admin\RatingPermissionController@deleteById');
         });
+
+        Route::group(['middleware' => 'productsinfoAdmin'], function () {
+//            Route::get('/productsinfo/org_structure', 'Admin\DocumentationController@orgStructure')->name('productsinfo.org');
+//            Route::post('productsinfo/save_struct', 'Admin\ProductsInfoController@saveStructure');
+
+//            Route::get('productsinfo/svg', 'Admin\ProductsInfoController@loadSvg')->name('productsinfo.svg');
+//            Route::post('productsinfo/save_svg', 'Admin\ProductsInfoController@saveSvg');
+//
+//            Route::get('productsinfo/word', 'Admin\ProductsInfoController@loadWord')->name('productsinfo.word');
+//            Route::post('productsinfo/save_word', 'Admin\ProductsInfoController@saveWord');
+
+            Route::get('productsinfo/image', 'Admin\ProductsInfoController@loadImage')->name('productsinfo.image');
+            Route::post('productsinfo/save_image', 'Admin\ProductsInfoController@saveImage');
+
+            Route::get('productsinfo/menu', 'Admin\ProductsInfoController@menu')->name('productsinfo.menu');
+            Route::post('productsinfo/save_menu', 'Admin\ProductsInfoController@saveMenu');
+            Route::post('productsinfo/list_menu', 'Admin\ProductsInfoController@listMenu');
+
+            Route::get('productsinfo/svg/list', 'Admin\ProductsInfoController@svgList')->name('productsinfo.svg.list');
+            Route::post('productsinfo/get/svgList', 'Admin\ProductsInfoController@getSvgList');
+            Route::post('productsinfo/delete/svg', 'Admin\ProductsInfoController@deleteSvg');
+
+            Route::get('productsinfo/word/list', 'Admin\ProductsInfoController@wordList')->name('productsinfo.word.list');
+            Route::get('productsinfo/description/list', 'Admin\ProductsInfoController@descriptionList')->name('productsinfo.description.list');
+            Route::post('productsinfo/get/descriptionList', 'Admin\ProductsInfoController@getDescriptionList');
+            Route::post('productsinfo/delete/word', 'Admin\ProductsInfoController@deleteWord');
+
+            Route::get('productsinfo/menu/list', 'Admin\ProductsInfoController@menuList')->name('productsinfo.menu.list');
+            Route::post('productsinfo/get/menuList', 'Admin\ProductsInfoController@getMenuList');
+            Route::post('/productsinfo/delete/menu', 'Admin\ProductsInfoController@deleteMenu');
+            Route::post('/productsinfo/getEditMenu', 'Admin\ProductsInfoController@getEditMenu');
+            Route::post('/productsinfo/deleteItem', 'Admin\ProductsInfoController@deleteItem');
+
+            Route::get('productsinfo/pdf', 'Admin\ProductsInfoController@loadPdf')->name('productsinfo.pdf');
+            Route::post('productsinfo/save_pdf', 'Admin\ProductsInfoController@savePdf');
+            Route::post('/productsinfo/save_file', 'Admin\ProductsInfoController@saveFile');
+            Route::post('/productsinfo/saveDescription', 'Admin\ProductsInfoController@saveDescription');
+        });
     });
 });
 
@@ -171,17 +218,29 @@ Route::group(['domain' => env('BACKEND_DOMAIN', 'my-admin.cic.kz')], function ()
  * FRONTEND APP
  * add local url to .env FRONTEND_DOMAIN
  */
-Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
+Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function () {
+
+    Route::get('/document-isn', 'DocumentManagementController@getDocumentIsn')->name('document.show');
+    Route::post('/createUser', 'DocumentManagementController@createUser');
     Route::get('/', 'SiteController@getIndex')->name('index');
-    Route::post('/login', 'SiteController@postLogin');
+    Route::post('/login', 'SiteController@postLogin')->name('login');
     Route::get('getModerators', 'SiteController@getModerators');
-    Route::post('/getBirthdays', 'SiteController@getBirthdays');
+    Route::post('/getBirthdays', 'SiteController@getBirthdays')->name('getBirthdays');
 
     Route::get('eds/od', 'EdsController@edsOD');
+    Route::get('eds/po', 'EdsController@edsPO');
+    Route::get('eds/pr' , 'EdsController@edsPR');
+    Route::post('/signqr', 'EdsController@signQr');
+    Route::post('/setQr', 'EdsController@setQr');
+    Route::post('/setQrPo', 'EdsController@setQrPo');
 
     Route::group(['middleware' => ['checkAuth', 'checkSession']], function () {
+        Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
         Route::group(['middleware' => 'duty'], function () {
             Route::get('test/eds', 'SiteController@testEds');
+            Route::post('/save_document', 'EdsController@saveDocument');
+            Route::post('/get_or_set_doc', 'EdsController@getOrSetDoc');
+            Route::post('/save_fail_status', 'EdsController@saveFailStatus');
             Route::get('/getEDS', 'SiteController@getEds');
             Route::post('/eds-by-isn', 'SiteController@edsByIsn')->name('eds-by-isn');
             Route::post('/save_eds_info', 'SiteController@saveEdsInfo');
@@ -190,6 +249,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::post('/getBranchData', 'SiteController@postBranchData');
             Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
             Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+            Route::post('/get-printable-order-document', 'EdsController@getPrintableOrderDocument');
             Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
             //DOSSIER
             Route::post('/emplInfo', 'SiteController@postEmplInfo');
@@ -202,13 +262,62 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
             Route::post('/documentation/search', 'DocumentationController@search');
             //PARSE
-            Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
+            /*Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');*/
+            //NEW PARSE
+            Route::get('parse', 'ParseController@DataCompany')->name('parse');
+            Route::get('parse/company/icompany', 'ParseController@getCompanyTopSum');
+            Route::get('parse/company/product', 'ParseController@getClassTopSum');
+            Route::post('parse/company/opu', 'ParseController@getOpuNewSum');
+            Route::post('parse/company/balance', 'ParseController@getBalanceNewSum');
+
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-            Route::get('parse', 'ParseController@redirectToCompany')->name('parse');
+            /*Route::get('parse', 'ParseController@redirectToCompany')->name('parse');*/
+        Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
+        Route::post('/getBranchData', 'SiteController@postBranchData');
+        Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');
+        Route::get('/getPrintableDocument/{ISN}/{TEMPLATE}/{CLASS}', 'SiteController@getPrintableDocument');
+        Route::post('/getMonthLabels', 'SiteController@getMonthLabel');
+        //DOSSIER
+        Route::post('/emplInfo', 'SiteController@postEmplInfo');
+        Route::get('/dossier', 'SiteController@dossier')->name('dossier');
+        //COORIDNATION
+        Route::get('/coordination', 'CoordinationController@index')->name('coordination');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+        Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
+        Route::post('/setCoordination', 'CoordinationController@setCoordination');
+        Route::post('/getAttachmentList', 'CoordinationController@getAttachments');
+        //DOCUMENTATION ADMIN MIDDLEWARE
+        Route::get('/documentation/a', 'DocumentationController@index')->name('documentation');
+        Route::post('/documentation/save', 'DocumentationController@save');
+        Route::get('/documentation/svg', 'DocumentationController@admin')->name('admin/documentation');
+        //DOCUMENTATION
+        Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
+        Route::post('/documentation/search', 'DocumentationController@search');
+        //PRODUCTS-INFO
+        Route::get('/productsinfo', 'ProductsInfoController@index')->name('productsinfo');
+        Route::post('/productsinfo/save', 'ProductsInfoController@save');
+        Route::get('/productsinfo/svg', 'ProductsInfoController@admin')->name('admin/productsinfo');
+        Route::get('productsinfo/{url}', 'ProductsInfoController@getByUrl');
+        Route::post('/productsinfo/search', 'ProductsInfoController@search');
 
-            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
-            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');
+        Route::get('/productsinfo', 'ProductsInfoController@getView')->name('productsinfo');
+        Route::post('/getItemList', 'ProductsInfoController@getItemsList');
+        Route::post('/productsinfo/showNameDocuments', 'ProductsInfoController@showNameDocuments');
+        Route::post('/productsinfo/showFullText', 'ProductsInfoController@showFullText');
+        Route::post('/productsinfo/searchName', 'ProductsInfoController@searchName');
+
+        //PARSE
+
+        Route::get('parse/oracle','ParseOracleController@getOracleData');
+
+        /*Route::get('parse/', 'ParseController@getCompanyTopSum')->name('parse');*/
+        Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
+        Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
+        /*Route::get('parse', 'ParseController@redirectToCompany')->name('parse');*/
+
+/*            Route::get('parse/table-opu', 'ParseController@getOpuTable')->name('parse/table-opu');  // opu
+            Route::get('parse/table-indicators', 'ParseController@getIndicatorsTable')->name('parse/table-indicators');*/
             Route::get('parse/table-info', 'ParseController@getInfoTable')->name('parse/table-info'); //info
 
             //TODO : create 3 get routes for OPU, Balance, Info. Use 3 Post routes for get data
@@ -230,25 +339,57 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 //        Route::group(['middleware' => 'cors'], function() {
 //            Route::get('/getVersion', 'Controller@getVersion');
 //        });
-            //NEWS
-            Route::get('/news', 'NewsController@getView')->name('news');
-            Route::get('/booking', 'BookingController@index')->name('booking');
-            Route::post('/booking/set', 'BookingController@set');
-            Route::post('/booking/remove', 'BookingController@delete');
-            Route::post('/addPost', 'NewsController@addPost');
-            Route::post('/news-birthday', 'NewsController@birthday');
-            Route::post('/getPosts', 'NewsController@getPosts');
-            Route::post('/deletePost', 'NewsController@deletePost');
-            Route::post('/setPinned', 'NewsController@setPinned');
-            Route::post('/unsetPinned', 'NewsController@unsetPinned');
-            Route::post('/likePost', 'NewsController@likePost');
-            Route::post('/editPost', 'NewsController@editPost');
-            Route::post('/addComment', 'NewsController@addComment');
-            Route::post('/deleteComment', 'NewsController@deleteComment');
-            Route::post('/editComment', 'NewsController@editComment');
-            Route::post('/vote', 'NewsController@vote');
+        //NEWS
+        Route::get('/booking', 'BookingController@index')->name('booking');
+        Route::post('/booking/set', 'BookingController@set');
+        Route::post('/booking/remove', 'BookingController@delete');
 
-            Route::post('/setSenateVote', 'NewsController@senateVote');
+        Route::group([
+            'prefix' => '/news',
+            'as'     => 'news',
+        ], function () {
+// TODO Постепенно перенести сюда все роуты связанные с этой группой
+            Route::get('/', 'News\\PostsController@getView')->name('.index');
+            Route::post('/getPosts', 'NewsController@getPosts')->name('.getPosts');
+            Route::post('/addPost', 'News\\PostsController@addPost')->name('.addPost'); // TODO use grouping
+            Route::post('/likePost', 'News\\PostsController@likePost')->name('.likePost');
+            Route::post('/news-birthday', 'NewsController@birthday');
+            Route::post('/editPost', 'NewsController@editPost')->middleware('checkPostAccess');
+            Route::post('/vote', 'News\\PostsController@vote')->name('.votePost');
+
+            Route::group([
+                'prefix'     => 'my',
+                'as'         => '.my',
+                'middleware' => ['checkPostAccess']
+            ], function () {
+                Route::post('/deletePost', 'News\\MyPostsController@deletePost')->name('.deletePost')->middleware('checkPostAccess');
+                Route::post('/editPost', 'News\\MyPostsController@editPost')->name('.editPost')->middleware('checkPostAccess');
+                Route::post('/setPinned', 'News\\MyPostsController@setPinned')->name('.setPinned')->middleware('checkPostAccess');
+                Route::post('/unsetPinned', 'News\\MyPostsController@unsetPinned')->name('.unsetPinned')->middleware('checkPostAccess');
+            });
+
+            Route::group([
+                'prefix' => '/comments',
+                'as' => '.comments',
+            ], function () {
+                Route::post('/addComment', 'News\\Comments\\PostCommentsController@addComment')->name('.add');
+                Route::post('/deleteComment', 'News\\Comments\\PostCommentsController@deleteComment')->name('.delete');
+                Route::post('/editComment', 'News\\Comments\\PostCommentsController@editComment')->name('.edit');
+            });
+
+            Route::group([
+                'prefix' => '/pin',
+                'as' => '.pin',
+            ], function () {
+                Route::post('/setPinned', 'NewsController@setPinned')->middleware('checkPostAccess');
+                Route::post('/unsetPinned', 'NewsController@unsetPinned')->middleware('checkPostAccess');
+            });
+
+        });
+
+        Route::post('/setPinned', 'News\\MyPostsController@setPinned')->middleware('checkPostAccess');
+
+        Route::post('/setSenateVote', 'NewsController@senateVote');
 //        //RATING
 //        Route::get('/rating', 'RatingController@index')->name('rating');
 //        Route::post('/getRatingList', 'RatingController@getRatingList');
@@ -267,6 +408,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             //UNTITLED
             Route::get('/name', 'NameController@getView')->name('documentation');
             Route::post('/getItemsList', 'NameController@getItemsList');
+            Route::post('/getItemsFirst', 'NameController@getItemsFirst');
 
             Route::get('/report', 'ReportController@index')->name('report');
             Route::post('/getReport', 'ReportController@getReport');
@@ -348,7 +490,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
             //My results page
             Route::get('rating', 'RatingController@ratingIndex')->name('rating');
             Route::post('getTopRatingList', 'RatingController@getTopRatingList');
-            Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+            // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
 
             Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
             Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
@@ -356,9 +498,140 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
 
         });
         Route::get('/logout', 'SiteController@logout');
+        //MOTIVATION
+        Route::get('motivation_main', 'MotivationController@motivation')->name('motivation_main');
+        // MOBILE
+        Route::get('mobile/login', 'ParseController@getLoginMobile')->name('mobile/login');
+        Route::get('mobile/dossier', 'ParseController@getDossierMobile')->name('mobile/dossier');
+        Route::get('mobile/matching', 'ParseController@getMatchingMobile')->name('mobile/matching');
+        Route::get('mobile/matching-index', 'ParseController@getMatchingIndexMobile')->name('mobile/matching-index');
+        Route::get('parse/parse', 'ParseController@getTest')->name('parse/parse');
+        Route::get('parse/main-data', 'ParseController@getMainData')->name('parse/main-data');
+        Route::get('parse/top-classes', 'ParseController@getTopClasses')->name('parse/top-classes');
+
+        Route::post('/getUsersData', 'SiteController@getUserData')->name('getUsersData');
+        Route::post('/getColleagueData', 'SiteController@getColleagueData');
+
+        Route::get('/motivation', 'MotivationController@motivation')->name('motivation');
+        Route::post('/getMotivationList', 'MotivationController@getMotivationList');
+
+        Route::get('/express', 'ProductsController@expressList');
+        //Route::get('/express/calc/{ID}', 'ProductsController@express');
+        Route::get('/express/calc/{ID}/{quotationId}', 'ProductsController@express')->name('express_front');
+        Route::post('/express/updateDocumentStatus', 'ProductsController@updateDocumentStatus');
+        Route::post('/getExpressAttributes', 'ProductsController@getExpressAttributes');
+        Route::get('/express/quotations/{productISN}', 'ProductsController@expressQuotationList')->name('express_quotations_list');
+        Route::post('/full/updateFullStatus', 'ProductsController@updateFullStatus');
+        Route::get('/full', 'ProductsController@fullList');
+        Route::get('/full/quotations/{productISN}', 'ProductsController@fullQuotationList')->name('full_quotations_list');
+        Route::get('/full/calc/{ID}/{quotationId}', 'ProductsController@fullCreateEdit')->name('full_front');
+        Route::post('/full/sendToInspection', 'ProductsController@sendToInspection');
+        Route::post('/full/create', 'ProductsController@fullCreate');
+        Route::post('/full/getFullObjects', 'ProductsController@getFullObjects');
+        Route::post('/full/getFullData', 'ProductsController@getFullData');
+        Route::post('/full/send-docs', 'ProductsController@sendDocs');
+        Route::post('/full/create-agr', 'ProductsController@createAgr');
+        Route::post('/full/getPrintableFormList','ProductsController@getPrintableFormList');
+        Route::get('/full/getPrintableForm','ProductsController@getPrintableForm');
+        Route::post('/full/getFullBranch','SiteController@getFullBranch');
+
+        Route::post('/getDictiList', 'SiteController@getDicti');
+        Route::post('/getDictiListFromBase', 'SiteController@getDictiFromBase');
+        Route::post('/searchSubject', 'SiteController@searchSubject');
+        Route::post('/setSubject', 'SiteController@setSubject');
+        Route::post('/calc/saveSubject', 'SiteController@saveSubject');
+        Route::post('/express/calculate', 'ProductsController@expressCalc');
+        Route::post('/express/createAgrByAgrcalc', 'ProductsController@CreateAgrByAgrcalc');
+        Route::post('/full/calculate', 'ProductsController@fullCalc');
+
+        Route::post('/getVehicle', 'VehicleController@getVehicle');
+        Route::post('/saveVehicle','VehicleController@saveVehicle');
+
+        Route::post('/setToken', 'NotificationController@setToken');
+        //PreInsuranceInspection
+        Route::get('insurance/inspection', 'PreInsuranceInspectionController@index')->name('insurance/inspection');
+        Route::get('insurance/inspection/{isn}', 'PreInsuranceInspectionController@show')
+            ->name('insurance/inspection/show');
+        Route::post('getInsuranceInspectionList', 'PreInsuranceInspectionController@getInsuranceInspectionList');
+        Route::post('getInsuranceInspectionInfo', 'PreInsuranceInspectionController@getInsuranceInspectionInfo');
+        Route::post('setInspection', 'PreInsuranceInspectionController@setInspection');
+        Route::post('upload', 'PreInsuranceInspectionController@upload');
+        Route::post('updateStatus', 'PreInsuranceInspectionController@updateStatus');
+        Route::post('getOperator', 'PreInsuranceInspectionController@getOperator');
+        //Application
+        Route::get('document/management', 'DocumentManagementController@index')->name('document.index');
+        Route::post('/document/getUserInfo', 'DocumentManagementController@getUserInfo')->name('document.get.user.info');
+        Route::post('/document/getProxyType', 'DocumentManagementController@getProxyType')->name('document.get.proxy.type');
+        Route::post('/document/getDailyMc', 'DocumentManagementController@getDailyMc')->name('document.get.daily.MC');
+        Route::post('/document/getCountriesList', 'DocumentManagementController@getCountriesList')->name('document.get.countries.list');
+        Route::post('/document/getRelational', 'DocumentManagementController@getRelational')->name('document.get.relational');
+        Route::post('/document/getHelpTo', 'DocumentManagementController@getHelpTo')->name('document.get.help.to');
+        Route::post('/document/getCalculationType', 'DocumentManagementController@getCalculationType')->name('document.get.calculation.type');
+        Route::post('/document/getPaymentForm', 'DocumentManagementController@getPaymentForm')->name('document.get.payment.form');
+        Route::post('/document/getPaymentOrder', 'DocumentManagementController@getPaymentOrder')->name('document.get.payment.order');
+        Route::post('/document/getServicesFor', 'DocumentManagementController@getServicesFor')->name('document.get.services.for');
+        Route::post('/document/getCostType', 'DocumentManagementController@getCostType')->name('document.get.cost.type');
+        Route::post('/document/getAutoColor', 'DocumentManagementController@getAutoColor')->name('document.get.auto.color');
+        Route::post('/document/getTopicEconomicActivity', 'DocumentManagementController@getTopicEconomicActivity')->name('document.get.topic.economic.activity');
+        Route::post('/document/getMissingProduct', 'DocumentManagementController@getMissingProduct')->name('document.get.missing.product');
+        Route::post('/document/getVehicleModel', 'DocumentManagementController@getVehicleModel')->name('document.get.vehicle.model');
+        Route::post('/document/getCarStateNumber', 'DocumentManagementController@getCarStateNumber')->name('document.get.car.state.number');
+        Route::post('/document/getViolationComposition', 'DocumentManagementController@getViolationComposition')->name('document.get.violation.composition');
+        Route::post('/document/getUnitGroup', 'DocumentManagementController@getUnitGroup')->name('document.get.unit.group');
+        Route::post('/document/getDuty', 'DocumentManagementController@getDuty')->name('document.get.duty');
+        Route::post('/document/getSzTopic', 'DocumentManagementController@getSzTopic')->name('document.sz.topic');
+        Route::post('/document/getReason', 'DocumentManagementController@getReason')->name('document.reason');
+        Route::post('/document/getDelegateAuthority', 'DocumentManagementController@getDelegateAuthority')->name('document.delegate.authority');
+        Route::post('/document/getReasonDeprivation', 'DocumentManagementController@getReasonDeprivation')->name('document.reason.deprivation');
+        Route::post('/document/getTypeSzAhd', 'DocumentManagementController@getTypeSzAhd')->name('document.type.sz.ahd');
+        Route::post('/document/getTypeSzMain', 'DocumentManagementController@getTypeSzMain')->name('document.type.sz.main');
+        Route::get('/document/{isn}', 'DocumentManagementController@show')->name('document.show');
+        Route::post('/document/{isn}/{docisn}', 'DocumentManagementController@show')->name('document.show');
+        Route::get('/bonus', 'DocumentManagementController@bonus')->name('document.bonus');
+        Route::get('/document/{id}/list', 'DocumentManagementController@listEmployee')->name('document.show.list');
+        Route::post('getDocument', 'DocumentManagementController@getDocument')->name('document.get');
+        Route::get('showMySZ', 'DocumentManagementController@showMySZ')->name('document.show');
+        Route::post('/document/saveDocument', 'DocumentManagementController@saveDocument');
+        Route::post('/document/buttonClick', 'DocumentManagementController@buttonClick');
+        Route::get('documents', 'DocumentManagementController@documents')->name('document.documents');
+        Route::post('/sendOut', 'DocumentManagementController@getOrSetDocs');
+        Route::post('/changeDocCoordination', 'DocumentManagementController@changeDocCoordination');
+        Route::post('/document/getCounterpartyType', 'DocumentManagementController@getCounterpartyType')->name('document.get.counterparty.type');
+        Route::post('/searchCounterparty', 'DocumentManagementController@searchCounterparty');
+        Route::post('/searchQuotation', 'DocumentManagementController@searchQuotation');
+        Route::post('/searchDocument', 'DocumentManagementController@documentSearch');
+        Route::post('/searchContract', 'DocumentManagementController@searchContract');
+        Route::post('/saveSubject', 'DocumentManagementController@saveSubject');
+        Route::post('/document/getKNP', 'DocumentManagementController@getKNP')->name('document.get.knp');
+        Route::post('/document/getKBK', 'DocumentManagementController@getKBK')->name('document.get.kbk');
+        Route::post('/document/getCreationSources', 'DocumentManagementController@getCreationSources')->name('document.get.creation.sources');
+        Route::post('/document/getStage', 'DocumentManagementController@getStage')->name('document.get.stage');
+        Route::post('/document/getProductType', 'DocumentManagementController@getProductType')->name('document.product.type');
+        Route::post('/document/getProductTypeAhd', 'DocumentManagementController@getProductTypeAhd')->name('document.product.type.ahd');
+        Route::post('/document/getTaxAuthorityCode', 'DocumentManagementController@getTaxAuthorityCode')->name('document.tax.authority.code');
+        Route::post('/document/getStagePassage', 'DocumentManagementController@getStagePassage')->name('document.stage.passages');
+        Route::post('/document/getRegions', 'DocumentManagementController@getRegions')->name('document.get.regions');
+        Route::post('/agreementCalcSearch', 'DocumentManagementController@agreementCalcSearch');
+        Route::post('/document/travellersList', 'DocumentManagementController@travellersList');
+        Route::post('/saveDoc', 'DocumentManagementController@saveDoc');
+
+        //Dev page route
+        Route::get('development/{name}', 'NewsController@dev')->name('development');
+
+        Route::get('boss-news', 'NewsController@index')->name('boss-news');
+        Route::post('boss-news/getBossPosts', 'NewsController@getBossPosts');
+
+        //My results page
+        Route::get('rating', 'RatingController@ratingIndex')->name('rating');
+        Route::post('getTopRatingList', 'RatingController@getTopRatingList');
+        // Route::post('/rating/getBranchData', 'RatingPermissionController@getBranchData');
+
+        Route::get('my-results', 'RatingController@myresultsIndex')->name('my-results');
+        Route::get('my-results/rating/{ISN}/{rating_date}', 'RatingController@myResultsIndex');
+        Route::post('my-results/getRating', 'RatingController@getRating');
         //COORIDNATION
         Route::get('/coordination', 'CoordinationController@index')->name('coordination');
-        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList');
+        Route::post('/getCoordinationList', 'CoordinationController@getCoordinationList')->name('coordination.getList');
         Route::post('/getCoordinationInfo', 'CoordinationController@getCoordinationInfo');
         Route::post('/setCoordination', 'CoordinationController@setCoordination');
         Route::post('/getDocRowList', 'CoordinationController@getDocRowList');
@@ -371,26 +644,33 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::post('api/booking/add', 'ApiController@addBookingData');
     Route::post('api/booking/officeList', 'ApiController@getBookingOfficeList');
 });
+
 Route::group(['domain' => env('PARSE_DOMAIN', 'parse.cic.kz')], function () {
     Route::get('/', 'SiteController@parseAuth');
     Route::post('/login', 'SiteController@parseLogin');
 
     Route::group(['middleware' => 'parseDomainAuth'], function () {
-        Route::get('parse/company', 'ParseController@getCompanyTopSum');
+        Route::get('parse', 'ParseController@getCompanyTopSum');
         Route::get('parse/product', 'ParseController@getClassTopSum');
         Route::get('parse/finance', 'ParseController@getFinancialIndicators');
-        Route::get('parse', 'ParseController@redirectToCompany');
+        /*Route::get('parse', 'ParseController@redirectToCompany');*/
         Route::get('parse/table-fees', 'ParseController@getFees');
         Route::get('parse/table-indicators', 'ParseController@getIndicators');
         Route::get('parse/table-competitors', 'ParseController@getCompetitors');
+
     });
 });
 Route::post('/save_document', 'EdsController@saveDocument');
+Route::post('/save_documentpr', 'EdsController@saveDocumentPR');
+Route::post('/save_documentpo', 'EdsController@saveDocumentPO');
 Route::post('/save_fail_status', 'EdsController@saveFailStatus');
+Route::post('/save_fail_statuspr', 'EdsController@saveFailStatusPR');
+Route::post('/save_fail_statuspo', 'EdsController@saveFailStatusPO');
 //RELOG
 Route::post('/relog/saveRelogImages', 'RelogController@saveRelogImages');
 Route::post('/car/addPrice', 'SiteController@addPrice');
 Route::post('/coordination/notify', 'CoordinationController@sendNotify');
+Route::post('/getEorderDocs', 'CoordinationController@getEorderDocs');
 Route::post('/serviceCenter/notify', 'CoordinationController@serviceCenterNotify');
 Route::post('/newpost/closedecade', 'CoordinationController@closeDecade');
 Route::get('/kolesa/marks', 'SiteController@getMarks');
@@ -400,6 +680,7 @@ Route::get('/kolesa/show-prices', 'SiteController@showPrices');
 Route::get('/api/centcoins', 'ApiController@getInfo');
 //Route::get('test', 'Admin\SiteController@getModelss');
 Route::post('/kolesa/getPrice', 'SiteController@getPriceByData');
+Route::post('/coordination/solution', 'ApiController@getOlData');
 
 Route::get('test', function () {
     return view('test');
@@ -407,6 +688,9 @@ Route::get('test', function () {
 Route::get('test3', function () {
     echo 'Если вы видите этот текст значит деплой через jenkins прошел успешно';
 });
+
+Route::post('/check-test', 'DocumentManagementController@checkTest');
+
 
 Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
     Route::get('/', 'Documentation\DocumentationAuthController@index')->name('documentation_auth');
@@ -419,11 +703,15 @@ Route::group(['domain' => env('DOCS_DOMAIN', 'docs.cic.kz')], function () {
         Route::get('/logout', 'Documentation\DocumentationAuthController@logout');
     });
 });
-
+Route::get('/payout', 'PaymentEdsController@payout');
 Route::group(['domain' => env('FRONTEND_DOMAIN', 'my.cic.kz')], function () {
     Route::get('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::any('/testqr', 'TestqrController@getQR')->name('testqr');
     Route::post('/testqr', 'TestqrController@getQR')->name('testqr');
+
+    Route::get('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::any('/qrmanagerreport', 'TestqrController@managerReportQR');
+    Route::post('/qrmanagerreport', 'TestqrController@managerReportQR');
 });
 
 //Contact-center
@@ -432,3 +720,16 @@ Route::post('/contact-center/getDocuments', 'ContactCenterController@getData');
 Route::post('/contact-center/setDocument', 'ContactCenterController@setData');
 Route::post('/contact-center/getNames', 'ContactCenterController@getNames');
 Route::post('/contact-center/deleteField', 'ContactCenterController@deleteField');
+
+Route::group(['prefix' => '/dev', 'as' => 'dev'], function () {
+    Route::get('code', 'Dev\CodeAnalyzeController@index')->name('.code');
+    Route::get('tests', 'Dev\TestsController@index')->name('.tests');
+    Route::get('routes', 'Dev\RoutesController@index')->name('.routes');
+    Route::get('vendor', 'Dev\VendorController@index')->name('.vendor');
+    Route::get('config', 'Dev\ConfigController@index')->name('.config');
+    Route::get('git', 'Dev\GitController@index')->name('.git');
+    Route::get('views', 'Dev\ViewsController@index')->name('.views');
+    Route::get('docs', 'Dev\DocsController@index')->name('.docs');
+    Route::get('caching', 'Dev\CachingController@index')->name('.caching');
+    Route::get('kias', 'Dev\KiasController@index')->name('.kias');
+});

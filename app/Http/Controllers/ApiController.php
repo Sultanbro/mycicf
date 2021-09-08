@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Booking;
 use App\Centcoin;
 use App\CentcoinHistory;
+use App\Library\Services\Kias;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ApiController extends Controller
 {
@@ -108,6 +110,56 @@ class ApiController extends Controller
             'drr' => 'ДРР 2-этаж',
             'dsv' => 'ДСВ 1-этаж',
             'dps' => 'ДПС 1-этаж',
+        ]);
+    }
+
+    public function resetPassword(Request $request){
+        $kias = app(Kias::class);
+        $kias->initSystem();
+        $newPass = Str::random(8);
+        $result = $kias->resetPassword($request->isn, $newPass);
+        if($result->error){
+            return response()->json([
+                'success' => false,
+                'error' => $result->error->text
+            ]);
+        }else{
+            return response()->json([
+                'success' => true,
+                'newPass' => $newPass
+            ]);
+        }
+    }
+
+    public function getOlData(Request $request){
+        $userIsn = $request->subjISN;
+        $docClass = $request->docClass;
+        $docID = $request->docID;
+        $emplName = $request->emplName;
+        $solution = $request->solution;
+        $remark = $request->remark;
+        $emplList = [];
+        foreach ($request->emplList as $item){
+            $emplList[] = [
+                'name' => $item['emplName']
+            ];
+        }
+        $client = new \GuzzleHttp\Client();
+        $url = 'https://botan.kupipolis.kz/api/get-ol-data';
+        $res = $client->request('POST', $url, [
+            'form_params'  => [
+                'userIsn'  => $userIsn,
+                'docType'  => $docClass,
+                'docNum'   => $docID,
+                'emplName' => $emplName,
+                'solution' => $solution,
+                'remark'   => $remark,
+                'emplList' => $emplList
+            ],
+            'verify' => false
+        ]);
+        return response()->json([
+            'success' => $res->getStatusCode() === 200 && $res->success
         ]);
     }
 }

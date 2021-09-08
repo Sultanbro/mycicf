@@ -1,0 +1,39 @@
+<?php
+
+namespace Tests\Feature\News\Comments\DeleteComment;
+
+use App\Post;
+use Tests\WithUser;
+
+/**
+ * Class DeleteCommentToPostWithNoAuthTest
+ * @package Tests\Feature\News\Comments\DeleteComment
+ * @covers \App\Http\Controllers\News\MyPostsController::deletePost
+ */
+class DeleteCommentToPostWithNoAuthTest extends DeleteCommentTestBase {
+
+    protected $description = 'Пытаемся добавить комментарий к посту без авторизации';
+
+    /**
+     * @var Post
+     */
+    protected $post;
+
+    public function testExecute() {
+        $response = $this->post($this->route, [
+            'commentId' => $this->comment->id,
+        ]);
+
+        $response->assertStatus(302);
+    }
+
+    public function cleanup() {
+        \Schema::disableForeignKeyConstraints();
+        $this->post->forceDelete();
+        \Schema::enableForeignKeyConstraints();
+    }
+
+    public function getMeasureName() {
+        return 'Delete comment with no auth';
+    }
+}

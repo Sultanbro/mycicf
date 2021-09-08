@@ -19,6 +19,19 @@
                         О компании
                     </li>
                 </a>
+                <li class="products-link" style="display:inline-flex">
+                    <ul id="products-nav">
+                        <li>
+                            <a class="products-item" href="javascript:void(0);" tabindex="1" >
+                                Котировки <span class="ml-2"><i class="fas fa-caret-down"></i></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li id="express"><a href="/express" class="item">Экспресс котировка</a></li>
+                                <li id="full"><a href="/full" class="item">Полная котировка</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
                 @if(Auth::user()->ISN !== Auth::user()->level || in_array(Auth::user()->ISN, \App\Http\Controllers\ParseController::getAcceptedUsers()))
                     <a class="header-navigation" href="{{route('parse')}}">
                         <li>
@@ -41,19 +54,13 @@
                         Библиотека
                     </li>
                 </a>
-                <li class="products-link" style="display:inline-flex">
-                    <ul id="products-nav">
+                @if(Auth::user()->ISN == 3609898 || Auth::user()->ISN == 1287408)
+                    <a class="header-navigation" href="{{route('productsinfo')}}">
                         <li>
-                            <a class="products-item" href="javascript:void(0);" tabindex="1" >
-                                Котировки <span class="ml-2"><i class="fas fa-caret-down"></i></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li id="express"><a href="/express" class="item">Экспресс котировка</a></li>
-                                <li id="full"><a href="/full" class="item">Полная котировка</a></li>
-                            </ul>
+                            Продукты Инфо
                         </li>
-                    </ul>
-                </li>
+                    </a>
+                @endif
 {{--                <a class="header-navigation" href="javascript:void(0)">--}}
 {{--                    <li>--}}
 {{--                        Обучение--}}

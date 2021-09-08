@@ -90,7 +90,8 @@
             sendSolution: Function,
             showView: String,
             doc_row_list_inner_other: Object,
-            coordination: Object
+            coordination: Object,
+            doc_row_error: String
         },
         methods: {
             connectSocket(check){
@@ -320,60 +321,64 @@
                 });
             },
             getToken(type,solution){
-                this.loader(true);
-                this.signedFile = '';
-                axios.get('/getEDS').then((response) => {
-                    if(response.data.success){
-                        this.sign.token = response.data.result.token;
-                        this.signing(type,solution);     // подписываем
-                    } else {
-                        alert('Ошибка получения токена. Попробуйте чуть позже');
-                        this.loader(false);
-                    }
-                });
-            },
-            checkSignedFilessss(){
-                this.signedFileInfo = [];
-                let self = this;
-                if(self.selectedFile != '') {
-                    var webSocket = new WebSocket('wss://127.0.0.1:13579');
-                    self.loader(true);
-                    webSocket.onopen = function () {
-                        var responseObj = {
-                            module: 'kz.uchet.signUtil.commonUtils',
-                            lang: 'en',
-                            method: 'checkCMS',
-                            args: [self.selectedFile]
-                        };
-                        webSocket.send(JSON.stringify(responseObj));
-                    };
-
-                    webSocket.onmessage = function (msg) {
-                        var result = JSON.parse(msg.data);
-                        if(result.code) {
-                            if (result.code == 200) {
-                                if(result.responseObjects.length > 0) {
-                                    self.signedFileInfo = result.responseObjects;
-                                    //webSocket.close();
-                                    self.loader(false);
-                                }
-                            } else {
-                                alert(result.message);
-                                self.loader(false);
-                                //webSocket.close();
-                            }
-                        }
-                    }
-                    webSocket.onerror = function (msg) {
-                        // TODO PUSH ERROR
-                        //webSocket.close();
-                        this.loader(false);
-                        console.log(msg);
-                    }
+                if(this.doc_row_error != ''){
+                    alert(this.doc_row_error);
                 } else {
-                    alert('Выберите пожалуйста файл');
+                    this.loader(true);
+                    this.signedFile = '';
+                    axios.get('/getEDS').then((response) => {
+                        if (response.data.success) {
+                            this.sign.token = response.data.result.token;
+                            this.signing(type, solution);     // подписываем
+                        } else {
+                            alert('Ошибка получения токена. Попробуйте чуть позже');
+                            this.loader(false);
+                        }
+                    });
                 }
             },
+            /*   checkSignedFilessss(){
+                   this.signedFileInfo = [];
+                   let self = this;
+                   if(self.selectedFile != '') {
+                       var webSocket = new WebSocket('wss://127.0.0.1:13579');
+                       self.loader(true);
+                       webSocket.onopen = function () {
+                           var responseObj = {
+                               module: 'kz.uchet.signUtil.commonUtils',
+                               lang: 'en',
+                               method: 'checkCMS',
+                               args: [self.selectedFile]
+                           };
+                           webSocket.send(JSON.stringify(responseObj));
+                       };
+
+                       webSocket.onmessage = function (msg) {
+                           var result = JSON.parse(msg.data);
+                           if(result.code) {
+                               if (result.code == 200) {
+                                   if(result.responseObjects.length > 0) {
+                                       self.signedFileInfo = result.responseObjects;
+                                       //webSocket.close();
+                                       self.loader(false);
+                                   }
+                               } else {
+                                   alert(result.message);
+                                   self.loader(false);
+                                   //webSocket.close();
+                               }
+                           }
+                       }
+                       webSocket.onerror = function (msg) {
+                           // TODO PUSH ERROR
+                           //webSocket.close();
+                           this.loader(false);
+                           console.log(msg);
+                       }
+                   } else {
+                       alert('Выберите пожалуйста файл');
+                   }
+               },*/
             checkSignedFile(url,toKias,agreementISN,edsType){        // Посмотреть подписанный файл
                 let self = this;
                 self.loader(true);
@@ -398,7 +403,7 @@
                                     //if(self.signedFileInfo.length > 0) {
                                     //    self.signedFileInfo.push(result.responseObjects[0]);
                                     //} else {
-                                        self.signedFileInfo = result.responseObjects;
+                                    self.signedFileInfo = result.responseObjects;
                                     //}
                                     if(toKias != undefined){    // Если нужно записать данные в киас, toKias - это isn документа
                                         self.sendEdsInfoToKias(toKias,agreementISN,edsType); // Записываем в киас данные из подписанного файла
@@ -432,7 +437,7 @@
                     }).then((response) => {
                         if (response.data.success) {
                             //if(type == 'coordination' && solution != undefined){
-                                //self.$parent.sendSolution(1);
+                            //self.$parent.sendSolution(1);
                             //}
                             if(edsType != 'cms') {
                                 if(self.coordination.RefAgrISN != 0 && self.coordination.RefAgrISN != undefined){

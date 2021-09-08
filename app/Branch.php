@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Branch
- * @property $fullname string
+ * @property $fullname stringchilds
  * @property $kias_id int
  * @property $kias_parent_id int
  * @property $has_child int
@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Storage;
 class Branch extends Model
 {
     protected $table = 'branches';
+
+    protected $dates = [
+        'birthday'
+    ];
 
     public function childs() {
         return $this->hasMany('App\Branch','kias_parent_id','kias_id') ;
