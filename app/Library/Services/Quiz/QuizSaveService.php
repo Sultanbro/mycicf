@@ -6,7 +6,9 @@ use App\Library\Services\KiasBranch\KiasBranchServiceInterface;
 use App\Quiz;
 use App\QuizAnswers;
 use App\QuizQuestion;
+use App\Repository\QuizAnswerRepositoryInterface;
 use App\Repository\QuizForKiasRepositoryInterface;
+use App\Repository\QuizQuestionRepositoryInterface;
 use App\Repository\QuizRepositoryInterface;
 
 // Сервис для сохранение теста с параметрами
@@ -23,12 +25,22 @@ class QuizSaveService implements QuizSaveServiceInterface
      * @var QuizForKiasRepositoryInterface
      */
     private $quizForKiasRepository;
+    /**
+     * @var QuizQuestionRepositoryInterface
+     */
+    private $quizQuestionRepository;
+    /**
+     * @var QuizAnswerRepositoryInterface
+     */
+    private $quizAnswerRepository;
 
-    public function __construct(QuizRepositoryInterface $quizRepository, KiasBranchServiceInterface $kiasBranchService, QuizForKiasRepositoryInterface $quizForKiasRepository)
+    public function __construct(QuizRepositoryInterface $quizRepository, KiasBranchServiceInterface $kiasBranchService, QuizForKiasRepositoryInterface $quizForKiasRepository, QuizQuestionRepositoryInterface $quizQuestionRepository,  QuizAnswerRepositoryInterface $quizAnswerRepository)
     {
         $this->quizRepository = $quizRepository;
         $this->kiasBranchService = $kiasBranchService;
         $this->quizForKiasRepository = $quizForKiasRepository;
+        $this->quizQuestionRepository = $quizQuestionRepository;
+        $this->quizAnswerRepository = $quizAnswerRepository;
     }
 
     // $req = параметры теста
@@ -53,7 +65,7 @@ class QuizSaveService implements QuizSaveServiceInterface
     public function quizSave($quiz_params)
     {
 
-        return Quiz::firstOrCreate($quiz_params);
+        return $this->quizRepository->create($quiz_params);
 
     }
 
@@ -63,9 +75,9 @@ class QuizSaveService implements QuizSaveServiceInterface
     public function quizSaveQuestionSave($quiz_id, $question)
     {
 
-            $quizModel = QuizQuestion::firstOrCreate(['quiz_id' => $quiz_id,
-                'question' => $question,]);
-            return $quizModel->id;
+        $quizModel = $this->quizQuestionRepository->create(['quiz_id' => $quiz_id,
+            'question' => $question,]);
+        return $quizModel->id;
 
     }
 
@@ -77,7 +89,7 @@ class QuizSaveService implements QuizSaveServiceInterface
         foreach ($quiz as $k => $answer) {
 
             if ($k != 5) {
-                QuizAnswers::firstOrCreate([
+                $this->quizAnswerRepository->create([
                     'question_id' => $question_id,
                     'answer' => $answer,
                     'right' => ($quiz[5] == $k) ? 1 : 0,

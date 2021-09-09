@@ -29,6 +29,7 @@ class QuizForKiasController extends Controller
     }
 
     /**
+     * Показывает все записи на тест
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -39,6 +40,7 @@ class QuizForKiasController extends Controller
     }
 
     /**
+     * Создает запись на тест
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -59,6 +61,7 @@ class QuizForKiasController extends Controller
     }
 
     /**
+     * Показывает запись на тест принимает его id
      * Display the specified resource.
      *
      * @param  int  $id
@@ -70,6 +73,7 @@ class QuizForKiasController extends Controller
     }
 
     /**
+     * Изменяет запись на тест принимает id и изменение
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -82,6 +86,7 @@ class QuizForKiasController extends Controller
     }
 
     /**
+     * Удаляет запись на тест
      * Remove the specified resource from storage.
      *
      * @param  int  $id

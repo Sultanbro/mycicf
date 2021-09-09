@@ -30,6 +30,7 @@ class EducationalMaterialController extends Controller
 
 
     /**
+     * Выводит все материалы для учебы
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -40,6 +41,7 @@ class EducationalMaterialController extends Controller
     }
 
     /**
+     * Сохраняет материал для учебы
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -55,6 +57,7 @@ class EducationalMaterialController extends Controller
     }
 
     /**
+     * Показывает МдУ по id
      * Display the specified resource.
      *
      * @param int $id
@@ -66,6 +69,7 @@ class EducationalMaterialController extends Controller
     }
 
     /**
+     * Меняет садержание Мду принимает id и изменения
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -78,6 +82,7 @@ class EducationalMaterialController extends Controller
     }
 
     /**
+     * Удаляет Мду принимает id
      * Remove the specified resource from storage.
      *
      * @param int $id

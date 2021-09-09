@@ -1340,13 +1340,48 @@ class KiasMock implements KiasServiceInterface {
         ');
     }
 
-    public function getPrintableOrderDocument($data, $dataParams)
+    public function getMySZ($emplIsn, $dateBeg, $dateEnd, $status)
     {
-        // TODO: Implement getPrintableOrderDocument() method.
+        // TODO: Implement getMySZ() method.
     }
 
-    public function resetPassword($subjIsn, $password)
+    public function userCicSaveDocument($isns, $id, $extID, $amount, $currIsn, $status_isn, $class_isn, $emplIsn, $signerIsn, $extSignerIsn, $docDate, $dateBeg, $dateEnd, $earlyTerminationDate, $subjIsn, $remark, $row, $doc)
     {
-        // TODO: Implement resetPassword() method.
+        // TODO: Implement userCicSaveDocument() method.
+    }
+
+    public function userCicChangeDocCoordination($row)
+    {
+        // TODO: Implement userCicChangeDocCoordination() method.
+    }
+
+    public function userCicGetDictiList($tarifIsn)
+    {
+        // TODO: Implement userCicGetDictiList() method.
+    }
+
+    public function documentSearch($id, $extId, $classIsn, $docDateFrom, $docDateTo, $showCancelled, $subjIsn, $deptIsn, $emplIsn, $amountFrom, $amountTo, $currIsn, $taskIsn, $pageNo)
+    {
+        // TODO: Implement documentSearch() method.
+    }
+
+    public function userCicSearchSubject($juridical, $orgName, $iin, $firstName, $lastName, $parentName, $classISN, $esbdSearch)
+    {
+        // TODO: Implement userCicSearchSubject() method.
+    }
+
+    public function userCicSaveSubject($iin, $firstName, $lastName, $parentName, $birthday, $juridical, $resident, $sexId, $countryIsn)
+    {
+        // TODO: Implement userCicSaveSubject() method.
+    }
+
+    public function agreementCalcSearch($id, $dateSignFrom, $dateSignTo, $classIsn, $dateBegFrom, $dateBegTo, $deptIsn, $emplIsn, $productIsn, $statusIsn, $taskIsn, $pageNo)
+    {
+        // TODO: Implement agreementCalcSearch() method.
+    }
+
+    public function AgrSearch($id, $blankSerNo, $dateBegFrom, $dateBegTo, $dateEndFrom, $dateEndTo, $dateSignFrom, $dateSignTo, $productIsn, $emplIsn, $status)
+    {
+        // TODO: Implement AgrSearch() method.
     }
 }

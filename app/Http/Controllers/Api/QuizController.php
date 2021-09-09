@@ -197,6 +197,7 @@ class QuizController extends Controller
     }
 
     /**
+     * Сохраняет материял для вопроса принимает file и id вопроса
      * @param Request $request
      * @param $questionId
      * @return \Illuminate\Database\Eloquent\Model|JsonResponse
@@ -213,6 +214,7 @@ class QuizController extends Controller
     }
 
     /**
+     * Удаляет материал вопроса принимает id материала
      * @param $id
      * @return JsonResponse
      */

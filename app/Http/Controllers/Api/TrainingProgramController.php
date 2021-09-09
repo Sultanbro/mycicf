@@ -28,6 +28,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Показывает все программы обучения
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -38,6 +39,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Создает программу обучения
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -59,6 +61,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Показывает программу обучения
      * Display the specified resource.
      *
      * @param int $id
@@ -70,6 +73,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Изменяет программу обучения если есть материал или тест добавляет
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -94,6 +98,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Удаляет программу обучения если есть материаллы и тест
      * Remove the specified resource from storage.
      *
      * @param int $id
@@ -111,6 +116,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Принимает id программы обучения и id материала и сохроняет с привязкой
      * @param $training_id
      * @param $materials_id
      * @return bool
@@ -123,6 +129,7 @@ class TrainingProgramController extends Controller
     }
 
     /**
+     * Принимает данные теста, id программы обучения и сохроняет в таблицу quiz_for_kias
      * @param $training_id
      * @param $quizzes
      * @return mixed
