@@ -34,6 +34,11 @@ use function Couchbase\defaultEncoder;
 
 class ParseController extends Controller
 {
+
+    // На старте приходит Рынок (все компании)
+    //companyId Евразия -> Обязательное,Личное, Имущщественное
+    //classId Обязательное -> Рынок по Обяз.
+    //productId -> любой продукт
 //DOC TYPES
     public const FINANCE = 1;           //Фин показатели
     public const PREMIUM = 2;           //Отчет по премиям
@@ -85,7 +90,14 @@ class ParseController extends Controller
 /*    public function company()
     {
         return view('parse/company');
+    }
+
+    public function redirectToCompany(){
+        return redirect('/parse/company');
     }*/
+
+
+
     public function dealerRaiting()
     {
         return view('dealerRaiting');
@@ -99,6 +111,7 @@ class ParseController extends Controller
         $model->full_name = $full_name;
         $model->save();
     }
+
     public function parseXlsFinance($name, $year, $month, $startProduct){
         $arr = Excel::toArray(new UsersImport, $name);
         $month = $month == 12 ? 0 : $month;
@@ -582,9 +595,29 @@ class ParseController extends Controller
             self::INDIVIDUAL => 'Личное',
         ];
     }
+
+
     public function getCompanyTopSum(Request $request){
 
         $label_first = '';
+        $label_second = '';
+        $default = $this->getDefaultDates(self::PREMIUM);
+        $dateType = $request->dateType ?? 'rise';
+        $firstPeriod = $request->first_period ?? $default['first_period'];
+        $secondPeriod = $request->second_period ?? $default['second_period'];
+        $firstYear = $request->first_year ?? $default['first_year'];
+        $secondYear = $request->second_year ?? $default['second_year'];
+
+        $discount = $request->disc;
+        $discount = 1-($discount/100);
+        $productId = $request->productId ?? 0;
+        $classId = $request->classId ?? 0;
+        $premium_first = [];
+        $premium_second= [];
+        $payout_first = [];
+        $payout_second = [];
+
+/*        $label_first = '';
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
         $dateType = $_GET['dateType'] ?? 'rise';
@@ -604,7 +637,10 @@ class ParseController extends Controller
         $premium_first = [];
         $premium_second= [];
         $payout_first = [];
-        $payout_second = [];
+        $payout_second = [];*/
+
+
+
         if($productId == 0)
         {
             $label = $classId == 0 ? 'Рынок' : self::getNameByClassId($classId);
@@ -622,7 +658,7 @@ class ParseController extends Controller
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
+                $label_first = $this->getMonthLabel()[$request->$firstPeriod-1].' '.$request->$firstYear;
                 $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
                 if($productId == 0 && $classId == 0)
                 {
@@ -1212,15 +1248,55 @@ class ParseController extends Controller
                 'companyList' => $this->getCompanyListWithId(),
                 'label' => $label,
                 'ranking' => $ranking,
-                //'label_first' => $label_first,
-                //'label_second' => $label_second,
+                'label_first' => $label_first,
+                'label_second' => $label_second,
                 'month' => $this->getMonthLabels(),
                 'quarter' => $this->getQuarterLabels(),
             ]
         ]);
+
+/*        return view('parse.top-company', [
+            'premium_first' => $premium_first,
+            'premium_second' => $premium_second,
+            'payout_first' => $payout_first,
+            'payout_second' => $payout_second,
+            'companyList' => $this->getCompanyListWithId(),
+            'label' => $label,
+            'ranking' => $ranking,
+            'label_first' => $label_first,
+            'label_second' => $label_second,
+            'month' => $this->getMonthLabels(),
+            'quarter' => $this->getQuarterLabels(),
+            'controller' => $this
+        ]);*/
+
     }
-    public function getClassTopSum(){
+
+    public function getClassTopSum(Request $request){
+
         $label_first = '';
+        $label_second = '';
+        $default = $this->getDefaultDates(self::PREMIUM);
+
+        $dateType = $request->dateType ?? 'rise';
+        $firstPeriod = $request->first_period; //?? $default['first_period'];
+        $secondPeriod = $request->second_period; //?? $default['second_period'];
+        $firstYear = $request->first_year; //?? $default['first_year'];
+        $secondYear = $request->second_year; //?? $default['second_year'];
+
+        $companyId = $request->companyId ?? 0;
+        $discount = $request->disc ?? 0;
+        $discount = 1-($discount/100);
+
+        $premium_first = [];
+        $premium_second= [];
+        $payout_first = [];
+        $payout_second = [];
+        $insurance_classes[1] = [];
+        $insurance_classes[2] = [];
+        $insurance_classes[3] = [];
+
+        /*        $label_first = '';
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
         $dateType = $_GET['dateType'] ?? 'rise';
@@ -1234,6 +1310,7 @@ class ParseController extends Controller
         $_GET['secondYear'] = $secondYear;
         $_GET['dateType'] = $dateType;
         $companyId = $_GET['companyId'] ?? 0;
+        $classId = $_GET['classId'] ?? 0;
         $discount = $_GET['disc'] ?? 0;
         $discount = 1-($discount/100);
         $premium_first = [];
@@ -1242,7 +1319,8 @@ class ParseController extends Controller
         $payout_second = [];
         $insurance_classes[1] = [];
         $insurance_classes[2] = [];
-        $insurance_classes[3] = [];
+        $insurance_classes[3] = [];*/
+
         foreach (InsuranceProduct::all() as $item){
             $premium_first[$item->id] = 0;
             $premium_second[$item->id] = 0;
@@ -1476,7 +1554,9 @@ class ParseController extends Controller
                     $first_payout += (integer)$payout_first[$item];
                     $second_payout += (integer)$payout_second[$item];
                 endif;
+
             }
+
             $class_sum[$id]['premium_first'] = $first_premium;
             $class_sum[$id]['payout_first'] = $first_payout;
             $class_sum[$id]['premium_second'] = $second_premium;
@@ -1494,13 +1574,30 @@ class ParseController extends Controller
                 'insuranceClassList' => $insurance_classes,
                 'class_sum' => $class_sum,
                 'label' => $label,
-                'label_first' => $label_first,
-                'label_second' => $label_second,
+                //'label_first' => $label_first,
+                //'label_second' => $label_second,
                 'month' => $this->getMonthLabels(),
                 'quarter' => $this->getQuarterLabels(),
                 'insuranceClass'=> $this->getNameWithClassId(),
             ]
         ]);
+
+/*        return view('parse.top-classes', [
+            'premium_first' => $premium_first,
+            'premium_second' => $premium_second,
+            'payout_first' => $payout_first,
+            'payout_second' => $payout_second,
+            'productList' => $this->getProductListWithId(),
+            'insuranceClassList' => $insurance_classes,
+            'class_sum' => $class_sum,
+            'label' => $label,
+            'label_first' => $label_first,
+            'label_second' => $label_second,
+            'month' => $this->getMonthLabels(),
+            'quarter' => $this->getQuarterLabels(),
+            'controller' => $this,
+        ]);*/
+
     }
     /**
      * Получить данные ОПУ по компаниям
@@ -1526,7 +1623,6 @@ class ParseController extends Controller
         $secondYear = $request->second_year;
         $firstPeriod = $request->first_period;
         $secondPeriod = $request->second_period;
-
         $opu_data = [];
         $percentSymbol = '';
 
@@ -2120,6 +2216,7 @@ class ParseController extends Controller
     public function getTopClasses(){
         return view('parse/top-classes');
     }
+
     public function getCompanyTopSumByPeriod($dateType='month', $firstPeriod=1, $secondPeriod=12, $firstYear=2019, $secondYear=2019, $productId=0){
         $premium = [];
         $payout = [];
@@ -2919,9 +3016,7 @@ class ParseController extends Controller
                 $request->input('callback')
             );
     }
-/*    public function redirectToCompany(){
-        return redirect('/parse/company');
-    }*/
+
     /** NEW PART */
     public function parseOpuData($filePath, $year, $month, $company_id)
     {

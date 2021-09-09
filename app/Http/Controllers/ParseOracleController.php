@@ -276,6 +276,7 @@ class ParseOracleController extends Controller
                 continue;
             $deptCollectSecond[$arrName][] = $collect;
         }
+       // dd($deptCollectFirst,$deptCollectSecond);
         $dept_data = [
             [
                 'empl_name' => 'ДКС',

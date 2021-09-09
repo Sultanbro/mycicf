@@ -1,5 +1,90 @@
 <template>
 <div>
+        <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'market'">
+            <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
+                <div class="width100 table-responsive">
+
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
+                        <thead>
+                        <tr class="border-table-0">
+                            <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
+                            <td class="pt-3" @click="changeViewM('market')"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3" @click="changeViewC('company')" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                            <td></td>
+                            <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="text-left">Компания</td>
+                            <td>{{label_first}}</td>
+                            <td>{{label_second}}</td>
+                            <td>Доля {{label_first}}</td>
+                            <td>Доля {{label_second}}</td>
+                            <td>Изм %</td>
+                            <td>Изм сумма</td>
+                            <td></td>
+                            <td>{{label_first}}</td>
+                            <td>{{label_second}}</td>
+                            <td>Изм %</td>
+                            <td>{{label_first}}</td>
+                            <td>{{label_second}}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,index) in companyData.companyList" v-if="!!companyData.ranking[index]">
+                            <td><span>{{index}}</span></td>
+                            <td>{{(companyData.ranking[index])}}</td>
+                            <td class="text-left"><span class="bold" @click="getCompany(index)" >{{item}}</span></td>
+                            <td>{{(companyData.premium_first[index] || 0) | numberFormat}}</td>
+                            <td>{{(companyData.premium_second[index] || 0) | numberFormat}}</td>
+
+                            <!--Это проценты 'Доля Мар 2021'-->
+                            <td>{{Math.floor((companyData.premium_first[index] /totalCompanyFirst) * 100 || 0)}}%</td>
+                            <!--Это проценты 'Доля Мар 2020'-->
+                            <td>{{Math.floor((companyData.premium_second[index] /totalCompanySecond) * 100 || 0)}}%</td>
+                            <!--Изм %-->
+                            <td>{{Math.floor((companyData.premium_first[index] /companyData.premium_second[index] - 1) * 100 || 0)}}%</td>
+                            <!--Изм сумма-->
+                            <td>{{(companyData.premium_first[index] - companyData.premium_second[index] || 0) | numberFormat}}</td>
+                            <td></td>
+                            <!--Мар 2021-->
+                            <td>{{(companyData.payout_first[index] || 0) | numberFormat}}</td>
+                            <!--Мар 2020-->
+                            <td>{{(companyData.payout_second[index] || 0) | numberFormat}}</td>
+                            <!--Изм %-->
+                            <td>{{Math.floor((companyData.payout_first[index] /companyData.payout_second[index] - 1) * 100 || 0)}}%</td>
+                            <!--Мар 2021 проценты-->
+                            <td>{{Math.floor((companyData.payout_first[index] / companyData.premium_first[index]) * 100 || 0)}}%</td>
+                            <!--Мар 2020 проценты-->
+                            <td>{{Math.floor((companyData.payout_second[index] / companyData.premium_second[index]) * 100 || 0)}}%</td>
+                        </tr>
+                        <tr>
+                            <td><span></span></td>
+                            <td><span></span></td>
+                            <td><span class="bold">Итого</span></td>
+                            <td>{{totalCompanyFirst | numberFormat}}</td>
+                            <td>{{totalCompanySecond | numberFormat}}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{Math.floor((totalCompanyFirst/totalCompanySecond - 1) * 100 || 0)}}%</td>
+                            <td>{{totalCompanyFirst - totalCompanySecond | numberFormat}}</td>
+                            <td></td>
+                            <td>{{payoutCompanyFirst | numberFormat}}</td>
+                            <td>{{payoutCompanySecond | numberFormat}}</td>
+                            <td>{{Math.floor((payoutCompanyFirst /payoutCompanySecond - 1) * 100 || 0)}}%</td>
+                            <td>{{Math.floor((payoutCompanyFirst/ totalCompanyFirst) * 100 || 0)}}%</td>
+                            <td>{{Math.floor((payoutCompanySecond/ totalCompanySecond) * 100 || 0)}}%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+<!--******************************************Компания****************************************************-->
+
     <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'company'">
         <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
             <div class="width100 table-responsive">
@@ -7,24 +92,22 @@
                 <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
                     <thead>
                     <tr class="border-table-0">
-                        <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
+                        <td colspan="2" class="text-left fs-1_3 pl-0">{{parseData.label}}</td>
                         <td class="pt-3" @click="changeView('company')"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
                         <td class="pt-3" @click="changeView('class')"><span :class="viewType === 'class' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
-                        <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                        <td colspan="3" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                         <td></td>
                         <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td class="text-left">Компания</td>
+                        <td class="text-left">Классы</td>
                         <td>{{label_first}}</td>
                         <td>{{label_second}}</td>
                         <td>Доля {{label_first}}</td>
                         <td>Доля {{label_second}}</td>
                         <td>Изм %</td>
                         <td>Изм сумма</td>
-                        <td></td>
+                        <td class="bg-grayblue"></td>
                         <td>{{label_first}}</td>
                         <td>{{label_second}}</td>
                         <td>Изм %</td>
@@ -33,49 +116,38 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(item,index) in companyData.companyList" v-if="!!companyData.ranking[index]">
-                        <td><span>{{index}}</span></td>
-                        <td>{{(companyData.ranking[index])}}</td>
-                        <td class="text-left"><span class="bold">{{item}}</span></td>
-                        <td>{{(companyData.premium_first[index] || 0) | numberFormat}}</td>
-                        <td>{{(companyData.premium_second[index] || 0) | numberFormat}}</td>
+                    <tr v-for="(item, index) in changeArr" :class="textStyle(index)">
+                        <td class="text-left" @click="getClass(index)">{{item}}</td>
+                        <td>{{(PremiumFirst[index] || 0) | numberFormat}}</td>
+                        <td>{{(PremiumSecond[index] || 0) | numberFormat}}</td>
+                        <td>{{Math.floor((PremiumFirst[index] /totalClassFirst) * 100 || 0)}}%</td>
+                        <td>{{Math.floor((PremiumSecond[index] /totalClassSecond) * 100 || 0)}}%</td>
 
-                        <!--Это проценты 'Доля Мар 2021'-->
-                        <td>{{Math.floor((companyData.premium_first[index] /totalCompanyFirst) * 100 || 0)}}%</td>
-                        <!--Это проценты 'Доля Мар 2020'-->
-                        <td>{{Math.floor((companyData.premium_second[index] /totalCompanySecond) * 100 || 0)}}%</td>
-                        <!--Изм %-->
-                        <td>{{Math.floor((companyData.premium_first[index] /companyData.premium_second[index] - 1) * 100 || 0)}}%</td>
-                        <!--Изм сумма-->
-                        <td>{{(companyData.premium_first[index] - companyData.premium_second[index] || 0) | numberFormat}}</td>
-                        <td></td>
-                        <!--Мар 2021-->
-                        <td>{{(companyData.payout_first[index] || 0) | numberFormat}}</td>
-                        <!--Мар 2020-->
-                        <td>{{(companyData.payout_second[index] || 0) | numberFormat}}</td>
-                        <!--Изм %-->
-                        <td>{{Math.floor((companyData.payout_first[index] /companyData.payout_second[index] - 1) * 100 || 0)}}%</td>
-                        <!--Мар 2021 проценты-->
-                        <td>{{Math.floor((companyData.payout_first[index] / companyData.premium_first[index]) * 100 || 0)}}%</td>
-                        <!--Мар 2020 проценты-->
-                        <td>{{Math.floor((companyData.payout_second[index] / companyData.premium_second[index]) * 100 || 0)}}%</td>
+                        <td>{{Math.floor((PremiumFirst[index] /PremiumSecond[index] - 1) * 100 || 0)}}%</td>
+                        <td>{{(PremiumFirst[index] - PremiumSecond[index] || 0) | numberFormat}}</td>
+                        <td class="bg-grayblue"></td>
+
+                        <td>{{(PayoutFirst[index] || 0) | numberFormat}}</td>
+                        <td>{{(PayoutSecond[index] || 0) | numberFormat}}</td>
+                        <td>{{Math.floor((PayoutFirst[index] /PayoutSecond[index] - 1) * 100 || 0) }}%</td>
+
+                        <td>{{Math.floor(PayoutFirst[index] /PremiumFirst[index] * 100 || 0)}}%</td>
+                        <td>{{Math.floor(PayoutSecond[index] /PremiumSecond[index] * 100 || 0)}}%</td>
                     </tr>
                     <tr>
-                        <td><span></span></td>
-                        <td><span></span></td>
-                        <td><span class="bold">Итого</span></td>
-                        <td>{{totalCompanyFirst | numberFormat}}</td>
-                        <td>{{totalCompanySecond | numberFormat}}</td>
+                        <td>Итого</td>
+                        <td>{{totalClassFirst | numberFormat}}</td>
+                        <td>{{totalClassSecond | numberFormat}}</td>
                         <td></td>
                         <td></td>
-                        <td>{{Math.floor((totalCompanyFirst/totalCompanySecond - 1) * 100 || 0)}}%</td>
-                        <td>{{totalCompanyFirst - totalCompanySecond | numberFormat}}</td>
+                        <td>{{Math.floor((totalClassFirst/totalClassSecond - 1) * 100 || 0)}}%</td>
+                        <td>{{totalClassFirst - totalClassSecond | numberFormat}}</td>
                         <td></td>
-                        <td>{{payoutCompanyFirst | numberFormat}}</td>
-                        <td>{{payoutCompanySecond | numberFormat}}</td>
-                        <td>{{Math.floor((payoutCompanyFirst /payoutCompanySecond - 1) * 100 || 0)}}%</td>
-                        <td>{{Math.floor((payoutCompanyFirst/ totalCompanyFirst) * 100 || 0)}}%</td>
-                        <td>{{Math.floor((payoutCompanySecond/ totalCompanySecond) * 100 || 0)}}%</td>
+                        <td>{{payoutClassFirst | numberFormat}}</td>
+                        <td>{{payoutClassSecond | numberFormat}}</td>
+                        <td>{{Math.floor((payoutClassFirst /payoutClassSecond - 1) * 100 || 0)}}%</td>
+                        <td>{{Math.floor((payoutClassFirst/ totalClassFirst) * 100 || 0)}}%</td>
+                        <td>{{Math.floor((totalClassSecond/ totalClassSecond) * 100 || 0)}}%</td>
                     </tr>
                     </tbody>
                 </table>
@@ -83,77 +155,90 @@
         </div>
     </div>
 
+    <!--******************************************Класс****************************************************-->
 
+        <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'class'">
+            <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
+                <div class="width100 table-responsive">
 
-    <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" v-if="viewType === 'class'">
-        <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
-            <div class="width100 table-responsive">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
+                        <thead>
+                        <tr class="border-table-0">
+                            <td colspan="2" class="text-left fs-1_3 pl-0">{{productData.label}}</td>
+                            <td class="pt-3" @click="changeViewM('market')"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3"  @click="changeViewC('company')" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
+                            <td></td>
+                            <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="text-left">Компания</td>
+                            <td>{{label_first}}</td>
+                            <td>{{label_second}}</td>
+                            <td>Доля {{label_first}}</td>
+                            <td>Доля {{label_second}}</td>
+                            <td>Изм %</td>
+                            <td>Изм сумма</td>
+                            <td></td>
+                            <td>{{label_first}}</td>
+                            <td>{{label_second}}</td>
+                            <td>Изм %</td>
+                            <td>{{label_first}}</td>
+                            <td>{{label_second}}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,index) in productData.companyList" v-if="!!productData.ranking[index]">
+                            <td><span>{{index}}</span></td>
+                            <td>{{(productData.ranking[index])}}</td>
+                            <td class="text-left"><span class="bold" @click="backCompany(index)">{{item}}</span></td>
+                            <td>{{(productData.premium_first[index] || 0) | numberFormat}}</td>
+                            <td>{{(productData.premium_second[index] || 0) | numberFormat}}</td>
 
-    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
-        <thead>
-    <tr class="border-table-0">
-        <td colspan="2" class="text-left fs-1_3 pl-0">{{parseData.label}}</td>
-        <td class="pt-3" @click="changeView('company')"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-        <td class="pt-3" @click="changeView('class')"><span :class="viewType === 'class' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
-        <td colspan="3" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
-        <td></td>
-        <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
-            </tr>
-            <tr>
-            <td class="text-left">Классы</td>
-            <td>{{label_first}}</td>
-            <td>{{label_second}}</td>
-            <td>Доля {{label_first}}</td>
-            <td>Доля {{label_second}}</td>
-            <td>Изм %</td>
-            <td>Изм сумма</td>
-            <td class="bg-grayblue"></td>
-            <td>{{label_first}}</td>
-            <td>{{label_second}}</td>
-            <td>Изм %</td>
-            <td>{{label_first}}</td>
-            <td>{{label_second}}</td>
-            </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item, index) in changeArr" :class="textStyle(index)">
-            <td class="text-left">{{item}}</td>
-            <td>{{(PremiumFirst[index] || 0) | numberFormat}}</td>
-            <td>{{(PremiumSecond[index] || 0) | numberFormat}}</td>
-            <td>{{Math.floor((PremiumFirst[index] /totalClassFirst) * 100 || 0)}}%</td>
-            <td>{{Math.floor((PremiumSecond[index] /totalClassSecond) * 100 || 0)}}%</td>
-
-            <td>{{Math.floor((PremiumFirst[index] /PremiumSecond[index] - 1) * 100 || 0)}}%</td>
-            <td>{{(PremiumFirst[index] - PremiumSecond[index] || 0) | numberFormat}}</td>
-            <td class="bg-grayblue"></td>
-
-            <td>{{(PayoutFirst[index] || 0) | numberFormat}}</td>
-            <td>{{(PayoutSecond[index] || 0) | numberFormat}}</td>
-            <td>{{Math.floor((PayoutFirst[index] /PayoutSecond[index] - 1) * 100 || 0) }}%</td>
-
-            <td>{{Math.floor(PayoutFirst[index] /PremiumFirst[index] * 100 || 0)}}%</td>
-            <td>{{Math.floor(PayoutSecond[index] /PremiumSecond[index] * 100 || 0)}}%</td>
-        </tr>
-        <tr>
-            <td>Итого</td>
-            <td>{{totalClassFirst | numberFormat}}</td>
-            <td>{{totalClassSecond | numberFormat}}</td>
-            <td></td>
-            <td></td>
-            <td>{{Math.floor((totalClassFirst/totalClassSecond - 1) * 100 || 0)}}%</td>
-            <td>{{totalClassFirst - totalClassSecond | numberFormat}}</td>
-            <td></td>
-            <td>{{payoutClassFirst | numberFormat}}</td>
-            <td>{{payoutClassSecond | numberFormat}}</td>
-            <td>{{Math.floor((payoutClassFirst /payoutClassSecond - 1) * 100 || 0)}}%</td>
-            <td>{{Math.floor((payoutClassFirst/ totalClassFirst) * 100 || 0)}}%</td>
-            <td>{{Math.floor((totalClassSecond/ totalClassSecond) * 100 || 0)}}%</td>
-        </tr>
-        </tbody>
-    </table>
+                            <!--Это проценты 'Доля Мар 2021'-->
+                            <td>{{Math.floor((productData.premium_first[index] /totalCompanyFirst) * 100 || 0)}}%</td>
+                            <!--Это проценты 'Доля Мар 2020'-->
+                            <td>{{Math.floor((productData.premium_second[index] /totalCompanySecond) * 100 || 0)}}%</td>
+                            <!--Изм %-->
+                            <td>{{Math.floor((productData.premium_first[index] /companyData.premium_second[index] - 1) * 100 || 0)}}%</td>
+                            <!--Изм сумма-->
+                            <td>{{(productData.premium_first[index] - productData.premium_second[index] || 0) | numberFormat}}</td>
+                            <td></td>
+                            <!--Мар 2021-->
+                            <td>{{(productData.payout_first[index] || 0) | numberFormat}}</td>
+                            <!--Мар 2020-->
+                            <td>{{(productData.payout_second[index] || 0) | numberFormat}}</td>
+                            <!--Изм %-->
+                            <td>{{Math.floor((productData.payout_first[index] /productData.payout_second[index] - 1) * 100 || 0)}}%</td>
+                            <!--Мар 2021 проценты-->
+                            <td>{{Math.floor((productData.payout_first[index] / productData.premium_first[index]) * 100 || 0)}}%</td>
+                            <!--Мар 2020 проценты-->
+                            <td>{{Math.floor((productData.payout_second[index] / productData.premium_second[index]) * 100 || 0)}}%</td>
+                        </tr>
+                        <tr>
+                            <td><span></span></td>
+                            <td><span></span></td>
+                            <td><span class="bold">Итого</span></td>
+                            <td>{{totalCompanyFirst | numberFormat}}</td>
+                            <td>{{totalCompanySecond | numberFormat}}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{Math.floor((totalCompanyFirst/totalCompanySecond - 1) * 100 || 0)}}%</td>
+                            <td>{{totalCompanyFirst - totalCompanySecond | numberFormat}}</td>
+                            <td></td>
+                            <td>{{payoutCompanyFirst | numberFormat}}</td>
+                            <td>{{payoutCompanySecond | numberFormat}}</td>
+                            <td>{{Math.floor((payoutCompanyFirst /payoutCompanySecond - 1) * 100 || 0)}}%</td>
+                            <td>{{Math.floor((payoutCompanyFirst/ totalCompanyFirst) * 100 || 0)}}%</td>
+                            <td>{{Math.floor((payoutCompanySecond/ totalCompanySecond) * 100 || 0)}}%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 </div>
 </template>
 
@@ -162,11 +247,17 @@
         name: "top-company",
         data() {
             return {
+                show: false,
                 labels : ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек',],
-                viewType: 'company',
+                viewType: 'market',
                 productArr:[],
                 productKey:[],
                 productValue:[],
+                companyId: 0,
+                productId: 0,
+                classId: 0,
+                parseData: null,
+                productData: null,
 
                 sumPF: [],
                 class_pf1: [],
@@ -196,19 +287,74 @@
         },
         props: {
             companyData: Object,
-            parseData: Object,
-            periods: Object
+            periods: Object,
         },
         methods: {
-            changeView(type) {
-                this.viewType = type;
+            async getClassTopSum() {
+                let response = await this.axios.get('/parse/company/product', {
+                    params: {
+                        company_list: this.first_company_list,
+                        first_year: this.periods.first_year,
+                        second_year: this.periods.second_year,
+                        first_period: this.periods.first_period -1,
+                        second_period: this.periods.second_period - 1,
+                        companyId: this.companyId,
+                    }
+                });
+
+                if(response.data.success) {
+                    this.parseData = response.data.data;
+                }
             },
 
+            async getCompanyTopSum() {
+                let response = await this.axios.get('/parse/company/icompany', {
+                    params: {
+                        company_list: this.first_company_list,
+                        first_year: this.periods.first_year,
+                        second_year: this.periods.second_year,
+                        first_period: this.periods.first_period -1,
+                        second_period: this.periods.second_period -1,
+                        dateType: this.type,
+                        disc: this.discount,
+                        classId: this.classId,
+                        productId: this.productId,
+                    }
+                });
+                if (response.data.success) {
+                    this.productData = response.data.data;
+                }
+            },
+
+            backCompany(index){
+                return this.viewType = 'market';
+            },
+            async getCompany(index){
+                this.companyId = index;
+                this.getClassTopSum();
+                this.viewType = 'company';
+            },
+            getClass(index){
+                if(index == 0){
+                    this.classId = 1;
+                }else if(index == 10){
+                    this.classId = 2;
+                }else if(index == 14){
+                    this.classId = 3
+                }
+                this.getCompanyTopSum();
+                this.viewType = 'class';
+            },
+
+            changeViewM(){
+                return this.viewType === 'market';
+            },
             textStyle(index){
                 var textStyle = 'bold fs-0_9 bg-grayblue';
                 textStyle = index == 0 || index == 10 || index == 14 ? textStyle : '';
                 return textStyle;
             },
+
         },
         computed: {
             changeArr(){
@@ -230,6 +376,28 @@
 
                     return this.productArr;
             },
+
+            totalCompanyFirst (){
+              return Object.values(this.companyData.premium_first).reduce(function(sum, elem){
+                  return sum + elem
+              }, 0);
+          },
+            totalCompanySecond(){
+              return Object.values(this.companyData.premium_second).reduce(function (sum,elem) {
+                    return sum + elem
+              }, 0);
+            },
+            payoutCompanyFirst(){
+                return Object.values(this.companyData.payout_first).reduce(function (sum,elem) {
+                    return sum + elem
+                }, 0);
+            },
+            payoutCompanySecond(){
+                return Object.values(this.companyData.payout_second).reduce(function (sum,elem) {
+                    return sum + elem
+                }, 0);
+            },
+
 
             PremiumFirst(){
                 this.productPF = (Object.values(this.parseData.premium_first));
@@ -335,28 +503,6 @@
                 return this.sumPts1;
             },
 
-          totalCompanyFirst (){
-              return Object.values(this.companyData.premium_first).reduce(function(sum, elem){
-                  return sum + elem
-              }, 0);
-          },
-            totalCompanySecond(){
-              return Object.values(this.companyData.premium_second).reduce(function (sum,elem) {
-                    return sum + elem
-              }, 0);
-            },
-            payoutCompanyFirst(){
-                return Object.values(this.companyData.payout_first).reduce(function (sum,elem) {
-                    return sum + elem
-                }, 0);
-            },
-            payoutCompanySecond(){
-                return Object.values(this.companyData.payout_second).reduce(function (sum,elem) {
-                    return sum + elem
-                }, 0);
-            },
-
-
             totalClassFirst (){
                 return this.PremiumFirst[0] + this.PremiumFirst[10] + this.PremiumFirst[14];
             },
@@ -371,7 +517,7 @@
             },
 
             label_first(){
-                return this.labels[this.periods.first_period - 2]+ ' ' + this.periods.first_year;
+                return this.labels[this.periods.first_period  - 2]+ ' ' + this.periods.first_year;
             },
             label_second(){
                 return this.labels[this.periods.second_period - 2]+ ' ' + this.periods.second_year;

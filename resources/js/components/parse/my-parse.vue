@@ -146,7 +146,6 @@
             <top-company v-show="viewType === 'top-company'"
                          :dateType="dateType"
                          :companyData="companyData"
-                         :parseData="parseData"
                          :periods="periods"
                          v-if="companyData"></top-company>
 
@@ -171,7 +170,10 @@
             let search = url.searchParams;
             let params = [...search.entries()];
             this.dateType = search.get('dateType');
-            let firstPeriod = search.get('firstPeriod');
+            //let firstPeriod = search.get('firstPeriod');
+            this.companyId = search.get('companyId');
+            this.classId = search.get('classId');
+            this.productId = search.get('productId');
         },
         data() {
             return {
@@ -233,8 +235,6 @@
 
                     return result;
                 })(),
-                filials: [],
-
                 parseData: null,
                 companyData: null,
                 oracleData: null,
@@ -256,22 +256,6 @@
                 }
             },
 
-            async getClassTopSum() {
-                let response = await this.axios.get('/parse/company/product', {
-                    params: {
-                        company_list: this.first_company_list,
-                        first_year: this.periods.first_year,
-                        second_year: this.periods.second_year,
-                        first_period: this.periods.first_period -1,
-                        second_period: this.periods.second_period - 1,
-                    }
-                });
-
-                if(response.data.success) {
-                    this.parseData = response.data.data;
-                }
-            },
-
             async getCompanyTopSum() {
                 let response = await this.axios.get('/parse/company/icompany', {
                     params: {
@@ -280,17 +264,14 @@
                         second_year: this.periods.second_year,
                         first_period: this.periods.first_period -1,
                         second_period: this.periods.second_period -1,
-                        productId: this.productId,
-                        classId: this.classId,
                         dateType: this.type,
                         disc: this.discount,
-
+                        classId: this.classId,
+                        productId: this.productId,
                     }
                 });
                 if (response.data.success) {
-                    this.$nextTick(()=>{
                         this.companyData = response.data.data;
-                    });
                 }
             },
 
@@ -318,7 +299,6 @@
             executeRequest(){
                 if(this.viewType =='top-company'){
                     this.getCompanyTopSum();
-                    this.getClassTopSum();
                 }
                 else if(this.viewType =='parse-opu' ){
                     this.Opu();
@@ -327,8 +307,6 @@
                     this.Balance();
                 }
                 else if(this.viewType == 'parse-centras'){
-                    //this.getCompanyTopSum();
-                    //this.getClassTopSum();
                     this.getOracleData();
                 }
             }
