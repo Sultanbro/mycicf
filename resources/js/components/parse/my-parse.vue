@@ -22,18 +22,17 @@
     </div>
 
         <div class="bg-white pl-3 pr-3 box-shadow border-16">
-            <div class="flex-row jc-sb pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
+            <div class="flex-row jc-sb mr-10 pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
 
-                <div class="flex-row jc-sb" v-if="viewType === 'top-company' || viewType === 'parse-opu' || viewType === 'parse_opu2' || viewType === 'parse-indicators'
-                || viewType === 'parse_indicators2'">
-                    <div @click="showData()" class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                <div  class="flex-row jc-sb" v-if="viewType === 'top-company' || viewType === 'parse-opu' || viewType === 'parse_opu2' || viewType === 'parse-indicators' || viewType === 'parse_indicators2'">
+<!--                    <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-chart-pie"></i>
                         <div class="mt-1 fs-0_8">
                             Сборы
                         </div>
-                    </div>
+                    </div>-->
                         <div
-                            @click="Opu()" class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                            @click="Opu()" class="custom-primary-button-inverse button-accept color-white width80 mr-3 pl-3 pr-3 pt-1 pb-1 flex-column vertical-middle parse-button-top pointer">
                             <i class="fa fa-user-friends"></i>
                             <div class="mt-1 fs-0_8">
                                 Конкуренты
@@ -41,14 +40,14 @@
                         </div>
                     <div class="d-flex">
                         <a @click="Opu()">
-                            <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">ОПУ</div>
+                            <div class="custom-primary-button-inverse button-accept color-white mr-3 pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">ОПУ</div>
                         </a>
                         <a @click="Balance()">
-                            <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">БАЛАНС</div>
+                            <div class="custom-primary-button-inverse button-accept color-white mr-3 pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">БАЛАНС</div>
                         </a>
 
                         <a @click="Opu2()">
-                            <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">Показатели</div>
+                            <div class="custom-primary-button-inverse button-accept color-white width80 mr-3 pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer" v-show="viewType !== 'top-company'">Показатели</div>
                         </a>
 
                         <a @click="Balance2()">
@@ -59,7 +58,7 @@
 
                 <div>
                     <div class="flex-row">
-                        <div class="mr-10 parse-top-company-select">
+                        <div class="mr-10 parse-top-company-select mr-1">
                             <div v-show="viewType === 'top-company'">
                                 <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
                                     <option v-for="dateType in dateTypes"
@@ -149,6 +148,7 @@
                          :periods="periods"
                          v-if="companyData"></top-company>
 
+
             <parse-opu v-show="viewType === 'parse-opu'" :periods="periods" ref="opuRef"/>
             <parse_opu2 v-show="viewType === 'parse_opu2'" :periods="periods" ref="opuRef2"/>
 
@@ -178,7 +178,6 @@
         data() {
             return {
                 viewType: 'top-company',
-                viewType: 'parse-centras',
                 type: "rise",
                 discount: 0,
                 dateTypes: [
@@ -275,10 +274,6 @@
                 }
             },
 
-            showData() {
-                this.viewType='top-company';
-                this.getCompanyTopSum();
-            },
             Opu(){
                 this.viewType='parse-opu';
                 this.$refs.opuRef.getOpuData();
@@ -297,16 +292,16 @@
             },
 
             executeRequest(){
-                if(this.viewType =='top-company'){
+                if(this.viewType ==='top-company'){
                     this.getCompanyTopSum();
                 }
-                else if(this.viewType =='parse-opu' ){
+                else if(this.viewType ==='parse-opu' ){
                     this.Opu();
                 }
-                else if(this.viewType =='parse-indicators'){
+                else if(this.viewType ==='parse-indicators'){
                     this.Balance();
                 }
-                else if(this.viewType == 'parse-centras'){
+                else if(this.viewType === 'parse-centras'){
                     this.getOracleData();
                 }
             }

@@ -514,7 +514,6 @@ class ParseController extends Controller
             $result[$item->id] = $item->short_name;
         }
         return $result;
-
     }
     public function getPremiumFromPreviusMonth($month, $year, $cid, $pid){
         $month = $month == 0 ? 12 : $month;
@@ -1557,6 +1556,13 @@ class ParseController extends Controller
 
             }
 
+            $classArr = $this->getNameWithClassId();
+            $productArr = $this->getProductListWithId();
+            $keys = array(1,10,14,12,11,13,17,26,20,24,27,18,15,29,21,25,31,22,16,23,34,33,19,28,30,32,2,3,8,7,4,6,72,5,9,74);
+            $bigArr = array_merge($classArr, $productArr);
+            $productArrList = array_combine($keys,$bigArr);
+
+
             $class_sum[$id]['premium_first'] = $first_premium;
             $class_sum[$id]['payout_first'] = $first_payout;
             $class_sum[$id]['premium_second'] = $second_premium;
@@ -1570,8 +1576,9 @@ class ParseController extends Controller
                 'premium_second' => $premium_second,
                 'payout_first' => $payout_first,
                 'payout_second' => $payout_second,
-                'productList' => $this->getProductListWithId(),
-                'insuranceClassList' => $insurance_classes,
+                'productArrList' => $productArrList,
+                //'productList' => $this->getProductListWithId(),
+                //'insuranceClassList' => $insurance_classes,
                 'class_sum' => $class_sum,
                 'label' => $label,
                 //'label_first' => $label_first,
