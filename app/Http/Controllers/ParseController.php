@@ -442,6 +442,7 @@ class ParseController extends Controller
         }
         return $result;
     }
+
     public function getProductIdByName($row){
         $model = PreviousProductName::where('name', '=', $row)->get()[0]->product_id;
         return $model;
@@ -488,14 +489,6 @@ class ParseController extends Controller
             'result' => $result
         ]);
     }
-    public function getCompanyListWithId(){
-        $model = InsuranceCompany::all();
-        $result = [];
-        foreach ($model as $item) {
-            $result[$item->id] = $item->short_name;
-        }
-        return $result;
-    }
     public function getCompanies(){
         $model = InsuranceCompany::all();
         $result = [];
@@ -504,6 +497,15 @@ class ParseController extends Controller
                'id' => $item->id,
                'name' => $item->short_name
             ]);
+        }
+        return $result;
+    }
+
+    public function getCompanyListWithId(){
+        $model = InsuranceCompany::all();
+        $result = [];
+        foreach ($model as $item) {
+            $result[$item->id] = $item->short_name;
         }
         return $result;
     }
@@ -584,6 +586,8 @@ class ParseController extends Controller
             'insurance_payouts',
         ];
     }
+
+
     public static function getNameByClassId($class_id){
         return self::getNameWithClassId()[$class_id];
     }
@@ -638,8 +642,7 @@ class ParseController extends Controller
         $payout_first = [];
         $payout_second = [];*/
 
-
-
+        //по classID & productID
         if($productId == 0)
         {
             $label = $classId == 0 ? 'Рынок' : self::getNameByClassId($classId);
@@ -654,11 +657,15 @@ class ParseController extends Controller
             $payout_first[$item->id] = 0;
             $payout_second[$item->id] = 0;
         }
+
+        // type Date
         if(in_array($dateType, $this->dateTypes())){
+            //вытащил тип месяц
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$request->$firstPeriod-1].' '.$request->$firstYear;
+                $label_first = $this->getMonthLabel()[$request->firstPeriod-1].' '.$request->firstYear;
                 $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                //если id = 0, вытащи Рынок
                 if($productId == 0 && $classId == 0)
                 {
                     if(($firstYear > 2018 || ($firstYear == 2018 && $firstPeriod >=10))){
@@ -693,6 +700,7 @@ class ParseController extends Controller
                             ->get();
 
                     }
+                    //вытащил суммы с discount
                     foreach ($dataPrem as $item){
                         $premium_first[$item->company_id] += $item->product_id == 24 ? $item->sum*$discount : $item->sum;
                     }
@@ -707,6 +715,7 @@ class ParseController extends Controller
                         $payout_second[$item->company_id] += $item->sum;
                     }
                 }
+                //вытащил класс по id
                 elseif ($classId != 0)
                 {
                     $classes = [];
@@ -744,6 +753,7 @@ class ParseController extends Controller
                         }
                     }
                 }
+                //продукт по id
                 else
                 {
                     $dataPrem = ParsePremium::where('year', '=', $firstYear)
@@ -776,6 +786,7 @@ class ParseController extends Controller
                     }
                 }
             }
+            //вытащил тип год
             elseif($dateType == 'year')
             {
                 $label_first = $firstYear;
