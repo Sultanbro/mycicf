@@ -1237,6 +1237,14 @@ class ParseController extends Controller
                 $ranking[$id] = $i++;
             }
         }
+
+        $classArr = $this->getNameWithClassId();
+        $productArr = $this->getProductListWithId();
+        $keys = array(1,14,10,12,11,13,17,26,20,24,27,18,15,29,21,25,31,22,16,23,34,33,19,28,30,32,2,3,8,7,4,6,72,5,9,74);
+        $bigArr = array_merge($classArr, $productArr);
+        $productArrList = array_combine($keys,$bigArr);
+
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -1251,6 +1259,7 @@ class ParseController extends Controller
                 'label_second' => $label_second,
                 'month' => $this->getMonthLabels(),
                 'quarter' => $this->getQuarterLabels(),
+                'productArrList' => $productArrList,
             ]
         ]);
 
@@ -1558,7 +1567,7 @@ class ParseController extends Controller
 
             $classArr = $this->getNameWithClassId();
             $productArr = $this->getProductListWithId();
-            $keys = array(1,10,14,12,11,13,17,26,20,24,27,18,15,29,21,25,31,22,16,23,34,33,19,28,30,32,2,3,8,7,4,6,72,5,9,74);
+            $keys = array(1,14,10,12,11,13,17,26,20,24,27,18,15,29,21,25,31,22,16,23,34,33,19,28,30,32,2,3,8,7,4,6,72,5,9,74);
             $bigArr = array_merge($classArr, $productArr);
             $productArrList = array_combine($keys,$bigArr);
 

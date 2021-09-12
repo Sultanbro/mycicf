@@ -147,7 +147,7 @@
                     <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'class'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0" >{{productData.label}}</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0" >{{classData.label}}</td>
                             <td class="pt-3" @click="topCompany()"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
                             <td class="pt-3"  @click="topClass()" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
@@ -377,7 +377,6 @@
                         dateType: this.type,
                         disc: this.discount,
                         classId: this.classId,
-                        classData: this.classData,
                     }
                 });
                 if (response.data.success) {
@@ -396,7 +395,6 @@
                         dateType: this.type,
                         disc: this.discount,
                         productId: this.productId,
-                        productData: this.productData,
                     }
                 });
                 if (response.data.success) {
@@ -413,35 +411,95 @@
                 this.getCompanyTopSum();
                 this.viewType = 'company';
             },
+
             async getClassProduct(index){
-                if(index === 1 || index === 10 || index === 14){
+                if(index == 1 ||index == 10 || index == 14){
                     this.getClass(index);
                 }else {
                     this.getProduct(index);
                 }
             },
             async getClass(index){
-                if(index === 10){
+                if(index == 10){
                     this.classId = 2;
-                }else if(index === 14){
-                    this.classId = 3
-                }else if(index === 1){
-                    return this.classId = 3
+                }else if(index == 14){
+                    this.classId = 3;
+                }else {
+                    this.classId = index;
                 }
                 this.getClassTopSum();
-                return  this.viewType = 'class';
+                this.viewType = 'class';
             },
 
             async getProduct(index) {
-                if(index === 10){
-                    this.productId = 0;
-                }else if(index === 14){
-                    this.productId = 0;
-                }
-                else if(index === 1){
-                    this.productId = 0;
-                } else {
-                    this.productId = index;
+                if(index == 2){
+                    this.productId = 24;
+                }else if(index == 3){
+                    this.productId = 25;
+                }else if(index == 4){
+                    this.productId = 28;
+                }else if(index == 5){
+                    this.productId = 31;
+                }else if(index == 6){
+                    this.productId = 29;
+                }else if(index == 7){
+                    this.productId = 27;
+                }else if(index == 8){
+                    this.productId = 26;
+                }else if(index == 9){
+                    this.productId = 32;
+
+                }else if(index == 11){
+                    this.productId = 2;
+                }else if(index == 12){
+                    this.productId = 1;
+                }else if(index == 13){
+                    this.productId = 3;
+
+                }else if(index == 15){
+                    this.productId = 10;
+                }else if(index == 16){
+                    this.productId = 16;
+                }else if(index == 17){
+                    this.productId = 4;
+                }else if(index == 18){
+                    this.productId = 9;
+                }else if(index == 19){
+                    this.productId = 20;
+                }else if(index == 20){
+                    this.productId = 6;
+                }else if(index == 21){
+                    this.productId = 12;
+                }else if(index == 22){
+                    this.productId = 15;
+                }else if(index == 23){
+                    this.productId = 17;
+                }else if(index == 24){
+                    this.productId = 7;
+                }else if(index == 25){
+                    this.productId = 13;
+                }else if(index == 26){
+                    this.productId = 5;
+                }else if(index == 27){
+                    this.productId = 8;
+                }else if(index == 28){
+                    this.productId = 21;
+                }else if(index == 29){
+                    this.productId = 11;
+                }else if(index == 30){
+                    this.productId = 22;
+                }else if(index == 31){
+                    this.productId = 14;
+                }else if(index == 32){
+                    this.productId = 19;
+                }else if(index == 33){
+                    this.productId = 28;
+                }else if(index == 34){
+                    this.productId = 18;
+                }else if(index == 72){
+                    this.productId = 30;
+                }else if(index == 74){
+                    this.productId = 34;
                 }
                 this.getProductTopSum();
                 this.viewType = 'product';
@@ -460,22 +518,6 @@
         },
 
         computed: {
-/*            label(){
-                let keyArr = Object.keys(this.parseData.productArrList);
-
-                for(let i=0; i < keyArr.length; i++){
-                    if(this.companyId === keyArr[i]){
-                        this.companyId;
-                    }else if(this.companyId !== keyArr[i]) {
-                        this.companyId = keyArr[i];
-                    }
-                  else  if(this.productId ===  keyArr[i]){
-                        this.productId;
-                    }else if(this.productId !== keyArr[i]) {
-                       this.productId = keyArr[i];
-                    }
-                }
-            },*/
             totalCompanyFirst (){
               return Object.values(this.companyData.premium_first).reduce(function(sum, elem){
                   return sum + elem
