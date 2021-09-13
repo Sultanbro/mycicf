@@ -504,11 +504,11 @@
                 this.getProductTopSum();
                 this.viewType = 'product';
             },
-            topCompany(){
-                return this.viewType = 'market';
+            topCompany(index){
+               return this.viewType = 'market';
             },
-            topClass(){
-                return this.viewType = 'class';
+            topClass(index){
+                return this.viewType = 'company';
             },
             textStyle(index){
                 var textStyle = 'bold fs-0_9 bg-grayblue';
@@ -657,10 +657,10 @@
             },
 
             label_first(){
-                return this.labels[this.periods.first_period  - 2]+ ' ' + this.periods.first_year;
+                return this.labels[this.periods.first_period]+ ' ' + this.periods.first_year;
             },
             label_second(){
-                return this.labels[this.periods.second_period - 2]+ ' ' + this.periods.second_year;
+                return this.labels[this.periods.second_period]+ ' ' + this.periods.second_year;
             }
         },
     }

@@ -77,13 +77,16 @@
 
                         <div class="flex-row jc-sb" id="monthBlock">
                             <div class="mr-4 ml-4">
+
                                 <select id="fYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
                                     <option v-for="year in years" :value="year">{{year}}</option>
                                 </select>
+
+
                                 <select id="firstMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
-                                    <option v-for="(month, index) in months" :value="index + 1">{{month}}</option>
+                                    <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                 </select>
                             </div>
 
@@ -95,7 +98,7 @@
                                     </select>
                                     <select id="secondMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_period">
                                         <option selected disabled hidden :value="null">Не выбрано</option>
-                                        <option v-for="(month, index) in months" :value="index + 1">{{month}}</option>
+                                        <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -208,21 +211,20 @@
                 days: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11',
                     '12', '13', '14', '15', '16', '17', '18', '19', '20', '21',
                     '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
-                months: [
-                    '',
-                    'Январь',
-                    'Февраль',
-                    'Март',
-                    'Апрель',
-                    'Май',
-                    'Июнь',
-                    'Июль',
-                    'Август',
-                    'Сентябрь',
-                    'Октябрь',
-                    'Ноябрь',
-                    'Декабрь',
-                ],
+                months: {
+                    1: 'Январь',
+                    2:'Февраль',
+                    3:'Март',
+                    4:'Апрель',
+                    5:'Май',
+                    6:'Июнь',
+                    7:'Июль',
+                    8:'Август',
+                    9:'Сентябрь',
+                    10:'Октябрь',
+                    11:'Ноябрь',
+                    12:'Декабрь',
+                },
                 years: (() => {
                     let current = new Date().getFullYear();
 
@@ -245,8 +247,8 @@
                     params: {
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period -1,
-                        second_period: this.periods.second_period -1,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
                         days: this.periods.days,
                     }
                 });
@@ -261,8 +263,8 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period -1,
-                        second_period: this.periods.second_period -1,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
                         dateType: this.type,
                         disc: this.discount,
                         classId: this.classId,

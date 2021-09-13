@@ -663,8 +663,8 @@ class ParseController extends Controller
             //вытащил тип месяц
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$request->firstPeriod-1].' '.$request->firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$request->firstPeriod + 1].' '.$request->firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod + 1].' '.$secondYear;
                 //если id = 0, вытащи Рынок
                 if($productId == 0 && $classId == 0)
                 {
@@ -966,39 +966,39 @@ class ParseController extends Controller
                     {
                         if($firstYear == 2019 || ($firstYear == 2018 && $firstPeriod == 4)):
                             $dataPrem = ParsePremium::where('year', '=', $firstYear)
-                                ->where('month', '=', ($firstPeriod-1)*3+$i)
+                                ->where('month', '=', ($firstPeriod)*3+$i)
                                 ->where('product_id', '<>', 3)
                                 ->get();
                             $dataPay = ParsePayout::where('year', '=', $firstYear)
-                                ->where('month', '=', ($firstPeriod-1)*3+$i)
+                                ->where('month', '=', ($firstPeriod)*3+$i)
                                 ->where('product_id', '<>', 3)
                                 ->get();
                         else :
                             $dataPrem = ParsePremium::where('year', '=', $firstYear)
-                                ->where('month', '=', ($firstPeriod-1)*3+$i)
+                                ->where('month', '=', ($firstPeriod)*3+$i)
                                 ->where('product_id', '<>', 3)
                                 ->get();
                             $dataPay = ParsePayout::where('year', '=', $firstYear)
-                                ->where('month', '=', ($firstPeriod-1)*3+$i)
+                                ->where('month', '=', ($firstPeriod)*3+$i)
                                 ->where('product_id', '<>', 3)
                                 ->get();
                         endif;
 
                         if($secondYear == 2019 || ($secondYear == 2018 && $secondPeriod == 4)):
                             $dataPremSec = ParsePremium::where('year', '=', $secondYear)
-                                ->where('month', '=', ($secondPeriod-1)*3+$i)
+                                ->where('month', '=', ($secondPeriod)*3+$i)
                                 ->where('product_id', '<>', 3)
                                 ->get();
                             $dataPaySec = ParsePayout::where('year', '=', $secondYear)
-                                ->where('month', '=', ($secondPeriod-1)*3+$i)
+                                ->where('month', '=', ($secondPeriod)*3+$i)
                                 ->where('product_id', '<>', 3)
                                 ->get();
                         else :
                             $dataPremSec = ParsePremium::where('year', '=', $secondYear)
-                                ->where('month', '=', ($secondPeriod-1)*3+$i)
+                                ->where('month', '=', ($secondPeriod)*3+$i)
                                 ->get();
                             $dataPaySec = ParsePayout::where('year', '=', $secondYear)
-                                ->where('month', '=', ($secondPeriod-1)*3+$i)
+                                ->where('month', '=', ($secondPeriod)*3+$i)
                                 ->get();
                         endif;
                         foreach ($dataPrem as $item){
@@ -1022,19 +1022,19 @@ class ParseController extends Controller
                         }
                         foreach ($classes as $class) {
                             $dataPrem = ParsePremium::where('year', '=', $firstYear)
-                                ->where('month', '=', ($firstPeriod-1)*3+$i)
+                                ->where('month', '=', ($firstPeriod)*3+$i)
                                 ->where('product_id', '=', $class)
                                 ->get();
                             $dataPay = ParsePayout::where('year', '=', $firstYear)
-                                ->where('month', '=', ($firstPeriod-1)*3+$i)
+                                ->where('month', '=', ($firstPeriod)*3+$i)
                                 ->where('product_id', '=', $class)
                                 ->get();
                             $dataPremSec = ParsePremium::where('year', '=', $secondYear)
-                                ->where('month', '=', ($secondPeriod-1)*3+$i)
+                                ->where('month', '=', ($secondPeriod)*3+$i)
                                 ->where('product_id', '=', $class)
                                 ->get();
                             $dataPaySec = ParsePayout::where('year', '=', $secondYear)
-                                ->where('month', '=', ($secondPeriod-1)*3+$i)
+                                ->where('month', '=', ($secondPeriod)*3+$i)
                                 ->where('product_id', '=', $class)
                                 ->get();
                             foreach ($dataPrem as $item){
@@ -1054,19 +1054,19 @@ class ParseController extends Controller
                     else
                     {
                         $dataPrem = ParsePremium::where('year', '=', $firstYear)
-                            ->where('month', '=', ($firstPeriod-1)*3+$i)
+                            ->where('month', '=', ($firstPeriod)*3+$i)
                             ->where('product_id', '=', $productId)
                             ->get();
                         $dataPay = ParsePayout::where('year', '=', $firstYear)
-                            ->where('month', '=', ($firstPeriod-1)*3+$i)
+                            ->where('month', '=', ($firstPeriod)*3+$i)
                             ->where('product_id', '=', $productId)
                             ->get();
                         $dataPremSec = ParsePremium::where('year', '=', $secondYear)
-                            ->where('month', '=', ($secondPeriod-1)*3+$i)
+                            ->where('month', '=', ($secondPeriod)*3+$i)
                             ->where('product_id', '=', $productId)
                             ->get();
                         $dataPaySec = ParsePayout::where('year', '=', $secondYear)
-                            ->where('month', '=', ($secondPeriod-1)*3+$i)
+                            ->where('month', '=', ($secondPeriod)*3+$i)
                             ->where('product_id', '=', $productId)
                             ->get();
                         foreach ($dataPrem as $item){
@@ -1086,8 +1086,8 @@ class ParseController extends Controller
             }
             else
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if($productId == 0 && $classId == 0)
                 {
                     for($monthFirst = 1; $monthFirst<=$firstPeriod; $monthFirst++){
@@ -1353,8 +1353,8 @@ class ParseController extends Controller
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if($companyId == 0){
                     $dataPrem = ParsePremium::where('year', '=', $firstYear)
                         ->where('month', '=', $firstPeriod)
@@ -1447,32 +1447,32 @@ class ParseController extends Controller
                 for ($i = 1; $i<=3; $i++){
                     if($companyId == 0){
                         $dataPrem = ParsePremium::where('year', '=', $firstYear)
-                            ->where('month', '=', ($firstPeriod-1)*3+$i)
+                            ->where('month', '=', ($firstPeriod)*3+$i)
                             ->get();
                         $dataPay = ParsePayout::where('year', '=', $firstYear)
-                            ->where('month', '=', ($firstPeriod-1)*3+$i)
+                            ->where('month', '=', ($firstPeriod)*3+$i)
                             ->get();
                         $dataPremSec = ParsePremium::where('year', '=', $secondYear)
-                            ->where('month', '=', ($secondPeriod-1)*3+$i)
+                            ->where('month', '=', ($secondPeriod)*3+$i)
                             ->get();
                         $dataPaySec = ParsePayout::where('year', '=', $secondYear)
-                            ->where('month', '=', ($secondPeriod-1)*3+$i)
+                            ->where('month', '=', ($secondPeriod)*3+$i)
                             ->get();
                     }else{
                         $dataPrem = ParsePremium::where('year', '=', $firstYear)
-                            ->where('month', '=', ($firstPeriod-1)*3+$i)
+                            ->where('month', '=', ($firstPeriod)*3+$i)
                             ->where('company_id', '=', $companyId)
                             ->get();
                         $dataPay = ParsePayout::where('year', '=', $firstYear)
-                            ->where('month', '=', ($firstPeriod-1)*3+$i)
+                            ->where('month', '=', ($firstPeriod)*3+$i)
                             ->where('company_id', '=', $companyId)
                             ->get();
                         $dataPremSec = ParsePremium::where('year', '=', $secondYear)
-                            ->where('month', '=', ($secondPeriod-1)*3+$i)
+                            ->where('month', '=', ($secondPeriod)*3+$i)
                             ->where('company_id', '=', $companyId)
                             ->get();
                         $dataPaySec = ParsePayout::where('year', '=', $secondYear)
-                            ->where('month', '=', ($secondPeriod-1)*3+$i)
+                            ->where('month', '=', ($secondPeriod)*3+$i)
                             ->where('company_id', '=', $companyId)
                             ->get();
                     }
@@ -1491,8 +1491,8 @@ class ParseController extends Controller
                 }
             }
             else {
-                $label_first = $this->getMonthLabel()[$firstPeriod - 1] . ' ' . $firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod - 1] . ' ' . $secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod] . ' ' . $firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod] . ' ' . $secondYear;
                 if ($companyId == 0) {
                     for ($monthFirst = 1; $monthFirst <= $firstPeriod; $monthFirst++) {
                         $dataPrem = ParsePremium::where('year', '=', $firstYear)
@@ -2077,8 +2077,8 @@ class ParseController extends Controller
                 'success' => true,
                 'firstPeriodData' => $firstResult,
                 'secondPeriodData' => $secondResult,
-                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear,
-                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear,
+                'firstPeriodLabel' => $this->getMonthLabel()[$firstPeriod].' '.$firstYear,
+                'secondPeriodLabel' => $this->getMonthLabel()[$secondPeriod].' '.$secondYear,
             ]);
     }
     public function getFinancialIndicators(){
@@ -2111,8 +2111,8 @@ class ParseController extends Controller
         }
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month') {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
 
                 $firstData = ParseFinance::where('year', '=', $firstYear)
                     ->where('month', '=', $firstPeriod)
@@ -2159,8 +2159,8 @@ class ParseController extends Controller
             }
             elseif ($dateType == 'rise')
             {
-                $label_first = $this->getMonthLabel()[$firstPeriod-1].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod-1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
 
                 $firstData = ParseFinance::where('year', '=', $firstYear)
                     ->where('month', '<=', $firstPeriod)
