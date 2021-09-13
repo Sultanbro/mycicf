@@ -9,8 +9,8 @@
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
-                            <td class="pt-3" @click="topCompany()"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3" @click="topClass()" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3" @click="viewType = 'company'" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -85,8 +85,8 @@
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0" >{{parseData.label}}</td>
-                            <td class="pt-3" @click="topCompany()"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3" @click="topClass()"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3" @click="viewType = 'company'"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="3" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -148,8 +148,8 @@
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0" >{{classData.label}}</td>
-                            <td class="pt-3" @click="topCompany()"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3"  @click="topClass()" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3"  @click="viewType = 'company'" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -224,8 +224,8 @@
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0" >{{productData.label}}</td>
-                            <td class="pt-3" @click="topCompany()"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3"  @click="topClass()" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3"  @click="viewType = 'company'"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -503,12 +503,6 @@
                 }
                 this.getProductTopSum();
                 this.viewType = 'product';
-            },
-            topCompany(index){
-               return this.viewType = 'market';
-            },
-            topClass(index){
-                return this.viewType = 'company';
             },
             textStyle(index){
                 var textStyle = 'bold fs-0_9 bg-grayblue';

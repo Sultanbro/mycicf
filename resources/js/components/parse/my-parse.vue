@@ -25,12 +25,12 @@
             <div class="flex-row jc-sb mr-10 pt-3 pr-3 pb-4 pl-3 vertical-middle flex-row">
 
                 <div  class="flex-row jc-sb" v-if="viewType === 'top-company' || viewType === 'parse-opu' || viewType === 'parse_opu2' || viewType === 'parse-indicators' || viewType === 'parse_indicators2'">
-<!--                    <div class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
+                    <div @click="viewType = 'top-company'" class="custom-primary-button-inverse button-accept color-white pl-3 pr-3 pt-2 pb-2 flex-column vertical-middle parse-button-top pointer">
                         <i class="fa fa-chart-pie"></i>
                         <div class="mt-1 fs-0_8">
                             Сборы
                         </div>
-                    </div>-->
+                    </div>
                         <div
                             @click="Opu()" class="custom-primary-button-inverse button-accept color-white width80 mr-3 pl-3 pr-3 pt-1 pb-1 flex-column vertical-middle parse-button-top pointer">
                             <i class="fa fa-user-friends"></i>
