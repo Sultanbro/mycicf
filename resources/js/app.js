@@ -28,9 +28,9 @@ import Vue from "vue";
 
 const moment = require('vue-moment');
 
-import Antd from "ant-design-vue"
+/*import Antd from "ant-design-vue"
 import "ant-design-vue/dist/antd.css"
-Vue.use(Antd);
+Vue.use(Antd);*/
 
 Vue.use(moment);
 
