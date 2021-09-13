@@ -92,6 +92,7 @@ use App\Http\Controllers\ParseController;
                             </select>
                         </div>
                     </div>
+
                     <div class="flex-row jc-sb" id="monthBlock" @if(($_GET['dateType'] ?? 'rise') == 'month' || ($_GET['dateType'] ?? 'rise') == 'rise') style="display: flex;" @else  style="display: none;"  @endif>
                         <div class="mr-4 ml-4">
                             <select id="fYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
@@ -118,6 +119,8 @@ use App\Http\Controllers\ParseController;
                             </select>
                         </div>
 
+
+
                     </div>
                     <div id="yearBlock" class="jc-sb" @if(($_GET['dateType'] ?? 'rise') == 'year') style="display: flex;" @else  style="display: none;"  @endif>
                         <select id="first" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1 mr-10">
@@ -132,6 +135,7 @@ use App\Http\Controllers\ParseController;
                             @endfor
                         </select>
                     </div>
+
                     <div id="quarterBlock" class="jc-sb" @if(($_GET['dateType'] ?? 'rise') == 'quarter') style="display: flex;" @else  style="display: none;"  @endif>
                         <div class="mr-10">
                             <select id="firstYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
@@ -145,6 +149,7 @@ use App\Http\Controllers\ParseController;
                                 @endfor
                             </select>
                         </div>
+
                         <div class="ml-10">
                             <select id="secondYear" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                                 @for($year = 2014; $year <= date('Y'); $year++)
