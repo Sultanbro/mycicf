@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Library\Services\Kias;
 use App\Library\Services\Mocks\KiasMock;
-use Debugbar;
+use Barryvdh\Debugbar\LaravelDebugbar as Debugbar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use App\Library\Services\KiasServiceInterface;
@@ -17,24 +17,18 @@ class KiasServiceProvider extends ServiceProvider {
      */
     public function register() {
         $this->app->singleton(KiasServiceInterface::class, function () {
-            Debugbar::startMeasure('KiasServiceInterface initialization');
-            {
-                $session = null;
-                if (Auth::check()) {
-                    $session = Auth::user()->session_id;
-                }
-
-                if (config('kias.mock.enabled')) {
-                    Debugbar::info('Using mocked Kias Service');
-                    $kias = KiasMock::instance();
-                } else {
-                    Debugbar::info('Using real Kias Service');
-                    $kias = Kias::instance();
-                }
-
-                $kias->init($session);
+            $session = null;
+            if (Auth::check()) {
+                $session = Auth::user()->session_id;
             }
-            Debugbar::stopMeasure('KiasServiceInterface initialization');
+
+            if (config('kias.mock.enabled')) {
+                $kias = KiasMock::instance();
+            } else {
+                $kias = Kias::instance();
+            }
+
+            $kias->init($session);
             return $kias;
         });
     }
@@ -45,7 +39,5 @@ class KiasServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        Debugbar::startMeasure('KiasServiceProvider::boot');
-        Debugbar::stopMeasure('KiasServiceProvider::boot');
     }
 }
