@@ -663,8 +663,10 @@ class ParseController extends Controller
             //вытащил тип месяц
             if($dateType == 'month')
             {
-                $label_first = $this->getMonthLabel()[$request->firstPeriod + 1].' '.$request->firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod + 1].' '.$secondYear;
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+
+
                 //если id = 0, вытащи Рынок
                 if($productId == 0 && $classId == 0)
                 {
@@ -1298,10 +1300,10 @@ class ParseController extends Controller
         $default = $this->getDefaultDates(self::PREMIUM);
 
         $dateType = $request->dateType ?? 'rise';
-        $firstPeriod = $request->first_period; //?? $default['first_period'];
-        $secondPeriod = $request->second_period; //?? $default['second_period'];
-        $firstYear = $request->first_year; //?? $default['first_year'];
-        $secondYear = $request->second_year; //?? $default['second_year'];
+        $firstPeriod = $request->first_period ?? $default['first_period'];
+        $secondPeriod = $request->second_period ?? $default['second_period'];
+        $firstYear = $request->first_year ?? $default['first_year'];
+        $secondYear = $request->second_year ?? $default['second_year'];
 
         $companyId = $request->companyId ?? 0;
         $discount = $request->disc ?? 0;
@@ -1315,7 +1317,7 @@ class ParseController extends Controller
         $insurance_classes[2] = [];
         $insurance_classes[3] = [];
 
-        /*        $label_first = '';
+/*        $label_first = '';
         $label_second = '';
         $default = $this->getDefaultDates(self::PREMIUM);
         $dateType = $_GET['dateType'] ?? 'rise';
@@ -1355,6 +1357,7 @@ class ParseController extends Controller
             {
                 $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
                 $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+                dd($label_first,$label_second);
                 if($companyId == 0){
                     $dataPrem = ParsePremium::where('year', '=', $firstYear)
                         ->where('month', '=', $firstPeriod)
@@ -1491,8 +1494,9 @@ class ParseController extends Controller
                 }
             }
             else {
-                $label_first = $this->getMonthLabel()[$firstPeriod] . ' ' . $firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod] . ' ' . $secondYear;
+
+                $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
                 if ($companyId == 0) {
                     for ($monthFirst = 1; $monthFirst <= $firstPeriod; $monthFirst++) {
                         $dataPrem = ParsePremium::where('year', '=', $firstYear)
@@ -1601,8 +1605,8 @@ class ParseController extends Controller
                 //'insuranceClassList' => $insurance_classes,
                 'class_sum' => $class_sum,
                 'label' => $label,
-                //'label_first' => $label_first,
-                //'label_second' => $label_second,
+                'label_first' => $label_first,
+                'label_second' => $label_second,
                 'month' => $this->getMonthLabels(),
                 'quarter' => $this->getQuarterLabels(),
                 'insuranceClass'=> $this->getNameWithClassId(),
@@ -2734,18 +2738,18 @@ class ParseController extends Controller
     }
     public function getMonthLabel(){
         return [
-            'Янв',
-            'Фев',
-            'Мар',
-            'Апр',
-            'Май',
-            'Июн',
-            'Июл',
-            'Авг',
-            'Сен',
-            'Окт',
-            'Ноя',
-            'Дек',
+            1=>'Янв',
+            2=>'Фев',
+            3=>'Мар',
+            4=>'Апр',
+            5=>'Май',
+            6=>'Июн',
+            7=>'Июл',
+            8=>'Авг',
+            9=>'Сен',
+            10=>'Окт',
+            11=>'Ноя',
+            12=>'Дек',
         ];
     }
     public function getDefaultDates($type){

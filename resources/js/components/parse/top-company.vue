@@ -19,18 +19,18 @@
                             <td></td>
                             <td></td>
                             <td class="text-left">Компания</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
-                            <td>Доля {{label_first}}</td>
-                            <td>Доля {{label_second}}</td>
+                            <td>{{companyData.label_first}}</td>
+                            <td>{{companyData.label_second}}</td>
+                            <td>Доля {{companyData.label_first}}</td>
+                            <td>Доля {{companyData.label_second}}</td>
                             <td>Изм %</td>
                             <td>Изм сумма</td>
                             <td></td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{companyData.label_first}}</td>
+                            <td>{{companyData.label_second}}</td>
                             <td>Изм %</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{companyData.label_first}}</td>
+                            <td>{{companyData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -93,18 +93,18 @@
                         </tr>
                         <tr>
                             <td class="text-left">Классы</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
-                            <td>Доля {{label_first}}</td>
-                            <td>Доля {{label_second}}</td>
+                            <td>{{parseData.label_first}}</td>
+                            <td>{{parseData.label_second}}</td>
+                            <td>Доля {{parseData.label_first}}</td>
+                            <td>Доля {{parseData.label_second}}</td>
                             <td>Изм %</td>
                             <td>Изм сумма</td>
                             <td class="bg-grayblue"></td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{parseData.label_first}}</td>
+                            <td>{{parseData.label_second}}</td>
                             <td>Изм %</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{parseData.label_first}}</td>
+                            <td>{{parseData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -158,18 +158,18 @@
                             <td></td>
                             <td></td>
                             <td class="text-left">Компания</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
-                            <td>Доля {{label_first}}</td>
-                            <td>Доля {{label_second}}</td>
+                            <td>{{classData.label_first}}</td>
+                            <td>{{classData.label_second}}</td>
+                            <td>Доля {{classData.label_first}}</td>
+                            <td>Доля {{classData.label_second}}</td>
                             <td>Изм %</td>
                             <td>Изм сумма</td>
                             <td></td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{classData.label_first}}</td>
+                            <td>{{classData.label_second}}</td>
                             <td>Изм %</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{classData.label_first}}</td>
+                            <td>{{classData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -234,18 +234,18 @@
                             <td></td>
                             <td></td>
                             <td class="text-left">Компания</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
-                            <td>Доля {{label_first}}</td>
-                            <td>Доля {{label_second}}</td>
+                            <td>{{productData.label_first}}</td>
+                            <td>{{productData.label_second}}</td>
+                            <td>Доля {{productData.label_first}}</td>
+                            <td>Доля {{productData.label_second}}</td>
                             <td>Изм %</td>
                             <td>Изм сумма</td>
                             <td></td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{productData.label_first}}</td>
+                            <td>{{productData.label_second}}</td>
                             <td>Изм %</td>
-                            <td>{{label_first}}</td>
-                            <td>{{label_second}}</td>
+                            <td>{{productData.label_first}}</td>
+                            <td>{{productData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -307,12 +307,10 @@
         name: "top-company",
         data() {
             return {
-                labels : { 1:'Янв', 2:'Фев', 3:'Мар', 4:'Апр', 5:'Май', 6:'Июн', 7:'Июл', 8:'Авг', 9:'Сен', 10:'Окт', 11:'Ноя', 12:'Дек'},
                 viewType: 'market',
                 companyId: 0,
                 productId: 0,
                 classId: 0,
-                title: '',
                 parseData: null,
                 classData: null,
                 productData: null,
@@ -346,6 +344,8 @@
         props: {
             companyData: Object,
             periods: Object,
+            type: String,
+            discount: String,
         },
         methods: {
 
@@ -355,9 +355,11 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period -1,
-                        second_period: this.periods.second_period - 1,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
                         companyId: this.companyId,
+                        dateType: this.type,
+                        disc: this.discount,
                     }
                 });
 
@@ -372,11 +374,11 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period -1,
-                        second_period: this.periods.second_period -1,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
+                        classId: this.classId,
                         dateType: this.type,
                         disc: this.discount,
-                        classId: this.classId,
                     }
                 });
                 if (response.data.success) {
@@ -390,11 +392,11 @@
                         company_list: this.first_company_list,
                         first_year: this.periods.first_year,
                         second_year: this.periods.second_year,
-                        first_period: this.periods.first_period -1,
-                        second_period: this.periods.second_period -1,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
+                        productId: this.productId,
                         dateType: this.type,
                         disc: this.discount,
-                        productId: this.productId,
                     }
                 });
                 if (response.data.success) {
@@ -649,13 +651,6 @@
             payoutClassSecond(){
                 return this.PayoutSecond[0] + this.PayoutSecond[10] + this.PayoutSecond[14];
             },
-
-            label_first(){
-                return this.labels[this.periods.first_period]+ ' ' + this.periods.first_year;
-            },
-            label_second(){
-                return this.labels[this.periods.second_period]+ ' ' + this.periods.second_year;
-            }
         },
     }
 </script>

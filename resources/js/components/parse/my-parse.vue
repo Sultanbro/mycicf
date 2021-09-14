@@ -75,21 +75,17 @@
                             </div>
                         </div>
 
-                        <div class="flex-row jc-sb" id="monthBlock">
+                        <div class="flex-row jc-sb" id="monthBlock" v-if="type === 'rise' || type === 'month'">
                             <div class="mr-4 ml-4">
-
                                 <select id="fYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
                                     <option v-for="year in years" :value="year">{{year}}</option>
                                 </select>
-
-
                                 <select id="firstMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
                                     <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                 </select>
                             </div>
-
                             <div class="mr-4 ml-4">
                                 <div>
                                     <select id="sYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
@@ -99,6 +95,52 @@
                                     <select id="secondMonth" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_period">
                                         <option selected disabled hidden :value="null">Не выбрано</option>
                                         <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="flex-row jc-sb" id="quarterBlock" v-if="type === 'quarter'">
+                            <div class="mr-4 ml-4">
+                                <select id="firstYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                    <option selected disabled hidden :value="null">Не выбрано</option>
+                                    <option v-for="year in years" :value="year">{{year}}</option>
+                                </select>
+
+                                <select id="firstQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1"
+                                        v-model="periods.first_period">
+                                    <option selected disabled hidden :value="null">квартал</option>
+                                    <option selected disabled hidden :value="null">квартал</option>
+                                    <option v-for="quarter in quarters">{{quarter}}</option>
+                                </select>
+                            </div>
+                            <div class="mr-4 ml-4">
+                                <div>
+                                    <select id="secondYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
+                                        <option selected disabled hidden :value="null">Не выбрано</option>
+                                        <option v-for="year in years" :value="year">{{year}}</option>
+                                    </select>
+                                    <select id="secondQuarter" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1"
+                                            v-model="periods.second_period">
+                                        <option selected disabled hidden :value="null">квартал</option>
+                                        <option v-for="quarter in quarters">{{quarter}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-row jc-sb" id="yearBlock" v-if="type === 'year'">
+                            <div class="mr-4 ml-4">
+                                <select id="first" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                    <option selected disabled hidden :value="null">Не выбрано</option>
+                                    <option v-for="year in years" :value="year">{{year}}</option>
+                                </select>
+                            </div>
+                            <div class="mr-4 ml-4">
+                                <div>
+                                    <select id="second" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
+                                        <option selected disabled hidden :value="null">Не выбрано</option>
+                                        <option v-for="year in years" :value="year">{{year}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -146,11 +188,11 @@
 
         <div>
             <top-company v-show="viewType === 'top-company'"
-                         :dateType="dateType"
+                         :type="type"
+                         :discount ="discount"
                          :companyData="companyData"
                          :periods="periods"
                          v-if="companyData"></top-company>
-
 
             <parse-opu v-show="viewType === 'parse-opu'" :periods="periods" ref="opuRef"/>
             <parse_opu2 v-show="viewType === 'parse_opu2'" :periods="periods" ref="opuRef2"/>
@@ -183,6 +225,7 @@
                 viewType: 'top-company',
                 type: "rise",
                 discount: 0,
+                quarters: [1,2,3,4],
                 dateTypes: [
                     {
                         name: "C нарастанием",
@@ -308,6 +351,9 @@
                 }
             }
         },
+        computed: {
+            //Дописать логику на фильтр год квартал, ибо first_period && second_period пустой
+        }
     }
 </script>
 
