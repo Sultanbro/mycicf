@@ -59,7 +59,7 @@
                 <div>
                     <div class="flex-row">
                         <div class="mr-10 parse-top-company-select mr-1">
-                            <div v-show="viewType === 'top-company'">
+                            <div v-show="viewType === 'top-company' || viewType === 'parse-centras'">
                                 <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
                                     <option v-for="dateType in dateTypes"
                                             :value="dateType.value">
@@ -67,12 +67,13 @@
                                     </option>
                                 </select>
                             </div>
-                            <div v-show="viewType === 'parse-centras'">
-                                <select id="day" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
-                                    <option selected disabled hidden :value="null">День</option>
-                                    <option v-for="day in days" :value="day">{{day}}</option>
-                                </select>
-                            </div>
+                        </div>
+
+                        <div v-show="viewType === 'parse-centras'">
+                            <select id="day" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                <option selected disabled hidden :value="null">День</option>
+                                <option v-for="day in days" :value="day">{{day}}</option>
+                            </select>
                         </div>
 
                         <div class="flex-row jc-sb" id="monthBlock" v-if="type === 'rise' || type === 'month'">
@@ -224,7 +225,7 @@
             return {
                 viewType: 'top-company',
                 type: "rise",
-                discount: 0,
+                discount: '0',
                 quarters: [1,2,3,4],
                 dateTypes: [
                     {
@@ -293,6 +294,7 @@
                         first_period: this.periods.first_period,
                         second_period: this.periods.second_period,
                         days: this.periods.days,
+                        dateType:this.type,
                     }
                 });
                 if(response.data.success) {

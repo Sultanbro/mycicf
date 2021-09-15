@@ -114,59 +114,37 @@ class ParseOracleController extends Controller
         $day = $request->days;
         $dateType = $request->dateType ?? 'rise';
 
+        //фильтр Даты
+        if (0 < $firstPeriod && $firstPeriod < '10' && empty($day)) {
+            $firstDate = '0' . $firstPeriod . '.' . $firstYear;
+        }else if($firstPeriod >= '10' && empty($day)) {
+            $firstDate = $firstPeriod . '.' . $firstYear;
+        }else if($firstPeriod < '10' && isset($day)){
+            $firstDate = $day . '.' . '0' . $firstPeriod . '.' . $firstYear;
+        }else if($firstPeriod >= '10' && isset($day)){
+            $firstDate = $day . '.' . $firstPeriod . '.' .$firstYear;
+        }else if(empty($firstPeriod) && empty($day)){
+            $firstDate = $firstYear;
+        }
+
+        if(0 < $secondPeriod && $secondPeriod < '10' && empty($day)){
+            $secondDate = '0' . $secondPeriod . '.' . $secondYear;
+        }else if($secondPeriod >='10' && empty($day)){
+            $secondDate = $secondPeriod . '.' . $secondYear;
+        }else if($secondPeriod < '10' && isset($day)){
+            $secondDate = $day . '.' . '0' . $secondPeriod . '.' . $secondYear;
+        }else if($secondPeriod >= '10' && isset($day)){
+            $secondDate = $day . '.' . $secondPeriod . '.' . $secondYear;
+        }else if(empty($secondPeriod) && empty($day)){
+            $secondDate = $secondYear;
+        }
+
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month'){
                 $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
                 $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
-            }
-        }
-        //фильтр Даты
-        if (empty($day)) {
-            if ($firstPeriod < '10') {
-                $first_date = '0' . $firstPeriod . '.' . $firstYear;
-            } else {
-                $first_date = $firstPeriod . '.' . $firstYear;
-            }
-            if ($secondPeriod < '10') {
-                $second_date = $secondPeriod . '.' . $secondYear;
-            } else {
-                $second_date = $secondPeriod . '.' . $secondYear;
-            }
 
-            if ($firstPeriod >= '10') {
-                $first_date = $firstPeriod . '.' . $firstYear;
-            } else {
-                $first_date = '0' . $firstPeriod . '.' . $firstYear;
-            }
-            if ($firstPeriod >= '10') {
-                $second_date = $secondPeriod . '.' . $secondYear;
-            } else {
-                $second_date = '0' . $secondPeriod . '.' . $secondYear;
-            }
-        } else {
-            if ($firstPeriod < '10') {
-                $first_date = $day . '.' . '0' . $firstPeriod . '.' . $firstYear;
-            } else {
-                $first_date = $day . '.' . $firstPeriod . '.' . $firstYear;
-            }
-            if ($request->second_period < '10') {
-                $second_date = $day . '.' . $secondPeriod . '.' . $secondYear;
-            } else {
-                $second_date = $day . '.' . $secondPeriod . '.' . $secondYear;
-            }
-            if ($firstPeriod >= '10') {
-                $first_date = $day . '.' . $firstPeriod . '.' .$firstYear;
-            } else {
-                $first_date = $day . '.' . '0' . $firstPeriod . '.' . $firstYear;
-            }
-            if ($request->second_period >= '10') {
-                $second_date = $day . '.' . $secondPeriod . '.' . $secondYear;
-            } else {
-                $second_date = $day . '.' . '0' . $secondPeriod. '.' . $secondYear;
-            }
-        }
-
-                if(!empty($request->days)){
+                if(!empty($day)){
 
                     $builder = DB::table('parse_oracle_plans')
                         ->select(
@@ -188,9 +166,9 @@ class ParseOracleController extends Controller
                             $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
                             $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
                         });
-                    $collects = $builder->where('parse_oracle_collects.dateAccept','=', $first_date)
-                        ->where('parse_oracle_plans.year','=', $request->first_year)
-                        ->where('parse_oracle_plans.month','=',$request->first_period)
+                    $collects = $builder->where('parse_oracle_collects.dateAccept','=', $firstDate)
+                        ->where('parse_oracle_plans.year','=', $firstYear)
+                        ->where('parse_oracle_plans.month','=',$firstPeriod)
                         ->groupBy(
                             DB::raw('parse_oracle_plans.agrempl'),
                             DB::raw('parse_oracle_plans.feesplan'),
@@ -220,9 +198,9 @@ class ParseOracleController extends Controller
                             $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
                             $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
                         });
-                    $collects2 = $model->where('parse_oracle_collects.dateAccept','=', $second_date)
-                        ->where('parse_oracle_plans.year','=', $request->second_year)
-                        ->where('parse_oracle_plans.month','=',$request->second_period)
+                    $collects2 = $model->where('parse_oracle_collects.dateAccept','=', $secondDate)
+                        ->where('parse_oracle_plans.year','=', $secondYear)
+                        ->where('parse_oracle_plans.month','=',$secondPeriod)
                         ->groupBy(
                             DB::raw('parse_oracle_plans.agrempl'),
                             DB::raw('parse_oracle_plans.feesplan'),
@@ -237,6 +215,7 @@ class ParseOracleController extends Controller
                             'parse_oracle_plans.feesplan',
                             'parse_oracle_plans.agrempl',
                             'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.dateAccept',
                             'parse_oracle_collects.dept_isn',
                             'parse_oracle_collects.dept_name',
                             DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
@@ -251,9 +230,9 @@ class ParseOracleController extends Controller
                             $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
                             $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
                         });
-                    $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $first_date)
-                        ->where('parse_oracle_plans.year','=', $request->first_year)
-                        ->where('parse_oracle_plans.month','=',$request->first_period)
+                    $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $firstDate)
+                        ->where('parse_oracle_plans.year','=', $firstYear)
+                        ->where('parse_oracle_plans.month','=',$firstPeriod)
                         ->groupBy(
                             DB::raw('parse_oracle_plans.agrempl'),
                             DB::raw('parse_oracle_plans.feesplan'),
@@ -268,6 +247,7 @@ class ParseOracleController extends Controller
                             'parse_oracle_plans.feesplan',
                             'parse_oracle_plans.agrempl',
                             'parse_oracle_collects.empl_name',
+                            'parse_oracle_collects.dateAccept',
                             'parse_oracle_collects.dept_isn',
                             'parse_oracle_collects.dept_name',
                             DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
@@ -282,9 +262,9 @@ class ParseOracleController extends Controller
                             $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
                             $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
                         });
-                    $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $second_date)
-                        ->where('parse_oracle_plans.year','=', $request->second_year)
-                        ->where('parse_oracle_plans.month','=',$request->second_period)
+                    $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $secondDate)
+                        ->where('parse_oracle_plans.year','=', $secondYear)
+                        ->where('parse_oracle_plans.month','=',$secondPeriod)
                         ->groupBy(
                             DB::raw('parse_oracle_plans.agrempl'),
                             DB::raw('parse_oracle_plans.feesplan'),
@@ -294,6 +274,71 @@ class ParseOracleController extends Controller
                             DB::raw('parse_oracle_collects.dept_name'))
                         ->get()->toArray();
                 }
+            }else if ($dateType == 'year'){
+                $builder = DB::table('parse_oracle_plans')
+                    ->select(
+                        'parse_oracle_plans.feesplan',
+                        'parse_oracle_plans.agrempl',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dateAccept',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                    ->leftJoin('parse_oracle_collects', function ($join) {
+                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                    })
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                    });
+                $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 6)'),'=', $firstDate)
+                    ->groupBy(
+                        DB::raw('parse_oracle_plans.agrempl'),
+                        DB::raw('parse_oracle_plans.feesplan'),
+                        DB::raw('parse_oracle_collects.empl_name'),
+                        //DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                        DB::raw('parse_oracle_collects.dept_isn'),
+                        DB::raw('parse_oracle_collects.dept_name'))
+                    ->get()->toArray();
+
+                $model = DB::table('parse_oracle_plans')
+                    ->select(
+                        'parse_oracle_plans.feesplan',
+                        'parse_oracle_plans.agrempl',
+                        'parse_oracle_collects.dateAccept',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                    ->leftJoin('parse_oracle_collects', function ($join) {
+                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                    })
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                    });
+                $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 6)'),'=', $secondDate)
+                    ->groupBy(
+                        DB::raw('parse_oracle_plans.agrempl'),
+                        DB::raw('parse_oracle_plans.feesplan'),
+                        DB::raw('parse_oracle_collects.empl_name'),
+                        DB::raw('parse_oracle_collects.dateAccept'),
+                        DB::raw('parse_oracle_collects.dept_isn'),
+                        DB::raw('parse_oracle_collects.dept_name'))
+                    ->get()->toArray();
+            }
+
+        }
+
+        dd($collects, $collects2);
 
                 $firstResults = json_decode(json_encode($collects), true);
                 $secondResults = json_decode(json_encode($collects2), true);
@@ -318,13 +363,8 @@ class ParseOracleController extends Controller
                 continue;
             $deptCollectSecond[$arrName][] = $collect;
         }
-        //dd($deptCollectFirst);
 
-        $dks = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem'));
-        dd($dks);
-
-
-
+        //$dks = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem'));
 
 
         return response()->json([
