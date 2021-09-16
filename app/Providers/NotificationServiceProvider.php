@@ -16,7 +16,6 @@ class NotificationServiceProvider extends ServiceProvider {
      */
     public function register() {
         $this->app->singleton(NotificationServiceInterface::class, function () {
-            Debugbar::startMeasure('NotificationServiceInterface initialization');
 
             if (config('notifications.mock.enabled')) {
                 $service = new NotificationServiceMock();
@@ -24,7 +23,6 @@ class NotificationServiceProvider extends ServiceProvider {
                 $service = new NotificationService();
             }
 
-            Debugbar::stopMeasure('NotificationServiceInterface initialization');
             return $service;
         });
     }
@@ -35,7 +33,5 @@ class NotificationServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        Debugbar::startMeasure('KiasServiceProvider::boot');
-        Debugbar::stopMeasure('KiasServiceProvider::boot');
     }
 }

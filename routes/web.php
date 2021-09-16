@@ -262,17 +262,17 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
             Route::get('/documentation/{url}', 'DocumentationController@getByUrl');
             Route::post('/documentation/search', 'DocumentationController@search');
             //PARSE
-            /*Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');*/
+            //Route::get('parse/company', 'ParseController@getCompanyTopSum')->name('parse/company');
             //NEW PARSE
             Route::get('parse', 'ParseController@DataCompany')->name('parse');
             Route::get('parse/company/icompany', 'ParseController@getCompanyTopSum');
             Route::get('parse/company/product', 'ParseController@getClassTopSum');
             Route::post('parse/company/opu', 'ParseController@getOpuNewSum');
             Route::post('parse/company/balance', 'ParseController@getBalanceNewSum');
+            Route::get('parse/company/collects', 'ParseOracleController@getOracleCollect');
 
             Route::get('parse/product', 'ParseController@getClassTopSum')->name('parse/class');
             Route::get('parse/finance', 'ParseController@getFinancialIndicators')->name('parse/finance');
-            /*Route::get('parse', 'ParseController@redirectToCompany')->name('parse');*/
         Route::post('/simpleInfo', 'SiteController@postSimpleInfo');
         Route::post('/getBranchData', 'SiteController@postBranchData');
         Route::get('/getAttachment/{ISN}/{REFISN}/{PICTTYPE}', 'SiteController@getAttachment');

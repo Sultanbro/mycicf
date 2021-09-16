@@ -82,14 +82,11 @@ services:
       - app_network
 
     volumes:
-      - /var/lib/mysql:/var/lib/mysql
+      - /var/lib/db/mycic:/var/lib/mysql
 
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
       - MYSQL_DATABASE=application
-
-    volumes:
-      - /var/lib/mysql/mycic:/var/lib/mysql
 
 
   redis:
