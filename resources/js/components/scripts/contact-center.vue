@@ -67,28 +67,45 @@
                 <div class="offset-2 col-5">
                     <table class="table table-responsive-sm table-stripper table-data table-bordered">
                         <tbody>
-                            <tr v-for="res in resultData" v-if="listPinned.length && res.id === listPinned[0].parent_id">
+                            <tr v-for="res in resultData" v-if="res.id === editRowModeParentId">
                                 <td style="width: 4%">{{res.id}}</td>
                                 <td class="col-3" v-if="editRowModeId !== res.id">{{res.name}}</td>
-                                <td class="col-3" v-if="editRowMode && editRowModeId === res.id"><textarea v-model="res.name" style="width: 100%; height: 60px"></textarea></td>
+                                <td class="col-3" v-if="editRowModeId === res.id"><textarea v-model="res.name" style="width: 100%; height: 60px"></textarea></td>
                                 <td class="col-1">
                                     <div class="form-group row">
                                         <button v-if="editRowModeId != res.id" class="btn-primary" style="margin-left: 10px;"><i @click="editRow(res)" class="fa fa-pencil-square-o"></i></button>
                                         <button v-if="editRowMode && editRowModeId == res.id" class="btn-primary" style="margin-left: 10px;"><i @click="approveRow(res)" class="fa fa-check"></i></button>
-                                        <button class="btn-danger" style="margin-left: 10px;"><i @click="deleteRow(res)" class="fa fa-trash"></i></button>
+                                        <button v-if="editRowModeId != res.id" class="btn-danger" style="margin-left: 10px;"><i @click="deleteRow(res)" class="fa fa-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
+<!--                            <template v-for="item in listPinned">-->
+<!--                                <tr style="padding-bottom: 2px">-->
+<!--                                    <td style="width: 4%">{{item.parent_id}}.{{item.web_id}}</td>-->
+<!--                                    <td class="col-3" v-if="(!editRowMode && editRowModeId !== item.id) || (!addRowMode || addRowModeIndex !== item.web_id)">{{item.name}}</td>-->
+<!--                                    <td class="col-3" v-if="(editRowMode && editRowModeId === item.id) || (addRowMode && addRowModeIndex === item.web_id)"><textarea v-model="item.name" style="width: 100%; height: 60px"></textarea></td>-->
+<!--                                    <td class="col-1">-->
+<!--                                        <div class="form-group row">-->
+<!--                                            <button v-if="(!editRowMode && editRowModeId !== item.id) || (!addRowMode || addRowModeIndex !== item.web_id)" class="btn-primary" style="margin-left: 10px;"><i @click="editRow(item)" class="fa fa-pencil-square-o"></i></button>-->
+<!--                                            <button v-if="(editRowMode && editRowModeId == item.id) || (addRowMode && addRowModeIndex === item.web_id)" class="btn-primary" style="margin-left: 10px;"><i @click="approveRow(item)" class="fa fa-check"></i></button>-->
+<!--                                            <button class="btn-danger" style="margin-left: 10px;"><i @click="deleteRow(item)" class="fa fa-trash"></i></button>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                            </template>-->
                             <template v-for="item in listPinned">
                                 <tr style="padding-bottom: 2px">
                                     <td style="width: 4%">{{item.parent_id}}.{{item.web_id}}</td>
-                                    <td class="col-3" v-if="(!editRowMode && editRowModeId !== item.id) || (!addRowMode || addRowModeIndex !== item.web_id)">{{item.name}}</td>
-                                    <td class="col-3" v-if="(editRowMode && editRowModeId === item.id) || (addRowMode && addRowModeIndex === item.web_id)"><textarea v-model="item.name" style="width: 100%; height: 60px"></textarea></td>
+                                    <td class="col-3" v-if="editRowModeId !== item.id">{{item.name}}</td>
+                                    <td class="col-3" v-if="editRowMode && editRowModeId == item.id"><textarea v-model="item.name" style="width: 100%; height: 60px"></textarea></td>
+<!--                                    <td class="col-3" v-if="editRowMode && editRowModeId == item.id"><textarea v-model="item.name" style="width: 100%; height: 60px"></textarea></td>-->
+                                    <td class="col-3" v-if="addRowMode && addRowModeIndex === item.web_id"><textarea v-model="item.name" style="width: 100%; height: 60px"></textarea></td>
                                     <td class="col-1">
                                         <div class="form-group row">
-                                            <button v-if="!editRowMode && editRowModeId !== item.id" class="btn-primary" style="margin-left: 10px;"><i @click="editRow(item)" class="fa fa-pencil-square-o"></i></button>
-                                            <button v-if="(editRowMode && editRowModeId == item.id) || (addRowMode && addRowModeIndex === item.web_id)" class="btn-primary" style="margin-left: 10px;"><i @click="approveRow(item)" class="fa fa-check"></i></button>
-                                            <button class="btn-danger" style="margin-left: 10px;"><i @click="deleteRow(item)" class="fa fa-trash"></i></button>
+                                            <button v-if="editRowModeId !== item.id" class="btn-primary" style="margin-left: 10px;"><i @click="editRow(item)" class="fa fa-pencil-square-o"></i></button>
+                                            <button v-if="(editRowMode && editRowModeId == item.id) || addRowModeIndex == item.web_id" class="btn-primary" style="margin-left: 10px;"><i @click="approveRow(item)" class="fa fa-check"></i></button>
+                                            <button v-if="editRowModeId != item.id || addRowModeIndex > 0" class="btn-danger" style="margin-left: 10px;"><i @click="deleteRow(item)" class="fa fa-trash"></i></button>
+<!--                                            <button v-if="editRowModeId != item.id" class="btn-danger" style="margin-left: 10px;"><i @click="deleteRow(item)" class="fa fa-trash"></i></button>-->
                                         </div>
                                     </td>
                                 </tr>
@@ -240,6 +257,15 @@ export default {
             //     this.listPinned = []
             // }
             this.listPinned = item.child
+            if(this.listPinned.length){
+                for(let i=0; i<this.listPinned.length; i++){
+                    if(this.listPinned[i].id == ''){
+                        delete this.listPinned[i]
+                        this.listPinned.splice(i, 1)
+                    }
+                }
+            }
+
             this.editRowModeParentId = item.id
             this.parentName = item.name
             this.editRowMode = false
@@ -269,7 +295,7 @@ export default {
                 }
                 this.axios.post('/contact-center/approveRow', data)
                     .then(response => {
-                        this.resultData = response.data.result
+                        alert('Успешно сохранили данные!')
                     });
             }
             this.editColumnMode = false;
@@ -300,8 +326,7 @@ export default {
         },
         addRow(){
             this.editColumnMode = true;
-            if (this.listPinned.length && this.listPinned[this.listPinned.length - 1].id=== '' && this.listPinned.length[this.listPinned.length - 1].name=== ''){
-                console.log(this.listPinned.length,'1')
+            if (this.listPinned.length && this.listPinned[this.listPinned.length - 1].id=== '' && this.listPinned[this.listPinned.length - 1].name=== ''){
                 delete this.listPinned[length-1];
                 this.listPinned.splice(this.listPinned.length-1, 1);
                 this.addRowModeIndex = '';
@@ -310,8 +335,6 @@ export default {
                 this.editColumnMode = true;
                 this.editRowModeId = '';
             }else{
-                console.log('2')
-                console.log(this.listPinned.length)
                 this.listPinned[this.listPinned.length] = {
                     id: '',
                     name: '',
@@ -320,15 +343,15 @@ export default {
                 }
                 this.editColumnMode = false;
                 this.addRowMode = true;
-                console.log(this.listPinned[this.listPinned.length])
-                console.log('3')
                 this.editRowModeId = '';
                 this.addRowModeIndex = this.listPinned.length
-                console.log(this.listPinned.length)
                 this.addRowMode = true
                 this.editColumnMode = true;
             }
         },
+        // checkResult(){
+        //     for()
+        // },
         getLevelOne: function(item){
             this.editColumnMode = false;
             if(item.id !== this.selectedId || this.selectedId !== ''){

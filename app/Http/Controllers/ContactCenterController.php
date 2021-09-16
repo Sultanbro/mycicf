@@ -171,11 +171,15 @@ class ContactCenterController extends Controller {
 //            dd($contact);
         }
         if(!isset($request->id)){
+            $contact->parent_id = $request->parentId;
+            $contact->name = $request->name;
+            $contact->save();
+            $this->index();
         }
     }
 
     public function deleteRow(Request $request){
-        dd($request);
+//        dd($request);
         $contactRow = Contact::where('id', $request->id)->first();
         if($contactRow !== null){
             $contactRow->delete();
