@@ -36,7 +36,6 @@
                             <td></td>
                             <td></td>
                             <td class="text-left">ДКС</td>
-                            <td class="text-left">{{}}</td>
                         </tr>
                         <tr>
                             <td></td>

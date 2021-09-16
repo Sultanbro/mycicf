@@ -57,26 +57,34 @@
                 </div>
 
                 <div>
+                    <!--Фильтр: Месяц,Год,Квартал ...-->
                     <div class="flex-row">
                         <div class="mr-10 parse-top-company-select mr-1">
-                            <div v-show="viewType === 'top-company' || viewType === 'parse-centras'">
+                            <div v-show="viewType === 'top-company'">
                                 <select class="border-0-bottom p-1 pointer" id="dateType" v-model="type">
-                                    <option v-for="dateType in dateTypes"
+                                    <option
+                                            v-for="dateType in dateTypes"
+                                            :disabled="dateType.value === 'date' || dateType.value === 'dayTo_day'"
                                             :value="dateType.value">
+                                        {{dateType.name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div v-show="viewType === 'parse-centras'">
+                                <select class="border-0-bottom p-1 pointer" id="dateTypeCompany" v-model="typeCompany">
+                                    <option
+                                        v-for="dateType in dateTypes"
+                                        :value="dateType.value">
                                         {{dateType.name}}
                                     </option>
                                 </select>
                             </div>
                         </div>
 
-                        <div v-show="viewType === 'parse-centras'">
-                            <select id="day" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
-                                <option selected disabled hidden :value="null">День</option>
-                                <option v-for="day in days" :value="day">{{day}}</option>
-                            </select>
-                        </div>
-
-                        <div class="flex-row jc-sb" id="monthBlock" v-if="type === 'rise' || type === 'month'">
+                        <!--Для всего Parse-->
+                        <div class="flex-row jc-sb" id="monthBlock"
+                             v-if="viewType === 'parse-centras' && typeCompany === 'rise' || viewType === 'parse-centras' && typeCompany === 'month'
+                            || viewType === 'top-company' && type === 'rise' || viewType === 'top-company' && type === 'month'">
                             <div class="mr-4 ml-4">
                                 <select id="fYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
@@ -100,9 +108,8 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="flex-row jc-sb" id="quarterBlock" v-if="type === 'quarter'">
+                        <div class="flex-row jc-sb" id="quarterBlock"
+                             v-if="viewType === 'parse-centras' && typeCompany === 'quarter' || viewType === 'top-company' && type === 'quarter'">
                             <div class="mr-4 ml-4">
                                 <select id="firstYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
@@ -130,7 +137,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex-row jc-sb" id="yearBlock" v-if="type === 'year'">
+                        <div class="flex-row jc-sb" id="yearBlock"
+                             v-if="viewType === 'parse-centras' && typeCompany === 'year' || viewType === 'top-company' && type === 'year'">
                             <div class="mr-4 ml-4">
                                 <select id="first" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
                                     <option selected disabled hidden :value="null">Не выбрано</option>
@@ -143,6 +151,68 @@
                                         <option selected disabled hidden :value="null">Не выбрано</option>
                                         <option v-for="year in years" :value="year">{{year}}</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--только для Компании-->
+                        <div v-show="viewType === 'parse-centras'">
+                            <div class="flex-row jc-sb" id="dayBlock" v-if="typeCompany === 'date'">
+                                <div>
+                                    <select id="day" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                        <option selected disabled hidden :value="null">День</option>
+                                        <option v-for="day in days" :value="day">{{day}}</option>
+                                    </select>
+                                </div>
+                                <div class="flex-row jc-sb" id="dateBlock">
+                                    <div class="mr-4 ml-4">
+                                        <select id="f_year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                            <option selected disabled hidden :value="null">Не выбрано</option>
+                                            <option v-for="year in years" :value="year">{{year}}</option>
+                                        </select>
+                                        <select id="f_month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
+                                            <option selected disabled hidden :value="null">Не выбрано</option>
+                                            <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="mr-4 ml-4">
+                                        <div>
+                                            <select id="s_year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
+                                                <option selected disabled hidden :value="null">Не выбрано</option>
+                                                <option v-for="year in years" :value="year">{{year}}</option>
+                                            </select>
+                                            <select id="second_month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_period">
+                                                <option selected disabled hidden :value="null">Не выбрано</option>
+                                                <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-row jc-sb" id="dayTo_dayBlock" v-if="typeCompany === 'dayTo_day'">
+                                <div>
+                                    <select id="dayToDay" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                        <option selected disabled hidden :value="null">День</option>
+                                        <option v-for="day in days" :value="day">{{day}}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="dayTo" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                        <option selected disabled hidden :value="null">День</option>
+                                        <option v-for="day in days" :value="day">{{day}}</option>
+                                    </select>
+                                </div>
+                                <div class="flex-row jc-sb" id="date_Block">
+                                    <div class="mr-4 ml-4">
+                                        <select id="F-year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                            <option selected disabled hidden :value="null">Не выбрано</option>
+                                            <option v-for="year in years" :value="year">{{year}}</option>
+                                        </select>
+                                        <select id="F-month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
+                                            <option selected disabled hidden :value="null">Не выбрано</option>
+                                            <option v-for="(month, index) in months" :value="index">{{month}}</option>
+                                        </select>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -192,6 +262,7 @@
                          :type="type"
                          :discount ="discount"
                          :companyData="companyData"
+                         v-on:getCompany = "eventChild"
                          :periods="periods"
                          v-if="companyData"></top-company>
 
@@ -225,8 +296,11 @@
             return {
                 viewType: 'top-company',
                 type: "rise",
+                typeCompany: "rise",
                 discount: '0',
                 quarters: [1,2,3,4],
+                top_viewType: '',
+                companyId: '',
                 dateTypes: [
                     {
                         name: "C нарастанием",
@@ -243,6 +317,40 @@
                     {
                         name: "Год",
                         value: "year"
+                    },
+                    {
+                        name: "Дата",
+                        value: "date",
+                    },
+                    {
+                        name: "День в день",
+                        value: "dayTo_day",
+                    }
+                ],
+                dateTypesCompany: [
+                    {
+                        name: "C нарастанием",
+                        value: "rise",
+                    },
+                    {
+                        name: "Месяц",
+                        value: "month",
+                    },
+                    {
+                        name: "Квартал",
+                        value: "quarter",
+                    },
+                    {
+                        name: "Год",
+                        value: "year"
+                    },
+                    {
+                        name: "Дата",
+                        value: "date",
+                    },
+                    {
+                        name: "День в день",
+                        value: "dayTo_day",
                     }
                 ],
                 periods: {
@@ -286,6 +394,30 @@
             }
         },
         methods: {
+            eventChild(top_viewType, companyId){
+                this.companyId = companyId;
+               this.top_viewType = top_viewType;
+
+            },
+            async getCompanyChildSum() {
+                let response = await this.axios.get('/parse/company/product', {
+                    params: {
+                        company_list: this.first_company_list,
+                        first_year: this.periods.first_year,
+                        second_year: this.periods.second_year,
+                        first_period: this.periods.first_period,
+                        second_period: this.periods.second_period,
+                        companyId: this.companyId,
+                        dateType: this.type,
+                        disc: this.discount,
+                    }
+                });
+
+                if(response.data.success) {
+                    this.parseData = response.data.data;
+                }
+            },
+
             async getOracleData() {
                 let response = await this.axios.get('/parse/company/collects', {
                     params: {
@@ -350,6 +482,9 @@
                 }
                 else if(this.viewType === 'parse-centras'){
                     this.getOracleData();
+                }
+                else if(this.top_viewType === 'company'){
+                        console.log(this.companyId);
                 }
             }
         },

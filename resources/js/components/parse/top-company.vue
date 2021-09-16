@@ -5,12 +5,12 @@
             <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
                 <div class="width100 table-responsive">
 
-                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-show="viewType === 'market'">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-show="top_viewType === 'market'">
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0">{{companyData.label}}</td>
-                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3" @click="viewType = 'company'" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="top_viewType = 'market'"><span :class="top_viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3" @click="top_viewType = 'company'" ><span :class="top_viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -81,12 +81,12 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'company'">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="top_viewType === 'company'">
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0" >{{parseData.label}}</td>
-                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3" @click="viewType = 'company'"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="top_viewType = 'market'"><span :class="top_viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3" @click="top_viewType = 'company'"><span :class="top_viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="3" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -109,7 +109,7 @@
                         </thead>
                         <tbody>
                         <tr v-for="(item, index) in parseData.productArrList" :class="textStyle(index)">
-                            <td class="text-left" @click="getClassProduct(index)">{{item}}</td>
+                            <td class="text-left" v-on:click="getEmit(index)">{{item}}</td>
                             <td>{{(PremiumFirst[index] || 0) | numberFormat}}</td>
                             <td>{{(PremiumSecond[index] || 0) | numberFormat}}</td>
                             <td>{{Math.floor((PremiumFirst[index] /totalClassFirst) * 100 || 0)}}%</td>
@@ -144,12 +144,12 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'class'">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="top_viewType === 'class'">
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0" >{{classData.label}}</td>
-                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3"  @click="viewType = 'company'" ><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="top_viewType = 'market'"><span :class="top_viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3"  @click="top_viewType = 'company'" ><span :class="top_viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -220,12 +220,12 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'product'">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="top_viewType === 'product'">
                         <thead>
                         <tr class="border-table-0">
                             <td colspan="2" class="text-left fs-1_3 pl-0" >{{productData.label}}</td>
-                            <td class="pt-3" @click="viewType = 'market'"><span :class="viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
-                            <td class="pt-3"  @click="viewType = 'company'"><span :class="viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
+                            <td class="pt-3" @click="top_viewType = 'market'"><span :class="top_viewType === 'market' ? 'pointer parse-active' : 'pointer'">Топ по компаниям</span></td>
+                            <td class="pt-3"  @click="top_viewType = 'company'"><span :class="top_viewType === 'company' ? 'pointer parse-active' : 'pointer'">Топ по классам</span></td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -307,7 +307,7 @@
         name: "top-company",
         data() {
             return {
-                viewType: 'market',
+                top_viewType: 'market',
                 companyId: 0,
                 productId: 0,
                 classId: 0,
@@ -405,21 +405,28 @@
             },
 
             backCompany(index){
-                return this.viewType = 'market';
+                return this.top_viewType = 'market';
             },
 
             async getCompany(index){
                 this.companyId = index;
                 this.getCompanyTopSum();
-                this.viewType = 'company';
+                this.top_viewType = 'company';
+                this.getEmit();
+            },
+
+            async getEmit(){
+                this.$emit('getCompany', this.top_viewType, this.companyId);
             },
 
             async getClassProduct(index){
                 if(index == 1 ||index == 10 || index == 14){
                     this.getClass(index);
+
                 }else {
                     this.getProduct(index);
                 }
+
             },
             async getClass(index){
                 if(index == 10){
@@ -430,7 +437,7 @@
                     this.classId = index;
                 }
                 this.getClassTopSum();
-                this.viewType = 'class';
+                this.top_viewType = 'class';
             },
 
             async getProduct(index) {
@@ -504,7 +511,7 @@
                     this.productId = 34;
                 }
                 this.getProductTopSum();
-                this.viewType = 'product';
+                this.top_viewType = 'product';
             },
             textStyle(index){
                 var textStyle = 'bold fs-0_9 bg-grayblue';
