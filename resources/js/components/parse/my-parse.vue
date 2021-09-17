@@ -95,6 +95,7 @@
                                     <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                 </select>
                             </div>
+
                             <div class="mr-4 ml-4">
                                 <div>
                                     <select id="sYear" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
@@ -158,29 +159,34 @@
                         <div v-show="viewType === 'parse-centras'">
                             <div class="flex-row jc-sb" id="dayBlock" v-if="typeCompany === 'date'">
                                 <div>
-                                    <select id="day" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                    <select id="day" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1"
+                                            v-model="periods.days">
                                         <option selected disabled hidden :value="null">День</option>
                                         <option v-for="day in days" :value="day">{{day}}</option>
                                     </select>
                                 </div>
                                 <div class="flex-row jc-sb" id="dateBlock">
                                     <div class="mr-4 ml-4">
-                                        <select id="f_year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                        <select id="f_year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1"
+                                                v-model="periods.first_year">
                                             <option selected disabled hidden :value="null">Не выбрано</option>
                                             <option v-for="year in years" :value="year">{{year}}</option>
                                         </select>
-                                        <select id="f_month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
+                                        <select id="f_month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1"
+                                                v-model="periods.first_period">
                                             <option selected disabled hidden :value="null">Не выбрано</option>
                                             <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                         </select>
                                     </div>
                                     <div class="mr-4 ml-4">
                                         <div>
-                                            <select id="s_year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_year">
+                                            <select id="s_year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1"
+                                                    v-model="periods.second_year">
                                                 <option selected disabled hidden :value="null">Не выбрано</option>
                                                 <option v-for="year in years" :value="year">{{year}}</option>
                                             </select>
-                                            <select id="second_month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.second_period">
+                                            <select id="second_month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1"
+                                                    v-model="periods.second_period">
                                                 <option selected disabled hidden :value="null">Не выбрано</option>
                                                 <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                             </select>
@@ -188,26 +194,32 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="flex-row jc-sb" id="dayTo_dayBlock" v-if="typeCompany === 'dayTo_day'">
-                                <div>
-                                    <select id="dayToDay" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+
+                                <div class="mr-4 ml-4">
+                                    <select id="dayToDay" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1"
+                                            v-model="periods.first_days">
                                         <option selected disabled hidden :value="null">День</option>
                                         <option v-for="day in days" :value="day">{{day}}</option>
                                     </select>
-                                </div>
-                                <div>
-                                    <select id="dayTo" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1" v-model="periods.days">
+                                    <select id="dayTo" class="border-0 date-color bg-darkgray ml-5 mr-5 pl-2 pr-2 pt-1 pb-1"
+                                            v-model="periods.second_days">
                                         <option selected disabled hidden :value="null">День</option>
                                         <option v-for="day in days" :value="day">{{day}}</option>
                                     </select>
+
                                 </div>
+
                                 <div class="flex-row jc-sb" id="date_Block">
                                     <div class="mr-4 ml-4">
-                                        <select id="F-year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_year">
+                                        <select id="F-year" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1"
+                                                v-model="periods.first_year">
                                             <option selected disabled hidden :value="null">Не выбрано</option>
                                             <option v-for="year in years" :value="year">{{year}}</option>
                                         </select>
-                                        <select id="F-month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1" v-model="periods.first_period">
+                                        <select id="F-month" class="border-0 date-color bg-darkgray pl-2 pr-2 pt-1 pb-1"
+                                                v-model="periods.first_period">
                                             <option selected disabled hidden :value="null">Не выбрано</option>
                                             <option v-for="(month, index) in months" :value="index">{{month}}</option>
                                         </select>
@@ -215,6 +227,7 @@
 
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -272,8 +285,11 @@
             <parse-indicators v-show="viewType === 'parse-indicators'" :periods="periods" ref="balanceRef"/>
             <parse_indicators2 v-show="viewType === 'parse_indicators2'" :periods="periods" ref="balanceRef2"/>
 
-            <parse-centras  v-show="viewType === 'parse-centras'" :dateType="dateType"
-                            :oracleData="oracleData" :periods="periods"  v-if="oracleData"></parse-centras>
+            <parse-centras  v-show="viewType === 'parse-centras'"
+                            :typeCompany="typeCompany"
+                            :oracleData="oracleData"
+                            :periods="periods"
+                            v-if="oracleData"></parse-centras>
         </div>
 
     </div>
@@ -358,7 +374,9 @@
                     second_year: null,
                     first_period: null,
                     second_period: null,
-                    days: null
+                    days: null,
+                    first_days: null,
+                    second_days: null,
                 },
                 days: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11',
                     '12', '13', '14', '15', '16', '17', '18', '19', '20', '21',
@@ -426,7 +444,9 @@
                         first_period: this.periods.first_period,
                         second_period: this.periods.second_period,
                         days: this.periods.days,
-                        dateType:this.type,
+                        first_days: this.periods.first_days,
+                        second_days: this.periods.second_days,
+                        dateType: this.typeCompany,
                     }
                 });
                 if(response.data.success) {

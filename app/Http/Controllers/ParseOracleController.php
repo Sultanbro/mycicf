@@ -83,25 +83,28 @@ class ParseOracleController extends Controller
             'month',
             'year',
             'quarter',
-            'rise'
+            'rise',
+            'date',
+            'dayTo_day'
         ];
     }
     public function getMonthLabel(){
         return [
-            'Янв',
-            'Фев',
-            'Мар',
-            'Апр',
-            'Май',
-            'Июн',
-            'Июл',
-            'Авг',
-            'Сен',
-            'Окт',
-            'Ноя',
-            'Дек',
+            1=>'Янв',
+            2=>'Фев',
+            3=>'Мар',
+            4=>'Апр',
+            5=>'Май',
+            6=>'Июн',
+            7=>'Июл',
+            8=>'Авг',
+            9=>'Сен',
+            10=>'Окт',
+            11=>'Ноя',
+            12=>'Дек',
         ];
     }
+
 
     public function getOracleCollect(Request $request)
     {
@@ -112,6 +115,8 @@ class ParseOracleController extends Controller
         $firstYear = $request->first_year;
         $secondYear = $request->second_year;
         $day = $request->days;
+        $firstDays = $request->first_days;
+        $secondDays = $request->second_days;
         $dateType = $request->dateType ?? 'rise';
 
         //фильтр Даты
@@ -123,7 +128,9 @@ class ParseOracleController extends Controller
             $firstDate = $day . '.' . '0' . $firstPeriod . '.' . $firstYear;
         }else if($firstPeriod >= '10' && isset($day)){
             $firstDate = $day . '.' . $firstPeriod . '.' .$firstYear;
-        }else if(empty($firstPeriod) && empty($day)){
+        }
+
+        if(empty($firstPeriod) && empty($day)){
             $firstDate = $firstYear;
         }
 
@@ -135,146 +142,17 @@ class ParseOracleController extends Controller
             $secondDate = $day . '.' . '0' . $secondPeriod . '.' . $secondYear;
         }else if($secondPeriod >= '10' && isset($day)){
             $secondDate = $day . '.' . $secondPeriod . '.' . $secondYear;
-        }else if(empty($secondPeriod) && empty($day)){
+        }
+
+        if(empty($secondPeriod) && empty($day)){
             $secondDate = $secondYear;
         }
 
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month'){
                 $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
-                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+                //$label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
 
-                if(!empty($day)){
-
-                    $builder = DB::table('parse_oracle_plans')
-                        ->select(
-                            'parse_oracle_plans.feesplan',
-                            'parse_oracle_plans.agrempl',
-                            'parse_oracle_collects.empl_name',
-                            'parse_oracle_collects.dateAccept',
-                            'parse_oracle_collects.dept_isn',
-                            'parse_oracle_collects.dept_name',
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
-                        ->leftJoin('parse_oracle_collects', function ($join) {
-                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
-                        })
-                        ->leftJoin('parse_oracle_pays', function ($join) {
-                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
-                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
-                        });
-                    $collects = $builder->where('parse_oracle_collects.dateAccept','=', $firstDate)
-                        ->where('parse_oracle_plans.year','=', $firstYear)
-                        ->where('parse_oracle_plans.month','=',$firstPeriod)
-                        ->groupBy(
-                            DB::raw('parse_oracle_plans.agrempl'),
-                            DB::raw('parse_oracle_plans.feesplan'),
-                            DB::raw('parse_oracle_collects.empl_name'),
-                            DB::raw('parse_oracle_collects.dateAccept'),
-                            DB::raw('parse_oracle_collects.dept_isn'),
-                            DB::raw('parse_oracle_collects.dept_name'))
-                        ->get()->toArray();
-
-                    $model = DB::table('parse_oracle_plans')
-                        ->select(
-                            'parse_oracle_plans.feesplan',
-                            'parse_oracle_plans.agrempl',
-                            'parse_oracle_collects.empl_name',
-                            'parse_oracle_collects.dateAccept',
-                            'parse_oracle_collects.dept_isn',
-                            'parse_oracle_collects.dept_name',
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
-                        ->leftJoin('parse_oracle_collects', function ($join) {
-                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
-                        })
-                        ->leftJoin('parse_oracle_pays', function ($join) {
-                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
-                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
-                        });
-                    $collects2 = $model->where('parse_oracle_collects.dateAccept','=', $secondDate)
-                        ->where('parse_oracle_plans.year','=', $secondYear)
-                        ->where('parse_oracle_plans.month','=',$secondPeriod)
-                        ->groupBy(
-                            DB::raw('parse_oracle_plans.agrempl'),
-                            DB::raw('parse_oracle_plans.feesplan'),
-                            DB::raw('parse_oracle_collects.empl_name'),
-                            DB::raw('parse_oracle_collects.dateAccept'),
-                            DB::raw('parse_oracle_collects.dept_isn'),
-                            DB::raw('parse_oracle_collects.dept_name'))
-                        ->get()->toArray();
-                }else {
-                    $builder = DB::table('parse_oracle_plans')
-                        ->select(
-                            'parse_oracle_plans.feesplan',
-                            'parse_oracle_plans.agrempl',
-                            'parse_oracle_collects.empl_name',
-                            'parse_oracle_collects.dateAccept',
-                            'parse_oracle_collects.dept_isn',
-                            'parse_oracle_collects.dept_name',
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
-                        ->leftJoin('parse_oracle_collects', function ($join) {
-                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
-                        })
-                        ->leftJoin('parse_oracle_pays', function ($join) {
-                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
-                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
-                        });
-                    $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $firstDate)
-                        ->where('parse_oracle_plans.year','=', $firstYear)
-                        ->where('parse_oracle_plans.month','=',$firstPeriod)
-                        ->groupBy(
-                            DB::raw('parse_oracle_plans.agrempl'),
-                            DB::raw('parse_oracle_plans.feesplan'),
-                            DB::raw('parse_oracle_collects.empl_name'),
-                            //DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
-                            DB::raw('parse_oracle_collects.dept_isn'),
-                            DB::raw('parse_oracle_collects.dept_name'))
-                        ->get()->toArray();
-
-                    $model = DB::table('parse_oracle_plans')
-                        ->select(
-                            'parse_oracle_plans.feesplan',
-                            'parse_oracle_plans.agrempl',
-                            'parse_oracle_collects.empl_name',
-                            'parse_oracle_collects.dateAccept',
-                            'parse_oracle_collects.dept_isn',
-                            'parse_oracle_collects.dept_name',
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
-                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
-                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
-                        ->leftJoin('parse_oracle_collects', function ($join) {
-                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
-                        })
-                        ->leftJoin('parse_oracle_pays', function ($join) {
-                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
-                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
-                        });
-                    $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $secondDate)
-                        ->where('parse_oracle_plans.year','=', $secondYear)
-                        ->where('parse_oracle_plans.month','=',$secondPeriod)
-                        ->groupBy(
-                            DB::raw('parse_oracle_plans.agrempl'),
-                            DB::raw('parse_oracle_plans.feesplan'),
-                            DB::raw('parse_oracle_collects.empl_name'),
-                            DB::raw('parse_oracle_collects.dateAccept'),
-                            DB::raw('parse_oracle_collects.dept_isn'),
-                            DB::raw('parse_oracle_collects.dept_name'))
-                        ->get()->toArray();
-                }
-            }else if ($dateType == 'year'){
                 $builder = DB::table('parse_oracle_plans')
                     ->select(
                         'parse_oracle_plans.feesplan',
@@ -295,12 +173,14 @@ class ParseOracleController extends Controller
                         $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
                         $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
                     });
-                $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 6)'),'=', $firstDate)
+                $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $firstDate)
+                    ->where('parse_oracle_plans.year','=', $firstYear)
+                    ->where('parse_oracle_plans.month','=',$firstPeriod)
                     ->groupBy(
                         DB::raw('parse_oracle_plans.agrempl'),
                         DB::raw('parse_oracle_plans.feesplan'),
                         DB::raw('parse_oracle_collects.empl_name'),
-                        //DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                        DB::raw('parse_oracle_collects.dateAccept'),
                         DB::raw('parse_oracle_collects.dept_isn'),
                         DB::raw('parse_oracle_collects.dept_name'))
                     ->get()->toArray();
@@ -309,8 +189,8 @@ class ParseOracleController extends Controller
                     ->select(
                         'parse_oracle_plans.feesplan',
                         'parse_oracle_plans.agrempl',
-                        'parse_oracle_collects.dateAccept',
                         'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dateAccept',
                         'parse_oracle_collects.dept_isn',
                         'parse_oracle_collects.dept_name',
                         DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
@@ -325,7 +205,9 @@ class ParseOracleController extends Controller
                         $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
                         $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
                     });
-                $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 6)'),'=', $secondDate)
+                $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $secondDate)
+                    ->where('parse_oracle_plans.year','=', $secondYear)
+                    ->where('parse_oracle_plans.month','=',$secondPeriod)
                     ->groupBy(
                         DB::raw('parse_oracle_plans.agrempl'),
                         DB::raw('parse_oracle_plans.feesplan'),
@@ -336,11 +218,234 @@ class ParseOracleController extends Controller
                     ->get()->toArray();
             }
 
+/*        elseif ($dateType == 'year'){
+                //Суммировать показатели менеджеров за год
+              $label_first = $firstYear;
+              //$label_second = $secondYear;
+
+              $builder = DB::table('parse_oracle_plans')
+                  ->select(
+                      'parse_oracle_plans.feesplan',
+                      'parse_oracle_plans.agrempl',
+                      'parse_oracle_collects.empl_name',
+                      DB::raw('substr(parse_oracle_collects.dateAccept, 7)'),
+                      'parse_oracle_collects.dept_isn',
+                      'parse_oracle_collects.dept_name',
+                      DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                      DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                      DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                      DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                      DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                  ->leftJoin('parse_oracle_collects', function ($join) {
+                      $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                  })
+                  ->leftJoin('parse_oracle_pays', function ($join) {
+                      $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                      $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                  });
+              $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 7)'),'=', $secondYear)
+                  ->where('parse_oracle_plans.year','=', $secondYear)
+                  ->groupBy(
+                      DB::raw('parse_oracle_plans.agrempl'),
+                      DB::raw('parse_oracle_plans.feesplan'),
+                      DB::raw('parse_oracle_collects.empl_name'),
+                      DB::raw('substr(parse_oracle_collects.dateAccept, 7)'),
+                      DB::raw('parse_oracle_collects.dept_isn'),
+                      DB::raw('parse_oracle_collects.dept_name'))
+                  ->get()->toArray();
+
+            $model = DB::table('parse_oracle_plans')
+                ->select(
+                    'parse_oracle_plans.feesplan',
+                    'parse_oracle_plans.agrempl',
+                    'parse_oracle_collects.empl_name',
+                    DB::raw('substr(parse_oracle_collects.dateAccept, 7)'),
+                    'parse_oracle_collects.dept_isn',
+                    'parse_oracle_collects.dept_name',
+                    DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                    DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                    DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                    DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                    DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                ->leftJoin('parse_oracle_collects', function ($join) {
+                    $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                })
+                ->leftJoin('parse_oracle_pays', function ($join) {
+                    $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                    $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                });
+            $collects2 = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 7)'),'=', $secondYear)
+                ->where('parse_oracle_plans.year','=', $secondYear)
+                ->groupBy(
+                    DB::raw('parse_oracle_plans.agrempl'),
+                    DB::raw('parse_oracle_plans.feesplan'),
+                    DB::raw('parse_oracle_collects.empl_name'),
+                    DB::raw('substr(parse_oracle_collects.dateAccept, 7)'),
+                    DB::raw('parse_oracle_collects.dept_isn'),
+                    DB::raw('parse_oracle_collects.dept_name'))
+                ->get()->toArray();
+
+            }
+
+            elseif ($dateType == 'quarter'){
+                $label_first = $firstPeriod.'кв. '.$firstYear;
+                //$label_second = $secondPeriod.'кв. '.$secondYear;
+
+                for ($i = 1; $i<=3; $i++) {
+                    $builder = DB::table('parse_oracle_plans')
+                        ->select(
+                            'parse_oracle_plans.feesplan',
+                            'parse_oracle_plans.agrempl',
+                            'parse_oracle_collects.empl_name',
+                            DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                            'parse_oracle_collects.dept_isn',
+                            'parse_oracle_collects.dept_name',
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                        ->leftJoin('parse_oracle_collects', function ($join) {
+                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                        })
+                        ->leftJoin('parse_oracle_pays', function ($join) {
+                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                        });
+                    $collects = $builder->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $firstDate)
+                        ->where('parse_oracle_plans.year','=', $firstYear)
+                        ->where('parse_oracle_plans.month','=',($firstPeriod)*3 + $i)
+                        ->groupBy(
+                            DB::raw('parse_oracle_plans.agrempl'),
+                            DB::raw('parse_oracle_plans.feesplan'),
+                            DB::raw('parse_oracle_collects.empl_name'),
+                            DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                            DB::raw('parse_oracle_collects.dept_isn'),
+                            DB::raw('parse_oracle_collects.dept_name'))
+                        ->get()->toArray();
+                }
+            }*/
+            elseif ($dateType == 'date'){
+                $label_first =  $day.' '.$this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                //$label_second = $day.' '.$this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+
+                $builder = DB::table('parse_oracle_plans')
+                    ->select(
+                        'parse_oracle_plans.feesplan',
+                        'parse_oracle_plans.agrempl',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dateAccept',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                    ->leftJoin('parse_oracle_collects', function ($join) {
+                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                    })
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                    });
+                $collects = $builder->where('parse_oracle_collects.dateAccept', $firstDate)
+                    ->where('parse_oracle_plans.year',$firstYear)
+                    ->where('parse_oracle_plans.month',$firstPeriod)
+                    ->groupBy(
+                        DB::raw('parse_oracle_plans.agrempl'),
+                        DB::raw('parse_oracle_plans.feesplan'),
+                        DB::raw('parse_oracle_collects.empl_name'),
+                        DB::raw('parse_oracle_collects.dateAccept'),
+                        DB::raw('parse_oracle_collects.dept_isn'),
+                        DB::raw('parse_oracle_collects.dept_name'))
+                    ->get()->toArray();
+
+            }
+
+            elseif ($dateType == 'dayTo_day'){
+
+                if(empty($secondPeriod) && empty($secondYear)){
+                    $secondPeriod = $firstPeriod;
+                    $secondYear = $firstYear;
+                }
+
+                $firstDate = $firstDays.'.'.$firstPeriod.'.'.$firstYear;
+                $secondDate = $secondDays.'.'.$secondPeriod.'.'.$secondYear;
+
+                $label_first =  $firstDays.' '.$this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+                $label_second = $secondDays.' '.$this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+
+                $builder = DB::table('parse_oracle_plans')
+                    ->select(
+                        'parse_oracle_plans.feesplan',
+                        'parse_oracle_plans.agrempl',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dateAccept',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                    ->leftJoin('parse_oracle_collects', function ($join) {
+                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                    })
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                    });
+                $collects = $builder->where('parse_oracle_collects.dateAccept', $firstDate)
+                    ->where('parse_oracle_plans.year',$firstYear)
+                    ->where('parse_oracle_plans.month',$firstPeriod)
+                    ->groupBy(
+                        DB::raw('parse_oracle_plans.agrempl'),
+                        DB::raw('parse_oracle_plans.feesplan'),
+                        DB::raw('parse_oracle_collects.empl_name'),
+                        DB::raw('parse_oracle_collects.dateAccept'),
+                        DB::raw('parse_oracle_collects.dept_isn'),
+                        DB::raw('parse_oracle_collects.dept_name'))
+                    ->get()->toArray();
+
+                $model = DB::table('parse_oracle_plans')
+                    ->select(
+                        'parse_oracle_plans.feesplan',
+                        'parse_oracle_plans.agrempl',
+                        'parse_oracle_collects.empl_name',
+                        'parse_oracle_collects.dateAccept',
+                        'parse_oracle_collects.dept_isn',
+                        'parse_oracle_collects.dept_name',
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                    ->leftJoin('parse_oracle_collects', function ($join) {
+                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                    })
+                    ->leftJoin('parse_oracle_pays', function ($join) {
+                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                    });
+                $collects2 = $builder->where('parse_oracle_collects.dateAccept', $secondDate)
+                    ->where('parse_oracle_plans.year',$secondYear)
+                    ->where('parse_oracle_plans.month',$secondPeriod)
+                    ->groupBy(
+                        DB::raw('parse_oracle_plans.agrempl'),
+                        DB::raw('parse_oracle_plans.feesplan'),
+                        DB::raw('parse_oracle_collects.empl_name'),
+                        DB::raw('parse_oracle_collects.dateAccept'),
+                        DB::raw('parse_oracle_collects.dept_isn'),
+                        DB::raw('parse_oracle_collects.dept_name'))
+                    ->get()->toArray();
+
+                dd($collects, $collects2);
+            }
         }
 
-        dd($collects, $collects2);
 
-                $firstResults = json_decode(json_encode($collects), true);
+                /*$firstResults = json_decode(json_encode($collects), true);
                 $secondResults = json_decode(json_encode($collects2), true);
 
         $deptCollectFirst = [];
@@ -362,15 +467,15 @@ class ParseOracleController extends Controller
             if (!$arrName)
                 continue;
             $deptCollectSecond[$arrName][] = $collect;
-        }
+        }*/
 
         //$dks = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem'));
 
 
-        return response()->json([
+/*        return response()->json([
             'success' => true,
-            'data' => $deptCollectFirst,
-        ]);
+            'data' => $collects,
+        ]);*/
 
     }
 }
