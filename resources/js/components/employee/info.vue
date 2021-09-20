@@ -5,11 +5,11 @@
                 <div class="flex-row jc-sb">
                     <div class="flex-column">
                         <label for="dateBeg" class="bold">Период с</label>
-                        <input type="date" id="dateBeg" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="datebeg">
+                        <input type="date" min="2015-02-03" max="2022-04-05" id="dateBeg" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="datebeg">
                     </div>
                     <div class="flex-column ml-3">
                         <label for="dateEnd" class="bold">Период по</label>
-                        <input type="date" id="dateEnd" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateend">
+                        <input type="date" min="2015-02-03" max="2022-04-05" id="dateEnd" class="border0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateend">
                     </div>
                     <div class="flex-column ml-3 dossierIsn">
                         <div v-if="checkUrl()" class="bg-darkgray flex-row date-color pr-1 pt-1 pb-1 date-width">
@@ -17,14 +17,13 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div class="flex-row border-gray pl-3 width-min-content pr-3 pt-2 pb-2 pointer showBtn" @click="getTables()">
-                        <div><i class="far fa-eye"></i></div>
-                        <div class="ml-2">Показать</div>
+
+                    <div class="flex-row border-gray pl-3 width-min-content pr-3 pt-2 pb-2 pointer showBtn btn ml-3" @click="getTables()">
+
+                        <div class="ml-2 "><i class="far fa-eye"></i> Показать</div>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="ml-2 mr-2" v-show="carier !== null">
             <div class="border-radius15 bg-white mt-2">
                 <div class="ml-3 pt-2 pb-2 pointer" @click="reverseCaret()" data-toggle="collapse" href="#staff_movement" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -221,6 +220,13 @@
         </div>
     </div>
 </template>
+
+
+<style>
+     .btn:hover  {
+         background: #00f7a5 !important;
+     }
+</style>
 
 <script>
     export default {

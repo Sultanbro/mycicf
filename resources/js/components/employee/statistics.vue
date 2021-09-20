@@ -5,8 +5,8 @@
                 <div class="border-radius15 bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3 d-flex align-items-center">
                     <div class="d-flex col">
                         <div class="ml-4 mr-4">
-                            <input type="date" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
-                            <input type="date" class="border-0 mt-1 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
+                            <input type="date" min="2015-02-03" max="2022-04-05" class="border-0 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateBeg">
+                            <input type="date" min="2015-02-03" max="2022-04-05"class="border-0 mt-1 date-color bg-darkgray pl-3 pt-1 pb-1 date-width" v-model="dateEnd">
                         </div>
                     </div>
                     <div class="col-6">
