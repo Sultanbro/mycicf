@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="text-center" v-if="calc_isn != null">
-            <!--h5>Котировка
+            <!--h5>Котировка-->
                 <!--span v-if="contract_number == null || contract_number == ''">(статус - {{ status_name }})</span-->
             <!--/h5-->
             <h5 v-if="calc_id != null">Полная котировка №{{ calc_id }}</h5>
@@ -84,7 +84,44 @@
                 </div>
             </div>
         </div>
-
+        <div  class="div-marg div-ml div-mr">
+            <div class="agreement-block">
+<!--                <div class="flex flex-row offset-3 col-6">-->
+<!--                    <h5>Выберите тип платежа:</h5>-->
+<!--                    <select class="custom-select select-size">-->
+<!--                        <option value="1">Рассрочка</option>-->
+<!--                        <option value="2">Рассрочка 70 на 30</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+                <h5 class="col-md-12">График платежей</h5>
+                <div class="col-4">
+                    <table class="table table-hover text-align-center fs-0_8">
+                        <thead>
+                        <tr class="border-table-0">
+                            <td>Дата</td>
+                            <td>Сумма</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template>
+                            <tr>
+                                <td>18.09.2021</td>
+                                <td>1000 тг</td>
+                            </tr>
+                            <tr>
+                                <td>18.10.2021</td>
+                                <td>1000 тг</td>
+                            </tr>
+                            <tr>
+                                <td>18.11.2021</td>
+                                <td>1000 тг</td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <div  class="div-marg div-ml">
             <div class="agreement-block " style="width:95%;">
                 <upload-docs :docs="docs" :quotationId="quotationId" :calc-changed="calcChanged"></upload-docs>
@@ -204,7 +241,8 @@
                     date: '',
                     time: '',
                     address: ''
-                }
+                },
+                schedulePayment: false,
             }
         },
         props: {
@@ -397,14 +435,17 @@
                                 this.DA_isn = response.data.DA_isn;
                                 this.DA.DA_nomer = response.data.DA_nomer;
                                 this.DA.orderCreated = true;
+                                this.schedulePayment = true;
                             } else {
                                 this.status = response.data.status;
                                 this.price = response.data.premium;
                                 this.calculated = true;
+                                this.schedulePayment = true;
                             }
                             this.calc_isn = response.data.calc_isn;
                             this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name;
+                            this.schedulePayment = true;
 
                             if(response.data.calc_isn != '') {
                                 this.preloader(false);
