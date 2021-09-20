@@ -447,6 +447,7 @@
                         first_days: this.periods.first_days,
                         second_days: this.periods.second_days,
                         dateType: this.typeCompany,
+                        deptCollectFirst: this.deptCollectFirst
                     }
                 });
                 if(response.data.success) {

@@ -21,6 +21,7 @@ class ParseOracleController extends Controller
         1445784 => 'УКС3',
         4989735 => 'УКС4',
         4784106 => 'УКР',
+
         //ДСП
         3436143 => 'ДСП',
         1445824 => 'г.Алматы',
@@ -53,7 +54,6 @@ class ParseOracleController extends Controller
         1445825 => 'Жамбылская область',
         1445821 => 'СКО',
         1445827 => 'ВКО',
-
         //Сайт
         3991842 => 'kupipolis',
         //Служба доставки и заявок
@@ -151,14 +151,14 @@ class ParseOracleController extends Controller
         if(in_array($dateType, $this->dateTypes())){
             if($dateType == 'month'){
                 $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
-                //$label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+                $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
 
                 $builder = DB::table('parse_oracle_plans')
                     ->select(
                         'parse_oracle_plans.feesplan',
                         'parse_oracle_plans.agrempl',
                         'parse_oracle_collects.empl_name',
-                        'parse_oracle_collects.dateAccept',
+                        DB::raw('substr(parse_oracle_collects.dateAccept,4)'),
                         'parse_oracle_collects.dept_isn',
                         'parse_oracle_collects.dept_name',
                         DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
@@ -180,7 +180,7 @@ class ParseOracleController extends Controller
                         DB::raw('parse_oracle_plans.agrempl'),
                         DB::raw('parse_oracle_plans.feesplan'),
                         DB::raw('parse_oracle_collects.empl_name'),
-                        DB::raw('parse_oracle_collects.dateAccept'),
+                        DB::raw('substr(parse_oracle_collects.dateAccept,4)'),
                         DB::raw('parse_oracle_collects.dept_isn'),
                         DB::raw('parse_oracle_collects.dept_name'))
                     ->get()->toArray();
@@ -362,91 +362,87 @@ class ParseOracleController extends Controller
                     ->get()->toArray();
 
             }
-
-            elseif ($dateType == 'dayTo_day'){
-
-                if(empty($secondPeriod) && empty($secondYear)){
-                    $secondPeriod = $firstPeriod;
-                    $secondYear = $firstYear;
-                }
-
-                $firstDate = $firstDays.'.'.$firstPeriod.'.'.$firstYear;
-                $secondDate = $secondDays.'.'.$secondPeriod.'.'.$secondYear;
-
-                $label_first =  $firstDays.' '.$this->getMonthLabel()[$firstPeriod].' '.$firstYear;
-                $label_second = $secondDays.' '.$this->getMonthLabel()[$secondPeriod].' '.$secondYear;
-
-                $builder = DB::table('parse_oracle_plans')
-                    ->select(
-                        'parse_oracle_plans.feesplan',
-                        'parse_oracle_plans.agrempl',
-                        'parse_oracle_collects.empl_name',
-                        'parse_oracle_collects.dateAccept',
-                        'parse_oracle_collects.dept_isn',
-                        'parse_oracle_collects.dept_name',
-                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
-                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
-                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
-                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
-                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
-                    ->leftJoin('parse_oracle_collects', function ($join) {
-                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
-                    })
-                    ->leftJoin('parse_oracle_pays', function ($join) {
-                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
-                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
-                    });
-                $collects = $builder->where('parse_oracle_collects.dateAccept', $firstDate)
-                    ->where('parse_oracle_plans.year',$firstYear)
-                    ->where('parse_oracle_plans.month',$firstPeriod)
-                    ->groupBy(
-                        DB::raw('parse_oracle_plans.agrempl'),
-                        DB::raw('parse_oracle_plans.feesplan'),
-                        DB::raw('parse_oracle_collects.empl_name'),
-                        DB::raw('parse_oracle_collects.dateAccept'),
-                        DB::raw('parse_oracle_collects.dept_isn'),
-                        DB::raw('parse_oracle_collects.dept_name'))
-                    ->get()->toArray();
-
-                $model = DB::table('parse_oracle_plans')
-                    ->select(
-                        'parse_oracle_plans.feesplan',
-                        'parse_oracle_plans.agrempl',
-                        'parse_oracle_collects.empl_name',
-                        'parse_oracle_collects.dateAccept',
-                        'parse_oracle_collects.dept_isn',
-                        'parse_oracle_collects.dept_name',
-                        DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
-                        DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
-                        DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
-                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
-                        DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
-                    ->leftJoin('parse_oracle_collects', function ($join) {
-                        $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
-                    })
-                    ->leftJoin('parse_oracle_pays', function ($join) {
-                        $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
-                        $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
-                    });
-                $collects2 = $builder->where('parse_oracle_collects.dateAccept', $secondDate)
-                    ->where('parse_oracle_plans.year',$secondYear)
-                    ->where('parse_oracle_plans.month',$secondPeriod)
-                    ->groupBy(
-                        DB::raw('parse_oracle_plans.agrempl'),
-                        DB::raw('parse_oracle_plans.feesplan'),
-                        DB::raw('parse_oracle_collects.empl_name'),
-                        DB::raw('parse_oracle_collects.dateAccept'),
-                        DB::raw('parse_oracle_collects.dept_isn'),
-                        DB::raw('parse_oracle_collects.dept_name'))
-                    ->get()->toArray();
-
-                dd($collects, $collects2);
-            }
         }
 
+        /*elseif ($dateType == 'dayTo_day'){
 
-                /*$firstResults = json_decode(json_encode($collects), true);
-                $secondResults = json_decode(json_encode($collects2), true);
+            if(empty($secondPeriod) && empty($secondYear)){
+                $secondPeriod = $firstPeriod;
+                $secondYear = $firstYear;
+            }
+
+            $firstDate = $firstDays.'.'.$firstPeriod.'.'.$firstYear;
+            $secondDate = $secondDays.'.'.$secondPeriod.'.'.$secondYear;
+
+            $label_first =  $firstDays.' '.$this->getMonthLabel()[$firstPeriod].' '.$firstYear;
+            $label_second = $secondDays.' '.$this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+
+            $builder = DB::table('parse_oracle_plans')
+                ->select(
+                    'parse_oracle_plans.feesplan',
+                    'parse_oracle_plans.agrempl',
+                    'parse_oracle_collects.empl_name',
+                    'parse_oracle_collects.dateAccept',
+                    'parse_oracle_collects.dept_isn',
+                    'parse_oracle_collects.dept_name',
+                    DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                    DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                    DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                    DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                    DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                ->leftJoin('parse_oracle_collects', function ($join) {
+                    $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                })
+                ->leftJoin('parse_oracle_pays', function ($join) {
+                    $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                    $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                });
+            $collects = $builder->where('parse_oracle_collects.dateAccept', $firstDate)
+                ->where('parse_oracle_plans.year',$firstYear)
+                ->where('parse_oracle_plans.month',$firstPeriod)
+                ->groupBy(
+                    DB::raw('parse_oracle_plans.agrempl'),
+                    DB::raw('parse_oracle_plans.feesplan'),
+                    DB::raw('parse_oracle_collects.empl_name'),
+                    DB::raw('parse_oracle_collects.dateAccept'),
+                    DB::raw('parse_oracle_collects.dept_isn'),
+                    DB::raw('parse_oracle_collects.dept_name'))
+                ->get()->toArray();
+
+            /*                $model = DB::table('parse_oracle_plans')
+                                ->select(
+                                    'parse_oracle_plans.feesplan',
+                                    'parse_oracle_plans.agrempl',
+                                    'parse_oracle_collects.empl_name',
+                                    'parse_oracle_collects.dateAccept',
+                                    'parse_oracle_collects.dept_isn',
+                                    'parse_oracle_collects.dept_name',
+                                    DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                                    DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                                    DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                                    DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                                    DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                                ->leftJoin('parse_oracle_collects', function ($join) {
+                                    $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                                })
+                                ->leftJoin('parse_oracle_pays', function ($join) {
+                                    $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                                    $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                                });
+                            $collects2 = $builder->where('parse_oracle_collects.dateAccept', $secondDate)
+                                ->where('parse_oracle_plans.year',$secondYear)
+                                ->where('parse_oracle_plans.month',$secondPeriod)
+                                ->groupBy(
+                                    DB::raw('parse_oracle_plans.agrempl'),
+                                    DB::raw('parse_oracle_plans.feesplan'),
+                                    DB::raw('parse_oracle_collects.empl_name'),
+                                    DB::raw('parse_oracle_collects.dateAccept'),
+                                    DB::raw('parse_oracle_collects.dept_isn'),
+                                    DB::raw('parse_oracle_collects.dept_name'))
+                                ->get()->toArray();*/
+
+        $firstResults = json_decode(json_encode($collects), true);
+        $secondResults = json_decode(json_encode($collects2), true);
 
         $deptCollectFirst = [];
         $deptCollectSecond = [];
@@ -467,15 +463,179 @@ class ParseOracleController extends Controller
             if (!$arrName)
                 continue;
             $deptCollectSecond[$arrName][] = $collect;
-        }*/
+        }
 
-        //$dks = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem'));
+        $dks = [
+            'Менеджер ДКС' => $deptCollectFirst['ДКС'],
+            'УКС1' => $deptCollectFirst['УКС1'],
+            'УКС2' => $deptCollectFirst['УКС2'],
+            'УКС3' => $deptCollectFirst['УКС3'],
+            'УКС4' => $deptCollectFirst['УКС4'],
+            'УКР' => $deptCollectFirst['УКР'],
+        ];
+        $dsp = [
+            'Менеджер ДСП' => $deptCollectFirst['ДСП'],
+            'г.Алматы' => $deptCollectFirst['г.Алматы'],
+            'УАП' => $deptCollectFirst['УАП'],
+            'УС1' => $deptCollectFirst['УС1'],
+            'УС2' => $deptCollectFirst['УС2'],
+            'УС3' => $deptCollectFirst['УС3'],
+            'УС4' => $deptCollectFirst['УС4'],
+            'УС5' => $deptCollectFirst['УС5'],
+            'УС6' => $deptCollectFirst['УС6'],
+            'УС7' => $deptCollectFirst['УС7'],
+        ];
+        $drpo = [
+            'Менеджер ДРПО' => $deptCollectFirst['ДРПО'],
+            'УПП' => $deptCollectFirst['УПП'],
+        ];
+        $dp = [
+            'ДП' => $deptCollectFirst['ДП']
+        ];
+        $filials = [
+            'Нур-Султан' =>$deptCollectFirst['Нур-Султан'],
+            'Актобе' =>$deptCollectFirst['Актобе'],
+            'Шымкент' =>$deptCollectFirst['Шымкент'],
+            'Кокшетау' =>$deptCollectFirst['Кокшетау'],
+            'Семей' =>$deptCollectFirst['Семей'],
+            'Атырауская облась' =>$deptCollectFirst['Атырауская облась'],
+            'Актюбинская область' =>$deptCollectFirst['Актюбинская область'],
+            'Карагандинская область' =>$deptCollectFirst['Карагандинская область'],
+            'Костанайская область' =>$deptCollectFirst['Костанайская область'],
+            'Кызылординская область' =>$deptCollectFirst['Кызылординская область'],
+            'Мангыстауская область' =>$deptCollectFirst['Мангыстауская область'],
+            'Павлодарская область' =>$deptCollectFirst['Павлодарская область'],
+            'Жамбылская область' =>$deptCollectFirst['Жамбылская область'],
+            'СКО' =>$deptCollectFirst['СКО'],
+            'ВКО'=>$deptCollectFirst['ВКО']
+        ];
+        $kupipolis = [
+            'kupipolis' => $deptCollectFirst['kupipolis'],
+            'СДЗ'=> $deptCollectFirst['СДЗ'],
+        ];
+        $os = [
+            'Отделение страхования 6' =>$deptCollectFirst['Отделение страхования 6'],
+            'Отделение страхования 1' =>$deptCollectFirst['Отделение страхования 1'],
+            'Отделение страхования 3' =>$deptCollectFirst['Отделение страхования 3'],
+        ];
+        $dsv = [
+            'ДСВ' =>$deptCollectFirst['ДСВ']
+        ];
+        $dms = [
+            'ДМС' =>$deptCollectFirst['ДМС']
+        ];
+
+        $dks2 = [
+            'Менеджер ДКС' => $deptCollectSecond['ДКС'],
+            'УКС1' => $deptCollectSecond['УКС1'],
+            'УКС2' => $deptCollectSecond['УКС2'],
+            'УКС3' => $deptCollectSecond['УКС3'],
+            'УКС4' => $deptCollectSecond['УКС4'],
+            'УКР' => $deptCollectSecond['УКР'],
+        ];
+        $dsp2 = [
+            'Менеджер ДСП' => $deptCollectSecond['ДСП'],
+            'г.Алматы' => $deptCollectSecond['г.Алматы'],
+            'УАП' => $deptCollectSecond['УАП'],
+            'УС1' => $deptCollectSecond['УС1'],
+            'УС2' => $deptCollectSecond['УС2'],
+            'УС3' => $deptCollectSecond['УС3'],
+            'УС4' => $deptCollectSecond['УС4'],
+            'УС5' => $deptCollectSecond['УС5'],
+            'УС6' => $deptCollectSecond['УС6'],
+            'УС7' => $deptCollectSecond['УС7'],
+        ];
+        $drpo2 = [
+            'Менеджер ДРПО' => $deptCollectSecond['ДРПО'],
+            'УПП' => $deptCollectSecond['УПП'],
+        ];
+        $dp2 = [
+            'ДП' => $deptCollectSecond['ДП']
+        ];
+        $filials2 = [
+            'Нур-Султан' =>$deptCollectSecond['Нур-Султан'],
+            'Актобе' =>$deptCollectSecond['Актобе'],
+            'Шымкент' =>$deptCollectSecond['Шымкент'],
+            'Кокшетау' =>$deptCollectSecond['Кокшетау'],
+            'Семей' =>$deptCollectSecond['Семей'],
+            'Атырауская облась' =>$deptCollectSecond['Атырауская облась'],
+            'Актюбинская область' =>$deptCollectSecond['Актюбинская область'],
+            'Карагандинская область' =>$deptCollectSecond['Карагандинская область'],
+            'Костанайская область' =>$deptCollectSecond['Костанайская область'],
+            'Кызылординская область' =>$deptCollectSecond['Кызылординская область'],
+            'Мангыстауская область' =>$deptCollectSecond['Мангыстауская область'],
+            'Павлодарская область' =>$deptCollectSecond['Павлодарская область'],
+            'Жамбылская область' =>$deptCollectSecond['Жамбылская область'],
+            'СКО' =>$deptCollectSecond['СКО'],
+            'ВКО'=>$deptCollectSecond['ВКО']
+        ];
+        $kupipolis2 = [
+            'kupipolis' => $deptCollectSecond['kupipolis'],
+            'СДЗ'=> $deptCollectSecond['СДЗ'],
+        ];
+        $os2 = [
+            'Отделение страхования 6' =>$deptCollectSecond['Отделение страхования 6'],
+            'Отделение страхования 1' =>$deptCollectSecond['Отделение страхования 1'],
+            'Отделение страхования 3' =>$deptCollectSecond['Отделение страхования 3'],
+        ];
+        $dsv2 = [
+            'ДСВ' =>$deptCollectSecond['ДСВ']
+        ];
+        $dms2 = [
+            'ДМС' =>$deptCollectSecond['ДМС']
+        ];
 
 
-/*        return response()->json([
+
+
+//        $dks0 = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem'));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return response()->json([
             'success' => true,
-            'data' => $collects,
-        ]);*/
+            'data' => [
+                'collects' => [
+                    'ДКС'=> $dks,
+                    'ДСП' => $dsp,
+                    'ДРПО' => $drpo,
+                    'ДП' => $dp,
+                    'Филиалы' => $filials,
+                    'kupipolis' => $kupipolis,
+                    'Отдел страхования' => $os,
+                    'ДСВ' => $dsv,
+                    'ДМС' => $dms
+                ],
+                'collectsSecond' => [
+                    'ДКС'=> $dks,
+                    'ДСП' => $dsp,
+                    'ДРПО' => $drpo,
+                    'ДП' => $dp,
+                    'Филиалы' => $filials,
+                    'kupipolis' => $kupipolis,
+                    'Отдел страхования' => $os,
+                    'ДСВ' => $dsv,
+                    'ДМС' => $dms
+                ],
+                'label_first' => $label_first,
+                'label_second' => $label_second,
+            ]
+        ]);
 
     }
 }
