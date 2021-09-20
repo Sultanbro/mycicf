@@ -28,4 +28,9 @@ class QuizQuestionRepository extends BaseRepository implements QuizQuestionRepos
     public function deleteQuestionByQuizId(int $id){
         return $this->model->where('quiz_id', $id)->delete();
     }
+
+    public function countQuestionBiQuiz($id)
+    {
+        return $this->model->where('quiz_id', $id)->count();
+    }
 }

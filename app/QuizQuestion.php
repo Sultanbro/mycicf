@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static truncate()
+ */
 class QuizQuestion extends Model
 {
     protected $fillable = ['quiz_id',

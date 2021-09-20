@@ -58,12 +58,12 @@ class BaseRepository implements EloquentRepositoryInterface
      * @param array $attributes
      * @return Model|null
      */
-    public function update(int $modelId, array $attributes): ?Model
+    public function update(int $modelId, array $attributes)
     {
         $model = $this->find($modelId);
 
         if (empty($model)) {
-            return $model;
+            return false;
         }
 
         if($model->update($attributes)) {

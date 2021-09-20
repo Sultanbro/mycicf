@@ -40,7 +40,7 @@ interface EloquentRepositoryInterface
      * @param array $attributes
      * @return bool
      */
-    public function update(int $modelId, array $attributes): ?Model;
+    public function update(int $modelId, array $attributes);
 
     /**
      * @param int $id

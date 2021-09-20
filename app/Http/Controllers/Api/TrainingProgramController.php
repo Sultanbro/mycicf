@@ -9,6 +9,7 @@ use App\Library\Services\Quiz\QuizSaveServiceInterface;
 use App\Repository\QuizForKiasRepositoryInterface;
 use App\Repository\TrainingMaterialRepositoryInterface;
 use App\Repository\TrainingProgramRepositoryInterface;
+use App\Repository\TrainingQuizRepositoryInterface;
 use Illuminate\Http\Request;
 
 class TrainingProgramController extends Controller
@@ -18,11 +19,16 @@ class TrainingProgramController extends Controller
     private $trainingMaterialRepository;
     private $quizSaveService;
     private $quizForKias;
+    /**
+     * @var TrainingQuizRepositoryInterface
+     */
+    private $trainingQuizRepository;
 
-    public function __construct(TrainingProgramRepositoryInterface $trainingProgramRepository, TrainingMaterialRepositoryInterface $trainingMaterialRepository, QuizSaveServiceInterface $quizSaveService, QuizForKiasRepositoryInterface $quizForKias)
+    public function __construct(TrainingProgramRepositoryInterface $trainingProgramRepository, TrainingMaterialRepositoryInterface $trainingMaterialRepository, QuizSaveServiceInterface $quizSaveService, QuizForKiasRepositoryInterface $quizForKias, TrainingQuizRepositoryInterface $trainingQuizRepository)
     {
         $this->trainingProgramRepository = $trainingProgramRepository;
         $this->trainingMaterialRepository = $trainingMaterialRepository;
+        $this->trainingQuizRepository = $trainingQuizRepository;
         $this->quizSaveService = $quizSaveService;
         $this->quizForKias = $quizForKias;
     }
@@ -106,8 +112,8 @@ class TrainingProgramController extends Controller
      */
     public function destroy($id)
     {
-        $this->quizForKias->deleteByTrainingId($id);
-        $this->trainingProgramRepository->deleteMaterial($id);
+//        $this->trainingQuizRepository->deleteByTrainingId($id);
+//        $this->trainingProgramRepository->deleteMaterial($id);
         if ($this->trainingProgramRepository->delete($id)) {
 
             return response()->json(true);
@@ -137,9 +143,8 @@ class TrainingProgramController extends Controller
     public function saveQuiz($training_id, $quizzes)
     {
         foreach ($quizzes as $quiz) {
-            $quizForKias = $quiz;
-            $quizForKias['training_program_id'] = $training_id;
-            $this->quizSaveService->saveQuizForKias($quizForKias);
+            $quiz['training_program_id'] = $training_id;
+            $this->trainingQuizRepository->create($quiz);
         }
     }
 }

@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CommentSeeder::class);
         $this->call(QuestionSeeder::class);
         $this->call(ScoreSeeder::class);
+        $this->call(QuizSeeder::class);
         // $this->call(AnswerSeeder::class);
         Schema::enableForeignKeyConstraints();
     }

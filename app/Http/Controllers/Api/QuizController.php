@@ -45,6 +45,7 @@ class QuizController extends Controller
      * @var QuestionMaterialRepositoryInterface
      */
     private $questionMaterialRepository;
+    private $quizSaveService;
 
     /**
      * QuizController constructor.
@@ -54,13 +55,14 @@ class QuizController extends Controller
      * @param QuizForKiasRepositoryInterface $quizForKiasRepository
      * @param QuestionMaterialRepositoryInterface $questionMaterialRepository
      */
-    public function __construct(QuizRepositoryInterface $quizRepository, QuizQuestionRepositoryInterface $quizQuestionsRepository, QuizAnswerRepositoryInterface $quizAnswersRepository, QuizForKiasRepositoryInterface $quizForKiasRepository, QuestionMaterialRepositoryInterface $questionMaterialRepository)
+    public function __construct(QuizRepositoryInterface $quizRepository, QuizQuestionRepositoryInterface $quizQuestionsRepository, QuizAnswerRepositoryInterface $quizAnswersRepository, QuizForKiasRepositoryInterface $quizForKiasRepository, QuestionMaterialRepositoryInterface $questionMaterialRepository, QuizSaveServiceInterface $quizSaveService)
     {
         $this->quizQuestionsRepository = $quizQuestionsRepository;
         $this->quizAnswersRepository = $quizAnswersRepository;
         $this->quizRepository = $quizRepository;
         $this->quizForKiasRepository = $quizForKiasRepository;
         $this->questionMaterialRepository = $questionMaterialRepository;
+        $this->quizSaveService = $quizSaveService;
     }
 
     /**
@@ -83,10 +85,10 @@ class QuizController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(QuizSaveServiceInterface $quizSaveService, QuizDownloadRequest $request)
+    public function store(QuizDownloadRequest $request)
     {
 
-        $result = $quizSaveService->quizParametersSave($request->all(), Excel::toCollection(new UsersImport(), $request->file('file')));
+        $result = $this->quizSaveService->quizParametersSave($request->all(), Excel::toCollection(new UsersImport(), $request->file('file')));
 
         if (!$result) {
             return response()->json(false);
@@ -144,10 +146,10 @@ class QuizController extends Controller
 
         if (!empty($model = $this->quizRepository->update($id, $request->validated()))) {
 
-            return response()->json(true);
+            return response()->json(['update' => 'true']);
 
         }
-        return response()->json(false);
+        return response()->json(['update' => 'false']);
 
     }
 
@@ -227,6 +229,15 @@ class QuizController extends Controller
 
         }
         return response()->json(false);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getQuestionCount($id)
+    {
+        return response()->json(['question_count' => $this->quizQuestionsRepository->countQuestionBiQuiz($id)]);
     }
 
 }

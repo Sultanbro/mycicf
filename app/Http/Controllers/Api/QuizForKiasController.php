@@ -48,16 +48,7 @@ class QuizForKiasController extends Controller
      */
     public function store(SaveQuizForKiasRequst $request)
     {
-        return $request->validated();
         return $this->quizSaveService->saveQuizForKias($request->validated());
-//        $saveRequset = $request->validated();
-//        $users_id = $this->kiasBranchService->getUserChilds($request->user_id);
-//
-//        foreach ($users_id as $user_id) {
-//            $saveRequset['user_id'] = $user_id;
-//            $saveRequset['training_program_id'] = isset($request->training_program_id) ? $request->training_program_id : null;
-//            $this->quizForKiasRepository->create($saveRequset);
-//        }
     }
 
     /**

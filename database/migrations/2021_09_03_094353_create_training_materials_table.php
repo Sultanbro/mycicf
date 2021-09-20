@@ -15,11 +15,12 @@ class CreateTrainingMaterialsTable extends Migration
     {
         Schema::create('training_materials', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('training_program_id');
+            $table->unsignedBigInteger('training_program_id');
             $table->integer('educational_material_id');
             $table->timestamps();
 
             $table->foreign('training_program_id')->references('id')->on('training_programs')->onDelete('cascade');
+            $table->foreign('educational_material_id')->references('id')->on('educational_materials')->onDelete('cascade');
         });
     }
 

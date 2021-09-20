@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
     Route::resource('quiz', 'Api\QuizController');
     Route::get('question/right/{id}', 'Api\QuizController@oneQuestionRightAnswers');
     Route::get('question/{id}', 'Api\QuizController@oneQuestionAnswers');
+    Route::get('question/count/{id}', 'Api\QuizController@getQuestionCount');
     Route::put('one/quiz/{id}', 'Api\QuizController@quizParametrsUpdate');
     Route::put('question/material/{id}', 'Api\QuizController@saveMaterialByQuestion');
     Route::delete('question/material/{id}', 'Api\QuizController@deleteMaterial');
@@ -28,4 +29,7 @@ use Illuminate\Http\Request;
     Route::resource('for_kias', 'Api\QuizForKiasController');
     Route::resource('material', 'Api\EducationalMaterialController');
     Route::resource('training_program', 'Api\TrainingProgramController');
+    Route::resource('announcement', 'Api\AnnouncementController');
+    Route::resource('assign/training', 'Api\AssignTrainingController');
+    Route::post('assign/subdivisions', 'Api\AssignTrainingController@updateSubdivisions');
 

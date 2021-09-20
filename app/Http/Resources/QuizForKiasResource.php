@@ -14,6 +14,9 @@ class QuizForKiasResource extends JsonResource
      */
     public function toArray($request)
     {
+        if (!isset($this->id)) {
+            return ['Нет записи'];
+        }
         return [
             'id' => $this->id,
             'quiz_id' => $this->quiz_id,

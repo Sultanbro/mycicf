@@ -18,6 +18,7 @@ class QuizResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'passing_score' => $this->passing_score,
+            'description' => $this->description,
             'time' => $this->time,
         ];
     }

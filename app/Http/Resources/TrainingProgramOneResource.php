@@ -20,6 +20,7 @@ class TrainingProgramOneResource extends JsonResource
             'description' => $this->description,
             'created' => $this->created_at,
             'material' => EducationalMaterialResource::collection(data_get($this, 'material')),
+            'quizzes' => QuizResource::collection(data_get($this, 'quizzes')),
         ];
     }
 }

@@ -99,6 +99,11 @@ class QuizSaveService implements QuizSaveServiceInterface
         }
     }
 
+    /**
+     * Сохраняет запись на тестирование принимает user_id и id программы обучения
+     * @param array $array
+     * @return mixed|void
+     */
     public function saveQuizForKias(array $array)
     {
         $users_id = $this->kiasBranchService->getUserChilds($array['user_id']);
