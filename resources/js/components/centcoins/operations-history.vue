@@ -11,10 +11,10 @@
                 <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                     <div class="flex-row jc-sb">
                         <div>
-                            <input v-model="dateBeg" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                            <input v-model="dateBeg"  min="2015-02-03" max="2022-04-05"  type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                         </div>
                         <div>
-                            <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                            <input v-model="dateEnd"  min="2015-02-03" max="2022-04-05" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                         </div>
                         <div>
                             <div class="flex-row date-color pl-2 pr-2">
