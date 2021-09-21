@@ -11,16 +11,16 @@
                 <div class="border-radius15 box-shadow centcoins-date-indicators bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                     <div class="flex-row jc-sb">
                         <div>
-                            <input v-model="dateBeg" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                            <input v-model="dateBeg"  min="2015-02-03" max="2022-04-05"  type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                         </div>
                         <div>
-                            <input v-model="dateEnd" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
+                            <input v-model="dateEnd"  min="2015-02-03" max="2022-04-05" type="date" class="border0 date-color bg-darkgray pl-4 pr-2 pt-1 pb-1">
                         </div>
                         <div>
                             <div class="flex-row date-color pl-2 pr-2">
-                                <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1">
+                                <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 show-btn">
                                     <div><i class="far fa-eye"></i></div>
-                                    <div class="ml-2" @click="getOperations()">Показать</div>
+                                    <div class="ml-2 buy-btn" @click="getOperations()">Показать</div>
                                 </div>
                             </div>
                         </div>
@@ -80,6 +80,33 @@
     }
 </script>
 
-<style scoped>
+<style>
+       .show-btn {
+    background: transparent !important;
+}
+     .show-btn:hover {
+         background: #00f7a5 !important;
+     }
 
+    .buy-btn {
+         background: transparent;
+        transition: 0.4s ease;
+        height: 40px;
+        width: 50%;
+        outline: none;
+        border: none;
+    }
+
+    .buy-btn:hover {
+        color: #FFF;
+        /*box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);*/
+    }
+
+    .buy-btn[disabled] {
+        opacity: 0.5;
+    }
+
+    .buy-btn[disabled]:hover {
+        box-shadow: none;
+    } 
 </style>
