@@ -80,6 +80,33 @@
     }
 </script>
 
-<style scoped>
+<style>
+    .show-btn {
+    background: transparent !important;
+}
+     .show-btn:hover {
+         background: #00f7a5 !important;
+     }
 
+    .buy-btn {
+         background: transparent;
+        transition: 0.4s ease;
+        height: 40px;
+        width: 50%;
+        outline: none;
+        border: none;
+    }
+
+    .buy-btn:hover {
+        color: #FFF;
+        /*box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);*/
+    }
+
+    .buy-btn[disabled] {
+        opacity: 0.5;
+    }
+
+    .buy-btn[disabled]:hover {
+        box-shadow: none;
+    }
 </style>
