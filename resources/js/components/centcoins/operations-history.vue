@@ -113,7 +113,7 @@
     }
 </script>
 
-<style scoped>
+<style>
    .show-btn {
     background: transparent !important;
 }
