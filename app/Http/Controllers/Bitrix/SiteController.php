@@ -60,11 +60,50 @@ class SiteController extends Controller
                 'success' => false,
                 'error' => (string)$response->error->text,
             ]);
-        }
-        if($response->StatusList->row){
+        }else if($response->StatusList->row){
+            for ($i=0; $i< count($response->StatusList->row); $i++){
+                $row[] = [
+                    'isn' => (int)$response->StatusList->row[$i]->isn,
+                    'parent_isn' => (int)$response->StatusList->row[$i]->parentisn,
+                    'short_name' => (string)$response->StatusList->row[$i]->shortname,
+                    'fullname' => (string)$response->StatusList->row[$i]->fullname,
+                    'code' => (int)$response->StatusList->row[$i]->code,
+                    'numcode' => (int)$response->StatusList->row[$i]->numcode,
+                    'n_kids' => (int)$response->StatusList->row[$i]->n_kids,];
+            }
             return response()->json([
                 'success' => true,
-                'row' => $response->StatusList,
+                'row' => $row,
+            ]);
+        } else if($response->StagesList->row){
+            for ($i=0; $i< count($response->StagesList->row); $i++){
+                $row[] = [
+                    'isn' => (int)$response->StagesList->row[$i]->isn,
+                    'parent_isn' => (int)$response->StagesList->row[$i]->parentisn,
+                    'short_name' => (string)$response->StagesList->row[$i]->shortname,
+                    'fullname' => (string)$response->StagesList->row[$i]->fullname,
+                    'code' => (int)$response->StagesList->row[$i]->code,
+                    'numcode' => (int)$response->StagesList->row[$i]->numcode,
+                    'n_kids' => (int)$response->StagesList->row[$i]->n_kids,];
+        }
+            return response()->json([
+                'success' => true,
+                'row' => $row,
+            ]);
+        } else if($response->DictiList->row){
+            for ($i=0; $i< count($response->DictiList->row); $i++){
+                $row[] = [
+                    'isn' => (int)$response->DictiList->row[$i]->isn,
+                    'parent_isn' => (int)$response->DictiList->row[$i]->parentisn,
+                    'fullname' => (string)$response->DictiList->row[$i]->fullname,
+                    'short_name' => (string)$response->DictiList->row[$i]->shortname,
+                    'code' => (int)$response->DictiList->row[$i]->code,
+                    'numcode' => (int)$response->DictiList->row[$i]->numcode,
+                    'n_kids' => (int)$response->DictiList->row[$i]->n_kids,];
+            }
+            return response()->json([
+                'success' => true,
+                'row' => $row,
             ]);
         }
         return response()->json([
@@ -76,6 +115,7 @@ class SiteController extends Controller
     public function getUserList(Request $request, KiasServiceInterface $kias){
         $kias->_sId = $request->Sid;
         $response = $kias->request('User_CicGetUserList', []);
+//        dd(count($response->LIST->row));
         if($response->error) {
             return response()->json([
                 'success' => false,
@@ -83,9 +123,19 @@ class SiteController extends Controller
             ]);
         }
         if($response->LIST){
+//            dd($response->LIST);
+            for ($i=0; $i< count($response->LIST->row); $i++){
+                $row[] = [
+                    'isn' => (int)$response->LIST->row[$i]->ISN,
+                    'fullname' => (string)$response->LIST->row[$i]->FullName,
+                    'parent_isn' => (int)$response->LIST->row[$i]->ParentISN,
+                    'kids' => (int)$response->LIST->row[$i]->Kids,
+                    'duty' => (string)$response->LIST->row[$i]->Duty,
+                    'birthday' => (string)$response->LIST->row[$i]->Birthday];
+            }
             return response()->json([
                 'success' => true,
-                'row' => $response->LIST,
+                'row' => $row,
             ]);
         }
         return response()->json([
@@ -99,19 +149,17 @@ class SiteController extends Controller
         $response = $kias->request('User_CicSearchSubject', [
             'IIN' => $request->iin,
         ]);
-        if($response->NotFound) {
+        if(count(get_object_vars($response->ROWSET)) == 0) {
             return response()->json([
                 'success' => false,
                 'error' => 'Пользователь не найден!',
             ]);
-        }
-        if($response->error) {
+        }else if($response->error) {
             return response()->json([
                 'success' => false,
                 'error' => (string)$response->error->text,
             ]);
-        }
-        if($response->ROWSET->row){
+        }else if($response->ROWSET->row){
             $row = [];
             if ((string)$response->ROWSET->row->JURIDICAL === 'Y'){
                 $row['orgname'] = (string)$response->ROWSET->row->ORGNAME;
@@ -150,18 +198,15 @@ class SiteController extends Controller
             'DOCCLASSISN' => $request->docClassIsn ? $request->docClassIsn : "",
             'DOCNO' => $request->docNo ? $request->docNo : "",
         ]);
-        if($response->error) {
+        if($response->error && $response->error->text != 'Ошибка привязки пользователя ЕСБД<->КИАС') {
             return response()->json([
                 'success' => false,
                 'error' => (string)$response->error,
             ]);
-        }
-        if($response->ROWSET->row){
-            $row = [];
-            $row['iin'] = (int)$response->ROWSET->row->IIN;
+        } else if($response->ROWSET->row || $response->error->text == 'Ошибка привязки пользователя ЕСБД<->КИАС'){
             return response()->json([
                 'success' => true,
-                'row' => $row,
+                'iin' => $request->iin,
             ]);
         }
         return response()->json([
