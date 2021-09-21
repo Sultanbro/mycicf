@@ -13,20 +13,21 @@ class SiteController extends Controller
 {
     public function authorization(Request $request, KiasServiceInterface $kias){
         $response = $kias->authenticate($request->username, hash('sha512', $request->password));
+//        dd($response);
         if($response->error) {
             $success = false;
+//            dd($success);
             $response = array(
                 'success' => $success,
-                'error' => (string)$response->error->text,
+                'error' => $response->error->text,
             );
-        }
-        if($response->UserDetails) {
+        }else if($response->UserDetails) {
             $ISN = $response->UserDetails->ISN;
             $sid = $response->Sid;
             $response = array(
                 'success' => true,
                 'data' => [
-                    'isn' => (string)$ISN,
+                    'isn' => (int)$ISN,
                     'auth_token' => (string)$sid,
                 ]
             );
