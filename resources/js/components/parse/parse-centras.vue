@@ -59,12 +59,13 @@
                             <td></td>
                             <td></td>
                             <td class="text-left">Управление</td>
-                            <td>{{oracleData.label_first}}</td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>Доля {{oracleData.label_first}}</td>
-                            <td>Доля {{oracleData.label_second}}</td>
-                            <td>Изм %</td>
-                            <td>Изм сумма</td>
+                            <td>План</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
+                            <td> ДСД {{oracleData.label_first}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
+                            <td>Нетто премии {{oracleData.label_second}}</td>
+                            <td>Тотал премии {{oracleData.label_second}}</td>
+                            <td>Изм сумма / %</td>
                             <td></td>
                             <td>{{oracleData.label_first}}</td>
                             <td>{{oracleData.label_second}}</td>
@@ -80,7 +81,12 @@
                                 <td><span>{{}}</span></td>
                                 <td>{{}}</td>
                                 <td class="text-left"><span class="bold"@click=getMan(key)>{{key}}</span></td>
-                                <td>{{}}</td>
+                                <td>{{item.feesplan}}</td>
+                                <td>{{item.brutto_prem}}</td>
+                                <td>{{item.dsd}}</td>
+                                <td>{{item.comission_and_rating}}</td>
+                                <td>{{item.netto_refund_sum}}</td>
+                                <td>{{item.total_refund_sum}}</td>
                             </tr>
                         </template>
                         <tr>
@@ -168,6 +174,9 @@
                 this.adminValue = key;
                 this.viewType = 'managers';
             }
+
+        },
+        computed: {
 
         },
     }
