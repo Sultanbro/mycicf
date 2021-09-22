@@ -218,10 +218,10 @@ class ParseOracleController extends Controller
                     ->get()->toArray();
             }
 
-/*        elseif ($dateType == 'year'){
+        elseif ($dateType == 'year'){
                 //Суммировать показатели менеджеров за год
               $label_first = $firstYear;
-              //$label_second = $secondYear;
+              $label_second = $secondYear;
 
               $builder = DB::table('parse_oracle_plans')
                   ->select(
@@ -289,7 +289,7 @@ class ParseOracleController extends Controller
 
             elseif ($dateType == 'quarter'){
                 $label_first = $firstPeriod.'кв. '.$firstYear;
-                //$label_second = $secondPeriod.'кв. '.$secondYear;
+                $label_second = $secondPeriod.'кв. '.$secondYear;
 
                 for ($i = 1; $i<=3; $i++) {
                     $builder = DB::table('parse_oracle_plans')
@@ -323,11 +323,44 @@ class ParseOracleController extends Controller
                             DB::raw('parse_oracle_collects.dept_isn'),
                             DB::raw('parse_oracle_collects.dept_name'))
                         ->get()->toArray();
+
+                    $model = DB::table('parse_oracle_plans')
+                        ->select(
+                            'parse_oracle_plans.feesplan',
+                            'parse_oracle_plans.agrempl',
+                            'parse_oracle_collects.empl_name',
+                            DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                            'parse_oracle_collects.dept_isn',
+                            'parse_oracle_collects.dept_name',
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.dsd)) AS dsd'),
+                            DB::raw('FLOOR(SUM(parse_oracle_collects.comission_and_rating)) AS comission_and_rating'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.total_refund_sum, 0))) AS total_refund_sum'),
+                            DB::raw('FLOOR(SUM(IFNULL(parse_oracle_pays.netto_refund_sum, 0))) AS netto_refund_sum'))
+                        ->leftJoin('parse_oracle_collects', function ($join) {
+                            $join->on('parse_oracle_plans.agrempl','=','parse_oracle_collects.empl_isn');
+                        })
+                        ->leftJoin('parse_oracle_pays', function ($join) {
+                            $join->on('parse_oracle_pays.empl_isn','parse_oracle_plans.agrempl');
+                            $join->on('parse_oracle_collects.dateAccept','parse_oracle_pays.dateAccept');
+                        });
+                    $collects2 = $model->where(DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),'=', $firstDate)
+                        ->where('parse_oracle_plans.year','=', $firstYear)
+                        ->where('parse_oracle_plans.month','=',($firstPeriod)*3 + $i)
+                        ->groupBy(
+                            DB::raw('parse_oracle_plans.agrempl'),
+                            DB::raw('parse_oracle_plans.feesplan'),
+                            DB::raw('parse_oracle_collects.empl_name'),
+                            DB::raw('substr(parse_oracle_collects.dateAccept, 4)'),
+                            DB::raw('parse_oracle_collects.dept_isn'),
+                            DB::raw('parse_oracle_collects.dept_name'))
+                        ->get()->toArray();
                 }
-            }*/
+                dd($collects,$collects2);
+            }
             elseif ($dateType == 'date'){
                 $label_first =  $day.' '.$this->getMonthLabel()[$firstPeriod].' '.$firstYear;
-                //$label_second = $day.' '.$this->getMonthLabel()[$secondPeriod].' '.$secondYear;
+                $label_second = $day.' '.$this->getMonthLabel()[$secondPeriod].' '.$secondYear;
 
                 $builder = DB::table('parse_oracle_plans')
                     ->select(
@@ -584,9 +617,6 @@ class ParseOracleController extends Controller
         $dms2 = [
             'ДМС' =>$deptCollectSecond['ДМС']
         ];
-
-
-
 
 //        $dks0 = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem');
 

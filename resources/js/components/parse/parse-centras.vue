@@ -34,7 +34,7 @@
                         <tr>
                             <td><span>{{}}</span></td>
                             <td>{{}}</td>
-                            <td class="text-left"><span class="bold" @click="viewType='admins'">{{value}}</span></td>
+                            <td class="text-left"><span class="bold" @click=getAdm(value)>{{value}}</span></td>
                             <td>{{}}</td>
                         </tr>
                         </template>
@@ -58,7 +58,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td class="text-left">Департамент</td>
+                            <td class="text-left">Управление</td>
                             <td>{{oracleData.label_first}}</td>
                             <td>{{oracleData.label_second}}</td>
                             <td>Доля {{oracleData.label_first}}</td>
@@ -75,12 +75,11 @@
                         </thead>
                         <tbody>
                         <template
-                            v-for="(item,key) in oracleData.collects.ДКС">
+                            v-for="(item,key) in oracleData.collects[deptValue]">
                             <tr>
                                 <td><span>{{}}</span></td>
                                 <td>{{}}</td>
-                                <td class="text-left"><span class="bold"
-                                                            @click="viewType = 'managers'">{{key}}</span></td>
+                                <td class="text-left"><span class="bold"@click=getMan(key)>{{key}}</span></td>
                                 <td>{{}}</td>
                             </tr>
                         </template>
@@ -119,8 +118,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(items,key) in oracleData.collects.ДКС">
-                            <tr v-for="(item,index) in items">
+                        <template v-for="(item,key) in oracleData.collects[deptValue][adminValue]">
+                            <tr>
                                     <td class="text-left">{{item.empl_name}}</td>
                                     <td>{{item.feesplan}}</td>
                                     <td>{{item.brutto_prem}}</td>
@@ -130,22 +129,6 @@
                                     <td>{{item.total_refund_sum}}</td>
                             </tr>
                         </template>
-
-                        <!--все менеджеры за период-->
-                        <!--<template v-for="items in oracleData.collects">
-                            <template v-for="elems in items">
-                                <tr v-for="(elem,value) in elems">
-                                    <td class="text-left">{{elem.empl_name}}</td>
-                                    <td>{{elem.feesplan}}</td>
-                                    <td>{{elem.brutto_prem}}</td>
-                                    <td>{{elem.dsd}}</td>
-                                    <td>{{elem.comission_and_rating}}</td>
-                                    <td>{{elem.netto_refund_sum}}</td>
-                                    <td>{{elem.total_refund_sum}}</td>
-                                </tr>
-                            </template>
-                        </template>-->
-
                         <tr>
                             <td><span class="bold">Итого</span></td>
                         </tr>
@@ -164,6 +147,7 @@
             return {
             viewType: 'departments',
             deptValue: null,
+            adminValue: null,
             }
         },
         props: {
@@ -176,6 +160,15 @@
                 textStyle = index == 1 || index == 10 || index == 14 ? textStyle : '';
                 return textStyle;
             },
+            getAdm(value){
+                this.deptValue = value;
+                this.viewType = 'admins';
+            },
+            getMan(key){
+                this.adminValue = key;
+                this.viewType = 'managers';
+            }
+
         },
     }
 </script>
