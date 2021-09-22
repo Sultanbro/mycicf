@@ -84,15 +84,8 @@
                 </div>
             </div>
         </div>
-        <div  class="div-marg div-ml div-mr">
+        <div v-if="schedulePaymentBool" class="div-marg div-ml div-mr">
             <div class="agreement-block">
-<!--                <div class="flex flex-row offset-3 col-6">-->
-<!--                    <h5>Выберите тип платежа:</h5>-->
-<!--                    <select class="custom-select select-size">-->
-<!--                        <option value="1">Рассрочка</option>-->
-<!--                        <option value="2">Рассрочка 70 на 30</option>-->
-<!--                    </select>-->
-<!--                </div>-->
                 <h5 class="col-md-12">График платежей</h5>
                 <div class="col-4">
                     <table class="table table-hover text-align-center fs-0_8">
@@ -100,22 +93,26 @@
                         <tr class="border-table-0">
                             <td>Дата</td>
                             <td>Сумма</td>
+                            <td>Объект</td>
                         </tr>
                         </thead>
                         <tbody>
                         <template>
-                            <tr>
-                                <td>18.09.2021</td>
-                                <td>1000 тг</td>
-                            </tr>
-                            <tr>
-                                <td>18.10.2021</td>
-                                <td>1000 тг</td>
-                            </tr>
-                            <tr>
-                                <td>18.11.2021</td>
-                                <td>1000 тг</td>
-                            </tr>
+                            <div v-for="docrow in orderedDocrows">
+                                <tr>
+                                    <td v-if="docrow.fieldname === 'Дата'" v-model="docrow.value">{{docrow.value}}</td>
+                                    <td v-if="docrow.fieldname === 'Вал. усл.'" v-model="docrow.value">{{docrow.value}} {{docrow.value_name}}</td>
+                                    <td v-if="docrow.fieldname === 'Объект'" v-model="docrow.value">{{ docrow.value }}</td>
+                                </tr>
+                            </div>
+<!--                            <tr>-->
+<!--                                <td>18.10.2021</td>-->
+<!--                                <td>1000 тг</td>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td>18.11.2021</td>-->
+<!--                                <td>1000 тг</td>-->
+<!--                            </tr>-->
                         </template>
                         </tbody>
                     </table>
@@ -242,7 +239,9 @@
                     time: '',
                     address: ''
                 },
-                schedulePayment: false,
+                schedulePayment: {},
+                schedulePaymentBool: false,
+                payGraphDocIsn: '',
             }
         },
         props: {
@@ -257,6 +256,11 @@
         },
         mounted() {
             this.getFullData();
+        },
+        computed: {
+            orderedDocrows: function () {
+                return _.orderBy(this.schedulePayment, 'isn')
+            },
         },
         methods: {
             getFullData() {
@@ -435,17 +439,18 @@
                                 this.DA_isn = response.data.DA_isn;
                                 this.DA.DA_nomer = response.data.DA_nomer;
                                 this.DA.orderCreated = true;
-                                this.schedulePayment = true;
+                                this.schedulePaymentBool = true;
                             } else {
                                 this.status = response.data.status;
                                 this.price = response.data.premium;
                                 this.calculated = true;
-                                this.schedulePayment = true;
+                                this.schedulePaymentBool = true;
                             }
                             this.calc_isn = response.data.calc_isn;
                             this.calc_id = response.data.calc_id;
                             this.status_name = response.data.status_name;
-                            this.schedulePayment = true;
+                            this.schedulePaymentBool = true;
+                            this.payGraphDocIsn = response.data.payGraphDocIsn
 
                             if(response.data.calc_isn != '') {
                                 this.preloader(false);
@@ -453,6 +458,16 @@
                             } else {
                                 this.preloader(false);
                             }
+                            let dat = {
+                                'payGraphDocIsn': this.payGraphDocIsn
+                            }
+                            this.axios.post('/full/getPaymentSchedule', dat).then(
+                                response => {
+                                    this.axios.post('/full/paymentScheduleButton', dat).then(
+                                        response => {
+                                            this.schedulePayment = response.data.docrow
+                                        })
+                                })
                         } else {
                             alert(response.data.error)
                             this.preloader(false);

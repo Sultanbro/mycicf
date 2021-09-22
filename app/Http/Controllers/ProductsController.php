@@ -1108,9 +1108,44 @@ class ProductsController extends Controller
                 'DA_isn' => isset($DA_isn) && $DA_isn != '' ? $DA_isn : null,
                 'DA_nomer' => isset($DA_nomer) && $DA_nomer != '' ? $DA_nomer : null,
                 'status' => isset($status) ? $status : null,
-                'status_name' => (string)$getStatus->Status
+                'status_name' => (string)$getStatus->Status,
+                'payGraphDocIsn' => (int)$response->wPayGraphDocISN
             ]);
         }
+    }
+
+    public function getPaymentSchedule(KiasServiceInterface $kias, Request $request){
+        $show = $kias->request('User_CicGetDocRowAttr', [
+            'CLASSISN' => 1480561,
+            'DOCISN' => $request->payGraphDocIsn ? $request->payGraphDocIsn : '',
+        ]);
+        return response()->json([
+            'success' => true,
+            'show' => $show
+        ]);
+    }
+
+    public function paymentScheduleButton(KiasServiceInterface $kias, Request $request){
+        $buttonClick = $kias->buttonClick($request->payGraphDocIsn ? $request->payGraphDocIsn : '', 'BUTTONEXEC');
+        $docrows = [];
+        dd($buttonClick);
+        foreach($buttonClick->DocRow->row as $docrow){
+            $docrows[] = [
+                'rn' => empty($docrow->rn) ? null : get_object_vars($docrow->rn)[0],
+                'isn' => empty($docrow->isn) ? null : get_object_vars($docrow->isn)[0],
+                'fieldname' => empty($docrow->fieldname) ? null : get_object_vars($docrow->fieldname)[0],
+                'code' => empty($docrow->code) ? null : get_object_vars($docrow->code)[0],
+                'classisn' => empty($docrow->classisn) ? null : get_object_vars($docrow->classisn)[0],
+                'rowisn' => empty($docrow->rowisn) ? null : get_object_vars($docrow->rowisn)[0],
+                'val' => empty($docrow->val) ? null : get_object_vars($docrow->val)[0],
+                'value' => empty(get_object_vars($docrow->value)) ? null : get_object_vars($docrow->value)[0],
+                'value_name' => empty(get_object_vars($docrow->value_name)) ? null : empty(get_object_vars($docrow->value_name)),
+            ];
+        }
+        return response()->json([
+            'success' => true,
+            'docrow' => $docrows
+        ]);
     }
 
     public function createAgr(Request $request, KiasServiceInterface $kias){    // создание договора

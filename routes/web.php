@@ -541,6 +541,8 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
         Route::post('/express/calculate', 'ProductsController@expressCalc');
         Route::post('/express/createAgrByAgrcalc', 'ProductsController@CreateAgrByAgrcalc');
         Route::post('/full/calculate', 'ProductsController@fullCalc');
+        Route::post('/full/getPaymentSchedule', 'ProductsController@getPaymentSchedule');
+        Route::post('/full/paymentScheduleButton', 'ProductsController@paymentScheduleButton');
 
         Route::post('/getVehicle', 'VehicleController@getVehicle');
         Route::post('/saveVehicle','VehicleController@saveVehicle');
