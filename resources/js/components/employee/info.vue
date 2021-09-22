@@ -1,6 +1,10 @@
 <template>
     <div class="news-tape-bg radius-4px mt-3 pb-2">
         <div class="pt-4">
+
+
+
+
             <div class="border-radius15 flex-row jc-start vertical-middle bg-white ml-2 mr-2 pl-3 pr-3 pt-4 pb-3">
                 <div class="flex-row jc-sb">
                     <div class="flex-column">
@@ -18,10 +22,19 @@
                     </div>
                 </div>
 
-                    <div class="flex-row border-gray pl-3 width-min-content pr-3 pt-2 pb-2 pointer showBtn btn ml-3" @click="getTables()">
+<!--                    <div class="flex-row align-items-center border-gray pl-3 width-min-content pr-3 pt-2 pb-2 pointer showBtn show-btn ml-3" @click="getTables()">-->
 
-                        <div class="ml-2 "><i class="far fa-eye"></i> Показать</div>
+<!--                        <div class="ml-2 but-btn"><i class="far fa-eye"></i> Показать</div>-->
+<!--                    </div>-->
+
+                <div>
+                    <div class="flex-row align-items-center date-color pl-2 pr-2 mt-3">
+                        <div class="flex-row align-items-center border-gray pl-4 width-min-content pr-4 pt-1 pb-1 show-btn ">
+                            <div><i class="far fa-eye"></i></div>
+                            <button class="ml-2  buy-btn" @click="getTables()">Показать</button>
+                        </div>
                     </div>
+                </div>
                 </div>
             </div>
         <div class="ml-2 mr-2" v-show="carier !== null">
@@ -222,11 +235,7 @@
 </template>
 
 
-<style>
-     .btn:hover  {
-         background: #00f7a5 !important;
-     }
-</style>
+
 
 <script>
     export default {

@@ -11,9 +11,9 @@
                     </div>
                     <div>
                         <div class="flex-row date-color pl-2 pr-2 ">
-                            <div class="flex-row border-gray pl-4 width-min-content pr-4 pt-1 pb-1 show-btn ">
+                            <div class="flex-row align-items-center border-gray pl-4 width-min-content pr-4 pt-1 pb-1 show-btn ">
                                 <div><i class="far fa-eye"></i></div>
-                                <button class="ml-2  buy-btn  " @click="getOperations()">Показать</button>
+                                <button class="ml-2  buy-btn" @click="getOperations()">Показать</button>
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,8 @@
     background: transparent !important;
 }
      .show-btn:hover {
-         background: #00f7a5 !important;
+         background: #e8efff !important;
+
      }
 
     .buy-btn {
@@ -131,7 +132,7 @@
     }
 
     .buy-btn:hover {
-        color: #FFF;
+        color:  #4267b2 !important;
         /*box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);*/
     }
 
