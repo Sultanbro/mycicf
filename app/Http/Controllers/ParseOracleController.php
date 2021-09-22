@@ -190,7 +190,7 @@ class ParseOracleController extends Controller
                         'parse_oracle_plans.feesplan',
                         'parse_oracle_plans.agrempl',
                         'parse_oracle_collects.empl_name',
-                        'parse_oracle_collects.dateAccept',
+                        DB::raw('substr(parse_oracle_collects.dateAccept,4)'),
                         'parse_oracle_collects.dept_isn',
                         'parse_oracle_collects.dept_name',
                         DB::raw('FLOOR(SUM(parse_oracle_collects.brutto_prem)) AS brutto_prem'),
@@ -212,7 +212,7 @@ class ParseOracleController extends Controller
                         DB::raw('parse_oracle_plans.agrempl'),
                         DB::raw('parse_oracle_plans.feesplan'),
                         DB::raw('parse_oracle_collects.empl_name'),
-                        DB::raw('parse_oracle_collects.dateAccept'),
+                        DB::raw('substr(parse_oracle_collects.dateAccept,4)'),
                         DB::raw('parse_oracle_collects.dept_isn'),
                         DB::raw('parse_oracle_collects.dept_name'))
                     ->get()->toArray();
@@ -588,24 +588,7 @@ class ParseOracleController extends Controller
 
 
 
-//        $dks0 = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem'));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//        $dks0 = array_sum(array_column($deptCollectFirst['ДКС'], 'brutto_prem');
 
         return response()->json([
             'success' => true,
@@ -622,15 +605,15 @@ class ParseOracleController extends Controller
                     'ДМС' => $dms
                 ],
                 'collectsSecond' => [
-                    'ДКС'=> $dks,
-                    'ДСП' => $dsp,
-                    'ДРПО' => $drpo,
-                    'ДП' => $dp,
-                    'Филиалы' => $filials,
-                    'kupipolis' => $kupipolis,
-                    'Отдел страхования' => $os,
-                    'ДСВ' => $dsv,
-                    'ДМС' => $dms
+                    'ДКС'=> $dks2,
+                    'ДСП' => $dsp2,
+                    'ДРПО' => $drpo2,
+                    'ДП' => $dp2,
+                    'Филиалы' => $filials2,
+                    'kupipolis' => $kupipolis2,
+                    'Отдел страхования' => $os2,
+                    'ДСВ' => $dsv2,
+                    'ДМС' => $dms2
                 ],
                 'label_first' => $label_first,
                 'label_second' => $label_second,

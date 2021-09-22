@@ -3,10 +3,10 @@
         <div class="bg-white pl-3 pr-3 mt-3 box-shadow border-16" >
             <div class="flex-row jc-sb pr-3 pl-3 vertical-middle flex-row">
                 <div class="width100 table-responsive">
-            <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'Department'">
+            <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'departments'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0">Label</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0">Departments</td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -30,11 +30,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(value,elem) in oracleData.collects" :value="oracleData.collects">
+                        <template v-for="(elem,value) in oracleData.collects">
                         <tr>
                             <td><span>{{}}</span></td>
-                            <td>{{123}}</td>
-                            <td class="text-left"><span class="bold">{{elem}}</span></td>
+                            <td>{{}}</td>
+                            <td class="text-left"><span class="bold" @click="viewType='admins'">{{value}}</span></td>
                             <td>{{}}</td>
                         </tr>
                         </template>
@@ -46,10 +46,11 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0"
+                           v-if="viewType === 'admins'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0">Label</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0">Administration</td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -73,11 +74,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(value,elem) in oracleData.collects.ДКС" :value="oracleData.collects.ДКС">
+                        <template
+                            v-for="(item,key) in oracleData.collects.ДКС">
                             <tr>
                                 <td><span>{{}}</span></td>
-                                <td>{{123}}</td>
-                                <td class="text-left"><span class="bold">{{elem}}</span></td>
+                                <td>{{}}</td>
+                                <td class="text-left"><span class="bold"
+                                                            @click="viewType = 'managers'">{{key}}</span></td>
                                 <td>{{}}</td>
                             </tr>
                         </template>
@@ -89,10 +92,11 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0">
+                    <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0"
+                           v-if="viewType === 'managers'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0">Label</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0">Managers</td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -115,17 +119,33 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(value,elem) in oracleData.collects.ДКС.УКС1" :value="oracleData.collects.ДКС">
-                            <tr>
-                                <td class="text-left"> {{value.empl_name}}</td>
-                                <td>{{value.feesplan}}</td>
-                                <td>{{value.brutto_prem}}</td>
-                                <td>{{value.dsd}}</td>
-                                <td>{{value.comission_and_rating}}</td>
-                                <td>{{value.netto_refund_sum}}</td>
-                                <td>{{value.total_refund_sum}}</td>
+                        <template v-for="(items,key) in oracleData.collects.ДКС">
+                            <tr v-for="(item,index) in items">
+                                    <td class="text-left">{{item.empl_name}}</td>
+                                    <td>{{item.feesplan}}</td>
+                                    <td>{{item.brutto_prem}}</td>
+                                    <td>{{item.dsd}}</td>
+                                    <td>{{item.comission_and_rating}}</td>
+                                    <td>{{item.netto_refund_sum}}</td>
+                                    <td>{{item.total_refund_sum}}</td>
                             </tr>
                         </template>
+
+                        <!--все менеджеры за период-->
+                        <!--<template v-for="items in oracleData.collects">
+                            <template v-for="elems in items">
+                                <tr v-for="(elem,value) in elems">
+                                    <td class="text-left">{{elem.empl_name}}</td>
+                                    <td>{{elem.feesplan}}</td>
+                                    <td>{{elem.brutto_prem}}</td>
+                                    <td>{{elem.dsd}}</td>
+                                    <td>{{elem.comission_and_rating}}</td>
+                                    <td>{{elem.netto_refund_sum}}</td>
+                                    <td>{{elem.total_refund_sum}}</td>
+                                </tr>
+                            </template>
+                        </template>-->
+
                         <tr>
                             <td><span class="bold">Итого</span></td>
                         </tr>
@@ -142,7 +162,8 @@
         name: "parse-centras",
         data() {
             return {
-            viewType: 'Department'
+            viewType: 'departments',
+            deptValue: null,
             }
         },
         props: {
