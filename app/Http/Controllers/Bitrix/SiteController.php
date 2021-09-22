@@ -149,7 +149,7 @@ class SiteController extends Controller
         $response = $kias->request('User_CicSearchSubject', [
             'IIN' => $request->iin,
         ]);
-        if(count(get_object_vars($response->ROWSET)) == 0) {
+        if(isset($response->ROWSET) && count(get_object_vars($response->ROWSET)) == 0 && (string)$response->NotFound == '0') {
             return response()->json([
                 'success' => false,
                 'error' => 'Пользователь не найден!',
