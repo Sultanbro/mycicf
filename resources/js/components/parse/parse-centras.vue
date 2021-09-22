@@ -15,12 +15,13 @@
                             <td></td>
                             <td></td>
                             <td class="text-left">Департамент</td>
-                            <td>{{oracleData.label_first}}</td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>Доля {{oracleData.label_first}}</td>
-                            <td>Доля {{oracleData.label_second}}</td>
-                            <td>Изм %</td>
-                            <td>Изм сумма</td>
+                            <td>План</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
+                            <td> ДСД {{oracleData.label_first}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
+                            <td>Нетто премии {{oracleData.label_second}}</td>
+                            <td>Тотал премии {{oracleData.label_second}}</td>
+                            <td>Изм сумма / %</td>
                             <td></td>
                             <td>{{oracleData.label_first}}</td>
                             <td>{{oracleData.label_second}}</td>
@@ -30,12 +31,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(elem,value) in oracleData.collects">
+                        <template v-for="(elem,value) in oracleData.collectsSum">
                         <tr>
                             <td><span>{{}}</span></td>
                             <td>{{}}</td>
                             <td class="text-left"><span class="bold" @click=getAdm(value)>{{value}}</span></td>
-                            <td>{{}}</td>
+                            <td>{{elem.feesplan}}</td>
+                            <td>{{elem.brutto_prem}}</td>
+                            <td>{{elem.dsd}}</td>
+                            <td>{{elem.comission_and_rating}}</td>
+                            <td>{{elem.netto_refund_sum}}</td>
+                            <td>{{elem.total_refund_sum}}</td>
                         </tr>
                         </template>
                         <tr>
@@ -76,7 +82,7 @@
                         </thead>
                         <tbody>
                         <template
-                            v-for="(item,key) in oracleData.collects[deptValue]">
+                            v-for="(item,key) in oracleData.collects1[deptValue]">
                             <tr>
                                 <td><span>{{}}</span></td>
                                 <td>{{}}</td>
@@ -124,7 +130,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(item,key) in oracleData.collects[deptValue][adminValue][managValue]">
+                        <template v-for="(item,key) in oracleData.collects1[deptValue][adminValue][managValue]">
                             <tr>
                                     <td class="text-left">{{item.empl_name}}</td>
                                     <td>{{item.feesplan}}</td>
