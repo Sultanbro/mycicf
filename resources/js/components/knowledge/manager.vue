@@ -692,7 +692,7 @@
 </template>
 
 <script>
-import todoForm from './form.vue'
+import todoForm from './TodoForm'
 
 export default {
 
