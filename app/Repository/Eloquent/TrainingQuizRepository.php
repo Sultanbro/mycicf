@@ -24,4 +24,9 @@ class TrainingQuizRepository extends BaseRepository implements TrainingQuizRepos
         $this->model = $model;
     }
 
+    public function getQuizId($id)
+    {
+        return $this->model->where('training_program_id', $id)->get();
+    }
+
 }

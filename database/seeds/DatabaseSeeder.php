@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(QuestionSeeder::class);
         $this->call(ScoreSeeder::class);
         $this->call(QuizSeeder::class);
+        $this->call(TrainingProgramSeeder::class);
+        $this->call(TrainingQuizzesSeeder::class);
         // $this->call(AnswerSeeder::class);
         Schema::enableForeignKeyConstraints();
     }

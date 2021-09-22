@@ -19,8 +19,8 @@ class TrainingProgramOneResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'created' => $this->created_at,
-            'material' => EducationalMaterialResource::collection(data_get($this, 'material')),
-            'quizzes' => QuizResource::collection(data_get($this, 'quizzes')),
+            'material' => TrainingMaterialResource::collection(data_get($this, 'materials')),
+            'quizzes' => TrainingQuizResource::collection(data_get($this, 'quizzes')),
         ];
     }
 }

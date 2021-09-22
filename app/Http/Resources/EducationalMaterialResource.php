@@ -20,6 +20,7 @@ class EducationalMaterialResource extends JsonResource
             'link' => $this->link,
             'description' => $this->description,
             'type' => $this->type,
+            'created' => $this->created_at,
         ];
     }
 }

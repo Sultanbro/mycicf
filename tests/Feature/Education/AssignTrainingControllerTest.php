@@ -15,32 +15,30 @@ class AssignTrainingControllerTest extends TestCase
         \Illuminate\Support\Facades\Artisan::call('db:seed --class=DatabaseSeeder --env=testing');
         $user_id = Branch::find(8)->kias_id;
 
-        $store = $this->json('POST', '/api/announcement', ['thema' => 'Почему', 'user_id' => $user_id, 'description' => 'Крутой', 'date_time' => '2022-02-03 12:00:00', 'online' => 1, 'space' => 2, 'type' => 1]);
+        $store = $this->json('POST', '/api/assign/training', ['kias_id' => 5003, 'training_programs_id' => [ 1 => 7 ] , 'date_start' => '2023.10.20', 'date_end' => '2023.12.20',]);
 
-        $store->assertOk();
+        $store->assertstatus(201);
 
-        $index = $this->json('GET', '/api/announcement');
+        $index = $this->json('GET', '/api/assign/training');
 
         $index->assertOk()
             ->assertJsonFragment([
-                'thema' => 'Почему', 'user_id' => $user_id,
+                'date_start' => '2023.10.20', 'date_end' => '2023.12.20', 'kias' => ['kias_id' => 5003],
             ]);
 
-        $show = $this->json('GET', '/api/announcement/'.$store['id']);
+        $show = $this->json('GET', '/api/assign/training/'.$store['id']);
 
         $show->assertOk()
             ->assertJsonFragment([
-                'thema' => 'Почему', 'user_id' => $user_id,
+                'id' => $store['id'], 'date_start' => '2023.10.20', 'date_end' => '2023.12.20', 'kias' => ['kias_id' => 5003],
             ]);
 
-        $update = $this->json('POST', '/api/announcement/'.$store['id'],  ['_method' => 'PUT', 'name' => 'Фото', 'description' => 'Хорошая', 'type' => 1]);
+        $update = $this->json('POST', '/api/assign/training/'.$store['id'],  ['_method' => 'PUT', 'date_start' => '2023.10.21', 'date_end' => '2023.12.21',]);
 
         $update->assertOk()
-            ->assertJsonFragment(['name' => 'Фото', 'description' => 'Хорошая', 'type' => 1]);
+            ->assertJsonFragment(['date_start' => '2023.10.21', 'date_end' => '2023.12.21',]);
 
-        $destroy = $this->json('DELETE', '/api/announcement/'.$store['id']);
-
-        Storage::disk('local')->assertMissing($store['link']);
+        $destroy = $this->json('DELETE', '/api/assign/training/'.$store['id']);
 
         $destroy->assertOk();
     }

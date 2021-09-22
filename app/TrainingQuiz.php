@@ -12,4 +12,9 @@ class TrainingQuiz extends Model
         'count_question',
         'try',
     ];
+
+    public function quiz()
+    {
+        return $this->hasOne(Quiz::class, 'id', 'quiz_id');
+    }
 }

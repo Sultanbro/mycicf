@@ -21,6 +21,7 @@ class CreateTrainingQuizzesTable extends Migration
             $table->integer('try');
             $table->timestamps();
 
+            $table->unique(['training_program_id', 'quiz_id']);
             $table->foreign('training_program_id')->references('id')->on('training_programs')->onDelete('cascade');
             $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade');
         });

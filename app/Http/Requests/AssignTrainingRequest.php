@@ -24,10 +24,10 @@ class AssignTrainingRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required',
-            'training_programs_id' => 'required',
             'date_start' => 'required',
             'date_end' => 'required',
+            'training_programs_id' => 'required',
+            'kias_id' => 'required',
         ];
     }
 }

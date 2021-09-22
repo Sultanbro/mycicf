@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AssignTrainingRequest;
+use App\Http\Requests\AssignTrainingUpdateRequest;
 use App\Http\Resources\AssignTrainingResource;
 use App\Library\Services\KiasBranch\KiasBranchServiceInterface;
 use App\Repository\AssignTrainingProgramsRepositoryInterface;
 use App\Repository\AssignTrainingRepositoryInterface;
+use App\Repository\QuizResultRepositoryInterface;
+use App\Repository\TrainingProgramRepositoryInterface;
+use App\Repository\TrainingQuizRepositoryInterface;
 use Illuminate\Http\Request;
 
 class AssignTrainingController extends Controller
@@ -25,12 +29,27 @@ class AssignTrainingController extends Controller
      * @var AssignTrainingProgramsRepositoryInterface
      */
     private $assignTrainingProgramsRepository;
+    /**
+     * @var QuizResultRepositoryInterface
+     */
+    private $quizResultRepository;
+    /**
+     * @var TrainingProgramRepositoryInterface
+     */
+    private $trainingProgramRepository;
+    /**
+     * @var TrainingQuizRepositoryInterface
+     */
+    private $trainingQuizRepository;
 
-    public function __construct(AssignTrainingRepositoryInterface $assignTrainingRepository, KiasBranchServiceInterface $branchService, AssignTrainingProgramsRepositoryInterface $assignTrainingProgramsRepository)
+    public function __construct(AssignTrainingRepositoryInterface $assignTrainingRepository, KiasBranchServiceInterface $branchService, AssignTrainingProgramsRepositoryInterface $assignTrainingProgramsRepository, QuizResultRepositoryInterface $quizResultRepository, TrainingProgramRepositoryInterface $trainingProgramRepository, TrainingQuizRepositoryInterface $trainingQuizRepository)
     {
         $this->assignTrainingRepository = $assignTrainingRepository;
         $this->branchService = $branchService;
         $this->assignTrainingProgramsRepository = $assignTrainingProgramsRepository;
+        $this->quizResultRepository = $quizResultRepository;
+        $this->trainingProgramRepository = $trainingProgramRepository;
+        $this->trainingQuizRepository = $trainingQuizRepository;
     }
 
     /**
@@ -51,17 +70,24 @@ class AssignTrainingController extends Controller
      */
     public function store(AssignTrainingRequest $request)
     {
-        $assignTraining = $request->validated();
-        $users_id = $this->branchService->getUserChilds($request->user_id);
-        foreach ($users_id as $user_id) {
-            unset($assignTraining['training_programs_id']);
-            $assignTraining['user_id'] = $user_id;
-            $assignTraining_id = $this->assignTrainingRepository->create($assignTraining)->id;
-            foreach ($request->training_programs_id as $training_program) {
-                $this->assignTrainingProgramsRepository->create(['assign_training_id' => $assignTraining_id, 'training_programs_id' => $training_program]);
+        $assignTraining = $this->assignTrainingRepository->create(['kias_id' => $request->kias_id, 'date_start' => $request->date_start, 'date_end' => $request->date_end]);
+        $users_id = $this->branchService->getUserChilds($request->kias_id);
+
+        foreach ($request->training_programs_id as $training_program_id) {
+
+            $this->assignTrainingProgramsRepository->create(['assign_training_id' => $assignTraining->id, 'training_programs_id' => $training_program_id]);
+            $trainingQuizzes = $this->trainingQuizRepository->getQuizId($training_program_id);
+
+            foreach ($trainingQuizzes as $trainingQuiz) {
+
+                foreach ($users_id as $user_id) {
+
+                    $this->quizResultRepository->create(['user_id' => $user_id, 'all_try' => $trainingQuiz->try, 'training_programs_id' => $trainingQuiz->training_program_id, 'quiz_id' => $trainingQuiz->quiz_id, 'assign_training_id' => $assignTraining->id]);
+
+                }
             }
         }
-        return response()->json(true);
+        return response()->json($assignTraining);
     }
 
     /**
@@ -82,7 +108,7 @@ class AssignTrainingController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AssignTrainingRequest $request, $id)
+    public function update(AssignTrainingUpdateRequest $request, $id)
     {
         return response()->json($this->assignTrainingRepository->update($id, $request->validated()));
     }
@@ -98,25 +124,4 @@ class AssignTrainingController extends Controller
         return response()->json($this->assignTrainingRepository->delete($id));
     }
 
-    public function showSubdivisions(Request $request)
-    {
-
-        return new AssignTrainingResource($this->assignTrainingRepository->find($id));
-    }
-
-    /**
-     * @param AssignTrainingRequest $request
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function updateSubdivisions(AssignTrainingRequest $request)
-    {
-        $assignTraining = $request->validated();
-        $users_id = $this->branchService->getUserChilds($request->user_id);
-        foreach ($users_id as $user_id) {
-            $assignTraining['user_id'] = $user_id;
-            $this->assignTrainingRepository->update($id, $assignTraining);
-        }
-        return response()->json(true);
-    }
 }

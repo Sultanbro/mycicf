@@ -10,6 +10,7 @@ use App\Repository\QuizForKiasRepositoryInterface;
 use App\Repository\TrainingMaterialRepositoryInterface;
 use App\Repository\TrainingProgramRepositoryInterface;
 use App\Repository\TrainingQuizRepositoryInterface;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class TrainingProgramController extends Controller
@@ -112,8 +113,6 @@ class TrainingProgramController extends Controller
      */
     public function destroy($id)
     {
-//        $this->trainingQuizRepository->deleteByTrainingId($id);
-//        $this->trainingProgramRepository->deleteMaterial($id);
         if ($this->trainingProgramRepository->delete($id)) {
 
             return response()->json(true);
@@ -130,7 +129,16 @@ class TrainingProgramController extends Controller
     public function saveMaterial($training_id, $materials_id)
     {
         foreach ($materials_id as $material_id) {
-            $this->trainingMaterialRepository->create(['training_program_id' => $training_id, 'educational_material_id' => $material_id]);
+            try {
+                $this->trainingMaterialRepository->create(['training_program_id' => $training_id, 'educational_material_id' => $material_id]);
+            }
+            catch (QueryException $e){
+                $errorCode = $e->errorInfo[1];
+                if($errorCode == 1062){
+                   continue;
+                }
+            }
+
         }
     }
 
@@ -143,8 +151,26 @@ class TrainingProgramController extends Controller
     public function saveQuiz($training_id, $quizzes)
     {
         foreach ($quizzes as $quiz) {
+            try {
             $quiz['training_program_id'] = $training_id;
             $this->trainingQuizRepository->create($quiz);
+            }
+            catch (QueryException $e){
+                $errorCode = $e->errorInfo[1];
+                if($errorCode == 1062){
+                    continue;
+                }
+            }
         }
+    }
+
+    public function deleteMaterial($id)
+    {
+        return response()->json($this->trainingMaterialRepository->delete($id));
+    }
+
+    public function deleteQuiz($id)
+    {
+        return response()->json($this->trainingQuizRepository->delete($id));
     }
 }

@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class AssignTraining extends Model
 {
     protected $fillable = [
-        'user_id',
+        'kias_id',
         'training_programs_id',
         'date_start',
         'date_end',
         'status',
     ];
 
-    public function user()
+    public function kias()
     {
-        return $this->hasOne(Branch::class, 'kias_id', 'user_id');
+        return $this->hasOne(Branch::class, 'kias_id', 'kias_id');
     }
 
     public function training()

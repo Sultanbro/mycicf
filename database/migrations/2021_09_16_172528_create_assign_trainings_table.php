@@ -20,7 +20,7 @@ class CreateAssignTrainingsTable extends Migration
             $table->date('date_end');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('kias_id')->on('branches')->onDelete('cascade');
+            $table->foreign('kias_id')->references('kias_id')->on('branches')->onDelete('cascade');
         });
     }
 

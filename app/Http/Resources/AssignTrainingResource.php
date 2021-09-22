@@ -16,11 +16,10 @@ class AssignTrainingResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_info' => new UserInfoResource(data_get($this, 'user')),
+            'kias' => new UserInfoResource(data_get($this, 'kias')),
             'training_program' => data_get($this, 'training'),
             'date_start' => $this->date_start,
             'date_end' => $this->date_end,
-            'status' => $this->status,
         ];
     }
 }

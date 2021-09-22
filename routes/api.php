@@ -29,7 +29,10 @@ use Illuminate\Http\Request;
     Route::resource('for_kias', 'Api\QuizForKiasController');
     Route::resource('material', 'Api\EducationalMaterialController');
     Route::resource('training_program', 'Api\TrainingProgramController');
+    Route::delete('training_program/material/{id}', 'Api\TrainingProgramController@deleteMaterial');
+    Route::delete('training_program/quiz/{id}', 'Api\TrainingProgramController@deleteQuiz');
     Route::resource('announcement', 'Api\AnnouncementController');
     Route::resource('assign/training', 'Api\AssignTrainingController');
-    Route::post('assign/subdivisions', 'Api\AssignTrainingController@updateSubdivisions');
+    Route::resource('undergo', 'Api\UndergoTrainingController');
+    Route::resource('conduct', 'Api\ConductTrainingController');
 
