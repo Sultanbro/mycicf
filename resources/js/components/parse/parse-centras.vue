@@ -124,7 +124,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <template v-for="(item,key) in oracleData.collects[deptValue][adminValue]">
+                        <template v-for="(item,key) in oracleData.collects[deptValue][adminValue][managValue]">
                             <tr>
                                     <td class="text-left">{{item.empl_name}}</td>
                                     <td>{{item.feesplan}}</td>
@@ -154,6 +154,7 @@
             viewType: 'departments',
             deptValue: null,
             adminValue: null,
+            managValue: null,
             }
         },
         props: {
@@ -172,12 +173,9 @@
             },
             getMan(key){
                 this.adminValue = key;
+                this.managValue = key;
                 this.viewType = 'managers';
             }
-
-        },
-        computed: {
-
         },
     }
 </script>
