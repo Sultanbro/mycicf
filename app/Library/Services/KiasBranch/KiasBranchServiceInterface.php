@@ -9,4 +9,10 @@ interface KiasBranchServiceInterface
      * @return mixed
      */
     public function getUserChilds($id);
+
+    /**
+     * @param $request
+     * @return mixed
+     */
+    public function getFullBranch($request);
 }
