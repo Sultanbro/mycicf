@@ -846,6 +846,386 @@ class ParseOracleController extends Controller
             'total_refund_sum' => array_sum(array_column($deptCollectFirst['ДМС'], 'total_refund_sum'))
         ];
 
+        //second_date
+        //ДКС
+        $SD_Mdks = [
+            'Менеджер ДКС' => $deptCollectSecond['ДКС'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ДКС'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ДКС'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ДКС'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДКС'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ДКС'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ДКС'], 'total_refund_sum'))
+        ];
+        $SD_uks1 = [
+            'УКС1' => $deptCollectSecond['УКС1'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УКС1'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УКС1'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УКС1'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДКС'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УКС1'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УКС1'], 'total_refund_sum'))
+        ];
+        $SD_uks2 = [
+            'УКС2' => $deptCollectSecond['УКС2'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УКС2'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УКС2'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УКС2'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УКС2'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УКС2'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УКС2'], 'total_refund_sum'))
+        ];
+        $SD_uks3 = [
+            'УКС3' => $deptCollectSecond['УКС3'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УКС3'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УКС3'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УКС3'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УКС3'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УКС3'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УКС3'], 'total_refund_sum'))
+        ];
+        $SD_uks4 = [
+            'УКС4' => $deptCollectSecond['УКС4'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УКС4'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УКС4'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УКС4'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УКС4'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УКС4'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УКС4'], 'total_refund_sum'))
+        ];
+        $SD_ukr = [
+            'УКР' => $deptCollectSecond['УКР'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УКР'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УКР'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УКР'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УКР'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УКР'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УКР'], 'total_refund_sum'))
+        ];
+        //ДСП
+        $SD_Mdsp = [
+            'Менеджер ДСП' => $deptCollectSecond['ДСП'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ДСП'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ДСП'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ДСП'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДСП'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ДСП'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ДСП'], 'total_refund_sum'))
+        ];
+        $SD_almaty = [
+            'г.Алматы' => $deptCollectSecond['г.Алматы'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['г.Алматы'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['г.Алматы'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['г.Алматы'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['г.Алматы'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['г.Алматы'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['г.Алматы'], 'total_refund_sum'))
+        ];
+        $SD_uap = [
+            'УАП' => $deptCollectSecond['УАП'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УАП'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УАП'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УАП'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УАП'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УАП'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УАП'], 'total_refund_sum'))
+        ];
+        $SD_us1 = [
+            'УС1' => $deptCollectSecond['УС1'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС1'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС1'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС1'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС1'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС1'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС1'], 'total_refund_sum'))
+        ];
+        $SD_us2 = [
+            'УС2' => $deptCollectSecond['УС2'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС2'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС2'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС2'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС2'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС2'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС2'], 'total_refund_sum'))
+        ];
+        $SD_us3 = [
+            'УС3' => $deptCollectSecond['УС3'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС3'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС3'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС3'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС3'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС3'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС3'], 'total_refund_sum'))
+        ];
+        $SD_us4 = [
+            'УС4' => $deptCollectSecond['УС4'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС4'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС4'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС4'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС4'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС4'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС4'], 'total_refund_sum'))
+        ];
+        $SD_us5 = [
+            'УС5' => $deptCollectSecond['УС5'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС5'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС5'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС5'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС5'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС5'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС5'], 'total_refund_sum'))
+        ];
+        $SD_us6 = [
+            'УС6' => $deptCollectSecond['УС6'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС6'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС6'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС6'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС6'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС6'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС6'], 'total_refund_sum'))
+        ];
+        $SD_us7 = [
+            'УС7' => $deptCollectSecond['УС7'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УС7'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УС7'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УС7'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УС7'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УС7'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УС7'], 'total_refund_sum'))
+        ];
+        //ДРПО
+        $SD_Mdrpo = [
+            'Менеджер ДРПО' => $deptCollectSecond['ДРПО'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ДРПО'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ДРПО'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ДРПО'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДРПО'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ДРПО'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ДРПО'], 'total_refund_sum'))
+        ];
+        $SD_upp = [
+            'УПП' => $deptCollectSecond['УПП'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['УПП'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['УПП'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['УПП'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['УПП'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['УПП'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['УПП'], 'total_refund_sum'))
+        ];
+        //ДП
+        $SD_Mdp = [
+            'ДП' => $deptCollectSecond['ДП'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ДП'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ДП'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ДП'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДП'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ДП'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ДП'], 'total_refund_sum'))
+        ];
+        //Филиалы
+        $SD_nur = [
+            'Нур-Султан' =>$deptCollectSecond['Нур-Султан'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Нур-Султан'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Нур-Султан'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Нур-Султан'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Нур-Султан'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Нур-Султан'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Нур-Султан'], 'total_refund_sum'))
+        ];
+        $SD_aktobe = [
+            'Актобе' =>$deptCollectSecond['Актобе'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Актобе'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Актобе'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Актобе'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Актобе'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Актобе'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Актобе'], 'total_refund_sum'))
+        ];
+        $SD_shymkent = [
+            'Шымкент' =>$deptCollectSecond['Шымкент'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Шымкент'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Шымкент'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Шымкент'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Шымкент'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Шымкент'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Шымкент'], 'total_refund_sum'))
+        ];
+        $SD_koksh = [
+            'Кокшетау' =>$deptCollectSecond['Кокшетау'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Кокшетау'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Кокшетау'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Кокшетау'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Кокшетау'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Кокшетау'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Кокшетау'], 'total_refund_sum'))
+        ];
+        $SD_semei = [
+            'Семей' =>$deptCollectSecond['Семей'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Семей'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Семей'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Семей'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Семей'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Семей'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Семей'], 'total_refund_sum'))
+        ];
+        $SD_atyrauObl = [
+            'Атырауская облась' =>$deptCollectSecond['Атырауская облась'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Атырауская облась'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Атырауская облась'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Атырауская облась'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Атырауская облась'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Атырауская облась'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Атырауская облась'], 'total_refund_sum'))
+        ];
+        $SD_aktobeObl = [
+            'Актюбинская область' =>$deptCollectSecond['Актюбинская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Актюбинская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Актюбинская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Актюбинская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Актюбинская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Актюбинская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Актюбинская область'], 'total_refund_sum'))
+        ];
+        $SD_karagandaObl = [
+            'Карагандинская область' =>$deptCollectSecond['Карагандинская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Карагандинская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Карагандинская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Карагандинская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Карагандинская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Карагандинская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Карагандинская область'], 'total_refund_sum'))
+        ];
+        $SD_kostanaiObl = [
+            'Костанайская область' =>$deptCollectSecond['Костанайская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Костанайская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Костанайская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Костанайская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Костанайская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Костанайская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Костанайская область'], 'total_refund_sum'))
+        ];
+        $SD_kyzylObl = [
+            'Кызылординская область' =>$deptCollectSecond['Кызылординская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Кызылординская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Кызылординская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Кызылординская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Кызылординская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Кызылординская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Кызылординская область'], 'total_refund_sum'))
+        ];
+        $SD_mangystObl = [
+            'Мангыстауская область' =>$deptCollectSecond['Мангыстауская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Мангыстауская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Мангыстауская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Мангыстауская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Мангыстауская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Мангыстауская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Мангыстауская область'], 'total_refund_sum'))
+        ];
+        $SD_pavlObl = [
+            'Павлодарская область' =>$deptCollectSecond['Павлодарская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Павлодарская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Павлодарская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Павлодарская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Павлодарская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Павлодарская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Павлодарская область'], 'total_refund_sum'))
+        ];
+        $SD_jambylObl = [
+            'Жамбылская область' =>$deptCollectSecond['Жамбылская область'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Жамбылская область'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Жамбылская область'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Жамбылская область'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Жамбылская область'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Жамбылская область'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Жамбылская область'], 'total_refund_sum'))
+        ];
+        $SD_sko = [
+            'СКО' =>$deptCollectSecond['СКО'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['СКО'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['СКО'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['СКО'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['СКО'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['СКО'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['СКО'], 'total_refund_sum'))
+        ];
+        $SD_vko = [
+            'ВКО'=>$deptCollectSecond['ВКО'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ВКО'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ВКО'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ВКО'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ВКО'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ВКО'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ВКО'], 'total_refund_sum'))
+        ];
+        //Купиполис
+        $SD_sait = [
+            'kupipolis' => $deptCollectSecond['kupipolis'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['kupipolis'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['kupipolis'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['kupipolis'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['kupipolis'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['kupipolis'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['kupipolis'], 'total_refund_sum'))
+        ];
+        $SD_sdz = [
+            'СДЗ' => $deptCollectSecond['СДЗ'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['СДЗ'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['СДЗ'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['СДЗ'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['СДЗ'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['СДЗ'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['СДЗ'], 'total_refund_sum'))
+        ];
+        //Отдел страхования
+        $SD_os6 =[
+            'Отделение страхования 6' => $deptCollectSecond['Отделение страхования 6'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Отделение страхования 6'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Отделение страхования 6'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Отделение страхования 6'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Отделение страхования 6'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Отделение страхования 6'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Отделение страхования 6'], 'total_refund_sum'))
+        ];
+        $SD_os1 =[
+            'Отделение страхования 1' => $deptCollectSecond['Отделение страхования 1'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Отделение страхования 1'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Отделение страхования 1'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Отделение страхования 1'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Отделение страхования 1'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Отделение страхования 1'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Отделение страхования 1'], 'total_refund_sum'))
+        ];
+        $SD_os3 =[
+            'Отделение страхования 3' => $deptCollectSecond['Отделение страхования 3'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['Отделение страхования 3'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['Отделение страхования 3'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['Отделение страхования 3'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['Отделение страхования 3'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['Отделение страхования 3'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['Отделение страхования 3'], 'total_refund_sum'))
+        ];
+        //ДСВ
+        $SD_dsv_u = [
+            'ДСВ' => $deptCollectSecond['ДСВ'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ДСВ'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ДСВ'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ДСВ'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДСВ'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ДСВ'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ДСВ'], 'total_refund_sum'))
+        ];
+        //ДМС
+        $SD_dms_u = [
+            'ДМС' => $deptCollectSecond['ДМС'],
+            'feesplan' => array_sum(array_column($deptCollectSecond['ДМС'], 'feesplan')),
+            'brutto_prem' => array_sum(array_column($deptCollectSecond['ДМС'], 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($deptCollectSecond['ДМС'], 'comission_and_rating')),
+            'dsd' => array_sum(array_column($deptCollectSecond['ДМС'], 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($deptCollectSecond['ДМС'], 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($deptCollectSecond['ДМС'], 'total_refund_sum'))
+        ];
+
         //Департаменты
         $dks = [
             'Менеджер ДКС' => $Mdks,
@@ -863,7 +1243,6 @@ class ParseOracleController extends Controller
             'netto_refund_sum' => array_sum(array_column($dks, 'netto_refund_sum')),
             'total_refund_sum' => array_sum(array_column($dks, 'total_refund_sum')),
         ];
-
         $dsp = [
             'Менеджер ДСП' => $Mdsp,
             'г.Алматы' => $almaty,
@@ -884,7 +1263,6 @@ class ParseOracleController extends Controller
             'netto_refund_sum' => array_sum(array_column($dsp, 'netto_refund_sum')),
             'total_refund_sum' => array_sum(array_column($dsp, 'total_refund_sum')),
         ];
-
         $drpo = [
             'Менеджер ДРПО' => $Mdrpo,
             'УПП' => $upp,
@@ -981,6 +1359,138 @@ class ParseOracleController extends Controller
             'total_refund_sum' => array_sum(array_column($dms, 'total_refund_sum')),
         ];
 
+        $sd_dks = [
+            'Менеджер ДКС' => $SD_Mdks,
+            'УКС1' => $SD_uks1,
+            'УКС2' => $SD_uks2,
+            'УКС3' => $SD_uks3,
+            'УКС4' => $SD_uks4,
+            'УКР' => $SD_ukr,
+        ];
+        $sd_dksSum = [
+            'feesplan' => array_sum(array_column($sd_dks, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_dks, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_dks, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_dks, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_dks, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_dks, 'total_refund_sum')),
+        ];
+        $sd_dsp = [
+            'Менеджер ДСП' => $SD_Mdsp,
+            'г.Алматы' => $SD_almaty,
+            'УАП' => $SD_uap,
+            'УС1' => $SD_us1,
+            'УС2' => $SD_us2,
+            'УС3' => $SD_us3,
+            'УС4' => $SD_us4,
+            'УС5' => $SD_us5,
+            'УС6' => $SD_us6,
+            'УС7' => $SD_us7,
+        ];
+        $sd_dspSum = [
+            'feesplan' => array_sum(array_column($sd_dsp, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_dsp, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_dsp, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_dsp, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_dsp, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_dsp, 'total_refund_sum')),
+        ];
+        $sd_drpo = [
+            'Менеджер ДРПО' => $SD_Mdrpo,
+            'УПП' => $SD_upp,
+        ];
+        $sd_drpoSum = [
+            'feesplan' => array_sum(array_column($sd_drpo, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_drpo, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_drpo, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_drpo, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_drpo, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_drpo, 'total_refund_sum')),
+        ];
+        $sd_dp = [
+            'ДП' => $SD_Mdp
+        ];
+        $sd_dpSum = [
+            'feesplan' => array_sum(array_column($sd_dp, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_dp, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_dp, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_dp, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_dp, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_dp, 'total_refund_sum')),
+        ];
+        $sd_filials = [
+            'Нур-Султан' =>$SD_nur,
+            'Актобе' =>$SD_aktobe,
+            'Шымкент' =>$SD_shymkent,
+            'Кокшетау' =>$SD_koksh,
+            'Семей' =>$SD_semei,
+            'Атырауская облась' =>$SD_atyrauObl,
+            'Актюбинская область' =>$SD_aktobeObl,
+            'Карагандинская область' =>$SD_karagandaObl,
+            'Костанайская область' =>$SD_kostanaiObl,
+            'Кызылординская область' =>$SD_kyzylObl,
+            'Мангыстауская область' =>$SD_mangystObl,
+            'Павлодарская область' =>$SD_pavlObl,
+            'Жамбылская область' =>$SD_jambylObl,
+            'СКО' =>$SD_sko,
+            'ВКО'=>$SD_vko
+        ];
+        $sd_filialsSum = [
+            'feesplan' => array_sum(array_column($sd_filials, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_filials, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_filials, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_filials, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_filials, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_filials, 'total_refund_sum')),
+        ];
+        $sd_kupipolis = [
+            'kupipolis' => $SD_sait,
+            'СДЗ'=> $SD_sdz,
+        ];
+        $sd_kupipolisSum = [
+            'feesplan' => array_sum(array_column($sd_kupipolis, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_kupipolis, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_kupipolis, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_kupipolis, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_kupipolis, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_kupipolis, 'total_refund_sum')),
+        ];
+        $sd_os = [
+            'Отделение страхования 6' =>$SD_os6,
+            'Отделение страхования 1' =>$SD_os1,
+            'Отделение страхования 3' =>$SD_os3,
+        ];
+        $sd_osSum = [
+            'feesplan' => array_sum(array_column($sd_os, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_os, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_os, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_os, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_os, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_os, 'total_refund_sum')),
+        ];
+        $sd_dsv = [
+            'ДСВ' =>$SD_dsv_u
+        ];
+        $sd_dsvSum = [
+            'feesplan' => array_sum(array_column($sd_dsv, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_dsv, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_dsv, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_dsv, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_dsv, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_dsv, 'total_refund_sum')),
+        ];
+        $sd_dms = [
+            'ДМС' =>$SD_dms_u
+        ];
+        $sd_dmsSum = [
+            'feesplan' => array_sum(array_column($sd_dms, 'feesplan')),
+            'brutto_prem' => array_sum(array_column($sd_dms, 'brutto_prem')),
+            'comission_and_rating' => array_sum(array_column($sd_dms, 'comission_and_rating')),
+            'dsd' => array_sum(array_column($sd_dms, 'dsd')),
+            'netto_refund_sum' => array_sum(array_column($sd_dms, 'netto_refund_sum')),
+            'total_refund_sum' => array_sum(array_column($sd_dms, 'total_refund_sum')),
+        ];
+
 
         return response()->json([
             'success' => true,
@@ -996,6 +1506,17 @@ class ParseOracleController extends Controller
                     'ДСВ' => $dsvSum,
                     'ДМС' => $dmsSum
                 ],
+                'collectsSum2' => [
+                    'ДКС'=> $sd_dksSum,
+                    'ДСП' => $sd_dspSum,
+                    'ДРПО' => $sd_drpoSum,
+                    'ДП' => $sd_dpSum,
+                    'Филиалы' => $sd_filialsSum,
+                    'kupipolis' => $sd_kupipolisSum,
+                    'Отдел страхования' => $sd_osSum,
+                    'ДСВ' => $sd_dsvSum,
+                    'ДМС' => $sd_dmsSum
+                ],
                 'collects1' => [
                     'ДКС'=> $dks,
                     'ДСП' => $dsp,
@@ -1006,6 +1527,17 @@ class ParseOracleController extends Controller
                     'Отдел страхования' => $os,
                     'ДСВ' => $dsv,
                     'ДМС' => $dms
+                ],
+                'collects2' => [
+                    'ДКС'=> $sd_dks,
+                    'ДСП' => $sd_dsp,
+                    'ДРПО' => $sd_drpo,
+                    'ДП' => $sd_dp,
+                    'Филиалы' => $sd_filials,
+                    'kupipolis' => $sd_kupipolis,
+                    'Отдел страхования' => $sd_os,
+                    'ДСВ' => $sd_dsv,
+                    'ДМС' => $sd_dms
                 ],
                 'label_first' => $label_first,
                 'label_second' => $label_second,

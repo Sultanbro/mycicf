@@ -12,8 +12,6 @@
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
                             <td class="text-left">Департамент</td>
                             <td>План</td>
                             <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
@@ -23,30 +21,35 @@
                             <td>Тотал премии {{oracleData.label_second}}</td>
                             <td>Изм сумма / %</td>
                             <td></td>
-                            <td>{{oracleData.label_first}}</td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>Изм %</td>
-                            <td>{{oracleData.label_first}}</td>
-                            <td>{{oracleData.label_second}}</td>
+                            <td>План</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
+                            <td> ДСД {{oracleData.label_first}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
+                            <td>Нетто премии {{oracleData.label_second}}</td>
+                            <td>Тотал премии {{oracleData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
                         <template v-for="(elem,value) in oracleData.collectsSum">
                         <tr>
-                            <td><span>{{}}</span></td>
-                            <td>{{}}</td>
-                            <td class="text-left"><span class="bold" @click=getAdm(value)>{{value}}</span></td>
-                            <td>{{elem.feesplan}}</td>
-                            <td>{{elem.brutto_prem}}</td>
-                            <td>{{elem.dsd}}</td>
-                            <td>{{elem.comission_and_rating}}</td>
-                            <td>{{elem.netto_refund_sum}}</td>
-                            <td>{{elem.total_refund_sum}}</td>
+                            <td class="text-left" @click=getAdm(value)>{{value}}</td>
+                            <td>{{(elem.feesplan || 0) | numberFormat}}</td>
+                            <td>{{(elem.brutto_prem || 0) | numberFormat}}</td>
+                            <td>{{(elem.dsd || 0) | numberFormat}}</td>
+                            <td>{{(elem.comission_and_rating || 0) | numberFormat}}</td>
+                            <td>{{(elem.netto_refund_sum || 0) | numberFormat}}</td>
+                            <td>{{(elem.total_refund_sum || 0) | numberFormat}}</td>
+                            <td>%%</td>
+                            <td></td>
+                            <td>{{(oracleData.collectsSum2[value].feesplan || 0) | numberFormat}}</td>
+                            <td>{{(oracleData.collectsSum2[value].brutto_prem || 0) | numberFormat}}</td>
+                            <td>{{(oracleData.collectsSum2[value].dsd || 0) | numberFormat}}</td>
+                            <td>{{(oracleData.collectsSum2[value].comission_and_rating || 0) | numberFormat}}</td>
+                            <td>{{(oracleData.collectsSum2[value].netto_refund_sum || 0) | numberFormat}}</td>
+                            <td>{{(oracleData.collectsSum2[value].total_refund_sum || 0) | numberFormat}}</td>
                         </tr>
                         </template>
                         <tr>
-                            <td><span></span></td>
-                            <td><span></span></td>
                             <td><span class="bold">Итого</span></td>
                         </tr>
                         </tbody>
@@ -62,8 +65,6 @@
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td></td>
                             <td class="text-left">Управление</td>
                             <td>План</td>
                             <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
@@ -73,31 +74,36 @@
                             <td>Тотал премии {{oracleData.label_second}}</td>
                             <td>Изм сумма / %</td>
                             <td></td>
-                            <td>{{oracleData.label_first}}</td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>Изм %</td>
-                            <td>{{oracleData.label_first}}</td>
-                            <td>{{oracleData.label_second}}</td>
+                            <td>План</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
+                            <td> ДСД {{oracleData.label_first}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
+                            <td>Нетто премии {{oracleData.label_second}}</td>
+                            <td>Тотал премии {{oracleData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
                         <template
                             v-for="(item,key) in oracleData.collects1[deptValue]">
                             <tr>
-                                <td><span>{{}}</span></td>
-                                <td>{{}}</td>
-                                <td class="text-left"><span class="bold"@click=getMan(key)>{{key}}</span></td>
-                                <td>{{item.feesplan}}</td>
-                                <td>{{item.brutto_prem}}</td>
-                                <td>{{item.dsd}}</td>
-                                <td>{{item.comission_and_rating}}</td>
-                                <td>{{item.netto_refund_sum}}</td>
-                                <td>{{item.total_refund_sum}}</td>
+                                <td class="text-left" @click=getMan(key)>{{key}}</td>
+                                <td>{{(item.feesplan || 0) | numberFormat}}</td>
+                                <td>{{(item.brutto_prem || 0) | numberFormat}}</td>
+                                <td>{{(item.dsd || 0) | numberFormat}}</td>
+                                <td>{{(item.comission_and_rating || 0) | numberFormat}}</td>
+                                <td>{{(item.netto_refund_sum || 0) | numberFormat}}</td>
+                                <td>{{(item.total_refund_sum || 0) | numberFormat}}</td>
+                                <td>%%</td>
+                                <td></td>
+                                <td>{{(oracleData.collects2[deptValue][key].feesplan || 0) | numberFormat}}</td>
+                                <td>{{(oracleData.collects2[deptValue][key].brutto_prem || 0) | numberFormat}}</td>
+                                <td>{{(oracleData.collects2[deptValue][key].dsd || 0) | numberFormat}}</td>
+                                <td>{{(oracleData.collects2[deptValue][key].comission_and_rating || 0) | numberFormat}}</td>
+                                <td>{{(oracleData.collects2[deptValue][key].netto_refund_sum || 0) | numberFormat}}</td>
+                                <td>{{(oracleData.collects2[deptValue][key].total_refund_sum || 0) | numberFormat}}</td>
                             </tr>
                         </template>
                         <tr>
-                            <td><span></span></td>
-                            <td><span></span></td>
                             <td><span class="bold">Итого</span></td>
                         </tr>
                         </tbody>
@@ -133,12 +139,22 @@
                         <template v-for="(item,key) in oracleData.collects1[deptValue][adminValue][managValue]">
                             <tr>
                                     <td class="text-left">{{item.empl_name}}</td>
-                                    <td>{{item.feesplan}}</td>
-                                    <td>{{item.brutto_prem}}</td>
-                                    <td>{{item.dsd}}</td>
-                                    <td>{{item.comission_and_rating}}</td>
-                                    <td>{{item.netto_refund_sum}}</td>
-                                    <td>{{item.total_refund_sum}}</td>
+                                    <td>{{(item.feesplan || 0) | numberFormat}}</td>
+                                    <td>{{(item.brutto_prem || 0) | numberFormat}}</td>
+                                    <td>{{(item.dsd || 0) | numberFormat}}</td>
+                                    <td>{{(item.comission_and_rating || 0) | numberFormat}}</td>
+                                    <td>{{(item.netto_refund_sum || 0) | numberFormat}}</td>
+                                    <td>{{(item.total_refund_sum || 0) | numberFormat}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].feesplan || 0) | numberFormat}}</td>
+                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].brutto_prem || 0) | numberFormat}}</td>
+                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].dsd || 0) | numberFormat}}</td>
+                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].comission_and_rating || 0)
+                                        | numberFormat}}</td>
+                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].netto_refund_sum || 0)
+                                        | numberFormat}}</td>
+                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].total_refund_sum || 0) | numberFormat}}</td>
                             </tr>
                         </template>
                         <tr>
@@ -187,5 +203,7 @@
 </script>
 
 <style scoped>
-
+    .text-left{
+        font-weight: bold;
+    }
 </style>
