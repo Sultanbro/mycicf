@@ -16,14 +16,13 @@
         "aws/aws-sdk-php": "^3.148",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.4",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "maatwebsite/excel": "^3.1",
-        "pusher/pusher-php-server": "^4.0",
-        "simplesoftwareio/simple-qrcode": "^4.2",
-        "yajra/laravel-oci8": "^6.0"
+        "pusher/pusher-php-server": "^4.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
