@@ -35,5 +35,5 @@ use Illuminate\Http\Request;
     Route::resource('assign/training', 'Api\AssignTrainingController');
     Route::resource('undergo', 'Api\UndergoTrainingController');
     Route::resource('conduct', 'Api\ConductTrainingController');
-    Route::post('/getFullBranch', 'Api\BranchController@getFullBranch');
+    Route::get('/getFullBranch', 'Api\BranchController@getFullBranch');
 
