@@ -16,14 +16,14 @@
                             <td>План</td>
                             <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
                             <td> ДСД {{oracleData.label_first}}</td>
-                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
-                            <td>Нетто премии {{oracleData.label_second}}</td>
-                            <td>Тотал премии {{oracleData.label_second}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_first}}</td>
+                            <td>Нетто премии {{oracleData.label_first}}</td>
+                            <td>Тотал премии {{oracleData.label_first}}</td>
                             <td>Изм сумма / %</td>
                             <td></td>
                             <td>План</td>
-                            <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
-                            <td> ДСД {{oracleData.label_first}}</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_second}}</td>
+                            <td> ДСД {{oracleData.label_second}}</td>
                             <td>АВ/Рейтинг {{oracleData.label_second}}</td>
                             <td>Нетто премии {{oracleData.label_second}}</td>
                             <td>Тотал премии {{oracleData.label_second}}</td>
@@ -69,14 +69,14 @@
                             <td>План</td>
                             <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
                             <td> ДСД {{oracleData.label_first}}</td>
-                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
-                            <td>Нетто премии {{oracleData.label_second}}</td>
-                            <td>Тотал премии {{oracleData.label_second}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_first}}</td>
+                            <td>Нетто премии {{oracleData.label_first}}</td>
+                            <td>Тотал премии {{oracleData.label_first}}</td>
                             <td>Изм сумма / %</td>
                             <td></td>
                             <td>План</td>
-                            <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
-                            <td> ДСД {{oracleData.label_first}}</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_second}}</td>
+                            <td> ДСД {{oracleData.label_second}}</td>
                             <td>АВ/Рейтинг {{oracleData.label_second}}</td>
                             <td>Нетто премии {{oracleData.label_second}}</td>
                             <td>Тотал премии {{oracleData.label_second}}</td>
@@ -123,15 +123,15 @@
                             <td>План</td>
                             <td class="text-left">Брутто премии {{oracleData.label_first}}</td>
                             <td> ДСД {{oracleData.label_first}}</td>
-                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
-                            <td>Нетто премии {{oracleData.label_second}}</td>
-                            <td>Тотал премии {{oracleData.label_second}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_first}}</td>
+                            <td>Нетто премии {{oracleData.label_first}}</td>
+                            <td>Тотал премии {{oracleData.label_first}}</td>
                             <td>Изм сумма / %</td>
                             <td></td>
-                            <td>{{oracleData.label_first}}</td>
+                            <td>{{oracleData.label_second}}</td>
                             <td>{{oracleData.label_second}}</td>
                             <td>Изм %</td>
-                            <td>{{oracleData.label_first}}</td>
+                            <td>{{oracleData.label_second}}</td>
                             <td>{{oracleData.label_second}}</td>
                         </tr>
                         </thead>
@@ -147,14 +147,14 @@
                                     <td>{{(item.total_refund_sum || 0) | numberFormat}}</td>
                                     <td></td>
                                     <td></td>
-                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].feesplan || 0) | numberFormat}}</td>
-                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].brutto_prem || 0) | numberFormat}}</td>
-                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].dsd || 0) | numberFormat}}</td>
-                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].comission_and_rating || 0)
+                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key]|| {}).feesplan || 0) | numberFormat}}</td>
+                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).brutto_prem || 0) | numberFormat}}</td>
+                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).dsd || 0) | numberFormat}}</td>
+                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).comission_and_rating || 0)
                                         | numberFormat}}</td>
-                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].netto_refund_sum || 0)
+                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).netto_refund_sum || 0)
                                         | numberFormat}}</td>
-                                    <td>{{(oracleData.collects2[deptValue][adminValue][managValue][key].total_refund_sum || 0) | numberFormat}}</td>
+                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).total_refund_sum || 0) | numberFormat}}</td>
                             </tr>
                         </template>
                         <tr>
@@ -197,6 +197,13 @@
                 this.adminValue = key;
                 this.managValue = key;
                 this.viewType = 'managers';
+            },
+            aa(){
+                //console.log(this.oracleData.collects1[this.deptValue][this.adminValue][this.managValue].firstDate[0]);
+
+/*                for(let i=0; i< this.oracleData.collects1[this.deptValue][this.adminValue][this.managValue].firstDate.length; i++){
+                    console.log(this.oracleData.collects1[this.deptValue][this.adminValue][this.managValue].firstDate[i]);
+                }*/
             }
         },
     }
