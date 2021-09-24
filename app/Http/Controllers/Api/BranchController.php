@@ -19,8 +19,8 @@ class BranchController extends Controller
         $this->branchService = $branchService;
     }
 
-    public function getFullBranch(Request $request)
+    public function getFullBranch()
     {
-        return $this->branchService->getFullBranch($request->all());
+        return $this->branchService->getFullBranch();
     }
 }

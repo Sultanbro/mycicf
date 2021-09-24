@@ -14,5 +14,5 @@ interface KiasBranchServiceInterface
      * @param $request
      * @return mixed
      */
-    public function getFullBranch($request);
+    public function getFullBranch();
 }

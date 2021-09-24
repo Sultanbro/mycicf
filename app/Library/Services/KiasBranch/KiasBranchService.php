@@ -47,7 +47,7 @@ class KiasBranchService implements KiasBranchServiceInterface
         return $result;
     }
 
-    public function getFullBranch($request){
+    public function getFullBranch(){
         ini_set('xdebug.max_nesting_level', 500);
         $headData = Branch::where('kias_id', 50)->first();
         $result = [];
