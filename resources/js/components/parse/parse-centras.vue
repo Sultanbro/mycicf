@@ -128,11 +128,11 @@
                             <td>Тотал премии {{oracleData.label_first}}</td>
                             <td>Изм сумма / %</td>
                             <td></td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>Изм %</td>
-                            <td>{{oracleData.label_second}}</td>
-                            <td>{{oracleData.label_second}}</td>
+                            <td class="text-left">Брутто премии {{oracleData.label_second}}</td>
+                            <td> ДСД {{oracleData.label_second}}</td>
+                            <td>АВ/Рейтинг {{oracleData.label_second}}</td>
+                            <td>Нетто премии {{oracleData.label_second}}</td>
+                            <td>Тотал премии {{oracleData.label_second}}</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -147,11 +147,15 @@
                                     <td>{{(item.total_refund_sum || 0) | numberFormat}}</td>
                                     <td></td>
                                     <td></td>
-                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key]|| {}).feesplan || 0) | numberFormat}}</td>
-                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).brutto_prem || 0) | numberFormat}}</td>
-                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).dsd || 0) | numberFormat}}</td>
-                                    <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).comission_and_rating || 0)
-                                        | numberFormat}}</td>
+                                    <td>
+                                        {{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).brutto_prem || 0) | numberFormat}}
+                                    </td>
+                                    <td>
+                                        {{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).dsd || 0) | numberFormat}}
+                                    </td>
+                                    <td>
+                                        {{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).comission_and_rating || 0) | numberFormat}}
+                                    </td>
                                     <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).netto_refund_sum || 0)
                                         | numberFormat}}</td>
                                     <td>{{((oracleData.collects2[deptValue][adminValue][managValue][key] || {}).total_refund_sum || 0) | numberFormat}}</td>
