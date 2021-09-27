@@ -1237,8 +1237,36 @@ class ParseController extends Controller
         }
         arsort($premium_first);
         arsort($premium_second);
+
         $ranking=[];
         $i = 1;
+        $a = 1;
+        $k = 1;
+        $j = 1;
+        $z = 1;
+
+        foreach ($premium_first as $id => $sum){
+            $premiumFirst[$sum] = $a++;
+        }
+
+        foreach ($premium_second as $id => $sum){
+            $premiumSecond[$sum] = $k++;
+        }
+
+        foreach ($payout_first as $id => $sum){
+            $payoutFirst[$sum] = $j++;
+        }
+
+        foreach ($payout_second as $id => $sum){
+            $payoutSecond[$sum] = $z++;
+        }
+
+
+        $fliped_first = array_flip($premiumFirst);
+        $fliped_second = array_flip($premiumSecond);
+        $fliped_f_payout = array_flip($premiumFirst);
+        $fliped_s_payout = array_flip($premiumSecond);
+
 
         foreach ($premium_second as $id => $sum){
             if($premium_first[$id] == 0 && $premium_second[$id] == 0 && $payout_first[$id] == 0 && $payout_second[$id] == 0){
@@ -1251,6 +1279,8 @@ class ParseController extends Controller
             }
         }
 
+        $flip_ranking = array_flip($ranking);
+
         $classArr = $this->getNameWithClassId();
         $productArr = $this->getProductListWithId();
         $keys = array(1,14,10,12,11,13,17,26,20,24,27,18,15,29,21,25,31,22,16,23,34,33,19,28,30,32,2,3,8,7,4,6,72,5,9,74);
@@ -1261,10 +1291,16 @@ class ParseController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'premium_first' => $premium_first,
-                'premium_second' => $premium_second,
-                'payout_first' => $payout_first,
-                'payout_second' => $payout_second,
+//                'premium_first' => $premium_first,
+//                'premium_second' => $premium_second,
+//                'payout_first' => $payout_first,
+//                'payout_second' => $payout_second,
+
+                'premium_first' => $fliped_first,
+                'premium_second' => $fliped_second,
+                'payout_first' => $fliped_f_payout,
+                'payout_second' => $fliped_s_payout,
+                'flip_ranking' => $flip_ranking,
                 'companyList' => $this->getCompanyListWithId(),
                 'label' => $label,
                 'ranking' => $ranking,
@@ -1493,7 +1529,7 @@ class ParseController extends Controller
                     }
                 }
             }
-            else {
+            elseif($dateType == 'rise') {
 
                 $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
                 $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
@@ -1586,7 +1622,6 @@ class ParseController extends Controller
             $bigArr = array_merge($classArr, $productArr);
             $productArrList = array_combine($keys,$bigArr);
 
-
             $class_sum[$id]['premium_first'] = $first_premium;
             $class_sum[$id]['payout_first'] = $first_payout;
             $class_sum[$id]['premium_second'] = $second_premium;
@@ -1596,6 +1631,11 @@ class ParseController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
+//                'premium_first' => $fliped_first,
+//                'premium_second'=>  $fliped_second,
+//                'payout_first' => $fliped_f_payout,
+//                'payout_second'=>  $fliped_s_payout,
+
                 'premium_first' => $premium_first,
                 'premium_second' => $premium_second,
                 'payout_first' => $payout_first,

@@ -34,10 +34,10 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(item,index) in companyData.companyList" v-if="!!companyData.ranking[index]">
+                        <tr v-for="(item,index) in companyData.flip_ranking" v-if="!!companyData.ranking[index]">
                             <td><span>{{index}}</span></td>
-                            <td>{{(companyData.ranking[index])}}</td>
-                            <td class="text-left"><span class="bold" @click="getCompany(index)" >{{item}}</span></td>
+                            <td>{{(item)}}</td>
+                            <td class="text-left"><span class="bold" @click="getCompany(item)" >{{companyData.companyList[item]}}</span></td>
                             <td>{{(companyData.premium_first[index] || 0) | numberFormat}}</td>
                             <td>{{(companyData.premium_second[index] || 0) | numberFormat}}</td>
 
@@ -521,6 +521,7 @@
         },
 
         computed: {
+
             totalCompanyFirst (){
               return Object.values(this.companyData.premium_first).reduce(function(sum, elem){
                   return sum + elem
