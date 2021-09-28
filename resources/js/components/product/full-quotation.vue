@@ -87,35 +87,46 @@
         <div v-if="schedulePaymentBool" class="div-marg div-ml div-mr">
             <div class="agreement-block">
                 <h5 class="col-md-12">График платежей</h5>
-                <div class="col-4">
+                <div class="col-8">
                     <table class="table table-hover text-align-center fs-0_8">
                         <thead>
                         <tr class="border-table-0">
-                            <td>Дата</td>
-                            <td>Сумма</td>
-                            <td>Объект</td>
+                            <th>№</th>
+                            <th>Дата</th>
+                            <th>Сумма</th>
+                            <th>Объект</th>
+                            <th>Операции</th>
                         </tr>
                         </thead>
                         <tbody>
                         <template>
-                            <div v-for="docrow in orderedDocrows">
-                                <tr>
-                                    <td v-if="docrow.fieldname === 'Дата'" v-model="docrow.value">{{docrow.value}}</td>
-                                    <td v-if="docrow.fieldname === 'Вал. усл.'" v-model="docrow.value">{{docrow.value}} {{docrow.value_name}}</td>
-                                    <td v-if="docrow.fieldname === 'Объект'" v-model="docrow.value">{{ docrow.value }}</td>
+                                <tr v-for="docrow in schedulePayment">
+                                    <td>{{docrow[0].rn}}</td>
+                                    <td v-if="docrow[0].fieldname === 'Дата' && !editItemBool" v-model="docrow.value">{{docrow[0].value}}</td>
+                                    <td v-if="docrow[0].fieldname === 'Дата' && editItemBool">
+                                        <input v-model="docrow[0].value" class="form-control" type="tel" v-mask="'##.##.####'"/></td>
+                                    <td v-if="docrow[2].fieldname === 'Страховая премия' && !editItemBool" v-model="docrow.value">{{docrow[2].value}} {{docrow[1].value_name}}</td>
+                                    <td v-if="docrow[2].fieldname === 'Страховая премия' && editItemBool" v-model="docrow[2].value" class="row">
+                                            <input v-model="docrow[2].value" class="form-control offset-1"/>
+                                        </td>
+                                    <td v-if="docrow[4].fieldname === 'Объект'" v-model="docrow.value">{{ docrow[4].value }}</td>
+                                    <td>
+                                        <button @click="deleteItem(docrow)" class="btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            </div>
-<!--                            <tr>-->
-<!--                                <td>18.10.2021</td>-->
-<!--                                <td>1000 тг</td>-->
-<!--                            </tr>-->
-<!--                            <tr>-->
-<!--                                <td>18.11.2021</td>-->
-<!--                                <td>1000 тг</td>-->
-<!--                            </tr>-->
                         </template>
                         </tbody>
                     </table>
+                    <button v-if="!editItemBool" @click="editItem(docrow)" class="btn-primary"><i class="fas fa-pen"></i>
+                    </button>
+                    <button v-if="editItemBool" @click="editItem(docrow)" class="btn-primary"><i class="fa fa-check"></i>
+                    </button>
+                    <button @click="buttonClick()" class="btn-primary btn-sm">Сформировать
+                    </button>
+                    <button @click="clearItem()" class="btn-danger"><i class="fa fa-check"></i>Очистить
+                    </button>
                 </div>
             </div>
         </div>
@@ -240,8 +251,12 @@
                     address: ''
                 },
                 schedulePayment: {},
+                schedulePaymentCopy: {},
                 schedulePaymentBool: false,
                 payGraphDocIsn: '',
+                editItemBool: false,
+                editItemIsn: '',
+                index: 1,
             }
         },
         props: {
@@ -257,11 +272,11 @@
         mounted() {
             this.getFullData();
         },
-        computed: {
-            orderedDocrows: function () {
-                return _.orderBy(this.schedulePayment, 'isn')
-            },
-        },
+        // computed: {
+        //     orderedDocrows: function () {
+        //         return _.orderBy(this.schedulePayment, 'isn')
+        //     },
+        // },
         methods: {
             getFullData() {
                 this.preloader(true);
@@ -350,6 +365,38 @@
                 this.axios.post('/full/getFullBranch', {}).then((response) => {
                     this.userList = response.data.result;
                 });
+            },
+
+            editItem(docrow){
+                this.schedulePaymentBool = false
+                if (this.editItemBool == false){
+                    this.editItemBool = true
+                } else {
+                    this.editItemBool = false
+                }
+                this.schedulePaymentBool = true
+            },
+
+            deleteItem(docrow){
+                for (let i=0; i<this.schedulePayment.length; i++){
+                    if (this.schedulePayment[i] == docrow){
+                        this.schedulePaymentBool = false
+                        delete this.schedulePayment[i]
+                        this.schedulePayment.splice(i, 1)
+                        this.schedulePaymentBool = true
+                    }
+                }
+
+            },
+
+            buttonClick(){
+                this.schedulePaymentBool = false
+                this.schedulePayment = JSON.parse(JSON.stringify(this.schedulePaymentCopy))
+                this.schedulePaymentBool = true
+            },
+
+            clearItem(){
+                this.schedulePayment = [];
             },
 
             calculate(){
@@ -465,7 +512,9 @@
                                 response => {
                                     this.axios.post('/full/paymentScheduleButton', dat).then(
                                         response => {
-                                            this.schedulePayment = response.data.docrow
+                                            // this.schedulePaymentCopy = response.data.docrow
+                                            this.schedulePaymentCopy= JSON.parse(JSON.stringify(response.data.docrow))
+                                            this.schedulePayment= JSON.parse(JSON.stringify(response.data.docrow))
                                         })
                                 })
                         } else {
@@ -539,8 +588,20 @@
                         this.preloader(false);
                     });
             },
+
+            saveSchedulePayment(){
+                let data = {
+                    'schedulePayment': this.schedulePayment,
+                    'schedulePaymentCopy': this.schedulePaymentCopy,
+                    'payGraphDocIsn': this.payGraphDocIsn
+                }
+                this.axios.post('/full/saveSchedulePayment', data).then(response => {
+
+                })
+            },
             createAgr(){        // Выпустить договор
-                this.preloader(true);
+                // this.preloader(true);
+                this.saveSchedulePayment();
                 this.axios.post('/full/create-agr',
                     {
                         calc_isn: this.calc_isn,

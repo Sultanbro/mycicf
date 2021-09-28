@@ -27,7 +27,6 @@
                         Удалить
                         <i class="fas fa-trash"></i>
                     </button>
-
                 </td>
             </tr>
             </tbody>

@@ -1128,7 +1128,6 @@ class ProductsController extends Controller
     public function paymentScheduleButton(KiasServiceInterface $kias, Request $request){
         $buttonClick = $kias->buttonClick($request->payGraphDocIsn ? $request->payGraphDocIsn : '', 'BUTTONEXEC');
         $docrows = [];
-        dd($buttonClick);
         foreach($buttonClick->DocRow->row as $docrow){
             $docrows[] = [
                 'rn' => empty($docrow->rn) ? null : get_object_vars($docrow->rn)[0],
@@ -1139,13 +1138,46 @@ class ProductsController extends Controller
                 'rowisn' => empty($docrow->rowisn) ? null : get_object_vars($docrow->rowisn)[0],
                 'val' => empty($docrow->val) ? null : get_object_vars($docrow->val)[0],
                 'value' => empty(get_object_vars($docrow->value)) ? null : get_object_vars($docrow->value)[0],
-                'value_name' => empty(get_object_vars($docrow->value_name)) ? null : empty(get_object_vars($docrow->value_name)),
+                'value_name' => empty(get_object_vars($docrow->value_name)) ? null : get_object_vars($docrow->value_name)[0],
             ];
+        }
+        $row = [];
+        for ($i=0; $i<intdiv(count($docrows), 8); $i++){
+            for ($j=0; $j<count($docrows); $j++){
+                if(count($row) == 0){
+                    $row[$i][$j] = $docrows[$j];
+                }elseif (!isset($row[$i])){
+                        $row[$i][] = $docrows[count($row)];
+                } elseif ($row[$i][count($row[$i])-1]['isn'] === $docrows[$j]['isn']){
+                    if (isset($row[$i][0]) && $row[$i][0] != $docrows[$j])
+                        $row[$i][] = $docrows[$j];
+                }
+            }
         }
         return response()->json([
             'success' => true,
-            'docrow' => $docrows
+            'docrow' => $row
         ]);
+    }
+
+    public function saveSchedulePayment(Request $request, KiasServiceInterface $kias){
+//        dd($request->schedulePayment);
+        $docrows = [];
+        if(isset($request->schedulePayment)){
+            foreach($request->schedulePayment as $docrow) {
+                foreach($docrow as $row) {
+                    $docrows[] = [
+                        'isn' => $row['isn'] ?? null,
+                        $row['val'] => $row['value'] ?? null,
+
+                    ];
+                }
+            }
+        }
+        $product = $kias->userCicSaveDocument($request->payGraphDocIsn ? $request->payGraphDocIsn : '', '','', '', '', '', $request->travellersListClassIsn ? $request->travellersListClassIsn : '',
+            $request->results["emplisn"], '', '', isset($request->results["docdate"]) ? $request->results["docdate"] : date('d.m.Y'), '', '',
+            '', '', '', '', $docrows);
+        dd($docrows);
     }
 
     public function createAgr(Request $request, KiasServiceInterface $kias){    // создание договора

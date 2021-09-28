@@ -454,6 +454,7 @@ Route::group(['domain' => env('FRONTEND_DOMAIN', 'http://mycic.test')], function
             Route::post('/full/getPrintableFormList', 'ProductsController@getPrintableFormList');
             Route::get('/full/getPrintableForm', 'ProductsController@getPrintableForm');
             Route::post('/full/getFullBranch', 'SiteController@getFullBranch');
+            Route::post('/full/saveSchedulePayment', 'ProductsController@saveSchedulePayment');
 
             Route::post('/getDictiList', 'SiteController@getDicti');
             Route::post('/getDictiListFromBase', 'SiteController@getDictiFromBase');
