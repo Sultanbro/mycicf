@@ -6,7 +6,8 @@
             <table class="table table-hover parse-table-topClasses parse-table text-align-center fs-0_8 mb-0" v-if="viewType === 'departments'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0">Departments</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0">
+                                Сентрас Иншуранс</td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -59,7 +60,7 @@
                            v-if="viewType === 'admins'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0">Administration</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0">{{deptValue}}</td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>
@@ -113,7 +114,7 @@
                            v-if="viewType === 'managers'">
                         <thead>
                         <tr class="border-table-0">
-                            <td colspan="2" class="text-left fs-1_3 pl-0">Managers</td>
+                            <td colspan="2" class="text-left fs-1_3 pl-0">{{adminValue}}</td>
                             <td colspan="5" class="text-right border-r-top-16 pt-3">Премии <i class="fa fa-info-circle ml-3"></i></td>
                             <td></td>
                             <td colspan="5" class="text-right pt-3">Выплаты <i class="fa fa-info-circle ml-3"></i></td>

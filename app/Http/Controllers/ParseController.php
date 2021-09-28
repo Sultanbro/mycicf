@@ -1393,7 +1393,6 @@ class ParseController extends Controller
             {
                 $label_first = $this->getMonthLabel()[$firstPeriod].' '.$firstYear;
                 $label_second = $this->getMonthLabel()[$secondPeriod].' '.$secondYear;
-                dd($label_first,$label_second);
                 if($companyId == 0){
                     $dataPrem = ParsePremium::where('year', '=', $firstYear)
                         ->where('month', '=', $firstPeriod)
