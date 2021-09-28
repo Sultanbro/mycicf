@@ -13,10 +13,8 @@ class SiteController extends Controller
 {
     public function authorization(Request $request, KiasServiceInterface $kias){
         $response = $kias->authenticate($request->username, hash('sha512', $request->password));
-//        dd($response);
         if($response->error) {
             $success = false;
-//            dd($success);
             $response = array(
                 'success' => $success,
                 'error' => $response->error->text,
@@ -115,7 +113,6 @@ class SiteController extends Controller
     public function getUserList(Request $request, KiasServiceInterface $kias){
         $kias->_sId = $request->Sid;
         $response = $kias->request('User_CicGetUserList', []);
-//        dd(count($response->LIST->row));
         if($response->error) {
             return response()->json([
                 'success' => false,
@@ -123,7 +120,6 @@ class SiteController extends Controller
             ]);
         }
         if($response->LIST){
-//            dd($response->LIST);
             for ($i=0; $i< count($response->LIST->row); $i++){
                 $row[] = [
                     'isn' => (int)$response->LIST->row[$i]->ISN,
@@ -161,6 +157,8 @@ class SiteController extends Controller
             ]);
         }else if($response->ROWSET->row){
             $row = [];
+            $row['isn'] = (int)$response->ROWSET->row->ISN;
+            $row['iin'] = (int)$response->ROWSET->row->IIN;
             if ((string)$response->ROWSET->row->JURIDICAL === 'Y'){
                 $row['orgname'] = (string)$response->ROWSET->row->ORGNAME;
             } else{
@@ -168,7 +166,6 @@ class SiteController extends Controller
                 $row['lastname'] = (string)$response->ROWSET->row->LASTNAME;
                 $row['parentname'] = (string)$response->ROWSET->row->PARENTNAME;
             }
-            $row['iin'] = (int)$response->ROWSET->row->IIN;
             $row['juridical'] = (string)$response->ROWSET->row->JURIDICAL;
             return response()->json([
                 'success' => true,
@@ -183,7 +180,7 @@ class SiteController extends Controller
 
     public function setSubject(Request $request, KiasServiceInterface $kias){
         $kias->_sId = $request->Sid;
-        $response = $kias->request('User_CicSetSubject', [
+        $response = $kias->request('User_CicSaveSubject', [
             'IIN' => $request->iin,
             'FIRSTNAME' => $request->firstname,
             'LASTNAME' => $request->lastname,
@@ -198,7 +195,7 @@ class SiteController extends Controller
             'DOCCLASSISN' => $request->docClassIsn ? $request->docClassIsn : "",
             'DOCNO' => $request->docNo ? $request->docNo : "",
         ]);
-        if($response->error && $response->error->text != 'Ошибка привязки пользователя ЕСБД<->КИАС') {
+        if($response->error) {
             return response()->json([
                 'success' => false,
                 'error' => (string)$response->error,
@@ -207,6 +204,11 @@ class SiteController extends Controller
             return response()->json([
                 'success' => true,
                 'iin' => $request->iin,
+            ]);
+        } else if ($response->ISN){
+            return response()->json([
+                'success' => true,
+                'isn' => (int)$response->ISN,
             ]);
         }
         return response()->json([
