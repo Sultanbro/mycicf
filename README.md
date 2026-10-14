@@ -1,5 +1,3 @@
-> Sanitized source snapshot for code review. Runtime credentials, operational exports, and personal test data are excluded. External integrations require your own configuration. This legacy project needs dependency and deployment review before production use. Existing license and attribution notices remain applicable. See [SECURITY.md](SECURITY.md).
-
 **Корпоративный сайт my.cic.kz**
 
 Это хранилище сайта my.cic.kz и всех его подпроектов.
